@@ -1,6 +1,30 @@
-# Verification — VANILLAJS 0.5.0
+# Verification — VANILLAJS 0.6.0
 
-## Platform riding: current change
+## RTS routing: current change
+
+- **176 Node tests passed locally**, including all previous 156 regressions.
+  New tests cover immutable grids, coordinate/boundary validation, shortest paths,
+  ties, unreachable/blocked/budget outcomes and unique reachable formation slots.
+  An independent breadth-first oracle compares costs on 80 seeded 12 × 9 maps.
+- Route planner and all six Squad orders units reach their destinations through
+  actual terrain. Every simulated tick checks distinct cell occupancy and visible
+  unit separation. Other scenarios cover gate closure/replanning, occupied gates,
+  atomic rejected group orders, in-flight replacements, stop semantics, swaps,
+  vacancy chains, contention, pause/reset and 30/60/144 Hz composition.
+- Syntax/purity/dependency checks cover 49 JS files and eleven modules. The
+  allowlisted package has 31 public files and a SHA-256 manifest. Twelve recipes
+  are registered. No runtime dependency is added; Canvas 2D is a browser API.
+- `scripts/browser-rts.js` adds rendered pixels, pointer/keyboard orders, blocked
+  goals, gate replanning, complete route/squad arrivals, drag selection, late
+  pointer-release cancellation, blur/reset, Canvas failure and 390 px emulated
+  touch controls. All prior browser scenarios remain enabled. Exact-head results
+  and screenshot inspection are recorded in the PR, not inferred from test code.
+- Local Chromium is unavailable; the packaged suite runs in CI. Blur and Canvas
+  failure events are synthetic; mobile controls use touch emulation. Physical
+  devices, other browsers and large-army performance remain unmeasured. Bounded
+  traffic safety does not establish deadlock freedom or optimal squad scheduling.
+
+## Historical platform riding (0.5.0)
 
 - **156 Node tests passed locally**, including all previous 138 regressions.
   New movement checks cover ascending/descending/diagonal carry, stable reversals,

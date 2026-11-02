@@ -1,10 +1,69 @@
-# API contracts — 0.5.0 (experimental)
+# API contracts — 0.6.0 (experimental)
 
 All paths are native ES modules. Public numerical routines require finite values
 unless otherwise stated. Vector arithmetic expects correctly sized numeric arrays;
 `finiteVector` is available for validation at application boundaries. Returned
 math arrays are new arrays. Body state is deliberately mutable and owned by the
 caller; do not replace its fields with invalid values between simulation ticks.
+
+## Navigation
+
+```js
+import {NavigationGrid,findPath,formationSlots} from '../modules/navigation/index.js';
+const grid=new NavigationGrid({width:24,height:16,cellSize:1,origin:[0,0],blocked:[[8,7]]});
+const route=findPath(grid,[3,4],[21,8],{maxExpanded:4096});
+if(route.status==='found') console.log(route.path,route.cost); // endpoints; metres
+const closed=grid.withBlocked([[8,4]],true); // new snapshot; original is unchanged
+const group=formationSlots(closed,[21,8],6,{exclude:[[21,9]],maxExpanded:4096});
+```
+
+`NavigationGrid` is immutable and owns its occupancy bits; constructor/edit input
+arrays are copied. `width`/`height` are positive integers, with at most 65,536 cells.
+`cellSize` is finite positive metres; `origin` contains finite world `[X,Z]` for
+the minimum corner. Extents and maximum route length must remain finite. Scales
+too small to represent cell centres relative to world bounds are rejected.
+Columns increase along +X, rows along +Z; +Y remains height outside this module.
+
+Cells are two safe integers. `contains(cell)` tests bounds; `walkable(cell)` also
+tests occupancy. Both return false outside the grid, and throw for malformed
+cells. `cellCenter(cell)` returns a new world `[X,Z]` and rejects out-of-bounds
+cells. `worldToCell([X,Z])` uses half-open bounds: minimum included, maximum
+excluded; outside returns null, malformed/nonfinite input throws. Standard
+floating-point boundary rounding applies. `withBlocked(cells,boolean=true)`
+returns a new grid snapshot after validating all edits, and rejects out-of-bounds
+cells. It never changes the original; duplicate edits are harmless. Returned
+arrays, including centres, routes and slots, are owned by the caller.
+
+`findPath(grid,start,goal,{maxExpanded=4096})` performs four-neighbour A* with
+uniform edge costs. No diagonals or corner cutting; cells represent points,
+not swept bodies. `maxExpanded` must be an integer in 1..65,536 and counts settled
+cells including the goal. It bounds search work, not elapsed milliseconds; arrays
+are allocated for the whole grid and heap work also depends on its frontier.
+Exact ties use total cost, Manhattan heuristic, then row-major cell index.
+
+| `status` | Meaning | `path` / `cost` |
+| --- | --- | --- |
+| `found` | Shortest path on this immutable grid | Both endpoints; distance in metres |
+| `blocked` | Either endpoint is outside or occupied | Empty / null; zero expansions |
+| `unreachable` | Entire reachable component exhausted | Empty / null |
+| `budget` | More work remains after the expansion limit | Empty / null; no partial route |
+
+The result also includes `expanded`. Start equal to goal returns one cell, zero
+cost and one expansion if walkable. Route lengths optimise uniform grid steps,
+not turning radius, terrain weight, moving obstacles or future traffic. A caller
+must replan against changed terrain and validate movement separately.
+
+`formationSlots(grid,anchor,count,{exclude=[],maxExpanded=4096})` collects nearby
+walkable cells in breadth-first order, using north/west/east/south neighbours.
+`count` is 1..256. Excluded in-bounds cells can be traversed but are never selected.
+Returns `{status,slots,expanded}`: `found` means exactly the requested number;
+`partial` means the connected component has too few available cells; `budget`
+means more search remains; `blocked` means an occupied/outside anchor. Partial and
+budget results contain only the slots found so far. Consumers requiring a whole
+formation must reject both. Slots are unique and reachable from the anchor on the
+supplied grid; this does not prove every agent can reach them. Assignment, spacing,
+unit footprint, collision avoidance and multi-agent scheduling belong to callers.
+There is no DOM, clock, random source or other module dependency.
 
 ## Maths
 

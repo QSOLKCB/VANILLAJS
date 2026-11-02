@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "0.5.0",
+  "release": "0.6.0",
   "license": "Apache-2.0",
   "modules": {
     "math": {
@@ -87,6 +87,13 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Simulation-time magazines, fire cadence and finite-reserve reloading"
+    },
+    "navigation": {
+      "entry": "modules/navigation/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Immutable X/Z grids, bounded four-neighbour A* and reachable group destinations"
     }
   },
   "recipes": {
@@ -231,6 +238,22 @@
         "interactions"
       ],
       "preset": "shuttle"
+    },
+    "rts-route-planner": {
+      "entry": "demos/rts-lab/worlds.js",
+      "modules": [
+        "navigation",
+        "time"
+      ],
+      "preset": "route"
+    },
+    "rts-squad-orders": {
+      "entry": "demos/rts-lab/worlds.js",
+      "modules": [
+        "navigation",
+        "time"
+      ],
+      "preset": "squad"
     }
   }
 }

@@ -1,8 +1,8 @@
 # VANILLAJS — reusable game modules
 
 Reusable, original JavaScript game modules built directly on web standards.
-**v0.5.0 — Platform riding: lifts, shuttles, jump-off momentum and clearance stops.**
-Ten reusable modules; ten recipes across Flight, Interaction and FPS labs.
+**v0.6.0 — RTS routing: navigation grids, bounded searches and squad orders.**
+Eleven reusable modules; twelve recipes across Flight, Interaction, FPS and RTS labs.
 
 [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
@@ -17,11 +17,13 @@ python3 -m http.server 8000
 # Open http://localhost:8000
 # Interaction Lab: http://localhost:8000/demos/interaction-lab/index.html
 # FPS Lab: http://localhost:8000/demos/fps-lab/index.html
+# RTS Lab: http://localhost:8000/demos/rts-lab/index.html
 ```
 
 There is no runtime installation, build step, npm dependency, CDN, account,
 telemetry, external asset download or backend. All geometry is procedural.
-WebGL 1 is required; a visible error explains unsupported graphics. Serve over
+The three 3D labs require WebGL 1; RTS Lab uses Canvas 2D. A visible error
+explains unsupported graphics. Serve over
 HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
@@ -128,10 +130,30 @@ stay active: duck or move clear to continue. **Reverse route** pauses and change
 travel direction. Slopes, capsules and rotating platforms remain future work. See
 [FPS contracts](docs/FPS_LAB.md).
 
+## RTS Lab
+
+| Recipe | Try this | Shared systems |
+| --- | --- | --- |
+| **Route planner** | Click open ground, run the route, then close the north gate | Grid snapshots, shortest paths, replanning and fixed ticks |
+| **Squad orders** | Drag to select units, right-click a destination, watch them regroup | The same path search plus reachable unique destinations and cell reservations |
+
+Plan while paused, then **Run routes**. Mouse drag selects; right-click moves.
+Touch uses **Select / Move** tools and map taps. The roster and **Select all**
+provide larger selection controls. With the map focused, arrows move the cursor,
+Enter applies the tool, Space orders a move, and A selects all. Escape and lost
+focus pause, cancelling unfinished gestures. Accepted orders persist on resume.
+
+The lab uses four-neighbour cell movement and a bounded, game-owned traffic
+policy. Units wait instead of swapping or overlapping; automatic retries may
+still reach a stand-off. Reorder or stop selected units to resolve it. This is a
+small routing slice; flow fields, continuous steering and reciprocal body physics
+remain future work. See [RTS contracts and limits](docs/RTS_LAB.md).
+
 ## Modules
 
 | Import directory | Responsibility |
 | --- | --- |
+| `modules/navigation/` | Immutable grids, bounded A* paths and compact reachable group destinations |
 | `modules/math/` | Vectors, quaternions, camera matrices, seeded random numbers |
 | `modules/time/` | Fixed ticks, interpolation fraction, pause, time scaling and catch-up limits |
 | `modules/collision/` | Static/kinematic body sliding, finite static shots and translating-target segment queries |
@@ -143,7 +165,7 @@ travel direction. Slopes, capsules and rotating platforms remain future work. Se
 | `modules/projectiles/` | Bounded constant-velocity projectiles, swept impacts and lifetimes |
 | `modules/interactions/` | Ordered conditions → effects with explicit outcome reasons |
 
-All APIs are **experimental** in 0.5.0. Use a tagged release or exact commit,
+All APIs are **experimental** in 0.6.0. Use a tagged release or exact commit,
 preserve the directory structure and record what your game imports. The
 machine-readable catalogue lists each module's dependency closure and environment.
 Core modules neither own an animation loop nor read the DOM or ambient time.
