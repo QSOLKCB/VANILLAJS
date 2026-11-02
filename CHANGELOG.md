@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.8.0 — OMI finite-state experiment (release candidate)
+
+- Add ARCH-OMI-001, attributed to Brian Thorne: strict sixteen-bit delta/XOR
+  operations, an explicit four-nibble encoding and tetrahedral face relations.
+- Add an interactive OMI Lab with bit controls, face selection/fault inspection,
+  reversible masks, orbit inspection and an incremental 65,536-word atlas.
+- Exhaustively compare every delta output with an independent arithmetic oracle;
+  record cycle counts, packing/inversion checks and a transition-table SHA-256.
+- Establish return-after-eight for every word, while recording 4,096 words with
+  shorter minimal periods. Demonstrate sixteen-to-one edge-pattern ambiguity and
+  the limits of face closure; no full OMI protocol or game-engine claim.
+- Add eleven regressions (207 total), packaged Chromium scenarios and CI evidence
+  reproduction. Keep eleven game modules and fourteen recipes; register the
+  research experiment separately. No runtime dependencies or assets are added.
+
 ## 0.7.0 — Shared flow fields (release candidate)
 
 - Add `FlowFieldSearch` to navigation: bounded incremental multi-source builds,

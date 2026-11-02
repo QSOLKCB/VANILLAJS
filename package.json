@@ -1,6 +1,6 @@
 {
   "name": "qsol-vanillajs",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "description": "Browser-native game modules with Flight, Interaction, FPS and RTS labs",

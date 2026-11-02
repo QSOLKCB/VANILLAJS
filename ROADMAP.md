@@ -69,6 +69,18 @@
 - Search-work comparisons for 1/24/128/512 requests on 32×32 and 64×64 grids;
   retain per-unit A* for cases where a shared full-field build is unnecessary.
 
+## v0.8.0 — OMI finite-state experiment
+
+- ARCH-OMI-001 credits Brian Thorne's ARCH OMI and implements the pinned delta
+  law with an explicitly chosen four-nibble tetrahedral encoding.
+- OMI Lab exposes bit edits, observed-edge faults, face residuals, XOR masks,
+  orbit selection and a pause-safe census of all 65,536 words.
+- Independent exhaustive arithmetic comparison records 8/56/4,032/61,440 states
+  of minimal period 1/2/4/8. Every word returns after eight steps, with 4,096 shorter
+  periods. Edge-pattern ambiguity and undetected coordinated changes are tested.
+- A separate research entry, not a new core game module. See
+  [encoding, pinned references and evidence](docs/ARCH_OMI.md).
+
 ## Proposed next slices — not implemented
 
 1. **FPS expansion:** sloped terrain/capsules, rotating platforms, rotating-target
@@ -94,7 +106,7 @@ Promote APIs toward stability after at least two consuming games exercise them.
 Keep a single monorepo release version initially. Prefer a small working slice
 with a visible demo to empty scaffolding for the full roadmap.
 
-## Concept to specify — ARCH OMI
+## ARCH OMI follow-ups — not implemented
 
 Credit: **Brian Thorne's ARCH OMI**, supplied by the repository owner as a reference
 for a 16-bit state space (65,536 values), four faces, OMICRON and XOR.
@@ -107,8 +119,9 @@ maps FS/GS/RS/US to four vertices and their opposite faces, with XOR incidence
 rules. This is a candidate reference for the owner's four-face concept; it does
 not establish a mapping to this library's grid directions.
 
-This is a proposed experiment. Define a game-facing encoding and verify the
-transform's claimed invariants with exhaustive tests before deriving an API.
-The current shared field uses cardinal breadth-first distances and includes
-no OMICRON/XOR transform or imported OMI code. Its index limit fits 16 bits, while
-stored distances and goal owners use wider integers with unreachable sentinels.
+ARCH-OMI-001 now records the chosen nibble encoding, independent exhaustive
+checks and the distinction between eight-step return and minimal period eight.
+Next, use it in a small reversible-switch puzzle and compare explicit game-state
+representations before considering a core API. Wider OMI protocols, alternative
+constants, error-correcting claims, networking and performance remain separate
+work. Shared navigation continues to use cardinal breadth-first distances.

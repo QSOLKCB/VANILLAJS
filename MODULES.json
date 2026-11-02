@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "0.7.0",
+  "release": "0.8.0",
   "license": "Apache-2.0",
   "modules": {
     "math": {
@@ -270,6 +270,16 @@
         "time"
       ],
       "preset": "evacuation"
+    }
+  },
+  "experiments": {
+    "arch-omi": {
+      "entry": "experiments/arch-omi/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "research-experiment",
+      "demo": "demos/omi-lab/index.html",
+      "description": "Attributed 16-bit delta law, explicit nibble encoding and tetrahedral XOR relations; not a game engine API"
     }
   }
 }

@@ -1,10 +1,15 @@
-# API contracts — 0.7.0 (experimental)
+# API contracts — 0.8.0 (experimental)
 
 All paths are native ES modules. Public numerical routines require finite values
 unless otherwise stated. Vector arithmetic expects correctly sized numeric arrays;
 `finiteVector` is available for validation at application boundaries. Returned
 math arrays are new arrays. Body state is deliberately mutable and owned by the
 caller; do not replace its fields with invalid values between simulation ticks.
+
+ARCH-OMI-001 is a separate research surface in `experiments/arch-omi/index.js`.
+Its strict integer encoding, delta/XOR operations, tetrahedral relations and
+bounded orbit API are documented in [ARCH_OMI.md](ARCH_OMI.md#experimental-api).
+Core game modules do not depend on it.
 
 ## Navigation
 

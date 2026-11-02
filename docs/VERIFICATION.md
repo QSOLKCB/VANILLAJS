@@ -1,6 +1,36 @@
-# Verification — VANILLAJS 0.7.0
+# Verification — VANILLAJS 0.8.0
 
-## Shared flow fields: current change
+## OMI finite-state experiment: current change
+
+- **207 Node tests passed locally**, retaining all 196 previous regressions.
+  Eleven additions cover strict finite-word boundaries, owned arrays, immutable
+  topology, full-domain packing and XOR inversion, and all 65,536 delta outputs
+  against an independent arithmetic bit oracle.
+- Complete orbit enumeration observes 8/56/4,032/61,440 states with minimal period
+  1/2/4/8. Every state returns after eight steps; the stronger universal exact-
+  period-eight interpretation fails for 4,096 states. A separate oracle-table
+  traversal counts all cycles. The report pins a little-endian transition hash.
+- All 262,144 derived faces close. All 4,096 edge patterns have exactly sixteen
+  preimages. Tests demonstrate each single-edge bit fault on a representative
+  word and a coordinated change that closure cannot detect. This is a relation
+  test, not a general error-detection or authentication guarantee.
+- Demo tests cover sliced enumeration, cancellation, independent summary/atlas
+  ownership, budget rejection, zero/invalid ticks, paused work, bounded catch-up
+  and identical state/survey results at 30/60/144 Hz schedules in one runtime.
+- `scripts/verify-omi.js --check` reproduces every committed report field except
+  the runtime label. Syntax/purity/dependency checks cover 63 JS files, eleven
+  game modules and one separately registered experiment. Packaging has 38 public
+  files and a SHA-256 manifest, with no tooling/evidence or runtime dependencies.
+- Packaged Chromium scenarios cover word vectors, all minimal periods, the full
+  census, fixed-word step counts, bit/fault/mask controls, atlas selection,
+  fresh-key cancellation, pause/blur/hidden/reset, Canvas failure and 390 px touch
+  emulation. All earlier browser scenarios remain enabled. The PR records the
+  actual run, screenshots and evidence hashes for its commit after execution.
+- Local Chromium is unavailable; browser checks run in CI. Physical devices,
+  other browser engines and performance claims remain unverified. This slice
+  neither imports external formal proofs nor claims full OMI conformance.
+
+## Historical shared flow fields (0.7.0)
 
 - **196 Node tests passed locally**, retaining all 176 previous tests. New core
   checks cover bounded build slices, publication only on completion, ownership,

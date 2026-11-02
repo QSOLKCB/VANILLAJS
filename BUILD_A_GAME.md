@@ -1,8 +1,13 @@
 # Build a game with VANILLAJS
 
+For the separately registered ARCH-OMI-001 research surface, see
+[OMI Lab](docs/ARCH_OMI.md). Its sixteen-bit encoding and exhaustive evidence can
+inform a puzzle experiment, but it is not a core game module or a replacement
+for navigation/physics. Pin the repository commit when trying its API.
+
 Start from an exact release or commit, inspect `MODULES.json` and select only the
 modules needed by the game. Keep all required dependencies and relative paths.
-All 0.7.0 APIs are experimental; record the revision instead of silently tracking
+All 0.8.0 APIs are experimental; record the revision instead of silently tracking
 `main`. Preserve LICENSE and NOTICE when distributing copied modules.
 
 For example, a flight game vendors `math`, `collision`, `flight`, `time` and

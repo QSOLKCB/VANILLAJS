@@ -6,3 +6,6 @@
 
 @media(max-width:780px){.masthead nav a.rts-link{display:inline;font-size:10px}}
 @media(max-width:480px){.masthead{height:auto;min-height:70px;flex-wrap:wrap;gap:16px;padding-top:18px;padding-bottom:18px}.masthead nav{width:100%;justify-content:space-between}}
+
+@media(max-width:780px){.masthead nav a.omi-link{display:inline;font-size:10px}.masthead nav{gap:12px}}
+@media(min-width:781px) and (max-width:1250px){.masthead nav{gap:17px}.masthead nav .version{display:none}}
