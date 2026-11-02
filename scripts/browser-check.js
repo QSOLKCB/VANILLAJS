@@ -46,6 +46,18 @@ try{
   assert.ok(Math.abs(parseFloat(await page.locator('#speed').textContent())-coast)<1,'inertial velocity should persist');
   await page.keyboard.down('x');await page.waitForFunction(()=>parseFloat(document.querySelector('#speed').textContent)<.5);await page.keyboard.up('x');
   await page.locator('#reset').click();assert.equal(await page.locator('#status').textContent(),'READY');
+  // Keep W physically down across Escape pause/resume. Repeated down() emits
+  // repeat=true; only releasing and pressing again may restart thrust.
+  await page.locator('#launch').click();await page.keyboard.down('w');
+  await page.waitForFunction(()=>parseFloat(document.querySelector('#speed').textContent)>5);
+  await page.keyboard.press('Escape');assert.equal(await page.locator('#status').textContent(),'PAUSED');
+  const pausedSpeed=parseFloat(await page.locator('#speed').textContent());
+  await page.keyboard.press('Escape');assert.equal(await page.locator('#status').textContent(),'RUNNING');
+  await page.keyboard.down('w');await page.waitForTimeout(350);
+  assert.ok(Math.abs(parseFloat(await page.locator('#speed').textContent())-pausedSpeed)<.15,'held W repeat must not restart thrust after resume');
+  await page.keyboard.up('w');await page.keyboard.down('w');
+  await page.waitForFunction(speed=>parseFloat(document.querySelector('#speed').textContent)>speed+3,pausedSpeed);
+  await page.keyboard.up('w');await page.locator('#reset').click();
   await mkdir('browser-artifacts',{recursive:true});await page.screenshot({path:'browser-artifacts/flight-lab.png',fullPage:true});
   await page.setViewportSize({width:390,height:844});
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile layout must not overflow');
@@ -53,5 +65,5 @@ try{
   const unsupported=await browser.newPage();await unsupported.addInitScript(()=>HTMLCanvasElement.prototype.getContext=()=>null);
   await unsupported.goto(page.url());await unsupported.locator('#error').waitFor({state:'visible'});
   assert.match(await unsupported.locator('#error').textContent(),/WebGL is unavailable/);
-  assert.deepEqual(errors,[]);console.log('Chromium: rendered geometry, both modes, thrust, braking, rotation, pause, blur, reset, project subpath, mobile layout and unsupported WebGL passed.');
+  assert.deepEqual(errors,[]);console.log('Chromium: rendered geometry, both modes, thrust, braking, rotation, pause, held-key repeat cancellation, blur, reset, project subpath, mobile layout and unsupported WebGL passed.');
 }finally{await browser.close();await new Promise(r=>server.close(r));}

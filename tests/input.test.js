@@ -11,6 +11,47 @@ test('keyboard handles two bindings for the same action and clears on blur',()=>
   key('keydown','ControlLeft');key('keydown','ControlRight');key('keyup','ControlLeft');assert.equal(a.value('down'),1);
   target.dispatchEvent(new Event('blur'));assert.equal(a.value('down'),0);binding.dispose();key('keydown','KeyW');assert.equal(a.value('forward'),0);
 });
+function sendKey(target,type,code,repeat=false){
+  const event=new Event(type,{cancelable:true});
+  Object.assign(event,{code,repeat});target.dispatchEvent(event);return event;
+}
+for(const [code,action] of [['KeyW','forward'],['ArrowLeft','yawLeft'],['KeyX','brake']]){
+  for(const reset of ['clear','blur'])test(`keyboard ${action} requires a fresh press after ${reset}`,()=>{
+    const target=new EventTarget(),a=new Actions(),binding=attachKeyboard(target,a);
+    sendKey(target,'keydown',code);assert.equal(a.value(action),1);assert.equal(a.consume(action),true);
+    if(reset==='clear')binding.clear();else target.dispatchEvent(new Event('blur'));
+    for(let i=0;i<3;i++){
+      const repeat=sendKey(target,'keydown',code,true);
+      assert.equal(a.value(action),0);assert.equal(a.consume(action),false);
+      assert.equal(repeat.defaultPrevented,true,'cancel gameplay-key defaults while active');
+    }
+    sendKey(target,'keyup',code);sendKey(target,'keydown',code);
+    assert.equal(a.value(action),1);assert.equal(a.consume(action),true);
+    sendKey(target,'keyup',code);assert.equal(a.value(action),0);binding.dispose();
+  });
+}
+test('tracked keyboard repeats keep a held action without creating new press edges',()=>{
+  const target=new EventTarget(),a=new Actions(),binding=attachKeyboard(target,a);
+  sendKey(target,'keydown','KeyW');assert.equal(a.consume('forward'),true);
+  const repeat=sendKey(target,'keydown','KeyW',true);
+  assert.equal(a.value('forward'),1);assert.equal(a.consume('forward'),false);assert.equal(repeat.defaultPrevented,true);
+  sendKey(target,'keyup','KeyW');assert.equal(a.value('forward'),0);binding.dispose();
+});
+test('a key first pressed while disabled cannot activate on repeat after enabling',()=>{
+  const target=new EventTarget(),a=new Actions();let enabled=false;
+  const binding=attachKeyboard(target,a,{enabled:()=>enabled});
+  assert.equal(sendKey(target,'keydown','KeyW').defaultPrevented,false);
+  enabled=true;sendKey(target,'keydown','KeyW',true);
+  assert.equal(a.value('forward'),0);assert.equal(a.consume('forward'),false);
+  sendKey(target,'keyup','KeyW');sendKey(target,'keydown','KeyW');assert.equal(a.value('forward'),1);binding.dispose();
+});
+test('a stale repeat cannot latch another binding of a newly pressed action',()=>{
+  const target=new EventTarget(),a=new Actions(),binding=attachKeyboard(target,a);
+  sendKey(target,'keydown','ControlLeft');binding.clear();sendKey(target,'keydown','ControlRight');
+  assert.equal(a.consume('down'),true);sendKey(target,'keydown','ControlLeft',true);
+  assert.equal(a.consume('down'),false);sendKey(target,'keyup','ControlRight');
+  assert.equal(a.value('down'),0);binding.dispose();
+});
 const pad=()=>({id:'test',index:0,mapping:'standard',connected:true,axes:[0,0,0,0],buttons:Array.from({length:17},()=>({value:0}))});
 test('gamepad held input is blocked until neutral after connection and resume',()=>{
   const g=new FlightGamepad(),p=pad();p.axes[1]=-1;assert.equal(g.sample([p]).thrust[2],0);

@@ -110,6 +110,10 @@ failure to complete motion, not a promise that every supplied world is solvable.
 `consume(name)`, `clear()` and a flight command via `flight()`. Edges are consumed
 once; clearing cancels both edges and held inputs. `attachKeyboard(target,actions,
 options)` takes optional bindings/enabled predicate and returns `clear/dispose`.
+After adapter `clear()` or blur, auto-repeat cannot re-arm an untracked key:
+release it and press again. Repeats of a tracked key retain its held state without
+creating another action edge. Ignored repeats still suppress gameplay-key browser
+defaults while the adapter is enabled and focus is outside an editable control.
 Text fields, controls and buttons retain their ordinary keyboard behaviour.
 
 `FlightGamepad.sample(pads)` returns a flight command plus `connected/pause`.

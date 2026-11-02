@@ -24,6 +24,11 @@ export function attachKeyboard(target, actions, {bindings=flightBindings, enable
     const action=bindings[event.code];
     if (!action) return;
     if (down && (!enabled() || editable(event))) return;
+    // Clearing input cancels held keys. OS auto-repeat must not re-arm them.
+    if (down && event.repeat && !keys.has(event.code)) {
+      event.preventDefault();
+      return;
+    }
     if (down) keys.add(event.code); else keys.delete(event.code);
     actions.set(action,[...keys].some(code=>bindings[code]===action));
     if (enabled() && !editable(event)) event.preventDefault();

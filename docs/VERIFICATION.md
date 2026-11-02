@@ -2,10 +2,14 @@
 
 ## Executed locally
 
-- **40 Node tests passed**, including force/mass, torque/inertia, quaternion norm,
+- **49 Node tests passed**, including force/mass, torque/inertia, quaternion norm,
   asymmetric gyroscopic response, inertial drift, assistance, braking, frame-rate
   independence, quarter-speed simulation and pause/debt cancellation. Additional
   regressions cover post-brake result consistency and invalid controller samples.
+- Keyboard regression tests reproduce the reviewed failure on the prior source:
+  repeated keydown reactivated cancelled thrust, steering and braking after clear
+  or blur. Eight new failure cases failed before the fix. All now require a fresh
+  press; tracked repeats, action edges and multiple bindings remain covered.
 - Collision cases include a body moving 10,000 m/s against a 2 cm wall, tangential
   sliding, two-wall corners, moving away from a surface, initial overlap and a
   bounded iteration budget.
@@ -23,7 +27,8 @@ in that browser. No GPU/browser restrictions were changed to bypass this limit.
 
 The PR workflow runs `scripts/browser-check.js` against the packaged application
 at `/VANILLAJS/` in Chromium using software WebGL. It checks actual rendered pixel
-output, both flight modes, thrust, assistance, braking, rotation, pause, blur,
+output, both flight modes, thrust, assistance, braking, rotation, pause, held-W
+auto-repeat across Escape pause/resume, blur,
 reset, narrow layout and the unsupported-WebGL path. Check the workflow result
 for the exact commit; merely committing the script does not establish a pass.
 Screenshots and the package manifest are stored as `flight-lab-evidence`.
