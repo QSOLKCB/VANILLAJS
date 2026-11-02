@@ -6,7 +6,7 @@
   <title>OMI Lab · VANILLAJS</title><link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<header><a class="brand" href="../../index.html">V<span>ANILLAJS</span><small>QSOL–IMC</small></a><nav aria-label="Labs"><a href="../../index.html">Flight ↗</a><a href="../fps-lab/index.html">FPS ↗</a><a href="../rts-lab/index.html">RTS ↗</a></nav></header>
+<header><a class="brand" href="../../index.html">V<span>ANILLAJS</span><small>QSOL–IMC</small></a><nav aria-label="Labs"><a class="machine-link" href="../ancient-machine/index.html">Brass Engine ↗</a><a href="../../index.html">Flight ↗</a><a href="../fps-lab/index.html">FPS ↗</a><a href="../rts-lab/index.html">RTS ↗</a></nav></header>
 <main>
   <section class="intro"><div><p class="eyebrow">EXPERIMENT 005 / FINITE STATES</p><h1>OMI Lab<span>.</span></h1></div><div><p>Four faces. Six edges.<br><strong>65,536 ways to begin.</strong></p><p class="credit">ARCH OMI reference: <a href="https://github.com/bthornemail">Brian Thorne ↗</a></p></div></section>
   <div class="runbar"><span class="status"><i></i> <span id="status">READY</span></span><p>One 16-bit word. Every state can be checked.</p><div><button id="run" class="primary">Run experiment ↗</button><button id="pause" disabled>Pause</button><button id="reset">Reset ↺</button></div></div>
@@ -39,7 +39,7 @@
   </div>
   <section class="explanation"><div><p class="eyebrow">WHAT THE EXPERIMENT MEANS</p><h2>Closure is a relation.</h2><p>We pack four nibble values into one word, assign them to FS, GS, RS and US, and label each edge with the XOR of its endpoints. XOR around every triangular face returns zero.</p><p>The six edges alone do not identify the word: sixteen different words share each edge pattern. Closure also cannot detect every coordinated change.</p></div><div><p class="eyebrow">SOURCE & EVIDENCE</p><h2>A rule you can inspect.</h2><p>Brian Thorne’s OMI delta law and OMINO tetrahedral notes provide the references. The nibble packing and this interactive bench are VANILLAJS experiments, with an independent exhaustive arithmetic check in the evidence report.</p><p><a href="https://github.com/QSOLKCB/VANILLAJS/blob/main/docs/ARCH_OMI.md">Read the experiment and source pins ↗</a></p><p class="note">Finite integer logic; no physics, encryption, compression or randomness claim.</p></div></section>
 </main>
-<footer><span>QSOL–IMC / VANILLAJS <b>v0.8.0</b></span><span>ARCH-OMI-001 · Native ES modules · Apache–2.0</span></footer>
+<footer><span>QSOL–IMC / VANILLAJS <b>v0.9.0</b></span><span>ARCH-OMI-001 · Native ES modules · Apache–2.0</span></footer>
 <script type="module" src="./app.js"></script>
 </body>
 </html>

@@ -34,5 +34,6 @@ for(const [name,info]of [...Object.entries(catalogue.modules),...Object.entries(
   if(info.environment==='pure-js')assert.ok(!/\b(window|document|navigator|requestAnimationFrame|Math\.random|Date\.now)\b/.test(source),`${name}: browser or ambient clock dependency`);
   await import(new URL('../'+info.entry,import.meta.url));
   if(info.demo)await readFile(resolve(root,info.demo));
+  for(const demo of Object.values(info.demonstrations??{}))await readFile(resolve(root,demo));
 }
 console.log(`Checked ${files.length} JavaScript files, ${Object.keys(catalogue.modules).length} module contracts and ${Object.keys(catalogue.experiments??{}).length} research experiments.`);

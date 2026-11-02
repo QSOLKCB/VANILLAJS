@@ -8,6 +8,11 @@ VANILLAJS encoding of four nibble-valued tetrahedral vertices. It is registered
 under `experiments` in `MODULES.json`, separate from the eleven game modules and
 fourteen game recipes. It does not replace navigation, physics or game state.
 
+The v0.9.0 [Brass Engine](BRASS_ENGINE.md) adds a second demonstration of this
+same rule: a fictional mechanical instrument with eight staged detents, a
+reversible counter and exact partial-position replay. The kernel and source
+interpretation below are unchanged.
+
 ## Reference boundaries
 
 | Reference | Pinned source | Used here |

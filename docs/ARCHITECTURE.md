@@ -1,4 +1,4 @@
-# Architecture — VANILLAJS 0.8.0
+# Architecture — VANILLAJS 0.9.0
 
 The goal is to assemble future games from small, versioned systems. The labs
 prove composition against different environments and control laws.
@@ -9,10 +9,15 @@ Rendering, input events and lifecycle policy belong to the application boundary.
 `MODULES.json` registers ARCH-OMI-001 separately under `experiments`. Its pure
 `experiments/arch-omi/index.js` entry owns strict finite-word transforms and an
 explicit tetrahedral encoding. OMI Lab owns the census, animation, DOM, SVG and
-Canvas atlas and consumes the existing fixed clock. No core module imports the
+Canvas atlas and consumes the existing fixed clock. The Brass Engine owns a
+pure staged cam model in `demos/ancient-machine/machine.js`, bounded receipts,
+strict replay validation, SVG geometry and browser lifecycle policy. Its motor
+uses integer subdivisions of the same 120 Hz clock; drawn angles never feed
+back into computation. Both demonstrations are registered under the same
+research entry. No core module imports the
 experiment. There remain eleven core modules and fourteen game recipes.
 
-The build allowlists only the research kernel plus its demo; the independent
+The build allowlists only the research kernel plus its demos; the independent
 arithmetic oracle, evidence generator, tests and evidence JSON stay outside the
 runtime. [ARCH_OMI.md](ARCH_OMI.md) separates source formulas, our encoding and
 executed results. Enumeration proves the stated finite cases; it does not

@@ -1,7 +1,7 @@
 # VANILLAJS — reusable game modules
 
 Reusable, original JavaScript game modules built directly on web standards.
-**v0.8.0 — OMI Lab: four faces, XOR and an exhaustive 16-bit experiment.**
+**v0.9.0 — The Brass Engine: a deterministic mechanical OMI instrument.**
 Eleven game modules; fourteen recipes across Flight, Interaction, FPS and RTS labs;
 one separately registered research experiment.
 
@@ -20,12 +20,14 @@ python3 -m http.server 8000
 # FPS Lab: http://localhost:8000/demos/fps-lab/index.html
 # RTS Lab: http://localhost:8000/demos/rts-lab/index.html
 # OMI Lab: http://localhost:8000/demos/omi-lab/index.html
+# Brass Engine: http://localhost:8000/demos/ancient-machine/index.html
 ```
 
 There is no runtime installation, build step, npm dependency, CDN, account,
 telemetry, external asset download or backend. All geometry is procedural.
 The three 3D labs require WebGL 1; RTS Lab uses Canvas 2D. OMI Lab uses SVG and
-Canvas 2D, retaining numerical controls if its atlas is unavailable. A visible
+Canvas 2D, retaining numerical controls if its atlas is unavailable. The Brass
+Engine uses native SVG and DOM controls. A visible
 message explains unsupported graphics. Serve over
 HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
 The local server works without internet access. Hosted offline reload via a
@@ -177,7 +179,7 @@ followed by 512 samples. These are search-operation counts, not measured FPS.
 | `modules/projectiles/` | Bounded constant-velocity projectiles, swept impacts and lifetimes |
 | `modules/interactions/` | Ordered conditions → effects with explicit outcome reasons |
 
-All APIs are **experimental** in 0.8.0. Use a tagged release or exact commit,
+All APIs are **experimental** in 0.9.0. Use a tagged release or exact commit,
 preserve the directory structure and record what your game imports. The
 machine-readable catalogue lists each module's dependency closure and environment.
 Core modules neither own an animation loop nor read the DOM or ambient time.
@@ -200,6 +202,22 @@ pins, encoding choices, API boundaries, controls and the executed evidence are
 documented together. It adds no runtime dependency and makes no pathfinding,
 physics, cryptographic, compression, RNG or speedup claim.
 
+## The Brass Engine — a mechanical OMI demonstration
+
+[Turn the crank](demos/ancient-machine/index.html) of an imagined ancient
+calculating instrument: four hexadecimal drums, an eight-detent cam, visible
+rotation/XOR lanes and a bounded receipt tape. Seven detents prepare the result;
+the eighth latches one exact OMI delta step. Reverse individual detents, advance
+a whole revolution or run the 120 Hz integer-tick motor.
+
+Save and restore a local JSON replay at any partial position. Pause, Escape and
+focus loss freeze the motor; continued input requires a fresh press. Reduced
+motion, keyboard operation and narrow touch layouts are supported. This is a
+fictional mechanical presentation of discrete logic, not a historical replica or
+physical analog solver. [Mechanism and replay contract](docs/BRASS_ENGINE.md)
+include exhaustive evidence and attribution to **Brian Thorne’s ARCH OMI**.
+It remains demo-owned; no new core API or game recipe is added.
+
 ## Development and verification
 
 Node.js 22+ is development tooling only. There is no `npm install` for these checks:
@@ -210,6 +228,7 @@ node scripts/check.js
 node scripts/build.js
 node scripts/navigation-workload.js --check
 node scripts/verify-omi.js --check
+node scripts/verify-machine.js --check
 ```
 
 The build stages an allowlisted `dist/` and generates `manifest.json` with sizes

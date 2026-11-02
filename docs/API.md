@@ -1,4 +1,4 @@
-# API contracts — 0.8.0 (experimental)
+# API contracts — 0.9.0 (experimental)
 
 All paths are native ES modules. Public numerical routines require finite values
 unless otherwise stated. Vector arithmetic expects correctly sized numeric arrays;
@@ -9,6 +9,8 @@ caller; do not replace its fields with invalid values between simulation ticks.
 ARCH-OMI-001 is a separate research surface in `experiments/arch-omi/index.js`.
 Its strict integer encoding, delta/XOR operations, tetrahedral relations and
 bounded orbit API are documented in [ARCH_OMI.md](ARCH_OMI.md#experimental-api).
+The Brass Engine’s staged mechanism and replay schema are demo-owned contracts
+documented in [BRASS_ENGINE.md](BRASS_ENGINE.md); they are not core game APIs.
 Core game modules do not depend on it.
 
 ## Navigation
