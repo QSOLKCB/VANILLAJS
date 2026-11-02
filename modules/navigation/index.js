@@ -95,3 +95,68 @@ export function formationSlots(grid,anchor,count,{exclude=[],maxExpanded=4096}={
   }
   return {status:expanded<queue.length?'budget':'partial',slots,expanded};
 }
+
+// Only completed searches construct a field. Its backing arrays never escape.
+class FlowField {
+  #distance;#owner;
+  constructor(grid,goals,distance,owner){
+    this.grid=grid;this.goals=Object.freeze(goals.map(c=>Object.freeze([...c])));
+    this.#distance=distance;this.#owner=owner;Object.freeze(this);
+  }
+  /** A cardinal next cell and world-X/Z direction toward a nearest goal.
+   * Fields describe their own immutable grid, not later terrain snapshots. */
+  sample(value){
+    const c=cell(value),empty=status=>({status,cost:null,next:null,direction:[0,0],goal:null});
+    if(!this.grid.walkable(c))return empty('blocked');
+    const index=indexOf(this.grid,c),steps=this.#distance[index];if(steps<0)return empty('unreachable');
+    const goal=[...this.goals[this.#owner[index]]];
+    if(steps===0)return {status:'goal',cost:0,next:null,direction:[0,0],goal};
+    // A neighbour of the same owner always exists along the BFS parent chain.
+    const nextIndex=neighbours(this.grid,index).find(i=>this.#distance[i]===steps-1&&this.#owner[i]===this.#owner[index]);
+    const next=fromIndex(this.grid,nextIndex);
+    return {status:'reachable',cost:steps*this.grid.cellSize,next,direction:next.map((v,i)=>v-c[i]),goal};
+  }
+}
+
+/** Incremental multi-source breadth-first integration on uniform-cost grids.
+ * Construction allocates O(cells); each step settles at most maxExpanded cells.
+ * No partial field is published. No agents, clocks or browser globals are owned. */
+export class FlowFieldSearch {
+  #grid;#goals;#distance;#owner;#queue=[];#head=0;#status='building';#result=null;
+  constructor(grid,goals){
+    this.#grid=checkedGrid(grid);
+    if(!Array.isArray(goals)||goals.length<1||goals.length>256)throw new RangeError('goals must contain 1..256 cells');
+    const checked=goals.map(cell),unique=new Map(checked.map(c=>[c.join(','),c]));
+    this.#goals=[...unique.values()].sort((a,b)=>a[1]-b[1]||a[0]-b[0]);
+    if(this.#goals.some(c=>!grid.walkable(c))){this.#status='blocked';Object.freeze(this);return;}
+    const total=grid.width*grid.height;
+    this.#distance=new Int32Array(total).fill(-1);this.#owner=new Int32Array(total).fill(-1);
+    this.#goals.forEach((c,owner)=>{const index=indexOf(grid,c);this.#distance[index]=0;this.#owner[index]=owner;this.#queue.push(index);});
+    Object.freeze(this);
+  }
+  get grid(){return this.#grid;}
+  get status(){return this.#status;}
+  get result(){return this.#result;}
+  get expanded(){return this.#head;}
+  get pending(){return this.#queue.length-this.#head;}
+  step(maxExpanded=256){
+    budget(maxExpanded);let processed=0;
+    if(this.#status==='building'){
+      while(this.#head<this.#queue.length&&processed<maxExpanded){
+        const current=this.#queue[this.#head++];processed++;
+        for(const next of neighbours(this.#grid,current))if(this.#distance[next]===-1){
+          this.#distance[next]=this.#distance[current]+1;this.#owner[next]=this.#owner[current];this.#queue.push(next);
+        }
+      }
+      if(this.#head===this.#queue.length){
+        this.#result=new FlowField(this.#grid,this.#goals,this.#distance,this.#owner);this.#status='ready';
+      }
+    }
+    return {status:this.#status,processed,expanded:this.expanded,pending:this.pending};
+  }
+  cancel(){
+    if(this.#status==='building'){
+      this.#status='cancelled';this.#queue.length=this.#head;this.#distance=null;this.#owner=null;
+    }
+  }
+}

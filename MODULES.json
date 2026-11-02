@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "0.6.0",
+  "release": "0.7.0",
   "license": "Apache-2.0",
   "modules": {
     "math": {
@@ -93,7 +93,7 @@
       "depends": [],
       "environment": "pure-js",
       "status": "experimental",
-      "description": "Immutable X/Z grids, bounded four-neighbour A* and reachable group destinations"
+      "description": "Immutable X/Z grids, bounded A*, group destinations and incremental shared flow fields"
     }
   },
   "recipes": {
@@ -254,6 +254,22 @@
         "time"
       ],
       "preset": "squad"
+    },
+    "rts-flow-convoy": {
+      "entry": "demos/rts-lab/flow-worlds.js",
+      "modules": [
+        "navigation",
+        "time"
+      ],
+      "preset": "flow"
+    },
+    "rts-two-exit-evacuation": {
+      "entry": "demos/rts-lab/flow-worlds.js",
+      "modules": [
+        "navigation",
+        "time"
+      ],
+      "preset": "evacuation"
     }
   }
 }

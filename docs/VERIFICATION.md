@@ -1,6 +1,34 @@
-# Verification — VANILLAJS 0.6.0
+# Verification — VANILLAJS 0.7.0
 
-## RTS routing: current change
+## Shared flow fields: current change
+
+- **196 Node tests passed locally**, retaining all 176 previous tests. New core
+  checks cover bounded build slices, publication only on completion, ownership,
+  cancellation, blocked/unreachable cells, stable multi-goal ties, descending
+  paths, immutable terrain identity and the full 65,536-cell grid. Every cell on
+  40 seeded maps is compared with per-goal A*; old A* has its independent BFS oracle.
+- Flow convoy delivers all 24 couriers; Two-exit evacuation delivers all 36 and
+  exercises both exits. Active-cell and visible-circle separation are checked
+  every tick. Tests also close an exit, edit gates, replace partial builds, reject
+  occupied/depot gates, hold unreachable units, pause/reset and compare identical
+  30/60/144 Hz input schedules. These are automated simulations.
+- `scripts/navigation-workload.js --check` reproduces the eight recorded rows in
+  `docs/NAVIGATION_WORKLOAD.json`: 1/24/128/512 requests on 32×32 and 64×64 maps.
+  Every route cost agrees. It records settled search cells, excluding setup,
+  heap, lookup, traffic and rendering costs; it is not a browser speed benchmark.
+- Syntax/purity/dependency checks cover 55 JS files and eleven modules. Packaging
+  contains 33 public files and the generated SHA-256 manifest. Fourteen recipes
+  are registered; all runtime code remains native and dependency-free.
+- `scripts/browser-flow.js` adds partial-build pause, replacement cancellation,
+  blocked goals, gate rebuilding, complete 24/36-unit delivery, exit closure,
+  blur/reset, recipe switching and 390 px touch-emulated controls. All earlier
+  browser checks remain enabled. Exact-head results, screenshots and workload
+  artifact verification are recorded in the PR after CI actually executes.
+- Local Chromium is unavailable; packaged Chromium runs in CI. Blur is synthetic
+  and touch uses emulation. Physical devices, other browsers, weighted terrain,
+  general crowd dynamics and large-army frame rates remain unverified.
+
+## Historical RTS routing (0.6.0)
 
 - **176 Node tests passed locally**, including all previous 156 regressions.
   New tests cover immutable grids, coordinate/boundary validation, shortest paths,

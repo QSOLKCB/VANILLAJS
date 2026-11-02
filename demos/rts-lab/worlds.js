@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Game-owned orders and traffic policy; the navigation module only plans routes.
 import {NavigationGrid,findPath,formationSlots} from '../../modules/navigation/index.js';
+import {reserveTraffic} from './traffic.js';
 export const RTS_RECIPES={route:'Route planner',squad:'Squad orders'};
-const key=c=>c.join(','),same=(a,b)=>a[0]===b[0]&&a[1]===b[1];
+const same=(a,b)=>a[0]===b[0]&&a[1]===b[1];
 const distance=(a,b)=>Math.abs(a[0]-b[0])+Math.abs(a[1]-b[1]);
 const byId=(a,b)=>a.id<b.id?-1:a.id>b.id?1:0;
 export function createRtsLab(kind='route'){
@@ -49,25 +50,17 @@ export function toggleRtsGate(s){
   s.message=s.gateOpen?'North gate open. Routes recalculated.':'North gate closed. Routes use the south passage.';return true;
 }
 function advanceCells(s){
-  const units=[...s.units].sort(byId),occupants=new Map(units.map(u=>[key(u.cell),u])),proposals=new Map(),destinations=new Set();
+  const units=[...s.units].sort(byId);
   for(const u of units){
     u.from=[...u.cell];
     if(u.goal&&u.waits>=6){
       const occupied=units.filter(v=>v!==u).map(v=>v.cell),r=findPath(s.grid.withBlocked(occupied),u.cell,u.goal);
       if(r.status==='found')u.path=r.path;u.waits=0;
     }
-    const next=u.path[1];if(!next||!s.grid.walkable(next)||distance(next,u.cell)!==1)continue;
-    if(!destinations.has(key(next))){destinations.add(key(next));proposals.set(u,next);}
   }
-  // A chain can move into a vacancy; a cycle (including head-on swaps) waits.
-  const accepted=new Map(),visiting=new Set();
-  function canMove(u){
-    if(accepted.has(u))return accepted.get(u);if(visiting.has(u)||!proposals.has(u))return false;
-    visiting.add(u);const occupant=occupants.get(key(proposals.get(u))),ok=!occupant||canMove(occupant);visiting.delete(u);accepted.set(u,ok);return ok;
-  }
-  for(const u of units)canMove(u);
+  const accepted=reserveTraffic(units,u=>{const next=u.path[1];return next&&s.grid.walkable(next)&&distance(next,u.cell)===1?next:null;});
   for(const u of units){
-    if(accepted.get(u)){u.cell=[...proposals.get(u)];u.path.shift();u.waits=0;s.moves++;}
+    if(accepted.has(u)){u.cell=[...accepted.get(u)];u.path.shift();u.waits=0;s.moves++;}
     else if(u.goal&&!same(u.cell,u.goal))u.waits++;
   }
 }

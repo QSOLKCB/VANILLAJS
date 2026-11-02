@@ -1,4 +1,4 @@
-# API contracts — 0.6.0 (experimental)
+# API contracts — 0.7.0 (experimental)
 
 All paths are native ES modules. Public numerical routines require finite values
 unless otherwise stated. Vector arithmetic expects correctly sized numeric arrays;
@@ -64,6 +64,67 @@ formation must reject both. Slots are unique and reachable from the anchor on th
 supplied grid; this does not prove every agent can reach them. Assignment, spacing,
 unit footprint, collision avoidance and multi-agent scheduling belong to callers.
 There is no DOM, clock, random source or other module dependency.
+
+### Shared flow fields (0.7.0)
+
+```js
+import {FlowFieldSearch} from '../modules/navigation/index.js';
+const build=new FlowFieldSearch(grid,[[21,3],[21,12]]);
+// Call from your own fixed update, skipping it while paused.
+const progress=build.step(32);
+if(build.status==='ready'){
+  const field=build.result;
+  const sample=field.sample([3,4]);
+  // sample.next is one cardinal cell; validate occupancy before moving a body.
+}
+```
+
+`new FlowFieldSearch(grid,goals)` takes a `NavigationGrid` and an array of 1..256
+cells. It copies inputs, removes duplicates and sorts goals by row-major order.
+Malformed cells/arguments throw. If any goal is occupied or outside the grid,
+the whole request has status `blocked`, zero expansions and no result. Otherwise
+the status starts as `building`. Construction allocates/initialises O(grid cells)
+storage synchronously; incremental stepping does not eliminate this setup cost.
+
+`step(maxExpanded=256)` accepts an integer 1..65,536. It settles at most that many
+cells and returns `{status,processed,expanded,pending}`. `processed` is work in
+this call; `expanded` is the cumulative count; `pending` is the queued frontier.
+Each reachable cell is settled once. Total work is bounded by 65,536 cells per
+build. Uniform edges permit breadth-first integration; no heap is needed here.
+One cell expansion includes up to four neighbour checks. These limits count
+algorithmic work, not milliseconds, allocation or a browser frame-rate budget.
+
+`grid`, `status`, `expanded`, `pending` and `result` are read-only getters.
+`result` is null until the entire reachable region has been settled and status
+becomes `ready`. No partially built direction map is exposed. `cancel()` changes
+a building search to `cancelled`, clears pending work and leaves `result` null.
+Terminal states (`ready`, `blocked`, `cancelled`) remain terminal; later valid
+`step` calls process zero cells, and `cancel` does not discard a ready result.
+Invalid step budgets always throw without changing state.
+
+A completed field exposes its immutable `grid`, a deeply frozen `goals` list,
+and `sample(cell)`. Samples are new owned objects/arrays:
+
+| Sample `status` | `cost` | `next` / `direction` | `goal` |
+| --- | --- | --- | --- |
+| `reachable` | Shortest distance in metres | Next cardinal cell / unit `[X,Z]` vector | Nearest reachable goal |
+| `goal` | 0 | null / `[0,0]` | This cell |
+| `unreachable` | null | null / `[0,0]` | null |
+| `blocked` | null | null / `[0,0]` | null |
+
+`blocked` includes out-of-bounds cells; malformed cells throw. Equidistant goals
+prefer the smallest row-major goal, independent of input order or build chunking.
+Equal-cost next steps toward that goal use north/west/east/south order. A reachable
+step reduces cost by exactly one `cellSize`; following these steps reaches a goal
+on this snapshot without loops. A* may return a different equally short route.
+`sample` examines at most four neighbours and owns no moving-agent state.
+
+Fields never update automatically: after a terrain edit, old fields still describe
+the old snapshot. Check `field.grid===currentGrid` and track the active destination
+generation in the consumer. Cancel superseded builds and publish only the current
+completed result. Destination edits also require a rebuild, even on the same grid.
+Fields optimise distance, not congestion, exit capacity, formation shape, physical
+collision or mutual steering. See [the lab composition](FLOW_FIELDS.md).
 
 ## Maths
 

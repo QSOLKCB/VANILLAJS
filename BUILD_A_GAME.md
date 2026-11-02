@@ -2,7 +2,7 @@
 
 Start from an exact release or commit, inspect `MODULES.json` and select only the
 modules needed by the game. Keep all required dependencies and relative paths.
-All 0.6.0 APIs are experimental; record the revision instead of silently tracking
+All 0.7.0 APIs are experimental; record the revision instead of silently tracking
 `main`. Preserve LICENSE and NOTICE when distributing copied modules.
 
 For example, a flight game vendors `math`, `collision`, `flight`, `time` and
@@ -261,6 +261,47 @@ including stopped units, head-on swaps, retry limits and atomic rejected orders.
 Its six-unit policy can deadlock; it is not a complete crowd solver. Preserve
 pause cancellation for unfinished gestures while keeping accepted orders frozen.
 See [RTS Lab](docs/RTS_LAB.md) for controls, scope and adoption limits.
+
+## Share routes across many units
+
+Use a flow field when many units need a nearest destination on the same immutable
+grid. Build it in bounded slices, then let units sample it without running A* for
+each order. A full field can cost more work than one short individual route.
+
+```js
+import {FlowFieldSearch} from './vendor/vanillajs/modules/navigation/index.js';
+let pending=null,active=null,generation=0;
+function requestField(currentGrid,goals){
+  const job=new FlowFieldSearch(currentGrid,goals); // validate before replacing
+  if(job.status==='blocked')return false;
+  pending?.job.cancel();generation++;active=null;
+  pending={job,generation};return true;
+}
+function fixedUpdate(dt){
+  // The application's paused FixedClock does not call this update.
+  if(pending?.job.status==='building')pending.job.step(32);
+  if(pending?.job.status==='ready'&&pending.generation===generation)
+    active={field:pending.job.result,generation};
+  if(!active||active.generation!==generation||active.field.grid!==currentGrid)return;
+  for(const unit of units){
+    const route=active.field.sample(unit.cell);
+    if(route.status==='reachable'){
+      // Propose route.next to your traffic/body movement system.
+      // A distance gradient does not reserve the cell or sweep the body.
+    }
+  }
+}
+```
+
+The snippet assumes game-owned `currentGrid`, `units` and movement integration.
+Call `requestField` again after terrain or destination changes. Cancel old jobs
+on reset/world replacement. Preserve already accepted in-flight moves only if
+the terrain edit remains safe for their full segment; otherwise stage/rollback
+the world transaction. For more than one destination, integration selects nearest
+distance with stable goal ties, not least congestion. The Flow convoy and Two-exit
+evacuation recipes demonstrate current-generation publication and cell reservations.
+They remove delivered units at exits; a persistent formation needs another arrival
+policy. See [work measurements and limits](docs/FLOW_FIELDS.md).
 
 ## Ride translating platforms
 

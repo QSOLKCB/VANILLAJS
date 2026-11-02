@@ -32,3 +32,8 @@ RTS routing, navigation grids, the A* implementation, formation destinations,
 Canvas 2D presentation and lab traffic rules were independently authored for
 this repository. A* and breadth-first traversal are conventional algorithms;
 no third-party game source, assets or runtime dependencies were copied.
+
+Shared flow fields, incremental multi-source breadth-first integration, convoy
+and evacuation recipes, and search-work measurements are original extensions
+authored for this repository. No external game source, assets or runtime code
+are included. Multi-source shortest-path integration is a conventional method.

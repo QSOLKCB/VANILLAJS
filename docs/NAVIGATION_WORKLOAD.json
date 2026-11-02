@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "version": "0.7.0",
+  "runtime": "v24.22.1",
+  "metric": "Settled search cells; excludes setup, heap, sampling, traffic and rendering work.",
+  "scenario": "Uniform cardinal grid; walls every eight columns with alternating gaps at rows 2 and size-3; row-major starts; common goal at size-2,size-2; build budget 64.",
+  "scenarios": [
+    {
+      "size": [
+        32,
+        32
+      ],
+      "units": 1,
+      "goal": [
+        30,
+        30
+      ],
+      "astarExpanded": 504,
+      "fieldExpanded": 931,
+      "fieldBuildSlices": 15,
+      "maxSlice": 64,
+      "fieldLookups": 1,
+      "totalCost": 114
+    },
+    {
+      "size": [
+        32,
+        32
+      ],
+      "units": 24,
+      "goal": [
+        30,
+        30
+      ],
+      "astarExpanded": 4733,
+      "fieldExpanded": 931,
+      "fieldBuildSlices": 15,
+      "maxSlice": 64,
+      "fieldLookups": 24,
+      "totalCost": 1569
+    },
+    {
+      "size": [
+        32,
+        32
+      ],
+      "units": 128,
+      "goal": [
+        30,
+        30
+      ],
+      "astarExpanded": 25211,
+      "fieldExpanded": 931,
+      "fieldBuildSlices": 15,
+      "maxSlice": 64,
+      "fieldLookups": 128,
+      "totalCost": 7788
+    },
+    {
+      "size": [
+        32,
+        32
+      ],
+      "units": 512,
+      "goal": [
+        30,
+        30
+      ],
+      "astarExpanded": 107717,
+      "fieldExpanded": 931,
+      "fieldBuildSlices": 15,
+      "maxSlice": 64,
+      "fieldLookups": 512,
+      "totalCost": 28160
+    },
+    {
+      "size": [
+        64,
+        64
+      ],
+      "units": 1,
+      "goal": [
+        62,
+        62
+      ],
+      "astarExpanded": 2812,
+      "fieldExpanded": 3655,
+      "fieldBuildSlices": 58,
+      "maxSlice": 64,
+      "fieldLookups": 1,
+      "totalCost": 478
+    },
+    {
+      "size": [
+        64,
+        64
+      ],
+      "units": 24,
+      "goal": [
+        62,
+        62
+      ],
+      "astarExpanded": 65445,
+      "fieldExpanded": 3655,
+      "fieldBuildSlices": 58,
+      "maxSlice": 64,
+      "fieldLookups": 24,
+      "totalCost": 9045
+    },
+    {
+      "size": [
+        64,
+        64
+      ],
+      "units": 128,
+      "goal": [
+        62,
+        62
+      ],
+      "astarExpanded": 215005,
+      "fieldExpanded": 3655,
+      "fieldBuildSlices": 58,
+      "maxSlice": 64,
+      "fieldLookups": 128,
+      "totalCost": 31934
+    },
+    {
+      "size": [
+        64,
+        64
+      ],
+      "units": 512,
+      "goal": [
+        62,
+        62
+      ],
+      "astarExpanded": 809826,
+      "fieldExpanded": 3655,
+      "fieldBuildSlices": 58,
+      "maxSlice": 64,
+      "fieldLookups": 512,
+      "totalCost": 116828
+    }
+  ]
+}
