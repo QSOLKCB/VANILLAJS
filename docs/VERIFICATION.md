@@ -2,20 +2,22 @@
 
 ## Mouse-look controls: current change
 
-- The Node suite adds relative input consumption, stationary-pointer no-spin,
+- **94 Node tests passed locally**, with syntax/module checks and packaging.
+  Added cases cover relative input consumption, stationary-pointer no-spin,
   short/held mouse firing, capture-click suppression, late capture cancellation,
   failed-capture drag fallback, touch cancellation and unchanged key mappings.
 - Pure flight checks cover yaw/pitch direction, level roll, pitch limits, invalid
   deltas, normalized orientation and five seconds of inertial updates with no
   mouse-induced angular drift or changes to linear velocity.
 - `scripts/browser-mouse.js`, called by the packaged Chromium check, exercises
-  actual Pointer Lock in both labs, rendered view changes followed by a stationary
-  view, arrow/WASD compatibility, left-click firing, Escape and blur, and rejected
-  capture with no-spin drag fallback. Exact-head CI results belong in the PR;
+  native Pointer Lock/click/Escape in both labs, synthetic relative mouse deltas
+  through the real app and rendered view, arrow/WASD compatibility, blur, and
+  rejected capture with real drag input and a stationary held/released view.
+  Headless CDP mouse moves under lock produced cancelling cursor-warp pairs;
+  explicit MouseEvent deltas test aiming separately from capture lifecycle. Exact-head CI results belong in the PR;
   adding these scenarios alone does not establish a browser pass.
 - Chromium is unavailable locally; physical mouse feel, touch hardware, Firefox
   and Safari coverage remain unverified. No runtime dependencies were added.
-
 
 ## Interaction Lab: executed locally
 

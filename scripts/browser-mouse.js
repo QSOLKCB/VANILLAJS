@@ -1,4 +1,5 @@
-// Real Pointer Lock input against the packaged labs; no simulation test hooks.
+// Native capture/click lifecycle with synthetic relative look samples.
+// Headless CDP mouse moves under lock produce paired cursor-warps, not device deltas.
 import assert from 'node:assert/strict';
 async function picture(page,selector){
   return page.locator(selector).evaluate(canvas=>new Promise(resolve=>requestAnimationFrame(()=>{
@@ -6,6 +7,12 @@ async function picture(page,selector){
     gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
     let hash=2166136261;for(const byte of pixels)hash=Math.imul(hash^byte,16777619);resolve(hash);
   })));
+}
+async function relativeLook(page,x,y){
+  await page.evaluate(({x,y})=>{
+    if(!document.pointerLockElement)throw new Error('mouse capture required');
+    document.pointerLockElement.dispatchEvent(new MouseEvent('mousemove',{bubbles:true,movementX:x,movementY:y}));
+  },{x,y});
 }
 export async function verifyMouseLook(browser,baseURL){
   for(const lab of ['flight','interaction']){
@@ -15,19 +22,12 @@ export async function verifyMouseLook(browser,baseURL){
     await page.goto(baseURL+(lab==='flight'?'':'demos/interaction-lab/index.html'));
     await page.waitForFunction(()=>document.querySelector('#status').textContent==='READY');
     if(lab==='flight')await page.locator('#choose-arena').click();
-    await page.locator('#launch').click();const canvas=page.locator(selector),box=await canvas.boundingBox();
-    await page.evaluate(()=>{
-      globalThis.mouseEvidence=[];
-      for(const name of ['mousemove','pointermove','pointerlockchange'])document.addEventListener(name,event=>{
-        if(globalThis.mouseEvidence.length<30)globalThis.mouseEvidence.push({type:name,x:event.movementX,y:event.movementY,locked:!!document.pointerLockElement});
-      });
-    });
+    await page.locator('#launch').click();const canvas=page.locator(selector);
     await canvas.click();await page.waitForFunction(()=>document.pointerLockElement instanceof HTMLCanvasElement && document.querySelector('#hint,#flight-hint').textContent.includes('active'));
     if(lab==='interaction')assert.equal(await page.locator('#shots').textContent(),'0','capture click must not fire');
     const before=await picture(page,selector);
-    await page.mouse.move(box.x+box.width/2+60,box.y+box.height/2-25,{steps:6});
+    await relativeLook(page,60,-25);
     await page.waitForTimeout(250);const aimed=await picture(page,selector);
-    console.log(lab,'mouse event evidence',await page.evaluate(()=>({events:globalThis.mouseEvidence,status:document.querySelector('#status').textContent})));
     assert.notEqual(aimed,before,`${lab}: relative mouse motion must turn the view`);
     await page.waitForTimeout(350);assert.equal(await picture(page,selector),aimed,`${lab}: view must stop when mouse stops`);
     if(lab==='flight')assert.equal(parseFloat(await page.locator('#spin').textContent()),0);
@@ -38,7 +38,7 @@ export async function verifyMouseLook(browser,baseURL){
     // Existing arrow-key flight still turns; a subsequent mouse sample takes over.
     await page.keyboard.down('ArrowLeft');await page.waitForTimeout(200);await page.keyboard.up('ArrowLeft');
     if(lab==='flight')assert.ok(parseFloat(await page.locator('#spin').textContent())>.1);
-    await page.mouse.move(box.x+box.width/2+70,box.y+box.height/2-25,{steps:6});await page.waitForTimeout(200);
+    await relativeLook(page,10,0);await page.waitForTimeout(200);
     if(lab==='flight')assert.equal(parseFloat(await page.locator('#spin').textContent()),0);
     await page.keyboard.down('w');await page.waitForTimeout(250);await page.keyboard.up('w');
     if(lab==='flight')assert.ok(parseFloat(await page.locator('#speed').textContent())>1);
@@ -65,5 +65,5 @@ export async function verifyMouseLook(browser,baseURL){
   assert.equal(parseFloat(await fallback.locator('#spin').textContent()),0);
   await fallback.screenshot({path:'browser-artifacts/mouse-look-fallback.png',fullPage:true});
   assert.deepEqual(errors,[]);await fallback.close();
-  console.log('Chromium mouse controls: both labs capture, aim, stop, preserve arrows/WASD, release on Escape/blur; mouse fire and denied-capture drag fallback passed.');
+  console.log('Chromium mouse controls: native capture/click/Escape, synthetic relative aim/no-spin/blur, arrows/WASD and real denied-capture drag passed in both labs.');
 }
