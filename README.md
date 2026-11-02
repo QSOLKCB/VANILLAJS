@@ -1,7 +1,8 @@
 # VANILLAJS — reusable game modules
 
 Reusable, original JavaScript game modules built directly on web standards.
-**v0.3.0 milestone: ten modules, Flight Lab, Interaction Lab and FPS Lab.**
+**v0.4.0 — FPS motion: safe crouching and continuous moving-target shots.**
+Ten reusable modules; eight recipes across Flight, Interaction and FPS labs.
 
 [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
@@ -104,9 +105,11 @@ Open **FPS Lab** from either lab header, then choose a proving ground:
 | --- | --- | --- |
 | **Footwork** | Walk up four 25 cm steps, jump the amber hurdle, pass through the doorway and reach four markers | Upright character, static collision, eye pose and input |
 | **Live range** | Clear three plates; compare instant traces and travelling bolts; empty and reload a magazine | The same character plus weapon timing, queries, projectiles and conditional effects |
+| **Low passage** | Duck through two low roofs, stand in the open bay and reach the finish | Safe stance changes, headroom checks and crouched movement |
+| **Tracking range** | Lead moving plates with travelling bolts; compare instant traces | Relative-motion queries, target interpolation and pause-safe tracks |
 
 Launch, then click the view for mouse look. **WASD** moves, **Space** jumps,
-**Shift** sprints, **arrows** aim, captured **left click / F** fires, and **R**
+**Shift** sprints, hold **C** to crouch, **arrows** aim, captured **left click / F** fires, and **R**
 reloads. Escape releases the cursor and pauses. On-screen controls and relative
 look dragging remain available. A brief jump/fire/reload press survives until
 its next physics tick. Pause clears controls and freezes ammunition timers;
@@ -114,9 +117,12 @@ resume requires fresh presses. The range's alignment buttons pause and repositio
 the character while preserving ammunition and scores.
 
 The default controller walks at 5 m/s, sprints at 8 m/s, and climbs steps up to
-30 cm. It is an upright **rectangular box**, with static world collision and a
-fixed eye height. This slice does not implement capsules, slopes, crouching,
-moving platforms or moving-target collision. See [FPS contracts](docs/FPS_LAB.md).
+30 cm. Crouching lowers the 1.8 m body to 1.08 m and targets 2.5 m/s; releasing
+C stands only when there is headroom. Feet stay in place and the eye follows the
+stance. It is an upright **rectangular box** against static world geometry. Shot
+queries also handle translating target boxes; this does not add moving platforms
+or dynamic body contacts. Capsules and slopes remain future work. See
+[FPS contracts](docs/FPS_LAB.md).
 
 ## Modules
 
@@ -124,8 +130,8 @@ moving platforms or moving-target collision. See [FPS contracts](docs/FPS_LAB.md
 | --- | --- |
 | `modules/math/` | Vectors, quaternions, camera matrices, seeded random numbers |
 | `modules/time/` | Fixed ticks, interpolation fraction, pause, time scaling and catch-up limits |
-| `modules/collision/` | Swept cube/rectangular-body movement and finite ray/segment queries against static AABBs |
-| `modules/character/` | Upright walking, sprinting, jumping, stair stepping and first-person view |
+| `modules/collision/` | Swept body movement, finite static queries and translating-target segment queries |
+| `modules/character/` | Upright walking, safe crouching, jumping, stairs and first-person view |
 | `modules/weapons/` | Simulation-time fire cadence, magazines and finite-reserve reloading |
 | `modules/flight/` | Force/torque integration; assisted and inertial control |
 | `modules/input/` | Pure action state, keyboard/mouse adapters and standard gamepad sampling |
@@ -133,7 +139,7 @@ moving platforms or moving-target collision. See [FPS contracts](docs/FPS_LAB.md
 | `modules/projectiles/` | Bounded constant-velocity projectiles, swept impacts and lifetimes |
 | `modules/interactions/` | Ordered conditions → effects with explicit outcome reasons |
 
-All APIs are **experimental** in 0.3.0. Use a tagged release or exact commit,
+All APIs are **experimental** in 0.4.0. Use a tagged release or exact commit,
 preserve the directory structure and record what your game imports. The
 machine-readable catalogue lists each module's dependency closure and environment.
 Core modules neither own an animation loop nor read the DOM or ambient time.
@@ -167,7 +173,8 @@ validation from Pages deployment permissions. No tag or release is created by CI
 ## Scope and licence
 
 This is a compact foundation, not a general rigid-body contact solver. Colliders
-are fixed-orientation cubes or rectangular bodies against static axis-aligned boxes. There are no
+use fixed-orientation cubes or rectangular bodies. Body movement uses static
+axis-aligned boxes; projectile queries can also track translating boxes. There are no
 dynamic body contacts, oriented-box contacts, friction, bounce, atmospheric
 flight, orbital gravity, audio engine, map editor or network synchronisation yet.
 Numerical tolerances and runtime limits are documented in [API.md](docs/API.md).

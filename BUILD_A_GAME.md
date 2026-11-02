@@ -2,7 +2,7 @@
 
 Start from an exact release or commit, inspect `MODULES.json` and select only the
 modules needed by the game. Keep all required dependencies and relative paths.
-All 0.3.0 APIs are experimental; record the revision instead of silently tracking
+All 0.4.0 APIs are experimental; record the revision instead of silently tracking
 `main`. Preserve LICENSE and NOTICE when distributing copied modules.
 
 For example, a flight game vendors `math`, `collision`, `flight`, `time` and
@@ -173,6 +173,7 @@ function update(dt) {
   stepCharacter(character, {
     move:[actions.axis('left','right'), actions.axis('forward','backward')],
     jump:actions.consume('jump'), sprint:!!actions.value('sprint'),
+    crouch:!!actions.value('crouch'),
   }, dt, config, solids);
   // Interpolate previous and characterView(character) for presentation.
 }
@@ -183,7 +184,40 @@ function update(dt) {
 
 The snippet assumes the surrounding game's `canvas`, `running`, `solids` and
 `setPaused` lifecycle. For a complete implementation, start with
-`demos/fps-lab/app.js` and its two world recipes. For single-shot behaviour, omit
+`demos/fps-lab/app.js` and its four world recipes. For single-shot behaviour, omit
 the held `actions.value('fire')` / `look.primary` terms and retain only edges.
 Keep ammo/weapon timers separate from shot geometry and damage rules. Consult
 [the contracts and limits](docs/FPS_LAB.md) before adapting steps or body sizes.
+
+
+## Shoot at moving targets
+
+Use `castMovingSegment` for a single swept query or `shots.stepMoving` for the
+owned projectile system. Each collider supplies its **start box** and the full
+tick's **displacement**, not its velocity or end box. Static walls omit motion.
+Do not update target boxes first; shots and targets must share the same interval.
+
+```js
+const dt = 1/120;
+const targetVelocity = [3,0,0];
+const displacement = targetVelocity.map(v => v*dt);
+const colliders = [
+  {id:'wall', box:wallBox},
+  {id:'plate', box:targetBox, displacement},
+];
+const events = shots.stepMoving(dt, colliders);
+// Consume each returned hit once, then advance the target to its end pose.
+targetBox = {
+  min:targetBox.min.map((v,i) => v+displacement[i]),
+  max:targetBox.max.map((v,i) => v+displacement[i]),
+};
+```
+
+This snippet assumes your existing `shots`, `wallBox` and mutable `targetBox`.
+The system clips target movement when a projectile's lifetime ends before the
+tick ends. Instant hitscan still uses `raycast` against the current boxes; it
+has no travel time to lead. Never use target displacement as ray travel time.
+Translation is linear for each query: split at turns, teleports or discontinuities;
+rotating/resizing colliders need another model. Tracking range's smooth paths
+use straight segments between 120 Hz endpoints. Keep character movement on static
+world geometry; these shot queries do not carry or push a character.

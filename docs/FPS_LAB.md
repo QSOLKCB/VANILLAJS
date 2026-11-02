@@ -1,4 +1,4 @@
-# FPS Lab — first grounded-controller slice
+# FPS Lab — grounded movement and moving targets
 
 Browser entry: `demos/fps-lab/index.html`. Pure demo composition:
 `createFpsLab`, `stepFpsLab`, `focusPlate` in `demos/fps-lab/worlds.js`.
@@ -19,7 +19,8 @@ movement and a timed jump through the actual colliders.
 Three stationary plates have 100 integrity each. A successful hit removes 25;
 spent plates remain solid and reject further effects. The interaction resolver
 returns reasons; the recipe owns integrity, counters and bounded impact history.
-No enemy AI, moving target or multiplayer system is implied.
+This original recipe retains stationary targets; Tracking range adds translating
+plates. No enemy AI or multiplayer system is implied.
 
 An instant trace queries the first static obstruction out to 130 m. A bolt
 travels at 65 m/s for at most 2 s with a cube half-size of .035 m. Both originate
@@ -29,9 +30,46 @@ penetration. Changing shot type pauses and cancels in-flight bolts. Plate focus
 pauses and repositions/stops the player, clearing shots/visual trails while
 preserving scores, ammunition and reload progress. Reset restores everything.
 
+## Low passage
+
+A 4 m wide corridor has two roofs with 1.25 m and 1.15 m clearance. The default
+standing body is 1.8 m tall; holding C reduces it to 1.08 m and the eye to .972 m.
+Its horizontal target speed becomes 2.5 m/s, even with sprint held. Feet stay put
+while dimensions change. Release C under a roof and the controller remains
+crouched, with LOW CEILING feedback, until standing volume is clear. There is no
+automatic crouching when a standing player walks into a passage.
+
+Four ordered markers require crouching through the first passage, standing in
+the open bay, crouching through the second passage and standing at the finish.
+The recipe tests traverse the actual corridor, including releasing crouch under
+both roofs. Crouched jumps still collide with overhead geometry.
+
+## Tracking range
+
+Three plates translate sideways on bounded tracks. Default shot mode is a
+travelling bolt: aim ahead, because a direct aim can miss as the plate moves.
+Instant traces sample the plate's position at the moment of firing. Focus aligns
+you with a plate's **current** position and pauses; it does not predict future
+motion or rewind the track. Cleared plates keep moving and remain shot occluders.
+
+Each 120 Hz tick takes target positions at its beginning and end. The demo's sine
+path endpoints are joined by straight motion during that tick; the query does
+not claim exact curved-path collision. `ProjectileSystem.stepMoving` compares
+all plate motions and static world boxes in that same interval, then the demo
+commits end positions. Rendering interpolates target centres. Instant traces run
+before the target moves. Damage is consumed once, in event order, from the same
+interaction resolver as Live range. Impact flashes mark the world hit location;
+they are not decals attached to the plate.
+
+These moving training plates are **shot-only** colliders, not character obstacles
+or moving platforms. Character movement still uses static world solids. Motion,
+shots and reloads all freeze on pause or focus loss; reset rewinds tracks and
+clears ammunition/progress. The test suite clears all plates using leading bolts
+and finite reloads, and checks a direct shot that misses a moving plate.
+
 ## Shared timing and controls
 
-Both recipes run 120 Hz physics through `FixedClock`, with bounded catch-up and
+All four recipes run 120 Hz physics through `FixedClock`, with bounded catch-up and
 presentation interpolation. Grounded movement uses `character`; cooldown,
 magazine and reload state use `weapons`. Input and WebGL remain opt-in adapters.
 The existing flight controller is untouched and stays available to space games.
@@ -43,7 +81,7 @@ keyboard, pointer and assistive button presses are retained until the next tick,
 and blocked requests are discarded. Pause/focus loss clears those edges and
 held states without advancing reload, cooldown or projectile lifetimes.
 
-WASD movement, Space jump, Shift sprint, arrows to aim, F/left click fire and R
+WASD movement, Space jump, Shift sprint, held C crouch, arrows to aim, F/left click fire and R
 reload are defined by `fpsBindings` plus the mouse adapter. Capture starts from
 a canvas press after launch; Escape releases and pauses. Touch and unavailable
 capture use relative drag look; on-screen buttons provide movement and aiming.
@@ -53,8 +91,8 @@ FPS Lab does not sample gamepads yet; Flight Lab's original gamepad mapping rema
 
 The controller is a kinematic upright rectangular box against static AABBs. It
 has gravity, limited horizontal acceleration, step attempts and short ground
-snap. It has no slopes, capsules, crouching, moving platforms, dynamic contacts,
-coyote time, jump buffer, ladder or swimming model. The eye pose is fixed inside
+snap. It has no slopes, capsules, moving platforms, dynamic contacts, coyote time,
+jump buffer, ladder or swimming model. Eye height follows the current stance inside
 the collider, with bounded pitch and zero roll; no camera collision rig or head
 bob is claimed. Exact numerical contracts are in [API.md](API.md).
 

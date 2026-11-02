@@ -20,3 +20,7 @@ FPS Lab's controller, weapon timers, courses, UI and procedural geometry were
 independently authored for this repository. No external game source, artwork,
 audio or runtime dependency was copied. Its upright AABB controller uses the
 repository's slab-intersection/slide solver, not a capsule or slope solver.
+
+FPS motion extensions, relative-motion queries, stance controls, Low passage
+and Tracking range geometry and scenarios are independently authored for this
+repository. No external game code or assets are included in these additions.

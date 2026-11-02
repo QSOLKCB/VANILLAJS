@@ -1,4 +1,4 @@
-# API contracts — 0.3.0 (experimental)
+# API contracts — 0.4.0 (experimental)
 
 All paths are native ES modules. Public numerical routines require finite values
 unless otherwise stated. Vector arithmetic expects correctly sized numeric arrays;
@@ -97,21 +97,28 @@ linear velocity are unchanged. A zero-delta call deliberately takes over and
 stops existing spin. It does not change `stepFlight` torque/inertia semantics;
 keyboard/gamepad flight remains fully 6DOF when the mouse is idle.
 
-## Grounded character (0.3.0)
+## Grounded character (0.3.0, stance extension in 0.4.0)
 
 `createCharacter({position=[0,0,0], velocity=[0,0,0], halfExtents=[.35,.9,.35],
-eyeHeight=1.62, yaw=0, pitch=0})` creates mutable, caller-owned state. Position
+eyeHeight=1.62, crouchHalfHeight=halfExtents[1]*.6,
+crouchEyeHeight=eyeHeight*.6, yaw=0, pitch=0})` creates mutable, caller-owned state. Position
 is the **centre of the feet**, velocity is world m/s, and the upright collider
 centre is `position + [0,halfExtents[1],0]`. Vectors are cloned and finite;
 extents must be positive and eyeHeight strictly inside the full body height.
 The initial `grounded:false` is resolved against real support on the first tick.
-Do not mutate fields to invalid values between calls.
+The initial stance is standing. State retains `standingHalfHeight`,
+`standingEyeHeight`, `crouchHalfHeight`, `crouchEyeHeight` and `crouched`.
+`halfExtents[1]` and `eyeHeight` describe the **current** stance. Crouch half-height
+must be positive and smaller than standing half-height; its eye must be positive,
+below crouch full height and below standing eye height. Do not mutate these
+fields to invalid values between calls.
 
 `characterConfig(options)` validates and returns these finite values:
 
 | Setting | Default | Meaning |
 | --- | --- | --- |
 | walkSpeed / sprintSpeed | 5 / 8 | Local horizontal target speed, m/s |
+| crouchSpeed | 2.5 | Crouched target speed, m/s; overrides sprint |
 | groundAcceleration / airAcceleration | 40 / 8 | Horizontal acceleration limit, m/s² |
 | gravity | 22 | Positive downward acceleration, m/s² |
 | jumpSpeed | 7.2 | Vertical take-off velocity, m/s |
@@ -121,7 +128,7 @@ Do not mutate fields to invalid values between calls.
 All settings are nonnegative, with strictly positive gravity. The config remains
 caller-owned; edits must preserve its invariants.
 
-`stepCharacter(character, {move=[0,0], sprint=false, jump=false}, dt, config, boxes)`
+`stepCharacter(character, {move=[0,0], sprint=false, jump=false, crouch=false}, dt, config, boxes)`
 mutates pose, velocity and grounded state. `move` is local `[x,z]`, with **-z
 forward**; components are clamped and diagonals limited to magnitude one. Movement
 uses yaw only, so looking up never turns walking into flight. Ground acceleration
@@ -130,9 +137,20 @@ no movement command. Gravity uses semi-implicit Euler. `jump` is a **fresh-press
 request**, ignored without actual support; callers consume an input edge once.
 
 `dt` must be in `[0,.05]` seconds; zero changes nothing. Return value is
-`{contacts:[{index,normal}], grounded, jumped, stepped, truncated}`. Contacts refer
+`{contacts:[{index,normal}], grounded, crouched, standBlocked, jumped, stepped, truncated}`. Contacts refer
 to the supplied static box array. Grounded state is probed at the final position,
 not inferred from a contact left behind earlier in the tick.
+
+`crouch` is held state, not a press edge. Stance changes are instantaneous at
+tick start, preserve feet position and use the same acceleration/gravity rules.
+Releasing requests standing. If its full candidate body has positive-volume
+overlap with any static box, the smaller stance remains and `standBlocked:true`
+reports that decision. Face tangency is allowed; walking free of the roof permits
+standing on the next tick. Blocked-standing checks occur before movement. Zero
+dt returns current stance and `standBlocked:false` without a geometry query.
+Crouched jumping is allowed; the smaller collider still hits ceilings. In air,
+changing stance does not anchor the head or change the feet's ballistic path.
+The eye changes with stance; render interpolation is the consumer's choice.
 
 The controller shares the rectangular swept/slide solver. While grounded and
 horizontally obstructed it compares the direct path with a bounded up/across/down
@@ -144,12 +162,13 @@ an arcade controller for metre-scale environments, not force-based biomechanics.
 `lookCharacter(character,{yaw=0,pitch=0})` consumes finite relative **radians**.
 Yaw wraps, pitch clamps to `±(π/2 − .01)`, and no angular velocity is stored.
 `characterView(character)` returns owned `{position,orientation}` arrays for the
-fixed eye height and roll-free yaw/pitch view. Positive yaw turns toward -X,
+current stance eye height and roll-free yaw/pitch view. Positive yaw turns toward -X,
 positive pitch looks up. Input deltas are applied once, without multiplying mouse
 movement by dt; keyboard angular rates are converted to deltas using dt.
 
-There are no capsules, slopes, crouching, moving platforms, moving-target
-continuous queries, coyote time, jump buffering or head bob in this slice.
+There are no capsules, slopes, moving platforms, coyote time, jump buffering or
+head bob in this controller. Translating-target queries below are for shots; they
+do not add moving body contact or platform support.
 The eye lies inside the body; this is not a separate third-person camera sweep.
 
 ## Weapon timing (0.3.0)
@@ -240,10 +259,36 @@ positive, and `halfSize` nonnegative. An unrepresentable segment/box extent thro
 finite direction and delegates to the segment query. Range is finite and
 nonnegative, in metres; the returned time is still a fraction of that range.
 
+### Translating-target queries (0.4.0)
+
+`castMovingSegment(origin, displacement, colliders, options)` has the same result,
+options, id validation, closed-volume contact and exact-time tie rules as
+`castSegment`. Each collider adds optional `displacement:[dx,dy,dz]` (default
+zero), a finite **world translation over the entire query interval**. Its box is
+at interval start. Query displacement and all collider displacements share that
+interval. Geometry may translate only: no rotation, scale change or teleport.
+
+The query subtracts collider translation from segment translation, then sweeps
+against the start box. A moving box can therefore hit a stationary shot; its
+`distance` stays zero. The result `time` is a normalized shared-interval fraction,
+`point` follows the shot's **world-space centre**, and `normal` is the box-face
+normal at contact. It is not a target-relative point or a rendered decal position.
+`startedInside` checks time zero. A target that escapes the path before arrival
+is missed even if a static snapshot would intersect. Walls and moving targets
+compete in the same nearest-hit ordering.
+
+Motion is validated even on ignored colliders; non-finite or unrepresentable
+relative travel/translated expanded extents throw. Inputs are not mutated. Split
+queries at path changes; this is linear continuous collision, not continuous
+collision for arbitrary curved/rotating bodies. Static `castSegment` and
+`raycast` deliberately ignore extra `displacement` fields and keep their original
+instant/static semantics.
+
 ## Projectiles
 
 `new ProjectileSystem({capacity=128})` requires a positive safe integer capacity.
-It owns constant-velocity point/cube motion; targets remain static during a step.
+It owns constant-velocity point/cube motion. `step` treats targets as static;
+`stepMoving` accepts their translation over the tick.
 It has no timer, renderer, damage model, gravity or automatic source exclusion.
 
 ```js
@@ -268,6 +313,16 @@ no-op. Use fixed ticks for composition with other modules. Travel is clipped to
 remaining lifetime, so a shot cannot hit beyond expiry. Contact at the exact
 lifetime endpoint takes precedence over expiry. The first hit consumes the shot.
 All motion is staged before commit: an invalid query leaves the system unchanged.
+
+`stepMoving(dt,colliders)` has the same lifecycle and event semantics, using
+`castMovingSegment`. Collider displacement covers **all dt**, not the shorter
+lifetime of an individual shot. For each shot the system scales target travel by
+`min(dt,remaining)/dt`, so a box cannot hit it after expiry. Event `time` is seconds
+from this tick's start; nested `hit.time` remains a fraction of that shot's clipped
+travel interval. World impact point/normal follow the query contract. Omit
+collider displacement for static walls. Zero dt is inert, and an empty system
+performs no collision query. The caller advances target boxes after the query;
+the system neither owns target paths nor resolves target/target collisions.
 
 | Event | Fields |
 | --- | --- |
@@ -371,7 +426,7 @@ if (look.pitch || look.yaw) lookFlight(body, look);
 // Optional fire input: look.primary || look.pressed.
 ```
 
-`fpsBindings` maps WASD to movement actions, Space to jump, either Shift to
+`fpsBindings` maps WASD to movement actions, C to held crouch, Space to jump, either Shift to
 sprint, arrows to pitch/yaw, F to fire and R to reload. `flightBindings` is
 unchanged. FPS consumers use `Actions.axis` and consume jump/reload/fire edges;
 `Actions.flight()` remains a flight-specific convenience.

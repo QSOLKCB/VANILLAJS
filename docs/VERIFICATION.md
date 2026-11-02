@@ -1,6 +1,35 @@
-# Verification — VANILLAJS 0.3.0
+# Verification — VANILLAJS 0.4.0
 
-## FPS Lab: current change
+## FPS motion: current change
+
+- **138 Node tests passed locally**, including all previous 117 regressions.
+  New cases cover feet/eye anchoring, safe standing under roofs and partial
+  overhangs, airborne stance changes, crouched speed/jumps, invalid dimensions,
+  zero ticks, input cancellation and rejection without partial state updates.
+- Relative-motion tests cover crossing targets missed by both static endpoints,
+  targets escaping before impact, matching velocity, stationary shots, overlap,
+  cube expansion, world-space hit points, walls, ties and ignores. Lifetimes clip
+  both trajectories; contact at expiry wins. Subdivided linear movement agrees
+  with a single query, including a high-speed crossing.
+- Recipe scenarios traverse Low passage, clear moving plates with leading bolts
+  and finite reloading, distinguish instantaneous traces from moving shots, freeze
+  tracks on pause, reset/focus safely, and produce identical results at 30/60/144 Hz
+  presentation schedules in the same runtime. These are automated simulations.
+- Syntax/purity/dependency checks cover 40 JS files and ten modules. The allowlisted
+  build contains 26 public files and a SHA-256 manifest; no runtime dependencies.
+- `scripts/browser-fps-motion.js` adds packaged checks for low-ceiling entry,
+  crouch/blocked-standing/clearance, held-C cancellation, target motion, paused
+  tracks, delayed moving-plate impacts, instant traces, blur/reset, on-screen
+  keyboard control and 390 px touch-emulated layout. All earlier browser tests
+  remain enabled. Exact-head execution results and screenshots belong in the PR;
+  the presence of these scenarios alone does not establish a browser pass.
+- Local Chromium is unavailable; browser execution uses the existing CI workflow.
+  Blur and old relative-aim checks use synthetic events. New movement/fire controls
+  use browser keyboard input; mobile recipe buttons use emulated taps and crouch
+  uses keyboard activation. Physical touch/mouse feel, other browsers, performance
+  and scaling have not been measured.
+
+## Historical FPS Lab (0.3.0)
 
 - **117 Node tests passed locally**, including all previous 94 regressions.
   New checks cover rectangular extents, stable support, jump apex/landing,
