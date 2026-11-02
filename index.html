@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a1118"><meta name="description" content="Two flight experiments. One reusable vanilla JavaScript physics core. QSOL Flight Lab.">
+  <title>Flight Lab — VANILLAJS / QSOL</title>
+  <link rel="stylesheet" href="demos/flight-lab/style.css">
+</head>
+<body>
+<header class="masthead">
+  <a href="./" class="brand" aria-label="VANILLAJS home"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M4 5h8l6 19L24 5h8L21 32h-6Z" fill="currentColor"/></svg>VANILLA<span>JS</span><small>BY QSOL–IMC</small></a>
+  <nav><a href="https://github.com/QSOLKCB/VANILLAJS">Source & docs ↗</a><span class="version">v0.1.0 <i></i> FLIGHT LAB</span></nav>
+</header>
+<main>
+  <section class="intro"><div><p class="eyebrow">EXPERIMENT 001 / MOTION</p><h1>Flight Lab<span>.</span></h1></div><p>Same physics. Different instincts.<br><span>Explore six degrees of freedom on the web.</span></p></section>
+  <div class="workspace">
+    <section class="sim-panel" aria-label="Flight experiments">
+      <div class="experiments" role="group" aria-label="Choose an experiment">
+        <button class="experiment active" id="choose-tunnel" aria-pressed="true" data-demo="tunnel"><span>01</span><div><strong>The conduit</strong><small>ASSISTED / TUNNEL FLIGHT</small></div><b>↗</b></button>
+        <button class="experiment" id="choose-arena" aria-pressed="false" data-demo="arena"><span>02</span><div><strong>Open orbit</strong><small>INERTIAL / SPACEFLIGHT</small></div><b>↗</b></button>
+      </div>
+      <div class="viewport" id="viewport">
+        <canvas id="flight" tabindex="0" aria-label="3D flight view. Use WASD to thrust, arrow keys to turn, Q and E to roll. Controls are listed below."></canvas>
+        <div class="view-top"><span><i class="status-dot"></i><span id="status">READY</span></span><span id="gate-count">SIGNAL 01 / 06</span></div>
+        <div id="target" aria-hidden="true"><span>01</span><small id="target-distance">30 m</small></div>
+        <div class="reticle" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <div class="view-bottom"><span id="mode-label">ASSISTANCE ONLINE</span><span id="bearing">TARGET AHEAD</span></div>
+        <div class="curtain" id="curtain">
+          <div class="launch-card"><p class="eyebrow" id="overlay-kicker">SIX AXES. ONE SHARED CORE.</p><h2 id="overlay-title">Follow the signal.</h2><p id="overlay-copy">Thread six gates through the conduit. Your thrusters stabilise the ship when you release the controls.</p><button id="launch" class="primary">Launch experiment <span>↗</span></button><small>Keyboard · drag to steer · standard gamepad</small></div>
+        </div>
+        <div id="error" role="alert" hidden></div>
+      </div>
+      <div class="telemetry" aria-label="Flight telemetry"><div><small>VELOCITY</small><strong id="speed">0.0 <em>m/s</em></strong><div class="meter"><i id="speed-meter"></i></div></div><div><small>ANGULAR RATE</small><strong id="spin">0.00 <em>rad/s</em></strong></div><div><small>SIMULATION</small><strong id="elapsed">00:00.0</strong></div><div><small>CONTACTS</small><strong id="contacts">00</strong></div></div>
+      <div class="toolbar"><span id="hint">W to thrust · arrows to steer · Q / E to roll</span><div><button id="pause" disabled>Pause</button><button id="reset">Reset ↺</button></div></div>
+    </section>
+    <aside>
+      <section class="settings"><div class="panel-title"><h2>Flight dynamics</h2><span>LIVE TUNING</span></div><p>Change the feel. Keep the physics.</p>
+        <label class="switch-row" for="assist"><span>Flight assistance<small>Velocity & rotation stabilisation</small></span><input id="assist" type="checkbox" checked role="switch"></label>
+        <label class="slider-label" for="thrust">Thrust acceleration <output id="thrust-value">32 m/s²</output></label><input id="thrust" type="range" min="5" max="50" value="32" step="1">
+        <label class="slider-label" for="turn">Angular acceleration <output id="turn-value">3.0 rad/s²</output></label><input id="turn" type="range" min="0.5" max="5" value="3" step="0.1">
+        <label class="slider-label" for="time-scale">Time scale <output id="time-value">1.00×</output></label><input id="time-scale" type="range" min="0.1" max="1" value="1" step="0.05">
+        <p class="micro">Hold <kbd>B</kbd> for ¼-speed bullet time.<br>Hold <kbd>X</kbd> for emergency braking.</p>
+        <label class="check-row"><input type="checkbox" id="eco"> Lower render resolution</label>
+      </section>
+      <section class="recipe"><p class="eyebrow">THE RECIPE</p><h2>Built to be borrowed.</h2><p>Both experiments share the same modules. Their worlds and flight settings make them feel different.</p><div class="chips"><span>math</span><span>time</span><span>input</span><span>flight</span><span>collision</span><span>render-webgl</span></div><a href="https://github.com/QSOLKCB/VANILLAJS/blob/main/BUILD_A_GAME.md">Build your next game ↗</a></section>
+    </aside>
+  </div>
+  <section class="control-strip"><div><h2>Your flight deck</h2><p>Six degrees of freedom. No autopilot.</p></div><dl><div><dt>THRUST</dt><dd><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dd></div><div><dt>RISE / DESCEND</dt><dd><kbd>Space</kbd><kbd>Ctrl</kbd></dd></div><div><dt>PITCH / YAW</dt><dd><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd></dd></div><div><dt>ROLL</dt><dd><kbd>Q</kbd><kbd>E</kbd></dd></div></dl></section>
+  <details class="more-controls"><summary>Mouse, touch & gamepad controls</summary><p>Drag the flight view like a joystick: drag up to pitch up, right to yaw right. Release to centre the stick. On a standard gamepad: left stick strafes / thrusts; right stick turns; shoulder buttons roll; triggers descend / rise; A brakes; Menu pauses. Release all gamepad controls after launch or resume. Losing focus pauses the experiment; resume deliberately.</p><div class="touch-controls" aria-label="On-screen flight controls"><button data-action="forward">Forward</button><button data-action="backward">Reverse</button><button data-action="left">Left</button><button data-action="right">Right</button><button data-action="up">Rise</button><button data-action="down">Descend</button><button data-action="rollLeft">Roll left</button><button data-action="rollRight">Roll right</button><button data-action="brake">Brake</button></div></details>
+</main>
+<footer><span>QSOL–IMC <b>/</b> VANILLAJS</span><span>Original geometry. Native web standards. Zero runtime dependencies.</span><span>Apache–2.0 ↗</span></footer>
+<p id="announcement" class="sr-only" aria-live="polite"></p>
+<script type="module" src="demos/flight-lab/app.js"></script>
+</body>
+</html>
