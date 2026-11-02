@@ -48,6 +48,7 @@ function select(kind){
   if(unavailable)return;
   running=false;started=false;clock.reset();clock.setPaused(true);previousTime=null;clearInput();session=createFpsLab(kind);shownReceipt=null;lastShotAt=-Infinity;
   if(renderer)buildScene();
+  $('hint').textContent='Launch, then click the view for mouse look.';
   $('status').textContent='READY';$('pause').disabled=true;$('pause').textContent='Pause';$('fire').disabled=true;$('reload').disabled=true;
   $('shot-mode').value='trace';$('automatic').checked=true;$('slow').checked=false;syncShotNote();
   $('course-progress').hidden=kind!=='course';$('range-focus').hidden=kind!=='range';

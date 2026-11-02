@@ -29,10 +29,21 @@ export async function verifyFps(browser,baseURL){
   await page.keyboard.press('Escape');assert.equal(await page.locator('#status').textContent(),'PAUSED');
   await page.locator('#launch').click();await page.keyboard.down('w');await page.waitForTimeout(350);
   assert.equal(parseFloat(await page.locator('#speed').textContent()),0);await page.keyboard.up('w');
+  await page.evaluate(()=>{
+    globalThis.fpsMouseEvents=[];
+    document.addEventListener('mousemove',e=>{if(globalThis.fpsMouseEvents.length<30)globalThis.fpsMouseEvents.push([e.movementX,e.movementY,e.isTrusted]);});
+  });
   await page.locator('#fps-view').click();await page.waitForFunction(()=>document.pointerLockElement && document.querySelector('#hint').textContent.includes('active'));
+  await page.waitForTimeout(150);
   const before=(await pixels(page)).hash;
   await page.evaluate(()=>document.pointerLockElement.dispatchEvent(new MouseEvent('mousemove',{bubbles:true,movementX:60,movementY:-20})));
-  await page.waitForTimeout(200);const aimed=(await pixels(page)).hash;assert.notEqual(aimed,before);
+  await page.waitForTimeout(200);const aimed=(await pixels(page)).hash;
+  if(aimed===before){
+    console.log('FPS aim diagnostic',await page.evaluate(()=>({events:globalThis.fpsMouseEvents,status:document.querySelector('#status').textContent,
+      elapsed:document.querySelector('#elapsed').textContent,locked:!!document.pointerLockElement,hint:document.querySelector('#hint').textContent,error:document.querySelector('#error').textContent})));
+    await page.screenshot({path:'browser-artifacts/fps-aim-diagnostic.png',fullPage:true});
+  }
+  assert.notEqual(aimed,before,'relative look must visibly change the FPS camera');
   await page.waitForTimeout(250);assert.equal((await pixels(page)).hash,aimed,'FPS mouse stops without angular drift');
   await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.pointerLockElement && document.querySelector('#status').textContent==='PAUSED');
 
