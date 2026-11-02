@@ -120,7 +120,10 @@ function frame(now){
   const command={thrust:key.thrust.map((v,i)=>clamp(v+touch.thrust[i],-1,1)),
     turn:key.turn.map((v,i)=>clamp(v+touch.turn[i]+dragTurn[i],-1,1)),brake:key.brake||touch.brake};
   const result=clock.advance(delta,dt=>{
-    stepLab(session,{...command,fire:!!(actions.value('fire')||screen.value('fire')||pendingFire)},dt);pendingFire=false;
+    // Consume edges even while held, so a brief tap survives until this tick
+    // without leaving a stale press to fire after release or a later cooldown.
+    const keyPress=actions.consume('fire'),buttonPress=screen.consume('fire');
+    stepLab(session,{...command,fire:!!(keyPress||buttonPress||actions.value('fire')||screen.value('fire')||pendingFire)},dt);pendingFire=false;
   },$('slow').checked?.25:1);
   render(running?result.alpha:1);
   if(now-lastHud>80){updateHud();lastHud=now;}frameHandle=requestAnimationFrame(frame);

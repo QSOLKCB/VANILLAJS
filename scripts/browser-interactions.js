@@ -26,6 +26,13 @@ export async function verifyInteractions(browser,baseURL) {
   assert.equal(await count('applied'),1);assert.match(await page.locator('#receipt').textContent(),/hull-hit/);
   assert.match(await page.locator('#target-labels').textContent(),/75 HULL/);
   await page.screenshot({path:'browser-artifacts/interaction-space.png',fullPage:true});
+  await page.locator('#reset').click();await page.locator('#launch').click();
+  // Both events occur in one JS task, before any simulation tick can intervene.
+  await page.evaluate(()=>{
+    for(const type of ['keydown','keyup'])window.dispatchEvent(new KeyboardEvent(type,{code:'KeyF',bubbles:true,cancelable:true}));
+  });
+  await page.waitForFunction(()=>Number(document.querySelector('#hits').textContent)===1);
+  await page.waitForTimeout(350);assert.equal(await count('shots'),1,'a brief press fires once without sticking');
   await page.locator('#reset').click();await page.locator('#launch').click();await page.keyboard.down('f');
   await page.waitForFunction(()=>Number(document.querySelector('#shots').textContent)>0);
   await page.keyboard.press('Escape');assert.equal(await page.locator('#status').textContent(),'PAUSED');
@@ -77,5 +84,5 @@ export async function verifyInteractions(browser,baseURL) {
   assert.match(await unsupported.locator('#error').textContent(),/WebGL is unavailable/);
   assert.deepEqual(errors,[]);
   await Promise.all([page.close(),mobile.close(),unsupported.close()]);
-  console.log('Interaction Lab: rendering, shields, all reaction outcomes, fresh-fire resume, pause/blur, target focus/reset, touch tap, pointer cancellation, mobile layout, context loss and unsupported WebGL passed.');
+  console.log('Interaction Lab: rendering, shields, all reaction outcomes, brief key tap, fresh-fire resume, pause/blur, target focus/reset, touch tap, pointer cancellation, mobile layout, context loss and unsupported WebGL passed.');
 }

@@ -21,7 +21,8 @@ All feedback, expiry and cooldown timing uses simulation seconds.
 
 Pause/blur/visibility loss freezes ticks and clears keyboard, pointer and button
 states. Resuming discards wall-clock debt. F and on-screen controls need a fresh
-press; quick taps are retained until a simulation tick can consume them. Changing
+press; quick keyboard/button taps are retained until a simulation tick can consume
+them, then discarded even when a cooldown blocks firing. Changing
 recipes resets all simulation state. Focusing a target preserves scores but
 repositions/stops the camera, cancels old shots and pauses. Render interpolation
 does not change simulation or collision state.

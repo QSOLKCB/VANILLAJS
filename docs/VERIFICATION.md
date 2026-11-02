@@ -30,7 +30,8 @@ workflow link are recorded in the PR; adding tests alone does not prove a pass.
 The added scenarios check rendered geometry, shield rejection and hull damage,
 missing ignition/oxygen, water-forming and resisted/empty-chamber outcomes,
 fresh-fire pause/resume, frozen in-flight shots, blur, focus/reset, a real touch
-event sequence in mobile emulation, pointer cancellation, narrow layout, context
+event sequence in mobile emulation, a key press/release between physics ticks,
+pointer cancellation, narrow layout, context
 loss and unsupported WebGL. Screenshots for both recipes and 390 px layout join
 the existing `flight-lab-evidence` artifact. Mobile emulation and synthetic
 lifecycle events do not establish physical-device coverage.
