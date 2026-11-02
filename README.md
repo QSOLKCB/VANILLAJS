@@ -1,7 +1,7 @@
 # VANILLAJS — reusable game modules
 
 Reusable, original JavaScript game modules built directly on web standards.
-**v0.2.0 milestone: eight modules, Flight Lab and Interaction Lab.**
+**v0.3.0 milestone: ten modules, Flight Lab, Interaction Lab and FPS Lab.**
 
 [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
@@ -15,6 +15,7 @@ Download or clone the repository, then serve its root with any static HTTP serve
 python3 -m http.server 8000
 # Open http://localhost:8000
 # Interaction Lab: http://localhost:8000/demos/interaction-lab/index.html
+# FPS Lab: http://localhost:8000/demos/fps-lab/index.html
 ```
 
 There is no runtime installation, build step, npm dependency, CDN, account,
@@ -95,20 +96,44 @@ Chemistry examples are symbolic, source-backed rules with reusable specimens,
 not quantitative chemistry simulation. See [model limits and sources](docs/INTERACTION_LAB.md).
 No Reaction Rumble code, artwork or data is included.
 
+## FPS Lab
+
+Open **FPS Lab** from either lab header, then choose a proving ground:
+
+| Recipe | Try this | Shared systems |
+| --- | --- | --- |
+| **Footwork** | Walk up four 25 cm steps, jump the amber hurdle, pass through the doorway and reach four markers | Upright character, static collision, eye pose and input |
+| **Live range** | Clear three plates; compare instant traces and travelling bolts; empty and reload a magazine | The same character plus weapon timing, queries, projectiles and conditional effects |
+
+Launch, then click the view for mouse look. **WASD** moves, **Space** jumps,
+**Shift** sprints, **arrows** aim, captured **left click / F** fires, and **R**
+reloads. Escape releases the cursor and pauses. On-screen controls and relative
+look dragging remain available. A brief jump/fire/reload press survives until
+its next physics tick. Pause clears controls and freezes ammunition timers;
+resume requires fresh presses. The range's alignment buttons pause and reposition
+the character while preserving ammunition and scores.
+
+The default controller walks at 5 m/s, sprints at 8 m/s, and climbs steps up to
+30 cm. It is an upright **rectangular box**, with static world collision and a
+fixed eye height. This slice does not implement capsules, slopes, crouching,
+moving platforms or moving-target collision. See [FPS contracts](docs/FPS_LAB.md).
+
 ## Modules
 
 | Import directory | Responsibility |
 | --- | --- |
 | `modules/math/` | Vectors, quaternions, camera matrices, seeded random numbers |
 | `modules/time/` | Fixed ticks, interpolation fraction, pause, time scaling and catch-up limits |
-| `modules/collision/` | Swept cube movement plus finite ray/segment queries against static AABBs |
+| `modules/collision/` | Swept cube/rectangular-body movement and finite ray/segment queries against static AABBs |
+| `modules/character/` | Upright walking, sprinting, jumping, stair stepping and first-person view |
+| `modules/weapons/` | Simulation-time fire cadence, magazines and finite-reserve reloading |
 | `modules/flight/` | Force/torque integration; assisted and inertial control |
 | `modules/input/` | Pure action state, keyboard/mouse adapters and standard gamepad sampling |
 | `modules/render-webgl/` | Minimal WebGL 1 triangle, line and point rendering |
 | `modules/projectiles/` | Bounded constant-velocity projectiles, swept impacts and lifetimes |
 | `modules/interactions/` | Ordered conditions → effects with explicit outcome reasons |
 
-All APIs are **experimental** in 0.2.0. Use a tagged release or exact commit,
+All APIs are **experimental** in 0.3.0. Use a tagged release or exact commit,
 preserve the directory structure and record what your game imports. The
 machine-readable catalogue lists each module's dependency closure and environment.
 Core modules neither own an animation loop nor read the DOM or ambient time.
@@ -142,7 +167,7 @@ validation from Pages deployment permissions. No tag or release is created by CI
 ## Scope and licence
 
 This is a compact foundation, not a general rigid-body contact solver. Colliders
-are fixed-orientation cubes against static axis-aligned boxes. There are no
+are fixed-orientation cubes or rectangular bodies against static axis-aligned boxes. There are no
 dynamic body contacts, oriented-box contacts, friction, bounce, atmospheric
 flight, orbital gravity, audio engine, map editor or network synchronisation yet.
 Numerical tolerances and runtime limits are documented in [API.md](docs/API.md).

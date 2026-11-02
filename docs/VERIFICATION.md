@@ -1,6 +1,28 @@
-# Verification — VANILLAJS 0.2.0
+# Verification — VANILLAJS 0.3.0
 
-## Mouse-look controls: current change
+## FPS Lab: current change
+
+- **117 Node tests passed locally**, including all previous 94 regressions.
+  New checks cover rectangular extents, stable support, jump apex/landing,
+  midair rejection, pitch-independent walking, diagonal/sprint speed limits,
+  stairs, tall obstacles, low ceilings, ledges, snap limits and thin-wall sweeps.
+- Recipe scenarios complete Footwork through actual course colliders and clear
+  all three range plates with finite ammunition and reloading. Traces/bolts both
+  stop at intervening cover; bolts arrive later. Pause freezes motion, projectiles
+  and weapon state. 30/60/144 Hz presentation schedules produce identical outcomes
+  in the same runtime. These are simulations, not human playthrough claims.
+- Syntax checks, ten module dependency/purity contracts and the allowlisted
+  26-file package pass. The generated manifest records SHA-256 hashes.
+- `scripts/browser-fps.js` runs through the packaged project subpath, adding
+  rendering, sprint/stairs/jump, input cancellation, capture/relative aiming,
+  ammo/reload pause, trace/bolt outcomes, focus/reset, mobile touch taps, layout,
+  context loss and unavailable-WebGL cases to the existing suite. Exact-head
+  execution results and screenshot evidence are recorded in the PR.
+- Local Chromium remains unavailable. Relative aim and blur use synthetic
+  events; capture/click/Escape and mobile-emulated taps use browser input. No
+  physical-device, cross-browser, frame-rate performance or scale claim is made.
+
+## Historical mouse-look controls after 0.2.0
 
 - **94 Node tests passed locally**, with syntax/module checks and packaging.
   Added cases cover relative input consumption, stationary-pointer no-spin,
@@ -104,7 +126,7 @@ have not been validated. Pure gamepad tests use synthetic standard-mapping data.
 Software WebGL does not establish physical-GPU performance or controller feel.
 No benchmark FPS or maximum unit count is claimed.
 
-The solver is deliberately limited to a moving axis-aligned cube against static
-boxes. It is neither an exact sphere sweep nor a general rigid-body contact
+The solver is deliberately limited to a moving axis-aligned cube or rectangular body against static
+boxes. It is neither a sphere/capsule sweep nor a general rigid-body contact
 solver. Numerical integration is approximate. Repeatability is tested within one
 JS runtime; cross-engine bit-identical simulation is not claimed.

@@ -17,12 +17,22 @@
 - Space target practice and a small source-backed Reaction Bench recipe.
 - Simulation regressions, packaged browser scenarios and composition contracts.
 
+## v0.3.0 — FPS Lab (first FPS slice)
+
+- Rectangular upright character collision, yaw-relative walking/sprinting,
+  grounded jumping, bounded stair stepping and short downward ground snapping.
+- First-person eye pose, existing mouse capture and new FPS action bindings.
+- Simulation-time fire cadence, finite magazines/reserve and manual reloads.
+- Footwork course and Live range compose the same controller. The range compares
+  existing static hitscan and swept-projectile queries with conditional damage.
+- Numerical, complete-course, weapon/lifecycle and packaged-browser checks.
+
 ## Proposed next slices — not implemented
 
-1. **FPS kit:** character controller, step/slope handling, ray and projectile
-   moving-target queries, camera rigs and richer weapon timing. Static ray and
-   projectile queries now exist in 0.2.0. Extract useful QSOL game behaviour
-   with provenance and regression tests.
+1. **FPS expansion:** sloped terrain/capsules, crouching, moving platforms, moving-
+   target queries and additional camera/weapon behaviours. Upright boxes, static
+   steps, eye poses and magazine timing now exist in 0.3.0. Extract further QSOL
+   game behaviour only with provenance and regression tests.
 2. **RTS kit:** navigation grids, A*, flow fields, selection, formations and
    steering. Measure scaling with concrete workloads.
 3. **Authoring foundation:** versioned map schema, validation, undo/redo,

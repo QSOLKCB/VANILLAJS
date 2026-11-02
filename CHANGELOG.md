@@ -1,6 +1,21 @@
 # Changelog
 
-## Unreleased — mouse-look controls
+## 0.3.0 — FPS Lab (release candidate)
+
+- A pure upright character controller: walking/sprinting, gravity, fresh-press
+  jumping, stair stepping, ground snapping and a first-person eye pose.
+- Rectangular AABB movement queries reuse the existing swept/slide solver while
+  preserving the cube APIs used by flight and projectile consumers.
+- A pure weapon timer: finite magazines/reserve, cooldowns, ordered reload events
+  and simulation-time pause behaviour, independent of input or damage rules.
+- Footwork and Live range demos, instant-trace/travelling-bolt comparison,
+  keyboard/mouse/touch controls, telemetry, target focus and bounded feedback.
+- Regression coverage for stairs, ceilings, ledges, wall tunnelling, course
+  completion, ammunition, reload/pause and fixed-step composition. Browser checks
+  exercise the packaged lab and keep earlier lab regressions enabled.
+- Ten-module catalogue, adoption examples and explicit approximation limits.
+
+## Mouse-look controls (after 0.2.0)
 
 - Both labs use click-to-capture relative mouse look with WASD movement. Mouse
   takeover cancels spin, levels roll and clamps pitch; stopping the mouse stops

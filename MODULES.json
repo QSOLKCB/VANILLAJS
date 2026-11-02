@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "0.2.0",
+  "release": "0.3.0",
   "license": "Apache-2.0",
   "modules": {
     "math": {
@@ -24,7 +24,7 @@
       ],
       "environment": "pure-js",
       "status": "experimental",
-      "description": "Swept static-box movement plus finite ray and cube-segment queries"
+      "description": "Swept cube/rectangular-body movement plus finite ray and cube-segment queries"
     },
     "flight": {
       "entry": "modules/flight/index.js",
@@ -70,6 +70,23 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Declarative conditions and effects with ordered resolution and explanatory outcomes"
+    },
+    "character": {
+      "entry": "modules/character/index.js",
+      "depends": [
+        "math",
+        "collision"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Upright grounded movement, jumping, static-box stairs and first-person view"
+    },
+    "weapons": {
+      "entry": "modules/weapons/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Simulation-time magazines, fire cadence and finite-reserve reloading"
     }
   },
   "recipes": {
@@ -124,6 +141,36 @@
         "interactions"
       ],
       "preset": "bench"
+    },
+    "fps-footwork": {
+      "entry": "demos/fps-lab/worlds.js",
+      "modules": [
+        "math",
+        "time",
+        "collision",
+        "character",
+        "weapons",
+        "input",
+        "render-webgl",
+        "projectiles",
+        "interactions"
+      ],
+      "preset": "course"
+    },
+    "fps-live-range": {
+      "entry": "demos/fps-lab/worlds.js",
+      "modules": [
+        "math",
+        "time",
+        "collision",
+        "character",
+        "weapons",
+        "input",
+        "render-webgl",
+        "projectiles",
+        "interactions"
+      ],
+      "preset": "range"
     }
   }
 }

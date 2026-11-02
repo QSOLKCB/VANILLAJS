@@ -8,7 +8,10 @@ export function aabb(min, max) {
 }
 // Sweeps the CENTER of an axis-aligned cube against a static AABB. Not a sphere sweep.
 export function sweepBox(origin, displacement, halfSize, box) {
-  const min = box.min.map(x=>x-halfSize), max = box.max.map(x=>x+halfSize);
+  return sweepExtents(origin,displacement,[halfSize,halfSize,halfSize],box);
+}
+function sweepExtents(origin, displacement, extents, box) {
+  const min = box.min.map((x,i)=>x-extents[i]), max = box.max.map((x,i)=>x+extents[i]);
   let near = -Infinity, far = Infinity, normal = [0,0,0];
   for (let i=0;i<3;i++) {
     if (Math.abs(displacement[i]) < 1e-12) {
@@ -25,8 +28,8 @@ export function sweepBox(origin, displacement, halfSize, box) {
   if (near < -1e-10 || near > 1 || far < 0 || dot(displacement,normal) >= 0) return null;
   return {time:Math.max(0,near), normal};
 }
-function penetration(position, halfSize, box) {
-  const min = box.min.map(x=>x-halfSize), max = box.max.map(x=>x+halfSize);
+function penetration(position, extents, box) {
+  const min = box.min.map((x,i)=>x-extents[i]), max = box.max.map((x,i)=>x+extents[i]);
   if (!position.every((x,i)=>x>min[i] && x<max[i])) return null;
   let distance = Infinity, normal = [0,0,0];
   for (let i=0;i<3;i++) for (const side of [-1,1]) {
@@ -44,12 +47,15 @@ export function moveAndSlide(position, velocity, dt, halfSize, boxes, maxSlides 
   if (!(Number.isFinite(dt) && dt>=0 && Number.isFinite(halfSize) && halfSize>0 && Number.isInteger(maxSlides) && maxSlides>0)) {
     throw new RangeError('invalid sweep parameters');
   }
+  return solveMovement(position,velocity,dt,[halfSize,halfSize,halfSize],boxes,maxSlides);
+}
+function solveMovement(position,velocity,dt,extents,boxes,maxSlides) {
   const contacts=[];
   // Resolve spawn overlap before sweeping. Contradictory/enclosing solids have no valid solution.
   for (let pass=0;pass<maxSlides;pass++) {
     let moved=false;
     for (let index=0;index<boxes.length;index++) {
-      const hit=penetration(position,halfSize,boxes[index]);
+      const hit=penetration(position,extents,boxes[index]);
       if (hit) {
         position=add(position,scale(hit.normal,hit.distance+SKIN));
         velocity=slide(velocity,hit.normal); contacts.push({index,normal:hit.normal}); moved=true;
@@ -57,7 +63,7 @@ export function moveAndSlide(position, velocity, dt, halfSize, boxes, maxSlides 
     }
     if (!moved) break;
   }
-  if (boxes.some(box=>penetration(position,halfSize,box))) {
+  if (boxes.some(box=>penetration(position,extents,box))) {
     return {position, velocity:[0,0,0], contacts, truncated:true};
   }
   let remaining=dt;
@@ -65,7 +71,7 @@ export function moveAndSlide(position, velocity, dt, halfSize, boxes, maxSlides 
     const delta=scale(velocity,remaining);
     let nearest=null;
     for (let index=0;index<boxes.length;index++) {
-      const hit=sweepBox(position,delta,halfSize,boxes[index]);
+      const hit=sweepExtents(position,delta,extents,boxes[index]);
       if (hit && (!nearest || hit.time<nearest.time)) nearest={...hit,index};
     }
     if (!nearest) { position=add(position,delta); remaining=0; break; }
@@ -74,6 +80,32 @@ export function moveAndSlide(position, velocity, dt, halfSize, boxes, maxSlides 
     remaining*=1-nearest.time; contacts.push({index:nearest.index,normal:nearest.normal});
   }
   return {position,velocity,contacts,truncated:remaining>1e-10};
+}
+
+/** Rectangular axis-aligned body queries. Extents are positive xyz half-widths;
+ * these are boxes, not capsules. Legacy cube APIs retain their old signatures. */
+function rectangularInput(origin,delta,halfExtents,boxes) {
+  origin=finiteVector(origin,3,'origin');delta=finiteVector(delta,3,'displacement');
+  const extents=finiteVector(halfExtents,3,'halfExtents');
+  if(extents.some(x=>x<=0) || !add(origin,delta).every(Number.isFinite))throw new RangeError('invalid body extent');
+  if(!Array.isArray(boxes))throw new TypeError('boxes must be an array');
+  boxes=boxes.map(box=>{
+    const checked=aabb(box?.min,box?.max);
+    if(!checked.min.every((x,i)=>Number.isFinite(x-extents[i]-origin[i])) ||
+       !checked.max.every((x,i)=>Number.isFinite(x+extents[i]-origin[i])))throw new RangeError('body extent overflow');
+    return checked;
+  });
+  return {origin,delta,extents,boxes};
+}
+export function sweepAABB(origin,displacement,halfExtents,box) {
+  const v=rectangularInput(origin,displacement,halfExtents,[box]);
+  return sweepExtents(v.origin,v.delta,v.extents,v.boxes[0]);
+}
+export function moveAndSlideAABB(position,velocity,dt,halfExtents,boxes,maxSlides=6) {
+  velocity=finiteVector(velocity,3,'velocity');
+  if(!Number.isFinite(dt) || dt<0 || !Number.isInteger(maxSlides) || maxSlides<1)throw new RangeError('invalid sweep parameters');
+  const v=rectangularInput(position,scale(velocity,dt),halfExtents,boxes);
+  return solveMovement(v.origin,velocity,dt,v.extents,v.boxes,maxSlides);
 }
 
 /** Closed finite segment versus static AABBs. halfSize expands each box by an
