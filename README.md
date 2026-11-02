@@ -1,8 +1,8 @@
 # VANILLAJS — reusable game modules
 
 Reusable, original JavaScript game modules built directly on web standards.
-**v0.6.0 — RTS routing: navigation grids, bounded searches and squad orders.**
-Eleven reusable modules; twelve recipes across Flight, Interaction, FPS and RTS labs.
+**v0.7.0 — Shared flow fields: one destination map, many units.**
+Eleven reusable modules; fourteen recipes across Flight, Interaction, FPS and RTS labs.
 
 [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
@@ -136,6 +136,8 @@ travel direction. Slopes, capsules and rotating platforms remain future work. Se
 | --- | --- | --- |
 | **Route planner** | Click open ground, run the route, then close the north gate | Grid snapshots, shortest paths, replanning and fixed ticks |
 | **Squad orders** | Drag to select units, right-click a destination, watch them regroup | The same path search plus reachable unique destinations and cell reservations |
+| **Flow convoy** | Deliver 24 couriers, move their depot, or close a gate | Incremental shared directions and safe field rebuilding |
+| **Two-exit evacuation** | Evacuate 36 units; close the north exit to redirect the group | Multi-source nearest-exit fields and shared traffic reservations |
 
 Plan while paused, then **Run routes**. Mouse drag selects; right-click moves.
 Touch uses **Select / Move** tools and map taps. The roster and **Select all**
@@ -146,14 +148,21 @@ focus pause, cancelling unfinished gestures. Accepted orders persist on resume.
 The lab uses four-neighbour cell movement and a bounded, game-owned traffic
 policy. Units wait instead of swapping or overlapping; automatic retries may
 still reach a stand-off. Reorder or stop selected units to resolve it. This is a
-small routing slice; flow fields, continuous steering and reciprocal body physics
-remain future work. See [RTS contracts and limits](docs/RTS_LAB.md).
+small routing slice; continuous steering and reciprocal body physics remain
+future work. The flow recipes build one field over bounded fixed ticks, then
+share it across every unit. Delivered units leave the map. Field rebuilding
+freezes new cell moves until the new grid/destination map is complete.
+
+See [RTS contracts and limits](docs/RTS_LAB.md) and the
+[recorded search-work comparison](docs/FLOW_FIELDS.md). On the 64×64, 512-request
+scenario, individual A* settles 809,826 cells; one shared field settles 3,655,
+followed by 512 samples. These are search-operation counts, not measured FPS.
 
 ## Modules
 
 | Import directory | Responsibility |
 | --- | --- |
-| `modules/navigation/` | Immutable grids, bounded A* paths and compact reachable group destinations |
+| `modules/navigation/` | Immutable grids, bounded A*, group destinations and incremental flow fields |
 | `modules/math/` | Vectors, quaternions, camera matrices, seeded random numbers |
 | `modules/time/` | Fixed ticks, interpolation fraction, pause, time scaling and catch-up limits |
 | `modules/collision/` | Static/kinematic body sliding, finite static shots and translating-target segment queries |
@@ -165,7 +174,7 @@ remain future work. See [RTS contracts and limits](docs/RTS_LAB.md).
 | `modules/projectiles/` | Bounded constant-velocity projectiles, swept impacts and lifetimes |
 | `modules/interactions/` | Ordered conditions → effects with explicit outcome reasons |
 
-All APIs are **experimental** in 0.6.0. Use a tagged release or exact commit,
+All APIs are **experimental** in 0.7.0. Use a tagged release or exact commit,
 preserve the directory structure and record what your game imports. The
 machine-readable catalogue lists each module's dependency closure and environment.
 Core modules neither own an animation loop nor read the DOM or ambient time.
@@ -178,6 +187,7 @@ Node.js 22+ is development tooling only. There is no `npm install` for these che
 node --test tests/*.test.js
 node scripts/check.js
 node scripts/build.js
+node scripts/navigation-workload.js --check
 ```
 
 The build stages an allowlisted `dist/` and generates `manifest.json` with sizes

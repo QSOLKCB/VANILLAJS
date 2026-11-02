@@ -21,6 +21,8 @@ jobs:
       - run: node --test tests/*.test.js
       - run: node scripts/check.js
       - run: node scripts/build.js
+      - name: Verify documented navigation workload
+        run: node scripts/navigation-workload.js --check > navigation-workload.json
       - name: Install isolated browser test tooling
         run: |
           npm install --prefix "$RUNNER_TEMP/flight-browser" --ignore-scripts --no-audit --no-fund playwright@1.64.0
@@ -37,6 +39,7 @@ jobs:
           path: |
             browser-artifacts/
             dist/manifest.json
+            navigation-workload.json
           retention-days: 14
       - name: Stage verified Pages artifact
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'

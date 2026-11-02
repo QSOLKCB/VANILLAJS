@@ -1,11 +1,16 @@
-# RTS Lab — routing slice (0.6.0)
+# RTS Lab — routing and shared fields (0.7.0)
 
-Two native Canvas 2D recipes use the same `navigation` and `time` modules.
+Four native Canvas 2D recipes use the same `navigation` and `time` modules.
 Route planner has one unit; Squad orders has six. Both cross a 24 × 16 map with
 two walls, two passages in the west wall, one in the east wall and a raised block.
 The geometry and UI are original; no assets or external game code are loaded.
 
-## Controls and lifecycle
+Flow convoy adds 24 couriers sharing one depot; Two-exit evacuation routes 36
+units to their nearest open exit and adds an upper passage in the east wall.
+Those recipes build directions incrementally and retire units at destinations.
+See [shared-field controls, contracts and measurements](FLOW_FIELDS.md).
+
+## A* recipe controls and lifecycle
 
 | Action | Mouse | Touch / keyboard |
 | --- | --- | --- |
@@ -25,7 +30,7 @@ Pause preserves accepted orders and positions. Resume is explicit. Reset restore
 all units, terrain, selection, clocks and counters. Stop allows the current segment
 to finish after resume; it does not teleport back to a previous cell.
 
-## Planning and traffic
+## A* recipe planning and traffic
 
 Grid coordinates are `[column,row]` in X/Z, one metre per cell. Units use cardinal
 movement, with a 180 ms interval per cell and presentation at 120 Hz fixed ticks.
@@ -67,5 +72,5 @@ Copy only `modules/navigation/index.js` for the planner; it has no dependencies.
 For an RTS game, supply its occupancy policy, inflate obstacles for the intended
 body footprint, validate terrain edits and implement the desired movement model.
 The existing FPS collision solver is separate; a grid route is not a body sweep.
-Flow fields, weighted costs, diagonals, slope navigation, navmeshes, continuous
+Weighted costs, diagonals, slope navigation, navmeshes, continuous
 steering and advanced multi-agent scheduling remain outside this release.

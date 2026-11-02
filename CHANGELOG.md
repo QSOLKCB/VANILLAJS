@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.0 — Shared flow fields (release candidate)
+
+- Add `FlowFieldSearch` to navigation: bounded incremental multi-source builds,
+  cancellable work, complete immutable fields, nearest-goal costs and directions.
+- Add Flow convoy and Two-exit evacuation: 24/36 units follow a shared field,
+  retire at destinations, and safely rebuild after gate or exit changes.
+- Reuse the existing demo cell-reservation policy without changing A* recipes.
+  Add direction overlays, build-budget controls and build/lookup/exit telemetry.
+- Add 20 regressions (196 total), including A* distance comparisons on 40 seeded
+  maps, the 65,536-cell limit, stale-build cancellation and complete deliveries.
+- Record reproducible search-work comparisons and check them in CI. Add packaged
+  browser scenarios. Eleven modules, fourteen recipes, zero runtime dependencies.
+
 ## 0.6.0 — RTS routing (release candidate)
 
 - Add the pure `navigation` module: immutable X/Z occupancy grids, bounded A*

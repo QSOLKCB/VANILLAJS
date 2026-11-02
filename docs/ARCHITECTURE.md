@@ -1,4 +1,4 @@
-# Architecture — VANILLAJS 0.6.0
+# Architecture — VANILLAJS 0.7.0
 
 The goal is to assemble future games from small, versioned systems. The labs
 prove composition against different environments and control laws.
@@ -18,7 +18,7 @@ Rendering, input events and lifecycle policy belong to the application boundary.
 | render-webgl | math | GPU buffers, shaders and rendering |
 | projectiles | math, collision | bounded straight-shot motion, lifetime and ordered hit/expiry events |
 | interactions | nothing | declarative rule selection, conditions, effects and reasons |
-| navigation | nothing | immutable occupancy snapshots, bounded paths and reachable destinations |
+| navigation | nothing | immutable grids, bounded paths, destinations and incremental shared fields |
 | demo worlds | math, collision, flight | environments, signal objectives and run state |
 | demo app | modules and worlds | animation loop, DOM, lifecycle, controls and telemetry |
 
@@ -162,7 +162,7 @@ uniform edge cost. A separate breadth-first traversal collects nearby reachable
 destinations. Neither routine owns an agent, order, animation or clock. Both cap
 expanded cells and distinguish budget exhaustion from proven unreachability.
 
-RTS Lab owns selection, greedy group assignment, movement and traffic. It plans
+The original route/squad recipes own selection, greedy assignment and traffic. Each plans
 all selected units before replacing any route. On a shared 180 ms cell boundary,
 unique-destination reservations accept chains ending in vacant cells and reject
 cycles/swaps. Waiting units retry around occupied cells after six failed moves.
@@ -175,6 +175,33 @@ Pause freezes routes and current segments. Gesture capture, selection and pendin
 pointer releases belong to the app; lifecycle changes cancel unfinished gestures.
 Accepted orders survive pause and require deliberate resume. No tactical rules,
 world geometry or traffic policy are imported by the navigation module.
+
+## Shared-field publication
+
+`FlowFieldSearch` expands outwards from one or more canonically ordered goals.
+On a uniform cardinal grid, breadth-first integration gives each reachable cell
+its minimum distance and stable nearest-goal owner. The builder accepts a work
+budget per call; allocation/setup still happens in its constructor. Partial
+arrays remain private. Only a complete immutable result can be sampled.
+
+The flow recipes own one current build, a grid identity and a destination
+generation. Editing either cancels unfinished work, invalidates the old field
+and increments the generation. Simulation ticks advance the current build only;
+paused clocks freeze both build work and unit motion. New moves require a complete
+field matching the current snapshot and generation. A safe in-flight segment may
+finish while rebuilding. Gate edits cannot intersect either segment endpoint.
+
+Both navigation modes use the same game-owned cell reservations, now in a shared
+demo helper. Flow units sample a next cell instead of storing a full A* path.
+Convoy/evacuation arrivals leave the map, releasing the destination for following
+units. Closed exits stop consuming units but remain walkable terrain. Nearest
+distance does not account for queue length. There is no body dynamics, weighted
+terrain, continuous steering, async worker or network state in this slice.
+
+`scripts/navigation-workload.js` compares settled-cell counts for independent A*
+requests and one shared field plus samples. CI regenerates the fixed workloads
+and compares them with the documented rows. The measurements exclude setup, heap,
+sampling, traffic and drawing costs; they do not establish browser throughput.
 
 ## Distribution and growth
 
