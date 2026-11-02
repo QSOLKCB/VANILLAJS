@@ -1,4 +1,4 @@
-# Architecture — Flight Lab 0.1.0
+# Architecture — VANILLAJS 0.2.0
 
 The goal is to assemble future games from small, versioned systems. The two
 demonstrations prove composition against different environments and control laws.
@@ -14,8 +14,17 @@ Rendering, input events and lifecycle policy belong to the application boundary.
 | flight | math, collision | physical state and control laws |
 | input | math | actions; opt-in keyboard and gamepad adapters |
 | render-webgl | math | GPU buffers, shaders and rendering |
+| projectiles | math, collision | bounded straight-shot motion, lifetime and ordered hit/expiry events |
+| interactions | nothing | declarative rule selection, conditions, effects and reasons |
 | demo worlds | math, collision, flight | environments, signal objectives and run state |
 | demo app | modules and worlds | animation loop, DOM, lifecycle, controls and telemetry |
+
+Interaction Lab recipes consume flight, collision, projectiles and interactions;
+their application adds time, input, maths and the shared renderer. Static queries
+find geometry; projectile events identify contacts; the recipe evaluates and
+applies effects. The interactions module never imports flight or projectiles.
+No recipe/domain data is imported by a module. Conditional effects do not mutate
+the simulation until the consumer explicitly applies them in event order.
 
 No dependency points back into a demo. Importing a module does not start a loop,
 register events, create a canvas or access a browser global. The keyboard adapter
@@ -65,6 +74,14 @@ flat face shading and distance fog. Each world uploads geometry on selection,
 not every frame. Resizing changes the drawing buffer; pixel ratio is capped.
 Buffer deletion occurs when switching worlds. Context loss pauses and explains
 that a reload is required. Unsupported WebGL fails visibly.
+
+Interaction Lab retains the same shader and static geometry path, with two owned
+dynamic buffers for target colour changes, bolts and short-lived impact rings.
+It updates those buffers instead of allocating new GPU buffers each frame. The
+CPU vertex arrays are rebuilt for clarity; no allocation-free claim is made.
+Both apps cancel held inputs at lifecycle boundaries. The new lab also retains
+a quick fire-button tap until the next physics tick, and cancels that pending
+tap on pause, focus changes, target focus or reset.
 
 ## Distribution and growth
 

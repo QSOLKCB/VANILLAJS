@@ -45,6 +45,11 @@ export class Renderer {
     const mesh={buffer,count:data.length/6,mode:primitive==='lines'?gl.LINES:primitive==='points'?gl.POINTS:gl.TRIANGLES};
     this.meshes.add(mesh);return mesh;
   }
+  update(mesh,data) {
+    if (!this.meshes.has(mesh)) throw new TypeError('mesh is not owned by this renderer');
+    const gl=this.gl;gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.DYNAMIC_DRAW);mesh.count=data.length/6;
+  }
   clearMeshes() {for(const m of this.meshes)this.gl.deleteBuffer(m.buffer);this.meshes.clear();}
   begin(position,orientation,{fog=.003,resolution=1}={}) {
     const gl=this.gl,rect=this.canvas.getBoundingClientRect(),dpr=Math.min(globalThis.devicePixelRatio||1,2)*resolution;

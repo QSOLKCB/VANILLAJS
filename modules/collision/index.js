@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import {finiteVector, add, scale, dot} from '../math/index.js';
+import {finiteVector, add, scale, dot, length} from '../math/index.js';
 const SKIN = 1e-6;
 export function aabb(min, max) {
   min = finiteVector(min,3,'min'); max = finiteVector(max,3,'max');
@@ -74,4 +74,63 @@ export function moveAndSlide(position, velocity, dt, halfSize, boxes, maxSlides 
     remaining*=1-nearest.time; contacts.push({index:nearest.index,normal:nearest.normal});
   }
   return {position,velocity,contacts,truncated:remaining>1e-10};
+}
+
+/** Closed finite segment versus static AABBs. halfSize expands each box by an
+ * axis-aligned cube, NOT a sphere. Starts inside/on a box hit at t=0, normal=0.
+ * Equal-time hits use ascending string id, independent of collider array order.
+ */
+export function castSegment(origin, displacement, colliders, {halfSize=0, ignoreIds=[]}={}) {
+  origin=finiteVector(origin,3,'origin');
+  displacement=finiteVector(displacement,3,'displacement');
+  const distance=length(displacement);
+  if (!Number.isFinite(distance) || !add(origin,displacement).every(Number.isFinite)
+      || !Number.isFinite(halfSize) || halfSize<0) throw new RangeError('invalid segment extent');
+  if (!Array.isArray(colliders) || !Array.isArray(ignoreIds) || !ignoreIds.every(id=>typeof id==='string')) {
+    throw new TypeError('colliders and ignoreIds must be arrays');
+  }
+  const ignored=new Set(ignoreIds), ids=new Set();
+  let nearest=null;
+  for (let index=0;index<colliders.length;index++) {
+    const collider=colliders[index];
+    if (!collider || typeof collider.id!=='string' || !collider.id || ids.has(collider.id)) {
+      throw new TypeError('collider ids must be unique nonempty strings');
+    }
+    ids.add(collider.id);
+    const box=aabb(collider.box?.min,collider.box?.max);
+    const min=box.min.map(x=>x-halfSize), max=box.max.map(x=>x+halfSize);
+    if (![...min,...max,...min.map((x,i)=>x-origin[i]),...max.map((x,i)=>x-origin[i])].every(Number.isFinite)) {
+      throw new RangeError('collider extent overflow');
+    }
+    if (ignored.has(collider.id)) continue;
+    const startedInside=origin.every((x,i)=>x>=min[i] && x<=max[i]);
+    let near=0, far=1, normal=[0,0,0], missed=false;
+    if (!startedInside) for (let i=0;i<3;i++) {
+      if (displacement[i]===0) {
+        if (origin[i]<min[i] || origin[i]>max[i]) {missed=true;break;}
+        continue;
+      }
+      let entry=(min[i]-origin[i])/displacement[i], exit=(max[i]-origin[i])/displacement[i];
+      if (entry>exit) [entry,exit]=[exit,entry];
+      if (entry>near) {near=entry;normal=[0,0,0];normal[i]=displacement[i]>0?-1:1;}
+      far=Math.min(far,exit);
+      if (near>far) {missed=true;break;}
+    }
+    if (missed || near>1 || far<0) continue;
+    if (!nearest || near<nearest.time || (near===nearest.time && collider.id<nearest.id)) {
+      nearest={id:collider.id,index,time:near,distance:distance*near,
+        point:add(origin,scale(displacement,near)),normal,startedInside};
+    }
+  }
+  return nearest;
+}
+
+/** Direction may be unnormalized; maxDistance is a finite distance in metres. */
+export function raycast(origin,direction,maxDistance,colliders,options) {
+  direction=finiteVector(direction,3,'direction');
+  const magnitude=length(direction);
+  if (!Number.isFinite(magnitude) || magnitude===0 || !Number.isFinite(maxDistance) || maxDistance<0) {
+    throw new RangeError('invalid ray direction or range');
+  }
+  return castSegment(origin,direction.map(x=>x/magnitude*maxDistance),colliders,options);
 }

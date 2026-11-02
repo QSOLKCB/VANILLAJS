@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0 — Interaction Lab (release candidate)
+
+- Finite ray and segment queries with stable nearest-hit selection, explicit
+  initial-overlap semantics, cube extents and collider filters.
+- A bounded projectile module with simulation-time lifetimes, swept hits,
+  ordered events, snapshots and cancellation.
+- A pure declarative interaction resolver with priority/id ordering, conditions,
+  effects and explanatory applied/blocked/resisted/unmatched results.
+- Space target practice and Reaction Bench compose the same modules, with
+  conditional shields and small source-backed chemistry examples.
+- Responsive WebGL range, on-screen/keyboard controls, quick fire taps, focus-safe
+  pause/resume, slow motion, target focus, impact trail and inspectable outcomes.
+- Dynamic mesh updates reuse owned GPU buffers. Flight Lab remains available.
+- New numerical, scenario and packaged Chromium checks; catalogue and manifest
+  version consistency; API and scientific approximation documentation.
+
 ## 0.1.0 — Flight Lab (release candidate)
 
 - Six original, browser-native ES modules: math, time, collision, flight, input

@@ -9,10 +9,19 @@
   gamepad input; responsive controls and explicit unsupported-graphics handling.
 - Contract catalogue, integration guide, simulation tests and browser CI.
 
+## v0.2.0 — Interaction Lab
+
+- Finite ray/segment queries against static boxes with stable nearest-hit ties.
+- Bounded projectile motion, swept contact, lifetimes and ordered events.
+- Declarative conditional effects with applied/blocked/resisted explanations.
+- Space target practice and a small source-backed Reaction Bench recipe.
+- Simulation regressions, packaged browser scenarios and composition contracts.
+
 ## Proposed next slices — not implemented
 
 1. **FPS kit:** character controller, step/slope handling, ray and projectile
-   queries, camera rigs and weapon timing. Extract useful QSOL game behaviour
+   moving-target queries, camera rigs and richer weapon timing. Static ray and
+   projectile queries now exist in 0.2.0. Extract useful QSOL game behaviour
    with provenance and regression tests.
 2. **RTS kit:** navigation grids, A*, flow fields, selection, formations and
    steering. Measure scaling with concrete workloads.

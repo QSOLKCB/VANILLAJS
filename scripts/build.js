@@ -10,5 +10,6 @@ async function walk(dir){for(const e of await readdir(dir,{withFileTypes:true}))
   const p=resolve(dir,e.name);if(e.isDirectory())await walk(p);else{const data=await readFile(p);files.push({path:relative(out,p),bytes:data.length,sha256:createHash('sha256').update(data).digest('hex')});}
 }}
 await walk(out);files.sort((a,b)=>a.path.localeCompare(b.path));
-await writeFile(resolve(out,'manifest.json'),JSON.stringify({version:'0.1.0',files},null,2)+'\n');
+const {version}=JSON.parse(await readFile(resolve(root,'package.json'),'utf8'));
+await writeFile(resolve(out,'manifest.json'),JSON.stringify({version,files},null,2)+'\n');
 console.log(`Packaged ${files.length} files into dist/; SHA-256 manifest written.`);

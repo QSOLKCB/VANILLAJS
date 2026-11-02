@@ -1,19 +1,20 @@
-# VANILLAJS — Flight Lab
+# VANILLAJS — reusable game modules
 
 Reusable, original JavaScript game modules built directly on web standards.
-**v0.1.0 milestone: six modules, two flight experiments, one shared simulation.**
+**v0.2.0 milestone: eight modules, Flight Lab and Interaction Lab.**
 
 [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json)
 
-## Run Flight Lab
+## Run the labs
 
 Download or clone the repository, then serve its root with any static HTTP server:
 
 ```sh
 python3 -m http.server 8000
 # Open http://localhost:8000
+# Interaction Lab: http://localhost:8000/demos/interaction-lab/index.html
 ```
 
 There is no runtime installation, build step, npm dependency, CDN, account,
@@ -23,7 +24,7 @@ HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoin
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
 
-## Two experiments
+## Flight Lab
 
 | Experiment | Flight model | Objective |
 | --- | --- | --- |
@@ -63,18 +64,45 @@ are ignored rather than guessed. Experiments are session-only, with no saved
 scores or progression. Menus support keyboard navigation and status announcements;
 the 3D flight itself requires visual/spatial interaction.
 
+## Interaction Lab
+
+Open **Interaction Lab** from the Flight Lab header. Both new recipes share the
+projectile system, conditional rule resolver and WebGL renderer:
+
+| Recipe | Try this | What it demonstrates |
+| --- | --- | --- |
+| **Target practice** | Fire at a drone, open its shield field, then land four hits | Inertial 6DOF flight, swept shots, conditional damage and spent targets |
+| **Reaction Bench** | Fire with ignition off; enable ignition; remove the O₂ feed; compare neon and an empty chamber | Successful, blocked and resisted outcomes with explicit reasons |
+
+**F** or the on-screen **Fire** button shoots; arrows or dragging steer. Target
+practice retains WASD / Space / Ctrl / Q / E flight and X braking. Reaction Bench
+uses a stationary observation point. **Line up a shot** repositions the camera,
+clears projectiles and pauses; resume deliberately. Controls also support touch
+and keyboard-activated buttons. These new recipes do not sample gamepads.
+
+Pause, blur and hidden tabs freeze movement, projectile lifetimes and cooldowns.
+Cancelled firing requires a fresh press. Slow motion scales the same simulation
+clock. A bounded impact trail records the selected rule and missing conditions;
+**Inspect the last outcome** exposes the structured result for debugging.
+
+Chemistry examples are symbolic, source-backed rules with reusable specimens,
+not quantitative chemistry simulation. See [model limits and sources](docs/INTERACTION_LAB.md).
+No Reaction Rumble code, artwork or data is included.
+
 ## Modules
 
 | Import directory | Responsibility |
 | --- | --- |
 | `modules/math/` | Vectors, quaternions, camera matrices, seeded random numbers |
 | `modules/time/` | Fixed ticks, interpolation fraction, pause, time scaling and catch-up limits |
-| `modules/collision/` | Swept axis-aligned cube versus static AABBs, sliding and overlap recovery |
+| `modules/collision/` | Swept cube movement plus finite ray/segment queries against static AABBs |
 | `modules/flight/` | Force/torque integration; assisted and inertial control |
 | `modules/input/` | Pure action state, keyboard adapter and standard gamepad sampling |
 | `modules/render-webgl/` | Minimal WebGL 1 triangle, line and point rendering |
+| `modules/projectiles/` | Bounded constant-velocity projectiles, swept impacts and lifetimes |
+| `modules/interactions/` | Ordered conditions → effects with explicit outcome reasons |
 
-All APIs are **experimental** in 0.1.0. Use a tagged release or exact commit,
+All APIs are **experimental** in 0.2.0. Use a tagged release or exact commit,
 preserve the directory structure and record what your game imports. The
 machine-readable catalogue lists each module's dependency closure and environment.
 Core modules neither own an animation loop nor read the DOM or ambient time.
