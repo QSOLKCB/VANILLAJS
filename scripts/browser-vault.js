@@ -72,7 +72,11 @@ export async function verifyVault(browser,baseURL){
   await approach();assert.equal(await page.locator('#console-title').textContent(),PUZZLES[5].name);await solve(5);
   await page.locator('#vault-view').focus();await page.keyboard.down('w');await page.waitForFunction(()=>document.querySelector('#status').textContent==='COMPLETE',null,{timeout:15000});await page.keyboard.up('w');
   assert.equal(await page.locator('#seal-count').textContent(),'06 / 06 SEALS');assert.equal(await page.locator('#rescues').textContent(),'0');
-  assert.ok(parseFloat(await page.locator('#position-z').textContent())<-59);await page.screenshot({path:'browser-artifacts/clockwork-complete.png',fullPage:true});
+  // The HUD rounds to centimetres; crossing -59 can still display -59.00.
+  assert.ok(parseFloat(await page.locator('#position-z').textContent())<=-59);await page.screenshot({path:'browser-artifacts/clockwork-complete.png',fullPage:true});
+  const completeDownloadPromise=page.waitForEvent('download');await page.locator('#save').click();const completeDownload=await completeDownloadPromise;
+  const completeReplay=JSON.parse(await readFile(await completeDownload.path(),'utf8'));
+  assert.equal(completeReplay.complete,true);assert.ok(completeReplay.player.position[2]<-59);assert.equal(importVault(completeReplay).complete,true);
   // Atomic rejection, future-version rejection, oversize files and stale reads.
   await restore(saved);await page.waitForFunction(()=>document.querySelector('#status').textContent==='PAUSED');const beforeBad=await freeze();
   const bad=structuredClone(saved);bad.locks[0].word=0;
