@@ -102,9 +102,13 @@ Brian's [OMI repositories](https://github.com/bthornemail?tab=repositories) incl
 an [OMI core specification](https://github.com/bthornemail/omi-portal/blob/5d2ebac312a8d44413af2a67ca9061e66594d9c8/docs/03-network/omi-core-spec.md#6-delta-law-evaluator)
 and [Omicron implementation](https://github.com/bthornemail/omi-portal/blob/5d2ebac312a8d44413af2a67ca9061e66594d9c8/src/omi/omicron-kernel.js)
 with a 16-bit rotate/XOR transform and default constant `0x5A3C`.
+His [OMINO tetrahedral note](https://github.com/bthornemail/omi-canon/blob/b63fcf4286a9630bd9a641625d3103453c9687d5/Untitled.md)
+maps FS/GS/RS/US to four vertices and their opposite faces, with XOR incidence
+rules. This is a candidate reference for the owner's four-face concept; it does
+not establish a mapping to this library's grid directions.
 
-This is a proposed experiment. Identify the exact four-face mapping and verify
-the transform's claimed invariants with exhaustive tests before deriving a game
-API. The current shared field uses cardinal breadth-first distances and includes
+This is a proposed experiment. Define a game-facing encoding and verify the
+transform's claimed invariants with exhaustive tests before deriving an API.
+The current shared field uses cardinal breadth-first distances and includes
 no OMICRON/XOR transform or imported OMI code. Its index limit fits 16 bits, while
 stored distances and goal owners use wider integers with unreachable sentinels.
