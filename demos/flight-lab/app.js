@@ -1,16 +1,26 @@
 // SPDX-License-Identifier: Apache-2.0
 import {length,mix,quatInterpolate,rotate,quatConjugate,subtract,clamp} from '../../modules/math/index.js';
+import {lookFlight} from '../../modules/flight/index.js';
 import {FixedClock} from '../../modules/time/index.js';
-import {Actions,attachKeyboard,FlightGamepad} from '../../modules/input/index.js';
+import {Actions,attachKeyboard,attachMouseLook,FlightGamepad} from '../../modules/input/index.js';
 import {Renderer,boxVertices,ringVertices} from '../../modules/render-webgl/index.js';
 import {createSession,updateSession,DEMOS} from './worlds.js';
 const $=id=>document.getElementById(id), canvas=$('flight');
 const clock=new FixedClock(), actions=new Actions(), touch=new Actions(), gamepad=new FlightGamepad();
-let session=createSession(), running=false, started=false, previousTime=null, renderer, meshes, drag=null, dragTurn=[0,0,0], lastHud=0, frameHandle;
+let session=createSession(), running=false, started=false, previousTime=null, renderer, meshes, lastHud=0, frameHandle;
 let padConnected=false, unavailable=false;
 const touchPointers=new Map();
 const keyboard=attachKeyboard(window,actions,{enabled:()=>running});
-function clearInput(){keyboard.clear();touch.clear();gamepad.reset();touchPointers.clear();drag=null;dragTurn=[0,0,0];document.querySelectorAll('.pressed').forEach(b=>b.classList.remove('pressed'));}
+let mouseExitAt=-Infinity;
+const mouse=attachMouseLook(canvas,{enabled:()=>running&&!unavailable,
+  onLock:()=>{
+    lookFlight(session.body);session.previous.orientation=[...session.body.orientation];
+    $('hint').textContent='Mouse look active · WASD thrust · Esc releases & pauses';
+  },
+  onUnlock:event=>{mouseExitAt=event.timeStamp;pause('Mouse released. Resume, then click the view to capture it again.');},
+  onError:()=>{$('hint').textContent='Mouse capture unavailable · drag to look or use arrows';}
+});
+function clearInput(){keyboard.clear();mouse.release();touch.clear();gamepad.reset();touchPointers.clear();document.querySelectorAll('.pressed').forEach(b=>b.classList.remove('pressed'));}
 function announce(text){$('announcement').textContent=text;}
 function buildMeshes(){
   renderer.clearMeshes();
@@ -43,7 +53,7 @@ function launch(){
   if(session.complete)select(session.world.kind);
   clearInput();started=true;running=true;clock.setPaused(false);previousTime=null;
   $('curtain').hidden=true;$('status').textContent='RUNNING';$('pause').disabled=false;$('pause').textContent='Pause';
-  canvas.focus({preventScroll:true});announce(`${DEMOS[session.world.kind].name} started.`);
+  canvas.focus({preventScroll:true});$('hint').textContent='Click view for mouse look · WASD thrust · arrows turn';announce(`${DEMOS[session.world.kind].name} started.`);
 }
 function select(kind){
   if(unavailable)return;
@@ -86,8 +96,10 @@ function frame(now){
   if(pad.pause&&started){if(running)pause();else launch();}
   const key=actions.flight(),screen=touch.flight();
   const input={thrust:key.thrust.map((v,i)=>clamp(v+screen.thrust[i]+pad.thrust[i],-1,1)),
-    turn:key.turn.map((v,i)=>clamp(v+screen.turn[i]+pad.turn[i]+dragTurn[i],-1,1)),brake:key.brake||screen.brake||pad.brake};
+    turn:key.turn.map((v,i)=>clamp(v+screen.turn[i]+pad.turn[i],-1,1)),brake:key.brake||screen.brake||pad.brake};
   const result=clock.advance(delta,dt=>{
+    const look=mouse.consume();
+    if(look.pitch || look.yaw)lookFlight(session.body,look);
     const before=session.nextGate;updateSession(session,input,dt);
     if(session.nextGate>before)announce(`Signal ${session.nextGate} of 6 acquired.`);
     if(session.complete){
@@ -108,23 +120,16 @@ $('thrust').addEventListener('input',()=>{session.config.acceleration=Number($('
 $('turn').addEventListener('input',()=>{session.config.angularAcceleration=Number($('turn').value);syncSettings();});
 $('time-scale').addEventListener('input',()=>{$('time-value').textContent=`${Number($('time-scale').value).toFixed(2)}×`;});
 window.addEventListener('keydown',event=>{
-  if(event.code==='Escape'&&!event.repeat&&started){event.preventDefault();if(running)pause();else launch();}
+  if(event.code==='Escape'&&!event.repeat&&event.timeStamp-mouseExitAt>200&&started){event.preventDefault();if(running)pause();else launch();}
 });
 window.addEventListener('blur',()=>pause('The window lost focus. Resume when you are ready.'));
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause('The tab was hidden. No simulation time passed while you were away.');});
-canvas.addEventListener('pointerdown',event=>{
-  if(!running)return;canvas.focus({preventScroll:true});canvas.setPointerCapture(event.pointerId);drag={id:event.pointerId,x:event.clientX,y:event.clientY};
-});
-canvas.addEventListener('pointermove',event=>{
-  if(drag?.id===event.pointerId)dragTurn=[clamp((drag.y-event.clientY)/100,-1,1),clamp((drag.x-event.clientX)/100,-1,1),0];
-});
-const releaseDrag=event=>{if(drag?.id===event.pointerId){drag=null;dragTurn=[0,0,0];}};
-canvas.addEventListener('pointerup',releaseDrag);canvas.addEventListener('pointercancel',releaseDrag);canvas.addEventListener('lostpointercapture',releaseDrag);
 document.querySelectorAll('[data-action]').forEach(button=>{
   button.addEventListener('pointerdown',event=>{if(!running)return;event.preventDefault();button.setPointerCapture(event.pointerId);touchPointers.set(event.pointerId,button.dataset.action);touch.set(button.dataset.action,true);button.classList.add('pressed');});
   const release=event=>{touchPointers.delete(event.pointerId);const held=[...touchPointers.values()].includes(button.dataset.action);touch.set(button.dataset.action,held);if(!held)button.classList.remove('pressed');};
   for(const name of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(name,release);
 });
+window.addEventListener('pagehide',()=>pause());
 canvas.addEventListener('webglcontextlost',event=>{
   event.preventDefault();pause('The graphics context was lost.');unavailable=true;cancelAnimationFrame(frameHandle);
   $('error').hidden=false;$('error').textContent='Graphics context lost. Reload the page to restart the lab.';$('launch').disabled=true;

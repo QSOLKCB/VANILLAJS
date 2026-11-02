@@ -12,7 +12,7 @@ Rendering, input events and lifecycle policy belong to the application boundary.
 | time | nothing | accumulator and tick budget |
 | collision | math | static-box sweeps and sliding |
 | flight | math, collision | physical state and control laws |
-| input | math | actions; opt-in keyboard and gamepad adapters |
+| input | math | actions; opt-in keyboard/mouse adapters; gamepad sampling |
 | render-webgl | math | GPU buffers, shaders and rendering |
 | projectiles | math, collision | bounded straight-shot motion, lifetime and ordered hit/expiry events |
 | interactions | nothing | declarative rule selection, conditions, effects and reasons |
@@ -27,8 +27,8 @@ No recipe/domain data is imported by a module. Conditional effects do not mutate
 the simulation until the consumer explicitly applies them in event order.
 
 No dependency points back into a demo. Importing a module does not start a loop,
-register events, create a canvas or access a browser global. The keyboard adapter
-registers listeners only when explicitly attached, and returns `dispose()`.
+register events, create a canvas or access a browser global. Browser input adapters
+register listeners only when explicitly attached, and returns `dispose()`.
 The renderer creates resources only when constructed, and offers `dispose()`.
 
 ## Shared simulation
@@ -65,9 +65,20 @@ movement through geometry. This does not solve arbitrary rigid-body collisions.
 
 Keyboard state is expressed as named actions. Standard gamepad sampling is pure
 and has a neutral-input gate for connection, replacement and resume. The app
-combines keyboard, on-screen controls, gamepad and pointer joystick into one
-command. Blur, hidden tabs, reset and demo switching clear input and simulation
-debt. Gamepad disconnection pauses the active experiment.
+combines keyboard, on-screen controls and gamepad into one flight command.
+Mouse look is a separate kinematic controller, not torque: relative deltas are
+consumed once per tick before flight and shot spawning. It levels roll, limits
+pitch and cancels angular momentum when taking over; translation still uses the
+chosen flight model. Mouse-idle keyboard/gamepad rotation keeps the original
+6DOF physics. Touch and failed Pointer Lock use relative drag, so a stationary
+held pointer never commands a continuous turn. Capture is requested only by a
+canvas press after launch. Escape/unexpected unlock pauses; deliberate app
+release suppresses the unlock callback. Both apps guard against the same native
+Escape also resuming immediately when its unlock event arrives first.
+
+Blur, hidden tabs, reset and demo switching clear input and simulation debt.
+They also release mouse capture and discard pending look/fire samples. Gamepad
+disconnection pauses the active experiment.
 
 Rendering uses one WebGL 1 shader program, static vertex buffers, depth testing,
 flat face shading and distance fog. Each world uploads geometry on selection,

@@ -20,18 +20,18 @@
         <button class="experiment" id="choose-arena" aria-pressed="false" data-demo="arena"><span>02</span><div><strong>Open orbit</strong><small>INERTIAL / SPACEFLIGHT</small></div><b>↗</b></button>
       </div>
       <div class="viewport" id="viewport">
-        <canvas id="flight" tabindex="0" aria-label="3D flight view. Use WASD to thrust, arrow keys to turn, Q and E to roll. Controls are listed below."></canvas>
+        <canvas id="flight" tabindex="0" aria-label="3D flight view. Click to capture mouse look. Use WASD to thrust; arrows turn, Q and E roll. Controls are listed below."></canvas>
         <div class="view-top"><span><i class="status-dot"></i><span id="status">READY</span></span><span id="gate-count">SIGNAL 01 / 06</span></div>
         <div id="target" aria-hidden="true"><span>01</span><small id="target-distance">30 m</small></div>
         <div class="reticle" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
         <div class="view-bottom"><span id="mode-label">ASSISTANCE ONLINE</span><span id="bearing">TARGET AHEAD</span></div>
         <div class="curtain" id="curtain">
-          <div class="launch-card"><p class="eyebrow" id="overlay-kicker">SIX AXES. ONE SHARED CORE.</p><h2 id="overlay-title">Follow the signal.</h2><p id="overlay-copy">Thread six gates through the conduit. Your thrusters stabilise the ship when you release the controls.</p><button id="launch" class="primary">Launch experiment <span>↗</span></button><small>Keyboard · drag to steer · standard gamepad</small></div>
+          <div class="launch-card"><p class="eyebrow" id="overlay-kicker">SIX AXES. ONE SHARED CORE.</p><h2 id="overlay-title">Follow the signal.</h2><p id="overlay-copy">Thread six gates through the conduit. Your thrusters stabilise the ship when you release the controls.</p><button id="launch" class="primary">Launch experiment <span>↗</span></button><small>WASD + mouse · arrows · standard gamepad</small></div>
         </div>
         <div id="error" role="alert" hidden></div>
       </div>
       <div class="telemetry" aria-label="Flight telemetry"><div><small>VELOCITY</small><strong id="speed">0.0 <em>m/s</em></strong><div class="meter"><i id="speed-meter"></i></div></div><div><small>ANGULAR RATE</small><strong id="spin">0.00 <em>rad/s</em></strong></div><div><small>SIMULATION</small><strong id="elapsed">00:00.0</strong></div><div><small>CONTACTS</small><strong id="contacts">00</strong></div></div>
-      <div class="toolbar"><span id="hint">W to thrust · arrows to steer · Q / E to roll</span><div><button id="pause" disabled>Pause</button><button id="reset">Reset ↺</button></div></div>
+      <div class="toolbar"><span id="hint">WASD thrust · click view for mouse look</span><div><button id="pause" disabled>Pause</button><button id="reset">Reset ↺</button></div></div>
     </section>
     <aside>
       <section class="settings"><div class="panel-title"><h2>Flight dynamics</h2><span>LIVE TUNING</span></div><p>Change the feel. Keep the physics.</p>
@@ -46,7 +46,7 @@
     </aside>
   </div>
   <section class="control-strip"><div><h2>Your flight deck</h2><p>Six degrees of freedom. No autopilot.</p></div><dl><div><dt>THRUST</dt><dd><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dd></div><div><dt>RISE / DESCEND</dt><dd><kbd>Space</kbd><kbd>Ctrl</kbd></dd></div><div><dt>PITCH / YAW</dt><dd><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd></dd></div><div><dt>ROLL</dt><dd><kbd>Q</kbd><kbd>E</kbd></dd></div></dl></section>
-  <details class="more-controls"><summary>Mouse, touch & gamepad controls</summary><p>Drag the flight view like a joystick: drag up to pitch up, right to yaw right. Release to centre the stick. On a standard gamepad: left stick strafes / thrusts; right stick turns; shoulder buttons roll; triggers descend / rise; A brakes; Menu pauses. Release all gamepad controls after launch or resume. Losing focus pauses the experiment; resume deliberately.</p><div class="touch-controls" aria-label="On-screen flight controls"><button data-action="forward">Forward</button><button data-action="backward">Reverse</button><button data-action="left">Left</button><button data-action="right">Right</button><button data-action="up">Rise</button><button data-action="down">Descend</button><button data-action="rollLeft">Roll left</button><button data-action="rollRight">Roll right</button><button data-action="brake">Brake</button></div></details>
+  <details class="more-controls"><summary>Mouse, touch & gamepad controls</summary><p>Launch, then click the view to capture the mouse. Move the mouse to look; stop moving to stop turning. Mouse look levels roll and limits pitch. WASD thrusts; Space / Ctrl rises / descends. Arrow keys and Q / E retain flight turning and roll. Escape releases the mouse and pauses; resume, then click to capture again. Touch or unavailable mouse capture: drag to look. On a standard gamepad: left stick strafes / thrusts; right stick turns; shoulder buttons roll; triggers descend / rise; A brakes; Menu pauses. Release all gamepad controls after launch or resume. Losing focus pauses the experiment; resume deliberately.</p><div class="touch-controls" aria-label="On-screen flight controls"><button data-action="forward">Forward</button><button data-action="backward">Reverse</button><button data-action="left">Left</button><button data-action="right">Right</button><button data-action="up">Rise</button><button data-action="down">Descend</button><button data-action="rollLeft">Roll left</button><button data-action="rollRight">Roll right</button><button data-action="brake">Brake</button></div></details>
 </main>
 <footer><span>QSOL–IMC <b>/</b> VANILLAJS</span><span>Original geometry. Native web standards. Zero runtime dependencies.</span><span>Apache–2.0 ↗</span></footer>
 <p id="announcement" class="sr-only" aria-live="polite"></p>

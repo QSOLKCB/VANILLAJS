@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — mouse-look controls
+
+- Both labs use click-to-capture relative mouse look with WASD movement. Mouse
+  takeover cancels spin, levels roll and clamps pitch; stopping the mouse stops
+  turning. Original arrow, Q/E and gamepad flight controls remain available.
+- Reusable `attachMouseLook` browser adapter and pure `lookFlight` controller;
+  relative drag fallback for touch or unavailable capture, Escape/focus-safe
+  cancellation, and left-click firing in Interaction Lab.
+- Regression coverage for input lifecycle, no-spin aiming, keyboard compatibility
+  and packaged Chromium pointer capture in both labs.
+
 ## 0.2.0 — Interaction Lab (release candidate)
 
 - Finite ray and segment queries with stable nearest-hit selection, explicit

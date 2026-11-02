@@ -46,7 +46,7 @@ time while keeping the interface responsive. Timing and physics use a fixed
 | --- | --- | --- |
 | Forward / reverse, strafe | W / S, A / D | Left stick |
 | Rise / descend | Space / Ctrl | RT / LT |
-| Pitch / yaw | Arrow keys, or drag the view like a joystick | Right stick |
+| Pitch / yaw | Mouse look (click view to capture), or arrow keys | Right stick |
 | Roll | Q / E | LB / RB |
 | Brake translation and rotation | Hold X | Hold A |
 | Bullet time | Hold B; or use the time slider | Use the time slider |
@@ -54,9 +54,14 @@ time while keeping the interface responsive. Timing and physics use a fixed
 | Restart | Reset | On-screen Reset |
 
 Expand **Mouse, touch & gamepad controls** for on-screen flight buttons. Multiple
-simultaneous pointers are supported. Dragging the view controls angular input;
-releasing it centres the input, while inertial angular motion continues.
-There is no pointer lock. Keyboard controls provide every flight axis.
+simultaneous pointers are supported. Launch, then click the view for captured mouse
+look: moving turns the view directly; stopping stops the turn. Mouse takeover
+levels roll, limits pitch just short of vertical and clears existing angular
+momentum. Translation still follows the selected flight model. Arrows and Q/E
+retain their original torque controls, including inertial angular coasting.
+Escape releases the cursor and pauses; resume, then click to capture again.
+Touch or denied/unavailable pointer lock uses relative drag-to-look with the same
+no-spin behaviour. Keyboard controls still provide every flight axis.
 
 Blur, hidden tabs and controller disconnect pause play. Resume is deliberate;
 held inputs are cleared, and gamepads must return to neutral. Unmapped gamepads
@@ -74,7 +79,8 @@ projectile system, conditional rule resolver and WebGL renderer:
 | **Target practice** | Fire at a drone, open its shield field, then land four hits | Inertial 6DOF flight, swept shots, conditional damage and spent targets |
 | **Reaction Bench** | Fire with ignition off; enable ignition; remove the O₂ feed; compare neon and an empty chamber | Successful, blocked and resisted outcomes with explicit reasons |
 
-**F** or the on-screen **Fire** button shoots; arrows or dragging steer. Target
+**Left click** while captured, **F**, or the on-screen **Fire** button shoots.
+Clicking the view first captures mouse look without firing; arrows still turn. Target
 practice retains WASD / Space / Ctrl / Q / E flight and X braking. Reaction Bench
 uses a stationary observation point. **Line up a shot** repositions the camera,
 clears projectiles and pauses; resume deliberately. Controls also support touch
@@ -97,7 +103,7 @@ No Reaction Rumble code, artwork or data is included.
 | `modules/time/` | Fixed ticks, interpolation fraction, pause, time scaling and catch-up limits |
 | `modules/collision/` | Swept cube movement plus finite ray/segment queries against static AABBs |
 | `modules/flight/` | Force/torque integration; assisted and inertial control |
-| `modules/input/` | Pure action state, keyboard adapter and standard gamepad sampling |
+| `modules/input/` | Pure action state, keyboard/mouse adapters and standard gamepad sampling |
 | `modules/render-webgl/` | Minimal WebGL 1 triangle, line and point rendering |
 | `modules/projectiles/` | Bounded constant-velocity projectiles, swept impacts and lifetimes |
 | `modules/interactions/` | Ordered conditions → effects with explicit outcome reasons |

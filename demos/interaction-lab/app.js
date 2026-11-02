@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import {clamp,mix,quatInterpolate,rotate,quatConjugate,subtract,length} from '../../modules/math/index.js';
+import {lookFlight} from '../../modules/flight/index.js';
 import {FixedClock} from '../../modules/time/index.js';
-import {Actions,attachKeyboard,flightBindings} from '../../modules/input/index.js';
+import {Actions,attachKeyboard,attachMouseLook,flightBindings} from '../../modules/input/index.js';
 import {raycast} from '../../modules/collision/index.js';
 import {Renderer,boxVertices,ringVertices} from '../../modules/render-webgl/index.js';
 import {createLab,stepLab,focusTarget,LABS} from './recipes.js';
@@ -9,10 +10,19 @@ import {createLab,stepLab,focusTarget,LABS} from './recipes.js';
 const $=id=>document.getElementById(id),canvas=$('range-view');
 const clock=new FixedClock(),actions=new Actions(),screen=new Actions(),pointers=new Map(),buttonKeys=new Set();
 let session=createLab(),renderer,staticMesh,geometryMesh,lineMesh,labels=[],running=false,started=false,unavailable=false;
-let previousTime=null,frameHandle,lastHud=0,shownReceipt=null,drag=null,dragTurn=[0,0,0],pendingFire=false;
+let previousTime=null,frameHandle,lastHud=0,shownReceipt=null,pendingFire=false;
 const keyboard=attachKeyboard(window,actions,{bindings:{...flightBindings,KeyF:'fire'},enabled:()=>running});
+let mouseExitAt=-Infinity;
+const mouse=attachMouseLook(canvas,{enabled:()=>running&&!unavailable,
+  onLock:()=>{
+    lookFlight(session.body);session.previous.orientation=[...session.body.orientation];
+    $('flight-hint').textContent='Mouse look active · WASD thrust · Esc releases & pauses';
+  },
+  onUnlock:event=>{mouseExitAt=event.timeStamp;pause('Mouse released. Resume, then click the view to capture it again.');},
+  onError:()=>{$('flight-hint').textContent='Mouse capture unavailable · drag to look or use arrows';}
+});
 function clearInput(){
-  keyboard.clear();screen.clear();pointers.clear();buttonKeys.clear();drag=null;dragTurn=[0,0,0];pendingFire=false;
+  keyboard.clear();mouse.release();screen.clear();pointers.clear();buttonKeys.clear();pendingFire=false;
   document.querySelectorAll('.pressed').forEach(b=>b.classList.remove('pressed'));
 }
 function overlay(title,copy,label){
@@ -28,7 +38,7 @@ function launch(){
   if(unavailable)return;
   clearInput();running=true;started=true;clock.setPaused(false);previousTime=null;
   $('curtain').hidden=true;$('status').textContent='RUNNING';$('pause').disabled=false;$('pause').textContent='Pause';$('fire').disabled=false;
-  canvas.focus({preventScroll:true});
+  canvas.focus({preventScroll:true});$('flight-hint').textContent=session.kind==='space'?'Click view for mouse look · WASD thrust · arrows turn':'Click view for mouse look · arrows turn · F fires';
 }
 function buildScene(){
   renderer.clearMeshes();
@@ -58,7 +68,7 @@ function select(kind){
   $('space-settings').hidden=kind!=='space';$('bench-settings').hidden=kind!=='bench';$('science-note').hidden=kind!=='bench';$('product-count').hidden=kind!=='bench';
   $('shields').checked=true;$('oxygen').checked=true;$('ignition').checked=false;$('slow').checked=false;
   $('range-mode').textContent=kind==='space'?'INERTIAL / FREE DRIFT':'OBSERVATION STATION';
-  $('flight-hint').textContent=kind==='space'?'WASD thrust · arrows turn · X brake':'Arrows or drag to aim · focus a specimen below';
+  $('flight-hint').textContent=kind==='space'?'WASD thrust · click view for mouse look':'Click view for mouse look · focus a specimen below';
   document.querySelectorAll('[data-lab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lab===kind)));
   $('outcome-badge').dataset.state='ready';$('outcome-badge').textContent='AWAITING IMPACT';
   $('outcome-title').textContent='What will happen?';$('outcome-reason').textContent='Fire at a target. The range will explain which conditions decided the outcome.';
@@ -118,12 +128,14 @@ function frame(now){
   const delta=previousTime===null?0:Math.max(0,(now-previousTime)/1000);previousTime=now;
   const key=actions.flight(),touch=screen.flight();
   const command={thrust:key.thrust.map((v,i)=>clamp(v+touch.thrust[i],-1,1)),
-    turn:key.turn.map((v,i)=>clamp(v+touch.turn[i]+dragTurn[i],-1,1)),brake:key.brake||touch.brake};
+    turn:key.turn.map((v,i)=>clamp(v+touch.turn[i],-1,1)),brake:key.brake||touch.brake};
   const result=clock.advance(delta,dt=>{
+    const look=mouse.consume();
+    if(look.pitch || look.yaw)lookFlight(session.body,look);
     // Consume edges even while held, so a brief tap survives until this tick
     // without leaving a stale press to fire after release or a later cooldown.
     const keyPress=actions.consume('fire'),buttonPress=screen.consume('fire');
-    stepLab(session,{...command,fire:!!(keyPress||buttonPress||actions.value('fire')||screen.value('fire')||pendingFire)},dt);pendingFire=false;
+    stepLab(session,{...command,fire:!!(keyPress||buttonPress||actions.value('fire')||screen.value('fire')||pendingFire||look.primary||look.pressed)},dt);pendingFire=false;
   },$('slow').checked?.25:1);
   render(running?result.alpha:1);
   if(now-lastHud>80){updateHud();lastHud=now;}frameHandle=requestAnimationFrame(frame);
@@ -132,16 +144,10 @@ $('launch').addEventListener('click',launch);$('pause').addEventListener('click'
 $('reset').addEventListener('click',()=>select(session.kind));
 document.querySelectorAll('[data-lab]').forEach(b=>b.addEventListener('click',()=>select(b.dataset.lab)));
 for(const key of ['shields','oxygen','ignition'])$(key).addEventListener('change',()=>{session.context[key]=$(key).checked;});
-window.addEventListener('keydown',event=>{if(event.code==='Escape'&&!event.repeat&&started&&!unavailable){event.preventDefault();running?pause():launch();}});
+window.addEventListener('keydown',event=>{if(event.code==='Escape'&&!event.repeat&&event.timeStamp-mouseExitAt>200&&started&&!unavailable){event.preventDefault();running?pause():launch();}});
 window.addEventListener('blur',()=>pause('The window lost focus. Controls were cancelled.'));
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause('The tab was hidden. No simulation time passed while you were away.');});
 window.addEventListener('pagehide',()=>pause());
-canvas.addEventListener('pointerdown',event=>{
-  if(!running || drag)return;canvas.focus({preventScroll:true});canvas.setPointerCapture(event.pointerId);drag={id:event.pointerId,x:event.clientX,y:event.clientY};
-});
-canvas.addEventListener('pointermove',event=>{if(drag?.id===event.pointerId)dragTurn=[clamp((drag.y-event.clientY)/100,-1,1),clamp((drag.x-event.clientX)/100,-1,1),0];});
-const releaseDrag=event=>{if(drag?.id===event.pointerId){drag=null;dragTurn=[0,0,0];}};
-for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,releaseDrag);
 document.querySelectorAll('[data-action]').forEach(button=>{
   const action=button.dataset.action;
   const sync=()=>{const held=[...pointers.values()].includes(action)||buttonKeys.has(action);screen.set(action,held);button.classList.toggle('pressed',held);};

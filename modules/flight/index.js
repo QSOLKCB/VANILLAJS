@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import {finiteVector, quatNormalize, rotate, quatConjugate, integrateOrientation, length, scale, cross, clamp} from '../math/index.js';
+import {finiteVector, quatNormalize, quatMultiply, rotate, quatConjugate, integrateOrientation, length, scale, cross, clamp} from '../math/index.js';
 import {moveAndSlide} from '../collision/index.js';
 export function createBody({position=[0,0,0], velocity=[0,0,0], orientation=[0,0,0,1], angularVelocity=[0,0,0], mass=1, halfSize=0.45, inertia} = {}) {
   if (!(Number.isFinite(mass) && mass>0 && Number.isFinite(halfSize) && halfSize>0)) throw new RangeError('mass and halfSize must be positive');
@@ -18,6 +18,18 @@ export function flightConfig(options={}) {
 }
 export function snapshot(body) {
   return {position:[...body.position],orientation:[...body.orientation]};
+}
+/** Kinematic mouse-look takeover: radians, world +Y yaw, local +X pitch.
+ * Levels roll, clamps pitch short of vertical and cancels angular momentum.
+ * Translation is untouched. Apply once per consumed relative look sample. */
+export function lookFlight(body, {pitch=0,yaw=0}={}) {
+  if (!Number.isFinite(pitch) || !Number.isFinite(yaw)) throw new RangeError('look angles must be finite');
+  const forward=rotate(quatNormalize(finiteVector(body.orientation,4)),[0,0,-1]);
+  const heading=(Math.atan2(-forward[0],-forward[2])+yaw%(2*Math.PI))/2;
+  const elevation=clamp(Math.asin(clamp(forward[1],-1,1))+pitch,-Math.PI/2+.01,Math.PI/2-.01)/2;
+  body.orientation=quatNormalize(quatMultiply([0,Math.sin(heading),0,Math.cos(heading)],
+    [Math.sin(elevation),0,0,Math.cos(elevation)]));
+  body.angularVelocity=[0,0,0];
 }
 /** Semi-implicit Euler translation; body-space Euler rotation. Force is world-space,
  * torque is body-space. Caller supplies finite SI quantities. */

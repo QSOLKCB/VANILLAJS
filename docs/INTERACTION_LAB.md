@@ -20,12 +20,20 @@ projectile slots, at most 64 short-lived impact flashes and eight log entries.
 All feedback, expiry and cooldown timing uses simulation seconds.
 
 Pause/blur/visibility loss freezes ticks and clears keyboard, pointer and button
-states. Resuming discards wall-clock debt. F and on-screen controls need a fresh
-press; quick keyboard/button taps are retained until a simulation tick can consume
+states. Resuming discards wall-clock debt. Captured left click, F and on-screen controls need a fresh
+press; quick mouse/keyboard/button taps are retained until a simulation tick can consume
 them, then discarded even when a cooldown blocks firing. Changing
 recipes resets all simulation state. Focusing a target preserves scores but
 repositions/stops the camera, cancels old shots and pauses. Render interpolation
 does not change simulation or collision state.
+
+Click the running view to capture mouse look, then use WASD to thrust and left
+click to fire (F and the Fire button remain available). The capture click does
+not fire. Relative mouse movement directly aims with a level horizon and limited
+pitch; stopping stops rotation. Mouse takeover cancels previous spin but leaves
+linear momentum. Escape releases capture and pauses. Arrows/Q/E keep their
+original flight control mappings; touch and denied capture use relative drag.
+Reaction Bench retains its stationary camera.
 
 ## Target practice
 
