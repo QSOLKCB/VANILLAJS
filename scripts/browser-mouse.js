@@ -16,11 +16,18 @@ export async function verifyMouseLook(browser,baseURL){
     await page.waitForFunction(()=>document.querySelector('#status').textContent==='READY');
     if(lab==='flight')await page.locator('#choose-arena').click();
     await page.locator('#launch').click();const canvas=page.locator(selector),box=await canvas.boundingBox();
-    await canvas.click();await page.waitForFunction(()=>document.pointerLockElement instanceof HTMLCanvasElement);
+    await page.evaluate(()=>{
+      globalThis.mouseEvidence=[];
+      for(const name of ['mousemove','pointermove','pointerlockchange'])document.addEventListener(name,event=>{
+        if(globalThis.mouseEvidence.length<30)globalThis.mouseEvidence.push({type:name,x:event.movementX,y:event.movementY,locked:!!document.pointerLockElement});
+      });
+    });
+    await canvas.click();await page.waitForFunction(()=>document.pointerLockElement instanceof HTMLCanvasElement && document.querySelector('#hint,#flight-hint').textContent.includes('active'));
     if(lab==='interaction')assert.equal(await page.locator('#shots').textContent(),'0','capture click must not fire');
     const before=await picture(page,selector);
-    await page.mouse.move(box.x+box.width/2+60,box.y+box.height/2-25);
+    await page.mouse.move(box.x+box.width/2+60,box.y+box.height/2-25,{steps:6});
     await page.waitForTimeout(250);const aimed=await picture(page,selector);
+    console.log(lab,'mouse event evidence',await page.evaluate(()=>({events:globalThis.mouseEvidence,status:document.querySelector('#status').textContent})));
     assert.notEqual(aimed,before,`${lab}: relative mouse motion must turn the view`);
     await page.waitForTimeout(350);assert.equal(await picture(page,selector),aimed,`${lab}: view must stop when mouse stops`);
     if(lab==='flight')assert.equal(parseFloat(await page.locator('#spin').textContent()),0);
@@ -31,7 +38,7 @@ export async function verifyMouseLook(browser,baseURL){
     // Existing arrow-key flight still turns; a subsequent mouse sample takes over.
     await page.keyboard.down('ArrowLeft');await page.waitForTimeout(200);await page.keyboard.up('ArrowLeft');
     if(lab==='flight')assert.ok(parseFloat(await page.locator('#spin').textContent())>.1);
-    await page.mouse.move(box.x+box.width/2+70,box.y+box.height/2-25);await page.waitForTimeout(200);
+    await page.mouse.move(box.x+box.width/2+70,box.y+box.height/2-25,{steps:6});await page.waitForTimeout(200);
     if(lab==='flight')assert.equal(parseFloat(await page.locator('#spin').textContent()),0);
     await page.keyboard.down('w');await page.waitForTimeout(250);await page.keyboard.up('w');
     if(lab==='flight')assert.ok(parseFloat(await page.locator('#speed').textContent())>1);
