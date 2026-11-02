@@ -48,7 +48,7 @@ export async function verifyFpsMotion(browser,baseURL){
   assert.equal(Number(await mobile.locator('#jumps').textContent()),0,'activating the crouch button must not also jump');
   await mobile.keyboard.up('Space');await mobile.waitForFunction(()=>document.querySelector('#body-height').textContent==='1.80 m');
   await mobile.locator('.controls summary').tap();await mobile.locator('#choose-tracking').tap();await mobile.locator('#launch').tap();
-  await mobile.waitForFunction(()=>Number(document.querySelector('#target-x').textContent())>1);
+  await mobile.waitForFunction(()=>Number(document.querySelector('#target-x').textContent)>1);
   assert.ok(await mobile.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'four-recipe mobile layout must not overflow');
   await mobile.screenshot({path:'browser-artifacts/fps-motion-mobile.png',fullPage:true});
   assert.deepEqual(errors,[]);await Promise.all([page.close(),mobile.close()]);
