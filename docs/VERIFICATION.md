@@ -1,6 +1,39 @@
-# Verification — VANILLAJS 0.9.0
+# Verification — VANILLAJS 1.0.0
 
-## The Brass Engine: current change
+## The Clockwork Vault: current change
+
+- **240 Node tests passed locally**, retaining all 221 previous regressions.
+  Nineteen additions cover the six puzzles, bounded hints, staged latching,
+  command limits, undo, 144 phase/fraction replay cases, validation failures,
+  complete physical progression, moving-lift saves and kinematic interlocks.
+- An independent arithmetic OMI/XOR oracle traverses all reachable states for
+  each level. It confirms shortest lengths 2/3/4/5/6/7, with 28,928 reachable-state
+  visits across six components and hashed complete distance tables. Runtime
+  hints use separate code and bounded 512-expansion tick slices.
+- A simulated player completes all six locks and the exit through actual gates,
+  causeway and lift colliders, with zero rescues. Separate tests cover the closed
+  gate, blocked interactions, fall recovery, preserved progression, halted world
+  motion with continued crouch control, and the four-hour tick boundary.
+- JSON round trips preserve player/support state and pending cam motion. Bad
+  schemas, words, histories, future operated locks, release order, supports,
+  overlaps, console reachability and completion are rejected before replacement.
+  These are validated save snapshots, not authenticated event histories.
+- Fixed pause and 30/60/144 Hz schedules preserve state in the tested runtime.
+  Existing OMI, Brass Engine and navigation reports and the new vault graph
+  report reproduce. Contracts/syntax cover 75 JavaScript files, eleven modules
+  and one research entry. Fifteen recipes and three research demonstrations are
+  registered; 47 public files plus a hash manifest are packaged.
+- Packaged Chromium scenarios cover visible WebGL, the full six-lock expedition,
+  real gate/bridge/lift traversal, staged motor/undo/hints, actual partial JSON
+  download/restore, bad and stale file input, fresh keys, cancelled gestures,
+  pointer lock, pause/blur/hidden, graphics failure and 390/320 px touch layouts.
+  All previous lab scenarios remain enabled. Actual CI execution and inspected
+  screenshots/artifact hashes are recorded in the PR after the run.
+- Local Chromium is unavailable; browser checks execute in CI. Physical devices,
+  other browser engines and performance claims remain unverified. The 1.0.0
+  showcase version preserves the explicit experimental API/research labels.
+
+## Historical Brass Engine (0.9.0)
 
 - **221 Node tests passed locally**, retaining all 207 earlier regressions.
   Fourteen additions cover staged register values, latch timing, reversible

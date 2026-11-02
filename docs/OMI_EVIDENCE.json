@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "experiment": "ARCH-OMI-001",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "runtime": "v24.22.1",
   "references": {
     "portal": "5d2ebac312a8d44413af2a67ca9061e66594d9c8",

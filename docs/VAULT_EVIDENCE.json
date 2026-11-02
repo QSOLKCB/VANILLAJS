@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "runtime": "v24.22.1",
+  "levelSet": "vault-six-1",
+  "domain": 65536,
+  "attribution": "Brian Thorne's ARCH OMI; original VANILLAJS encoding and puzzle definitions",
+  "method": "Independent arithmetic delta/XOR, complete FIFO traversal of each reachable component; each completed delta or XOR costs one command. Undo and cam detents are not graph edges.",
+  "distanceTableEncoding": "65,536 signed int32 little-endian distances in ascending word order; -1 denotes unreachable",
+  "totalReachableStateVisits": 28928,
+  "puzzles": [
+    {
+      "id": "awakening",
+      "seed": 4660,
+      "target": 60280,
+      "masks": [
+        1
+      ],
+      "shortestCommands": 2,
+      "solution": [
+        0,
+        1
+      ],
+      "reachableStates": 256,
+      "examinedEdges": 512,
+      "distanceTableSha256": "2887f061336f5f8f0bae8cb1a0fffe086355e652a13b618aac112b698b6df35c"
+    },
+    {
+      "id": "twins",
+      "seed": 18977,
+      "target": 49676,
+      "masks": [
+        240,
+        3840
+      ],
+      "shortestCommands": 3,
+      "solution": [
+        0,
+        1,
+        2
+      ],
+      "reachableStates": 1024,
+      "examinedEdges": 3072,
+      "distanceTableSha256": "42c50666129b044689ca67ce83b097880a5942314dfb27967a77d69d1515d98f"
+    },
+    {
+      "id": "stillness",
+      "seed": 5239,
+      "target": 41335,
+      "masks": [
+        4096,
+        256
+      ],
+      "shortestCommands": 4,
+      "solution": [
+        1,
+        0,
+        1,
+        2
+      ],
+      "reachableStates": 1024,
+      "examinedEdges": 3072,
+      "distanceTableSha256": "fe6ca34781b238a699850eabf9c5acbb2ca7d63b187670806b86b863b87e430b"
+    },
+    {
+      "id": "causeway",
+      "seed": 195,
+      "target": 22974,
+      "masks": [
+        13107,
+        15,
+        32769
+      ],
+      "shortestCommands": 5,
+      "solution": [
+        0,
+        1,
+        2,
+        0,
+        3
+      ],
+      "reachableStates": 8192,
+      "examinedEdges": 32768,
+      "distanceTableSha256": "0f72a9d94b04fa0610302aff4715547ef6f53f0ed3d5c6aa5e3e027f77b9143b"
+    },
+    {
+      "id": "ascent",
+      "seed": 48879,
+      "target": 31358,
+      "masks": [
+        4080,
+        165,
+        33825
+      ],
+      "shortestCommands": 6,
+      "solution": [
+        0,
+        1,
+        0,
+        1,
+        2,
+        3
+      ],
+      "reachableStates": 2048,
+      "examinedEdges": 8192,
+      "distanceTableSha256": "45ac0e90577d622a6bbab3a1208e5ba60a8d78e1e01308dde8643196e5ef20fe"
+    },
+    {
+      "id": "keeper",
+      "seed": 23100,
+      "target": 12719,
+      "masks": [
+        4369,
+        584,
+        32769
+      ],
+      "shortestCommands": 7,
+      "solution": [
+        0,
+        1,
+        2,
+        0,
+        1,
+        0,
+        3
+      ],
+      "reachableStates": 16384,
+      "examinedEdges": 65536,
+      "distanceTableSha256": "fee779205be574c71023c780f777f7a390afa309b44442dfb0f5c47e13da5dbb"
+    }
+  ]
+}

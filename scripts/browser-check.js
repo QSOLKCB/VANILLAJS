@@ -13,6 +13,7 @@ import {verifyRts} from './browser-rts.js';
 import {verifyFlow} from './browser-flow.js';
 import {verifyOmi} from './browser-omi.js';
 import {verifyMachine} from './browser-machine.js';
+import {verifyVault} from './browser-vault.js';
 const require=createRequire(import.meta.url),{chromium}=require('playwright');
 const root=resolve(import.meta.dirname,'../dist');
 const server=createServer(async(req,res)=>{
@@ -80,6 +81,7 @@ try{
   await verifyFlow(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyOmi(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyMachine(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
+  await verifyVault(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   const unsupported=await browser.newPage();await unsupported.addInitScript(()=>HTMLCanvasElement.prototype.getContext=()=>null);
   await unsupported.goto(page.url());await unsupported.locator('#error').waitFor({state:'visible'});
   assert.match(await unsupported.locator('#error').textContent(),/WebGL is unavailable/);
