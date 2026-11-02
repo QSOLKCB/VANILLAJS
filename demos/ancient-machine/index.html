@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#201c17"><meta name="description" content="An imagined ancient calculating engine. Turn the crank to trace an exact 16-bit OMI computation through brass drums and XOR gates.">
+  <title>The Brass Engine · VANILLAJS</title><link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header><a class="brand" href="../../index.html">VANILLA<span>JS</span><small>QSOL–IMC / INSTRUMENTS</small></a><nav aria-label="Labs"><a href="../omi-lab/index.html">OMI Lab ↗</a><a href="../../index.html">Flight Lab ↗</a><a href="https://github.com/QSOLKCB/VANILLAJS">Source ↗</a></nav></header>
+<main>
+  <section class="intro"><div><p class="eyebrow">INSTRUMENT No. 006 / ARCH OMI</p><h1>The Brass Engine<span>.</span></h1><p class="lede">An ancient machine. An exact little universe.</p></div><p class="edition">XVI BITS<br><span>FOUR DRUMS · EIGHT DETENTS</span></p></section>
+  <div class="instrument-bar"><span><i id="status-light"></i> <strong id="status">AT REST</strong></span><p>One revolution. One OMI Δ step.</p><span class="serial">MODEL OMI / 01</span></div>
+  <div class="workspace">
+    <section class="mechanism" aria-labelledby="mechanism-title">
+      <div class="panel-heading"><h2 id="mechanism-title">The calculating chamber</h2><span>ENGRAVED IN BASE XVI</span></div>
+      <div class="machine-face">
+        <svg id="machine" viewBox="0 0 880 710" role="img" aria-labelledby="machine-title machine-description">
+          <title id="machine-title">Four hexadecimal register drums and an eight-position OMI cam</title>
+          <desc id="machine-description">The outer drums show the latched word. The central crank advances the computation; the registers alongside reveal each rotation and XOR.</desc>
+          <defs>
+            <radialGradient id="brass"><stop stop-color="#f1ce83"/><stop offset=".52" stop-color="#a67a38"/><stop offset=".82" stop-color="#dac182"/><stop offset="1" stop-color="#735122"/></radialGradient>
+            <linearGradient id="plate" x2="1" y2="1"><stop stop-color="#bba16a"/><stop offset=".45" stop-color="#e3ce97"/><stop offset="1" stop-color="#9b804c"/></linearGradient>
+            <radialGradient id="well"><stop stop-color="#3a3022"/><stop offset="1" stop-color="#181811"/></radialGradient>
+            <linearGradient id="arm"><stop stop-color="#806031"/><stop offset=".45" stop-color="#e6ca87"/><stop offset="1" stop-color="#98763d"/></linearGradient>
+          </defs>
+          <rect x="16" y="16" width="848" height="678" rx="28" class="outer-frame"/>
+          <rect x="30" y="30" width="820" height="650" rx="20" class="inner-frame"/>
+          <g class="screws" aria-hidden="true"><g transform="translate(52 52)"><circle r="9"/><path d="M-5 4 5-4"/></g><g transform="translate(828 52)"><circle r="9"/><path d="M-5-4 5 4"/></g><g transform="translate(52 658)"><circle r="9"/><path d="M-5-4 5 4"/></g><g transform="translate(828 658)"><circle r="9"/><path d="M-5 4 5-4"/></g></g>
+          <text x="440" y="66" class="inscription">DETERMINISTIC CALCULATING ENGINE</text>
+          <g class="relations" aria-hidden="true"><path d="M205 195H675V515H205V195L675 515M675 195 205 515"/><path d="M205 201H669V509H211V201"/></g>
+          <g id="edge-values" aria-label="Derived XOR edge values"></g>
+          <g id="drums"></g>
+          <g transform="translate(440 355)">
+            <circle r="140" class="cam-surround"/><g id="cam-marks"></g>
+            <g id="cam"><path id="cam-teeth" fill="url(#brass)"/><circle r="105" class="cam-inset"/><g class="spokes"><path d="M-98 0H98M0-98V98M-69-69 69 69M-69 69 69-69"/></g><circle r="75" class="cam-inner"/></g>
+            <circle r="51" class="hub"/>
+            <g id="crank-arm"><path d="M-15 14Q-26-1-12-15L76-89Q91-99 101-86Q110-73 97-63L14 13Z" fill="url(#arm)"/><circle cx="88" cy="-77" r="21" class="crank-grip"/><circle cx="88" cy="-77" r="12" class="grip-inset"/></g>
+            <circle r="18" fill="url(#brass)"/><circle r="6" class="axle"/>
+          </g>
+          <path d="M431 198H449L440 212Z" class="cam-pointer"/>
+          <g class="nameplate"><rect x="322" y="574" width="236" height="70" rx="5"/><text x="440" y="597">OMICRON · FIXED KEY</text><text x="440" y="626" class="constant">5 A 3 C</text></g>
+          <text x="440" y="667" class="maker">ARCH OMI / BRIAN THORNE · VANILLAJS CONSTRUCTION</text>
+        </svg>
+        <button id="crank" class="crank-target" aria-label="Turn crank one detent" title="Turn one detent"></button>
+      </div>
+      <div class="cam-caption"><span id="detent-label">DETENT 0 / 8</span><strong id="stage">Ready to capture</strong><span class="turn-arrow">↻</span></div>
+      <div class="controls" role="group" aria-label="Operate the machine"><button id="back" disabled>← Back</button><button id="step">Detent →</button><button id="turn">Full turn ↻</button><button id="motor" class="primary">Run motor</button></div>
+      <div class="mechanism-foot"><label for="rate">Motor <select id="rate"><option value="60">2 detents / sec</option><option value="30" selected>4 detents / sec</option><option value="15">8 detents / sec</option></select></label><button id="reset">Reset ↺</button><label class="motion"><input id="reduced-motion" type="checkbox"> Reduced motion</label></div>
+      <p class="controls-note">Tap the crank, or focus it and use ← / → to step. Enter turns once. Space starts or pauses the motor. Escape and focus loss pause.</p>
+    </section>
+    <aside class="ledger" aria-label="Machine registers and replay">
+      <section class="readout"><div class="panel-heading"><h2>The latched word</h2><span id="period">PERIOD 8</span></div><output id="word" aria-label="Current sixteen-bit word">0x1234</output><div class="counters"><div><small>REVOLUTIONS</small><strong id="turns">00000</strong></div><div><small>DETENTS</small><strong id="detents">000000</strong></div><div><small>MOTOR TICK</small><strong id="subtick">00 / 30</strong></div></div><p>Drums change only when the eighth detent latches the result.</p></section>
+      <section class="seed-panel"><form id="seed-form"><label for="seed">INITIAL WORD <span>0000 — FFFF</span></label><div class="seed-entry"><input id="seed" value="1234" maxlength="12" autocomplete="off" spellcheck="false" inputmode="text" aria-describedby="seed-help"><button id="load" type="submit">Load</button></div></form><p id="seed-help">A new word rewinds the whole mechanism.</p><div class="presets" aria-label="Example cycles"><button data-seed="1234">8 turns</button><button data-seed="0005">4 turns</button><button data-seed="0063">2 turns</button><button data-seed="1477">Fixed point</button></div></section>
+      <section class="register-panel"><div class="panel-heading"><h2>Under the plate</h2><span>15 ← BIT → 0</span></div><div id="registers"></div><div class="closure"><span>FACE RESIDUALS</span><output id="faces">FS 0 · GS 0 · RS 0 · US 0</output></div></section>
+      <section class="replay-panel"><div class="panel-heading"><h2>The keeper’s record</h2><span>LOCAL JSON</span></div><p>Save the seed, counter and exact motor position. Restoring always leaves the engine paused.</p><div class="replay-actions"><button id="save">Save replay ↓</button><button id="restore">Restore replay ↑</button><input id="replay-file" type="file" accept=".json,application/json" hidden></div></section>
+    </aside>
+  </div>
+  <p id="message" class="message" role="status">The mechanism is ready. Turn the crank to capture the first word.</p>
+  <div class="bottom-grid">
+    <section class="receipt-panel"><div class="panel-heading"><h2>The last eight revolutions</h2><span>INPUT → OUTPUT</span></div><table><thead><tr><th scope="col">Turn</th><th scope="col">Captured</th><th scope="col">Latched</th></tr></thead><tbody id="receipts"><tr><td colspan="3">No completed revolutions yet.</td></tr></tbody></table></section>
+    <section class="field-notes"><p class="eyebrow">NOTES FROM THE WORKBENCH</p><h2>Old-world form.<br>Finite-state mathematics.</h2><p>This imagined instrument gives the OMI rule a mechanical face. The brass, cams and drums illustrate discrete integer operations; this is not a reconstruction of a historical device or a continuous analog solver.</p><p class="equation">Δ(x) = rotl(x, 1) ⊕ rotl(x, 3)<br>⊕ rotr(x, 2) ⊕ 0x5A3C</p><p>All 65,536 words return after eight revolutions. Some return sooner. The four drums use VANILLAJS’s nibble encoding of FS, GS, RS and US.</p><p>Credit: <a href="https://github.com/bthornemail">Brian Thorne’s ARCH OMI ↗</a><br><a href="https://github.com/QSOLKCB/VANILLAJS/blob/main/docs/BRASS_ENGINE.md">Mechanism, replay and evidence ↗</a> · <a href="../omi-lab/index.html">Explore the complete OMI census ↗</a></p></section>
+  </div>
+</main>
+<footer><span>QSOL–IMC / VANILLAJS <b>v0.9.0</b></span><span>Original SVG geometry · Native web standards · Apache–2.0</span></footer>
+<noscript><p class="message">Enable JavaScript to operate the calculating engine.</p></noscript>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

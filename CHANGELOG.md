@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.9.0 — The Brass Engine (release candidate)
+
+- Add an imagined ancient OMI instrument with four engraved hex drums, an
+  eight-detent cam, visible rotate/XOR lanes and an eight-row receipt tape.
+- Seven detents prepare each result; the eighth latches it. Reverse detents,
+  full turns and a 120 Hz integer-tick motor use a bounded 16-bit turn counter.
+- Save/restore strict local JSON replays, including partial motor positions;
+  pause, focus cancellation, keyboard/touch and reduced motion stay demo-owned.
+- Add fourteen Node regressions (221 total), exhaustive staged/oracle and reverse
+  evidence for all 65,536 words, 96 partial replay cases and packaged Chromium
+  scenarios. Eleven modules, fourteen game recipes, one research entry with two
+  demonstrations. No runtime dependencies or downloaded assets.
+- Credit Brian Thorne’s ARCH OMI. The mechanism is fictional discrete logic,
+  not a historical reconstruction or a continuous analog solver.
+
 ## 0.8.0 — OMI finite-state experiment (release candidate)
 
 - Add ARCH-OMI-001, attributed to Brian Thorne: strict sixteen-bit delta/XOR

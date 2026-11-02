@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "version": "0.9.0",
+  "runtime": "v24.22.1",
+  "experiment": "ARCH-OMI-001 / Brass Engine",
+  "attribution": "Brian Thorne's ARCH OMI; independently authored mechanical presentation",
+  "domain": 65536,
+  "preLatchWordChecks": 458752,
+  "stagedOracleMatches": 65536,
+  "reverseRoundTrips": 65536,
+  "partialReplayCases": 96,
+  "simulationHz": 120,
+  "ticksPerDetent": [
+    60,
+    30,
+    15
+  ],
+  "maxDetents": 524280,
+  "transitionTable": {
+    "encoding": "ascending input; uint16 little-endian outputs",
+    "bytes": 131072,
+    "sha256": "a0bb32b98090680604ff561e02db2d576194b767bd75bef7284a3d3877fa7c1a"
+  },
+  "scope": "Executed finite-domain checks in the recorded Node runtime; no historical reconstruction, physical analog solver or full OMI protocol claim."
+}

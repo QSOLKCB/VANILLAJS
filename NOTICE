@@ -1,4 +1,4 @@
-VANILLAJS — Flight Lab, Interaction Lab, FPS Lab, RTS Lab and OMI Lab
+VANILLAJS — Flight Lab, Interaction Lab, FPS Lab, RTS Lab, OMI Lab and The Brass Engine
 Copyright 2026 QSOL–IMC / Trent Slade and contributors.
 Distributed under the repository's existing Apache License 2.0.
 
@@ -44,3 +44,8 @@ in docs/ARCH_OMI.md. The finite-word kernel is independently implemented from
 mathematical rules. Four-nibble packing, valued XOR edges, the census, independent
 arithmetic oracle and UI are authored for this repository. No donor source files,
 proofs or assets are copied, and full OMI protocol conformance is not claimed.
+
+The Brass Engine is an independently authored, fictional mechanical presentation
+of the same attributed OMI delta rule. Its SVG drums, cams, staged evaluator,
+replay format and browser controls are original work for this repository. No
+historical reconstruction, physical analog mechanism or donor assets are claimed.

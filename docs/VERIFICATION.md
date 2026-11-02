@@ -1,6 +1,35 @@
-# Verification — VANILLAJS 0.8.0
+# Verification — VANILLAJS 0.9.0
 
-## OMI finite-state experiment: current change
+## The Brass Engine: current change
+
+- **221 Node tests passed locally**, retaining all 207 earlier regressions.
+  Fourteen additions cover staged register values, latch timing, reversible
+  detents, integer motor rates, strict boundaries, snapshot ownership, receipt
+  rewind, JSON replay failure paths and the 65,535-turn counter limit.
+- Every one of 65,536 staged outputs agrees with both the OMI kernel and an
+  independent arithmetic bit oracle. All 458,752 preparation checks keep the
+  latched word unchanged; all 65,536 reverse round trips restore the seed.
+- `scripts/verify-machine.js --check` reproduces the committed mechanical report
+  except its runtime label. The transition table retains the OMI kernel hash.
+  Ninety-six replay cases span eight cam phases, three rates and four periods,
+  restoring fractional ticks and identical future states.
+- Presentation schedules at 30/60/144 Hz produce the same integer state in the
+  tested runtime. Paused clocks preserve partial positions and discard time
+  debt; long stalls remain bounded. Rendered angles never feed back into logic.
+- Syntax/dependency checks cover 68 JavaScript files, eleven core modules and
+  one research entry with two demonstrations. Packaging has 42 public files
+  plus a SHA-256 manifest; evidence, browser tooling and tests remain excluded.
+- Packaged Chromium scenarios exercise visible SVG geometry, exact stage
+  values, reverse movement, fixed/short periods, motor pause, real JSON download
+  and restore, malformed replay rejection, fresh keyboard input, cancelled
+  pointer releases, blur/hidden, counter stop, reduced motion and 390/320 px
+  touch-emulated layouts. All earlier lab browser checks stay enabled.
+- Local Chromium is unavailable; the required browser checks execute in CI.
+  The PR records the actual run and artifact evidence after execution. Other
+  engines, physical touch devices, historical authenticity and real mechanical
+  tolerances are not verified. This is fictional discrete integer logic.
+
+## Historical OMI finite-state experiment (0.8.0)
 
 - **207 Node tests passed locally**, retaining all 196 previous regressions.
   Eleven additions cover strict finite-word boundaries, owned arrays, immutable
