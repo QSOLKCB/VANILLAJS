@@ -1,4 +1,4 @@
-# FPS Lab — grounded movement and moving targets
+# FPS Lab — grounded movement, moving targets and platform riding
 
 Browser entry: `demos/fps-lab/index.html`. Pure demo composition:
 `createFpsLab`, `stepFpsLab`, `focusPlate` in `demos/fps-lab/worlds.js`.
@@ -67,9 +67,47 @@ shots and reloads all freeze on pause or focus loss; reset rewinds tracks and
 clears ammunition/progress. The test suite clears all plates using leading bolts
 and finite reloads, and checks a direct shot that misses a moving plate.
 
+## Clearance lift
+
+Start aboard a 4 m square lift. It waits 2 s, rises 4 m over 4 s, holds for 2 s,
+then descends; the full route repeats every 16 s. The upper deck is at 4.5 m.
+An amber beam has only 1.5 m of standing clearance at the top: hold C to fit.
+If the rider would be crushed, the attempted platform/body transaction is rejected.
+The platform stops and turns amber while the rider still receives input against
+the stopped world. Duck or move clear to resume; the body never commits a partial
+squeeze. This **game-owned interlock** is policy built on the collision result.
+
+Four markers check boarding, rising while crouched, transfer to the static upper
+deck, and a standing finish. Support IDs distinguish riding from merely passing
+near a marker. The lift is not a lift-force or mass/constraint simulation.
+
+## Shuttle run
+
+A 4 m square shuttle crosses a 27 m gap between raised docks. It waits 2 s,
+travels for 8 s, holds at the far dock for 3 s, then returns over 8 s; the cycle
+is 24 s. Stay aboard for the middle marker, then walk or jump onto the far dock.
+Jumping inherits the departure platform's world velocity once; landing reacquires
+support. The lower floor is a recovery zone, not a fatal drop.
+
+Both platform courses rewind route/checkpoints and return the rider to a validated
+spawn after a fall, clearing in-flight shots and transient input. Ammunition,
+shot counters and simulation time persist; Reset restores the whole experiment.
+Reverse route pauses, cancels controls and reverses route-clock direction without
+teleporting the surface. Route time advances only on accepted platform ticks.
+The simulation clock continues during a clearance stop, so the player can react;
+Pause/blur freezes both clocks, rider, targets and weapon state.
+
+Routes are game data, sampled as linear endpoint translations per 120 Hz tick.
+Surfaces keep their orientation/size. Visual interpolation never drives collision.
+These two courses use `stepCharacterPlatforms`; the four earlier FPS recipes keep
+`stepCharacter` with its automatic static stairs and short downward snap. The
+platform controller deliberately has no stair/snap pass. Platform colliders also
+join the moving-shot query over the same accepted interval. See the precise
+[platform and transaction contracts](API.md#platform-character-050).
+
 ## Shared timing and controls
 
-All four recipes run 120 Hz physics through `FixedClock`, with bounded catch-up and
+All six recipes run 120 Hz physics through `FixedClock`, with bounded catch-up and
 presentation interpolation. Grounded movement uses `character`; cooldown,
 magazine and reload state use `weapons`. Input and WebGL remain opt-in adapters.
 The existing flight controller is untouched and stays available to space games.
@@ -89,10 +127,10 @@ FPS Lab does not sample gamepads yet; Flight Lab's original gamepad mapping rema
 
 ## Limits and provenance
 
-The controller is a kinematic upright rectangular box against static AABBs. It
-has gravity, limited horizontal acceleration, step attempts and short ground
-snap. It has no slopes, capsules, moving platforms, dynamic contacts, coyote time,
-jump buffer, ladder or swimming model. Eye height follows the current stance inside
+The controllers use kinematic upright rectangular boxes, with either static
+stairs/snap or translating-surface support. They have gravity and limited motor
+acceleration. Neither implements slopes, capsules, rotating platforms, reciprocal
+dynamic-body contacts, coyote time, jump buffering, ladders or swimming. Eye height follows the current stance inside
 the collider, with bounded pitch and zero roll; no camera collision rig or head
 bob is claimed. Exact numerical contracts are in [API.md](API.md).
 

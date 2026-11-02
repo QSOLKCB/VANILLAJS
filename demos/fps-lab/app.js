@@ -56,10 +56,12 @@ function select(kind){
     const stage=document.createElement('span');stage.dataset.stage=i;stage.textContent=`0${i+1} ${checkpoint.label}`;return stage;
   }));
   $('motion-readout').hidden=kind!=='tracking';
+  $('platform-panel').hidden=!session.platforms.length;$('rider-readout').hidden=!session.platforms.length;
   $('run-note').textContent=kind==='lowpass'?'Hold C to crouch at 2.5 m/s. Release to stand when the roof clears. Follow all four stance markers.':kind==='tracking'?'Three plates move on separate tracks. Lead bolts; aim traces directly. Plate motion freezes while paused.':'Walk at 5 m/s. Sprint at 8 m/s. Hold C to crouch at 2.5 m/s. Shallow stairs climb automatically.';
   document.querySelectorAll('[data-course]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.course===kind)));
   $('outcome').textContent='Ready when you are.';$('impact-log').replaceChildren();const empty=document.createElement('li');empty.textContent='Hits, spent plates and cover all leave a receipt.';$('impact-log').append(empty);
-  overlay({course:'Find your footing.',range:'Make every round count.',lowpass:'Watch your head.',tracking:'Aim where it will be.'}[kind],COURSES[kind].description,'Enter experiment ↗');updateHud();
+  if(session.platforms.length)$('run-note').textContent=kind==='lift'?'The lift stops when headroom runs out. Hold C to continue, then walk onto the upper deck.':'Ride the shuttle to the far dock. Jumping keeps its momentum. Falling returns you to the start.';
+  overlay({course:'Find your footing.',range:'Make every round count.',lowpass:'Watch your head.',tracking:'Aim where it will be.',lift:'Going up. Mind your head.',shuttle:'Keep your feet. Cross the gap.'}[kind],COURSES[kind].description,'Enter experiment ↗');updateHud();
 }
 function updateHud(){
   const body=session.character,weapon=session.weapon.snapshot();
@@ -71,6 +73,10 @@ function updateHud(){
   $('stance').textContent=body.crouched?(session.lastMovement?.standBlocked?'CROUCHED · LOW CEILING':'CROUCHED'):body.grounded?'GROUNDED':body.velocity[1]>0?'RISING':'FALLING';
   $('body-height').textContent=`${(body.halfExtents[1]*2).toFixed(2)} m`;
   $('target-x').textContent=session.targets[0]?.center[0].toFixed(2)??'—';
+  $('support-name').textContent=body.supportId??'AIR';$('rescues').textContent=session.rescues;
+  $('platform-phase').textContent=session.platformTime.toFixed(2);
+  $('platform-state').textContent=session.platformBlocked?'CLEARANCE STOP':session.platformDirection>0?'ROUTE FORWARD':'ROUTE REVERSED';
+  $('platform-note').textContent=session.platformBlocked?'Platform stopped safely. Your controls still work: hold C to duck or move clear.':session.kind==='lift'?'Ride up, duck beneath the beam, then walk forward onto the upper deck.':'Stay aboard until the far dock, then walk or jump forward onto the landing.';
   for(const key of ['steps','jumps','shots','hits'])$(key).textContent=session[key];
   $('cleared').textContent=`${session.cleared} / ${session.targets.length}`;
   const goal=session.checkpoints[session.nextCheckpoint];
@@ -88,6 +94,11 @@ function updateHud(){
 function render(alpha){
   const view=characterView(session.character),position=mix(session.previous.position,view.position,alpha),orientation=quatInterpolate(session.previous.orientation,view.orientation,alpha);
   const vertices=[],lines=[];
+  for(const platform of session.platforms){
+    const center=mix(platform.previousCenter,platform.center,alpha);
+    vertices.push(...boxVertices(center,platform.size,session.platformBlocked?[.8,.48,.22]:platform.color));
+    const r=platform.route;lines.push(r.from[0]+2.1,r.from[1]+.26,r.from[2],.3,.65,.75,r.to[0]+2.1,r.to[1]+.26,r.to[2],.3,.65,.75);
+  }
   for(const target of session.targets){
     const center=target.previousCenter?mix(target.previousCenter,target.center,alpha):target.center;
     const color=target.alive?target.color:[.16,.24,.3];vertices.push(...boxVertices(center,target.size,color));
@@ -114,13 +125,14 @@ function frame(now){
     const look=mouse.consume(),jump=actions.consume('jump')|screen.consume('jump'),reload=actions.consume('reload')|screen.consume('reload');
     const fireEdge=actions.consume('fire')|screen.consume('fire')|look.pressed;
     const fire=fireEdge || ($('automatic').checked && (actions.value('fire')||screen.value('fire')||look.primary));
-    const axis=(a,b)=>actions.axis(a,b)+screen.axis(a,b),previous=session.nextCheckpoint;
+    const axis=(a,b)=>actions.axis(a,b)+screen.axis(a,b),previous=session.nextCheckpoint,priorRescues=session.rescues;
     const events=stepFpsLab(session,{move:[axis('left','right'),axis('forward','backward')],jump:!!jump,reload:!!reload,fire:!!fire,
       sprint:!!(actions.value('sprint')||screen.value('sprint')),
       crouch:!!(actions.value('crouch')||screen.value('crouch')),
       look:{yaw:look.yaw+axis('yawRight','yawLeft')*1.6*dt,pitch:look.pitch+axis('pitchDown','pitchUp')*1.6*dt}},dt);
     if(events.some(e=>e.type==='shot'))lastShotAt=session.elapsed;
     if(previous!==session.nextCheckpoint)$('announcement').textContent=`Checkpoint ${session.nextCheckpoint} of 4 reached.`;
+    if(priorRescues!==session.rescues){clearInput();$('announcement').textContent='Returned to the start. Release and press movement controls again.';}
     if(session.truncated)pause('Collision movement reached its limit. Reset the experiment to recover.');
     if(session.complete){
       running=false;clock.setPaused(true);clearInput();$('status').textContent='COMPLETE';$('pause').disabled=true;$('fire').disabled=true;$('reload').disabled=true;
@@ -133,6 +145,7 @@ $('launch').addEventListener('click',launch);$('pause').addEventListener('click'
 document.querySelectorAll('[data-course]').forEach(b=>b.addEventListener('click',()=>select(b.dataset.course)));
 $('shot-mode').addEventListener('change',()=>{pause('Shot type changed. Resume to compare its behaviour.');clearInput();session.shotMode=$('shot-mode').value;session.projectiles.clear();syncShotNote();});
 $('automatic').addEventListener('change',()=>{clearInput();});
+$('reverse-platform').addEventListener('click',()=>{pause('Platform route reversed. Resume when ready.');clearInput();session.platformDirection*=-1;updateHud();});
 window.addEventListener('keydown',event=>{if(event.code==='Escape'&&!event.repeat&&event.timeStamp-mouseExitAt>200&&started&&!unavailable){event.preventDefault();running?pause():launch();}});
 window.addEventListener('blur',()=>pause('The window lost focus. All controls were cancelled.'));
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause('The tab was hidden. No simulation time passed.');});window.addEventListener('pagehide',()=>pause());

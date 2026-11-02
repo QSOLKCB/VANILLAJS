@@ -24,3 +24,6 @@ repository's slab-intersection/slide solver, not a capsule or slope solver.
 FPS motion extensions, relative-motion queries, stance controls, Low passage
 and Tracking range geometry and scenarios are independently authored for this
 repository. No external game code or assets are included in these additions.
+
+Platform riding, kinematic movement queries, Clearance lift and Shuttle run
+are independently authored extensions. No external game code or assets are used.

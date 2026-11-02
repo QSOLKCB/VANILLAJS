@@ -108,6 +108,50 @@ export function moveAndSlideAABB(position,velocity,dt,halfExtents,boxes,maxSlide
   return solveMovement(v.origin,velocity,dt,v.extents,v.boxes,maxSlides);
 }
 
+/** Continuous movement against translating AABBs over one shared interval.
+ * Surface-normal velocity is inherited on contact. No friction/rotation or
+ * initial-overlap recovery. A truncated result is partial: callers must not
+ * commit collider end poses; roll back or stop their world transaction. */
+export function moveAndSlideMovingAABB(position,velocity,dt,halfExtents,colliders,maxSlides=8) {
+  position=finiteVector(position,3,'position');velocity=finiteVector(velocity,3,'velocity');
+  const extents=finiteVector(halfExtents,3,'halfExtents');
+  if(!Number.isFinite(dt) || dt<0 || extents.some(v=>v<=0) || !Number.isInteger(maxSlides) || maxSlides<1 || maxSlides>32)throw new RangeError('invalid moving sweep parameters');
+  if(dt===0)return {position,velocity,contacts:[],fraction:1,truncated:false};
+  if(!Array.isArray(colliders))throw new TypeError('colliders must be an array');
+  const ids=new Set(),world=colliders.map((c,index)=>{
+    if(typeof c?.id!=='string' || !c.id || ids.has(c.id))throw new TypeError('collider ids must be unique nonempty strings');
+    ids.add(c.id);const displacement=finiteVector(c.displacement??[0,0,0],3,'collider displacement');
+    const box=aabb(c.box?.min,c.box?.max),surfaceVelocity=displacement.map(v=>v/dt);
+    rectangularInput(position,scale(velocity,dt),extents,[box,{min:add(box.min,displacement),max:add(box.max,displacement)}]);
+    if(!surfaceVelocity.every(Number.isFinite) || !velocity.map((v,i)=>v-surfaceVelocity[i]).every(Number.isFinite))throw new RangeError('relative velocity overflow');
+    return {id:c.id,index,box,displacement,velocity:surfaceVelocity};
+  });
+  if(!add(position,scale(velocity,dt)).every(Number.isFinite))throw new RangeError('movement overflow');
+  const at=(c,f)=>({min:add(c.box.min,scale(c.displacement,f)),max:add(c.box.max,scale(c.displacement,f))});
+  const contacts=[];let fraction=0;
+  const blocked=()=>({position,velocity:[0,0,0],contacts,fraction,truncated:true});
+  for(let pass=0;pass<maxSlides && fraction<1;pass++) {
+    const current=world.map(c=>({...c,box:at(c,fraction)}));
+    if(current.some(c=>penetration(position,extents,c.box)))return blocked();
+    const remaining=dt*(1-fraction);let nearest=null;
+    for(const c of current) {
+      const relative=velocity.map((v,i)=>(v-c.velocity[i])*remaining);
+      if(!relative.every(Number.isFinite))throw new RangeError('relative travel overflow');
+      const hit=sweepExtents(position,relative,extents,c.box);
+      if(hit && (!nearest || hit.time<nearest.time || (hit.time===nearest.time && c.id<nearest.id)))nearest={...c,...hit};
+    }
+    if(!nearest){position=add(position,scale(velocity,remaining));fraction=1;break;}
+    position=add(add(position,scale(velocity,remaining*nearest.time)),scale(nearest.normal,SKIN));
+    fraction+= (1-fraction)*nearest.time;
+    const into=dot(velocity.map((v,i)=>v-nearest.velocity[i]),nearest.normal);
+    if(into<0)velocity=add(velocity,scale(nearest.normal,-into));
+    contacts.push({id:nearest.id,index:nearest.index,normal:nearest.normal,time:fraction*dt});
+  }
+  if(![...position,...velocity].every(Number.isFinite))throw new RangeError('movement overflow');
+  if(fraction<1 || world.some(c=>penetration(position,extents,at(c,1))))return blocked();
+  return {position,velocity,contacts,fraction,truncated:false};
+}
+
 /** Closed finite segment versus static AABBs. halfSize expands each box by an
  * axis-aligned cube, NOT a sphere. Starts inside/on a box hit at t=0, normal=0.
  * Equal-time hits use ascending string id, independent of collider array order.

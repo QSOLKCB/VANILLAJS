@@ -1,4 +1,4 @@
-# API contracts — 0.4.0 (experimental)
+# API contracts — 0.5.0 (experimental)
 
 All paths are native ES modules. Public numerical routines require finite values
 unless otherwise stated. Vector arithmetic expects correctly sized numeric arrays;
@@ -166,10 +166,56 @@ current stance eye height and roll-free yaw/pitch view. Positive yaw turns towar
 positive pitch looks up. Input deltas are applied once, without multiplying mouse
 movement by dt; keyboard angular rates are converted to deltas using dt.
 
-There are no capsules, slopes, moving platforms, coyote time, jump buffering or
-head bob in this controller. Translating-target queries below are for shots; they
-do not add moving body contact or platform support.
+The static `stepCharacter` API has no moving platforms, slopes, capsules, coyote
+time, jump buffering or head bob. Use the explicit platform controller below
+for translating surfaces. Shot queries alone never carry or push a body.
 The eye lies inside the body; this is not a separate third-person camera sweep.
+
+### Platform character (0.5.0)
+
+`stepCharacterPlatforms(character, input, dt, config, colliders)` uses characters
+from `createCharacter`, the same movement/crouch/jump/look conventions and `[0,.05]`
+second dt limit. Every surface is `{id,box,displacement?}`: unique nonempty string
+id, start-of-tick AABB and world translation over the whole tick. Omit displacement
+for a stationary wall/floor. IDs must persist while riding a surface. Supply **all**
+obstacles, including static walls/ceilings. Initial body overlap is rejected.
+
+Unlike `stepCharacter`, this controller uses continuous relative-motion body
+queries and does **not** run stair stepping or the `groundSnap` distance pass;
+`stepHeight` and `groundSnap` are unused. The small 2 mm support probe still applies.
+It supports walking/sprinting/crouching, gravity, landing and fresh-press jumps.
+There is no rotation, resizing, slopes, capsules or reciprocal body dynamics.
+Choose one controller for a world instead of invoking both in the same tick.
+
+`createCharacter` now also initializes `supportId:null` and
+`supportVelocity:[0,0,0]`. Platform updates set these to the final support's id and
+world m/s, or null/zero when airborne. **`character.velocity` remains world m/s**:
+horizontal target speeds are relative to support. An attached rider adjusts for
+changes in support velocity, so acceleration/reversal does not accumulate carry.
+A resting spawn can acquire a descending surface. Landing resolves normal speed;
+horizontal motor acceleration then matches the surface plus commanded movement.
+
+Jump adds `jumpSpeed` to the support's vertical speed, retaining horizontal world
+velocity. Walking off retains world velocity too. Subsequent airborne ticks do
+not add carry again; existing air control/gravity apply. Support is re-probed at
+the final world pose using relative vertical velocity; exact ties use string id.
+Crouch keeps feet anchored and checks standing headroom against start boxes;
+continuous movement detects approaching ceilings later in the tick. The static
+controller clears support metadata on a successful nonzero update.
+
+Returns `{contacts,grounded,crouched,standBlocked,jumped,stepped:false,truncated,
+blocked,supportId}`. Moving contacts are `{id,index,normal,time}` with time in
+seconds from tick start. Successful calls mutate body state. If the collision
+budget is exhausted or geometry cannot fit the body, `blocked` and `truncated`
+are true and **every character field is unchanged**. Transition flags are false;
+contacts describe the rejected attempt. Invalid input throws without mutation;
+zero dt returns current state without geometry queries.
+
+The caller MUST NOT advance collider poses after a blocked attempt. Stage all
+riders/world objects if a game has more than one actor; this API is not a global
+transaction manager. FPS Lab rejects that platform tick, then updates the rider
+against stopped surfaces so they can duck or move clear. Collision skin is 1 µm;
+provide real clearance, rather than relying on an exactly body-sized enclosure.
 
 ## Weapon timing (0.3.0)
 
@@ -234,6 +280,33 @@ geometry and nonnegative finite dt, without mutating inputs. Exact contact ties
 retain box-array order. The existing `sweepBox` and `moveAndSlide` scalar cube
 APIs keep their signatures and behaviour; ray/projectile queries keep their
 separate closed-volume initial-overlap semantics.
+
+### Moving rectangular-body solver (0.5.0)
+
+`moveAndSlideMovingAABB(position, velocity, dt, halfExtents, colliders, maxSlides=8)`
+uses a body's **centre**, finite world m/s and positive xyz half-extents. dt is
+finite and nonnegative; the slide budget is an integer in `[1,32]`. Collider
+records use unique IDs, validated tick-start boxes and optional finite translation
+for the same dt. Static geometry omits translation. Zero dt returns copies of the
+input pose/velocity with empty contacts, fraction one and no geometry query.
+
+For each remaining subinterval it sweeps relative body/surface displacement,
+chooses earliest contact (exact ties by string id), advances both on the same
+clock, nudges the body by 1 µm and removes only inward **relative normal velocity**.
+Tangential surface velocity is not automatically inherited: the character layer
+supplies riding behaviour. Initial penetration is not recovered; it returns a
+truncated attempt. No friction, restitution, mass, angular motion or mutual push
+response is modeled. All paths are linear within the supplied interval; split
+at discontinuities. There is no claim of general constraint solving.
+
+Returns `{position,velocity,contacts,fraction,truncated}`. `fraction` is the
+normalized resolved time; contacts contain `{id,index,normal,time}` with time in
+seconds. An exhausted budget, initial overlap or unresolved penetration sets
+`truncated:true` and returns zero velocity and the partial candidate position.
+That position can belong to an unresolved enclosure: **never blindly commit it
+or full collider end poses**. Roll back the whole transaction, or use a separate
+world-level recovery policy. `stepCharacterPlatforms` handles body rollback.
+Finite vector/box/relative-travel overflows throw; supplied arrays are not mutated.
 
 ### Finite queries (0.2.0)
 

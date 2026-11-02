@@ -37,12 +37,23 @@
   targets, while all six previous recipes remain available.
 - Full-course and moving-range regressions plus additive packaged-browser checks.
 
+## v0.5.0 — Platform riding
+
+- Continuous rectangular-body movement against translating kinematic surfaces,
+  surface-normal velocity response and bounded unresolved-contact reporting.
+- Explicit platform character controller with stable support IDs, world-space
+  velocity, carry across route reversals, jump-off momentum and safe blocked ticks.
+- Clearance lift and Shuttle run demonstrate riding, crouch clearance, transfer,
+  landing, pause, route reversal and fall recovery.
+- Safety interlock rejects platform movement while allowing the player to move;
+  no general reciprocal rigid-body solver, rotating platforms or slope support.
+
 ## Proposed next slices — not implemented
 
-1. **FPS expansion:** sloped terrain/capsules, moving platforms, rotating-target
+1. **FPS expansion:** sloped terrain/capsules, rotating platforms, rotating-target
    queries and additional camera/weapon behaviours. Upright boxes, static steps,
-   stance changes, eye poses, magazine timing and translating-target shots now
-   exist through 0.4.0. Extract further QSOL
+   stance changes, eye poses, magazine timing, translating-target shots and platform
+   riding now exist through 0.5.0. Extract further QSOL
    game behaviour only with provenance and regression tests.
 2. **RTS kit:** navigation grids, A*, flow fields, selection, formations and
    steering. Measure scaling with concrete workloads.

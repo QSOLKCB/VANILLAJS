@@ -1,4 +1,4 @@
-# Architecture — VANILLAJS 0.4.0
+# Architecture — VANILLAJS 0.5.0
 
 The goal is to assemble future games from small, versioned systems. The labs
 prove composition against different environments and control laws.
@@ -10,8 +10,8 @@ Rendering, input events and lifecycle policy belong to the application boundary.
 | --- | --- | --- |
 | math | nothing | numeric operations and coordinate conventions |
 | time | nothing | accumulator and tick budget |
-| collision | math | cube/rectangular sweeps, sliding, static and translating-target queries |
-| character | math, collision | upright grounded motion, stance clearance and eye pose |
+| collision | math | cube/rectangular sweeps, static/kinematic sliding, static and translating-target queries |
+| character | math, collision | upright grounded motion, stance clearance, platform support and eye pose |
 | weapons | nothing | magazine/cooldown/reload state |
 | flight | math, collision | physical state and control laws |
 | input | math | actions; opt-in keyboard/mouse adapters; gamepad sampling |
@@ -98,12 +98,13 @@ tap on pause, focus changes, target focus or reset.
 
 ## Grounded FPS composition
 
-FPS Lab uses the character controller instead of the free-flight body. Four
+FPS Lab uses the character controller instead of the free-flight body. Six
 recipes share upright rectangular sweeps, yaw-only movement, gravity, support
 probes, bounded up/across/down steps and stance-relative eye poses. Crouch keeps
 the feet anchored; standing first checks the larger volume for headroom.
 Crouch dimensions and current state belong to the character, not the input adapter.
-Camera pitch never enters walking direction. Stair stepping is an intentional
+Platform recipes replace the static stair/snap pass with continuous kinematic
+movement and support tracking. Camera pitch never enters walking direction. Stair stepping is an intentional
 kinematic control rule; it does not claim a general rigid-body or slope solver.
 The older cube functions use the same internal solver with equal extents.
 
@@ -117,11 +118,35 @@ translations to the moving query: it subtracts target travel from shot travel,
 finds shared time of contact, then returns the world-space shot position.
 Projectile lifetime clipping scales target motion by the same interval fraction.
 Targets commit end poses after impacts, and interpolate only for presentation.
-Character movement still uses static geometry; shot queries do not push bodies.
+Tracking range character movement still uses static geometry; its shot-only
+plates do not push bodies. Platform courses use the separate body solver below.
 
 The new app retains click-to-capture mouse look, on-screen input, fresh-press
 pause boundaries, bounded render work and explicit graphics failures. New browser
 scenarios are additive: all earlier lab checks remain enabled.
+
+## Translating platform transactions
+
+`moveAndSlideMovingAABB` tracks contact time across successive linear sweeps.
+Relative surface motion affects normal velocity, so an ascending lift can carry
+an upright body into a ceiling. The solver bounds contact iterations and reports
+unresolved geometry; it never claims to solve an impossible squeeze. Unlike the
+static movement solver, it rejects initial overlap instead of depenetrating.
+
+`stepCharacterPlatforms` adds a motor and support metadata around that solver.
+It adjusts attached world velocity when a platform changes speed, retains world
+velocity on departure, and probes support again at the end. The character is
+updated only after a successful whole tick. A failed attempt leaves it untouched,
+letting the application reject its corresponding platform movement. Exact ties
+use stable surface IDs. This is kinematic control, not mutual body dynamics.
+
+FPS Lab has one rider and a single platform per course. It computes intended
+route motion, tries the rider, and on failure freezes the route and updates the
+player against the stopped world. This allows a crouch or walk-out recovery.
+Only accepted platform motion goes into projectile queries and end-pose commits.
+Game elapsed time and route time are separate: an interlock stops the motor;
+explicit pause stops both. Multi-actor consumers must stage their own complete
+world transactions. No module stores a route, HUD, fall-recovery rule or game clock.
 
 ## Distribution and growth
 

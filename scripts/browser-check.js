@@ -8,6 +8,7 @@ import {verifyInteractions} from './browser-interactions.js';
 import {verifyMouseLook} from './browser-mouse.js';
 import {verifyFps} from './browser-fps.js';
 import {verifyFpsMotion} from './browser-fps-motion.js';
+import {verifyPlatforms} from './browser-platforms.js';
 const require=createRequire(import.meta.url),{chromium}=require('playwright');
 const root=resolve(import.meta.dirname,'../dist');
 const server=createServer(async(req,res)=>{
@@ -70,6 +71,7 @@ try{
   await verifyMouseLook(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyFps(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyFpsMotion(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
+  await verifyPlatforms(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   const unsupported=await browser.newPage();await unsupported.addInitScript(()=>HTMLCanvasElement.prototype.getContext=()=>null);
   await unsupported.goto(page.url());await unsupported.locator('#error').waitFor({state:'visible'});
   assert.match(await unsupported.locator('#error').textContent(),/WebGL is unavailable/);
