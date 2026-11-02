@@ -1,4 +1,4 @@
-# Architecture — VANILLAJS 0.5.0
+# Architecture — VANILLAJS 0.6.0
 
 The goal is to assemble future games from small, versioned systems. The labs
 prove composition against different environments and control laws.
@@ -18,6 +18,7 @@ Rendering, input events and lifecycle policy belong to the application boundary.
 | render-webgl | math | GPU buffers, shaders and rendering |
 | projectiles | math, collision | bounded straight-shot motion, lifetime and ordered hit/expiry events |
 | interactions | nothing | declarative rule selection, conditions, effects and reasons |
+| navigation | nothing | immutable occupancy snapshots, bounded paths and reachable destinations |
 | demo worlds | math, collision, flight | environments, signal objectives and run state |
 | demo app | modules and worlds | animation loop, DOM, lifecycle, controls and telemetry |
 
@@ -147,6 +148,33 @@ Only accepted platform motion goes into projectile queries and end-pose commits.
 Game elapsed time and route time are separate: an interlock stops the motor;
 explicit pause stops both. Multi-actor consumers must stage their own complete
 world transactions. No module stores a route, HUD, fall-recovery rule or game clock.
+
+## RTS routing composition
+
+Navigation uses integer `[column,row]` cells in the X/Z plane; columns increase
+along +X and rows along +Z. Cell centres convert to metres. The immutable grid
+owns its blocked bits. Editing returns another snapshot, leaving old searches
+well-defined; consumers explicitly replan when terrain changes.
+
+Four-neighbour A* uses a Manhattan heuristic and a binary heap ordered by total
+cost, heuristic, then row-major cell index. Paths include both endpoints and have
+uniform edge cost. A separate breadth-first traversal collects nearby reachable
+destinations. Neither routine owns an agent, order, animation or clock. Both cap
+expanded cells and distinguish budget exhaustion from proven unreachability.
+
+RTS Lab owns selection, greedy group assignment, movement and traffic. It plans
+all selected units before replacing any route. On a shared 180 ms cell boundary,
+unique-destination reservations accept chains ending in vacant cells and reject
+cycles/swaps. Waiting units retry around occupied cells after six failed moves.
+This bounded policy prioritises safety; it does not guarantee eventual arrival
+for every arrangement. Routes and unit centres are not physical collider shapes.
+
+The lab advances the same 120 Hz clock and interpolates 2D unit positions. Native
+Canvas 2D supplies a top-down view; it has no dependency on the WebGL adapter.
+Pause freezes routes and current segments. Gesture capture, selection and pending
+pointer releases belong to the app; lifecycle changes cancel unfinished gestures.
+Accepted orders survive pause and require deliberate resume. No tactical rules,
+world geometry or traffic policy are imported by the navigation module.
 
 ## Distribution and growth
 

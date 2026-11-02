@@ -48,6 +48,16 @@
 - Safety interlock rejects platform movement while allowing the player to move;
   no general reciprocal rigid-body solver, rotating platforms or slope support.
 
+## v0.6.0 — RTS routing (first RTS slice)
+
+- Immutable X/Z occupancy grids, bounded four-neighbour A* searches and compact
+  reachable group destinations. Distinguish blocked, unreachable and work limits.
+- Route planner and Squad orders compose navigation with fixed-step movement,
+  selection, formation destinations, gate replanning and cell reservations.
+- Native Canvas 2D presentation, mouse/keyboard/touch orders and pause-safe
+  gestures; independent shortest-path comparisons and packaged browser checks.
+- This is a small routing slice, not a complete RTS engine or crowd solver.
+
 ## Proposed next slices — not implemented
 
 1. **FPS expansion:** sloped terrain/capsules, rotating platforms, rotating-target
@@ -55,8 +65,10 @@
    stance changes, eye poses, magazine timing, translating-target shots and platform
    riding now exist through 0.5.0. Extract further QSOL
    game behaviour only with provenance and regression tests.
-2. **RTS kit:** navigation grids, A*, flow fields, selection, formations and
-   steering. Measure scaling with concrete workloads.
+2. **RTS expansion:** flow fields, continuous steering, richer formations and
+   stronger multi-agent scheduling. Grids, A*, compact group destinations and
+   demo selection/reservations exist through 0.6.0. Measure scaling with concrete
+   workloads before claiming large armies or deadlock-free routing.
 3. **Authoring foundation:** versioned map schema, validation, undo/redo,
    selection/transforms, snapping, prefab definitions and play-testing.
 4. **Atmospheric flight:** separate aerodynamic force model, lift/drag curves,

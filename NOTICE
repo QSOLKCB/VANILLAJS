@@ -1,4 +1,4 @@
-VANILLAJS — Flight Lab, Interaction Lab and FPS Lab
+VANILLAJS — Flight Lab, Interaction Lab, FPS Lab and RTS Lab
 Copyright 2026 QSOL–IMC / Trent Slade and contributors.
 Distributed under the repository's existing Apache License 2.0.
 
@@ -27,3 +27,8 @@ repository. No external game code or assets are included in these additions.
 
 Platform riding, kinematic movement queries, Clearance lift and Shuttle run
 are independently authored extensions. No external game code or assets are used.
+
+RTS routing, navigation grids, the A* implementation, formation destinations,
+Canvas 2D presentation and lab traffic rules were independently authored for
+this repository. A* and breadth-first traversal are conventional algorithms;
+no third-party game source, assets or runtime dependencies were copied.

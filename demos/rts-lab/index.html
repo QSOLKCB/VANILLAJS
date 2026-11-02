@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1418"><meta name="description" content="Plan routes, command a squad and change the terrain with native JavaScript game modules."><title>RTS Lab · VANILLAJS</title><link rel="stylesheet" href="./style.css"></head>
+<body>
+<header><a class="brand" href="../../index.html">V<span>ANILLAJS</span><small>QSOL–IMC</small></a><nav aria-label="Labs"><a href="../../index.html">Flight Lab ↗</a><a href="../interaction-lab/index.html">Interaction Lab ↗</a><a href="../fps-lab/index.html">FPS Lab ↗</a></nav></header>
+<main>
+  <section class="intro"><div><p class="eyebrow">EXPERIMENT 004 / STRATEGY</p><h1>RTS Lab<span>.</span></h1></div><p>See the whole field.<small>Give an order. Watch it find a way.</small></p></section>
+  <div class="workspace">
+    <section class="lab" aria-label="Strategy experiments">
+      <div class="tabs"><button id="choose-route" data-recipe="route" aria-pressed="true"><span>01</span><div>Route planner<small>ONE UNIT / EVERY TURN</small></div><b>↗</b></button><button id="choose-squad" data-recipe="squad" aria-pressed="false"><span>02</span><div>Squad orders<small>SELECT / ROUTE / REGROUP</small></div><b>↗</b></button></div>
+      <div class="map-heading"><span><i></i> <span id="status">READY</span></span><span>SECTOR 04 <b>·</b> NORTH ↑</span></div>
+      <div class="map-wrap"><canvas id="rts-view" tabindex="0" aria-label="Tactical map. Arrows move the map cursor. Enter applies the selected tool. Space orders a move. A selects all units. Escape pauses." aria-describedby="map-help"></canvas><div id="error" role="alert" hidden></div></div>
+      <div class="map-footer"><span><i class="legend-unit"></i> UNIT <i class="legend-path"></i> ROUTE <i class="legend-gate"></i> GATE</span><span id="cursor-cell">CURSOR 21, 8</span></div>
+      <div class="telemetry"><div><small>SELECTED</small><strong id="selected-count">1 / 1</strong></div><div><small>ARRIVED</small><strong id="arrived-count">0 / 1</strong></div><div><small>WAITING</small><strong id="waiting-count">0</strong></div><div><small>SIM TIME</small><strong><span id="elapsed">0.00</span> <em>s</em></strong></div></div>
+      <div class="toolbar"><div class="tools" role="group" aria-label="Map tool"><button id="tool-select" aria-pressed="false">Select</button><button id="tool-move" aria-pressed="true">Move</button></div><div><button id="launch" class="primary">Run routes ↗</button><button id="pause" disabled>Pause</button><button id="reset">Reset ↺</button></div></div>
+      <p id="message" class="message" role="status">Choose a destination on the map.</p>
+    </section>
+    <aside>
+      <section class="panel"><p class="eyebrow">ORDERS DESK</p><h2 id="recipe-title">One route. Many choices.</h2><p id="recipe-copy">Tap open ground to plan a route. Run it, then close the north gate to send your unit through the south passage.</p><div class="commands"><button id="example-order" class="primary">To east landing ↗</button><button id="select-all">Select all</button><button id="stop">Stop selected</button><button id="toggle-gate" aria-pressed="false">Close north gate</button></div><label class="toggle"><input id="slow" type="checkbox"> Quarter-speed simulation</label><p class="note">Plan while paused. Accepted orders resume when you run. Stop finishes the current cell move.</p></section>
+      <section class="panel"><p class="eyebrow">UNIT ROSTER</p><h2>Keep them together.</h2><div id="roster" aria-label="Select units"></div><p class="note">Click a unit or drag a box to select. Shift adds to the selection. Right-click open ground to move.</p></section>
+      <section class="panel receipt"><p class="eyebrow">LATEST ORDER</p><dl><div><dt>Result</dt><dd id="order-result">READY</dd></div><div><dt>Combined route</dt><dd id="route-cost">0 m</dd></div><div><dt>Cells searched</dt><dd id="search-count">0</dd></div><div><dt>Orders accepted</dt><dd id="order-count">0</dd></div></dl><p class="note">Mint lines show planned routes. Units wait for occupied cells and retry around traffic. A fresh order can resolve a stand-off.</p></section>
+    </aside>
+  </div>
+  <section class="below"><div><p class="eyebrow">YOUR COMMAND TABLE</p><h2>One click ahead.</h2><p id="map-help">Mouse: drag to select; right-click to move. Touch: choose Select or Move, then tap the map. Keyboard: focus the map, use arrows to position the cursor, Enter to use the tool, Space to order a move, A to select all. Escape pauses. Losing focus pauses and cancels an unfinished gesture.</p></div><div><p class="eyebrow">BUILT TO BE BORROWED</p><h2>Routes for your next world.</h2><p>Two experiments share navigation grids, bounded path searches and group destinations. The lab adds selection, orders and a small traffic policy.</p><div class="chips"><span>navigation</span><span>time</span><span>Canvas 2D</span></div><a href="https://github.com/QSOLKCB/VANILLAJS/blob/main/docs/RTS_LAB.md">Read the recipe ↗</a></div></section>
+</main>
+<footer><span>QSOL–IMC / VANILLAJS <b>v0.6.0</b></span><a href="https://github.com/QSOLKCB/VANILLAJS">Native web standards. Original geometry. Apache–2.0. ↗</a></footer>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

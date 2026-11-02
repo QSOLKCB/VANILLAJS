@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.0 — RTS routing (release candidate)
+
+- Add the pure `navigation` module: immutable X/Z occupancy grids, bounded A*
+  search with explicit outcomes, and unique reachable formation destinations.
+- Add Route planner and Squad orders in a Canvas 2D RTS Lab: drag selection,
+  keyboard/touch orders, gate changes, group routes, cell reservations and retries.
+- Preserve accepted orders across pause while cancelling incomplete gestures;
+  reject failed group plans atomically and expose waiting/unreachable states.
+- Add 20 Node regressions (176 total), including an independent shortest-path
+  oracle on 80 seeded maps, complete courses, traffic safety and timing schedules.
+  Add packaged browser scenarios and contracts. Eleven modules, twelve recipes,
+  no runtime dependencies; all earlier 3D labs remain available.
+
 ## 0.5.0 — Platform riding (release candidate)
 
 - Add `moveAndSlideMovingAABB` for bounded rectangular-body movement against

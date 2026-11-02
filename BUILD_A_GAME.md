@@ -2,7 +2,7 @@
 
 Start from an exact release or commit, inspect `MODULES.json` and select only the
 modules needed by the game. Keep all required dependencies and relative paths.
-All 0.5.0 APIs are experimental; record the revision instead of silently tracking
+All 0.6.0 APIs are experimental; record the revision instead of silently tracking
 `main`. Preserve LICENSE and NOTICE when distributing copied modules.
 
 For example, a flight game vendors `math`, `collision`, `flight`, `time` and
@@ -222,6 +222,45 @@ rotating/resizing colliders need another model. Tracking range's smooth paths
 use straight segments between 120 Hz endpoints. Keep character movement on static
 world geometry; these shot queries do not carry or push a character.
 
+
+## Plan RTS routes
+
+The navigation module is a standalone native ES module. Construct an immutable
+X/Z occupancy grid for the map and the unit footprint, then request a bounded
+route. Keep graphics, orders, time and movement separate from the planner.
+
+```js
+import {NavigationGrid,findPath,formationSlots}
+  from './vendor/vanillajs/modules/navigation/index.js';
+
+let grid=new NavigationGrid({width:32,height:24,cellSize:1,
+  origin:[-16,-12],blocked:[[10,5],[10,6]]});
+const destination=grid.worldToCell([6,3]);
+if(destination){
+  const result=findPath(grid,[2,3],destination,{maxExpanded:2048});
+  if(result.status==='found'){
+    const worldWaypoints=result.path.map(cell=>grid.cellCenter(cell));
+    // Hand worldWaypoints to your movement system, after accepting the order.
+    // Validate each move against current occupancy/body collision.
+  }
+  // 'budget' is incomplete work; 'unreachable' is a proved disconnected route.
+}
+grid=grid.withBlocked([[10,7]],true); // explicitly replan old orders on edits
+const slots=formationSlots(grid,[22,15],6,{exclude:[[22,16]]});
+if(slots.status==='found'){
+  // Assign these unique cells to units, plan every route, then commit together.
+  // Slot reachability from the anchor is not reachability from every unit.
+}
+```
+
+Grid paths use four cardinal neighbours and uniform costs. Inflate occupied cells
+for your intended body footprint; the planner does not know body radius or height.
+Accepted routes need movement validation, and group destinations need a traffic
+policy. See `demos/rts-lab/worlds.js` for one bounded cell-reservation example,
+including stopped units, head-on swaps, retry limits and atomic rejected orders.
+Its six-unit policy can deadlock; it is not a complete crowd solver. Preserve
+pause cancellation for unfinished gestures while keeping accepted orders frozen.
+See [RTS Lab](docs/RTS_LAB.md) for controls, scope and adoption limits.
 
 ## Ride translating platforms
 
