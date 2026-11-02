@@ -1,5 +1,22 @@
 # Verification — VANILLAJS 0.2.0
 
+## Mouse-look controls: current change
+
+- The Node suite adds relative input consumption, stationary-pointer no-spin,
+  short/held mouse firing, capture-click suppression, late capture cancellation,
+  failed-capture drag fallback, touch cancellation and unchanged key mappings.
+- Pure flight checks cover yaw/pitch direction, level roll, pitch limits, invalid
+  deltas, normalized orientation and five seconds of inertial updates with no
+  mouse-induced angular drift or changes to linear velocity.
+- `scripts/browser-mouse.js`, called by the packaged Chromium check, exercises
+  actual Pointer Lock in both labs, rendered view changes followed by a stationary
+  view, arrow/WASD compatibility, left-click firing, Escape and blur, and rejected
+  capture with no-spin drag fallback. Exact-head CI results belong in the PR;
+  adding these scenarios alone does not establish a browser pass.
+- Chromium is unavailable locally; physical mouse feel, touch hardware, Firefox
+  and Safari coverage remain unverified. No runtime dependencies were added.
+
+
 ## Interaction Lab: executed locally
 
 - **79 Node tests passed**: the 49 Flight Lab tests plus 30 query, projectile,

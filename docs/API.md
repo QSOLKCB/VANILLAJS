@@ -88,6 +88,15 @@ copies the pose for interpolation. The movement result agrees with the final bod
 velocity, including explicit braking. Zero-duration calls return only empty contacts
 and `truncated:false`, without changing the body.
 
+`lookFlight(body, {pitch=0, yaw=0})` is an opt-in kinematic controller for
+mouse look. Deltas are finite radians, not angular rates: positive yaw turns
+left around world +Y, positive pitch looks up around local +X. It derives the
+current heading/pitch, adds the deltas, levels roll, clamps pitch to
+`±(π/2 − 0.01)`, normalizes orientation and zeros angular velocity. Position and
+linear velocity are unchanged. A zero-delta call deliberately takes over and
+stops existing spin. It does not change `stepFlight` torque/inertia semantics;
+keyboard/gamepad flight remains fully 6DOF when the mouse is idle.
+
 ## Collision
 
 `aabb(min,max)` validates positive box volume. `sweepBox(origin, displacement,
@@ -220,6 +229,44 @@ release it and press again. Repeats of a tracked key retain its held state witho
 creating another action edge. Ignored repeats still suppress gameplay-key browser
 defaults while the adapter is enabled and focus is outside an editable control.
 Text fields, controls and buttons retain their ordinary keyboard behaviour.
+
+`attachMouseLook(canvas, options)` is an opt-in browser adapter. Options:
+`enabled=()=>true`, positive finite `sensitivity=0.0025` radians per pixel, and
+`onLock(event)`, `onUnlock(event)`, `onError(errorOrEvent)` callbacks. A primary
+mouse press on the canvas requests Pointer Lock; touch/pen or failed capture
+uses relative drag deltas. Browser support and user permission determine capture.
+The adapter does not query globals at import time. Pass a canvas with an owner
+document and ordinary focus/pointer-capture methods.
+
+- `consume()` returns `{pitch,yaw,primary,pressed}`. Look deltas and the primary
+  button edge are drained once; primary held state remains until mouseup.
+  Rightward/upward movement produces negative yaw/positive pitch. Queued angles
+  are bounded to ±π per consume; non-finite movement is ignored.
+- Consume **inside a physics tick**, before updating flight or spawning shots.
+  Do not multiply deltas by `dt` or repeatedly feed them into torque. A quick
+  click survives until consumed; the initial capture click never fires.
+- `locked` reports capture state. `release()` discards queued/held input and
+  exits owned capture without invoking `onUnlock`. Unexpected capture loss clears
+  input and calls `onUnlock`; apps must pause and clear other adapters there.
+- Call `release()` on pause, blur, hidden tabs, reset and mode switches. Resume
+  requires a new canvas press. Late acquisition after cancellation is exited.
+  `dispose()` releases capture and removes listeners (pending legacy requests
+  retain only settlement listeners until they finish). Promise rejection and
+  `pointerlockerror` report failure once; arrows remain available.
+
+```js
+import {attachMouseLook} from '../modules/input/index.js';
+import {lookFlight} from '../modules/flight/index.js';
+const mouse = attachMouseLook(canvas, {
+  enabled: () => running,
+  onLock: () => lookFlight(body), // stop any prior keyboard-driven spin
+  onUnlock: () => pause(),       // pause() also calls mouse.release()
+});
+// Within each fixed update, before stepFlight / projectile spawning:
+const look = mouse.consume();
+if (look.pitch || look.yaw) lookFlight(body, look);
+// Optional fire input: look.primary || look.pressed.
+```
 
 `FlightGamepad.sample(pads)` returns a flight command plus `connected/pause`.
 It accepts only the standard mapping, selects the first valid controller, and

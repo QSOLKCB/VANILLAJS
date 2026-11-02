@@ -34,7 +34,7 @@
       ],
       "environment": "pure-js",
       "status": "experimental",
-      "description": "6DOF rigid-body integration and assisted/inertial control"
+      "description": "6DOF rigid-body integration, assisted/inertial control and direct mouse look"
     },
     "input": {
       "entry": "modules/input/index.js",
@@ -43,7 +43,7 @@
       ],
       "environment": "pure state with opt-in browser adapter",
       "status": "experimental",
-      "description": "Action state, keyboard lifecycle and standard gamepad mapping"
+      "description": "Action state, keyboard/mouse lifecycle and standard gamepad mapping"
     },
     "render-webgl": {
       "entry": "modules/render-webgl/index.js",

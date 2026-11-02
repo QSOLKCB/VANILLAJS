@@ -38,6 +38,92 @@ export function attachKeyboard(target, actions, {bindings=flightBindings, enable
   target.addEventListener('keydown',down);target.addEventListener('keyup',up);target.addEventListener('blur',clear);
   return {clear,dispose(){clear();target.removeEventListener('keydown',down);target.removeEventListener('keyup',up);target.removeEventListener('blur',clear);}};
 }
+/** Relative mouse-look in radians; click to capture, drag as a touch/failure fallback.
+ * Consume on a simulation tick (not every render). Call release on pause/focus loss. */
+export function attachMouseLook(target, {enabled=()=>true,sensitivity=.0025,onLock=()=>{},onUnlock=()=>{},onError=()=>{}}={}) {
+  if (!Number.isFinite(sensitivity) || sensitivity<=0) throw new RangeError('sensitivity must be positive');
+  const doc=target.ownerDocument;
+  let pitch=0,yaw=0,primary=false,pressed=false,drag=null,locked=false,wanted=false,disposed=false,suppressPrimary=false;
+  let request=0,capturing=false;
+  const reset=()=>{pitch=0;yaw=0;primary=false;pressed=false;drag=null;};
+  const move=(x,y)=>{
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+    // Bound a queued sample even if a device supplies pathological movement.
+    yaw=clamp(yaw-x*sensitivity,-Math.PI,Math.PI);
+    pitch=clamp(pitch-y*sensitivity,-Math.PI,Math.PI);
+  };
+  const fail=(id,error)=>{
+    if (id!==request || !capturing) return;
+    capturing=false;const report=wanted && !disposed;wanted=false;
+    if (disposed) removeListeners();
+    if (report) onError(error);
+  };
+  const down=event=>{
+    if (disposed || !enabled() || locked || drag || event.button!==0) return;
+    target.focus({preventScroll:true});
+    drag={id:event.pointerId,x:event.clientX,y:event.clientY};
+    target.setPointerCapture?.(event.pointerId);
+    if (event.pointerType==='mouse' && !capturing) {
+      wanted=true;capturing=true;suppressPrimary=true;const id=++request;
+      try {
+        if (!target.requestPointerLock) throw new Error('Pointer lock unavailable');
+        const pending=target.requestPointerLock();
+        pending?.catch(error=>fail(id,error)); // Older implementations return void.
+      } catch(error) { fail(id,error); }
+    }
+  };
+  const dragMove=event=>{
+    if (locked || !enabled() || drag?.id!==event.pointerId) return;
+    move(event.clientX-drag.x,event.clientY-drag.y);drag.x=event.clientX;drag.y=event.clientY;
+  };
+  const dragEnd=event=>{if (drag?.id===event.pointerId) drag=null;};
+  const dragCancel=event=>{if (drag?.id===event.pointerId) reset();};
+  const mouseMove=event=>{if (locked && enabled()) move(event.movementX,event.movementY);};
+  const mouseDown=event=>{
+    if (locked && enabled() && event.button===0 && !suppressPrimary) {
+      if (!primary) pressed=true;primary=true;event.preventDefault();
+    }
+  };
+  const mouseUp=event=>{if (event.button===0) {primary=false;suppressPrimary=false;}};
+  const lockChange=event=>{
+    if (doc.pointerLockElement===target) {
+      capturing=false;
+      if (disposed || !wanted || !enabled()) {doc.exitPointerLock();if(disposed)removeListeners();return;}
+      if (!locked) {
+        locked=true;reset();onLock(event);
+      }
+    } else if (locked) {
+      locked=false;wanted=false;reset();onUnlock(event);
+    }
+  };
+  const lockError=event=>fail(request,event);
+  const contextMenu=event=>{if (locked) event.preventDefault();};
+  const listeners=[[target,'pointerdown',down],[target,'pointermove',dragMove],
+    [target,'pointerup',dragEnd],[target,'pointercancel',dragCancel],[target,'lostpointercapture',dragCancel],
+    [doc,'mousemove',mouseMove],[doc,'mousedown',mouseDown],[doc,'mouseup',mouseUp],
+    [doc,'pointerlockchange',lockChange],[doc,'pointerlockerror',lockError],[target,'contextmenu',contextMenu]];
+  for (const [node,name,handler] of listeners) node.addEventListener(name,handler);
+  function removeListeners(){
+    for (const [node,name,handler] of listeners) {
+      // A legacy request returning void can still acquire after disposal.
+      if (capturing && (name==='pointerlockchange' || name==='pointerlockerror')) continue;
+      node.removeEventListener(name,handler);
+    }
+  }
+  const release=()=>{
+    wanted=false;locked=false;reset();suppressPrimary=true;
+    if (doc.pointerLockElement===target) doc.exitPointerLock();
+  };
+  return {
+    get locked(){return locked;},
+    consume(){
+      if (!enabled()) {reset();return {pitch:0,yaw:0,primary:false,pressed:false};}
+      const sample={pitch,yaw,primary,pressed};pitch=0;yaw=0;pressed=false;return sample;
+    },
+    release,
+    dispose(){disposed=true;release();removeListeners();}
+  };
+}
 export function deadzone(value, zone=0.16) {
   if (!Number.isFinite(value) || !Number.isFinite(zone) || zone<0 || zone>=1) return 0;
   return Math.sign(value)*clamp((Math.abs(value)-zone)/(1-zone),0,1);
