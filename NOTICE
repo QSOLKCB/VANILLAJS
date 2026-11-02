@@ -1,0 +1,10 @@
+VANILLAJS — Flight Lab
+Copyright 2026 QSOL–IMC / Trent Slade and contributors.
+Distributed under the repository's existing Apache License 2.0.
+
+The Flight Lab code, environments, UI and procedural geometry were authored for
+this repository. No game assets, audio recordings or third-party runtime code
+are included. QUICKSCOPER and CorpoWars were consulted as QSOL architectural
+references; this milestone does not copy their source files. Mathematical
+algorithms use conventional vector, quaternion, slab-intersection and rigid-body
+integration methods. Development-only tools are not included in the runtime.
