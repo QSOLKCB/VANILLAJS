@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.0 — Platform riding (release candidate)
+
+- Add `moveAndSlideMovingAABB` for bounded rectangular-body movement against
+  translating surfaces, with normal velocity response and partial-step reporting.
+- Add `stepCharacterPlatforms` for support tracking, riding, route reversals,
+  crouching and jumping with inherited world velocity. Blocked ticks leave the
+  rider unchanged so the caller can safely stop its world transaction.
+- Add Clearance lift and Shuttle run with a clearance interlock, route reversal,
+  interpolation, pause/reset/fall recovery and on-screen support telemetry.
+- Keep the static stair controller and all prior recipes available. Catalogue:
+  ten modules, ten recipes, zero runtime dependencies. Add 18 Node regressions
+  (156 total), plus packaged browser scenarios and explicit integration contracts.
+
 ## 0.4.0 — FPS motion (release candidate)
 
 - Add safe held crouch/stand to the character controller, with feet-anchored

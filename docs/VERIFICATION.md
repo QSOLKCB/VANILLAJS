@@ -1,6 +1,29 @@
-# Verification — VANILLAJS 0.4.0
+# Verification — VANILLAJS 0.5.0
 
-## FPS motion: current change
+## Platform riding: current change
+
+- **156 Node tests passed locally**, including all previous 138 regressions.
+  New movement checks cover ascending/descending/diagonal carry, stable reversals,
+  inherited jump velocity once, walk-off/landing, headroom clearance,
+  crush rejection with unchanged body state, side-wall sliding, stable support
+  ties, initial-overlap rejection, a fast crossing wall, invalid input and zero dt.
+- Recipe simulations complete both courses through real geometry and support-
+  sensitive markers, test the lift interlock and crouch/reverse recovery, shuttle
+  jump/landing, fall recovery, pause/reset and 30/60/144 Hz composition in one
+  runtime. These are simulations, not human/device playthrough claims.
+- Syntax/purity/dependency checks pass for 43 JS files and ten modules. Packaging
+  contains 26 public files and a SHA-256 manifest. Ten recipes are registered;
+  no runtime dependency was added.
+- `scripts/browser-platforms.js` adds packaged lift carry/pause, clearance stop,
+  crouch recovery and complete upper-deck transfer; shuttle jump/landing/reversal,
+  blur/reset and 390 px touch-emulated layout. Earlier browser checks all remain
+  enabled. Exact-head execution and screenshots are recorded in the PR; adding
+  scenarios by itself does not establish a browser pass.
+- Local Chromium is unavailable. CI uses packaged software WebGL; the new controls
+  use native browser keyboard/tap input while blur is synthetic. Physical devices,
+  additional browsers, performance and multi-rider scaling remain unmeasured.
+
+## Historical FPS motion (0.4.0)
 
 - **138 Node tests passed locally**, including all previous 117 regressions.
   New cases cover feet/eye anchoring, safe standing under roofs and partial

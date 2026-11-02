@@ -2,7 +2,7 @@
 
 Start from an exact release or commit, inspect `MODULES.json` and select only the
 modules needed by the game. Keep all required dependencies and relative paths.
-All 0.4.0 APIs are experimental; record the revision instead of silently tracking
+All 0.5.0 APIs are experimental; record the revision instead of silently tracking
 `main`. Preserve LICENSE and NOTICE when distributing copied modules.
 
 For example, a flight game vendors `math`, `collision`, `flight`, `time` and
@@ -184,7 +184,7 @@ function update(dt) {
 
 The snippet assumes the surrounding game's `canvas`, `running`, `solids` and
 `setPaused` lifecycle. For a complete implementation, start with
-`demos/fps-lab/app.js` and its four world recipes. For single-shot behaviour, omit
+`demos/fps-lab/app.js` and its six world recipes. For single-shot behaviour, omit
 the held `actions.value('fire')` / `look.primary` terms and retain only edges.
 Keep ammo/weapon timers separate from shot geometry and damage rules. Consult
 [the contracts and limits](docs/FPS_LAB.md) before adapting steps or body sizes.
@@ -221,3 +221,52 @@ Translation is linear for each query: split at turns, teleports or discontinuiti
 rotating/resizing colliders need another model. Tracking range's smooth paths
 use straight segments between 120 Hz endpoints. Keep character movement on static
 world geometry; these shot queries do not carry or push a character.
+
+
+## Ride translating platforms
+
+Use `stepCharacterPlatforms` instead of `stepCharacter` in a platform world.
+Keep a stable id for every collider and include stationary walls and ceilings in
+the same list. Supply start boxes and intended translation, then commit their
+end boxes only if the rider update succeeds. This mode has no automatic stairs.
+
+```js
+import {stepCharacterPlatforms}
+  from './vendor/vanillajs/modules/character/index.js';
+
+function updatePlatformWorld(dt, input) {
+  // Game-owned routes produce proposed translation; stationary walls use zero.
+  const proposed = world.map(surface => ({
+    id:surface.id, box:surface.box,
+    displacement:plannedDisplacement(surface, dt),
+  }));
+  const result = stepCharacterPlatforms(character, input, dt, config, proposed);
+  if (result.blocked) {
+    // Body was not mutated. Stop the platforms and let the player move free.
+    stepCharacterPlatforms(character, input, dt, config,
+      proposed.map(c => ({...c, displacement:[0,0,0]})));
+  } else {
+    for (let i=0; i<world.length; i++) {
+      const c=proposed[i];
+      world[i].box = {
+        min:c.box.min.map((v,j) => v+c.displacement[j]),
+        max:c.box.max.map((v,j) => v+c.displacement[j]),
+      };
+    }
+    // Advance route clocks only here, by accepted simulated time.
+  }
+}
+```
+
+The snippet assumes a game-owned `world`, `plannedDisplacement`, `character` and
+`config`. Also handle a blocked stopped-world update, for example by pausing and
+resetting to a validated spawn. Preserve start/end poses for interpolation and
+moving-shot queries before committing geometry. The complete FPS recipe stages
+platform/rider movement, resolves shots over the accepted world interval, then
+commits platform end poses. Pause skips all simulation, including route clocks.
+
+`character.velocity` is world m/s; support metadata is diagnostic and also carries
+state for the next tick. Jump once from an input edge, and do not manually add
+platform speed a second time. Multi-actor games must stage copies of all affected
+riders and world state before committing any of them. Rotating/resizing platforms,
+slopes, teleporting routes and reciprocal body dynamics need separate models.

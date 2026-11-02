@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "0.4.0",
+  "release": "0.5.0",
   "license": "Apache-2.0",
   "modules": {
     "math": {
@@ -24,7 +24,7 @@
       ],
       "environment": "pure-js",
       "status": "experimental",
-      "description": "Swept body movement, finite static queries and translating-target continuous queries"
+      "description": "Static and translating AABB sweeps, body sliding, finite shots and bounded kinematic contacts"
     },
     "flight": {
       "entry": "modules/flight/index.js",
@@ -79,7 +79,7 @@
       ],
       "environment": "pure-js",
       "status": "experimental",
-      "description": "Grounded movement, safe crouch/stand, jumping, stairs and first-person view"
+      "description": "Grounded walking, crouching, jumping and static stairs or translating-platform riding"
     },
     "weapons": {
       "entry": "modules/weapons/index.js",
@@ -201,6 +201,36 @@
         "interactions"
       ],
       "preset": "tracking"
+    },
+    "fps-clearance-lift": {
+      "entry": "demos/fps-lab/worlds.js",
+      "modules": [
+        "math",
+        "time",
+        "collision",
+        "character",
+        "weapons",
+        "input",
+        "render-webgl",
+        "projectiles",
+        "interactions"
+      ],
+      "preset": "lift"
+    },
+    "fps-shuttle-run": {
+      "entry": "demos/fps-lab/worlds.js",
+      "modules": [
+        "math",
+        "time",
+        "collision",
+        "character",
+        "weapons",
+        "input",
+        "render-webgl",
+        "projectiles",
+        "interactions"
+      ],
+      "preset": "shuttle"
     }
   }
 }
