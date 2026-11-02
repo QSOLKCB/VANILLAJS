@@ -1,9 +1,9 @@
 {
   "name": "qsol-vanillajs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
-  "description": "Browser-native game modules and Flight Lab",
+  "description": "Browser-native game modules, Flight Lab and Interaction Lab",
   "license": "Apache-2.0",
   "scripts": {
     "test": "node --test tests/*.test.js",

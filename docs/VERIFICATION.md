@@ -1,6 +1,43 @@
-# Verification — Flight Lab 0.1.0
+# Verification — VANILLAJS 0.2.0
 
-## Executed locally
+## Interaction Lab: executed locally
+
+- **79 Node tests passed**: the 49 Flight Lab tests plus 30 query, projectile,
+  interaction and recipe regressions. Scenarios include thin-wall occlusion,
+  initial overlap, finite range, stable hit ties, clipped lifetime and exact-end
+  contact, capacity reclaim, snapshot ownership and atomic rejected steps.
+- Rule tests cover missing conditions, resistance, unmatched pairs, strict field
+  comparison, priority/id ordering and blocked-rule fallthrough prevention.
+- Both recipes exercise successful and rejected impacts through the actual
+  projectile/collider/resolver composition. Simultaneous lethal hits apply only
+  one damage effect; a change of conditions in flight is sampled at impact.
+- 30/60/144 Hz presentation schedules produce identical simulated outcomes in
+  the same runtime. Pause freezes cooldown and projectile state, and firing after
+  input cancellation requires a fresh keydown. Focus/reset and bounded history
+  are covered.
+- Syntax/module checks and packaging pass: eight module contracts and 20 public
+  files, plus the generated manifest. Catalogue/package versions agree; the build
+  reads its manifest version from package.json.
+
+## Interaction Lab: browser execution
+
+Local Playwright tooling was present but its Chromium executable was unavailable,
+so the packaged browser suite could not run locally. The PR workflow installs
+its own pinned browser and runs both `scripts/browser-check.js` (Flight Lab) and
+`scripts/browser-interactions.js` (Interaction Lab). Exact-head results and the
+workflow link are recorded in the PR; adding tests alone does not prove a pass.
+
+The added scenarios check rendered geometry, shield rejection and hull damage,
+missing ignition/oxygen, water-forming and resisted/empty-chamber outcomes,
+fresh-fire pause/resume, frozen in-flight shots, blur, focus/reset, a real touch
+event sequence in mobile emulation, pointer cancellation, narrow layout, context
+loss and unsupported WebGL. Screenshots for both recipes and 390 px layout join
+the existing `flight-lab-evidence` artifact. Mobile emulation and synthetic
+lifecycle events do not establish physical-device coverage.
+
+## Historical Flight Lab 0.1.0 evidence
+
+### Executed locally
 
 - **49 Node tests passed**, including force/mass, torque/inertia, quaternion norm,
   asymmetric gyroscopic response, inertial drift, assistance, braking, frame-rate
@@ -19,7 +56,7 @@
 - Syntax checks, module dependency contracts and pure-core boundary checks passed.
 - Runtime packaging passed; its manifest records file sizes and SHA-256 hashes.
 
-## Browser checks
+### Browser checks
 
 The local cloud preview could not create a WebGL context. The visible unsupported
 graphics message was observed; local rendered-flight validation is unavailable

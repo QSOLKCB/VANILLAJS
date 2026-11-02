@@ -14,6 +14,12 @@ for(const path of files){
   assert.equal(result.status,0,result.stderr);
 }
 const catalogue=JSON.parse(await readFile(resolve(root,'MODULES.json'),'utf8'));
+const pkg=JSON.parse(await readFile(resolve(root,'package.json'),'utf8'));
+assert.equal(catalogue.release,pkg.version,'catalogue and package versions differ');
+for(const [name,recipe] of Object.entries(catalogue.recipes)){
+  await readFile(resolve(root,recipe.entry));
+  for(const module of recipe.modules)assert.ok(catalogue.modules[module],`${name}: unknown module ${module}`);
+}
 for(const [name,info]of Object.entries(catalogue.modules)){
   const source=await readFile(resolve(root,info.entry),'utf8');
   const imports=[...source.matchAll(/from\s+['"]([^'"]+)['"]/g)].map(m=>m[1]);

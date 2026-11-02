@@ -1,17 +1,129 @@
 {
   "schemaVersion": 1,
-  "release": "0.1.0",
+  "release": "0.2.0",
   "license": "Apache-2.0",
   "modules": {
-    "math": {"entry": "modules/math/index.js", "depends": [], "environment": "pure-js", "status": "experimental", "description": "Vectors, quaternions, matrices and seeded randomness"},
-    "time": {"entry": "modules/time/index.js", "depends": [], "environment": "pure-js", "status": "experimental", "description": "Fixed simulation ticks, interpolation and pause"},
-    "collision": {"entry": "modules/collision/index.js", "depends": ["math"], "environment": "pure-js", "status": "experimental", "description": "Swept axis-aligned cube versus static boxes; sliding and depenetration"},
-    "flight": {"entry": "modules/flight/index.js", "depends": ["math", "collision"], "environment": "pure-js", "status": "experimental", "description": "6DOF rigid-body integration and assisted/inertial control"},
-    "input": {"entry": "modules/input/index.js", "depends": ["math"], "environment": "pure state with opt-in browser adapter", "status": "experimental", "description": "Action state, keyboard lifecycle and standard gamepad mapping"},
-    "render-webgl": {"entry": "modules/render-webgl/index.js", "depends": ["math"], "environment": "browser-webgl1", "status": "experimental", "description": "Minimal coloured geometry, lines, points and camera rendering"}
+    "math": {
+      "entry": "modules/math/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Vectors, quaternions, matrices and seeded randomness"
+    },
+    "time": {
+      "entry": "modules/time/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Fixed simulation ticks, interpolation and pause"
+    },
+    "collision": {
+      "entry": "modules/collision/index.js",
+      "depends": [
+        "math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Swept static-box movement plus finite ray and cube-segment queries"
+    },
+    "flight": {
+      "entry": "modules/flight/index.js",
+      "depends": [
+        "math",
+        "collision"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "6DOF rigid-body integration and assisted/inertial control"
+    },
+    "input": {
+      "entry": "modules/input/index.js",
+      "depends": [
+        "math"
+      ],
+      "environment": "pure state with opt-in browser adapter",
+      "status": "experimental",
+      "description": "Action state, keyboard lifecycle and standard gamepad mapping"
+    },
+    "render-webgl": {
+      "entry": "modules/render-webgl/index.js",
+      "depends": [
+        "math"
+      ],
+      "environment": "browser-webgl1",
+      "status": "experimental",
+      "description": "Minimal coloured geometry, lines, points and camera rendering"
+    },
+    "projectiles": {
+      "entry": "modules/projectiles/index.js",
+      "depends": [
+        "math",
+        "collision"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded straight projectiles, swept hit events and simulation-time lifetimes"
+    },
+    "interactions": {
+      "entry": "modules/interactions/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Declarative conditions and effects with ordered resolution and explanatory outcomes"
+    }
   },
   "recipes": {
-    "assisted-tunnel": {"entry": "demos/flight-lab/worlds.js", "modules": ["math", "time", "collision", "flight", "input", "render-webgl"], "preset": "tunnel"},
-    "inertial-arena": {"entry": "demos/flight-lab/worlds.js", "modules": ["math", "time", "collision", "flight", "input", "render-webgl"], "preset": "arena"}
+    "assisted-tunnel": {
+      "entry": "demos/flight-lab/worlds.js",
+      "modules": [
+        "math",
+        "time",
+        "collision",
+        "flight",
+        "input",
+        "render-webgl"
+      ],
+      "preset": "tunnel"
+    },
+    "inertial-arena": {
+      "entry": "demos/flight-lab/worlds.js",
+      "modules": [
+        "math",
+        "time",
+        "collision",
+        "flight",
+        "input",
+        "render-webgl"
+      ],
+      "preset": "arena"
+    },
+    "space-target-practice": {
+      "entry": "demos/interaction-lab/recipes.js",
+      "modules": [
+        "math",
+        "time",
+        "collision",
+        "flight",
+        "input",
+        "render-webgl",
+        "projectiles",
+        "interactions"
+      ],
+      "preset": "space"
+    },
+    "reaction-bench": {
+      "entry": "demos/interaction-lab/recipes.js",
+      "modules": [
+        "math",
+        "time",
+        "collision",
+        "flight",
+        "input",
+        "render-webgl",
+        "projectiles",
+        "interactions"
+      ],
+      "preset": "bench"
+    }
   }
 }

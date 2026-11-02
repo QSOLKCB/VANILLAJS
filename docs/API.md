@@ -1,4 +1,4 @@
-# API contracts — 0.1.0 (experimental)
+# API contracts — 0.2.0 (experimental)
 
 All paths are native ES modules. Public numerical routines require finite values
 unless otherwise stated. Vector arithmetic expects correctly sized numeric arrays;
@@ -104,6 +104,111 @@ Colliders are not spheres: corner contacts are intentionally box-shaped.
 An impossible overlap may remain unresolved; `truncated` is a caller-visible
 failure to complete motion, not a promise that every supplied world is solvable.
 
+### Finite queries (0.2.0)
+
+`castSegment(origin, displacement, colliders, {halfSize=0, ignoreIds=[]})` returns
+null or `{id,index,time,distance,point,normal,startedInside}`. Colliders are
+`{id: 'unique-nonempty-string', box: aabb(min,max)}`. All supplied boxes and ids
+are validated, including ignored colliders. Vectors must be finite, box volume
+positive, and `halfSize` nonnegative. An unrepresentable segment/box extent throws.
+
+- `displacement` is end minus origin in world metres. `time` is its fraction in
+  `[0,1]`; `distance` is metres travelled, and `point` is the moving **centre**.
+- The segment and expanded box are closed. Tangency and endpoint contact count.
+  Starting inside or on the box gives time zero, `startedInside:true`, normal
+  `[0,0,0]`, even when moving outward. A stationary query only finds start overlap.
+- Positive halfSize expands boxes for a world-axis-aligned cube; it is not a
+  sphere/capsule sweep. Zero is a point query.
+- Nearest contact wins; exact-time ties use ascending string id (JS code-unit
+  ordering), independent of input order. `index` still identifies the input row.
+- These query semantics are separate from the older movement sweep's boundary
+  semantics. Query results do not resolve penetration or slide a body.
+
+`raycast(origin,direction,maxDistance,colliders,options)` normalizes a nonzero,
+finite direction and delegates to the segment query. Range is finite and
+nonnegative, in metres; the returned time is still a fraction of that range.
+
+## Projectiles
+
+`new ProjectileSystem({capacity=128})` requires a positive safe integer capacity.
+It owns constant-velocity point/cube motion; targets remain static during a step.
+It has no timer, renderer, damage model, gravity or automatic source exclusion.
+
+```js
+const shots = new ProjectileSystem({capacity:64});
+const result = shots.spawn({position:[0,0,0], velocity:[0,0,-100],
+  lifetime:1.5, halfSize:0.08, ignoreIds:['my-ship'], data:{kind:'pulse'}});
+const events = shots.step(1/120, colliders);
+```
+
+`spawn` validates finite vectors, positive finite lifetime in seconds, nonnegative
+finite halfSize in metres and an array of string ignoreIds. It clones vectors,
+ignoreIds and structured-cloneable `data` (default null). Velocity is world m/s.
+Success returns `{accepted:true,id,reason:null}`. At capacity it returns
+`{accepted:false,id:null,reason:'capacity'}` without consuming an id. Invalid input
+throws, including non-cloneable data. Ids are monotonically increasing integers;
+exhausting safe integer ids throws. `clear()` cancels shots without emitting
+events or reusing ids. Read-only `size/capacity` report bounds; `snapshots()`
+returns owned copies including remaining lifetime.
+
+`step(dt,colliders)` accepts finite nonnegative seconds. Zero is an immediate
+no-op. Use fixed ticks for composition with other modules. Travel is clipped to
+remaining lifetime, so a shot cannot hit beyond expiry. Contact at the exact
+lifetime endpoint takes precedence over expiry. The first hit consumes the shot.
+All motion is staged before commit: an invalid query leaves the system unchanged.
+
+| Event | Fields |
+| --- | --- |
+| hit | `type:'hit', projectileId, time, hit, data` |
+| expired | `type:'expired', projectileId, time, position, data` |
+
+Here event `time` is **seconds from this step's start**, while nested `hit.time`
+is a fraction of the shot's lifetime-clipped segment. Events sort by event time,
+then projectile id. A consumed shot never emits a second event. Metadata is
+cloned on output. A consumer applies effects once, in event order; this module
+does not deduplicate events re-submitted by a consumer. Complexity is a direct
+scan of active projectiles × colliders; no spatial acceleration is claimed.
+
+## Interactions
+
+`createInteractionResolver(rules)` validates and snapshots declarations, returning
+an object with `evaluate({source,target,context={}})`. Each input is a record;
+source and target need nonempty `kind` strings. Evaluating never mutates inputs.
+
+```js
+const resolver = createInteractionResolver([{
+  id:'pulse-hull', priority:0, match:{source:'pulse',target:'drone'},
+  requires:[{scope:'context', key:'shield', equals:false,
+    code:'shield-active', message:'The shield is active.'}],
+  effects:[{type:'damage',amount:25}],
+  reason:{code:'hull-hit',message:'Shield open; hull damaged.'}
+}]);
+const result = resolver.evaluate({source:{kind:'pulse'},target:{kind:'drone'},
+  context:{shield:false}});
+```
+
+- Rule ids are unique nonempty strings. Priority is a safe integer (default 0).
+  Match source/target are exact kind strings. Highest priority wins, then ascending
+  id; declaration order does not affect selection.
+- Requirements default to `[]`. They compare an **own**, flat field in source,
+  target or context using strict equality. Expected values are strings, booleans,
+  finite numbers or null. Missing fields fail, including when `equals:null`.
+  Each requirement supplies a nonempty reason code and message.
+- A selected rule with unmet requirements blocks and reports every failing
+  requirement in declaration order. It cannot fall through to a permissive rule.
+- Effects default to `[]`; each is a flat scalar record with a nonempty `type`.
+  Effects describe requested changes; application and unit meanings belong to
+  the consumer. They contain no executable strings or callbacks.
+- Outcome is `applied` (default) or `resisted`. Resisted rules must have no
+  effects. Every rule requires a reason `{code,message}` for its successful match.
+
+Results are `{status,ruleId,effects,reasons}` with fresh mutable arrays/records.
+Statuses: `applied`, `resisted`, `blocked`, `unmatched`. Unmatched pairs have null
+ruleId and a `no-rule` reason. Blocked, resisted and unmatched results emit no
+effects. No rule chaining, state mutation, global event bus or domain vocabulary
+is implicit. Recipes decide when to sample conditions; Interaction Lab samples
+them at impact and applies hits in chronological order against updated state.
+
 ## Input and rendering
 
 `Actions` provides `set(name,down)`, `value(name)`, `axis(negative,positive)`,
@@ -127,4 +232,8 @@ interleaved XYZ/RGB vertices with `triangles`, `lines` or `points`.
 `begin(position,orientation,options)` clears, resizes and sets the camera;
 `draw(mesh)` draws. `clearMeshes()` deletes buffers; `dispose()` also deletes the
 program. `boxVertices` and `ringVertices` generate original simple geometry.
+`update(mesh,data)` replaces an owned mesh's interleaved XYZ/RGB vertices using
+a dynamic buffer upload, retaining its primitive. It rejects a mesh cleared or
+owned by another renderer. Supply a finite numeric array with length divisible
+by six, just as for `mesh`; geometry validity remains the caller's responsibility.
 The application owns context-loss policy and animation scheduling.

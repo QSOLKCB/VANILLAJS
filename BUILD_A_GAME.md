@@ -2,7 +2,7 @@
 
 Start from an exact release or commit, inspect `MODULES.json` and select only the
 modules needed by the game. Keep all required dependencies and relative paths.
-All 0.1.0 APIs are experimental; record the revision instead of silently tracking
+All 0.2.0 APIs are experimental; record the revision instead of silently tracking
 `main`. Preserve LICENSE and NOTICE when distributing copied modules.
 
 For example, a flight game vendors `math`, `collision`, `flight`, `time` and
@@ -87,3 +87,49 @@ Before release, run module tests and game-level scenarios at different render
 rates. Include input cancellation, pause, transitions, collisions and the actual
 deployment subpath. Do not equate a headless simulation pass with graphics,
 physical controller or device-performance validation.
+
+## Add projectiles and conditional effects
+
+Vendor `projectiles`, `collision`, `math` and `interactions`. Add `time` for a
+fixed-step loop and whichever browser/flight adapters your game needs. The
+Interaction Lab recipes are small complete consumers; their game data stays in
+`demos/interaction-lab/recipes.js`. See [API contracts](docs/API.md) for validation,
+event ordering and [recipe limits](docs/INTERACTION_LAB.md) for the examples.
+
+```js
+import {aabb} from './vendor/vanillajs/modules/collision/index.js';
+import {ProjectileSystem} from './vendor/vanillajs/modules/projectiles/index.js';
+import {createInteractionResolver} from './vendor/vanillajs/modules/interactions/index.js';
+
+const shots = new ProjectileSystem({capacity:64});
+const target = {kind:'drone',health:100};
+const colliders = [{id:'drone',box:aabb([-2,-2,-22],[2,2,-20])}];
+const rules = createInteractionResolver([{
+  id:'pulse-hull',match:{source:'pulse',target:'drone'},
+  requires:[{scope:'context',key:'shield',equals:false,
+    code:'shield-active',message:'Open the shield first.'}],
+  effects:[{type:'damage',amount:25}],
+  reason:{code:'hit',message:'Pulse hit the hull.'}
+}]);
+shots.spawn({position:[0,0,0],velocity:[0,0,-100],data:{kind:'pulse'}});
+const context = {shield:false};
+function update(dt) {
+  for (const event of shots.step(dt,colliders)) {
+    if (event.type !== 'hit' || event.hit.id !== 'drone') continue;
+    const result = rules.evaluate({source:event.data,target,context});
+    for (const effect of result.effects) {
+      if (effect.type === 'damage') target.health = Math.max(0,target.health-effect.amount);
+    }
+    // Display result.reasons, including blocked or resisted outcomes.
+  }
+}
+// Invoke update from FixedClock.advance. Pausing the clock also pauses shots.
+```
+
+Include walls in the same collider query as targets so the nearest obstruction
+wins. Explicitly ignore the shooter if its collider is included. Consume each
+event once, retain the documented ordering, and choose when conditions are
+sampled. If a dead target must reject further effects, add an `alive` requirement
+as the complete Target practice recipe does. Keep cooldowns in simulation time.
+On pause, clear the keyboard adapter, pointer states and queued fire commands;
+do not recreate held firing from keyboard repeat events on resume.

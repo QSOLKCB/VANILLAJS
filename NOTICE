@@ -1,4 +1,4 @@
-VANILLAJS — Flight Lab
+VANILLAJS — Flight Lab and Interaction Lab
 Copyright 2026 QSOL–IMC / Trent Slade and contributors.
 Distributed under the repository's existing Apache License 2.0.
 
@@ -8,3 +8,10 @@ are included. QUICKSCOPER and CorpoWars were consulted as QSOL architectural
 references; this milestone does not copy their source files. Mathematical
 algorithms use conventional vector, quaternion, slab-intersection and rigid-body
 integration methods. Development-only tools are not included in the runtime.
+
+Interaction Lab's modules, rules, UI and procedural geometry are original work
+for this repository. David Nate Breslauer's Reaction Rumble project description
+inspired explaining condition-dependent outcomes; no game source, artwork or
+dataset was copied. The symbolic hydrogen/oxygen and neon examples reference
+Purdue University and Royal Society of Chemistry educational material. Scientific
+facts, scope and source URLs are documented in docs/INTERACTION_LAB.md.
