@@ -1,4 +1,4 @@
-VANILLAJS — Flight Lab and Interaction Lab
+VANILLAJS — Flight Lab, Interaction Lab and FPS Lab
 Copyright 2026 QSOL–IMC / Trent Slade and contributors.
 Distributed under the repository's existing Apache License 2.0.
 
@@ -15,3 +15,8 @@ inspired explaining condition-dependent outcomes; no game source, artwork or
 dataset was copied. The symbolic hydrogen/oxygen and neon examples reference
 Purdue University and Royal Society of Chemistry educational material. Scientific
 facts, scope and source URLs are documented in docs/INTERACTION_LAB.md.
+
+FPS Lab's controller, weapon timers, courses, UI and procedural geometry were
+independently authored for this repository. No external game source, artwork,
+audio or runtime dependency was copied. Its upright AABB controller uses the
+repository's slab-intersection/slide solver, not a capsule or slope solver.

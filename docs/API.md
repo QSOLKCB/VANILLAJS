@@ -1,4 +1,4 @@
-# API contracts — 0.2.0 (experimental)
+# API contracts — 0.3.0 (experimental)
 
 All paths are native ES modules. Public numerical routines require finite values
 unless otherwise stated. Vector arithmetic expects correctly sized numeric arrays;
@@ -97,6 +97,94 @@ linear velocity are unchanged. A zero-delta call deliberately takes over and
 stops existing spin. It does not change `stepFlight` torque/inertia semantics;
 keyboard/gamepad flight remains fully 6DOF when the mouse is idle.
 
+## Grounded character (0.3.0)
+
+`createCharacter({position=[0,0,0], velocity=[0,0,0], halfExtents=[.35,.9,.35],
+eyeHeight=1.62, yaw=0, pitch=0})` creates mutable, caller-owned state. Position
+is the **centre of the feet**, velocity is world m/s, and the upright collider
+centre is `position + [0,halfExtents[1],0]`. Vectors are cloned and finite;
+extents must be positive and eyeHeight strictly inside the full body height.
+The initial `grounded:false` is resolved against real support on the first tick.
+Do not mutate fields to invalid values between calls.
+
+`characterConfig(options)` validates and returns these finite values:
+
+| Setting | Default | Meaning |
+| --- | --- | --- |
+| walkSpeed / sprintSpeed | 5 / 8 | Local horizontal target speed, m/s |
+| groundAcceleration / airAcceleration | 40 / 8 | Horizontal acceleration limit, m/s² |
+| gravity | 22 | Positive downward acceleration, m/s² |
+| jumpSpeed | 7.2 | Vertical take-off velocity, m/s |
+| stepHeight | 0.3 | Maximum attempted static stair rise, m; zero disables stepping |
+| groundSnap | 0.12 | Maximum downward ground-follow distance, m; zero disables snap |
+
+All settings are nonnegative, with strictly positive gravity. The config remains
+caller-owned; edits must preserve its invariants.
+
+`stepCharacter(character, {move=[0,0], sprint=false, jump=false}, dt, config, boxes)`
+mutates pose, velocity and grounded state. `move` is local `[x,z]`, with **-z
+forward**; components are clamped and diagonals limited to magnitude one. Movement
+uses yaw only, so looking up never turns walking into flight. Ground acceleration
+also brakes toward rest; airborne motion keeps horizontal momentum when there is
+no movement command. Gravity uses semi-implicit Euler. `jump` is a **fresh-press
+request**, ignored without actual support; callers consume an input edge once.
+
+`dt` must be in `[0,.05]` seconds; zero changes nothing. Return value is
+`{contacts:[{index,normal}], grounded, jumped, stepped, truncated}`. Contacts refer
+to the supplied static box array. Grounded state is probed at the final position,
+not inferred from a contact left behind earlier in the tick.
+
+The controller shares the rectangular swept/slide solver. While grounded and
+horizontally obstructed it compares the direct path with a bounded up/across/down
+step. A step needs full overhead clearance, landing support and improved forward
+progress. Ground snap follows only short downward drops and never pulls a jumping
+character down. Support probing uses 2 mm; comparison tolerance is 10 µm. This is
+an arcade controller for metre-scale environments, not force-based biomechanics.
+
+`lookCharacter(character,{yaw=0,pitch=0})` consumes finite relative **radians**.
+Yaw wraps, pitch clamps to `±(π/2 − .01)`, and no angular velocity is stored.
+`characterView(character)` returns owned `{position,orientation}` arrays for the
+fixed eye height and roll-free yaw/pitch view. Positive yaw turns toward -X,
+positive pitch looks up. Input deltas are applied once, without multiplying mouse
+movement by dt; keyboard angular rates are converted to deltas using dt.
+
+There are no capsules, slopes, crouching, moving platforms, moving-target
+continuous queries, coyote time, jump buffering or head bob in this slice.
+The eye lies inside the body; this is not a separate third-person camera sweep.
+
+## Weapon timing (0.3.0)
+
+`new WeaponTimer({magazineSize=8, ammo=magazineSize, reserve=32, interval=.2,
+reloadTime=1.2})` owns magazine, cooldown and reload state, with no geometry, input,
+randomness, renderer or damage policy. Magazine size is a positive safe integer;
+ammo is a safe integer in `[0,magazineSize]`; reserve is a nonnegative safe integer.
+Both timings are finite seconds, at least `.05`.
+
+`step(dt,{fire=false,reload=false})` accepts `dt` in `[0,.05]`. Zero is inert.
+Fire is a request at the tick start: a fresh edge gives single-shot behaviour;
+a held request gives automatic fire. At most one shot occurs per call, and
+cooldown-blocked requests are discarded, never queued for a later burst. With
+fixed ticks, cadence rounds conservatively to a tick boundary. The minimum
+interval matches the maximum step size.
+
+Reload takes priority when the magazine is not full and reserve is available.
+It preserves existing rounds and transfers only the missing amount at completion.
+Held fire cannot interrupt reload or fire on its completion tick. No automatic
+reload, chambered extra round, ammo pickup or trigger-edge tracking is implicit.
+
+| Event | Fields |
+| --- | --- |
+| shot | `type:'shot', time:0, id` (monotonic integer) |
+| reload-start | `type:'reload-start', time:0` |
+| reload-complete | `type:'reload-complete', time, rounds` |
+
+Event time is seconds within the supplied tick. A reload started and completed
+in one call reports both events in order. Empty or blocked fire emits no event.
+`snapshot()` returns an owned record with `ammo`, `reserve`, `magazineSize`,
+`cooldown`, `reloadRemaining`, and `phase` (`ready`, `cooldown`, `reloading`,
+`empty`). Not calling `step` pauses all timers. Clear gameplay input at pause;
+this timer cannot distinguish a fresh physical press from a caller's stale flag.
+
 ## Collision
 
 `aabb(min,max)` validates positive box volume. `sweepBox(origin, displacement,
@@ -112,6 +200,21 @@ There is no friction, restitution, rotating collider or dynamic-body collision.
 Colliders are not spheres: corner contacts are intentionally box-shaped.
 An impossible overlap may remain unresolved; `truncated` is a caller-visible
 failure to complete motion, not a promise that every supplied world is solvable.
+
+### Rectangular body queries (0.3.0)
+
+`sweepAABB(origin,displacement,halfExtents,box)` has the movement sweep's semantics,
+with positive xyz half-extents. It sweeps an upright rectangular **centre** against
+one static AABB; initial overlap is not recovered. It validates finite vectors,
+positive box volume and representable expanded extents.
+
+`moveAndSlideAABB(position,velocity,dt,halfExtents,boxes,maxSlides=6)` performs
+bounded penetration recovery, continuous collision and sliding with rectangular
+extents, returning the same shape as `moveAndSlide`. It validates the supplied
+geometry and nonnegative finite dt, without mutating inputs. Exact contact ties
+retain box-array order. The existing `sweepBox` and `moveAndSlide` scalar cube
+APIs keep their signatures and behaviour; ray/projectile queries keep their
+separate closed-volume initial-overlap semantics.
 
 ### Finite queries (0.2.0)
 
@@ -267,6 +370,11 @@ const look = mouse.consume();
 if (look.pitch || look.yaw) lookFlight(body, look);
 // Optional fire input: look.primary || look.pressed.
 ```
+
+`fpsBindings` maps WASD to movement actions, Space to jump, either Shift to
+sprint, arrows to pitch/yaw, F to fire and R to reload. `flightBindings` is
+unchanged. FPS consumers use `Actions.axis` and consume jump/reload/fire edges;
+`Actions.flight()` remains a flight-specific convenience.
 
 `FlightGamepad.sample(pads)` returns a flight command plus `connected/pause`.
 It accepts only the standard mapping, selects the first valid controller, and

@@ -17,6 +17,8 @@ export class Actions {
 }
 export const flightBindings={KeyW:'forward',KeyS:'backward',KeyA:'left',KeyD:'right',Space:'up',ControlLeft:'down',ControlRight:'down',
   ArrowUp:'pitchUp',ArrowDown:'pitchDown',ArrowLeft:'yawLeft',ArrowRight:'yawRight',KeyQ:'rollLeft',KeyE:'rollRight',KeyX:'brake',KeyB:'slow'};
+export const fpsBindings={KeyW:'forward',KeyS:'backward',KeyA:'left',KeyD:'right',Space:'jump',ShiftLeft:'sprint',ShiftRight:'sprint',
+  ArrowUp:'pitchUp',ArrowDown:'pitchDown',ArrowLeft:'yawLeft',ArrowRight:'yawRight',KeyF:'fire',KeyR:'reload'};
 export function attachKeyboard(target, actions, {bindings=flightBindings, enabled=()=>true}={}) {
   const keys=new Set();
   const editable=event=>event.target?.closest?.('input,select,textarea,button');

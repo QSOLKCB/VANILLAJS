@@ -2,7 +2,7 @@
 
 Start from an exact release or commit, inspect `MODULES.json` and select only the
 modules needed by the game. Keep all required dependencies and relative paths.
-All 0.2.0 APIs are experimental; record the revision instead of silently tracking
+All 0.3.0 APIs are experimental; record the revision instead of silently tracking
 `main`. Preserve LICENSE and NOTICE when distributing copied modules.
 
 For example, a flight game vendors `math`, `collision`, `flight`, `time` and
@@ -133,3 +133,57 @@ sampled. If a dead target must reject further effects, add an `alive` requiremen
 as the complete Target practice recipe does. Keep cooldowns in simulation time.
 On pause, clear the keyboard adapter, pointer states and queued fire commands;
 do not recreate held firing from keyboard repeat events on resume.
+
+
+## Build a grounded FPS
+
+Vendor `character`, `collision`, `math`, `input` and `time`; add `weapons` and
+optionally `projectiles`/`interactions`. The character's position is feet-centred,
+not its eye or collision centre. Start on a valid floor and supply static boxes.
+
+```js
+import {createCharacter, characterConfig, lookCharacter, characterView,
+  stepCharacter} from './vendor/vanillajs/modules/character/index.js';
+import {WeaponTimer} from './vendor/vanillajs/modules/weapons/index.js';
+import {Actions, attachKeyboard, attachMouseLook, fpsBindings}
+  from './vendor/vanillajs/modules/input/index.js';
+
+const character = createCharacter({position:[0,0,7]});
+const config = characterConfig();
+const weapon = new WeaponTimer({magazineSize:8, reserve:32});
+const actions = new Actions();
+const keys = attachKeyboard(window, actions, {bindings:fpsBindings,
+  enabled:() => running});
+const mouse = attachMouseLook(canvas, {enabled:() => running,
+  onUnlock:() => setPaused(true)});
+// Use the FixedClock/RAF lifecycle from the first example, replacing its update:
+function update(dt) {
+  const look = mouse.consume();
+  lookCharacter(character, look); // deltas already in radians; no dt multiplier
+  const previous = characterView(character);
+  const fireEdge = actions.consume('fire'); // drain even when a button is held
+  const events = weapon.step(dt, {
+    fire:fireEdge || actions.value('fire') || look.pressed || look.primary,
+    reload:actions.consume('reload'),
+  });
+  for (const event of events) if (event.type === 'shot') {
+    // Cast a ray or spawn a bolt from previous.position / previous.orientation.
+    // Query walls and targets together, then apply returned effects once.
+  }
+  stepCharacter(character, {
+    move:[actions.axis('left','right'), actions.axis('forward','backward')],
+    jump:actions.consume('jump'), sprint:!!actions.value('sprint'),
+  }, dt, config, solids);
+  // Interpolate previous and characterView(character) for presentation.
+}
+// setPaused must clear keys and mouse.release(), pause the clock and reset
+// the RAF timestamp. Do not step the weapon while paused. Dispose adapters
+// and renderer when your game tears down.
+```
+
+The snippet assumes the surrounding game's `canvas`, `running`, `solids` and
+`setPaused` lifecycle. For a complete implementation, start with
+`demos/fps-lab/app.js` and its two world recipes. For single-shot behaviour, omit
+the held `actions.value('fire')` / `look.primary` terms and retain only edges.
+Keep ammo/weapon timers separate from shot geometry and damage rules. Consult
+[the contracts and limits](docs/FPS_LAB.md) before adapting steps or body sizes.

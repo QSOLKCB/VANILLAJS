@@ -1,7 +1,7 @@
-# Architecture — VANILLAJS 0.2.0
+# Architecture — VANILLAJS 0.3.0
 
-The goal is to assemble future games from small, versioned systems. The two
-demonstrations prove composition against different environments and control laws.
+The goal is to assemble future games from small, versioned systems. The labs
+prove composition against different environments and control laws.
 Rendering, input events and lifecycle policy belong to the application boundary.
 
 ## Dependency direction
@@ -10,7 +10,9 @@ Rendering, input events and lifecycle policy belong to the application boundary.
 | --- | --- | --- |
 | math | nothing | numeric operations and coordinate conventions |
 | time | nothing | accumulator and tick budget |
-| collision | math | static-box sweeps and sliding |
+| collision | math | cube/rectangular sweeps, sliding and finite static queries |
+| character | math, collision | upright grounded motion and eye pose |
+| weapons | nothing | magazine/cooldown/reload state |
 | flight | math, collision | physical state and control laws |
 | input | math | actions; opt-in keyboard/mouse adapters; gamepad sampling |
 | render-webgl | math | GPU buffers, shaders and rendering |
@@ -93,6 +95,26 @@ CPU vertex arrays are rebuilt for clarity; no allocation-free claim is made.
 Both apps cancel held inputs at lifecycle boundaries. The new lab also retains
 a quick fire-button tap until the next physics tick, and cancels that pending
 tap on pause, focus changes, target focus or reset.
+
+## Grounded FPS composition
+
+FPS Lab uses the character controller instead of the free-flight body. Both
+Footwork and Live range share upright rectangular sweeps, yaw-only movement,
+gravity, support probes, bounded up/across/down steps and a fixed eye pose.
+Camera pitch never enters walking direction. Stair stepping is an intentional
+kinematic control rule; it does not claim a general rigid-body or slope solver.
+The older cube functions use the same internal solver with equal extents.
+
+Weapon timers accept requests and emit shot/reload events in simulation time.
+They know no collider, projectile, damage or key binding. A demo chooses fresh
+fire edges or held requests, fires traces or spawns bolts at the tick's initial
+eye pose, then advances movement and projectile motion. The existing interaction
+resolver describes target effects; the recipe applies them. Bodies and targets
+remain static within individual projectile queries, as in Interaction Lab.
+
+The new app retains click-to-capture mouse look, on-screen input, fresh-press
+pause boundaries, bounded render work and explicit graphics failures. New browser
+scenarios are additive: all earlier lab checks remain enabled.
 
 ## Distribution and growth
 
