@@ -1,8 +1,9 @@
 # VANILLAJS — reusable game modules
 
 Reusable, original JavaScript game modules built directly on web standards.
-**v0.7.0 — Shared flow fields: one destination map, many units.**
-Eleven reusable modules; fourteen recipes across Flight, Interaction, FPS and RTS labs.
+**v0.8.0 — OMI Lab: four faces, XOR and an exhaustive 16-bit experiment.**
+Eleven game modules; fourteen recipes across Flight, Interaction, FPS and RTS labs;
+one separately registered research experiment.
 
 [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
@@ -18,12 +19,14 @@ python3 -m http.server 8000
 # Interaction Lab: http://localhost:8000/demos/interaction-lab/index.html
 # FPS Lab: http://localhost:8000/demos/fps-lab/index.html
 # RTS Lab: http://localhost:8000/demos/rts-lab/index.html
+# OMI Lab: http://localhost:8000/demos/omi-lab/index.html
 ```
 
 There is no runtime installation, build step, npm dependency, CDN, account,
 telemetry, external asset download or backend. All geometry is procedural.
-The three 3D labs require WebGL 1; RTS Lab uses Canvas 2D. A visible error
-explains unsupported graphics. Serve over
+The three 3D labs require WebGL 1; RTS Lab uses Canvas 2D. OMI Lab uses SVG and
+Canvas 2D, retaining numerical controls if its atlas is unavailable. A visible
+message explains unsupported graphics. Serve over
 HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
@@ -174,10 +177,28 @@ followed by 512 samples. These are search-operation counts, not measured FPS.
 | `modules/projectiles/` | Bounded constant-velocity projectiles, swept impacts and lifetimes |
 | `modules/interactions/` | Ordered conditions → effects with explicit outcome reasons |
 
-All APIs are **experimental** in 0.7.0. Use a tagged release or exact commit,
+All APIs are **experimental** in 0.8.0. Use a tagged release or exact commit,
 preserve the directory structure and record what your game imports. The
 machine-readable catalogue lists each module's dependency closure and environment.
 Core modules neither own an animation loop nor read the DOM or ambient time.
+
+## OMI Lab — research experiment
+
+**Credit: Brian Thorne's ARCH OMI.** [ARCH-OMI-001](docs/ARCH_OMI.md) implements
+the pinned sixteen-bit rotate/XOR delta law and an explicit VANILLAJS encoding
+of four nibble-valued tetrahedral vertices. Inspect the four faces, flip an
+observed edge bit, apply reversible masks and survey all 65,536 words.
+
+The exhaustive result distinguishes **return after eight steps** from **minimal
+period eight**: 8 words have period 1, 56 period 2, 4,032 period 4 and 61,440 period 8.
+An independent arithmetic oracle agrees on every output. Six derived edge
+differences have only 4,096 patterns, each shared by sixteen words; closure does
+not establish absolute identity or detect every coordinated change.
+
+This lives under `experiments/arch-omi/`, separate from the game modules. Source
+pins, encoding choices, API boundaries, controls and the executed evidence are
+documented together. It adds no runtime dependency and makes no pathfinding,
+physics, cryptographic, compression, RNG or speedup claim.
 
 ## Development and verification
 
@@ -188,6 +209,7 @@ node --test tests/*.test.js
 node scripts/check.js
 node scripts/build.js
 node scripts/navigation-workload.js --check
+node scripts/verify-omi.js --check
 ```
 
 The build stages an allowlisted `dist/` and generates `manifest.json` with sizes

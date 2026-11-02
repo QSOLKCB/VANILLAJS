@@ -8,7 +8,7 @@ async function walk(dir){
     const path=resolve(dir,entry.name);if(entry.isDirectory())files.push(...await walk(path));else files.push(path);
   }return files;
 }
-const files=(await Promise.all(['modules','demos','scripts','tests'].map(d=>walk(resolve(root,d))))).flat().filter(f=>f.endsWith('.js'));
+const files=(await Promise.all(['modules','experiments','demos','scripts','tests'].map(d=>walk(resolve(root,d))))).flat().filter(f=>f.endsWith('.js'));
 for(const path of files){
   const result=spawnSync(process.execPath,['--check',path],{encoding:'utf8'});
   assert.equal(result.status,0,result.stderr);
@@ -20,7 +20,7 @@ for(const [name,recipe] of Object.entries(catalogue.recipes)){
   await readFile(resolve(root,recipe.entry));
   for(const module of recipe.modules)assert.ok(catalogue.modules[module],`${name}: unknown module ${module}`);
 }
-for(const [name,info]of Object.entries(catalogue.modules)){
+for(const [name,info]of [...Object.entries(catalogue.modules),...Object.entries(catalogue.experiments??{})]){
   const source=await readFile(resolve(root,info.entry),'utf8');
   const imports=[...source.matchAll(/from\s+['"]([^'"]+)['"]/g)].map(m=>m[1]);
   const actual=new Set();
@@ -33,5 +33,6 @@ for(const [name,info]of Object.entries(catalogue.modules)){
   assert.deepEqual([...actual].sort(),[...info.depends].sort(),`${name}: catalogue dependencies differ`);
   if(info.environment==='pure-js')assert.ok(!/\b(window|document|navigator|requestAnimationFrame|Math\.random|Date\.now)\b/.test(source),`${name}: browser or ambient clock dependency`);
   await import(new URL('../'+info.entry,import.meta.url));
+  if(info.demo)await readFile(resolve(root,info.demo));
 }
-console.log(`Checked ${files.length} JavaScript files and ${Object.keys(catalogue.modules).length} module contracts.`);
+console.log(`Checked ${files.length} JavaScript files, ${Object.keys(catalogue.modules).length} module contracts and ${Object.keys(catalogue.experiments??{}).length} research experiments.`);

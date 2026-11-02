@@ -1,4 +1,4 @@
-VANILLAJS — Flight Lab, Interaction Lab, FPS Lab and RTS Lab
+VANILLAJS — Flight Lab, Interaction Lab, FPS Lab, RTS Lab and OMI Lab
 Copyright 2026 QSOL–IMC / Trent Slade and contributors.
 Distributed under the repository's existing Apache License 2.0.
 
@@ -37,3 +37,10 @@ Shared flow fields, incremental multi-source breadth-first integration, convoy
 and evacuation recipes, and search-work measurements are original extensions
 authored for this repository. No external game source, assets or runtime code
 are included. Multi-source shortest-path integration is a conventional method.
+
+ARCH-OMI-001 credits Brian Thorne's ARCH OMI as its conceptual reference.
+The pinned OMI delta law and OMINO tetrahedral incidence notes are identified
+in docs/ARCH_OMI.md. The finite-word kernel is independently implemented from
+mathematical rules. Four-nibble packing, valued XOR edges, the census, independent
+arithmetic oracle and UI are authored for this repository. No donor source files,
+proofs or assets are copied, and full OMI protocol conformance is not claimed.

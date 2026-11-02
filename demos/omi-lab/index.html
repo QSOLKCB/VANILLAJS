@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10151b"><meta name="description" content="Explore all 65,536 words of a 16-bit OMI experiment: four faces, XOR and finite orbits.">
+  <title>OMI Lab · VANILLAJS</title><link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header><a class="brand" href="../../index.html">V<span>ANILLAJS</span><small>QSOL–IMC</small></a><nav aria-label="Labs"><a href="../../index.html">Flight ↗</a><a href="../fps-lab/index.html">FPS ↗</a><a href="../rts-lab/index.html">RTS ↗</a></nav></header>
+<main>
+  <section class="intro"><div><p class="eyebrow">EXPERIMENT 005 / FINITE STATES</p><h1>OMI Lab<span>.</span></h1></div><div><p>Four faces. Six edges.<br><strong>65,536 ways to begin.</strong></p><p class="credit">ARCH OMI reference: <a href="https://github.com/bthornemail">Brian Thorne ↗</a></p></div></section>
+  <div class="runbar"><span class="status"><i></i> <span id="status">READY</span></span><p>One 16-bit word. Every state can be checked.</p><div><button id="run" class="primary">Run experiment ↗</button><button id="pause" disabled>Pause</button><button id="reset">Reset ↺</button></div></div>
+  <p id="message" class="message" role="status">Step through a word, or run the complete census.</p>
+  <div class="workspace">
+    <section class="panel bench" aria-label="Four-face XOR bench">
+      <div class="panel-heading"><p class="eyebrow">01 / FOUR-FACE BENCH</p><span class="tag">RESEARCH ENCODING</span></div>
+      <div class="word-heading"><div><small>CURRENT WORD</small><output id="word">0x1234</output></div><dl><div><dt>DECIMAL</dt><dd id="decimal">4660</dd></div><div><dt>MINIMAL PERIOD</dt><dd><span id="period">8</span> steps</dd></div><div><dt>Δ STEPS</dt><dd id="delta-steps">0</dd></div></dl></div>
+      <div class="word-form"><label for="seed">Load a hexadecimal word<input id="seed" value="1234" maxlength="6" spellcheck="false" autocomplete="off"></label><button id="load">Load word</button><button id="step" class="primary">Δ step →</button></div>
+      <div id="bits" class="bits" role="group" aria-label="Toggle individual word bits"></div>
+      <div class="nibble-labels"><span>FS · bits 15–12</span><span>GS · bits 11–8</span><span>RS · bits 7–4</span><span>US · bits 3–0</span></div>
+      <div class="shape-layout"><svg id="tetrahedron" viewBox="0 0 420 330" role="img" aria-labelledby="shape-title shape-desc"><title id="shape-title">Tetrahedral XOR relations</title><desc id="shape-desc">Four nibble-valued vertices and six pairwise XOR edges. Select a face to highlight its boundary.</desc><g id="faces-drawing"></g><g id="edges-drawing"></g><g id="vertices-drawing"></g></svg><div class="face-controls"><p class="eyebrow">FACES / XOR RESIDUAL</p><div id="faces"></div><p id="closure">4 / 4 faces close</p><button id="fault" aria-pressed="false">Flip one observed edge bit</button><p class="note">A fault affects the observed FS–GS edge. The stored word stays intact.</p></div></div>
+      <div class="xor-controls"><label for="xor-mask">XOR mask<input id="xor-mask" value="5A3C" maxlength="6" spellcheck="false" autocomplete="off"></label><button id="xor">Apply XOR ⊕</button><button id="common">Common nibble XOR F</button></div>
+      <p class="note">Applying the same mask twice restores the word. A common nibble mask changes all four vertices while preserving their edge differences.</p>
+      <div class="orbit-heading"><h2>This word’s orbit</h2><span>CLICK A STATE TO INSPECT</span></div><div id="orbit" class="orbit"></div>
+      <p class="formula">Δ(x) = rotl₁(x) ⊕ rotl₃(x) ⊕ rotr₂(x) ⊕ 5A3C</p>
+    </section>
+    <section class="panel atlas-panel" aria-label="Complete state census">
+      <div class="panel-heading"><p class="eyebrow">02 / STATE ATLAS</p><span class="tag" id="survey-status">BUILDING</span></div>
+      <h2>A finite universe.</h2><p class="copy">Each pixel is one word. Its colour is the shortest cycle that returns to that word.</p>
+      <div class="atlas-wrap"><canvas id="atlas" width="256" height="256" tabindex="0" aria-label="16-bit state atlas. Click or tap a word. Arrow keys select neighbouring words; Space steps delta; X applies the XOR mask. Escape pauses." aria-describedby="atlas-help"></canvas><div id="canvas-error" role="alert" hidden></div></div>
+      <p id="atlas-help" class="axis">256 × 256 · ROW = HIGH BYTE · COLUMN = LOW BYTE</p>
+      <div class="progress-line"><span id="survey-count">0 / 65,536</span><span id="survey-percent">0%</span></div><progress id="survey-progress" value="0" max="65536" aria-label="States surveyed"></progress>
+      <p id="counts-label" class="eyebrow counts-label">STATES COUNTED SO FAR</p>
+      <dl class="legend"><div><dt><i class="p1"></i> Period 1</dt><dd id="count-1">0</dd></div><div><dt><i class="p2"></i> Period 2</dt><dd id="count-2">0</dd></div><div><dt><i class="p4"></i> Period 4</dt><dd id="count-4">0</dd></div><div><dt><i class="p8"></i> Period 8</dt><dd id="count-8">0</dd></div></dl>
+      <p id="finding" class="finding">Run the census to inspect every word. Dark pixels have not been counted yet.</p>
+      <dl class="checks"><div><dt>Distinct Δ outputs</dt><dd id="unique">0</dd></div><div><dt>Returns after eight steps</dt><dd id="return-eight">0</dd></div><div><dt>Closed derived faces</dt><dd id="closed-faces">0</dd></div><div><dt>Distinct edge patterns</dt><dd id="edge-patterns">0</dd></div></dl>
+      <p class="note">The census advances while running. Escape, focus loss and Pause freeze it. Click the atlas to inspect a word and pause.</p>
+    </section>
+  </div>
+  <section class="explanation"><div><p class="eyebrow">WHAT THE EXPERIMENT MEANS</p><h2>Closure is a relation.</h2><p>We pack four nibble values into one word, assign them to FS, GS, RS and US, and label each edge with the XOR of its endpoints. XOR around every triangular face returns zero.</p><p>The six edges alone do not identify the word: sixteen different words share each edge pattern. Closure also cannot detect every coordinated change.</p></div><div><p class="eyebrow">SOURCE & EVIDENCE</p><h2>A rule you can inspect.</h2><p>Brian Thorne’s OMI delta law and OMINO tetrahedral notes provide the references. The nibble packing and this interactive bench are VANILLAJS experiments, with an independent exhaustive arithmetic check in the evidence report.</p><p><a href="https://github.com/QSOLKCB/VANILLAJS/blob/main/docs/ARCH_OMI.md">Read the experiment and source pins ↗</a></p><p class="note">Finite integer logic; no physics, encryption, compression or randomness claim.</p></div></section>
+</main>
+<footer><span>QSOL–IMC / VANILLAJS <b>v0.8.0</b></span><span>ARCH-OMI-001 · Native ES modules · Apache–2.0</span></footer>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
