@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "0.3.0",
+  "release": "0.4.0",
   "license": "Apache-2.0",
   "modules": {
     "math": {
@@ -24,7 +24,7 @@
       ],
       "environment": "pure-js",
       "status": "experimental",
-      "description": "Swept cube/rectangular-body movement plus finite ray and cube-segment queries"
+      "description": "Swept body movement, finite static queries and translating-target continuous queries"
     },
     "flight": {
       "entry": "modules/flight/index.js",
@@ -62,7 +62,7 @@
       ],
       "environment": "pure-js",
       "status": "experimental",
-      "description": "Bounded straight projectiles, swept hit events and simulation-time lifetimes"
+      "description": "Bounded straight projectiles against static or translating targets, ordered impacts and lifetimes"
     },
     "interactions": {
       "entry": "modules/interactions/index.js",
@@ -79,7 +79,7 @@
       ],
       "environment": "pure-js",
       "status": "experimental",
-      "description": "Upright grounded movement, jumping, static-box stairs and first-person view"
+      "description": "Grounded movement, safe crouch/stand, jumping, stairs and first-person view"
     },
     "weapons": {
       "entry": "modules/weapons/index.js",
@@ -171,6 +171,36 @@
         "interactions"
       ],
       "preset": "range"
+    },
+    "fps-low-passage": {
+      "entry": "demos/fps-lab/worlds.js",
+      "modules": [
+        "math",
+        "time",
+        "collision",
+        "character",
+        "weapons",
+        "input",
+        "render-webgl",
+        "projectiles",
+        "interactions"
+      ],
+      "preset": "lowpass"
+    },
+    "fps-tracking-range": {
+      "entry": "demos/fps-lab/worlds.js",
+      "modules": [
+        "math",
+        "time",
+        "collision",
+        "character",
+        "weapons",
+        "input",
+        "render-webgl",
+        "projectiles",
+        "interactions"
+      ],
+      "preset": "tracking"
     }
   }
 }

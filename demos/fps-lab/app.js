@@ -12,7 +12,7 @@ let session=createFpsLab(),renderer,sceneMesh,gridMesh,dynamicMesh,lineMesh,runn
 let previousTime=null,frameHandle,lastHud=0,shownReceipt=null,lastShotAt=-Infinity,mouseExitAt=-Infinity;
 const keyboard=attachKeyboard(window,actions,{bindings:fpsBindings,enabled:()=>running});
 const mouse=attachMouseLook(canvas,{enabled:()=>running&&!unavailable,
-  onLock:()=>{$('hint').textContent='Mouse look active · WASD move · Space jump · Esc releases & pauses';},
+  onLock:()=>{$('hint').textContent='Mouse look active · WASD move · C crouch · Esc releases & pauses';},
   onUnlock:event=>{mouseExitAt=event.timeStamp;pause('Mouse released. Resume, then click the view to capture it again.');},
   onError:()=>{$('hint').textContent='Mouse capture unavailable · drag to look or use arrows';}
 });
@@ -28,7 +28,7 @@ function launch(){
   if(unavailable)return;if(session.complete)select(session.kind);
   clearInput();running=true;started=true;clock.setPaused(false);previousTime=null;
   $('curtain').hidden=true;$('status').textContent='RUNNING';$('pause').disabled=false;$('pause').textContent='Pause';$('fire').disabled=false;$('reload').disabled=false;
-  canvas.focus({preventScroll:true});$('hint').textContent='Click view for mouse look · WASD move · Space jump · Shift sprint';
+  canvas.focus({preventScroll:true});$('hint').textContent='Click view for mouse look · WASD move · C crouch · Space jump';
 }
 function buildScene(){
   renderer.clearMeshes();sceneMesh=renderer.mesh(session.solids.flatMap(s=>boxVertices(s.center,s.size,s.color)));
@@ -43,18 +43,23 @@ function buildScene(){
     $('target-buttons').append(button);
   }
 }
-function syncShotNote(){$('shot-note').textContent=session.shotMode==='trace'?'An instant trace stops at the first surface.':'Bolts travel at 65 m/s and collide along their full path.';}
+function syncShotNote(){$('shot-note').textContent=session.shotMode==='trace'?'An instant trace stops at the first surface. Aim directly at the plate.':session.kind==='tracking'?'Bolts travel at 65 m/s. Aim ahead of a moving plate; try quarter-speed.':'Bolts travel at 65 m/s and collide along their full path.';}
 function select(kind){
   if(unavailable)return;
   running=false;started=false;clock.reset();clock.setPaused(true);previousTime=null;clearInput();session=createFpsLab(kind);shownReceipt=null;lastShotAt=-Infinity;
   if(renderer)buildScene();
   $('hint').textContent='Launch, then click the view for mouse look.';
   $('status').textContent='READY';$('pause').disabled=true;$('pause').textContent='Pause';$('fire').disabled=true;$('reload').disabled=true;
-  $('shot-mode').value='trace';$('automatic').checked=true;$('slow').checked=false;syncShotNote();
-  $('course-progress').hidden=kind!=='course';$('range-focus').hidden=kind!=='range';
+  $('shot-mode').value=session.shotMode;$('automatic').checked=true;$('slow').checked=false;syncShotNote();
+  $('course-progress').hidden=session.checkpoints.length===0;$('range-focus').hidden=!['range','tracking'].includes(kind);
+  $('course-progress').replaceChildren(...session.checkpoints.map((checkpoint,i)=>{
+    const stage=document.createElement('span');stage.dataset.stage=i;stage.textContent=`0${i+1} ${checkpoint.label}`;return stage;
+  }));
+  $('motion-readout').hidden=kind!=='tracking';
+  $('run-note').textContent=kind==='lowpass'?'Hold C to crouch at 2.5 m/s. Release to stand when the roof clears. Follow all four stance markers.':kind==='tracking'?'Three plates move on separate tracks. Lead bolts; aim traces directly. Plate motion freezes while paused.':'Walk at 5 m/s. Sprint at 8 m/s. Hold C to crouch at 2.5 m/s. Shallow stairs climb automatically.';
   document.querySelectorAll('[data-course]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.course===kind)));
   $('outcome').textContent='Ready when you are.';$('impact-log').replaceChildren();const empty=document.createElement('li');empty.textContent='Hits, spent plates and cover all leave a receipt.';$('impact-log').append(empty);
-  overlay(kind==='course'?'Find your footing.':'Make every round count.',COURSES[kind].description,kind==='course'?'Enter the course ↗':'Enter the range ↗');updateHud();
+  overlay({course:'Find your footing.',range:'Make every round count.',lowpass:'Watch your head.',tracking:'Aim where it will be.'}[kind],COURSES[kind].description,'Enter experiment ↗');updateHud();
 }
 function updateHud(){
   const body=session.character,weapon=session.weapon.snapshot();
@@ -63,11 +68,13 @@ function updateHud(){
   $('ammo').textContent=weapon.ammo;$('reserve').textContent=weapon.reserve;
   $('weapon-state').textContent=weapon.phase.toUpperCase();$('reload-time').textContent=weapon.phase==='reloading'?`${weapon.reloadRemaining.toFixed(1)} s`:'8-round magazine';
   $('reload-meter').style.width=`${weapon.phase==='reloading'?(1-weapon.reloadRemaining/1.2)*100:0}%`;
-  $('stance').textContent=body.grounded?'GROUNDED':body.velocity[1]>0?'RISING':'FALLING';
+  $('stance').textContent=body.crouched?(session.lastMovement?.standBlocked?'CROUCHED · LOW CEILING':'CROUCHED'):body.grounded?'GROUNDED':body.velocity[1]>0?'RISING':'FALLING';
+  $('body-height').textContent=`${(body.halfExtents[1]*2).toFixed(2)} m`;
+  $('target-x').textContent=session.targets[0]?.center[0].toFixed(2)??'—';
   for(const key of ['steps','jumps','shots','hits'])$(key).textContent=session[key];
   $('cleared').textContent=`${session.cleared} / ${session.targets.length}`;
   const goal=session.checkpoints[session.nextCheckpoint];
-  $('goal').textContent=session.kind==='course'?(goal?`${String(session.nextCheckpoint+1).padStart(2,'0')} / ${goal.label}`:'COURSE COMPLETE'):`${session.cleared} / ${session.targets.length} PLATES CLEARED`;
+  $('goal').textContent=session.checkpoints.length?(goal?`${String(session.nextCheckpoint+1).padStart(2,'0')} / ${goal.label}`:'COURSE COMPLETE'):`${session.cleared} / ${session.targets.length} PLATES CLEARED`;
   document.querySelectorAll('[data-stage]').forEach(el=>{el.classList.toggle('done',Number(el.dataset.stage)<session.nextCheckpoint);el.classList.toggle('active',Number(el.dataset.stage)===session.nextCheckpoint);});
   const last=session.history[0];
   if(last && last!==shownReceipt){
@@ -82,8 +89,10 @@ function render(alpha){
   const view=characterView(session.character),position=mix(session.previous.position,view.position,alpha),orientation=quatInterpolate(session.previous.orientation,view.orientation,alpha);
   const vertices=[],lines=[];
   for(const target of session.targets){
-    const color=target.alive?target.color:[.16,.24,.3];vertices.push(...boxVertices(target.center,target.size,color));
-    lines.push(...ringVertices([target.center[0],target.center[1],target.center[2]+.22],.55,target.alive?[.9,.7,.44]:[.25,.36,.44],24));
+    const center=target.previousCenter?mix(target.previousCenter,target.center,alpha):target.center;
+    const color=target.alive?target.color:[.16,.24,.3];vertices.push(...boxVertices(center,target.size,color));
+    lines.push(...ringVertices([center[0],center[1],center[2]+.22],.55,target.alive?[.9,.7,.44]:[.25,.36,.44],24));
+    if(target.motion){const m=target.motion;lines.push(m.originX-m.amplitude,.25,center[2],.45,.36,.24,m.originX+m.amplitude,.25,center[2],.45,.36,.24);}
   }
   session.checkpoints.forEach((checkpoint,i)=>{
     const color=i<session.nextCheckpoint?[.4,.7,.5]:i===session.nextCheckpoint?[.57,.79,.95]:[.23,.35,.45];
@@ -95,7 +104,7 @@ function render(alpha){
   renderer.update(dynamicMesh,vertices);renderer.update(lineMesh,lines);
   renderer.begin(position,orientation,{fog:.012,resolution:$('eco').checked?.65:1});renderer.draw(sceneMesh);renderer.draw(gridMesh);renderer.draw(dynamicMesh);renderer.draw(lineMesh);
   const hit=raycast(position,rotate(orientation,[0,0,-1]),130,session.colliders),target=session.targets.find(t=>t.id===hit?.id);
-  $('aim-label').textContent=target?`${target.label.toUpperCase()} / ${target.health} INTEGRITY`:session.kind==='course'?'FOLLOW THE BLUE MARKERS':'STATIC TRAINING RANGE';
+  $('aim-label').textContent=target?`${target.label.toUpperCase()} / ${target.health} INTEGRITY`:session.checkpoints.length?'FOLLOW THE BLUE MARKERS':session.kind==='tracking'?'LEAD YOUR BOLTS':'STATIC TRAINING RANGE';
   $('hit-mark').hidden=!session.flashes.some(f=>f.status==='applied' && session.elapsed-f.at<.12);
   document.querySelector('.weapon').classList.toggle('firing',session.elapsed-lastShotAt<.08);
 }
@@ -108,13 +117,14 @@ function frame(now){
     const axis=(a,b)=>actions.axis(a,b)+screen.axis(a,b),previous=session.nextCheckpoint;
     const events=stepFpsLab(session,{move:[axis('left','right'),axis('forward','backward')],jump:!!jump,reload:!!reload,fire:!!fire,
       sprint:!!(actions.value('sprint')||screen.value('sprint')),
+      crouch:!!(actions.value('crouch')||screen.value('crouch')),
       look:{yaw:look.yaw+axis('yawRight','yawLeft')*1.6*dt,pitch:look.pitch+axis('pitchDown','pitchUp')*1.6*dt}},dt);
     if(events.some(e=>e.type==='shot'))lastShotAt=session.elapsed;
     if(previous!==session.nextCheckpoint)$('announcement').textContent=`Checkpoint ${session.nextCheckpoint} of 4 reached.`;
     if(session.truncated)pause('Collision movement reached its limit. Reset the experiment to recover.');
     if(session.complete){
       running=false;clock.setPaused(true);clearInput();$('status').textContent='COMPLETE';$('pause').disabled=true;$('fire').disabled=true;$('reload').disabled=true;
-      overlay(session.kind==='course'?'Footwork complete.':'Range cleared.',`${session.elapsed.toFixed(2)} simulation seconds. ${session.kind==='course'?`${session.steps} steps climbed and ${session.jumps} jumps.`:`${session.hits} hits from ${session.shots} shots.`}`,'Run it again ↗');updateHud();
+      overlay(session.checkpoints.length?'Course complete.':'Range cleared.',`${session.elapsed.toFixed(2)} simulation seconds. ${session.checkpoints.length?'All four markers reached.':`${session.hits} hits from ${session.shots} shots.`}`,'Run it again ↗');updateHud();
     }
   },$('slow').checked?.25:1);
   render(running?result.alpha:1);if(now-lastHud>70){updateHud();lastHud=now;}frameHandle=requestAnimationFrame(frame);

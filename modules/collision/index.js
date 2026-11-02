@@ -113,6 +113,16 @@ export function moveAndSlideAABB(position,velocity,dt,halfExtents,boxes,maxSlide
  * Equal-time hits use ascending string id, independent of collider array order.
  */
 export function castSegment(origin, displacement, colliders, {halfSize=0, ignoreIds=[]}={}) {
+  return cast(origin,displacement,colliders,halfSize,ignoreIds,false);
+}
+
+/** Each collider's optional displacement translates its start box over the
+ * SAME interval as the segment. No rotation/resizing. Returned point/distance
+ * follow the projectile in world space; time is a fraction of that interval. */
+export function castMovingSegment(origin,displacement,colliders,{halfSize=0,ignoreIds=[]}={}) {
+  return cast(origin,displacement,colliders,halfSize,ignoreIds,true);
+}
+function cast(origin,displacement,colliders,halfSize,ignoreIds,moving) {
   origin=finiteVector(origin,3,'origin');
   displacement=finiteVector(displacement,3,'displacement');
   const distance=length(displacement);
@@ -130,21 +140,24 @@ export function castSegment(origin, displacement, colliders, {halfSize=0, ignore
     }
     ids.add(collider.id);
     const box=aabb(collider.box?.min,collider.box?.max);
+    const motion=moving?finiteVector(collider.displacement??[0,0,0],3,'collider displacement'):[0,0,0];
+    const relative=displacement.map((v,i)=>v-motion[i]);
     const min=box.min.map(x=>x-halfSize), max=box.max.map(x=>x+halfSize);
-    if (![...min,...max,...min.map((x,i)=>x-origin[i]),...max.map((x,i)=>x-origin[i])].every(Number.isFinite)) {
+    if (![...min,...max,...relative,...add(origin,relative),...add(min,motion),...add(max,motion),
+      ...min.map((x,i)=>x-origin[i]),...max.map((x,i)=>x-origin[i])].every(Number.isFinite)) {
       throw new RangeError('collider extent overflow');
     }
     if (ignored.has(collider.id)) continue;
     const startedInside=origin.every((x,i)=>x>=min[i] && x<=max[i]);
     let near=0, far=1, normal=[0,0,0], missed=false;
     if (!startedInside) for (let i=0;i<3;i++) {
-      if (displacement[i]===0) {
+      if (relative[i]===0) {
         if (origin[i]<min[i] || origin[i]>max[i]) {missed=true;break;}
         continue;
       }
-      let entry=(min[i]-origin[i])/displacement[i], exit=(max[i]-origin[i])/displacement[i];
+      let entry=(min[i]-origin[i])/relative[i], exit=(max[i]-origin[i])/relative[i];
       if (entry>exit) [entry,exit]=[exit,entry];
-      if (entry>near) {near=entry;normal=[0,0,0];normal[i]=displacement[i]>0?-1:1;}
+      if (entry>near) {near=entry;normal=[0,0,0];normal[i]=relative[i]>0?-1:1;}
       far=Math.min(far,exit);
       if (near>far) {missed=true;break;}
     }

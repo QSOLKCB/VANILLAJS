@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 — FPS motion (release candidate)
+
+- Add safe held crouch/stand to the character controller, with feet-anchored
+  dimensions, crouch speed and blocked-standing feedback; bind C in FPS controls.
+- Add `castMovingSegment` and `ProjectileSystem.stepMoving` for translating AABBs
+  over a shared interval. Return world-space impacts and clip target travel to
+  projectile lifetime. Existing static APIs and flight mappings remain intact.
+- Add Low passage and Tracking range recipes, moving-target interpolation,
+  stance/track telemetry and keyboard/on-screen input lifecycle checks.
+- Add 21 Node regressions (138 total), packaged browser scenarios and updated
+  contracts/examples. Ten modules, eight recipes, no runtime dependencies.
+- No slopes, capsules, moving platforms, rotating targets or dynamic body solver.
+
 ## 0.3.0 — FPS Lab (release candidate)
 
 - A pure upright character controller: walking/sprinting, gravity, fresh-press

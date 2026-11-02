@@ -27,11 +27,22 @@
   existing static hitscan and swept-projectile queries with conditional damage.
 - Numerical, complete-course, weapon/lifecycle and packaged-browser checks.
 
+## v0.4.0 — FPS motion
+
+- Feet-anchored crouch/stand, configurable stance dimensions and speed, with
+  headroom rejection and fresh-input lifecycle rules.
+- Relative-motion segment queries and projectile stepping against translating
+  AABBs, including lifetime clipping, occlusion and stable impact ordering.
+- Low passage and Tracking range demonstrate stance changes and leading moving
+  targets, while all six previous recipes remain available.
+- Full-course and moving-range regressions plus additive packaged-browser checks.
+
 ## Proposed next slices — not implemented
 
-1. **FPS expansion:** sloped terrain/capsules, crouching, moving platforms, moving-
-   target queries and additional camera/weapon behaviours. Upright boxes, static
-   steps, eye poses and magazine timing now exist in 0.3.0. Extract further QSOL
+1. **FPS expansion:** sloped terrain/capsules, moving platforms, rotating-target
+   queries and additional camera/weapon behaviours. Upright boxes, static steps,
+   stance changes, eye poses, magazine timing and translating-target shots now
+   exist through 0.4.0. Extract further QSOL
    game behaviour only with provenance and regression tests.
 2. **RTS kit:** navigation grids, A*, flow fields, selection, formations and
    steering. Measure scaling with concrete workloads.
