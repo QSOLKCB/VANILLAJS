@@ -43,3 +43,7 @@ test('invalid body, config and steps fail before integration',()=>{
   const b=createBody(),before=structuredClone(b);assert.throws(()=>stepFlight(b,{},1,flightConfig()));assert.deepEqual(b,before);
   stepFlight(b,{},0,flightConfig());assert.deepEqual(b,before);
 });
+test('step result agrees with final body velocity after braking',()=>{
+  const b=createBody({velocity:[10,0,0]});const result=stepFlight(b,{brake:true},.05,flightConfig());
+  assert.deepEqual(result.velocity,b.velocity);assert.ok(result.velocity[0]<10);
+});

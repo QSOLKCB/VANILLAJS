@@ -47,7 +47,10 @@ export class FlightGamepad {
     out.connected=true;
     const identity=`${pad.index}:${pad.id}`;
     if (identity!==this.identity) { this.identity=identity;this.reset(); }
-    const button=i=>clamp(pad.buttons[i]?.value ?? Number(Boolean(pad.buttons[i]?.pressed)),0,1);
+    const button=i=>{
+      const value=pad.buttons[i]?.value ?? Number(Boolean(pad.buttons[i]?.pressed));
+      return Number.isFinite(value)?clamp(value,0,1):0;
+    };
     const axis=i=>deadzone(pad.axes[i] ?? 0);
     if (!this.armed) {
       this.armed=!pad.buttons.some((_,i)=>button(i)>0.1) && pad.axes.every(x=>Math.abs(deadzone(x))===0);

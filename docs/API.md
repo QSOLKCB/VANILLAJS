@@ -84,8 +84,9 @@ General asymmetric rotation can become unstable at large angular rates: smaller
 steps or a more advanced integrator are needed for demanding rigid-body work.
 
 Both integration calls return collision contacts and `truncated`. `snapshot(body)`
-copies the pose for interpolation. The body is authoritative after a step; the
-movement result's velocity is pre-brake when `stepFlight` applies explicit braking.
+copies the pose for interpolation. The movement result agrees with the final body
+velocity, including explicit braking. Zero-duration calls return only empty contacts
+and `truncated:false`, without changing the body.
 
 ## Collision
 

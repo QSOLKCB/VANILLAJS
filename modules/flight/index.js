@@ -62,5 +62,6 @@ export function stepFlight(body, input, dt, config, boxes=[]) {
     const factor=Math.exp(-config.brake*dt);
     body.velocity=scale(body.velocity,factor); body.angularVelocity=scale(body.angularVelocity,factor);
   }
+  movement.velocity=body.velocity;
   return movement;
 }

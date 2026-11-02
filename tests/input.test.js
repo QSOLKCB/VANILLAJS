@@ -26,3 +26,7 @@ test('deadzone rejects invalid samples and unmapped controllers are ignored',()=
   assert.equal(deadzone(.1),0);assert.equal(deadzone(NaN),0);assert.equal(deadzone(1),1);
   assert.equal(new FlightGamepad().sample([{...pad(),mapping:''}]).connected,false);
 });
+test('non-finite controller button values cannot poison flight commands',()=>{
+  const g=new FlightGamepad(),p=pad();g.sample([p]);p.buttons[7].value=NaN;
+  assert.deepEqual(g.sample([p]).thrust,[0,0,0]);
+});

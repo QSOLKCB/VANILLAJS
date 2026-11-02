@@ -2,9 +2,10 @@
 
 ## Executed locally
 
-- **38 Node tests passed**, including force/mass, torque/inertia, quaternion norm,
+- **40 Node tests passed**, including force/mass, torque/inertia, quaternion norm,
   asymmetric gyroscopic response, inertial drift, assistance, braking, frame-rate
-  independence, quarter-speed simulation and pause/debt cancellation.
+  independence, quarter-speed simulation and pause/debt cancellation. Additional
+  regressions cover post-brake result consistency and invalid controller samples.
 - Collision cases include a body moving 10,000 m/s against a 2 cm wall, tangential
   sliding, two-wall corners, moving away from a surface, initial overlap and a
   bounded iteration budget.
@@ -26,6 +27,13 @@ output, both flight modes, thrust, assistance, braking, rotation, pause, blur,
 reset, narrow layout and the unsupported-WebGL path. Check the workflow result
 for the exact commit; merely committing the script does not establish a pass.
 Screenshots and the package manifest are stored as `flight-lab-evidence`.
+
+The initial implementation at `54de65dce3014fc60bbd326ae6dd695a2383ea78` passed
+[Chromium and all CI checks](https://github.com/QSOLKCB/VANILLAJS/actions/runs/41455294082).
+The desktop and 390 px screenshots were inspected. The downloaded artifact's
+SHA-256 matched its GitHub digest, and all 14 packaged file hashes matched the
+initial source snapshot, including the unchanged licence. Later commits must
+obtain their own green workflow result.
 
 ## Limits
 
