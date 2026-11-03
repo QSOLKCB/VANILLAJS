@@ -55,3 +55,9 @@ UI, replay validation and procedural geometry are independently authored for
 this repository. It composes the existing game modules and Brass Engine model;
 Brian Thorne’s ARCH OMI attribution and source boundaries remain in force.
 No third-party game code, artwork, audio or runtime dependency is introduced.
+
+Rendering reuse adapts the invariant-driven reuse and signature-bound incremental
+execution patterns in QSOLKCB/OPT at 7556dd36acd53ed3ed538fd03b1db44e5c1ec869.
+The JavaScript implementation is original; no Wonderbuild or other donor source
+is copied. Provenance, exactness contracts and measured limits are recorded in
+docs/OPTIMIZATION.md. Existing OMI attribution remains unchanged.

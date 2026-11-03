@@ -4,13 +4,16 @@ import {Actions,attachKeyboard,attachMouseLook,fpsBindings} from '../../modules/
 import {characterView} from '../../modules/character/index.js';
 import {mix,quatInterpolate} from '../../modules/math/index.js';
 import {Renderer,boxVertices,ringVertices} from '../../modules/render-webgl/index.js';
+import {VaultGeometry} from './view.js';
 import {STAGES} from '../ancient-machine/machine.js';
 import {PUZZLES,MAX_COMMANDS,PuzzleSearch} from './puzzles.js';
 import {createVault,stepVault,progress,consoleAccess,openConsole,closeConsole,operateLock,engageSeal,
   mechanismGeometry,consolePosition,exportVault,importVault,palette} from './world.js';
 const $=id=>document.getElementById(id),canvas=$('vault-view'),hex=n=>'0x'+n.toString(16).toUpperCase().padStart(4,'0');
 const clock=new FixedClock(),actions=new Actions(),screen=new Actions(),pointers=new Map(),buttonKeys=new Set();
-let session=createVault(),mode='intro',renderer,staticMesh,floorMesh,dynamicMesh,lineMesh,last=null,frameHandle;
+let session=createVault(),mode='intro',renderer,staticMesh,floorMesh,mechanismMeshes,consoleMeshes,last=null,frameHandle;
+const geometryCache=new VaultGeometry();
+let uploadedMechanisms=null,uploadedConsoles=null;
 let revision=0,hintSearch=null,lastModal='',shownConsole=null,gesture=null,completed=null;
 const active=()=>mode==='playing'||mode==='console';clock.setPaused(true);
 const keyboard=attachKeyboard(window,actions,{bindings:{...fpsBindings,KeyE:'interact'},enabled:()=>mode==='playing'});
@@ -82,34 +85,25 @@ function buildScene(){
     lines.push(...ringVertices([0,y+3.9,c[2]-6.2],1.05,palette.brass,32));
   }
   vertices.push(...boxVertices([0,3.7,-61.7],[2.2,3.4,.6],palette.light));
-  staticMesh=renderer.mesh(vertices);floorMesh=renderer.mesh(lines,'lines');dynamicMesh=renderer.mesh([]);lineMesh=renderer.mesh([],'lines');
+  staticMesh=renderer.mesh(vertices);floorMesh=renderer.mesh(lines,'lines');
+  mechanismMeshes={vertices:renderer.mesh([]),lines:renderer.mesh([],'lines')};
+  consoleMeshes={vertices:renderer.mesh([]),lines:renderer.mesh([],'lines')};
+  geometryCache.clear();uploadedMechanisms=null;uploadedConsoles=null;
 }
 function render(alpha){
   if(!renderer)return;
   const current=characterView(session.character),position=mix(session.previous.position,current.position,alpha),orientation=quatInterpolate(session.previous.orientation,current.orientation,alpha);
-  const vertices=[],lines=[],parts=mechanismGeometry(session);
-  for(const part of parts){
-    vertices.push(...boxVertices(part.center,part.size,part.color));
-    if(part.id.startsWith('door-')){
-      const [x,y,z]=part.center,w=part.size[0]*.36,h=1.4;
-      vertices.push(...boxVertices([x,y,z+.27],[part.size[0]*.68,2.8,.035],[.25,.27,.18]));
-      lines.push(x-w,y-h,z+.3,...palette.light,x+w,y+h,z+.3,...palette.light,
-        x-w,y+h,z+.3,...palette.light,x+w,y-h,z+.3,...palette.light);
-      lines.push(...ringVertices([x,y,z+.31],.4,palette.light,24));
-    }else{
-      const [x,y,z]=part.center;
-      for(const dx of [-2.2,2.2])vertices.push(...boxVertices([x+dx,y+.27,z],[.09,.035,part.size[2]-.08],palette.light));
-    }
+  const geometry=geometryCache.update(session);
+  if(geometry.mechanisms!==uploadedMechanisms){
+    renderer.update(mechanismMeshes.vertices,geometry.mechanisms.vertices);renderer.update(mechanismMeshes.lines,geometry.mechanisms.lines);
+    uploadedMechanisms=geometry.mechanisms;
   }
-  const n=progress(session);
-  for(let i=0;i<6;i++){
-    const c=consolePosition(i),state=session.locks[i].snapshot(),color=i<n?[.62,.77,.43]:i===n?palette.light:[.32,.35,.25];
-    lines.push(...ringVertices([c[0],c[1]+.5,c[2]-.06],.35,color,32));
-    for(let bit=0;bit<16;bit++)vertices.push(...boxVertices([c[0]-.48+(bit%4)*.32,c[1]+.81-Math.floor(bit/4)*.20,c[2]-.07],[.14,.11,.04],state.word&(1<<(15-bit))?color:[.15,.19,.13]));
-    if(i===n){lines.push(c[0],c[1]+1.2,c[2],...palette.light,c[0],c[1]+2.1,c[2],...palette.light);}
+  if(geometry.consoles!==uploadedConsoles){
+    renderer.update(consoleMeshes.vertices,geometry.consoles.vertices);renderer.update(consoleMeshes.lines,geometry.consoles.lines);
+    uploadedConsoles=geometry.consoles;
   }
-  renderer.update(dynamicMesh,vertices);renderer.update(lineMesh,lines);
-  renderer.begin(position,orientation,{fog:.009});renderer.draw(staticMesh);renderer.draw(floorMesh);renderer.draw(dynamicMesh);renderer.draw(lineMesh);
+  renderer.begin(position,orientation,{fog:.009});renderer.draw(staticMesh);renderer.draw(floorMesh);
+  renderer.draw(mechanismMeshes.vertices);renderer.draw(consoleMeshes.vertices);renderer.draw(mechanismMeshes.lines);renderer.draw(consoleMeshes.lines);
 }
 
 const svgNS='http://www.w3.org/2000/svg';
@@ -155,21 +149,22 @@ function renderConsole(){
   for(const command of s.commands.slice(-12)){const li=document.createElement('li');li.textContent=command===0?'Δ':String.fromCharCode(64+command);$('command-tape').append(li);}
   if(!s.commands.length){const li=document.createElement('li');li.className='empty';li.textContent='No completed commands.';$('command-tape').append(li);}
 }
+function write(node,key,value){if(key==='textContent')value=String(value);if(node[key]!==value)node[key]=value;}
 function updateHud(){
   const n=progress(session),access=consoleAccess(session),player=session.character;
-  $('status').textContent=({intro:'READY',playing:'EXPLORING',console:'AT CONSOLE',paused:'PAUSED',complete:'COMPLETE',unavailable:'UNAVAILABLE'})[mode];
-  $('seal-count').textContent=`${String(n).padStart(2,'0')} / 06 SEALS`;
-  $('bay-name').textContent=n===6?'THE KEEPER’S DOOR':PUZZLES[n].name.toUpperCase();
-  $('distance').textContent=n===6?'EXIT AHEAD':`${access.distance.toFixed(1)} m`;
-  $('aim-note').textContent=n===6?'All seals released. Walk through the final doorway.':access.available?'E / INSPECT THE BRASS CONSOLE':`Approach seal ${String(n+1).padStart(2,'0')} · ${PUZZLES[n].name}`;
-  $('interact').disabled=mode!=='playing'||!access.available;$('pause').disabled=mode==='intro'||mode==='unavailable'||mode==='complete';
-  $('pause').textContent=mode==='paused'?'Resume':'Pause';
-  $('position-z').textContent=player.position[2].toFixed(2);$('height').textContent=player.position[1].toFixed(2);$('support').textContent=player.supportId??'AIR';$('rescues').textContent=session.rescues;
-  const seconds=Math.floor(session.ticks/120);$('elapsed').textContent=`${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;
-  journey.forEach(({li,detail},i)=>{li.classList.toggle('done',i<n);li.classList.toggle('active',i===n);detail.textContent=i<n?'RELEASED':i===n?'ACTIVE · '+PUZZLES[i].mechanism.toUpperCase():'SEALED';});
-  $('lift-info').hidden=n<5;
-  if(n>=5){const lift=mechanismGeometry(session).find(part=>part.id==='lift'),height=lift.center[1]+.25,phase=(session.mechanismTick-session.sealedAt[4])%960;$('lift-height').textContent=height.toFixed(2);$('lift-state').textContent=height===0?'LOWER LANDING':height===2?'UPPER LANDING':phase<480?'RISING':'DESCENDING';}
-  $('objective').textContent=session.blocked?'A mechanism is waiting for clearance. Move clear to let it continue.':n===6?'The final gate is rising. Walk to the light at the far end.':n===5?'Board the lift while it is down. Ride to the upper landing, then walk forward to the last console.':n===4?'Cross the raised causeway and approach the fifth console.':`Walk forward to ${PUZZLES[n].name}. Inspect its word, use the levers and crank, then engage the matching seal.`;
+  write($('status'),'textContent',({intro:'READY',playing:'EXPLORING',console:'AT CONSOLE',paused:'PAUSED',complete:'COMPLETE',unavailable:'UNAVAILABLE'})[mode]);
+  write($('seal-count'),'textContent',`${String(n).padStart(2,'0')} / 06 SEALS`);
+  write($('bay-name'),'textContent',n===6?'THE KEEPER’S DOOR':PUZZLES[n].name.toUpperCase());
+  write($('distance'),'textContent',n===6?'EXIT AHEAD':`${access.distance.toFixed(1)} m`);
+  write($('aim-note'),'textContent',n===6?'All seals released. Walk through the final doorway.':access.available?'E / INSPECT THE BRASS CONSOLE':`Approach seal ${String(n+1).padStart(2,'0')} · ${PUZZLES[n].name}`);
+  write($('interact'),'disabled',mode!=='playing'||!access.available);write($('pause'),'disabled',mode==='intro'||mode==='unavailable'||mode==='complete');
+  write($('pause'),'textContent',mode==='paused'?'Resume':'Pause');
+  write($('position-z'),'textContent',player.position[2].toFixed(2));write($('height'),'textContent',player.position[1].toFixed(2));write($('support'),'textContent',player.supportId??'AIR');write($('rescues'),'textContent',session.rescues);
+  const seconds=Math.floor(session.ticks/120);write($('elapsed'),'textContent',`${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`);
+  journey.forEach(({li,detail},i)=>{li.classList.toggle('done',i<n);li.classList.toggle('active',i===n);write(detail,'textContent',i<n?'RELEASED':i===n?'ACTIVE · '+PUZZLES[i].mechanism.toUpperCase():'SEALED');});
+  write($('lift-info'),'hidden',n<5);
+  if(n>=5){const lift=mechanismGeometry(session).find(part=>part.id==='lift'),height=lift.center[1]+.25,phase=(session.mechanismTick-session.sealedAt[4])%960;write($('lift-height'),'textContent',height.toFixed(2));write($('lift-state'),'textContent',height===0?'LOWER LANDING':height===2?'UPPER LANDING':phase<480?'RISING':'DESCENDING');}
+  write($('objective'),'textContent',session.blocked?'A mechanism is waiting for clearance. Move clear to let it continue.':n===6?'The final gate is rising. Walk to the light at the far end.':n===5?'Board the lift while it is down. Ride to the upper landing, then walk forward to the last console.':n===4?'Cross the raised causeway and approach the fifth console.':`Walk forward to ${PUZZLES[n].name}. Inspect its word, use the levers and crank, then engage the matching seal.`);
   if(mode==='console')renderConsole();
 }
 

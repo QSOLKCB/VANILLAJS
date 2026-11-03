@@ -21,6 +21,7 @@ export function ringVertices(position,radius,color,segments=48) {
   return data;
 }
 export class Renderer {
+  #capacities=new WeakMap();
   constructor(canvas) {
     this.canvas=canvas;
     const gl=canvas.getContext('webgl',{antialias:true,alpha:false});
@@ -40,17 +41,20 @@ export class Renderer {
     gl.enable(gl.DEPTH_TEST);gl.clearColor(.018,.03,.05,1);
   }
   mesh(data,primitive='triangles') {
-    const gl=this.gl, buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);
+    const gl=this.gl, buffer=gl.createBuffer(),values=new Float32Array(data);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+    gl.bufferData(gl.ARRAY_BUFFER,values,gl.STATIC_DRAW);
     const mesh={buffer,count:data.length/6,mode:primitive==='lines'?gl.LINES:primitive==='points'?gl.POINTS:gl.TRIANGLES};
-    this.meshes.add(mesh);return mesh;
+    this.meshes.add(mesh);this.#capacities.set(mesh,values.byteLength);return mesh;
   }
   update(mesh,data) {
     if (!this.meshes.has(mesh)) throw new TypeError('mesh is not owned by this renderer');
-    const gl=this.gl;gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);
-    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.DYNAMIC_DRAW);mesh.count=data.length/6;
+    const gl=this.gl,values=new Float32Array(data);gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);
+    if(values.byteLength>this.#capacities.get(mesh)){
+      gl.bufferData(gl.ARRAY_BUFFER,values,gl.DYNAMIC_DRAW);this.#capacities.set(mesh,values.byteLength);
+    }else if(values.byteLength){gl.bufferSubData(gl.ARRAY_BUFFER,0,values);}
+    mesh.count=data.length/6;
   }
-  clearMeshes() {for(const m of this.meshes)this.gl.deleteBuffer(m.buffer);this.meshes.clear();}
+  clearMeshes() {for(const m of this.meshes){this.gl.deleteBuffer(m.buffer);this.#capacities.delete(m);}this.meshes.clear();}
   begin(position,orientation,{fog=.003,resolution=1}={}) {
     const gl=this.gl,rect=this.canvas.getBoundingClientRect(),dpr=Math.min(globalThis.devicePixelRatio||1,2)*resolution;
     const width=Math.max(1,Math.floor(rect.width*dpr)),height=Math.max(1,Math.floor(rect.height*dpr));

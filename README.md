@@ -249,6 +249,7 @@ node scripts/navigation-workload.js --check
 node scripts/verify-omi.js --check
 node scripts/verify-machine.js --check
 node scripts/verify-vault.js --check
+node scripts/opt-render-workload.js --check
 ```
 
 The build stages an allowlisted `dist/` and generates `manifest.json` with sizes

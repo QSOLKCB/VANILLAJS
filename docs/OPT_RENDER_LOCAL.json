@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "source": "QSOLKCB/OPT@7556dd36acd53ed3ed538fd03b1db44e5c1ec869",
+  "baseline": "QSOLKCB/VANILLAJS@a9d40685135a3480b4ccaad4e03607be833b05ec",
+  "environment": {
+    "runtime": "v24.22.1",
+    "platform": "linux",
+    "arch": "x64",
+    "release": "6.18.57",
+    "cpu": "AMD EPYC 9V74 80-Core Processor"
+  },
+  "protocol": {
+    "frames": 240,
+    "warmupPairs": 2,
+    "measuredPairs": 7,
+    "order": "alternating",
+    "timingGate": false,
+    "scope": "CPU model creation, signatures, geometry construction, Float32 conversion; no GPU or frame-rate claim"
+  },
+  "workloads": [
+    {
+      "name": "idle",
+      "outputSha256": "941a311e3ebd8494593ab9b0abb17c0bca0c2ce02b0515dd73dd1c36c5ab47cf",
+      "baseline": {
+        "frames": 240,
+        "builds": 240,
+        "uploads": 480,
+        "floatValues": 7093440,
+        "storageAllocations": 480,
+        "capacityBytes": 118224
+      },
+      "optimized": {
+        "frames": 240,
+        "builds": 2,
+        "uploads": 4,
+        "floatValues": 29556,
+        "storageAllocations": 4,
+        "capacityBytes": 118224
+      },
+      "samplesMs": {
+        "baseline": [
+          435.43994799999996,
+          436.33063200000015,
+          454.39641699999993,
+          358.7207779999999,
+          362.7618459999999,
+          361.9288910000005,
+          365.10033999999996
+        ],
+        "optimized": [
+          11.851122999999916,
+          11.196412999999666,
+          8.482547000000068,
+          8.40402099999983,
+          8.483858999999939,
+          9.423251000000164,
+          8.310262999999395
+        ]
+      },
+      "medianMs": {
+        "baseline": 365.10033999999996,
+        "optimized": 8.483858999999939
+      }
+    },
+    {
+      "name": "opening-gate",
+      "outputSha256": "23c74259b517ef1d5f7fd7f645781d18115dca4ead85f1c8d18b378ae5b2afe3",
+      "baseline": {
+        "frames": 240,
+        "builds": 240,
+        "uploads": 480,
+        "floatValues": 7093440,
+        "storageAllocations": 480,
+        "capacityBytes": 118224
+      },
+      "optimized": {
+        "frames": 240,
+        "builds": 182,
+        "uploads": 364,
+        "floatValues": 1200276,
+        "storageAllocations": 4,
+        "capacityBytes": 118224
+      },
+      "samplesMs": {
+        "baseline": [
+          422.3951820000002,
+          445.0616179999997,
+          366.17897699999867,
+          441.45760899999914,
+          495.50788400000056,
+          437.5921579999995,
+          498.21733499999937
+        ],
+        "optimized": [
+          134.05139400000007,
+          130.52199199999995,
+          121.05298200000107,
+          175.98595100000057,
+          150.1576729999997,
+          142.021025,
+          182.05428399999983
+        ]
+      },
+      "medianMs": {
+        "baseline": 441.45760899999914,
+        "optimized": 142.021025
+      }
+    },
+    {
+      "name": "working-console",
+      "outputSha256": "eff0a0fe599c9e7b8c033ea910ee2714e05a730f96eb4e83ad47c872e4d14422",
+      "baseline": {
+        "frames": 240,
+        "builds": 240,
+        "uploads": 480,
+        "floatValues": 7093440,
+        "storageAllocations": 480,
+        "capacityBytes": 118224
+      },
+      "optimized": {
+        "frames": 240,
+        "builds": 10,
+        "uploads": 20,
+        "floatValues": 213972,
+        "storageAllocations": 4,
+        "capacityBytes": 118224
+      },
+      "samplesMs": {
+        "baseline": [
+          643.6663370000006,
+          614.3051759999998,
+          569.8863849999998,
+          516.8502970000009,
+          497.02613100000053,
+          439.69124399999964,
+          454.5042140000005
+        ],
+        "optimized": [
+          52.06102800000008,
+          56.02218199999879,
+          52.03047200000037,
+          42.290618999999424,
+          36.297874000001684,
+          36.31354099999953,
+          32.79639099999986
+        ]
+      },
+      "medianMs": {
+        "baseline": 516.8502970000009,
+        "optimized": 42.290618999999424
+      }
+    },
+    {
+      "name": "cycling-lift",
+      "outputSha256": "1ffa1a8039ddb2010377654f42fc46bbf3fb57dcaf08aff53d6d1b8f27468039",
+      "baseline": {
+        "frames": 240,
+        "builds": 240,
+        "uploads": 480,
+        "floatValues": 7093440,
+        "storageAllocations": 480,
+        "capacityBytes": 118224
+      },
+      "optimized": {
+        "frames": 240,
+        "builds": 121,
+        "uploads": 242,
+        "floatValues": 803532,
+        "storageAllocations": 4,
+        "capacityBytes": 118224
+      },
+      "samplesMs": {
+        "baseline": [
+          460.0322849999975,
+          457.9379259999987,
+          438.3114920000007,
+          446.1503600000033,
+          458.2005109999991,
+          457.5694029999977,
+          462.23836500000107
+        ],
+        "optimized": [
+          99.57851500000106,
+          97.10691199999928,
+          108.8711289999992,
+          98.89059499999712,
+          93.36189400000148,
+          98.91467600000033,
+          97.50897199999963
+        ]
+      },
+      "medianMs": {
+        "baseline": 457.9379259999987,
+        "optimized": 98.89059499999712
+      }
+    },
+    {
+      "name": "changing-both",
+      "outputSha256": "f3a5aa130a7357a5052297c82191115113a5fa0e74c0d4f5b254f0116f307973",
+      "baseline": {
+        "frames": 240,
+        "builds": 240,
+        "uploads": 480,
+        "floatValues": 7093440,
+        "storageAllocations": 480,
+        "capacityBytes": 118224
+      },
+      "optimized": {
+        "frames": 240,
+        "builds": 368,
+        "uploads": 736,
+        "floatValues": 4511616,
+        "storageAllocations": 4,
+        "capacityBytes": 118224
+      },
+      "samplesMs": {
+        "baseline": [
+          458.0976230000015,
+          434.5517089999994,
+          430.87749500000064,
+          418.53993699999774,
+          441.21524900000077,
+          455.17731800000183,
+          488.49490600000354
+        ],
+        "optimized": [
+          598.4830910000019,
+          597.2721469999997,
+          564.0663969999987,
+          557.1839279999986,
+          552.2950869999986,
+          578.7262819999996,
+          544.6232600000003
+        ]
+      },
+      "medianMs": {
+        "baseline": 441.21524900000077,
+        "optimized": 564.0663969999987
+      }
+    }
+  ]
+}
