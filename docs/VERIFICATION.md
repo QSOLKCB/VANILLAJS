@@ -2,10 +2,12 @@
 
 ## OPT rendering reuse: current change
 
-Eight additional Node checks compare every vertex/colour/order with a frozen
+Nine additional Node checks compare every vertex/colour/order with a frozen
 v1.0 reference across 1,200 rendering states, verify complete-key invalidation,
 immutable output, restore/clear behavior, and exact GPU buffer/draw semantics
 through growth, shrink, empty updates, foreign handles and failed uploads.
+Signed zero remains distinct in cache identities; non-finite colours are rejected
+without publishing a new generation.
 All earlier gameplay and evidence checks remain enabled. Paired workload timings,
 deterministic work counts and limitations are in [OPTIMIZATION.md](OPTIMIZATION.md).
 

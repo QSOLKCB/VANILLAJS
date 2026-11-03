@@ -45,3 +45,12 @@ test('Complete effective identity includes colours; failed capture does not publ
   const restored=cache.update(s),lock=s.locks[0];s.locks[0]={snapshot(){throw new Error('read failed');}};
   assert.throws(()=>cache.update(s),/read failed/);s.locks[0]=lock;assert.equal(cache.update(s),restored);
 });
+test('Signatures preserve signed-zero vertex bytes and reject non-finite colours without publishing',()=>{
+  const s=createVault(),cache=new VaultGeometry(),light=palette.light[0];
+  try{
+    palette.light[0]=0;const positive=cache.update(s);palette.light[0]=-0;const negative=cache.update(s);
+    assert.notEqual(negative,positive);assert.deepEqual(flatten(negative),referenceGeometry(s));
+    for(const invalid of [NaN,Infinity,-Infinity]){palette.light[0]=invalid;assert.throws(()=>cache.update(s),/Non-finite/);}
+    palette.light[0]=-0;assert.equal(cache.update(s),negative);
+  }finally{palette.light[0]=light;}
+});

@@ -34,7 +34,8 @@ allocations. Node preparation times are not game frame rates or GPU timings.
 The Vault's two slots contain mechanisms and console glyphs. A synchronous call
 copies every input used by each builder: positions, sizes, colours, part IDs,
 latched words and active-console state. The signature is exact JSON of those
-owned finite primitive snapshots, not a lossy hash or a clock-only key. A tick,
+owned finite primitive snapshots with an explicit signed-zero marker, not a
+lossy hash or a clock-only key. Non-finite inputs fail before publication. A tick,
 camera movement or pending crank phase can differ while those inputs remain
 equivalent. Each slot publishes its signature and frozen geometry only after a
 successful build. Both slots commit together. A failed build leaves the previous
@@ -71,13 +72,13 @@ it does not allocate real GPU memory.
 
 | Workload | Fresh median ms | Reuse median ms | Uploaded values, fresh → reuse | Storage replacement calls, fresh → reuse |
 | --- | ---: | ---: | ---: | ---: |
-| Idle chamber | 447.97 | 7.17 | 7,093,440 → 29,556 | 480 → 4 |
-| Opening gate then settled | 424.90 | 131.24 | 7,093,440 → 1,200,276 | 480 → 4 |
-| Working console | 465.28 | 31.34 | 7,093,440 → 213,972 | 480 → 4 |
-| Cycling lift, including landings | 449.86 | 92.94 | 7,093,440 → 803,532 | 480 → 4 |
-| Moving lift + rapid XOR until tape cap | 432.03 | 558.33 | 7,093,440 → 4,511,616 | 480 → 4 |
+| Idle chamber | 365.10 | 8.48 | 7,093,440 → 29,556 | 480 → 4 |
+| Opening gate then settled | 441.46 | 142.02 | 7,093,440 → 1,200,276 | 480 → 4 |
+| Working console | 516.85 | 42.29 | 7,093,440 → 213,972 | 480 → 4 |
+| Cycling lift, including landings | 457.94 | 98.89 | 7,093,440 → 803,532 | 480 → 4 |
+| Moving lift + rapid XOR until tape cap | 441.22 | 564.07 | 7,093,440 → 4,511,616 | 480 → 4 |
 
-The rapid-change stress case is **29.2% slower in this CPU preparation model**:
+The rapid-change stress case is **27.8% slower in this CPU preparation model**:
 snapshot/signature/immutable-output work costs more when reuse opportunities are
 scarce. Splitting the geometry also raises upload calls there (480 → 736), while
 reducing their total size. This tradeoff is retained explicitly; the optimization

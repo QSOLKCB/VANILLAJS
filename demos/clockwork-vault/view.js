@@ -14,6 +14,15 @@ export function captureVaultView(session){
   };
 }
 const geometry=(vertices,lines)=>Object.freeze({vertices:Object.freeze(vertices),lines:Object.freeze(lines)});
+// JSON numbers alone collapse -0 into +0. The marker cannot collide with these
+// typed snapshots (numeric vectors/words, string IDs, boolean active flags).
+const signature=input=>JSON.stringify(input,(_,value)=>{
+  if(typeof value==='number'){
+    if(!Number.isFinite(value))throw new RangeError('Non-finite rendering input');
+    if(Object.is(value,-0))return {$negativeZero:true};
+  }
+  return value;
+});
 export function buildMechanisms({parts,light}){
   const vertices=[],lines=[];
   for(const part of parts){
@@ -44,7 +53,7 @@ export class VaultGeometry {
   #keys=null; #current=null;
   clear(){this.#keys=null;this.#current=null;}
   update(session){
-    const inputs=captureVaultView(session),keys={mechanisms:JSON.stringify(inputs.mechanisms),consoles:JSON.stringify(inputs.consoles)};
+    const inputs=captureVaultView(session),keys={mechanisms:signature(inputs.mechanisms),consoles:signature(inputs.consoles)};
     if(this.#keys?.mechanisms===keys.mechanisms&&this.#keys?.consoles===keys.consoles)return this.#current;
     // Build both candidates before committing. No consumer can mutate a hit.
     const mechanisms=this.#keys?.mechanisms===keys.mechanisms?this.#current.mechanisms:buildMechanisms(inputs.mechanisms);
