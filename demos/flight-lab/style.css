@@ -9,3 +9,5 @@
 
 @media(max-width:780px){.masthead nav a.omi-link{display:inline;font-size:10px}.masthead nav{gap:12px}}
 @media(min-width:781px) and (max-width:1250px){.masthead nav{gap:17px}.masthead nav .version{display:none}}
+
+.vault-link{display:flex;align-items:center;gap:20px;padding:16px 20px;margin:0 0 22px;border:1px solid #677251;border-radius:5px;background:#232d22;color:#d9d8bc;text-decoration:none}.vault-link>span{font:8px monospace;letter-spacing:1px;color:#d9bd79}.vault-link strong{font:13px system-ui;font-weight:400}.vault-link b{margin-left:auto;font:11px system-ui;color:#d9bd79}@media(max-width:650px){.vault-link{flex-wrap:wrap;gap:8px 16px;padding:15px}.vault-link>span{flex-basis:100%}.vault-link strong{font-size:11px}.vault-link b{font-size:10px;margin-left:0}}

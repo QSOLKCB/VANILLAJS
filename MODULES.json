@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "0.9.0",
+  "release": "1.0.0",
   "license": "Apache-2.0",
   "modules": {
     "math": {
@@ -270,6 +270,22 @@
         "time"
       ],
       "preset": "evacuation"
+    },
+    "clockwork-vault": {
+      "entry": "demos/clockwork-vault/world.js",
+      "modules": [
+        "math",
+        "time",
+        "input",
+        "character",
+        "collision",
+        "interactions",
+        "render-webgl"
+      ],
+      "research": [
+        "arch-omi"
+      ],
+      "preset": "vault"
     }
   },
   "experiments": {
@@ -282,7 +298,8 @@
       "description": "Attributed 16-bit delta law, explicit nibble encoding and tetrahedral XOR relations; not a game engine API",
       "demonstrations": {
         "word-bench": "demos/omi-lab/index.html",
-        "brass-engine": "demos/ancient-machine/index.html"
+        "brass-engine": "demos/ancient-machine/index.html",
+        "clockwork-vault": "demos/clockwork-vault/index.html"
       }
     }
   }

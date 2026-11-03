@@ -19,6 +19,7 @@ assert.equal(catalogue.release,pkg.version,'catalogue and package versions diffe
 for(const [name,recipe] of Object.entries(catalogue.recipes)){
   await readFile(resolve(root,recipe.entry));
   for(const module of recipe.modules)assert.ok(catalogue.modules[module],`${name}: unknown module ${module}`);
+  for(const experiment of recipe.research??[])assert.ok(catalogue.experiments?.[experiment],`${name}: unknown research entry ${experiment}`);
 }
 for(const [name,info]of [...Object.entries(catalogue.modules),...Object.entries(catalogue.experiments??{})]){
   const source=await readFile(resolve(root,info.entry),'utf8');

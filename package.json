@@ -1,9 +1,9 @@
 {
   "name": "qsol-vanillajs",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Browser-native game modules and attributed OMI research instruments",
+  "description": "Native JavaScript game modules, OMI research instruments and The Clockwork Vault",
   "license": "Apache-2.0",
   "scripts": {
     "test": "node --test tests/*.test.js",

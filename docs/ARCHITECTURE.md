@@ -1,4 +1,4 @@
-# Architecture — VANILLAJS 0.9.0
+# Architecture — VANILLAJS 1.0.0
 
 The goal is to assemble future games from small, versioned systems. The labs
 prove composition against different environments and control laws.
@@ -13,9 +13,12 @@ Canvas atlas and consumes the existing fixed clock. The Brass Engine owns a
 pure staged cam model in `demos/ancient-machine/machine.js`, bounded receipts,
 strict replay validation, SVG geometry and browser lifecycle policy. Its motor
 uses integer subdivisions of the same 120 Hz clock; drawn angles never feed
-back into computation. Both demonstrations are registered under the same
-research entry. No core module imports the
-experiment. There remain eleven core modules and fourteen game recipes.
+back into computation. The Clockwork Vault composes the same staged model with character movement,
+kinematic collision, declarative interactions, input, the clock and rendering.
+Its puzzle graph, bounded hint search, progression, chamber and strict local
+replay format remain demo-owned. All three demonstrations are registered under
+the same research entry. No core module imports the
+experiment. There remain eleven core modules and fifteen game recipes.
 
 The build allowlists only the research kernel plus its demos; the independent
 arithmetic oracle, evidence generator, tests and evidence JSON stay outside the

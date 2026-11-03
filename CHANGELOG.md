@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.0 — The Clockwork Vault (release candidate)
+
+- Add a complete first-person expedition: six original OMI locks, rising and
+  parting gates, a causeway, a counterweight lift and the final keeper’s exit.
+- Reuse the Brass Engine’s staged cam; add XOR levers, bounded incremental
+  shortest-path hints, undo, command limits and checkpoint recovery.
+- Preserve exact partial cam state, player pose and moving-world phase in strict
+  local JSON saves. Reject invalid, inconsistent, future and stale input before
+  replacement; freeze simulation and cancel input on pause/focus changes.
+- Add 19 Node regressions (240 total), independent complete puzzle-component
+  evidence, full physical route and interlock checks, and packaged browser tests.
+- Fifteen game recipes, eleven core modules, one attributed research entry with
+  three demonstrations. No runtime dependencies or downloaded assets. 1.0.0 is
+  the showcase milestone; module and OMI experimental labels remain explicit.
+
 ## 0.9.0 — The Brass Engine (release candidate)
 
 - Add an imagined ancient OMI instrument with four engraved hex drums, an

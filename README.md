@@ -1,9 +1,9 @@
 # VANILLAJS — reusable game modules
 
 Reusable, original JavaScript game modules built directly on web standards.
-**v0.9.0 — The Brass Engine: a deterministic mechanical OMI instrument.**
-Eleven game modules; fourteen recipes across Flight, Interaction, FPS and RTS labs;
-one separately registered research experiment.
+**v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
+Eleven experimental game modules; fifteen recipes including The Clockwork Vault;
+one separately registered research experiment with three demonstrations.
 
 [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
@@ -21,11 +21,12 @@ python3 -m http.server 8000
 # RTS Lab: http://localhost:8000/demos/rts-lab/index.html
 # OMI Lab: http://localhost:8000/demos/omi-lab/index.html
 # Brass Engine: http://localhost:8000/demos/ancient-machine/index.html
+# Clockwork Vault: http://localhost:8000/demos/clockwork-vault/index.html
 ```
 
 There is no runtime installation, build step, npm dependency, CDN, account,
 telemetry, external asset download or backend. All geometry is procedural.
-The three 3D labs require WebGL 1; RTS Lab uses Canvas 2D. OMI Lab uses SVG and
+The three 3D labs and The Clockwork Vault require WebGL 1; RTS Lab uses Canvas 2D. OMI Lab uses SVG and
 Canvas 2D, retaining numerical controls if its atlas is unavailable. The Brass
 Engine uses native SVG and DOM controls. A visible
 message explains unsupported graphics. Serve over
@@ -179,7 +180,7 @@ followed by 512 samples. These are search-operation counts, not measured FPS.
 | `modules/projectiles/` | Bounded constant-velocity projectiles, swept impacts and lifetimes |
 | `modules/interactions/` | Ordered conditions → effects with explicit outcome reasons |
 
-All APIs are **experimental** in 0.9.0. Use a tagged release or exact commit,
+API maturity remains **experimental**, including in 1.0.0. Use a tagged release or exact commit,
 preserve the directory structure and record what your game imports. The
 machine-readable catalogue lists each module's dependency closure and environment.
 Core modules neither own an animation loop nor read the DOM or ambient time.
@@ -218,6 +219,24 @@ physical analog solver. [Mechanism and replay contract](docs/BRASS_ENGINE.md)
 include exhaustive evidence and attribution to **Brian Thorne’s ARCH OMI**.
 It remains demo-owned; no new core API or game recipe is added.
 
+## The Clockwork Vault — v1.0.0 showcase
+
+[Enter the vault](demos/clockwork-vault/index.html): walk through one original
+chamber, operate six OMI consoles, raise gates and a causeway, ride a counterweight
+lift, and reach the keeper’s exit. WASD/mouse, arrow look and on-screen touch
+controls compose existing modules without a new engine or runtime dependency.
+
+Each console reuses the Brass Engine’s eight-detent calculation and adds XOR
+levers. Independently verified shortest solutions increase from two to seven
+commands. Bounded hints guide the next step; undo cancels a pending revolution
+or reverses a command. Released seals stay released. Local JSON saves preserve
+player pose, moving mechanisms, command histories and partial motor ticks.
+
+**1.0.0 names the completed showcase milestone.** It does not silently promote
+experimental module contracts or OMI research to stable APIs. [The game contract
+and evidence](docs/CLOCKWORK_VAULT.md) document input cancellation, save validation,
+approximation limits and attribution to **Brian Thorne’s ARCH OMI**.
+
 ## Development and verification
 
 Node.js 22+ is development tooling only. There is no `npm install` for these checks:
@@ -229,6 +248,7 @@ node scripts/build.js
 node scripts/navigation-workload.js --check
 node scripts/verify-omi.js --check
 node scripts/verify-machine.js --check
+node scripts/verify-vault.js --check
 ```
 
 The build stages an allowlisted `dist/` and generates `manifest.json` with sizes

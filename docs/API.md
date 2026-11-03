@@ -1,4 +1,4 @@
-# API contracts — 0.9.0 (experimental)
+# API contracts — 1.0.0 (experimental)
 
 All paths are native ES modules. Public numerical routines require finite values
 unless otherwise stated. Vector arithmetic expects correctly sized numeric arrays;
@@ -11,7 +11,10 @@ Its strict integer encoding, delta/XOR operations, tetrahedral relations and
 bounded orbit API are documented in [ARCH_OMI.md](ARCH_OMI.md#experimental-api).
 The Brass Engine’s staged mechanism and replay schema are demo-owned contracts
 documented in [BRASS_ENGINE.md](BRASS_ENGINE.md); they are not core game APIs.
-Core game modules do not depend on it.
+The Clockwork Vault adds demo-owned puzzle, expedition and replay contracts in
+[CLOCKWORK_VAULT.md](CLOCKWORK_VAULT.md). The 1.0.0 showcase version does not change
+the experimental maturity recorded in `MODULES.json`. Core game modules do not
+depend on the research entry.
 
 ## Navigation
 

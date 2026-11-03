@@ -1,4 +1,4 @@
-VANILLAJS — Flight Lab, Interaction Lab, FPS Lab, RTS Lab, OMI Lab and The Brass Engine
+VANILLAJS — Flight Lab, Interaction Lab, FPS Lab, RTS Lab, OMI Lab, The Brass Engine and The Clockwork Vault
 Copyright 2026 QSOL–IMC / Trent Slade and contributors.
 Distributed under the repository's existing Apache License 2.0.
 
@@ -49,3 +49,9 @@ The Brass Engine is an independently authored, fictional mechanical presentation
 of the same attributed OMI delta rule. Its SVG drums, cams, staged evaluator,
 replay format and browser controls are original work for this repository. No
 historical reconstruction, physical analog mechanism or donor assets are claimed.
+
+The Clockwork Vault chamber, six puzzle definitions, graph search, progression,
+UI, replay validation and procedural geometry are independently authored for
+this repository. It composes the existing game modules and Brass Engine model;
+Brian Thorne’s ARCH OMI attribution and source boundaries remain in force.
+No third-party game code, artwork, audio or runtime dependency is introduced.

@@ -91,6 +91,18 @@
   strict atomic replay validation and packaged keyboard/touch lifecycle checks.
 - See [mechanism, provenance and limits](docs/BRASS_ENGINE.md).
 
+## v1.0.0 — The Clockwork Vault
+
+- One playable first-person chamber combines existing movement, collision,
+  interaction, input, timing and rendering with the Brass Engine’s staged OMI law.
+- Six original XOR/rotation locks have independent shortest solutions of two
+  through seven commands. Bounded hints, undo, gate/bridge/lift progression and
+  validated local partial-position saves stay demo-owned.
+- Full-route, collision/interlock, replay and packaged browser regressions plus
+  independent complete reachable-component evidence. Fifteen game recipes.
+- This is a showcase milestone; per-module experimental maturity remains explicit.
+  See [game contract and evidence](docs/CLOCKWORK_VAULT.md).
+
 ## Proposed next slices — not implemented
 
 1. **FPS expansion:** sloped terrain/capsules, rotating platforms, rotating-target
@@ -132,7 +144,8 @@ not establish a mapping to this library's grid directions.
 ARCH-OMI-001 now records the chosen nibble encoding, independent exhaustive
 checks and the distinction between eight-step return and minimal period eight.
 The Brass Engine exposes those operations as a reversible mechanical demo.
-Next, use it in a small reversible-switch puzzle and compare explicit game-state
+The Clockwork Vault now demonstrates reversible-switch puzzles with independent
+shortest-path evidence. Compare further consuming games and explicit game-state
 representations before considering a core API. Wider OMI protocols, alternative
 constants, error-correcting claims, networking and performance remain separate
 work. Shared navigation continues to use cardinal breadth-first distances.

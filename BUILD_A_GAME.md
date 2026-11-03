@@ -355,3 +355,12 @@ state for the next tick. Jump once from an input edge, and do not manually add
 platform speed a second time. Multi-actor games must stage copies of all affected
 riders and world state before committing any of them. Rotating/resizing platforms,
 slopes, teleporting routes and reciprocal body dynamics need separate models.
+
+## Borrow the Clockwork Vault composition
+
+`demos/clockwork-vault/world.js` composes character/platform movement, collision,
+interactions and fixed ticks into a complete chamber. `puzzles.js` owns the
+finite-word rules and bounded hint search; `app.js` owns rendering, input and
+focus lifecycle. The game uses the existing Brass Engine model for staged OMI
+turns. Copy the recipe deliberately; these game rules and replay schemas are
+not new core APIs. See [the game contract](docs/CLOCKWORK_VAULT.md).

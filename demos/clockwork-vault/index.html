@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#191c1b"><meta name="description" content="Explore a clockwork vault. Six deterministic OMI locks, a lost causeway and a counterweight lift, built with native JavaScript game modules.">
+  <title>The Clockwork Vault · VANILLAJS v1.0.0</title><link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header><a class="brand" href="../../index.html">VANILLA<span>JS</span><small>QSOL–IMC / PLAYABLE SYSTEMS</small></a><nav aria-label="Labs"><a href="../ancient-machine/index.html">Brass Engine ↗</a><a href="../omi-lab/index.html">OMI Lab ↗</a><a href="https://github.com/QSOLKCB/VANILLAJS">Source ↗</a><span class="version">v1.0.0</span></nav></header>
+<main>
+  <section class="intro"><div><p class="eyebrow">EXPEDITION 007 / THE KEEPER’S CHAMBER</p><h1>The Clockwork Vault<span>.</span></h1></div><p>Six seals. One way through.<br><span>Every mechanism remembers.</span></p></section>
+  <div class="game-layout">
+    <section class="game" aria-label="First-person vault expedition">
+      <div class="game-top"><span><i id="status-light"></i> <strong id="status">READY</strong></span><span id="seal-count">00 / 06 SEALS</span><span class="run-label">EXPEDITION / 01</span></div>
+      <div class="viewport">
+        <canvas id="vault-view" tabindex="0" aria-label="First-person vault. WASD move, mouse or arrows look, Space jumps, C crouches. Press E near the active console."></canvas>
+        <div class="view-top"><span id="bay-name">THE AWAKENING</span><span id="compass">N · INNER VAULT</span></div>
+        <div class="reticle" aria-hidden="true"><i></i><i></i></div>
+        <div class="view-bottom"><span id="aim-note">Approach the first brass console.</span><span id="distance">—</span></div>
+        <div id="curtain" class="curtain"><div class="intro-card"><p class="eyebrow" id="overlay-kicker">THE BRASS ENGINE HAS A PURPOSE.</p><h2 id="overlay-title">Wake the sleeping vault.</h2><p id="overlay-copy">Find each brass console. Turn the crank, pull the XOR levers and match its engraved word. Release all six seals, rebuild the causeway and ride the lift to the keeper’s door.</p><button id="launch" class="primary">Enter the vault <span>↗</span></button><small>WASD + mouse · arrows · touch controls below</small></div></div>
+        <div id="error" role="alert" hidden></div>
+      </div>
+      <div class="game-controls"><button id="interact" class="primary" disabled><kbd>E</kbd> Inspect console</button><button id="pause" disabled>Pause</button><span id="control-note">Launch, then click the view for mouse look.</span></div>
+      <div class="telemetry"><div><small>POSITION Z</small><output id="position-z">5.00</output></div><div><small>HEIGHT / m</small><output id="height">0.00</output></div><div><small>SUPPORT</small><output id="support">AIR</output></div><div><small>SIMULATION</small><output id="elapsed">00:00</output></div><div><small>RESCUES</small><output id="rescues">0</output></div></div>
+      <div class="touch-controls" aria-label="On-screen movement controls"><button data-hold="left">← Strafe</button><button data-hold="forward">Forward</button><button data-hold="right">Strafe →</button><button data-hold="yawLeft">↶ Look</button><button data-hold="backward">Back</button><button data-hold="yawRight">Look ↷</button><button data-hold="jump">Jump</button><button data-hold="crouch">Crouch</button><button data-hold="sprint">Sprint</button></div>
+    </section>
+    <aside>
+      <section class="journey"><div class="section-title"><h2>The six seals</h2><span>EXPEDITION RECORD</span></div><ol id="journey"></ol><div id="lift-info" class="lift-info" hidden><small>COUNTERWEIGHT LIFT</small><strong id="lift-state">LOWER LANDING</strong><span><output id="lift-height">0.00</output> m</span></div><div class="objective"><small>YOUR NEXT MOVE</small><p id="objective">Walk forward to the first console. Press E when you are close.</p></div></section>
+      <section class="keeper-note"><p class="eyebrow">A WORD FROM THE KEEPER</p><h2>The order is the key.</h2><p>A crank revolution transforms sixteen bits. A lever flips its engraved mask. Try them in a different order and watch the word change.</p><p>Nothing is lost by experimenting. Undo a move, reset a seal, or ask for the next step of a shortest solution.</p><a href="../ancient-machine/index.html">Study the original Brass Engine ↗</a></section>
+      <section class="save-panel"><div class="section-title"><h2>Keep your place</h2><span>LOCAL SAVE</span></div><p>Save your position, seals and mechanisms. Restoring leaves the expedition paused.</p><div><button id="save">Save replay ↓</button><button id="restore">Restore ↑</button><input id="replay-file" type="file" accept=".json,application/json" hidden></div><button id="restart" class="text-button">Restart expedition ↺</button></section>
+    </aside>
+  </div>
+  <p id="message" class="message" role="status">The vault is ready. Its first word is waiting.</p>
+  <details class="field-guide"><summary>Field guide · controls, replay and attribution</summary><div><p><strong>Move:</strong> WASD; Shift sprints, Space jumps, C crouches. Click the view to capture the mouse; Escape releases it and pauses. Drag to look on touch or use the arrow keys. Release held movement controls after pausing or closing a console.</p><p><strong>Operate:</strong> approach the next console and press E. Use the crank or T for a Δ turn; 1–3 pull levers, U undoes, R resets the current seal. Tab between controls; Enter or Space activates a focused button. Engage the seal when its word matches. The motor completes one revolution at a time. Closing a console stops its motor; pause holds its exact position. A released seal stays released.</p><p><strong>Credit:</strong> Brian Thorne’s ARCH OMI. The four-nibble encoding and this imagined chamber are VANILLAJS constructions. These are finite integer puzzles, not a historical reconstruction or an analog physics model. The game composes existing movement, collision, input, timing, interactions and rendering modules.</p><p><a href="https://github.com/QSOLKCB/VANILLAJS/blob/main/docs/CLOCKWORK_VAULT.md">Puzzle rules, independent evidence and save format ↗</a></p></div></details>
+</main>
+<div id="console-panel" class="console-backdrop" role="dialog" aria-modal="true" aria-labelledby="console-title" hidden>
+  <section class="console-card">
+    <div class="console-heading"><div><p id="console-kicker" class="eyebrow">SEAL 01 / 06</p><h2 id="console-title">The Awakening</h2></div><button id="close-console" aria-label="Close console and return to vault">Back to vault ↗</button></div>
+    <p id="puzzle-note" class="puzzle-note"></p>
+    <div class="word-pair"><div><small>LATCHED WORD</small><output id="lock-word">0x1234</output></div><span aria-hidden="true">→</span><div><small>ENGRAVED TARGET</small><output id="target-word">0xEB78</output></div></div>
+    <div class="instrument"><svg id="lock-machine" viewBox="0 0 640 175" role="img" aria-label="Four hexadecimal drums and an eight-detent crank"><defs><radialGradient id="vault-brass"><stop stop-color="#f0d08b"/><stop offset=".7" stop-color="#b18c48"/><stop offset="1" stop-color="#65502a"/></radialGradient></defs><path d="M60 90H580" class="shaft"/><g id="lock-drums"></g><g transform="translate(320 90)"><circle r="58" class="crank-ring"/><g id="lock-cam"><path id="lock-gear" fill="url(#vault-brass)"/><circle r="35" class="crank-hub"/><path d="M0 0 29-30" class="crank-hand"/><circle cx="29" cy="-30" r="10" class="crank-grip"/><circle r="9" fill="url(#vault-brass)"/></g></g></svg><button id="crank" aria-label="Turn crank one detent" title="Advance one detent"></button></div>
+    <div class="stage-row"><span id="lock-stage">Ready to capture</span><span id="lock-phase">0 / 8 DETENTS</span></div>
+    <dl id="working-lanes" class="working-lanes"></dl>
+    <div id="levers" class="levers" aria-label="XOR levers"></div>
+    <div class="console-controls"><button id="turn" class="primary">Δ Full turn</button><button id="undo">Undo ↶</button><button id="reset-lock">Reset seal</button><button id="hint">Next-step hint</button></div>
+    <p id="hint-copy" class="hint-copy" role="status">Match the engraved target, then engage the seal.</p>
+    <div class="tape-heading"><span>COMMAND TAPE</span><span id="move-count">0 / 128</span></div><ol id="command-tape" aria-label="Recent completed commands"></ol>
+    <div class="seal-footer"><span id="seal-state">The seal is waiting.</span><button id="engage" disabled>Engage seal →</button></div>
+  </section>
+</div>
+<footer><span>QSOL–IMC / VANILLAJS <b>v1.0.0</b></span><span>Original geometry · Native web standards · Apache–2.0</span></footer>
+<noscript><p class="message">Enable JavaScript to enter the vault.</p></noscript>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
