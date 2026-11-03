@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased — OPT rendering reuse
+
+- Apply OPT-INV-001 and OPT-INC-001 to Clockwork Vault geometry: independently
+  reuse mechanism and console groups only when their complete inputs match.
+- Retain per-mesh WebGL buffer capacity across updates, with exact live counts
+  after shrink/empty uploads; release retained storage on mesh clearing/disposal.
+- Avoid unchanged HUD text/attribute writes without reducing update frequency.
+- Preserve the v1.0 fresh geometry reference, exact parity and invalidation
+  regressions, paired CPU observations and native Chromium pixel/buffer checks.
+  Physics, puzzles, controls, replay schemas and visual detail are unchanged.
+- Document measured gains and the rapid-change workload's CPU tradeoff in
+  `docs/OPTIMIZATION.md`; no universal frame-rate or hardware-GPU claim.
+
 ## 1.0.0 — The Clockwork Vault (release candidate)
 
 - Add a complete first-person expedition: six original OMI locks, rising and

@@ -649,4 +649,9 @@ program. `boxVertices` and `ringVertices` generate original simple geometry.
 a dynamic buffer upload, retaining its primitive. It rejects a mesh cleared or
 owned by another renderer. Supply a finite numeric array with length divisible
 by six, just as for `mesh`; geometry validity remains the caller's responsibility.
+Storage grows to the exact byte length when necessary and is reused with
+`bufferSubData` for equal/smaller updates. Empty updates draw zero vertices; old
+tail bytes are never drawn. Capacity remains at the mesh's largest upload until
+`clearMeshes()` or `dispose()`. Float32 conversion and caller-data ownership are
+unchanged; no global buffer pool or cross-renderer reuse is introduced.
 The application owns context-loss policy and animation scheduling.

@@ -1,6 +1,22 @@
 # Verification — VANILLAJS 1.0.0
 
-## The Clockwork Vault: current change
+## OPT rendering reuse: current change
+
+Eight additional Node checks compare every vertex/colour/order with a frozen
+v1.0 reference across 1,200 rendering states, verify complete-key invalidation,
+immutable output, restore/clear behavior, and exact GPU buffer/draw semantics
+through growth, shrink, empty updates, foreign handles and failed uploads.
+All earlier gameplay and evidence checks remain enabled. Paired workload timings,
+deterministic work counts and limitations are in [OPTIMIZATION.md](OPTIMIZATION.md).
+
+Packaged Chromium additionally checks exact pixel parity, unchanged-HUD writes,
+idle/camera/partial-crank reuse, changed-glyph uploads and native retained buffers.
+It records paired synchronous WebGL observations, followed by all existing lab
+and complete Vault scenarios. Executed CI/head/artifact details are recorded in
+the PR after verification. These observations do not establish physical-GPU
+frame rates or coverage of other browser engines.
+
+## The Clockwork Vault (1.0.0)
 
 - **240 Node tests passed locally**, retaining all 221 previous regressions.
   Nineteen additions cover the six puzzles, bounded hints, staged latching,

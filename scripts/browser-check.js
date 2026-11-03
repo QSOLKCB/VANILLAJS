@@ -14,6 +14,7 @@ import {verifyFlow} from './browser-flow.js';
 import {verifyOmi} from './browser-omi.js';
 import {verifyMachine} from './browser-machine.js';
 import {verifyVault} from './browser-vault.js';
+import {verifyRenderReuse} from './browser-opt-render.js';
 const require=createRequire(import.meta.url),{chromium}=require('playwright');
 const root=resolve(import.meta.dirname,'../dist');
 const server=createServer(async(req,res)=>{
@@ -72,6 +73,7 @@ try{
   await page.setViewportSize({width:390,height:844});
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile layout must not overflow');
   await page.screenshot({path:'browser-artifacts/flight-lab-mobile.png',fullPage:true});
+  await verifyRenderReuse(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyInteractions(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyMouseLook(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyFps(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
