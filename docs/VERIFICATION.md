@@ -355,6 +355,10 @@ JS runtime; cross-engine bit-identical simulation is not claimed.
 - `node scripts/verify-integer.js --check`: pinned 482-tick full-game-state and
   input SHA-256 receipts reproduced. See `INTEGER_EVIDENCE.json`.
 - Packaged Chromium Foundry coverage is integrated into the existing CI browser
-  job. Local browser installation was unavailable: the download endpoint returned
-  HTML instead of a browser archive. Browser pass claims require the CI result.
+  job. At d413aff4b25ca77f8bc85f012d4fbadfa2255006, run 41996848225 passed
+  all new Foundry browser checks, including Node/Chromium complete-state parity.
+  The same run then exposed a duplicated navigation CSS class in an older lab
+  test; the Foundry link now has its own class. Final full-suite status is recorded
+  on the PR. Local browser installation was unavailable because the download
+  endpoint returned HTML instead of a browser archive.
 - No hardware GPU, Firefox/WebKit, physical touch-device or speedup claim is made.
