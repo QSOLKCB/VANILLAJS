@@ -3,7 +3,8 @@ import {length,mix,quatInterpolate,rotate,quatConjugate,subtract,clamp} from '..
 import {lookFlight} from '../../modules/flight/index.js';
 import {FixedClock} from '../../modules/time/index.js';
 import {Actions,attachKeyboard,attachMouseLook,FlightGamepad} from '../../modules/input/index.js';
-import {Renderer,boxVertices,ringVertices} from '../../modules/render-webgl/index.js';
+import {Renderer,ringVertices} from '../../modules/render-webgl/index.js';
+import {boxMeshBatch} from '../../modules/geometry/index.js';
 import {createSession,updateSession,DEMOS} from './worlds.js';
 const $=id=>document.getElementById(id), canvas=$('flight');
 const clock=new FixedClock(), actions=new Actions(), touch=new Actions(), gamepad=new FlightGamepad();
@@ -25,7 +26,7 @@ function announce(text){$('announcement').textContent=text;}
 function buildMeshes(){
   renderer.clearMeshes();
   const world=session.world;
-  meshes={solid:renderer.mesh([...world.solids,...world.decoration].flatMap(b=>boxVertices(b.center,b.size,b.color))),
+  meshes={solid:renderer.mesh(boxMeshBatch([...world.solids,...world.decoration])),
     stars:renderer.mesh(world.stars.flatMap(p=>[...p,.55,.65,.72]),'points'),
     gates:world.gates.map(g=>({active:renderer.mesh(ringVertices(g.position,g.radius,[.65,.94,.82]),'lines'),
       inactive:renderer.mesh(ringVertices(g.position,g.radius,[.2,.36,.4]),'lines'),done:renderer.mesh(ringVertices(g.position,g.radius,[.91,.68,.36]),'lines')}))};

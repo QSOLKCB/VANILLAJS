@@ -31,6 +31,8 @@ jobs:
         run: node scripts/verify-vault.js --check > vault-evidence.json
       - name: Verify OPT rendering parity and record paired workload observations
         run: node scripts/opt-render-workload.js --check > opt-render-workload.json
+      - name: Validate static geometry layer and record paired workload observations
+        run: node scripts/geometry-layer2-workload.js --check > geometry-layer2-workload.json
       - name: Install isolated browser test tooling
         run: |
           npm install --prefix "$RUNNER_TEMP/flight-browser" --ignore-scripts --no-audit --no-fund playwright@1.64.0
@@ -52,6 +54,7 @@ jobs:
             omi-machine-evidence.json
             vault-evidence.json
             opt-render-workload.json
+            geometry-layer2-workload.json
           retention-days: 14
       - name: Stage verified Pages artifact
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
