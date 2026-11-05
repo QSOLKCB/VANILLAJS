@@ -5,15 +5,18 @@ varying vec3 tint;varying float distanceToCamera;
 void main(){gl_Position=vp*vec4(position,1.0);tint=color;distanceToCamera=gl_Position.w;gl_PointSize=pointSize;}`;
 const fragment=`precision mediump float;varying vec3 tint;varying float distanceToCamera;uniform float fog;
 void main(){float f=exp(-max(0.0,distanceToCamera)*fog);gl_FragColor=vec4(mix(vec3(0.018,0.03,0.05),tint,f),1.0);}`;
+// Optional caller-owned output permits several primitives to be streamed into a
+// single packed group. No per-object geometry array or spread-copy is required.
+// Existing calls still create and return their own arrays; numerical order stays exact.
 // OPT-INV-001: face topology is invariant; shade each face once instead of
 // mapping the same RGB triplet again for every triangle vertex.
 const BOX_FACES=[[0,4,6,2],[1,3,7,5],[0,1,5,4],[2,6,7,3],[0,2,3,1],[4,5,7,6]];
 const BOX_SHADES=[.7,.9,.58,1,.8,.65];
 const BOX_TRIANGLES=[0,1,2,0,2,3];
-export function boxVertices(center,size,color) {
+export function boxVertices(center,size,color,out=[]) {
   const corners=[];
   for(let i=0;i<8;i++) corners.push(center.map((v,k)=>v+size[k]*((i>>k&1)-.5)));
-  const data=[];
+  const data=out;
   for(let i=0;i<BOX_FACES.length;i++){
     const face=BOX_FACES[i],shade=color.map(x=>x*BOX_SHADES[i]);
     for(let k=0;k<BOX_TRIANGLES.length;k++){
@@ -40,8 +43,8 @@ function circleSamples(segments){
   }
   return samples;
 }
-export function ringVertices(position,radius,color,segments=48) {
-  const data=[];
+export function ringVertices(position,radius,color,segments=48,out=[]) {
+  const data=out;
   if(CACHED_RING_SEGMENTS.has(segments)){
     const circle=circleSamples(segments);
     for(let i=0;i<segments;i++) for(const j of [i,i+1]){
