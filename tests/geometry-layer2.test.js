@@ -42,6 +42,7 @@ test('ternary plane/frustum rejects only certainly-outside finite boxes',()=>{
   assert.equal(classifyAABBFrustum(b,[[1,0,0,3],[0,-1,0,1]]),0);
   assert.throws(()=>classifyAABBPlane(b,[NaN,1,0,3]));
   assert.throws(()=>classifyAABBFrustum(b,[]),RangeError);
+  assert.throws(()=>classifyAABBFrustum(b,[[1,0,0,-3],[NaN,0,0,0]]),TypeError);
   for(let i=0;i<1000;i++){
     const center=[rand()*20-10,rand()*20-10,rand()*20-10];
     const r=.01+rand()*3,box={min:center.map(x=>x-r),max:center.map(x=>x+r)};

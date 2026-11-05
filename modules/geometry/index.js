@@ -72,6 +72,13 @@ export function classifyAABBPlane(box,plane){
 /** All planes must include the AABB. Any definitely-outside plane rejects it. */
 export function classifyAABBFrustum(box,planes){
   if(!Array.isArray(planes)||planes.length<1||planes.length>32)throw new RangeError('planes must be 1..32');
+  // Validate all constraints before an early outside result: malformed
+  // later planes may not silently disappear behind the first rejection.
+  for(const p of planes){
+    if(!p||p.length!==4||!Array.from(p).every(Number.isFinite)){
+      throw new TypeError('every frustum plane must have four finite coefficients');
+    }
+  }
   let inside=true;
   for(const p of planes){
     const c=classifyAABBPlane(box,p);
