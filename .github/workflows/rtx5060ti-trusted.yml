@@ -43,7 +43,7 @@ jobs:
           test -z "$(git status --porcelain)"
           command -v nvidia-smi
           command -v node
-          test -n "$${{ DISPLAY:- }}$${{ WAYLAND_DISPLAY:- }}"
+          test -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}"
           node --check scripts/rtx5060ti-trusted.mjs
           node --check scripts/rtx5060ti-browser.mjs
       - name: Compare pinned baseline and candidate using local hardware
