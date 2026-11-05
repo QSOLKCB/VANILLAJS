@@ -18,7 +18,7 @@ kinematic collision, declarative interactions, input, the clock and rendering.
 Its puzzle graph, bounded hint search, progression, chamber and strict local
 replay format remain demo-owned. All three demonstrations are registered under
 the same research entry. No core module imports the
-experiment. There are now twelve core modules and fifteen game recipes; the optional geometry layer is a runtime module, while the E8 point atlas remains research-only.
+experiment. There are now sixteen core modules and sixteen game recipes; the optional geometry layer is a runtime module, while the E8 point atlas remains research-only.
 
 The build allowlists only the research kernel plus its demos; the independent
 arithmetic oracle, evidence generator, tests and evidence JSON stay outside the
@@ -30,6 +30,10 @@ establish a physics model, compressed state, cryptography or a speedup.
 
 | Module | Depends on | Owns |
 | --- | --- | --- |
+| integer-math | nothing | checked fixed-point operations and uint32 PRNG |
+| integer-time | integer-math | integer microseconds, rational phase and tick budget |
+| integer-physics | integer-math | immutable static boxes and X/Y/Z ordered sweeps |
+| integer-engine | integer-math, integer-physics | atomic ticks, owned snapshots, replay |
 | math | nothing | numeric operations and coordinate conventions |
 | time | nothing | accumulator and tick budget |
 | collision | math | cube/rectangular sweeps, static/kinematic sliding, static and translating-target queries |
@@ -57,7 +61,22 @@ register events, create a canvas or access a browser global. Browser input adapt
 register listeners only when explicitly attached, and returns `dispose()`.
 The renderer creates resources only when constructed, and offers `dispose()`.
 
-## Shared simulation
+## Integer simulation boundary
+
+The new integer core has no dependency on legacy floating math, browser clocks,
+DOM or the renderer. It stores signed 32-bit subunits, uses BigInt for products
+and quotients, and rejects overflow before committing a tick. Static collision
+uses exact integer comparisons in a documented X/Y/Z order. Snapshots include
+all engine state, geometry, tick and RNG state. Game-specific state and input
+recording remain in the recipe. Integer Foundry renders the latest committed
+pose through the existing WebGL module; no rendered quantity feeds back into it.
+
+The browser quantises **absolute** frame timestamps to whole microseconds before
+differencing; `IntegerClock` accumulates `elapsedUs * hz` and consumes 1,000,000
+phase units per tick. Rendering cadence and live input sampling are outside the
+replay contract. See [INTEGER_ENGINE.md](INTEGER_ENGINE.md).
+
+## Shared simulation (legacy controllers)
 
 The world is right-handed, +Y up, -Z forward. Positions and linear velocities
 are world-space. Angular velocities, diagonal inertia and control torque are

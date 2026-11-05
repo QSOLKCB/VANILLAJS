@@ -18,6 +18,13 @@ depend on the research entry.
 
 
 
+## Integer engine (experimental)
+
+The four `integer-*` modules use strict integers and owned snapshots, in contrast
+to the mutable legacy bodies described above. Their full public contracts,
+rounding, overflow, tick units and runnable composition example are in
+[INTEGER_ENGINE.md](INTEGER_ENGINE.md). Integer Foundry is the first consumer.
+
 ## Optional static geometry layer (layer 2)
 
 ```js

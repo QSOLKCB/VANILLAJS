@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Integer Foundry · VANILLAJS</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><a href="../../index.html" class="brand">VANILLA<span>JS</span> <small>ENGINE LAB / 01</small></a><a href="https://github.com/QSOLKCB/VANILLAJS">Source ↗</a></header>
+<main>
+  <section class="intro"><div><p class="eyebrow">PRECISION BUILT. EVERY TICK ACCOUNTED FOR.</p><h1>Integer<br><em>Foundry.</em></h1></div><p class="lead">A little machine with an exact memory.<br>Climb the gantries. Recover four power cells.<br>Then replay every move.</p></section>
+  <section class="machine" aria-label="Integer Foundry game">
+    <div class="instrument"><span><i></i> <strong id="status" role="status">READY</strong></span><span>120 Hz <b>/</b> 65536 SUBUNITS PER METRE</span></div>
+    <div class="viewport"><canvas id="foundry" tabindex="0" aria-label="Foundry platform course. A or D to move, Space to jump, Escape to pause."></canvas><div class="view-label">FOUNDRY / SECTOR 83<span>POWER CELLS <b id="cells">0 / 4</b></span></div><p id="error" role="alert" hidden></p></div>
+    <div class="dashboard"><div><span>SIMULATION TICK</span><strong id="tick">000000</strong></div><div><span>POSITION / SUBUNITS</span><strong id="position">65536 · 49152 · 0</strong></div><div><span>STATE CHECKSUM / FNV-1A</span><strong id="checksum">—</strong></div></div>
+    <div class="toolbar"><button id="launch" class="primary">Start machine <span>▶</span></button><button id="pause" disabled>Pause</button><button id="reset">Reset</button><button id="verify">Verify replay ↗</button></div>
+  </section>
+  <div class="below"><section><p class="eyebrow">OPERATING INSTRUCTIONS</p><h2>Four cells. One clean run.</h2><p>Use <kbd>A</kbd> <kbd>D</kbd> or the arrow keys to move. Press <kbd>Space</kbd> to jump onto each gantry. <kbd>Esc</kbd> pauses. Losing focus pauses the machine; resume with a fresh press.</p><div class="touch" aria-label="On-screen controls"><button data-action="left" aria-label="Move left">← Left</button><button data-action="right" aria-label="Move right">Right →</button><button data-action="jump">Jump ↑</button></div></section><section class="receipt"><p class="eyebrow">REPLAY RECEIPT</p><h2>Same inputs. Same state.</h2><p id="replay" aria-live="polite">Run the course, then verify your recorded inputs. Verification compares the complete game state.</p><p class="fine">Integer simulation · WebGL display<br>The checksum is a diagnostic, not a security signature.</p></section></div>
+  <footer>Native JavaScript. No runtime dependencies. <span>QSOL-IMC / INTEGER ENGINE</span></footer>
+</main><script type="module" src="app.js"></script>
+</body></html>

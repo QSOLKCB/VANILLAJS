@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased — integer engine foundation
+
+- Add four experimental native ES modules for signed 16.16 fixed-point math,
+  integer tick scheduling, static AABB axis sweeps and an atomic kinematic world.
+- Reject fractional/overflowing state; preserve the entire world and RNG on
+  failed ticks. Add canonical snapshots, strict restoration and bounded replay.
+- Add Integer Foundry, a playable gantry course with full-state replay receipts,
+  keyboard/touch lifecycle handling and the existing WebGL renderer.
+- Add arithmetic/collision oracles, snapshot/overflow controls, long replay,
+  frame partition invariance, pinned SHA-256 evidence and packaged browser tests.
+- Document exact supported scope and staged migration; existing controllers and
+  release tags remain unchanged. No runtime dependencies are added.
+
 ## Unreleased — OPT rendering reuse
 
 - Apply OPT-INV-001 and OPT-INC-001 to Clockwork Vault geometry: independently

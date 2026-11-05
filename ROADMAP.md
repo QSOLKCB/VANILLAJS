@@ -103,6 +103,28 @@
 - This is a showcase milestone; per-module experimental maturity remains explicit.
   See [game contract and evidence](docs/CLOCKWORK_VAULT.md).
 
+## Integer engine foundation — implemented, unreleased
+
+- Four native modules: checked fixed-point math, rational integer clock, static
+  axis-sweep collision, and an atomic world with canonical snapshot/replay.
+- Integer Foundry: playable 3D-presented platform course with integer game state,
+  full-state replay verification and pause-safe keyboard/touch controls.
+- Boundary/oracle tests, 10,000-tick replay, frame partition tests, pinned course
+  evidence and packaged Chromium parity/lifecycle coverage.
+- Legacy APIs remain compatible. The repository version remains 1.0.0 until an
+  owner-authorised release; the new API is explicitly experimental.
+
+### Integer migration queue — not implemented
+
+1. Character controller parity: crouch, stairs, integer ground probes and swept
+   translating-platform support before migrating existing FPS recipes.
+2. Integer orientation and angular dynamics with explicit approximation/error
+   contracts before migrating flight; no float quaternion round-trip in state.
+3. Projectile and weapon adapters using integer lifetime/cooldown ticks and
+   stable contact ordering; migrate one complete existing game at a time.
+4. Broader browser/runtime conformance and measured CPU/allocation workloads.
+   BigInt exactness is implemented; a performance improvement is not claimed.
+
 ## Proposed next slices — not implemented
 
 1. **FPS expansion:** sloped terrain/capsules, rotating platforms, rotating-target
