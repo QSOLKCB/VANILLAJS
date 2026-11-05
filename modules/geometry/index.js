@@ -56,14 +56,24 @@ export function classifyAABBPlane(box,plane){
   if(!plane||plane.length!==4||!Array.from(plane).every(Number.isFinite)){
     throw new TypeError('plane must be four finite coefficients');
   }
-  let lo=plane[3],hi=plane[3],error=Math.abs(plane[3]);
+  // Positive rescaling must not change a plane's containment meaning.
+  // Divide by the maximum coefficient before taking any dot products: this
+  // keeps even all-subnormal planes representable. A component lost during
+  // normalization is an uncertainty, never permission to cull.
+  const scale=Math.max(...Array.from(plane,Math.abs));
+  if(scale===0)return 0;
+  const coefficients=Array.from(plane,x=>x/scale);
+  if(coefficients.some((x,i)=>x===0&&plane[i]!==0))return 0;
+  let lo=coefficients[3],hi=coefficients[3],error=Math.abs(coefficients[3]);
   for(let i=0;i<3;i++){
-    const a=plane[i]*min[i],b=plane[i]*max[i];
+    const a=coefficients[i]*min[i],b=coefficients[i]*max[i];
     lo+=Math.min(a,b);hi+=Math.max(a,b);
     error+=Math.abs(a)+Math.abs(b);
   }
   if(!Number.isFinite(lo)||!Number.isFinite(hi)||!Number.isFinite(error))return 0;
-  const margin=16*Number.EPSILON*error;
+  // Also budget absolute subnormal rounding: a relative-only tolerance may
+  // itself underflow to zero near the classification boundary.
+  const margin=Math.max(16*Number.EPSILON*error,32*Number.MIN_VALUE);
   if(hi < -margin)return -1;
   if(lo > margin)return 1;
   return 0;

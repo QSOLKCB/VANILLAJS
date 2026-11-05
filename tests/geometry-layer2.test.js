@@ -43,6 +43,13 @@ test('ternary plane/frustum rejects only certainly-outside finite boxes',()=>{
   assert.throws(()=>classifyAABBPlane(b,[NaN,1,0,3]));
   assert.throws(()=>classifyAABBFrustum(b,[]),RangeError);
   assert.throws(()=>classifyAABBFrustum(b,[[1,0,0,-3],[NaN,0,0,0]]),TypeError);
+  // Codex P2: the smallest positive subnormal rescales this same plane.
+  const cornerBox={min:[.1,.1,.1],max:[.49,.49,.49]};
+  const plane=[1,1,1,-1],tiny=plane.map(x=>x*Number.MIN_VALUE);
+  assert.equal(classifyAABBPlane(cornerBox,plane),0);
+  assert.equal(classifyAABBPlane(cornerBox,tiny),0,'subnormal scaling must not produce false culling');
+  assert.equal(classifyAABBFrustum(cornerBox,[tiny]),0);
+  assert.equal(classifyAABBPlane(cornerBox,[0,0,0,0]),0);
   for(let i=0;i<1000;i++){
     const center=[rand()*20-10,rand()*20-10,rand()*20-10];
     const r=.01+rand()*3,box={min:center.map(x=>x-r),max:center.map(x=>x+r)};
