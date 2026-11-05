@@ -280,3 +280,13 @@ Numerical tolerances and runtime limits are documented in [API.md](docs/API.md).
 The repository's existing [Apache-2.0 licence](LICENSE) is preserved. See
 [NOTICE](NOTICE) for authorship and reference provenance. No ripped assets or
 third-party game engine source are included.
+
+## Owner-activated RTX 5060 Ti full-path validation
+
+The optional [trusted local NVIDIA validation workflow](docs/RTX5060TI_TRUSTED_VALIDATION.md)
+compares the exact pre-geometry-optimization SHA against reviewed `main` on a
+physical RTX 5060 Ti, recording CPU geometry, collision, statistical allocations,
+submitted GPU uploads, native pixel parity and observed frame timings.
+It runs only on explicit owner activation, never in a normal push or PR build;
+ordinary CI performs syntax preflight only. No GPU results are claimed until
+the local evidence receipt is actually produced.
