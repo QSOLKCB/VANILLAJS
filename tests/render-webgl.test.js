@@ -43,3 +43,39 @@ test('Failed upload does not bless capacity or change draw count; the next attem
   d.gl.fail=false;r.update(m,vertices(3));assert.equal(d.calls.allocations,2);assert.equal(m.count,3);
   r.draw(m);assert.deepEqual(d.calls.draws.at(-1).values,Array.from(new Float32Array(vertices(3))));
 });
+
+test('Renderer.updateRange changes only selected live vertices and never reallocates',()=>{
+  const d=device(),r=new Renderer(d.canvas),initial=vertices(5),m=r.mesh(initial);
+  const patch=new Float32Array(vertices(2).map(v=>v+7)).subarray(0,12);
+  const originalUploads=d.calls.allocations;
+  r.updateRange(m,2,patch);
+  assert.equal(d.calls.allocations,originalUploads,'range changes require no new storage');
+  assert.equal(d.calls.writes,1);
+  assert.equal(m.count,5,'sparse updates must retain draw count');
+  const expected=new Float32Array(initial);expected.set(patch,12);
+  r.draw(m);assert.deepEqual(d.calls.draws.at(-1).values,Array.from(expected));
+  patch.fill(100);
+  r.draw(m);assert.deepEqual(d.calls.draws.at(-1).values,Array.from(expected),'GPU upload owns its bytes');
+  r.updateRange(m,5,[]);assert.equal(d.calls.writes,1,'empty end range is a no-op');
+  const snapshot=Array.from(m.buffer.data);
+  for(const [first,values] of [[-1,vertices(1)],[.5,vertices(1)],[6,[]],[4,vertices(2)],[0,vertices(1).slice(1)]]){
+    assert.throws(()=>r.updateRange(m,first,values),RangeError);
+  }
+  assert.deepEqual(Array.from(m.buffer.data),snapshot,'preflight failures leave GPU bytes unchanged');
+  assert.throws(()=>r.updateRange({},0,vertices(1)),/not owned/);
+  r.update(m,vertices(2));
+  assert.throws(()=>r.updateRange(m,2,vertices(1)),/live draw count/,'stale tails cannot be modified');
+  d.gl.fail=true;assert.throws(()=>r.updateRange(m,0,vertices(1)),/upload failed/);
+  d.gl.fail=false;r.updateRange(m,0,vertices(1));
+  r.draw(m);assert.equal(d.calls.draws.at(-1).count,2);
+});
+test('Renderer.update passes prepacked Float32 subviews directly and keeps upload ownership',()=>{
+  const d=device(),r=new Renderer(d.canvas),m=r.mesh(vertices(1));
+  const original=d.gl.bufferSubData;
+  let observed=null;
+  d.gl.bufferSubData=(...args)=>{observed=args[2];original(...args);};
+  const source=new Float32Array(vertices(5));const view=source.subarray(6,18);
+  r.update(m,view);assert.equal(observed,view,'typed view does not require a second CPU Float32 copy');
+  const expected=Array.from(view);view.fill(222);
+  r.draw(m);assert.deepEqual(d.calls.draws.at(-1).values,expected);
+});
