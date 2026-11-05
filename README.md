@@ -2,12 +2,12 @@
 
 Reusable, original JavaScript game modules built directly on web standards.
 **v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-Eleven experimental game modules; fifteen recipes including The Clockwork Vault;
-one separately registered research experiment with three demonstrations.
+Twelve experimental game modules; fifteen recipes including The Clockwork Vault;
+two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
 [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
-[Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json)
+[Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
 ## Run the labs
 
