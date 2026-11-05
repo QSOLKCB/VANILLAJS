@@ -652,6 +652,20 @@ by six, just as for `mesh`; geometry validity remains the caller's responsibilit
 Storage grows to the exact byte length when necessary and is reused with
 `bufferSubData` for equal/smaller updates. Empty updates draw zero vertices; old
 tail bytes are never drawn. Capacity remains at the mesh's largest upload until
-`clearMeshes()` or `dispose()`. Float32 conversion and caller-data ownership are
-unchanged; no global buffer pool or cross-renderer reuse is introduced.
+`clearMeshes()` or `dispose()`. Ordinary input arrays still convert to Float32; prepacked `Float32Array` views
+are passed directly to WebGL without a redundant CPU conversion/copy. WebGL
+copies submitted bytes to its buffer before returning, so changing the input
+after upload cannot alter a draw. No global pool or cross-renderer reuse is used.
+
+`updateRange(mesh,firstVertex,data)` uploads only a **whole-vertex contiguous
+subrange** of the existing live XYZ/RGB data (six floats per vertex). The
+zero-based `firstVertex` is not a byte offset, its range must fit
+`mesh.count`, and the draw count and existing GPU allocation are unchanged.
+Invalid or stale handles and out-of-draw-range writes are rejected before upload.
+An empty range at the end is a no-op. The caller tracks dirty vertices and
+supplies the complete replacement values for that range; the renderer does not
+infer dirty state. Upload errors propagate; a GL failure does not constitute a
+transactional rollback guarantee. These are optional APIs, and the default full
+`update` path remains available for fast-changing complete meshes.
+
 The application owns context-loss policy and animation scheduling.
