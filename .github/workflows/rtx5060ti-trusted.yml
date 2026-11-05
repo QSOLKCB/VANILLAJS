@@ -1,0 +1,66 @@
+name: RTX 5060 Ti trusted local validation
+
+# Explicit owner-dispatched workload. NEVER run for pull_request or push.
+# This requires a user-controlled headed desktop session and a deliberately
+# registered, dedicated self-hosted GPU runner with label qsol-rtx5060ti.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "I authorize executing the reviewed main commit on my local GPU runner"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Opt in to upload machine-specific timing and GPU evidence to GitHub"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rtx5060ti-trusted-${{ github.repository }}-${{ github.actor }}
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    # No branch, PR, fork or other actor may trigger this through this workflow.
+    if: ${{ github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify reviewed checkout and headed GPU prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          command -v nvidia-smi
+          command -v node
+          test -n "$${{ DISPLAY:- }}$${{ WAYLAND_DISPLAY:- }}"
+          node --check scripts/rtx5060ti-trusted.mjs
+          node --check scripts/rtx5060ti-browser.mjs
+      - name: Compare pinned baseline and candidate using local hardware
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$HOME/.local/state/qsol/vanillajs/rtx5060ti/actions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          node scripts/rtx5060ti-trusted.mjs --expected-head "$GITHUB_SHA" --out "$evidence"
+          echo "QSOL_GPU_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+          cat "$evidence/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish GPU-specific evidence only with explicit opt-in
+        if: ${{ inputs.publish_evidence == true }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: vanillajs-rtx5060ti-${{ github.run_id }}
+          path: |
+            ${{ env.QSOL_GPU_EVIDENCE }}/report.json
+            ${{ env.QSOL_GPU_EVIDENCE }}/SUMMARY.md
+            ${{ env.QSOL_GPU_EVIDENCE }}/SHA256SUMS
+          retention-days: 14
