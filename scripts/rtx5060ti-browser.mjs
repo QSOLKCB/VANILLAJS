@@ -114,12 +114,26 @@ async function exactPixels(page,role){
   },role);
 }
 
-const captureInit=()=>{
+// Window-local sample gate: stop after exactly N completed application callbacks
+// instead of after an asynchronous Playwright polling roundtrip.
+export const captureInit=()=>{
   const native=window.requestAnimationFrame.bind(window);
-  const meter={active:false,callbackMs:[],deltaMs:[],last:null,
-    reset(){this.callbackMs=[];this.deltaMs=[];this.last=null;this.active=true;},
+  const meter={active:false,target:0,callbackMs:[],deltaMs:[],last:null,invalidReasons:[],
+    invalidate(reason){if(this.active&&!this.invalidReasons.includes(reason))this.invalidReasons.push(reason);},
+    reset(count){
+      if(!Number.isSafeInteger(count)||count<=0)throw Error('invalid frame sample count');
+      this.active=false;this.target=count;this.callbackMs=[];this.deltaMs=[];this.last=null;
+      this.invalidReasons=[];
+      if(document.hidden)this.invalidReasons.push('hidden-at-start');
+      if(!document.hasFocus())this.invalidReasons.push('not-focused-at-start');
+      if(document.querySelector('#status')?.textContent!=='RUNNING')this.invalidReasons.push('not-running-at-start');
+      this.active=true;
+    },
     stop(){this.active=false;}};
   window.__qsolFrame=meter;
+  window.addEventListener('blur',()=>meter.invalidate('window-blur'));
+  window.addEventListener('pagehide',()=>meter.invalidate('pagehide'));
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)meter.invalidate('document-hidden');});
   window.requestAnimationFrame=cb=>native(t=>{
     const recording=meter.active,start=performance.now();
     try{return cb(t);}
@@ -127,6 +141,10 @@ const captureInit=()=>{
       meter.callbackMs.push(performance.now()-start);
       if(meter.last!==null)meter.deltaMs.push(t-meter.last);
       meter.last=t;
+      if(document.hidden)meter.invalidate('hidden-during-callback');
+      if(!document.hasFocus())meter.invalidate('focus-lost-during-callback');
+      if(document.querySelector('#status')?.textContent!=='RUNNING')meter.invalidate('not-running-during-callback');
+      if(meter.callbackMs.length>=meter.target)meter.stop();
     }}
   });
   const counts={bufferDataCalls:0,bufferSubDataCalls:0,uploadedBytes:0,
@@ -173,11 +191,14 @@ async function appPage(context,url){
   return {page,errors,info};
 }
 async function collectFrames(page,count){
-  await page.evaluate(()=>{window.__qsolUploads.reset();window.__qsolFrame.reset();});
-  await page.waitForFunction(n=>window.__qsolFrame.callbackMs.length>=n,count,{polling:100,timeout:90000});
+  await page.evaluate(n=>{window.__qsolUploads.reset();window.__qsolFrame.reset(n);},count);
+  await page.waitForFunction(n=>window.__qsolFrame.callbackMs.length===n && !window.__qsolFrame.active,
+    count,{polling:100,timeout:90000});
   return page.evaluate(()=>{
-    window.__qsolFrame.stop();
-    return {callbackMs:window.__qsolFrame.callbackMs.slice(),deltaMs:window.__qsolFrame.deltaMs.slice(),
+    const meter=window.__qsolFrame;
+    if(meter.invalidReasons.length)throw Error('Invalid FPS trial: '+meter.invalidReasons.join(', '));
+    if(meter.active||meter.callbackMs.length!==meter.target)throw Error('Incomplete FPS sample');
+    return {callbackMs:meter.callbackMs.slice(),deltaMs:meter.deltaMs.slice(),
       uploads:window.__qsolUploads.snapshot()};
   });
 }
@@ -206,7 +227,8 @@ async function sampledMemory(context,url){
       return r.metrics.find(x=>x.name==='JSHeapUsedSize')?.value??null;
     };
     const before=await used();
-    await cdp.send('HeapProfiler.startSampling',{samplingInterval:32768});
+    await cdp.send('HeapProfiler.startSampling',{samplingInterval:32768,
+      includeObjectsCollectedByMajorGC:true,includeObjectsCollectedByMinorGC:true});
     await collectFrames(page,180);
     const {profile}=await cdp.send('HeapProfiler.stopSampling');
     await cdp.send('HeapProfiler.collectGarbage');
