@@ -70,7 +70,7 @@ test('Renderer.updateRange changes only selected live vertices and never realloc
   r.draw(m);assert.equal(d.calls.draws.at(-1).count,2);
 });
 test('Renderer.update passes prepacked Float32 subviews directly and keeps upload ownership',()=>{
-  const d=device(),r=new Renderer(d.canvas),m=r.mesh(vertices(1));
+  const d=device(),r=new Renderer(d.canvas),m=r.mesh(vertices(3));
   const original=d.gl.bufferSubData;
   let observed=null;
   d.gl.bufferSubData=(...args)=>{observed=args[2];original(...args);};
