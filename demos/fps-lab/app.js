@@ -96,22 +96,22 @@ function render(alpha){
   const vertices=[],lines=[];
   for(const platform of session.platforms){
     const center=mix(platform.previousCenter,platform.center,alpha);
-    vertices.push(...boxVertices(center,platform.size,session.platformBlocked?[.8,.48,.22]:platform.color));
+    boxVertices(center,platform.size,session.platformBlocked?[.8,.48,.22]:platform.color,vertices);
     const r=platform.route;lines.push(r.from[0]+2.1,r.from[1]+.26,r.from[2],.3,.65,.75,r.to[0]+2.1,r.to[1]+.26,r.to[2],.3,.65,.75);
   }
   for(const target of session.targets){
     const center=target.previousCenter?mix(target.previousCenter,target.center,alpha):target.center;
-    const color=target.alive?target.color:[.16,.24,.3];vertices.push(...boxVertices(center,target.size,color));
-    lines.push(...ringVertices([center[0],center[1],center[2]+.22],.55,target.alive?[.9,.7,.44]:[.25,.36,.44],24));
+    const color=target.alive?target.color:[.16,.24,.3];boxVertices(center,target.size,color,vertices);
+    ringVertices([center[0],center[1],center[2]+.22],.55,target.alive?[.9,.7,.44]:[.25,.36,.44],24,lines);
     if(target.motion){const m=target.motion;lines.push(m.originX-m.amplitude,.25,center[2],.45,.36,.24,m.originX+m.amplitude,.25,center[2],.45,.36,.24);}
   }
   session.checkpoints.forEach((checkpoint,i)=>{
     const color=i<session.nextCheckpoint?[.4,.7,.5]:i===session.nextCheckpoint?[.57,.79,.95]:[.23,.35,.45];
-    lines.push(...ringVertices(checkpoint.position.map((v,k)=>v+(k===1?1:0)),.7,color,32));
+    ringVertices(checkpoint.position.map((v,k)=>v+(k===1?1:0)),.7,color,32,lines);
   });
-  for(const shot of session.projectiles.snapshots())vertices.push(...boxVertices(shot.position,[.07,.07,.18],[1,.73,.39]));
+  for(const shot of session.projectiles.snapshots())boxVertices(shot.position,[.07,.07,.18],[1,.73,.39],vertices);
   for(const trace of session.tracers)lines.push(...trace.from,.94,.77,.5,...trace.to,.94,.77,.5);
-  for(const flash of session.flashes)lines.push(...ringVertices(flash.position,.08+(session.elapsed-flash.at)*1.8,[1,.76,.47],16));
+  for(const flash of session.flashes)ringVertices(flash.position,.08+(session.elapsed-flash.at)*1.8,[1,.76,.47],16,lines);
   renderer.update(dynamicMesh,vertices);renderer.update(lineMesh,lines);
   renderer.begin(position,orientation,{fog:.012,resolution:$('eco').checked?.65:1});renderer.draw(sceneMesh);renderer.draw(gridMesh);renderer.draw(dynamicMesh);renderer.draw(lineMesh);
   const hit=raycast(position,rotate(orientation,[0,0,-1]),130,session.colliders),target=session.targets.find(t=>t.id===hit?.id);
