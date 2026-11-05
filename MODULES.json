@@ -103,6 +103,41 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Exact Float32 box batching, conservative ternary frustum classification and bounded static AABB indexing"
+    },
+    "integer-math": {
+      "entry": "modules/integer-math/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Checked signed fixed-point arithmetic, integer square root and explicit uint32 PRNG"
+    },
+    "integer-time": {
+      "entry": "modules/integer-time/index.js",
+      "depends": [
+        "integer-math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Integer microsecond scheduling, rational tick phase and bounded catch-up"
+    },
+    "integer-physics": {
+      "entry": "modules/integer-physics/index.js",
+      "depends": [
+        "integer-math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Integer X/Y/Z axis sweeps against immutable static AABBs"
+    },
+    "integer-engine": {
+      "entry": "modules/integer-engine/index.js",
+      "depends": [
+        "integer-math",
+        "integer-physics"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Atomic integer simulation ticks, canonical snapshots and bounded replay"
     }
   },
   "recipes": {
@@ -303,6 +338,18 @@
         "arch-omi"
       ],
       "preset": "vault"
+    },
+    "integer-foundry": {
+      "entry": "demos/integer-foundry/world.js",
+      "modules": [
+        "integer-math",
+        "integer-time",
+        "integer-physics",
+        "integer-engine",
+        "input",
+        "render-webgl"
+      ],
+      "preset": "foundry"
     }
   },
   "experiments": {

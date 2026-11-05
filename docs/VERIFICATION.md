@@ -344,3 +344,17 @@ The solver is deliberately limited to a moving axis-aligned cube or rectangular 
 boxes. It is neither a sphere/capsule sweep nor a general rigid-body contact
 solver. Numerical integration is approximate. Repeatability is tested within one
 JS runtime; cross-engine bit-identical simulation is not claimed.
+
+
+## Integer engine foundation (unreleased)
+
+- `node --test tests/*.test.js`: 281 tests passed locally, including integer
+  arithmetic/collision oracles, 10,000-tick replay and complete Foundry route.
+- `node scripts/check.js` and `node scripts/build.js`: contract/import checks and
+  allowlisted package passed; no runtime dependencies added.
+- `node scripts/verify-integer.js --check`: pinned 482-tick full-game-state and
+  input SHA-256 receipts reproduced. See `INTEGER_EVIDENCE.json`.
+- Packaged Chromium Foundry coverage is integrated into the existing CI browser
+  job. Local browser installation was unavailable: the download endpoint returned
+  HTML instead of a browser archive. Browser pass claims require the CI result.
+- No hardware GPU, Firefox/WebKit, physical touch-device or speedup claim is made.

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Native JavaScript game modules, OMI research instruments and The Clockwork Vault",
+  "description": "Native JavaScript game engine with integer simulation, replay and procedural browser labs",
   "license": "Apache-2.0",
   "scripts": {
     "test": "node --test tests/*.test.js",

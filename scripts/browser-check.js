@@ -4,6 +4,7 @@ import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 import assert from 'node:assert/strict';
+import {verifyIntegerFoundry} from './browser-integer.js';
 import {verifyInteractions} from './browser-interactions.js';
 import {verifyMouseLook} from './browser-mouse.js';
 import {verifyFps} from './browser-fps.js';
@@ -73,6 +74,7 @@ try{
   await page.setViewportSize({width:390,height:844});
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile layout must not overflow');
   await page.screenshot({path:'browser-artifacts/flight-lab-mobile.png',fullPage:true});
+  await verifyIntegerFoundry(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyRenderReuse(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyInteractions(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyMouseLook(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);

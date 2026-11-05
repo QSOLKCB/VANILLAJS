@@ -1,11 +1,11 @@
-# VANILLAJS — reusable game modules
+# VANILLAJS — integer game engine and reusable modules
 
 Reusable, original JavaScript game modules built directly on web standards.
 **v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-Twelve experimental game modules; fifteen recipes including The Clockwork Vault;
+Sixteen experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
-[Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
+[Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
@@ -16,6 +16,7 @@ Download or clone the repository, then serve its root with any static HTTP serve
 ```sh
 python3 -m http.server 8000
 # Open http://localhost:8000
+# Integer Foundry: http://localhost:8000/demos/integer-foundry/index.html
 # Interaction Lab: http://localhost:8000/demos/interaction-lab/index.html
 # FPS Lab: http://localhost:8000/demos/fps-lab/index.html
 # RTS Lab: http://localhost:8000/demos/rts-lab/index.html
@@ -33,6 +34,27 @@ message explains unsupported graphics. Serve over
 HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
+
+## Integer engine — new development track
+
+The new core runs authoritative game state on checked signed 32-bit fixed-point
+values: **65,536 subunits per metre**, integer ticks and exact BigInt
+multiply/divide intermediates. It provides atomic kinematic world updates,
+static box collision, seeded integer randomness, canonical snapshots and bounded
+input replay. Browser presentation converts positions to metres at the renderer.
+No hardware oscillator, server, third-party engine or runtime package is needed.
+
+**Integer Foundry** is the first complete recipe: climb four gantries, recover
+power cells, then verify your recorded inputs against the full game state. A/D or
+arrows move, Space jumps, Escape pauses; on-screen controls support touch.
+The 120 Hz demo caps recording at 36,000 ticks. Serve locally as above, then open
+`demos/integer-foundry/index.html`.
+
+Existing flight/FPS controllers still use their original floating-point APIs.
+This is an additive engine foundation, not a claim that all existing physics has
+been converted. Static axis-ordered boxes are supported; dynamic rigid bodies,
+rotations, slopes and moving platforms are outside the integer contract.
+See [API, bounds and migration](docs/INTEGER_ENGINE.md).
 
 ## Flight Lab
 

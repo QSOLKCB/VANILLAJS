@@ -26,6 +26,8 @@ jobs:
           node --check scripts/rtx5060ti-browser.mjs
           node --check scripts/rtx5060ti-trusted.mjs
           node scripts/rtx5060ti-trusted.mjs --help > /dev/null
+      - name: Reproduce integer-engine full-state replay evidence
+        run: node scripts/verify-integer.js --check > integer-evidence.json
       - name: Verify documented navigation workload
         run: node scripts/navigation-workload.js --check > navigation-workload.json
       - name: Validate static geometry layer and record paired workload observations
@@ -58,6 +60,7 @@ jobs:
           path: |
             browser-artifacts/
             dist/manifest.json
+            integer-evidence.json
             navigation-workload.json
             geometry-layer2-workload.json
             omi-evidence.json

@@ -1,0 +1,13 @@
+{
+  "schema": "vanillajs-integer-evidence/1",
+  "scale": 65536,
+  "tickHz": 120,
+  "fixture": "integer-foundry-four-cells",
+  "ticks": 482,
+  "complete": true,
+  "cells": 15,
+  "engineChecksumFNV1a": "a558ddcd",
+  "fullStateSHA256": "e5925929b9aef51335fedc7d916a0d8de59e9484d3e6b1987d0d153785100b00",
+  "inputSHA256": "676f42da6f76ab87bd433bc4aef1143e4e5a67e7758b124303e6469bfd307fba",
+  "replayMatch": true
+}

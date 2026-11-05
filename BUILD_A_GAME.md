@@ -1,5 +1,9 @@
 # Build a game with VANILLAJS
 
+For new integer simulations, start with [the integer-engine composition example](docs/INTEGER_ENGINE.md#compose-a-game).
+It covers fixed-point units, atomic ticks, collision and replay. The examples
+below remain the compatible floating-point controller recipes.
+
 For the separately registered ARCH-OMI-001 research surface, see
 [OMI Lab](docs/ARCH_OMI.md). Its sixteen-bit encoding and exhaustive evidence can
 inform a puzzle experiment, but it is not a core game module or a replacement
