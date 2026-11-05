@@ -5,18 +5,54 @@ varying vec3 tint;varying float distanceToCamera;
 void main(){gl_Position=vp*vec4(position,1.0);tint=color;distanceToCamera=gl_Position.w;gl_PointSize=pointSize;}`;
 const fragment=`precision mediump float;varying vec3 tint;varying float distanceToCamera;uniform float fog;
 void main(){float f=exp(-max(0.0,distanceToCamera)*fog);gl_FragColor=vec4(mix(vec3(0.018,0.03,0.05),tint,f),1.0);}`;
+// OPT-INV-001: face topology is invariant; shade each face once instead of
+// mapping the same RGB triplet again for every triangle vertex.
+const BOX_FACES=[[0,4,6,2],[1,3,7,5],[0,1,5,4],[2,6,7,3],[0,2,3,1],[4,5,7,6]];
+const BOX_SHADES=[.7,.9,.58,1,.8,.65];
+const BOX_TRIANGLES=[0,1,2,0,2,3];
 export function boxVertices(center,size,color) {
   const corners=[];
   for(let i=0;i<8;i++) corners.push(center.map((v,k)=>v+size[k]*((i>>k&1)-.5)));
-  const faces=[[0,4,6,2],[1,3,7,5],[0,1,5,4],[2,6,7,3],[0,2,3,1],[4,5,7,6]], shades=[.7,.9,.58,1,.8,.65],data=[];
-  faces.forEach((f,i)=>{for(const k of [0,1,2,0,2,3]) data.push(...corners[f[k]],...color.map(x=>x*shades[i]));});
+  const data=[];
+  for(let i=0;i<BOX_FACES.length;i++){
+    const face=BOX_FACES[i],shade=color.map(x=>x*BOX_SHADES[i]);
+    for(let k=0;k<BOX_TRIANGLES.length;k++){
+      const xyz=corners[face[BOX_TRIANGLES[k]]];
+      data.push(...xyz,...shade);
+    }
+  }
   return data;
+}
+// Four known ring tessellations account for the built-in demos. Keep a bounded
+// 1,984-byte table of binary64 unit-circle samples, not a world-geometry cache.
+// Float64 retains the original trigonometric outputs before radius scaling.
+const CACHED_RING_SEGMENTS=new Set([16,24,32,48]);
+const ringSamples=new Map();
+function circleSamples(segments){
+  let samples=ringSamples.get(segments);
+  if(!samples){
+    samples=new Float64Array((segments+1)*2);
+    for(let i=0;i<=segments;i++){
+      const a=i/segments*Math.PI*2;
+      samples[i*2]=Math.cos(a);samples[i*2+1]=Math.sin(a);
+    }
+    ringSamples.set(segments,samples);
+  }
+  return samples;
 }
 export function ringVertices(position,radius,color,segments=48) {
   const data=[];
-  for(let i=0;i<segments;i++) for(const j of [i,i+1]) {
-    const a=j/segments*Math.PI*2;
-    data.push(position[0]+Math.cos(a)*radius,position[1]+Math.sin(a)*radius,position[2],...color);
+  if(CACHED_RING_SEGMENTS.has(segments)){
+    const circle=circleSamples(segments);
+    for(let i=0;i<segments;i++) for(const j of [i,i+1]){
+      data.push(position[0]+circle[j*2]*radius,position[1]+circle[j*2+1]*radius,position[2],...color);
+    }
+  }else{
+    // Preserve legacy behaviour for custom, fractional or invalid segment counts.
+    for(let i=0;i<segments;i++) for(const j of [i,i+1]){
+      const a=j/segments*Math.PI*2;
+      data.push(position[0]+Math.cos(a)*radius,position[1]+Math.sin(a)*radius,position[2],...color);
+    }
   }
   return data;
 }
@@ -48,11 +84,32 @@ export class Renderer {
   }
   update(mesh,data) {
     if (!this.meshes.has(mesh)) throw new TypeError('mesh is not owned by this renderer');
-    const gl=this.gl,values=new Float32Array(data);gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);
+    // RUNE / GALAXY: avoid a second CPU copy for caller-owned packed Float32
+    // views. WebGL copies upload bytes into its own storage before return.
+    const gl=this.gl,values=data instanceof Float32Array?data:new Float32Array(data);
+    gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);
     if(values.byteLength>this.#capacities.get(mesh)){
       gl.bufferData(gl.ARRAY_BUFFER,values,gl.DYNAMIC_DRAW);this.#capacities.set(mesh,values.byteLength);
     }else if(values.byteLength){gl.bufferSubData(gl.ARRAY_BUFFER,0,values);}
     mesh.count=data.length/6;
+  }
+  /** Update complete interleaved XYZ/RGB vertices inside the current draw
+   * range, without replacing the rest of the GPU buffer or changing draw count.
+   * firstVertex is a vertex index, not a byte offset. This is opt-in; callers
+   * must supply their own dirtied ranges and retain their full world state.
+   */
+  updateRange(mesh,firstVertex,data) {
+    if (!this.meshes.has(mesh)) throw new TypeError('mesh is not owned by this renderer');
+    if (!Number.isSafeInteger(firstVertex)||firstVertex<0) throw new RangeError('invalid first vertex');
+    const values=data instanceof Float32Array?data:new Float32Array(data);
+    if(values.length%6!==0 || firstVertex>mesh.count || values.length/6>mesh.count-firstVertex) {
+      throw new RangeError('range must contain whole XYZ/RGB vertices inside the live draw count');
+    }
+    if(values.length){
+      const gl=this.gl;
+      gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);
+      gl.bufferSubData(gl.ARRAY_BUFFER,firstVertex*24,values);
+    }
   }
   clearMeshes() {for(const m of this.meshes){this.gl.deleteBuffer(m.buffer);this.#capacities.delete(m);}this.meshes.clear();}
   begin(position,orientation,{fog=.003,resolution=1}={}) {
