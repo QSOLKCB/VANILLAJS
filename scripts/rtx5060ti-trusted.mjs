@@ -184,6 +184,24 @@ async function main(){
     console.log('Baseline '+BASELINE+' vs candidate '+head);
     console.log('Evidence directory: '+output);
     console.log(lines.join('\n'));
+  }catch(error){
+    // Fail closed: incomplete comparisons cannot leave a success-looking receipt.
+    try{
+      for(const file of ['report.json','SUMMARY.md','SHA256SUMS'])
+        rmSync(join(output,file),{force:true});
+      const failure={schemaVersion:1,kind:'qsol.vanillajs.rtx5060ti.failed.v1',
+        status:'FAILED',timeUtc:new Date().toISOString(),baselineSha:BASELINE,
+        candidateSha:head,nvidiaGpu:gpu,chromeVersion,
+        error:{name:error?.name??'Error',message:error?.message??String(error)},
+        note:'Partial or failed execution is not a validated performance result.'};
+      const bytes=JSON.stringify(failure,null,2)+'\n';
+      writeFileSync(join(output,'FAILURE.json'),bytes,{mode:0o600});
+      writeFileSync(join(output,'SHA256SUMS'),sum(Buffer.from(bytes))+'  FAILURE.json\n',{mode:0o600});
+      console.error('FAILED receipt retained in '+output);
+    }catch(receiptError){
+      console.error('Could not persist failure receipt: '+receiptError.message);
+    }
+    throw error;
   }finally{
     if(browser)await browser.close().catch(()=>{});
     if(server)await new Promise(done=>server.close(done));
