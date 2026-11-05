@@ -63,7 +63,11 @@ export function classifyAABBPlane(box,plane){
   const scale=Math.max(...Array.from(plane,Math.abs));
   if(scale===0)return 0;
   const coefficients=Array.from(plane,x=>x/scale);
-  if(coefficients.some((x,i)=>x===0&&plane[i]!==0))return 0;
+  // A nonzero subnormal quotient can have arbitrarily poor relative
+  // precision. Large box coordinates can magnify its division-rounding error.
+  // Do not assert outside/inside when this coefficient is uncertain.
+  const MIN_NORMAL=2.2250738585072014e-308;
+  if(coefficients.some((x,i)=>(x===0&&plane[i]!==0)||(x!==0&&Math.abs(x)<MIN_NORMAL)))return 0;
   let lo=coefficients[3],hi=coefficients[3],error=Math.abs(coefficients[3]);
   for(let i=0;i<3;i++){
     const a=coefficients[i]*min[i],b=coefficients[i]*max[i];

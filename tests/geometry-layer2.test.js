@@ -50,6 +50,10 @@ test('ternary plane/frustum rejects only certainly-outside finite boxes',()=>{
   assert.equal(classifyAABBPlane(cornerBox,tiny),0,'subnormal scaling must not produce false culling');
   assert.equal(classifyAABBFrustum(cornerBox,[tiny]),0);
   assert.equal(classifyAABBPlane(cornerBox,[0,0,0,0]),0);
+  const extremeBox={min:[1e308,8e-16,0],max:[1.1e308,9e-16,1]};
+  const extremePlane=[-3*Number.MIN_VALUE,2,0,0];
+  assert.equal(classifyAABBPlane(extremeBox,extremePlane),0,'nonzero subnormal quotient cannot authorize culling');
+  assert.equal(classifyAABBFrustum(extremeBox,[extremePlane]),0);
   for(let i=0;i<1000;i++){
     const center=[rand()*20-10,rand()*20-10,rand()*20-10];
     const r=.01+rand()*3,box={min:center.map(x=>x-r),max:center.map(x=>x+r)};

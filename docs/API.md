@@ -56,7 +56,7 @@ not translating targets, rotated bodies or general rigid-body collision.
 `classifyAABBFrustum(box,planes)` use classical ternary containment status:
 -1 = certainly outside, 0 = crossing/numerically uncertain, +1 = certainly
 inside. The accepted halfspace is non-negative plane signed distance. A
-coefficient normalization plus relative and absolute subnormal-roundoff margins protect exact boundaries; uncertain results classify as zero. The functions are
+coefficient normalization plus relative and absolute subnormal-roundoff margins protect exact boundaries. Zeroed **or nonzero-subnormal** normalized coefficients are conservatively uncertain, preventing magnification of division rounding errors by large box coordinates. The functions are
 pure helpers; they do not automatically cull or alter draw order. Only -1
 authorizes skipping geometry.
 
