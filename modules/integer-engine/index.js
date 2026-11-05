@@ -60,13 +60,17 @@ export class IntegerEngine {
   static fromSnapshot(snapshot) {
     keys(snapshot, ['schema', 'scale', 'tick', 'randomState', 'boxes', 'bodies']);
     if (snapshot.schema !== SCHEMA || snapshot.scale !== SCALE) throw new RangeError('unsupported integer snapshot schema or scale');
-    int32(snapshot.tick, 'tick');
+    const tick = int32(snapshot.tick, 'tick'), seed = uint32(snapshot.randomState, 'random state');
     if (snapshot.tick < 0) throw new RangeError('negative tick');
     if (!Array.isArray(snapshot.boxes) || snapshot.boxes.length > 4096 || !Array.isArray(snapshot.bodies) || snapshot.bodies.length > 256) throw new TypeError('invalid scene arrays');
     for (const box of snapshot.boxes) keys(box, ['id', 'min', 'max']);
-    for (const body of snapshot.bodies) keys(body, ['id', 'position', 'halfSize', 'velocity']);
-    const engine = new IntegerEngine({...snapshot, seed: snapshot.randomState});
-    engine.#tick = snapshot.tick;
+    for (const body of snapshot.bodies) {
+      keys(body, ['id', 'position', 'halfSize', 'velocity']);
+      // Restore requires values; constructor defaults are only for new worlds.
+      vector3(body.position); vector3(body.halfSize); vector3(body.velocity);
+    }
+    const engine = new IntegerEngine({...snapshot, seed});
+    engine.#tick = tick;
     return engine;
   }
 }

@@ -65,7 +65,8 @@ test('snapshot schemas, counter overflow, missing fields and invalid states fail
   const engine = new IntegerEngine({bodies: [body()]});
   for (const change of [s => s.scale++, s => s.tick = -1, s => s.tick = 1.1, s => s.randomState = -1,
     s => s.extra = 1, s => delete s.bodies[0].velocity, s => s.bodies[0].position[0] = Infinity,
-    s => s.schema = 'vanillajs-integer-engine/2']) {
+    s => s.schema = 'vanillajs-integer-engine/2', s => s.randomState = undefined,
+    s => s.bodies[0].position = undefined, s => s.bodies[0].halfSize = undefined, s => s.bodies[0].velocity = undefined]) {
     const s = engine.snapshot(); change(s); assert.throws(() => IntegerEngine.fromSnapshot(s));
   }
   const s = engine.snapshot(); s.tick = INT_MAX;
