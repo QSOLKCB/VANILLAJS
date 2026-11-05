@@ -26,7 +26,7 @@ node scripts/rtx5060ti-trusted.mjs
 
 The optional `NODE_PATH` line is an example, not a required exact path. If you already have Playwright installed in an accessible tooling directory, point to that; otherwise obtain/review the pinned Playwright 1.64.0 tool separately **before activation**, under an isolated tooling prefix outside the repo. There is no `npm install` in the validation workflow. The program accepts `--chrome /absolute/path/to/chrome` and `--out /absolute/path/outside/repo` when necessary; `--expected-head <exact40hex>` provides an extra SHA pin.
 
-Evidence is saved by default under `$XDG_STATE_HOME/qsol/vanillajs/rtx5060ti/<UTC timestamp>` or `~/.local/state/qsol/vanillajs/rtx5060ti/<UTC timestamp>`. The directory contains private `report.json`, `SUMMARY.md`, and `SHA256SUMS`. Raw samples include machine/driver observations and statistical allocations. No evidence is uploaded automatically. Temporary detached worktrees are removed after completion. Failure exits nonzero.
+Evidence is saved by default under `$XDG_STATE_HOME/qsol/vanillajs/rtx5060ti/<UTC timestamp>` or `~/.local/state/qsol/vanillajs/rtx5060ti/<UTC timestamp>`. A successful run creates private `report.json`, `SUMMARY.md`, and `SHA256SUMS`. A failed/incomplete GPU or parity run instead creates an explicit `FAILURE.json` plus `SHA256SUMS`, never a success-shaped report. Raw successful samples include machine/driver observations and statistical allocations. No evidence is uploaded automatically. Temporary detached worktrees are removed after completion. Failure exits nonzero.
 
 ## Activation 2: explicit GitHub Actions dispatch (optional)
 
@@ -51,7 +51,7 @@ Both versions build their **own pinned source** with their own `scripts/build.js
 | Actual frame timing | Same FPS Lab recipe, graphics resolution, screen and 240-frame sample | rAF frame interval p95 and JS frame callback median; raw samples retained |
 | JS memory allocation | Separate 180-frame native FPS Lab pass | CDP statistical allocation sampling (32 KiB interval) and GC-adjusted JS heap; not exact allocation or RSS |
 
-Two warm-up pairs precede **seven alternating baseline/candidate pairs** for the CPU tests and application frame tests. Timing results are descriptive observations, not noisy CI thresholds. CPU geometry bytes, complete canonical collision receipt hashes, and native pixel hashes must match exactly; any mismatch aborts before emitting a successful receipt.
+Two warm-up pairs precede **seven alternating baseline/candidate pairs** for the CPU tests and application frame tests. The 240-frame sample gate closes synchronously inside the 240th completed callback, so WebGL submission counts cannot include later frames. Any blur, hidden-document, lost focus or `PAUSED` state during a measured or warm-up sample invalidates the trial. Timing results are descriptive observations, not noisy CI thresholds. CPU geometry bytes, complete canonical collision receipt hashes, and native pixel hashes must match exactly; any mismatch aborts before emitting a successful receipt.
 
 **Scope limits:**
 
@@ -59,7 +59,7 @@ Two warm-up pairs precede **seven alternating baseline/candidate pairs** for the
 - The actual FPS Lab has fixed simulation steps but advances according to browser wall-clock frames; the no-input scene recipe and settings match, not necessarily the same number of simulation ticks at each sampled present. The deterministic CPU and GPU parity lanes use exactly the same data/tick sequence.
 - Submitted GPU upload bytes count API submissions, not actual PCIe bus traffic, physical VRAM allocations or guaranteed transfer completion.
 - The rAF callback duration is CPU JavaScript execution; frame interval includes compositor/vsync and does not isolate GPU draw execution. No claim of hardware GPU milliseconds is made without timer-query evidence.
-- Sampling changes memory behavior and therefore runs separately from timing. A single CDP allocation profile is not a precise per-frame or whole-process memory allocation count.
+- Sampling changes memory behavior and therefore runs separately from timing. CDP allocation sampling explicitly retains samples for objects collected by major and minor GC; surviving-objects-only sampling would be misleading. A single statistical profile is still not an exact per-frame or whole-process memory allocation count.
 - Browser, OS compositor, power state, thermal/frequency variation and background work affect measurements. Repeat on the same machine after ensuring similar conditions. No remote sensor or cloud access is required to run the CLI.
 
 ## Verification and promotion gates
@@ -73,4 +73,4 @@ node scripts/check.js
 node scripts/build.js
 ```
 
-The ordinary hosted CI performs **syntax/help preflight**, not the physical NVIDIA GPU run. Physical results must be reported separately with their exact source SHA, driver, browser, profiles, raw medians, hardware gate status and `SHA256SUMS`. Keep any incomplete/failed attempts explicitly failed; no simulated or substituted RTX numbers are permitted.
+The ordinary hosted CI performs **syntax/help preflight** and deterministic fake-rAF/WebGL sample-boundary tests, not the physical NVIDIA GPU run. Physical results must be reported separately with their exact source SHA, driver, browser, profiles, raw medians, hardware gate status and `SHA256SUMS`. Keep any incomplete/failed attempts explicitly failed; no simulated or substituted RTX numbers are permitted.
