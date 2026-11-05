@@ -12,10 +12,6 @@ const percentile=(values,p)=>{
 };
 const stats=values=>({count:values.length,medianMs:median(values),p95Ms:percentile(values,95),maximumMs:Math.max(...values)});
 const order=i=>i%2===0?['baseline','candidate']:['candidate','baseline'];
-const sha=async bytes=>{
-  const digest=await crypto.subtle.digest('SHA-256',bytes);
-  return Array.from(new Uint8Array(digest),n=>n.toString(16).padStart(2,'0')).join('');
-};
 
 export async function gpuIdentity(page){
   return page.evaluate(()=>{
@@ -67,6 +63,8 @@ async function kernel(page,role){
         collision.castSegment(r.origin,r.displacement,colliders,{halfSize:r.halfSize}));
       return hits;
     };
+    // Warm the exact algorithms inside this browser realm before timing.
+    runGeometry();runCollision();runGeometry();runCollision();
     const t0=performance.now(),geomSink=runGeometry(),geometryMs=performance.now()-t0;
     const t1=performance.now(),hits=runCollision(),collisionMs=performance.now()-t1;
     if(!Number.isFinite(geomSink))throw Error('nonfinite geometry sink');
@@ -158,7 +156,7 @@ const captureInit=()=>{
 };
 
 async function appPage(context,url){
-  const page=await context.newPage({viewport:{width:1280,height:900},deviceScaleFactor:1});
+  const page=await context.newPage();
   page.setDefaultTimeout(20000);
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.addInitScript(captureInit);
@@ -237,6 +235,7 @@ export async function runBrowserProbe(browser,baseURL){
     pixelHashes[role]=await exactPixels(page,role);
     await page.close();
   }
+  assert.ok(pixelHashes.baseline.every(x=>x.brightPixels>10),'GPU parity fixture must render nonblank geometry');
   assert.deepStrictEqual(pixelHashes.baseline,pixelHashes.candidate,'native WebGL pixel parity');
   for(let pair=-WARMUPS;pair<SAMPLES;pair++){
     for(const role of order(pair)){
