@@ -7,6 +7,8 @@ for(const path of ['index.html','modules','demos','LICENSE','NOTICE','MODULES.js
 // Research tooling and evidence stay out of the runtime. Only this pure kernel ships.
 await mkdir(resolve(out,'experiments/arch-omi'),{recursive:true});
 await cp(resolve(root,'experiments/arch-omi/index.js'),resolve(out,'experiments/arch-omi/index.js'));
+await mkdir(resolve(out,'experiments/e8-geometry'),{recursive:true});
+await cp(resolve(root,'experiments/e8-geometry/index.js'),resolve(out,'experiments/e8-geometry/index.js'));
 await writeFile(resolve(out,'.nojekyll'),'');
 const files=[];
 async function walk(dir){for(const e of await readdir(dir,{withFileTypes:true})){

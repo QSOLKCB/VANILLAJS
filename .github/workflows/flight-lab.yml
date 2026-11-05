@@ -23,6 +23,8 @@ jobs:
       - run: node scripts/build.js
       - name: Verify documented navigation workload
         run: node scripts/navigation-workload.js --check > navigation-workload.json
+      - name: Validate static geometry layer and record paired workload observations
+        run: node scripts/geometry-layer2-workload.js --check > geometry-layer2-workload.json
       - name: Reproduce exhaustive OMI evidence
         run: node scripts/verify-omi.js --check > omi-evidence.json
       - name: Reproduce mechanical OMI evidence
@@ -52,6 +54,7 @@ jobs:
             browser-artifacts/
             dist/manifest.json
             navigation-workload.json
+            geometry-layer2-workload.json
             omi-evidence.json
             omi-machine-evidence.json
             vault-evidence.json

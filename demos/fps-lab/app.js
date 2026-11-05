@@ -5,6 +5,7 @@ import {Actions,attachKeyboard,attachMouseLook,fpsBindings} from '../../modules/
 import {characterView} from '../../modules/character/index.js';
 import {raycast} from '../../modules/collision/index.js';
 import {Renderer,boxVertices,ringVertices} from '../../modules/render-webgl/index.js';
+import {boxMeshBatch} from '../../modules/geometry/index.js';
 import {createFpsLab,stepFpsLab,focusPlate,COURSES} from './worlds.js';
 const $=id=>document.getElementById(id),canvas=$('fps-view');
 const clock=new FixedClock(),actions=new Actions(),screen=new Actions(),pointers=new Map(),buttonKeys=new Set();
@@ -31,7 +32,7 @@ function launch(){
   canvas.focus({preventScroll:true});$('hint').textContent='Click view for mouse look · WASD move · C crouch · Space jump';
 }
 function buildScene(){
-  renderer.clearMeshes();sceneMesh=renderer.mesh(session.solids.flatMap(s=>boxVertices(s.center,s.size,s.color)));
+  renderer.clearMeshes();sceneMesh=renderer.mesh(boxMeshBatch(session.solids));
   const lines=[];
   for(let z=10;z>-48;z-=2)lines.push(-11.9,.006,z,.2,.3,.4,11.9,.006,z,.2,.3,.4);
   for(let x=-10;x<=10;x+=2)lines.push(x,.006,11.9,.2,.3,.4,x,.006,-47.7,.2,.3,.4);

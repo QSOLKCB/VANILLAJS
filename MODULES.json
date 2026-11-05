@@ -94,6 +94,15 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Immutable X/Z grids, bounded A*, group destinations and incremental shared flow fields"
+    },
+    "geometry": {
+      "entry": "modules/geometry/index.js",
+      "depends": [
+        "collision"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Exact Float32 box batching, conservative ternary frustum classification and bounded static AABB indexing"
     }
   },
   "recipes": {
@@ -105,7 +114,8 @@
         "collision",
         "flight",
         "input",
-        "render-webgl"
+        "render-webgl",
+        "geometry"
       ],
       "preset": "tunnel"
     },
@@ -117,7 +127,8 @@
         "collision",
         "flight",
         "input",
-        "render-webgl"
+        "render-webgl",
+        "geometry"
       ],
       "preset": "arena"
     },
@@ -160,7 +171,8 @@
         "input",
         "render-webgl",
         "projectiles",
-        "interactions"
+        "interactions",
+        "geometry"
       ],
       "preset": "course"
     },
@@ -175,7 +187,8 @@
         "input",
         "render-webgl",
         "projectiles",
-        "interactions"
+        "interactions",
+        "geometry"
       ],
       "preset": "range"
     },
@@ -190,7 +203,8 @@
         "input",
         "render-webgl",
         "projectiles",
-        "interactions"
+        "interactions",
+        "geometry"
       ],
       "preset": "lowpass"
     },
@@ -205,7 +219,8 @@
         "input",
         "render-webgl",
         "projectiles",
-        "interactions"
+        "interactions",
+        "geometry"
       ],
       "preset": "tracking"
     },
@@ -220,7 +235,8 @@
         "input",
         "render-webgl",
         "projectiles",
-        "interactions"
+        "interactions",
+        "geometry"
       ],
       "preset": "lift"
     },
@@ -235,7 +251,8 @@
         "input",
         "render-webgl",
         "projectiles",
-        "interactions"
+        "interactions",
+        "geometry"
       ],
       "preset": "shuttle"
     },
@@ -301,6 +318,13 @@
         "brass-engine": "demos/ancient-machine/index.html",
         "clockwork-vault": "demos/clockwork-vault/index.html"
       }
+    },
+    "e8-geometry": {
+      "entry": "experiments/e8-geometry/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "research-experiment",
+      "description": "Independent 240-root E8 inventory and authored non-isometric 3D point projection; not a collision model"
     }
   }
 }

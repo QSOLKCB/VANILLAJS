@@ -18,7 +18,7 @@ kinematic collision, declarative interactions, input, the clock and rendering.
 Its puzzle graph, bounded hint search, progression, chamber and strict local
 replay format remain demo-owned. All three demonstrations are registered under
 the same research entry. No core module imports the
-experiment. There remain eleven core modules and fifteen game recipes.
+experiment. There are now twelve core modules and fifteen game recipes; the optional geometry layer is a runtime module, while the E8 point atlas remains research-only.
 
 The build allowlists only the research kernel plus its demos; the independent
 arithmetic oracle, evidence generator, tests and evidence JSON stay outside the
@@ -38,6 +38,7 @@ establish a physics model, compressed state, cryptography or a speedup.
 | flight | math, collision | physical state and control laws |
 | input | math | actions; opt-in keyboard/mouse adapters; gamepad sampling |
 | render-webgl | math | GPU buffers, shaders and rendering |
+| geometry | collision | Immutable static AABB index, conservative three-way culling, exact Float32 box batching |
 | projectiles | math, collision | bounded straight-shot motion, lifetime and ordered hit/expiry events |
 | interactions | nothing | declarative rule selection, conditions, effects and reasons |
 | navigation | nothing | immutable grids, bounded paths, destinations and incremental shared fields |
