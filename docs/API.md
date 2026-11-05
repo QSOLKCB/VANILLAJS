@@ -655,3 +655,57 @@ tail bytes are never drawn. Capacity remains at the mesh's largest upload until
 `clearMeshes()` or `dispose()`. Float32 conversion and caller-data ownership are
 unchanged; no global buffer pool or cross-renderer reuse is introduced.
 The application owns context-loss policy and animation scheduling.
+
+
+## Optional static geometry layer (layer 2)
+
+```js
+import {boxMeshBatch,StaticAABBIndex,classifyAABBFrustum} from '../modules/geometry/index.js';
+
+// Builds GPU-ready triangles with exact parity to
+// new Float32Array(boxes.flatMap(b => boxVertices(b.center,b.size,b.color))).
+const mesh=renderer.mesh(boxMeshBatch(boxes));
+const staticIndex=new StaticAABBIndex(staticColliders);
+const hit=staticIndex.castSegment(start,displacement,{halfSize:0,ignoreIds:[]});
+// hit.index remains the original staticColliders index, or null for a miss.
+const state=classifyAABBFrustum(bounds,[[1,0,0,2],[0,1,0,3]]);
+// -1 definitely outside; 0 intersects or uncertain; +1 definitely inside.
+```
+
+`boxMeshBatch` takes an array of at most 16,384 boxes. Each box has finite
+three-coordinate `center`, `size`, `color`. It rejects malformed input
+before output allocation and returns one new owned Float32Array of precisely
+216 values per box (36 XYZ/RGB vertices). Geometry on the GPU, not the
+pre-upload JS-number representation, is the exactness contract. Signed-zero
+and Float32 byte parity with the legacy builder are regression-tested.
+
+`StaticAABBIndex` owns a frozen copy of at most 65,536 unique named static
+colliders, each `{id,box:{min,max}}` with a positive-volume AABB. It builds
+a balanced median-split bounding hierarchy. Both the collider coordinates and
+cast origin/displacement/endpoint must stay within ±1e9 metres; halfSize is a
+finite value from zero to 1e9. A query returns sorted original candidate indices,
+allowing false positives but not false negatives. `castSegment` invokes the
+existing canonical collision narrowphase on those candidates, preserving
+stable ID tie-breaks and the original collider index. It is **not** safe to
+reuse after moving, resizing or replacing world collision boxes: create a new
+index from the new snapshot. This implementation covers static segments only,
+not translating targets, rotated bodies or general rigid-body collision.
+
+`classifyAABBPlane(box,[nx,ny,nz,d])` and
+`classifyAABBFrustum(box,planes)` use classical ternary containment status:
+-1 = certainly outside, 0 = crossing/numerically uncertain, +1 = certainly
+inside. The accepted halfspace is non-negative plane signed distance. A
+conservative roundoff margin protects exact boundaries. The functions are
+pure helpers; they do not automatically cull or alter draw order. Only -1
+authorizes skipping geometry.
+
+An independent research entry,
+`experiments/e8-geometry/index.js`, offers `generateE8Roots()` and
+`projectE8RootPoints({scale})`. The first returns 240 eight-component
+vectors; the second emits 240 Float32 XYZ/RGB point vertices using a
+declared authored 3D linear projection. It is **not** a distance-preserving E8
+embedding, gameplay collider, or audio/QEC simulation.
+
+Detailed source pinning, benchmark boundaries, and rollback:
+[Geometry layer 2](GEOMETRY_LAYER2.md). This layer does not depend on the
+separate OPT renderer optimization PR #13.
