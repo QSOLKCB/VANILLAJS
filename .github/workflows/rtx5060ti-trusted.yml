@@ -46,6 +46,8 @@ jobs:
           test -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}"
           node --check scripts/rtx5060ti-trusted.mjs
           node --check scripts/rtx5060ti-browser.mjs
+          node --check scripts/rtx-playwright.mjs
+          node scripts/rtx-playwright.mjs
       - name: Compare pinned baseline and candidate using local hardware
         shell: bash
         run: |
