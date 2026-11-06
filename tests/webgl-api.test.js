@@ -14,7 +14,8 @@ function device(){
   const gl={
     ARRAY_BUFFER:1,DYNAMIC_DRAW:2,TRIANGLES:3,LINES:4,POINTS:5,FLOAT:6,
     VERTEX_SHADER:7,FRAGMENT_SHADER:8,COMPILE_STATUS:9,LINK_STATUS:10,
-    DEPTH_TEST:11,COLOR_BUFFER_BIT:0x4000,DEPTH_BUFFER_BIT:0x100,
+    DEPTH_TEST:11,COLOR_BUFFER_BIT:0x4000,DEPTH_BUFFER_BIT:0x100,NO_ERROR:0,
+    getError(){const result=gl.pendingError??0;gl.pendingError=0;return result;},
     createShader:()=>({}),shaderSource(){},compileShader(){},getShaderParameter:()=>true,
     getShaderInfoLog:()=>'',deleteShader(){},createProgram:()=>({}),attachShader(){},
     linkProgram(){},getProgramParameter:()=>true,getProgramInfoLog:()=>'',deleteProgram(){calls.deleted++;},
@@ -135,6 +136,19 @@ test('failed uploads do not bless CPU snapshots; recovery republishes before dra
   api.dispose();
 });
 
+test('non-throwing GL errors fail closed and require the committed snapshot to be republished',()=>{
+  const d=device(),api=new WebGLAPI(d.canvas),mesh=api.createMesh(verts());
+  const update=new Float32Array(verts());update[1]=.333;
+  d.gl.pendingError=1282; // Simulate WebGL INVALID_OPERATION after an upload.
+  assert.throws(()=>api.updateMesh(mesh,update),/bufferSubData WebGL error 1282/);
+  begin(api);assert.throws(()=>api.draw(mesh),/recover/);api.endFrame();
+  assert.equal(api.stats().bufferSubData,0,'failed upload is not blessed');
+  assert.equal(api.updateMesh(mesh,verts()),true,'exact old data must still repair dirty GPU');
+  assert.equal(api.stats().bufferData,2,'recovery uses a full committed snapshot');
+  begin(api);api.draw(mesh);api.endFrame();
+  assert.deepEqual(d.calls.draw.at(-1).bytes,Array.from(verts()));
+  api.dispose();
+});
 test('rendering state caches uniforms/program/viewport and still clear every frame',()=>{
   const d=device(),api=new WebGLAPI(d.canvas),mesh=api.createMesh(verts());
   begin(api);api.draw(mesh);api.draw(mesh);api.endFrame();
