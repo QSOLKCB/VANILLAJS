@@ -82,6 +82,14 @@ Two warm-up pairs precede **seven alternating baseline/candidate pairs** for the
 - Sampling changes memory behavior and therefore runs separately from timing. CDP allocation sampling explicitly retains samples for objects collected by major and minor GC; surviving-objects-only sampling would be misleading. A single statistical profile is still not an exact per-frame or whole-process memory allocation count.
 - Browser, OS compositor, power state, thermal/frequency variation and background work affect measurements. Repeat on the same machine after ensuring similar conditions. No remote sensor or cloud access is required to run the CLI.
 
+## Headed FPS Lab warm-up interruption diagnostics (2026-11-06)
+
+Owner run `42198799361` confirmed that Playwright 1.64.0 resolves from the isolated local tooling directory, but the 90-frame FPS Lab warm-up was rejected with `not-running-during-callback`. That is an **invalid physical trial**, not a performance result and not a missing dependency. Keep its `FAILURE.json` and `SHA256SUMS` as failed evidence.
+
+The FPS trial now explicitly foregrounds each new headed page **before launching**, then requires `RUNNING`, an unhidden document and a focused page before any measurement. If the app subsequently leaves `RUNNING`, the sample **still fails closed**; it records the first invalidating callback's actual status and overlay text, and labels which baseline/candidate URL failed. No automatic resume, focus-forcing during a sample, retry, reclassification of failures, or software-GPU fallback is permitted.
+
+A deterministic regression also executes a no-input tracking scene at the application's actual 120 Hz fixed simulation step for 840 ticks, requiring no collision truncation, shots or completion. This checks the pure scene behaviour but cannot establish a physical native-GPU pass. Only an owner-dispatched run on the reviewed merged `main` commit can do that. If the updated run still fails, inspect the new first-event snapshot for `PAUSED`/the overlay reason versus `COMPLETE` or `UNAVAILABLE`, preserve the failure receipt, and correct the specific cause rather than weakening the measurement gate.
+
 ## Verification and promotion gates
 
 ```sh
