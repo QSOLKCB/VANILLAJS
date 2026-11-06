@@ -24,16 +24,25 @@ const circle=(item,i)=>{
     throw new RangeError('circle bounds exceed coordinate domain');
   return Object.freeze({id,x:center[0],y:center[1],radius:item.radius,index:i});
 };
-/** Reference narrowphase used unchanged by both paths.
- * First contact along a closed segment; start-inside is time 0. */
+/** Shared narrowphase for both broadphases. First entry into a closed circle.
+ * The quadratic discriminant b*b-4*a*c loses the small clearance term when
+ * the segment is very long relative to the radius, creating false contacts.
+ * Instead resolve along-track distance and perpendicular clearance in a
+ * unit-length segment frame; compute the half-chord without subtracting
+ * nearly equal squared distances. Start-inside remains time zero. */
 function intersection(start,delta,c){
   const dx=delta[0],dy=delta[1],fx=start[0]-c.x,fy=start[1]-c.y;
-  const a=dx*dx+dy*dy,b=2*(fx*dx+fy*dy),v=fx*fx+fy*fy-c.radius*c.radius;
-  if(v<=0)return 0;
-  if(a===0)return null;
-  const discriminant=b*b-4*a*v;
-  if(discriminant<0)return null;
-  const t=(-b-Math.sqrt(discriminant))/(2*a);
+  const radius=c.radius;
+  if(Math.hypot(fx,fy)<=radius)return 0;
+  const length=Math.hypot(dx,dy);
+  if(length===0)return null;
+  const ux=dx/length,uy=dy/length;
+  const forward=-(fx*ux+fy*uy);
+  if(forward<=0)return null; // Closest point on the forward ray is its origin.
+  const clearance=Math.abs(fx*uy-fy*ux);
+  if(clearance>radius)return null;
+  const halfChord=Math.sqrt((radius-clearance)*(radius+clearance));
+  const t=(forward-halfChord)/length;
   return t>=0&&t<=1?t:null;
 }
 const choose=(best,c,t)=>t!==null &&
