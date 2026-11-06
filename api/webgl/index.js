@@ -58,7 +58,7 @@ const snapshot=values=>new Float32Array(values);
  * context state mutation. Never share this context with another renderer.
  * A WebGL context loss requires discarding/rebuilding the entire API object. */
 export class WebGLAPI {
-  #meshes=new Map();#bound=null;#programBound=false;#viewport=null;#vp=null;
+  #meshes=new Map();#bound=null;#attribBuffer=null;#programBound=false;#viewport=null;#vp=null;
   #fog=null;#pointSize=null;#active=false;#disposed=false;
   #calls={bufferData:0,bufferSubData:0,bindBuffer:0,uploadedBytes:0,
     skippedIdentical:0,drawCalls:0,drawnVertices:0,uniformUploads:0,
@@ -202,7 +202,9 @@ export class WebGLAPI {
         gl.useProgram(this.program);this.#calls.programBinds++;
         gl.enableVertexAttribArray(this.position);
         gl.enableVertexAttribArray(this.color);
-        this.#programBound=true;this.#bound=null;
+        gl.enable(gl.DEPTH_TEST);
+        gl.clearColor(.018,.03,.05,1);
+        this.#programBound=true;this.#bound=null;this.#attribBuffer=null;
       }
       if(!this.#viewport||this.#viewport[0]!==width||this.#viewport[1]!==height){
         gl.viewport(0,0,width,height);this.#viewport=[width,height];this.#calls.viewportCalls++;
@@ -230,10 +232,11 @@ export class WebGLAPI {
     if(info.dirty)throw Error('mesh upload failed; recover before drawing');
     if(info.count===0)return false;
     const gl=this.gl;
-    if(this.#bound!==info.buffer){
-      this.#bind(info.buffer);
+    this.#bind(info.buffer);
+    if(this.#attribBuffer!==info.buffer){
       gl.vertexAttribPointer(this.position,3,gl.FLOAT,false,STRIDE,0);
       gl.vertexAttribPointer(this.color,3,gl.FLOAT,false,STRIDE,12);
+      this.#attribBuffer=info.buffer;
     }
     gl.drawArrays(info.mode,0,info.count);
     this.#calls.drawCalls++;this.#calls.drawnVertices+=info.count;
@@ -249,13 +252,14 @@ export class WebGLAPI {
   /** Call after changing GL state outside this API, e.g. a separate shader. */
   invalidateState(){
     this.#available();
-    this.#bound=null;this.#programBound=false;this.#viewport=null;
+    this.#bound=null;this.#attribBuffer=null;this.#programBound=false;this.#viewport=null;
     this.#vp=null;this.#fog=null;this.#pointSize=null;
   }
   deleteMesh(handle){
     const info=this.#owned(handle);
     this.gl.deleteBuffer(info.buffer);
     if(this.#bound===info.buffer)this.#bound=null;
+    if(this.#attribBuffer===info.buffer)this.#attribBuffer=null;
     this.#meshes.delete(handle);
   }
   dispose(){
