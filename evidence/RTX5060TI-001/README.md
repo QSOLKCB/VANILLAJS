@@ -42,6 +42,10 @@ The faster geometry and collision timings are from the defined **synthetic workl
 
 The SHA-256 verifies bytes, **not** signatures, actor identity, TPM hardware attestation, or immutable Git branch/tag policy. Git object content is hash-addressed, but branch refs can be moved and unreferenced objects may eventually be garbage-collected. Do not modify or normalise this numbered record. Future hardware measurements get new numbered receipts and separate source pins. Merge through the normal reviewed PR gate; do not move release tags for this preservation task.
 
+## Independent local verification — owner-reported PASS (2026-11-07)
+
+The owner additionally ran both offline receipt-checking commands from a local `main` checkout and reported PASS/OK. See [LOCAL-VERIFICATION.md](LOCAL-VERIFICATION.md) for the source-pinned terminal transcript, the independent `sha256sum -c` result, and its explicit scope limits. This is a custody addendum, not a new GPU benchmark and not a modification of the original ZIP.
+
 ## Offline verification
 
 From the repository root, with Python 3 and no third-party dependencies:
