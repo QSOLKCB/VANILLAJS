@@ -3,7 +3,7 @@ import {resolve,relative} from 'node:path';
 import {createHash} from 'node:crypto';
 const root=resolve(import.meta.dirname,'..'),out=resolve(root,'dist');
 await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
-for(const path of ['index.html','modules','demos','LICENSE','NOTICE','MODULES.json'])await cp(resolve(root,path),resolve(out,path),{recursive:true});
+for(const path of ['index.html','modules','demos','api','LICENSE','NOTICE','MODULES.json'])await cp(resolve(root,path),resolve(out,path),{recursive:true});
 // Research tooling and evidence stay out of the runtime. Only this pure kernel ships.
 await mkdir(resolve(out,'experiments/arch-omi'),{recursive:true});
 await cp(resolve(root,'experiments/arch-omi/index.js'),resolve(out,'experiments/arch-omi/index.js'));
