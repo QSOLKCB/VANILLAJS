@@ -16,6 +16,7 @@ import {verifyOmi} from './browser-omi.js';
 import {verifyMachine} from './browser-machine.js';
 import {verifyVault} from './browser-vault.js';
 import {verifyRenderReuse} from './browser-opt-render.js';
+import {verifyWebGLAPI} from './browser-webgl-api.js';
 const require=createRequire(import.meta.url),{chromium}=require('playwright');
 const root=resolve(import.meta.dirname,'../dist');
 const server=createServer(async(req,res)=>{
@@ -76,6 +77,7 @@ try{
   await page.screenshot({path:'browser-artifacts/flight-lab-mobile.png',fullPage:true});
   await verifyIntegerFoundry(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyRenderReuse(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
+  await verifyWebGLAPI(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyInteractions(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyMouseLook(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyFps(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);

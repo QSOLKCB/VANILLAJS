@@ -269,6 +269,15 @@ experimental module contracts or OMI research to stable APIs. [The game contract
 and evidence](docs/CLOCKWORK_VAULT.md) document input cancellation, save validation,
 approximation limits and attribution to **Brian Thorne’s ARCH OMI**.
 
+## Explicit GPU API (experimental)
+
+The optional [`/api/webgl` device](api/README.md) offers retained XYZ/RGB
+buffers, exact Float32 change detection, partial vertex updates, explicit
+frame submission, cached GL state and fail-closed recovery. It uses the
+existing browser WebGL1 standard with no new runtime dependency or scene graph.
+It does **not** replace the normal renderer or retroactively claim an RTX
+performance improvement. Hardware measurements remain separately pinned.
+
 ## Development and verification
 
 Node.js 22+ is development tooling only. There is no `npm install` for these checks:
