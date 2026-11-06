@@ -69,3 +69,13 @@ src/physics.js at 2bdc0e12d7f0e3f691a2efbc2ab612e871b5d534.
 These are source-attributed adaptations with bounded general-purpose APIs
 and independent test oracles. No donor game content, art, audio or other
 third-party runtime code is included; see docs/TERRAIN_BALLISTICS.md.
+
+The experimental adaptive serial collision and packed cuboid modules are
+source-inspired by QSOLKCB/GAMES LATTICE_CORSAIR/flight.js and optimization
+notes at 7e0a9019d07b491cffc9b698fa51acdb843c49cc, and by
+QSOLKCB/CorpoWars3d src/renderer.js and src/skins.js at
+8e86066686a575402ee2818378f1ec9323fb9ee6. Both sources are
+Apache-2.0. This repository retains only original bounded general-purpose
+implementations, test oracles and provenance: no game characters, skins,
+artwork, GPL/third-party engines or media are transplanted. The precise
+scope and original sources are documented in docs/ADAPTIVE_DONOR_EXTRACTION.md.
