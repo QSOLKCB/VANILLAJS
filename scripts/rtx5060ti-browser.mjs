@@ -118,16 +118,24 @@ async function exactPixels(page,role){
 // instead of after an asynchronous Playwright polling roundtrip.
 export const captureInit=()=>{
   const native=window.requestAnimationFrame.bind(window);
-  const meter={active:false,target:0,callbackMs:[],deltaMs:[],last:null,invalidReasons:[],
-    invalidate(reason){if(this.active&&!this.invalidReasons.includes(reason))this.invalidReasons.push(reason);},
+  const meter={active:false,target:0,callbackMs:[],deltaMs:[],last:null,invalidReasons:[],invalidSnapshots:[],
+    invalidate(reason){
+      if(!this.active||this.invalidReasons.includes(reason))return;
+      this.invalidReasons.push(reason);
+      // Capture on the exact invalidating callback, not after asynchronous polling.
+      // Status plus overlay distinguishes collision truncation, completion, pointer unlock and focus pauses.
+      this.invalidSnapshots.push({reason,callback:this.callbackMs.length,
+        status:document.querySelector('#status')?.textContent??null,
+        overlay:document.getElementById?.('overlay-copy')?.textContent??null,
+        hidden:document.hidden,focused:document.hasFocus()});
+    },
     reset(count){
       if(!Number.isSafeInteger(count)||count<=0)throw Error('invalid frame sample count');
       this.active=false;this.target=count;this.callbackMs=[];this.deltaMs=[];this.last=null;
-      this.invalidReasons=[];
-      if(document.hidden)this.invalidReasons.push('hidden-at-start');
-      if(!document.hasFocus())this.invalidReasons.push('not-focused-at-start');
-      if(document.querySelector('#status')?.textContent!=='RUNNING')this.invalidReasons.push('not-running-at-start');
-      this.active=true;
+      this.invalidReasons=[];this.invalidSnapshots=[];this.active=true;
+      if(document.hidden)this.invalidate('hidden-at-start');
+      if(!document.hasFocus())this.invalidate('not-focused-at-start');
+      if(document.querySelector('#status')?.textContent!=='RUNNING')this.invalidate('not-running-at-start');
     },
     stop(){this.active=false;}};
   window.__qsolFrame=meter;
@@ -177,18 +185,33 @@ async function appPage(context,url){
   const page=await context.newPage();
   page.setDefaultTimeout(20000);
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.addInitScript(captureInit);
-  await page.goto(url,{waitUntil:'load'});
-  await page.locator('[data-course="tracking"]').click();
-  await page.locator('#launch').click();
-  await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='RUNNING',null,{polling:100,timeout:15000});
-  const info=await page.locator('#fps-view').evaluate(canvas=>{
-    const gl=canvas.getContext('webgl'),debug=gl?.getExtension('WEBGL_debug_renderer_info');
-    if(!debug)throw Error('FPS WebGL debug renderer unavailable');
-    return {vendor:gl.getParameter(debug.UNMASKED_VENDOR_WEBGL),renderer:gl.getParameter(debug.UNMASKED_RENDERER_WEBGL)};
-  });
-  requireNvidia(info);
-  return {page,errors,info};
+  try{
+    await page.addInitScript(captureInit);
+    await page.goto(url,{waitUntil:'load'});
+    // A headed desktop can leave a newly created page behind the previous window.
+    // Foreground it BEFORE launch, then require a stable, focused RUNNING state.
+    await page.bringToFront();
+    await page.locator('[data-course="tracking"]').click();
+    await page.locator('#launch').click();
+    await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='RUNNING',null,{polling:100,timeout:15000});
+    const state=await page.evaluate(()=>({
+      status:document.querySelector('#status')?.textContent??null,
+      focused:document.hasFocus(),hidden:document.hidden,
+      activeElement:document.activeElement?.id??null
+    }));
+    if(state.status!=='RUNNING'||state.hidden||!state.focused)
+      throw Error('FPS Lab foreground preflight rejected: '+JSON.stringify(state));
+    const info=await page.locator('#fps-view').evaluate(canvas=>{
+      const gl=canvas.getContext('webgl'),debug=gl?.getExtension('WEBGL_debug_renderer_info');
+      if(!debug)throw Error('FPS WebGL debug renderer unavailable');
+      return {vendor:gl.getParameter(debug.UNMASKED_VENDOR_WEBGL),renderer:gl.getParameter(debug.UNMASKED_RENDERER_WEBGL)};
+    });
+    requireNvidia(info);
+    return {page,errors,info};
+  }catch(error){
+    await page.close().catch(()=>{});
+    throw Error('FPS Lab startup '+url+': '+error.message,{cause:error});
+  }
 }
 async function collectFrames(page,count){
   await page.evaluate(n=>{window.__qsolUploads.reset();window.__qsolFrame.reset(n);},count);
@@ -196,7 +219,8 @@ async function collectFrames(page,count){
     count,{polling:100,timeout:90000});
   return page.evaluate(()=>{
     const meter=window.__qsolFrame;
-    if(meter.invalidReasons.length)throw Error('Invalid FPS trial: '+meter.invalidReasons.join(', '));
+    if(meter.invalidReasons.length)throw Error('Invalid FPS trial: '+meter.invalidReasons.join(', ')+
+      '; first-event snapshots='+JSON.stringify(meter.invalidSnapshots));
     if(meter.active||meter.callbackMs.length!==meter.target)throw Error('Incomplete FPS sample');
     return {callbackMs:meter.callbackMs.slice(),deltaMs:meter.deltaMs.slice(),
       uploads:window.__qsolUploads.snapshot()};
@@ -213,6 +237,8 @@ async function timedApp(context,url){
     const callbacks=raw.callbackMs.slice(0,FRAMES),deltas=raw.deltaMs.slice(0,FRAMES-1);
     return {jsCallback:stats(callbacks),frameInterval:stats(deltas),longFramesOver33ms:deltas.filter(x=>x>33.333).length,
       gpuUploads:raw.uploads,raw:{callbackMs:callbacks,deltaMs:deltas}};
+  }catch(error){
+    throw Error('FPS Lab timing '+url+': '+error.message,{cause:error});
   }finally{await page.close();}
 }
 async function sampledMemory(context,url){
@@ -237,6 +263,8 @@ async function sampledMemory(context,url){
     return {sampledAllocationBytes:profile.samples.reduce((n,x)=>n+x.size,0),
       sampleCount:profile.samples.length,heapUsedBeforeGCBytes:before,heapUsedAfterGCBytes:after,
       scope:'CDP statistical allocation sampling at 32KiB; heap after forced GC, NOT exact allocated bytes or process RSS'};
+  }catch(error){
+    throw Error('FPS Lab memory '+url+': '+error.message,{cause:error});
   }finally{await cdp.detach();await page.close();}
 }
 
