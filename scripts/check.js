@@ -8,7 +8,7 @@ async function walk(dir){
     const path=resolve(dir,entry.name);if(entry.isDirectory())files.push(...await walk(path));else files.push(path);
   }return files;
 }
-const files=(await Promise.all(['modules','experiments','demos','scripts','tests'].map(d=>walk(resolve(root,d))))).flat().filter(f=>f.endsWith('.js'));
+const files=(await Promise.all(['modules','experiments','demos','api','scripts','tests'].map(d=>walk(resolve(root,d))))).flat().filter(f=>f.endsWith('.js'));
 for(const path of files){
   const result=spawnSync(process.execPath,['--check',path],{encoding:'utf8'});
   assert.equal(result.status,0,result.stderr);
