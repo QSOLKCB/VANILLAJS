@@ -1,6 +1,6 @@
 # RTX 5060 Ti trusted validation — local, opt-in, exact-source comparison
 
-**Status:** proposed instrumentation; NOT executed on the owner's physical GPU by this PR. No benchmark or GPU-pass claim follows from adding this workflow.
+**Status (2026-11-06):** Physical RTX 5060 Ti owner-dispatched validation completed successfully at candidate source commit `240617e8bc1a935f05eaf75a10531f194f72a173`, Actions run `42203888152`. The **exact original artifact ZIP** and its outer checksum are preserved as [VANILLAJS RTX5060TI-001](../evidence/RTX5060TI-001/README.md), with an offline verifier and CI gate. This is observed native-GPU evidence, not cryptographic hardware attestation; the historical comparison protocol and limitations below still apply.
 
 This is a repeatable, **headed native-GPU** comparison between:
 
