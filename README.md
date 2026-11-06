@@ -310,5 +310,9 @@ compares the exact pre-geometry-optimization SHA against reviewed `main` on a
 physical RTX 5060 Ti, recording CPU geometry, collision, statistical allocations,
 submitted GPU uploads, native pixel parity and observed frame timings.
 It runs only on explicit owner activation, never in a normal push or PR build;
-ordinary CI performs syntax preflight only. No GPU results are claimed until
-the local evidence receipt is actually produced.
+ordinary hosted CI performs syntax preflight and verifies the immutable-content
+receipt, not a physical GPU rerun. The successful owner-run validation is now
+preserved as [VANILLAJS RTX5060TI-001](evidence/RTX5060TI-001/README.md),
+tied to commit `240617e8bc1a935f05eaf75a10531f194f72a173`.
+The recorded gains are workload-specific and do not establish an FPS increase or
+cryptographic hardware attestation.
