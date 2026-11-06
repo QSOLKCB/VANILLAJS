@@ -4,22 +4,31 @@ import assert from 'node:assert/strict';
 import {AdaptiveCircleQueries} from '../modules/adaptive-circles/index.js';
 import {nextRandom} from '../modules/integer-math/index.js';
 
-// Independent all-pairs segment/circle oracle: quadratic projection form.
+// Independent geometric oracle. Clamp the closest *segment* point and
+// bisect the entry on the decreasing-distance half of the segment. This
+// deliberately avoids any quadratic/discriminant calculation and is separate
+// from production's unit-tangent/half-chord solution.
 function reference(circles,start,delta,ignored=[]){
   const skip=new Set(ignored);let best=null;
   for(let i=0;i<circles.length;i++){
     const c=circles[i];if(skip.has(c.id))continue;
-    const rx=start[0]-c.x,ry=start[1]-c.y;
-    const dx=delta[0],dy=delta[1],a=dx*dx+dy*dy;
-    const inside=rx*rx+ry*ry<=c.radius*c.radius;
+    const dx=delta[0],dy=delta[1],fx=start[0]-c.x,fy=start[1]-c.y;
     let time=null;
-    if(inside)time=0;
-    else if(a>0){
-      const p=rx*dx+ry*dy;
-      const disc=p*p-a*(rx*rx+ry*ry-c.radius*c.radius);
-      if(disc>=0){
-        const root=(-p-Math.sqrt(disc))/a;
-        if(root>=0&&root<=1)time=root;
+    if(Math.hypot(fx,fy)<=c.radius)time=0;
+    else{
+      const squared=dx*dx+dy*dy;
+      if(squared>0){
+        const nearest=Math.max(0,Math.min(1,-(fx*dx+fy*dy)/squared));
+        const distance=t=>Math.hypot(
+          start[0]+t*dx-c.x,start[1]+t*dy-c.y);
+        if(distance(nearest)<=c.radius){
+          let lo=0,hi=nearest;
+          for(let step=0;step<56;step++){
+            const mid=(lo+hi)/2;
+            if(distance(mid)<=c.radius)hi=mid;else lo=mid;
+          }
+          time=hi;
+        }
       }
     }
     if(time!==null&&(!best||time<best.time||
@@ -58,6 +67,50 @@ test('small encounters use the all-pairs path; large encounters reduce tests',()
   assert.equal(result.mode,'grid');
   assert.ok(result.tested<large.length/2);
   match(result.hit,reference(large,[0,0],[10,0]));
+});
+
+test('long segments and subunit circles use stable geometry in both broadphases',()=>{
+  // The old b*b-4*a*c discriminant rounds to zero for the first case,
+  // inventing a tangent at t=0.5 despite a full metre of clearance.
+  const cases=[
+    {name:'reported false hit',start:[-1e8,-1],delta:[2e8,0],hit:null},
+    {name:'close miss',start:[-1e8,-.101],delta:[2e8,0],hit:null},
+    {name:'exact tangent',start:[-1e8,-.1],delta:[2e8,0],hit:.5},
+    {name:'near-tangent entry',start:[-1e8,-.099],delta:[2e8,0],
+      hit:.5-Math.sqrt((.1-.099)*(.1+.099))/2e8},
+    {name:'center entry',start:[-1e8,0],delta:[2e8,0],
+      hit:.5-.1/2e8},
+    {name:'diagonal miss',start:[-1e8,-1e8-.2],delta:[2e8,2e8],
+      cellSize:1e8,hit:null},
+    {name:'diagonal crossing',start:[-1e8,-1e8],delta:[2e8,2e8],
+      cellSize:1e8,hit:.5-.1/Math.hypot(2e8,2e8)},
+    {name:'translated circle miss',start:[2e8,2e8-1],delta:[2e8,0],
+      center:[3e8,2e8],hit:null}
+  ];
+  for(const example of cases){
+    const [x,y]=example.center??[0,0];
+    // A larger, distant circle expands the grid's candidate margin,
+    // ensuring the grid *actually tests* the small circle even on misses.
+    const circles=[{id:1,x,y,radius:.1},{id:2,x:7e8,y:1000,radius:2}];
+    const settings={cellSize:example.cellSize??1e5,maxCellVisits:16384};
+    const brute=new AdaptiveCircleQueries(circles,{...settings,gridMin:32})
+      .castSegment(example.start,example.delta);
+    const grid=new AdaptiveCircleQueries(circles,{...settings,gridMin:1})
+      .castSegment(example.start,example.delta);
+    assert.equal(brute.mode,'brute',example.name);
+    assert.equal(grid.mode,'grid',example.name);
+    assert.ok(grid.tested>=1,example.name+' must exercise grid narrowphase');
+    const geometric=reference(circles,example.start,example.delta);
+    match(brute.hit,geometric);match(grid.hit,geometric);
+    assert.deepEqual(grid.hit,brute.hit,example.name+' broadphase parity');
+    if(example.hit===null){
+      assert.equal(brute.hit,null,example.name+' must miss');
+    }else{
+      assert.equal(brute.hit?.id,1,example.name+' must hit small circle');
+      assert.ok(Math.abs(brute.hit.time-example.hit)<1e-12,
+        example.name+' entry time must match geometric expectation');
+    }
+  }
 });
 
 test('long sweeps fall back rather than visiting unlimited cells',()=>{
