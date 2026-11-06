@@ -107,6 +107,11 @@ export class WebGLAPI {
     if(!info)throw new TypeError('unknown, deleted or foreign mesh handle');
     return info;
   }
+  #checkWrite(operation){
+    const error=this.gl.getError();
+    if(error!==this.gl.NO_ERROR)
+      throw Error(operation+' WebGL error '+error+'; resource is not committed');
+  }
   #bind(buffer){
     if(this.#bound!==buffer){
       this.gl.bindBuffer(this.gl.ARRAY_BUFFER,buffer);
@@ -116,6 +121,7 @@ export class WebGLAPI {
   #alloc(info,values){
     this.#bind(info.buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER,values,this.gl.DYNAMIC_DRAW);
+    this.#checkWrite('bufferData');
     this.#calls.bufferData++;this.#calls.uploadedBytes+=values.byteLength;
     info.capacity=values.byteLength;
   }
@@ -152,6 +158,7 @@ export class WebGLAPI {
       }else if(values.length){
         this.#bind(info.buffer);
         this.gl.bufferSubData(this.gl.ARRAY_BUFFER,0,values);
+        this.#checkWrite('bufferSubData');
         this.#calls.bufferSubData++;this.#calls.uploadedBytes+=values.byteLength;
       }
       info.mirror=snapshot(values);info.count=values.length/6;info.dirty=false;
@@ -177,6 +184,7 @@ export class WebGLAPI {
       if(values.length){
         this.#bind(info.buffer);
         this.gl.bufferSubData(this.gl.ARRAY_BUFFER,firstVertex*STRIDE,values);
+        this.#checkWrite('bufferSubData');
         this.#calls.bufferSubData++;this.#calls.uploadedBytes+=values.byteLength;
         info.mirror.set(values,firstVertex*6);
       }
