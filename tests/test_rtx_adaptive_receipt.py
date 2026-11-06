@@ -1,5 +1,4 @@
 """Offline integrity regressions for the new owner-run RTX follow-up receipt."""
-import copy
 import hashlib
 import json
 import subprocess
@@ -30,7 +29,7 @@ class AdaptiveReceiptTests(unittest.TestCase):
             self.full = json.loads(archive.read("report.json"))
         self.full["candidate"]["sha"] = HEAD
         stats = {
-            lane: {"samplesMs": [1] * 7}
+            lane: {"samplesMs": [1] * 7, "medianMs": 1}
             for lane in ("brute", "grid", "adaptive")
         }
         self.serial = {
