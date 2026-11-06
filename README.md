@@ -2,10 +2,10 @@
 
 Reusable, original JavaScript game modules built directly on web standards.
 **v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-Twenty-one experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
+Twenty-two experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
-[Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
+[Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
@@ -34,6 +34,15 @@ message explains unsupported graphics. Serve over
 HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
+
+## Renderer-independent appearance composition
+
+The opt-in `appearance` module adapts the **source-pinned colour-LUT,
+deterministic actor variation, bounded hit-volume and high/low-detail emission**
+architecture from QSOLKCB/CorpoWars3d PR #8. It compiles caller-defined
+cuboid parts and emits them through one callback to either a software
+renderer or the retained `CuboidStream`. No CorpoWars3d characters or artwork
+are imported. [See the API and provenance contract](docs/APPEARANCE.md).
 
 ## Opt-in adaptive query and cuboid streaming kernels
 
