@@ -2,10 +2,10 @@
 
 Reusable, original JavaScript game modules built directly on web standards.
 **v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-Seventeen experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
+Nineteen experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
-[Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
+[Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
@@ -34,6 +34,13 @@ message explains unsupported graphics. Serve over
 HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
+
+## Optional terrain and ballistic kernels
+
+A small, pure-JS extraction from the owned Ski-Shooter and CorpoWars3d games
+adds triangulated terrain sampling/sweeps and closed-form gravity stepping.
+See [API boundaries and pinned donor provenance](docs/TERRAIN_BALLISTICS.md).
+Neither kernel replaces the existing character solver, Integer Foundry or renderer.
 
 ## Integer engine — new development track
 

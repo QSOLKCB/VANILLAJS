@@ -61,3 +61,11 @@ execution patterns in QSOLKCB/OPT at 7556dd36acd53ed3ed538fd03b1db44e5c1ec869.
 The JavaScript implementation is original; no Wonderbuild or other donor source
 is copied. Provenance, exactness contracts and measured limits are recorded in
 docs/OPTIMIZATION.md. Existing OMI attribution remains unchanged.
+
+Terrain and ballistics modules (experimental): adapted under Apache-2.0 from
+QSOLKCB/Ski-Shooter site/src/world.js at
+9864a6cdd741a5cb9938d6de610711be7aaeedc9 and QSOLKCB/CorpoWars3d
+src/physics.js at 2bdc0e12d7f0e3f691a2efbc2ab612e871b5d534.
+These are source-attributed adaptations with bounded general-purpose APIs
+and independent test oracles. No donor game content, art, audio or other
+third-party runtime code is included; see docs/TERRAIN_BALLISTICS.md.
