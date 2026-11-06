@@ -353,3 +353,10 @@ cryptographic hardware attestation.
 The owner independently rechecked the frozen archive on Ubuntu on 2026-11-07;
 see the [offline local verification record](evidence/RTX5060TI-001/LOCAL-VERIFICATION.md)
 (PASS, matching SHA-256; not a rerun of GPU measurement).
+
+The separately dispatched adaptive-kernel and retained-rendering benchmark is
+preserved as [RTX5060TI-002](evidence/RTX5060TI-002/README.md), pinned to
+`b39b0bd0db5ba9b467b9e47aede4edc4dd156e9f`. Its original Actions ZIP
+is byte-identical to the uploaded artifact and verified in hosted CI.
+The new serial-circle and retained/fresh WebGL workloads have **no historical
+RTX5060TI-001 equivalent**, and the observed results are not universal FPS claims.
