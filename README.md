@@ -316,3 +316,6 @@ preserved as [VANILLAJS RTX5060TI-001](evidence/RTX5060TI-001/README.md),
 tied to commit `240617e8bc1a935f05eaf75a10531f194f72a173`.
 The recorded gains are workload-specific and do not establish an FPS increase or
 cryptographic hardware attestation.
+The owner independently rechecked the frozen archive on Ubuntu on 2026-11-07;
+see the [offline local verification record](evidence/RTX5060TI-001/LOCAL-VERIFICATION.md)
+(PASS, matching SHA-256; not a rerun of GPU measurement).
