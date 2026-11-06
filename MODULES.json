@@ -104,6 +104,22 @@
       "status": "experimental",
       "description": "Exact Float32 box batching, conservative ternary frustum classification and bounded static AABB indexing"
     },
+    "terrain": {
+      "entry": "modules/terrain/index.js",
+      "depends": [
+        "math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded immutable triangulated heightfield, sampling and ridge-safe continuous segment crossings"
+    },
+    "ballistics": {
+      "entry": "modules/ballistics/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Closed-form bounded constant-gravity vertical stepping with explicit ground clamping"
+    },
     "integer-math": {
       "entry": "modules/integer-math/index.js",
       "depends": [],
