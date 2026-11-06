@@ -13,13 +13,14 @@ jobs:
   verify:
     runs-on: ubuntu-24.04
     timeout-minutes: 20 # cold-cache and complete browser-suite margin; not permission to skip checks
-    env:
-      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/flight-browser/browsers
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
+      # runner.temp is only defined at step runtime, never in jobs.verify.env.
+      - name: Set isolated Playwright browser root
+        run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
       - run: node --test tests/*.test.js
       - run: node scripts/check.js
       - run: node scripts/build.js
