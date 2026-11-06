@@ -20,11 +20,23 @@ git switch main
 git status --short
 git log -1 --format='%H %s'
 nvidia-smi
-export NODE_PATH="$HOME/.local/share/qsol/browser-tools/node_modules"  # only if Playwright lives there
+node scripts/rtx-playwright.mjs  # preflight: finds an existing local Node.js Playwright install
 node scripts/rtx5060ti-trusted.mjs
 ```
 
-The optional `NODE_PATH` line is an example, not a required exact path. If you already have Playwright installed in an accessible tooling directory, point to that; otherwise obtain/review the pinned Playwright 1.64.0 tool separately **before activation**, under an isolated tooling prefix outside the repo. There is no `npm install` in the validation workflow. The program accepts `--chrome /absolute/path/to/chrome` and `--out /absolute/path/outside/repo` when necessary; `--expected-head <exact40hex>` provides an extra SHA pin.
+The preflight and measurement program now share the same **fail-closed** resolver. It checks absolute directories in `NODE_PATH` first, then `~/.local/share/qsol/browser-tools/node_modules`, `~/.local/lib/node_modules`, `~/.npm-global/lib/node_modules`, Node's executable-prefix global module directory, and system global module directories. It requires the actual `playwright` Node.js package with a usable `chromium.launch`, refuses packages that resolve inside the VANILLAJS checkout, and prints the selected package location/version. It never downloads, installs or silently substitutes browser tooling. A global `playwright` **CLI** or Python Playwright installation alone does not guarantee a resolvable Node.js package.
+
+If the preflight reports that no package was found, provision the separately reviewed Playwright Node.js tooling **once on your own desktop**, outside the repository:
+
+```sh
+PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install \
+  --prefix "$HOME/.local/share/qsol/browser-tools" \
+  --no-save --package-lock=false --no-audit --no-fund \
+  playwright@1.64.0
+node scripts/rtx-playwright.mjs
+```
+
+This one-time command is **manual**, not part of CI; it does not install a browser because validation uses your already-installed system Chrome/Chromium. For an existing nonstandard installation, set `NODE_PATH=/absolute/path/to/node_modules` in the terminal **before starting `~/actions-runner/run.sh`**. Restart the runner if its environment changes. The harness now **requires Playwright 1.64.0** for comparable evidence and records the version in `report.json`. An incompatible version fails closed instead of producing apparently comparable GPU results. The program accepts `--chrome /absolute/path/to/chrome` and `--out /absolute/path/outside/repo` when necessary; `--expected-head <exact40hex>` provides an extra SHA pin.
 
 Evidence is saved by default under `$XDG_STATE_HOME/qsol/vanillajs/rtx5060ti/<UTC timestamp>` or `~/.local/state/qsol/vanillajs/rtx5060ti/<UTC timestamp>`. A successful run creates private `report.json`, `SUMMARY.md`, and `SHA256SUMS`. A failed/incomplete GPU or parity run instead creates an explicit `FAILURE.json` plus `SHA256SUMS`, never a success-shaped report. Raw successful samples include machine/driver observations and statistical allocations. No evidence is uploaded automatically. Temporary detached worktrees are removed after completion. Failure exits nonzero.
 
@@ -36,7 +48,15 @@ To use it, *you* must register a dedicated **self-hosted** Linux x64 GitHub runn
 
 After this PR lands on `main`, navigate to **Actions → RTX 5060 Ti trusted local validation → Run workflow**, choose `main`, tick `acknowledge_local_execution`, and leave `publish_evidence` **unchecked** unless you expressly choose to upload machine-specific receipts to GitHub. By default only a summary enters the Actions job log; full evidence remains in `~/.local/state/qsol/vanillajs/rtx5060ti/actions-<run>-<attempt>/` on the desktop. A runner lacking the exact label will queue rather than silently use a hosted software GPU.
 
-The runner requires the same preinstalled Chrome, Node, Git, Playwright and NVIDIA tools. The workflow pins the existing approved checkout/upload actions; the checkout does not retain credentials and fetches full Git history. Nothing automatically installs packages or drivers.
+The runner requires the same preinstalled Chrome, Node, Git, Playwright Node.js package and NVIDIA tools. A dedicated Playwright resolution preflight runs before expensive measurements, with the same resolution rules as the harness. The workflow pins the existing approved checkout/upload actions; the checkout does not retain credentials and fetches full Git history. Nothing automatically installs packages or drivers.
+
+## Hosted Flight Lab: version-keyed tooling reuse
+
+Hosted CPU/browser CI uses a separate ephemeral Ubuntu 24.04 runner. `.github/workflows/flight-lab.yml` now caches the **isolated Playwright 1.64.0 Node package and its matching Chromium headless-shell binary** using a versioned Linux/x64/Node22 key and pinned `actions/cache`. It skips the install entirely on an exact cache hit, and verifies the package/core version and actually launches the headless shell before running the unchanged packaged-browser tests.
+
+**Cold cache:** install the exact Node package and use `playwright install --only-shell chromium`. Do not invoke `--with-deps` on the hosted Ubuntu image: run 42192474396 showed every required Chromium shared library was already installed; `--with-deps` instead fetched nine optional font packages at an unusually slow package mirror (9m29s), exhausting the previous 15-minute job budget. If an image change makes the shell unable to launch, fail closed and inspect the new missing system dependency rather than silently accepting a software/browser substitute. Test jobs have a 20-minute cold-cache margin, not a bypass.
+
+**Invariant boundary:** only the tagged tooling directory is reused. Candidate source, build output, browser tests, parity assertions, benchmark evidence and artifacts are executed/regenerated for every commit; no previous success is cached. Caches are version-scoped and validated at runtime. This is hosted headless SwiftShader CI, **not** evidence of the owner's native RTX 5060 Ti.
 
 ## Measurement protocol
 
