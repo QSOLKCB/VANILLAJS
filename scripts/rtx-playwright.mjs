@@ -7,6 +7,7 @@ import {delimiter,dirname,isAbsolute,join,relative,resolve,sep} from 'node:path'
 import {fileURLToPath} from 'node:url';
 
 const repoRoot=resolve(import.meta.dirname,'..');
+const PIN='1.64.0';
 const load=createRequire(import.meta.url);
 
 export function playwrightSearchRoots({env=process.env,home=homedir(),executable=process.execPath}={}){
@@ -42,6 +43,7 @@ export function findPlaywright({roots=playwrightSearchRoots(),checkout=repoRoot}
     try{
       metadata=JSON.parse(readFileSync(join(actual,'package.json'),'utf8'));
       if(metadata.name!=='playwright')throw Error('Unexpected package identity '+JSON.stringify(metadata.name));
+      if(metadata.version!==PIN)throw Error('Expected pinned Playwright '+PIN+', found '+JSON.stringify(metadata.version));
       playwright=load(actual);
       if(typeof playwright?.chromium?.launch!=='function')
         throw Error('Package does not expose chromium.launch');
