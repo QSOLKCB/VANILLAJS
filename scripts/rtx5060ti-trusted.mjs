@@ -8,6 +8,7 @@ import {existsSync,readFileSync,writeFileSync,mkdirSync,mkdtempSync,rmSync,readd
 import {tmpdir,homedir,hostname,platform,release,arch,cpus} from 'node:os';
 import {resolve,join,sep,dirname} from 'node:path';
 import {runBrowserProbe} from './rtx5060ti-browser.mjs';
+import {findPlaywright} from './rtx-playwright.mjs';
 
 const BASELINE='1f965f4e5b6669de0f954e3a39b11aa679e56720';
 const root=resolve(import.meta.dirname,'..'),checkHex=x=>/^[0-9a-f]{40}$/.test(x);
@@ -98,9 +99,8 @@ async function main(){
   const chrome=options.chrome?realpathSync(resolve(options.chrome)):
     findProgram(['google-chrome-stable','google-chrome','chromium','chromium-browser']);
   const chromeVersion=cmd(chrome,['--version'],{timeout:30000});
-  const {chromium}=(()=>{try{return require('playwright');}catch{
-    throw Error('Playwright is not installed in the local tooling path. Set NODE_PATH to your existing isolated Playwright node_modules. No automatic npm install is performed.');
-  }})();
+  const {chromium,version:playwrightVersion,location:playwrightLocation}=findPlaywright();
+  console.log('Playwright local tooling: '+playwrightVersion+' ('+playwrightLocation+')');
   const defaultRoot=process.env.XDG_STATE_HOME||join(homedir(),'.local','state');
   const stamp=new Date().toISOString().replace(/[:.]/g,'-');
   const output=safeOut(options.out||join(defaultRoot,'qsol','vanillajs','rtx5060ti',stamp));
@@ -133,7 +133,7 @@ async function main(){
         manifestSha256:sum(readFileSync(join(b,'dist','manifest.json')))},
       environment:{timeUtc:new Date().toISOString(),hostnameSha256:sum(hostname()),
         os:{platform:platform(),release:release(),arch:arch(),cpu:cpus()[0]?.model},
-        node:process.version,chromeVersion,playwright:require('playwright/package.json').version,
+        node:process.version,chromeVersion,playwright:playwrightVersion,
         gpu,nativeWebGL:proof.nativeRenderer},
       comparison:proof,
       trustBoundary:{
