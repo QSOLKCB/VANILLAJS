@@ -12,6 +12,19 @@ async function pixels(page){
 export async function verifyFps(browser,baseURL){
   const page=await browser.newPage({viewport:{width:1440,height:1100}}),errors=[];
   page.on('pageerror',error=>errors.push(error.message));const url=baseURL+'demos/fps-lab/index.html';
+  // Headless CDP pointer capture can emit a huge cursor-recentering MouseEvent
+  // (observed -563/-701) even though the test supplies its own bounded delta.
+  // Suppress only those *trusted* recenter artifacts in this test page; preserve
+  // all normal movement and the synthetic 60/-20 sample under test.
+  await page.addInitScript(()=>{
+    document.addEventListener('mousemove',event=>{
+      if(document.pointerLockElement && event.isTrusted &&
+         (Math.abs(event.movementX)>250 || Math.abs(event.movementY)>250)){
+        globalThis.fpsWarpDrops=(globalThis.fpsWarpDrops??0)+1;
+        event.stopImmediatePropagation();
+      }
+    },true);
+  });
   const value=id=>page.locator('#'+id).textContent().then(Number);
   await page.goto(baseURL);await page.locator('a.fps-link').click();assert.equal(page.url(),url);
   await page.waitForFunction(()=>document.querySelector('#status').textContent==='READY');
@@ -35,12 +48,18 @@ export async function verifyFps(browser,baseURL){
   });
   await page.locator('#fps-view').click();await page.waitForFunction(()=>document.pointerLockElement && document.querySelector('#hint').textContent.includes('active'));
   await page.waitForTimeout(150);
-  const before=(await pixels(page)).hash;
+  const initial=await pixels(page);
+  assert.ok(initial.bright>500,'FPS relative-look fixture requires visible WebGL geometry');
+  const before=initial.hash;
+  const beforeElapsed=parseFloat(await page.locator('#elapsed').textContent());
   await page.evaluate(()=>document.pointerLockElement.dispatchEvent(new MouseEvent('mousemove',{bubbles:true,movementX:60,movementY:-20})));
-  await page.waitForTimeout(200);const aimed=(await pixels(page)).hash;
+  await page.waitForFunction(start=>parseFloat(document.querySelector('#elapsed').textContent)>start+.12,beforeElapsed);
+  const aimed=(await pixels(page)).hash;
   if(aimed===before){
     console.log('FPS aim diagnostic',await page.evaluate(()=>({events:globalThis.fpsMouseEvents,status:document.querySelector('#status').textContent,
-      elapsed:document.querySelector('#elapsed').textContent,locked:!!document.pointerLockElement,hint:document.querySelector('#hint').textContent,error:document.querySelector('#error').textContent})));
+      elapsed:document.querySelector('#elapsed').textContent,locked:!!document.pointerLockElement,
+      ignoredHeadlessRecenters:globalThis.fpsWarpDrops??0,
+      hint:document.querySelector('#hint').textContent,error:document.querySelector('#error').textContent})));
     await page.screenshot({path:'browser-artifacts/fps-aim-diagnostic.png',fullPage:true});
   }
   assert.notEqual(aimed,before,'relative look must visibly change the FPS camera');
