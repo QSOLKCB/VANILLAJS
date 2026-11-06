@@ -134,6 +134,15 @@
       "status": "experimental",
       "description": "Retained Float32 cuboid instance stream, exact encoded input and deterministic distance LOD"
     },
+    "appearance": {
+      "entry": "modules/appearance/index.js",
+      "depends": [
+        "cuboid-stream"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Renderer-independent bounded cuboid appearances with shared RGB LUT, deterministic actor variation, high/low detail emission and cuboid-stream adapter"
+    },
     "integer-math": {
       "entry": "modules/integer-math/index.js",
       "depends": [],
