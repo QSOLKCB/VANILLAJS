@@ -5,7 +5,7 @@ Reusable, original JavaScript game modules built directly on web standards.
 Seventeen experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
-[Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
+[Minimal WebGL API](api/README.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
@@ -261,6 +261,15 @@ player pose, moving mechanisms, command histories and partial motor ticks.
 experimental module contracts or OMI research to stable APIs. [The game contract
 and evidence](docs/CLOCKWORK_VAULT.md) document input cancellation, save validation,
 approximation limits and attribution to **Brian Thorne’s ARCH OMI**.
+
+## Explicit GPU API (experimental)
+
+The optional [`/api/webgl` device](api/README.md) offers retained XYZ/RGB
+buffers, exact Float32 change detection, partial vertex updates, explicit
+frame submission, cached GL state and fail-closed recovery. It uses the
+existing browser WebGL1 standard with no new runtime dependency or scene graph.
+It does **not** replace the normal renderer or retroactively claim an RTX
+performance improvement. Hardware measurements remain separately pinned.
 
 ## Development and verification
 
