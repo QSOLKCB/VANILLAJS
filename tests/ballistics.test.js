@@ -50,7 +50,7 @@ test('zero dt is inert; invalid physics and overflow are rejected',()=>{
     {height:1,velocity:1,dt:Infinity},{height:1,velocity:1,dt:.01,gravity:0},
     {height:1,velocity:1,dt:.01,gravity:-1},
     {height:1,velocity:1,dt:.01,groundHeight:2},
-    {height:1,velocity:1e308,dt:.1,gravity:1e308},
+    {height:Number.MAX_VALUE,velocity:Number.MAX_VALUE,dt:.1,gravity:9.81},
     {height:1,velocity:1,dt:.01,groundHeight:NaN}
   ])assert.throws(()=>ballisticStep(args),RangeError);
 });
