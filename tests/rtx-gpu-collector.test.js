@@ -22,6 +22,7 @@ function harness(){
     get hidden(){return state.hidden;},
     hasFocus(){return state.focused;},
     querySelector(selector){assert.equal(selector,'#status');return {textContent:state.status};},
+    getElementById(id){assert.equal(id,'overlay-copy');return {textContent:state.overlay??''};},
     addEventListener(name,callback){listeners['document:'+name]=callback;}
   };
   runInNewContext('('+captureInit.toString()+')()',{
@@ -65,6 +66,22 @@ test('focus loss, document hiding and paused simulation reject a hardware timing
     assert.equal(meter.active,false);
     assert.ok(meter.invalidReasons.length>0,condition+' must invalidate');
   }
+});
+test('GPU collector retains exact state and pause explanation on first invalid callback',()=>{
+  const h=harness(),meter=h.window.__qsolFrame;
+  meter.reset(3);
+  h.step(16);
+  h.state.status='PAUSED';
+  h.state.overlay='Collision movement reached its limit. Reset the experiment to recover.';
+  h.step(32);
+  h.step(48);
+  assert.deepEqual(Array.from(meter.invalidReasons),['not-running-during-callback']);
+  assert.equal(meter.invalidSnapshots.length,1);
+  assert.equal(meter.invalidSnapshots[0].callback,2);
+  assert.equal(meter.invalidSnapshots[0].status,'PAUSED');
+  assert.match(meter.invalidSnapshots[0].overlay,/Collision movement reached its limit/);
+  assert.equal(meter.invalidSnapshots[0].focused,true);
+  assert.equal(meter.active,false);
 });
 test('initially paused or unfocused scenes cannot create a clean sample',()=>{
   for(const kind of ['paused','unfocused','hidden']){
