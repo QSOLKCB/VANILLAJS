@@ -61,10 +61,3 @@ execution patterns in QSOLKCB/OPT at 7556dd36acd53ed3ed538fd03b1db44e5c1ec869.
 The JavaScript implementation is original; no Wonderbuild or other donor source
 is copied. Provenance, exactness contracts and measured limits are recorded in
 docs/OPTIMIZATION.md. Existing OMI attribution remains unchanged.
-
-The opt-in /api/webgl interface independently adapts the existing VANILLAJS
-WebGL1 coloured-geometry shader contract and OPT-style invariant reuse;
-no external rendering engine, proprietary WebGL library or unrelated donor
-source is bundled. It was informed by retained effects/instance geometry
-observed in QSOLKCB/Ski-Shooter and QSOLKCB/CorpoWars3d, both Apache-2.0.
-See api/README.md for state ownership, attribution and unsupported features.
