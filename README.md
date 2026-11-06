@@ -5,7 +5,7 @@ Reusable, original JavaScript game modules built directly on web standards.
 Seventeen experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
-[Minimal WebGL API](api/README.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
+[Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
