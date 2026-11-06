@@ -26,8 +26,8 @@ def require(condition, message):
 def verify():
     raw = ZIP.read_bytes()
     require(hashlib.sha256(raw).hexdigest() == DIGEST, "outer ZIP SHA-256 mismatch")
-    outer = (RECEIPT_DIR / "SHA256SUMS").read_text(encoding="ascii")
-    require(outer == f"{DIGEST}  {ZIP.name}\n", "outer SHA256SUMS changed")
+    outer = (RECEIPT_DIR / "SHA256SUMS").read_bytes()
+    require(outer == f"{DIGEST}  {ZIP.name}\n".encode("ascii"), "outer SHA256SUMS changed")
     with zipfile.ZipFile(ZIP) as archive:
         infos = archive.infolist()
         require(len(infos) == 3 and {info.filename for info in infos} == MEMBERS,
