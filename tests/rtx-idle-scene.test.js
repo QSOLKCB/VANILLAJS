@@ -7,9 +7,9 @@ import {createFpsLab,stepFpsLab} from '../demos/fps-lab/worlds.js';
 
 test('tracking scene remains RUNNING under deterministic idle fixed ticks',()=>{
   const session=createFpsLab('tracking');
-  const dt=1/60;
+  const dt=1/120; // Matches FixedClock's real FPS Lab simulation step.
   const idle={move:[0,0],jump:false,reload:false,fire:false,sprint:false,crouch:false,look:{yaw:0,pitch:0}};
-  for(let i=0;i<420;i++){
+  for(let i=0;i<840;i++){
     stepFpsLab(session,idle,dt);
     assert.equal(session.truncated,false,'collision truncated at tick '+i);
     assert.equal(session.complete,false,'no-input tracking range completed at tick '+i);
