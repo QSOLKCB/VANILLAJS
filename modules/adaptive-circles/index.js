@@ -5,7 +5,8 @@
 const MAX_ITEMS=16384, LIMIT=1e9, EPS=Number.EPSILON;
 const point=(value,name)=>{
   if(!Array.isArray(value)||value.length!==2||
-     !value.every(x=>typeof x==='number'&&Number.isFinite(x)&&Math.abs(x)<=LIMIT))
+     ![0,1].every(i=>Object.hasOwn(value,i)&&
+       typeof value[i]==='number'&&Number.isFinite(value[i])&&Math.abs(value[i])<=LIMIT))
     throw new TypeError(name+' must be two finite coordinates within +/-1e9');
   return [value[0]===0?0:value[0],value[1]===0?0:value[1]];
 };
