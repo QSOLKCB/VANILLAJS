@@ -111,6 +111,15 @@
       "status": "experimental",
       "description": "Checked signed fixed-point arithmetic, integer square root and explicit uint32 PRNG"
     },
+    "integer-vector": {
+      "entry": "modules/integer-vector/index.js",
+      "depends": [
+        "integer-math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Checked 16.16 vector operations with exact BigInt dot/cross/distance intermediates and rational interpolation"
+    },
     "integer-time": {
       "entry": "modules/integer-time/index.js",
       "depends": [

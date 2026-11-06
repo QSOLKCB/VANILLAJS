@@ -2,7 +2,7 @@
 
 Reusable, original JavaScript game modules built directly on web standards.
 **v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-Sixteen experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
+Seventeen experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
 [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
@@ -55,6 +55,9 @@ This is an additive engine foundation, not a claim that all existing physics has
 been converted. Static axis-ordered boxes are supported; dynamic rigid bodies,
 rotations, slopes and moving platforms are outside the integer contract.
 See [API, bounds and migration](docs/INTEGER_ENGINE.md).
+The separate [integer-vector operators](docs/INTEGER_VECTORS.md) provide checked
+3D fixed-point sums, widened dot/cross products, exact squared distances and
+rational interpolation. They are experimental; existing gameplay paths are unchanged.
 
 ## Flight Lab
 

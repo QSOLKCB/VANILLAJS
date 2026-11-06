@@ -36,6 +36,13 @@ zero is normalised. `fromRatio(n, d=1)` encodes metres from an integer ratio;
 SCALE before division. `mulDiv(a,b,d)` takes three signed int32 operands.
 `toNumber` divides by SCALE **only at the presentation boundary**.
 
+The additive [integer-vector module](INTEGER_VECTORS.md) supplies 3D
+component-wise arithmetic, exact widened dot/cross/distance expressions, and
+rational interpolation using the same 16.16 coordinates. Raw results are
+`BigInt` and require explicit serialisation; int32 results reject overflow.
+It is an experimental reusable API, not yet a replacement for integer-physics
+sweeps or any visual renderer path.
+
 At 120 Hz, encode 6 m/s as `fromRatio(6,120)` subunits/tick, and −10 m/s² as
 `fromRatio(-10,14400)` subunits/tick². These values are quantised (3276 and −45);
 constant −45 corresponds to −9.8876953125 m/s². There is no residual-carry
