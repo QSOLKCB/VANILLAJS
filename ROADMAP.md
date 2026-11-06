@@ -125,6 +125,39 @@
 4. Broader browser/runtime conformance and measured CPU/allocation workloads.
    BigInt exactness is implemented; a performance improvement is not claimed.
 
+## Post-v1.1.1 WebGL API research — proposed, not implemented
+
+> When we return to it, I think the most interesting experiment will be retained
+> terrain chunks with batched rendering, followed by a source-pinned comparison
+> against the original renderer on your RTX 5060 Ti. That would give us concrete
+> evidence about whether the API's architectural advantages translate into real
+> GPU performance.
+
+- **Retained terrain chunks:** reuse the v1.1.1 triangulated heightfield
+  geometry through the opt-in `api/webgl` device. Define bounded chunk sizes,
+  complete effective-input signatures, deterministic invalidation and cleanup.
+- **Batched rendering:** group compatible static geometry without changing
+  vertex order, colours, visible output or the owning game's simulation. Compare
+  whole-buffer uploads, dirty ranges, draw calls, memory ownership and cache
+  rebuild costs against forced-fresh rendering.
+- **Correctness gates:** independent source-backed geometry/Float32-byte and
+  rendered-pixel parity checks; camera motion, chunk edits, rebuilds,
+  pause/resume and WebGL context loss must invalidate or recover correctly.
+- **Physical comparison:** pin exact baseline (existing `Renderer`) and
+  candidate (`api/webgl`) commits; use identical terrain workloads, frame
+  schedules, viewports, driver and RTX 5060 Ti hardware. Retain paired raw CPU
+  preparation, GPU submissions, allocation and frame-timing observations with
+  SHA-256 receipts. Use native GPU timing queries only when supported and
+  separately report their limitations.
+- **Decision rule:** retain optimisations only when parity and fail-closed
+  lifecycle gates pass and measured evidence supports the claimed benefit.
+  Report regressions and no-change outcomes, not just speedups. Keep
+  RTX5060TI-001 immutable as historical evidence; issue a **new numbered
+  receipt** for this experiment.
+
+This is a future research/benchmark slice, **not** a v1.1.1 feature or a claim
+that the new WebGL API has already improved physical GPU performance.
+
 ## Proposed next slices — not implemented
 
 1. **FPS expansion:** sloped terrain/capsules, rotating platforms, rotating-target
