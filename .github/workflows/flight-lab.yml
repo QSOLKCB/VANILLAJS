@@ -19,6 +19,7 @@ jobs:
         run: |
           python3 scripts/verify-rtx-receipt.py
           python3 -m unittest discover -s tests -p 'test_rtx_receipt.py' -v
+          python3 -m unittest discover -s tests -p 'test_rtx_adaptive_receipt.py' -v
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
@@ -35,6 +36,13 @@ jobs:
           node scripts/rtx5060ti-trusted.mjs --help > /dev/null
       - name: Reproduce integer-engine full-state replay evidence
         run: node scripts/verify-integer.js --check > integer-evidence.json
+      - name: Verify adaptive serial brute/grid and cuboid work-count parity
+        run: node scripts/adaptive-query-workload.js --check > adaptive-query-workload.json
+      - name: Syntax check owner-only native RTX follow-up (no GPU execution)
+        run: |
+          node --check scripts/rtx5060ti-adaptive-browser.mjs
+          node scripts/rtx5060ti-adaptive-browser.mjs --help > /dev/null
+          python3 -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/finalize-rtx5060ti-adaptive.py').read_text())"
       - name: Verify documented navigation workload
         run: node scripts/navigation-workload.js --check > navigation-workload.json
       - name: Validate static geometry layer and record paired workload observations
@@ -85,6 +93,7 @@ jobs:
             browser-artifacts/
             dist/manifest.json
             integer-evidence.json
+            adaptive-query-workload.json
             navigation-workload.json
             geometry-layer2-workload.json
             omi-evidence.json

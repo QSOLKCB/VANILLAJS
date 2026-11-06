@@ -120,6 +120,20 @@
       "status": "experimental",
       "description": "Closed-form bounded constant-gravity vertical stepping with explicit ground clamping"
     },
+    "adaptive-circles": {
+      "entry": "modules/adaptive-circles/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Immutable 2D circle snapshots with adaptive serial brute-force/grid swept-hit queries"
+    },
+    "cuboid-stream": {
+      "entry": "modules/cuboid-stream/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Retained Float32 cuboid instance stream, exact encoded input and deterministic distance LOD"
+    },
     "integer-math": {
       "entry": "modules/integer-math/index.js",
       "depends": [],

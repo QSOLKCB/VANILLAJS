@@ -1,0 +1,121 @@
+name: RTX 5060 Ti adaptive donor validation
+
+# Owner-authorised local workstation only. Not PR/push triggered. The workflow
+# becomes usable after review/merge to main, NEVER with unreviewed PR code.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "Authorize exact reviewed main on my visible RTX 5060 Ti runner"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Opt in to temporary upload of machine-specific evidence"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qsol-rtx5060ti-adaptive-${{ github.repository }}-${{ github.actor }}
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    if: ${{ github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact reviewed checkout, frozen receipt and GPU runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          git cat-file -e 1f965f4e5b6669de0f954e3a39b11aa679e56720^{commit}
+          git cat-file -e 240617e8bc1a935f05eaf75a10531f194f72a173^{commit}
+          test -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}"
+          command -v nvidia-smi
+          command -v node
+          command -v python3
+          nvidia-smi --query-gpu=name,driver_version --format=csv,noheader
+          python3 scripts/verify-rtx-receipt.py
+          (cd evidence/RTX5060TI-001 && sha256sum -c SHA256SUMS)
+          node --check scripts/rtx5060ti-trusted.mjs
+          node --check scripts/rtx5060ti-adaptive-browser.mjs
+          node scripts/rtx5060ti-adaptive-browser.mjs --help
+          node scripts/rtx-playwright.mjs
+
+      - name: Recheck donor kernels on the exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/adaptive-circles.test.js tests/cuboid-stream.test.js
+          node scripts/check.js
+          node scripts/build.js
+
+      - name: Compare original pinned renderer workloads on physical RTX
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$HOME/.local/state/qsol/vanillajs/rtx5060ti/adaptive-actions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          if test -e "$evidence"; then
+            echo "Refusing to overwrite preexisting evidence directory" >&2
+            exit 1
+          fi
+          mkdir -m 700 -p "$evidence"
+          echo "QSOL_ADAPTIVE_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+          node scripts/rtx5060ti-trusted.mjs \
+            --expected-head "$GITHUB_SHA" \
+            --out "$evidence/fullpath"
+
+      - name: Measure serial CPU brute/grid/adaptive comparisons
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/adaptive-query-workload.js --check > "$QSOL_ADAPTIVE_EVIDENCE/adaptive-serial.json"
+
+      - name: Measure NEW native WebGL fresh/retained and adaptive scenes
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/rtx5060ti-adaptive-browser.mjs \
+            --expected-head "$GITHUB_SHA" \
+            --out "$QSOL_ADAPTIVE_EVIDENCE/adaptive-browser.json"
+
+      - name: Finalize new follow-up receipt and exact SHA-256 manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/finalize-rtx5060ti-adaptive.py \
+            --out "$QSOL_ADAPTIVE_EVIDENCE" \
+            --expected-head "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID" \
+            --attempt "$GITHUB_RUN_ATTEMPT"
+          (cd "$QSOL_ADAPTIVE_EVIDENCE" && sha256sum -c SHA256SUMS)
+          cat "$QSOL_ADAPTIVE_EVIDENCE/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload new machine-specific evidence only with owner opt-in
+        if: ${{ inputs.publish_evidence == true }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: vanillajs-rtx5060ti-adaptive-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.QSOL_ADAPTIVE_EVIDENCE }}/EXPERIMENT.json
+            ${{ env.QSOL_ADAPTIVE_EVIDENCE }}/SUMMARY.md
+            ${{ env.QSOL_ADAPTIVE_EVIDENCE }}/SHA256SUMS
+            ${{ env.QSOL_ADAPTIVE_EVIDENCE }}/adaptive-browser.json
+            ${{ env.QSOL_ADAPTIVE_EVIDENCE }}/adaptive-serial.json
+            ${{ env.QSOL_ADAPTIVE_EVIDENCE }}/fullpath/report.json
+            ${{ env.QSOL_ADAPTIVE_EVIDENCE }}/fullpath/SUMMARY.md
+            ${{ env.QSOL_ADAPTIVE_EVIDENCE }}/fullpath/SHA256SUMS
+          retention-days: 14

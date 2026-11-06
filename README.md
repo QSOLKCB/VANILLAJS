@@ -2,10 +2,10 @@
 
 Reusable, original JavaScript game modules built directly on web standards.
 **v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-Nineteen experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
+Twenty-one experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
-[Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
+[Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
@@ -34,6 +34,21 @@ message explains unsupported graphics. Serve over
 HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
+
+## Opt-in adaptive query and cuboid streaming kernels
+
+The experimental `adaptive-circles` module compares a serial all-pairs
+swept-circle reference with a bounded uniform-grid broad phase, switching
+paths only above a configurable item count. The new `cuboid-stream`
+module packs 12-float actor/geometry instances into retained CPU storage.
+Both are informed by pinned GAMES and CorpoWars3d donor experiments and
+retain independent parity and failure tests. Existing renderers and games
+are unchanged. See [scope and source provenance](docs/ADAPTIVE_DONOR_EXTRACTION.md).
+
+An optional [owner-run RTX 5060 Ti validation](docs/RTX5060TI_ADAPTIVE_VALIDATION.md)
+will recheck the frozen RTX5060TI-001 evidence and run **new, separately
+identified** adaptive/retained workloads after a reviewed merge to `main`.
+The new hardware measurements have **not been executed** by this PR.
 
 ## Optional terrain and ballistic kernels
 
