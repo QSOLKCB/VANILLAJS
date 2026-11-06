@@ -35,10 +35,16 @@ test('load an existing isolated Playwright Node package outside the checkout',t=
 });
 test('resolve a Node installation prefix without requiring NODE_PATH',t=>{
   const home=fixture(t),prefix=join(home,'node'),modules=join(prefix,'lib','node_modules');
-  fakePackage(modules,{version:'1.62.1'});
+  fakePackage(modules);
   const roots=playwrightSearchRoots({env:{},home,executable:join(prefix,'bin','node')});
   assert.ok(roots.includes(modules));
-  assert.equal(findPlaywright({roots,checkout:join(home,'repo')}).version,'1.62.1');
+  assert.equal(findPlaywright({roots,checkout:join(home,'repo')}).version,'1.64.0');
+});
+test('reject Playwright versions other than 1.64.0',t=>{
+  const home=fixture(t),modules=join(home,'node_modules');
+  fakePackage(modules,{version:'1.62.1'});
+  assert.throws(()=>findPlaywright({roots:[modules],checkout:join(home,'repo')}),
+    /Expected pinned Playwright 1\.64\.0/);
 });
 test('reject package substitution and unreviewed in-checkout modules',t=>{
   const home=fixture(t),outside=join(home,'outside'),checkout=join(home,'repo');
