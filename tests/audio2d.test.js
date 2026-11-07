@@ -49,7 +49,7 @@ test('fixed channel concurrency, invalid positions, overflow and NaN refuse',()=
   for(const [start,count] of [[-1,1],[0,201],[201,0],[200,1],[1,-1]])
     assert.throws(()=>r.renderRange(start,count));
   assert.throws(()=>createSound2D({frames:48000*9}));
-  assert.throws(()=>createSound2D({frames:100,events:[{...base,id:2,sample:0}]}));
+  assert.throws(()=>createSound2D({frames:100,events:[base,{...base,id:2,sample:0}]}));
 });
 test('silent no-event song and independent renderer state',()=>{
   const a=createSound2D({frames:128});
