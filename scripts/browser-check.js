@@ -12,6 +12,7 @@ import {verifyFpsMotion} from './browser-fps-motion.js';
 import {verifyPlatforms} from './browser-platforms.js';
 import {verifyRts} from './browser-rts.js';
 import {verifyFlow} from './browser-flow.js';
+import {verify2DLab} from './browser-2d.js';
 import {verifyOmi} from './browser-omi.js';
 import {verifyMachine} from './browser-machine.js';
 import {verifyVault} from './browser-vault.js';
@@ -87,6 +88,7 @@ try{
   await verifyPlatforms(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyRts(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyFlow(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
+  await verify2DLab(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyOmi(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyMachine(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
   await verifyVault(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
