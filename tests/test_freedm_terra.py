@@ -4,6 +4,10 @@ from pathlib import Path
 import sys
 import unittest
 import zlib
+import argparse
+import os
+import tempfile
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "experiments/freedm-terra"))
@@ -152,6 +156,90 @@ class Contracts(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "no retry"):
             core.call_terra("sk-test-secret", payload, opener=fail)
         self.assertEqual(attempts, [1])
+
+    def test_three_paid_responses_survive_fourth_api_failure_unapplied(self):
+        """Synthetic workers prove receipts survive a mixed provider outcome."""
+        png = core.png_rgb24(FakeFrame())
+
+        class Pipe:
+            def __init__(self, role):
+                self.role = role
+                self.command = None
+                self.did_act = False
+
+            def send(self, command):
+                self.command = command
+                if command["op"] == "act":
+                    self.did_act = True
+
+            def poll(self, timeout):
+                return True
+
+            def recv(self):
+                assert self.command["op"] == "observe"
+                return {
+                    "kind": "observation", "role": self.role,
+                    "image": png, "imageSHA256": core.sha256(png),
+                    "ended": False,
+                    "variables": {"PLAYER_COUNT": 4, "HEALTH": 100,
+                                  "AMMO2": 50, "FRAGCOUNT": 0},
+                }
+
+        pipes = [Pipe(name) for name, _ in core.ROLES]
+        infos = [{"role": r, "playerNumber": i + 1, "playerCount": 4}
+                 for i, (r, _) in enumerate(core.ROLES)]
+        def fake_terra(secret, payload):
+            prompt = payload["input"][0]["content"][0]["text"]
+            role = next(name for name, _ in core.ROLES
+                        if prompt.startswith("You are " + name))
+            if role == "TERRA-DELTA":
+                raise RuntimeError("synthetic provider HTTP failure")
+            action = core.neutral_action()
+            return action, {"inputTokens": 1000, "outputTokens": 30,
+                            "responseId": "resp_" + role, "model": core.MODEL}
+
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp) / "capture"
+            args = argparse.Namespace(
+                mode="paid", wad=Path("/does/not/exist/freedm.wad"),
+                out=out, head="a" * 40, port=25029, decisions=1,
+                authorized_usd=20.0)
+            with patch.object(arena, "valid_wad", return_value={
+                        "name": "freedm.wad", "sha256": "b" * 64,
+                        "byteLength": 10000000}), \
+                 patch.object(arena, "check_checkout"), \
+                 patch.object(arena, "spawn_players", return_value=(
+                     [(p, object()) for p in pipes], infos)), \
+                 patch.object(arena, "stop_players", return_value=[]), \
+                 patch.object(arena, "call_terra", side_effect=fake_terra), \
+                 patch.dict(os.environ, {"FREEDM_TERRA_PAID_AUTH": "YES",
+                                         "OPENAI_API_KEY": "sk-synthetic"}, clear=False):
+                with self.assertRaisesRegex(ValueError, "no retries"):
+                    arena.play(args)
+            receipt = json.loads((out / "MATCH.json").read_text())
+            self.assertEqual(receipt["status"], "ABORTED")
+            self.assertEqual(len(receipt["turns"]), 1)
+            turn = receipt["turns"][0]
+            self.assertEqual(turn["phase"], "API_ABORTED_UNAPPLIED")
+            self.assertEqual(len(turn["observations"]), 4)
+            self.assertEqual(len(turn["actions"]), 4)
+            for index, item in enumerate(turn["actions"][:3]):
+                self.assertEqual(item["status"], "READY_NOT_APPLIED")
+                self.assertEqual(item["api"]["responseId"],
+                                 "resp_" + core.ROLES[index][0])
+                self.assertFalse(pipes[index].did_act)
+            self.assertEqual(turn["actions"][3]["status"],
+                             "API_FAILED_NOT_APPLIED")
+            self.assertFalse(pipes[3].did_act)
+            self.assertEqual(sum(x["attempts"] for x in
+                receipt["budget"]["roles"].values()), 4)
+            self.assertEqual(sum(x["reservedUSD"] for x in
+                receipt["budget"]["roles"].values()), 1.6)
+            self.assertEqual(len(list((out / "frames").rglob("*.png"))), 4)
+            lines = (out / "SHA256SUMS").read_text().splitlines()
+            self.assertEqual(len(lines), 5)
+            self.assertTrue(all((out / line.partition("  ")[2]).is_file()
+                                for line in lines))
 
     def test_engine_validation_has_no_import_or_download_side_effects(self):
         self.assertFalse("vizdoom" in sys.modules)
