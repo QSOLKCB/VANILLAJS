@@ -25,9 +25,13 @@ jobs:
           python3 scripts/verify-rtx-adaptive-receipt.py
           python3 -m unittest discover -s tests -p 'test_rtx_adaptive_archive.py' -v
           (cd evidence/RTX5060TI-002 && sha256sum -c SHA256SUMS)
-      - name: Verify exact RTX5060TI-003 Git archive; screenshot remains pending
+      - name: Verify original COMMENT-001 screenshot, derivative and RTX003 exact bytes
         run: |
-          python3 scripts/verify-rtx003-comment001.py --rtx-only
+          python3 scripts/verify-rtx003-comment001.py --require-binaries \
+            --archive evidence/RTX5060TI-003/vanillajs-rtx5060ti-arcade-42329114286-1.zip \
+            --screenshot evidence/COMMENT-001/2026-11-07_original-screenshot.png \
+            --excerpt evidence/COMMENT-001/2026-11-07_x-post_excerpt.png
+          (cd evidence/COMMENT-001 && sha256sum -c SHA256SUMS)
           (cd evidence/RTX5060TI-003 && sha256sum -c SHA256SUMS)
           python3 -m unittest discover -s tests -p 'test_rtx003_comment001.py' -v
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
