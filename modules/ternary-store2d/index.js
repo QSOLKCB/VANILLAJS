@@ -80,7 +80,7 @@ function decode(name,bytes){
   const str=decoder.decode(bytes);
   if(name.endsWith('.txt'))return str;
   const parsed=JSON.parse(str),validated=canonical(parsed);
-  if(JSON.stringify(validated)!==str)throw new TypeError('noncanonical JSON document');
+  if(JSON.stringify(validated)!==str)throw new TypeError('noncanonical JSON payload');
   // API consumers receive ordinary parsed JSON objects. Validation uses
   // null-prototype scratch objects only and rejects poison keys first.
   return parsed;
