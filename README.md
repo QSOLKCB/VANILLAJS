@@ -35,6 +35,14 @@ HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoin
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
 
+## QwakeTF-style reusable broadphase scratch
+
+The existing `StaticAABBIndex` gains an opt-in `collectCandidates()` method,
+which writes the same sorted candidate indices into a caller-reused array.
+The original allocating `candidates()` remains the reference. Paired serial
+measurements and exact candidate-set tests are documented alongside the
+[pooled navigation experiment](docs/NAVIGATION_POOL.md).
+
 ## Experimental pooled navigation
 
 QwakeTF v0.2.0's exact-parity OPT work inspired a serial **pooled A***
