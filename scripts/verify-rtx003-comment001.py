@@ -41,7 +41,8 @@ def read_manifest():
     m = json.loads(MANIFEST.read_bytes())
     require(m["schemaVersion"] == 1, "unexpected manifest schema")
     require(m["githubActions"]["sourceSha"] == HEAD, "source pin changed")
-    assert set(m["rawEvidence"]) == {"rtx003", "screenshot", "excerpt"}
+    require(set(m["rawEvidence"]) == {"rtx003", "screenshot", "excerpt"},
+            "unexpected manifest members")
     for item in m["rawEvidence"].values():
         require(re.fullmatch(r"[0-9a-f]{64}", item["sha256"]), "bad SHA-256")
         require(re.fullmatch(r"[0-9a-f]{40}", item["gitBlob"]), "bad Git blob SHA-1")
@@ -125,15 +126,23 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--manifest-only", action="store_true")
     p.add_argument("--require-binaries", action="store_true")
+    p.add_argument("--rtx-only", action="store_true")
     p.add_argument("--archive", type=Path)
     p.add_argument("--screenshot", type=Path)
     p.add_argument("--excerpt", type=Path)
     args = p.parse_args()
     m = read_manifest()
     if args.manifest_only:
-        require(not args.require_binaries and not any((
+        require(not args.require_binaries and not args.rtx_only and not any((
             args.archive, args.screenshot, args.excerpt)), "choose one mode")
         print("PASS metadata only — RAW ARTIFACTS NOT VERIFIED")
+        return
+    if args.rtx_only:
+        require(not args.require_binaries and not args.screenshot and not args.excerpt,
+                "RTX-only mode takes no screenshot inputs")
+        archive = args.archive or ROOT / m["rawEvidence"]["rtx003"]["path"]
+        verify_zip(verify_bytes(m["rawEvidence"]["rtx003"], archive))
+        print("PASS exact RTX003 Git archive; SCREENSHOT BYTES NOT VERIFIED")
         return
     require(args.require_binaries or all((args.archive, args.screenshot, args.excerpt)),
             "provide all three paths or use --manifest-only")
