@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // General-purpose conservative 2-D range prefilter, based on the mathematical
-// OPT-REDUCE-001 principle used in QSOLKCB/CorpoWars3d PR #10
-// (a81b7b03d0c8b730b830f9d92459ef2193793b7f).
+// OPT-REDUCE-001 principle used in QSOLKCB/CorpoWars3d v1.2.0
+// (merge 5701949e4ef7047b715db808b777450c3bf49d53, PR #10).
 // No donor game simulation or AI source is copied.
 const point=(x,label)=>{
   if(!x||typeof x!=='object'||typeof x.x!=='number'||typeof x.y!=='number'||
