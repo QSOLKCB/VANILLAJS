@@ -57,10 +57,7 @@ def verify(source, report, expected_head):
             report.get("kind") == "qsol.vanillajs.rtx5060ti.2d-foundry.native.v1" and
             report.get("status") == "PASS" and
             report.get("candidateSha") == expected_head and
-            report.get("sourceStrictSHA256") == identity and
-            report.get("sourceEvidenceSHA256") == sha(
-                (json.dumps(source, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
-            ),
+            report.get("sourceStrictSHA256") == identity,
             "RTX2D result source identity mismatch")
     # A receipt must bind the exact source JSON file; the caller below checks
     # this again from original raw bytes, never from a reconstructed report.
@@ -136,9 +133,10 @@ def finalize(folder, expected_head, run_id, attempt):
     require(type(source_hashes) is dict and len(source_hashes) == 4,
             "source byte identity list incomplete")
     for name, h in source_hashes.items():
-        require(type(name) is str and name.startswith("modules/") or
-                name == "demos/2d-lab/world.js",
-                "nonallowlisted source path")
+        require(name in {
+            "modules/motion2d/index.js", "modules/audio2d/index.js",
+            "modules/ternary-store2d/index.js", "demos/2d-lab/world.js"
+        }, "nonallowlisted source path")
         require(_HEX64.fullmatch(h) is not None and
                 sha(regular(ROOT / name)) == h,
                 "source files changed after measured code execution")
