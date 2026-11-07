@@ -266,11 +266,22 @@ def save_file(path: Path, data: bytes):
 
 
 def seal(out: Path):
-    paths = sorted(p for p in out.iterdir() if p.is_file())
-    require(all(not p.is_symlink() and p.name != "SHA256SUMS" for p in paths),
-            "unsafe output sidecar")
+    # Replays contain only REPLAY.json; live matches additionally contain
+    # role/turn PNGs in nested directories. All observed bytes must be
+    # covered by the same checksum manifest, without symlink traversal.
+    paths = sorted(p for p in out.rglob("*") if p.is_file() or p.is_symlink())
+    require(1 <= len(paths) <= 64 and all(
+        not p.is_symlink() and p.name != "SHA256SUMS" and
+        all(not part.is_symlink() for part in p.parents if part != out)
+        for p in paths
+    ), "unsafe/unbounded or preexisting output sidecar")
+    names = [p.relative_to(out).as_posix() for p in paths]
+    require(len(set(names)) == len(names) and all(
+        ".." not in Path(name).parts and "\n" not in name and "\r" not in name
+        for name in names), "invalid output member path")
     save_file(out / "SHA256SUMS", "".join(
-        sha256(p.read_bytes()) + "  " + p.name + "\n" for p in paths
+        sha256(p.read_bytes()) + "  " + name + "\n"
+        for p, name in zip(paths, names)
     ).encode("ascii"))
 
 
