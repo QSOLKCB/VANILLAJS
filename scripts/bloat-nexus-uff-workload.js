@@ -108,7 +108,7 @@ for(const name of ['range2d','integer-replay','nexus-lattice','orbital-physics']
 const report={schemaVersion:1,
   kind:'qsol.vanillajs.bloat-nexus-uff.serial-workloads.v1',
   sourcePins:{vanillajsBase:BASE,bloatOps:'6f290dc818759ca49bcdec54b31d738b33c7946f',
-    corpoWars3dPr10:'a81b7b03d0c8b730b830f9d92459ef2193793b7f',
+    corpoWars3dV12:'5701949e4ef7047b715db808b777450c3bf49d53',
     nexus:'ac9ef5ac79008b46be3351c57cab946b93dd37e8',
     uff:'596cd732df61587aa1a9801cad1ec13483b1347f'},
   sourceSHA256,environment:{node:process.version,platform:platform(),
