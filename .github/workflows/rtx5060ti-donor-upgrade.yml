@@ -28,6 +28,10 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
     runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
     timeout-minutes: 90
+    # Python synthetic tests import scripts and tests. Never create pycache
+    # files in the exact-head checkout consumed by trusted GPU validation.
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
