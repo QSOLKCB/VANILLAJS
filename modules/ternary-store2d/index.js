@@ -4,6 +4,34 @@
 // persistence, an encrypted database or quantum/physical information storage.
 const MAX_DOCS=64,MAX_BYTES=16384,NAME=/^(?!\/)(?!.*\/\/)(?!.*(?:^|\/)\.\.?\/)[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*\.(?:txt|json)$/;
 const encoder=new TextEncoder(),decoder=new TextDecoder('utf-8',{fatal:true});
+const TRITS_PER_BYTE=6, TRIT_SPACE=729;
+// Small, immutable-by-encapsulation LUTs: 1,536 forward bytes + 1,458 inverse
+// bytes. Built once, reused for every encode/decode and store snapshot.
+const BYTE_TO_TRITS=new Uint8Array(256*TRITS_PER_BYTE);
+const TRITS_TO_BYTE=new Int16Array(TRIT_SPACE).fill(-1);
+for(let value=0;value<256;value++){
+  let rest=value;
+  for(let k=0;k<TRITS_PER_BYTE;k++){
+    BYTE_TO_TRITS[value*TRITS_PER_BYTE+k]=rest%3;
+    rest=Math.floor(rest/3);
+  }
+  TRITS_TO_BYTE[value]=value;
+}
+export function tritsForByte(value){
+  finite(value,'byte',0,255);
+  return Array.from(BYTE_TO_TRITS.subarray(value*TRITS_PER_BYTE,
+    (value+1)*TRITS_PER_BYTE));
+}
+export function byteFromTrits(value){
+  if(!Array.isArray(value)||value.length!==TRITS_PER_BYTE||
+     !value.every(n=>Number.isInteger(n)&&n>=0&&n<=2))
+    throw new TypeError('expected exactly six trits in [0,2]');
+  let code=0,weight=1;
+  for(const trit of value){code+=trit*weight;weight*=3;}
+  const byte=TRITS_TO_BYTE[code];
+  if(byte<0)throw new RangeError('six-trit value exceeds byte range');
+  return byte;
+}
 const finite=(n,name,lo,hi)=>{
   if(!Number.isSafeInteger(n)||n<lo||n>hi)throw new RangeError('invalid '+name);
   return n;
@@ -54,37 +82,40 @@ function decode(name,bytes){
   return parsed;
 }
 function trits(bytes,width){
-  const rows=Math.ceil(bytes.length*6/width),grid=Array.from({length:rows},()=>Array(width).fill(0));
+  const rows=Math.ceil(bytes.length*TRITS_PER_BYTE/width);
+  const grid=Array.from({length:rows},()=>Array(width).fill(0));
   let offset=0;
-  for(const value of bytes) {
-    let n=value;
-    for(let i=0;i<6;i++){
-      grid[Math.floor(offset/width)][offset%width]=n%3;
-      n=Math.floor(n/3);offset++;
-    }
-  }
+  for(const value of bytes)for(let i=0;i<TRITS_PER_BYTE;i++,offset++)
+    grid[Math.floor(offset/width)][offset%width]=
+      BYTE_TO_TRITS[value*TRITS_PER_BYTE+i];
   return grid;
 }
 function fromTrits(rows,width,byteLength){
-  const total=byteLength*6;
-  const bytes=new Uint8Array(byteLength);
+  const total=byteLength*TRITS_PER_BYTE,bytes=new Uint8Array(byteLength);
   let at=0;
   for(let i=0;i<byteLength;i++){
-    let factor=1,value=0;
-    for(let j=0;j<6;j++){
-      const t=rows[Math.floor(at/width)][at%width];
-      value+=t*factor;factor*=3;at++;
+    let code=0,weight=1;
+    for(let j=0;j<TRITS_PER_BYTE;j++,at++){
+      code+=rows[Math.floor(at/width)][at%width]*weight;
+      weight*=3;
     }
-    if(value>255)throw new RangeError('invalid six-trit UTF-8 byte');
-    bytes[i]=value;
+    const byte=TRITS_TO_BYTE[code];
+    if(byte<0)throw new RangeError('invalid six-trit UTF-8 byte');
+    bytes[i]=byte;
   }
-  for(;at<rows.length*width;at++)if(rows[Math.floor(at/width)][at%width]!==0)
-    throw new RangeError('nonzero trailing trit');
+  for(;at<rows.length*width;at++)
+    if(rows[Math.floor(at/width)][at%width]!==0)
+      throw new RangeError('nonzero trailing trit');
   if(total>rows.length*width)throw new RangeError('missing trit cells');
   return bytes;
 }
 export class TernaryGridStore2D {
-  #docs=new Map();#maxBytes;#columns;
+  #docs=new Map();#maxBytes;#columns;#cached=null;
+  #builds=0;#hits=0;#invalidations=0;#unchangedWrites=0;
+  #invalidate(){this.#cached=null;this.#invalidations++;}
+  cacheStats(){return Object.freeze({builds:this.#builds,hits:this.#hits,
+    invalidations:this.#invalidations,unchangedWrites:this.#unchangedWrites,
+    cached:this.#cached!==null});}
   constructor({columns=27,maxBytes=MAX_BYTES}={}){
     if(![9,27,81].includes(columns))throw new RangeError('columns must be 9,27,81');
     this.#maxBytes=finite(maxBytes,'maxBytes',1,MAX_BYTES);
@@ -101,8 +132,15 @@ export class TernaryGridStore2D {
     if((!this.#docs.has(name)&&this.size===MAX_DOCS)||
        remaining+bytes.length>this.#maxBytes)
       throw new RangeError('bounded ternary data storage exhausted');
-    // Publish a fresh byte buffer only after all validation succeeds.
+    // Identical bytes are an invariant reuse hit: preserve the current cache.
+    const current=this.#docs.get(name);
+    if(current&&current.length===bytes.length&&current.every((b,i)=>b===bytes[i])){
+      this.#unchangedWrites++;return bytes.length;
+    }
+    // Publish only after all validation succeeds; failed writes do not
+    // invalidate successful earlier cache entries or result snapshots.
     this.#docs.set(name,bytes);
+    this.#invalidate();
     return bytes.length;
   }
   get(name){
@@ -110,17 +148,32 @@ export class TernaryGridStore2D {
     const bytes=this.#docs.get(name);
     return bytes?decode(name,bytes):null;
   }
-  delete(name){filename(name);return this.#docs.delete(name);}
-  clear(){this.#docs.clear();}
+  delete(name){
+    filename(name);const deleted=this.#docs.delete(name);
+    if(deleted)this.#invalidate();
+    return deleted;
+  }
+  clear(){if(this.#docs.size){this.#docs.clear();this.#invalidate();}}
   snapshot(){
-    const entries=[],buffer=[];
-    for(const name of this.names()){
-      const bytes=this.#docs.get(name),offset=buffer.length;
-      buffer.push(...bytes);
-      entries.push({name,offset,length:bytes.length});
-    }
-    return {schemaVersion:1,columns:this.#columns,maxBytes:this.#maxBytes,
-      byteLength:buffer.length,entries,rows:trits(buffer,this.#columns)};
+    if(!this.#cached){
+      const entries=[],buffer=[];
+      for(const name of this.names()){
+        const bytes=this.#docs.get(name),offset=buffer.length;
+        buffer.push(...bytes);
+        entries.push({name,offset,length:bytes.length});
+      }
+      this.#cached={schemaVersion:1,columns:this.#columns,
+        maxBytes:this.#maxBytes,byteLength:buffer.length,
+        entries,rows:trits(buffer,this.#columns)};
+      this.#builds++;
+    }else this.#hits++;
+    // Always return a detached ordinary object: consumers cannot alter
+    // either a future snapshot or the internal LUT/cache by mutation.
+    const snap=this.#cached;
+    return {schemaVersion:snap.schemaVersion,columns:snap.columns,
+      maxBytes:snap.maxBytes,byteLength:snap.byteLength,
+      entries:snap.entries.map(entry=>({...entry})),
+      rows:snap.rows.map(row=>[...row])};
   }
   static fromSnapshot(data){
     if(!plain(data)||Object.keys(data).sort().join(',')!==
