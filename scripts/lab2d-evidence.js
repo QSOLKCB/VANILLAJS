@@ -10,6 +10,15 @@ import {createLab2D,stepLab2D,snapshotLab2D,LAB2D_MODES,rtsRoute2D}
 import {createSound2D} from '../modules/audio2d/index.js';
 import {TernaryGridStore2D} from '../modules/ternary-store2d/index.js';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+// Portable canonical JSON for evidence identity; arrays preserve order,
+// objects have sorted keys, and performance observations are outside identity.
+const canonical=value=>JSON.stringify(value,(key,v)=>{
+  if(v&&typeof v==='object'&&!Array.isArray(v)){
+    const out={};for(const name of Object.keys(v).sort())out[name]=v[name];
+    return out;
+  }
+  return v;
+});
 const sourceFiles=['modules/motion2d/index.js','modules/audio2d/index.js',
   'modules/ternary-store2d/index.js','demos/2d-lab/world.js'];
 const pinned=Object.fromEntries(sourceFiles.map(name=>
@@ -85,7 +94,7 @@ const strict={schemaVersion:1,kind:'qsol.vanillajs.lab2d.evidence.v1',
   sourceBaseline:'34040c330a4943d4b55104c78935a25b3ab94973',
   sourceSHA256:pinned,scenes,rtsRouteLength:rtsRoute2D().length,
   audio:audioReport,ternary:storeReport};
-const report={strict,strictSHA256:sha(JSON.stringify(strict)),
+const report={strict,strictSHA256:sha(canonical(strict)),
   observations:{device:'hosted-or-owner CPU',hardwareGPU:'not measured',
     unit:'milliseconds',profile:'serial Node; 2 warmups; 7 trials; no time gate',
     cacheComparison:perf}};
