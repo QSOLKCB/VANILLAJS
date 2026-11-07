@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "designation": "RTX5060TI-003+COMMENT-001",
+  "rawEvidence": {
+    "rtx003": {
+      "path": "evidence/RTX5060TI-003/vanillajs-rtx5060ti-arcade-42329114286-1.zip",
+      "filename": "vanillajs-rtx5060ti-arcade-42329114286-1.zip",
+      "size": 25481,
+      "sha256": "2b4377fa147fb951d9a918f94716518865e0696da328140e0ac323556f46b5da",
+      "gitBlob": "4b35e831027783618b6508a898883456c17b6aef"
+    },
+    "screenshot": {
+      "path": "evidence/COMMENT-001/2026-11-07_original-screenshot.png",
+      "filename": "Screenshot From 2026-11-07 12-45-25(1).png",
+      "size": 357343,
+      "sha256": "7b575405c975030c952d04c12441e2e9b85d0d55acc7dfa472fdcf3e95e06654",
+      "gitBlob": "d3cb1bbad91c316ec5e4e3607fff68d1b7c48320"
+    },
+    "excerpt": {
+      "path": "evidence/COMMENT-001/2026-11-07_x-post_excerpt.png",
+      "size": 17205,
+      "sha256": "0840808768ddab18fa6faca9df8e92acf67a27817d5a17b6c48845680aaa9d86",
+      "gitBlob": "0c970a6f7ed71092ed2b0c18cbcb05d2b4ef8b5c",
+      "derivedFrom": "screenshot",
+      "crop": [
+        424,
+        244,
+        1094,
+        798
+      ],
+      "paletteColours": 16
+    }
+  },
+  "githubActions": {
+    "runId": 42329114286,
+    "jobId": 128271297981,
+    "artifactId": 13556233173,
+    "attempt": 1,
+    "sourceSha": "3f5518a168652a003e8db9aa6dc0371ddb4782ea"
+  },
+  "relatedDataset": {
+    "citation": "SLADE, T. (2026). COMMENT-001: YouTube comment incident and AI-mediated attribution claims — an image dataset (Version 1.1.0) [Dataset]. Zenodo.",
+    "doi": "10.5281/zenodo.24026140",
+    "verification": "citation supplied by maintainer; landing page not independently retrievable in this pass"
+  },
+  "claimsBoundary": "The screenshot documents a disputed allegation; maintainer denies copying; the screenshot alone does not establish copying or adjudicate authorship."
+}

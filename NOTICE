@@ -104,3 +104,16 @@ QSOLKCB/ARCADE PR #2 and release v0.4.0 at
 drawing on its explicit frame invalidation and retained-terminal contracts.
 No arcade cabinet mechanics, artwork, music, game assets or runtime code were
 copied. See docs/FRAME_GATE.md for source pins and correctness limitations.
+
+Authorship and disputed attribution: VANILLAJS is a QSOL-IMC project under
+Trent Slade's maintainership. The maintainer expressly states that no work
+was stolen or copied from the X account shown in the COMMENT-001 capture.
+This is a maintainer statement, not a forensic finding. The screenshot
+contains an allegation without an identified matching source file, commit
+or asset; its presence does not demonstrate that the allegation is true.
+The record is identified by the original screenshot SHA-256
+7b575405c975030c952d04c12441e2e9b85d0d55acc7dfa472fdcf3e95e06654
+and a related dataset citation provided by the maintainer:
+Slade, T. (2026), COMMENT-001: YouTube comment incident and AI-mediated
+attribution claims — an image dataset, v1.1.0,
+DOI 10.5281/zenodo.24026140. See evidence/COMMENT-001/README.md.
