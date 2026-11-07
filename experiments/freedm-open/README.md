@@ -60,10 +60,14 @@ per response), along with error category, original response text hash,
 `done_reason`, token/timing fields and thinking length/hash when present.
 Only opt-in evidence publication can expose these untrusted model outputs.
 
-A complete replay now writes a valid research receipt whether its
-`status` is `PASS` or `PARTIAL`. **Live-mode execution refuses
-`PARTIAL`** and requires all four candidates to emit valid actions for
-every paired frame before starting the FreeDM smoke and real match.
+A replay with **every expected provider response completed** now writes a
+valid research receipt whether its `status` is `PASS` or `PARTIAL`.
+Completed replies with malformed control JSON are counted as
+`INVALID_ACTION`; failed Ollama HTTP/transport/model requests are
+`LOCAL_ERROR`, producing `INCOMPLETE` and a failing workflow instead.
+**Live-mode execution refuses both `PARTIAL` and `INCOMPLETE`**, and
+requires all four candidates to emit valid actions for every paired
+frame before starting the FreeDM smoke and real match.
 
 ## Owner-controlled preparation (one time)
 
