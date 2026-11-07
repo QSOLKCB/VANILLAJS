@@ -102,7 +102,7 @@
       ],
       "environment": "pure-js",
       "status": "experimental",
-      "description": "Exact Float32 box batching, conservative ternary frustum classification and bounded static AABB indexing"
+      "description": "Exact Float32 box batching, conservative ternary frustum classification and bounded static AABB indexing with reusable candidate collection"
     },
     "terrain": {
       "entry": "modules/terrain/index.js",
