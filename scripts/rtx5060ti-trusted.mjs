@@ -197,7 +197,7 @@ async function main(){
       for(const file of ['report.json','SUMMARY.md','SHA256SUMS'])
         rmSync(join(output,file),{force:true});
       const failure={schemaVersion:1,kind:'qsol.vanillajs.rtx5060ti.failed.v1',
-        status:'FAILED',timeUtc:new Date().toISOString(),baselineSha:BASELINE,
+        status:'FAILED',timeUtc:new Date().toISOString(),baselineSha:baseline,
         candidateSha:head,nvidiaGpu:gpu,chromeVersion,
         error:{name:error?.name??'Error',message:error?.message??String(error)},
         note:'Partial or failed execution is not a validated performance result.'};
