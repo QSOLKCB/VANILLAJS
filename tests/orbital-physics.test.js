@@ -15,7 +15,7 @@ test('UFF-compatible SI point-mass constants, acceleration and circular speed',(
     {center:[100,0,-50]});
   assert.deepEqual(shifted,a);
 });
-test('velocity-Verlet conserves energy and nearly closes a circular orbit',()=>{
+test('velocity-Verlet bounds one-orbit energy and phase drift at fixed resolution',()=>{
   // 400-km altitude Earth orbit with approximately 5-second steps; reference period uses
   // T=2 pi sqrt(r^3/(GM)). This is not a per-frame GPU metric.
   const mass=5.9722e24,r=6371e3+400e3,speed=circularSpeedSI(mass,r);
