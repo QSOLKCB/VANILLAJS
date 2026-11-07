@@ -88,3 +88,12 @@ source commit 7b42cae4d7f46a36f00e86beee35cf4258994dab, merged as
 Only general-purpose bounded appearance interfaces are reimplemented here;
 no named characters, art, audio, skins, weapons, maps or game content are copied.
 See docs/APPEARANCE.md for contract and validation limitations.
+
+The experimental PooledPathfinder implementation is an independently adapted
+generic A* workspace inspired by QSOLKCB/QwakeTF PR #4
+(46367b7b946b0254aa7cbdbb4a454735b81e3052, merged as
+3852d20c9744350b883e38560f492a5683f2e492), documented in
+QSOLKCB/QwakeTF/docs/OPTIMIZATION.md (OPT-INV-001, OPT-POOL-001).
+It preserves VANILLAJS's previous result/tie-order contract; no QwakeTF game
+data, assets, rendering code or third-party runtime dependencies are copied.
+See docs/NAVIGATION_POOL.md for provenance and parity limits.

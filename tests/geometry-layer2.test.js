@@ -97,3 +97,58 @@ test('static spatial index matches canonical cast for 1,800 randomized rays',()=
   assert.throws(()=>idx.candidates([1e10,0,0],[0,0,0]),TypeError);
   assert.deepEqual(new StaticAABBIndex([]).candidates([0,0,0],[1,0,0]),[]);
 });
+
+
+test('retained AABB candidate collection matches allocating reference for 2,400 sweeps',()=>{
+  const rnd=(()=>{let s=0x9e3779b9;return ()=>((s=(Math.imul(s,1664525)+1013904223)>>>0)/0x100000000);})();
+  for(let round=0;round<8;round++){
+    const boxes=Array.from({length:112},(_,i)=>{
+      const c=[(rnd()-.5)*400,(rnd()-.5)*200,(rnd()-.5)*400],r=.1+rnd()*10;
+      return {id:'item-'+i,box:{min:c.map(x=>x-r),max:c.map(x=>x+r)}};
+    });
+    const idx=new StaticAABBIndex(boxes),buffer=[999,999],same=buffer;
+    for(let j=0;j<300;j++){
+      const origin=[(rnd()-.5)*440,(rnd()-.5)*240,(rnd()-.5)*440],
+        delta=[(rnd()-.5)*180,(rnd()-.5)*100,(rnd()-.5)*180];
+      const options={halfSize:(j%8)*.125};
+      const expected=idx.candidates(origin,delta,options);
+      assert.equal(idx.collectCandidates(origin,delta,buffer,options),same);
+      assert.deepEqual(buffer,expected,'retained candidates must preserve exact indices and order');
+      if(j%19===0){
+        const hit=idx.castSegment(origin,delta,options);
+        const reference=castSegment(origin,delta,boxes,options);
+        assert.deepEqual(hit,reference,'reused candidate collection must not disturb indexed casts');
+      }
+    }
+  }
+});
+
+test('retained AABB collection clears stale output and fails before modifying invalid callers',()=>{
+  const boxes=[
+    {id:'b',box:{min:[-1,-1,-2],max:[1,1,-1]}},
+    {id:'a',box:{min:[-1,-1,-2],max:[1,1,-1]}},
+    {id:'c',box:{min:[4,-1,-2],max:[6,1,-1]}}
+  ];
+  const index=new StaticAABBIndex(boxes),out=[999];
+  assert.deepEqual(index.collectCandidates([0,0,0],[0,0,-3],out),[0,1]);
+  assert.deepEqual(index.collectCandidates([0,0,0],[0,0,0],out),[]);
+  assert.equal(index.collectCandidates([5,0,0],[0,0,-3],out),out);
+  assert.deepEqual(out,[2]);
+  out.push(999,999);
+  assert.deepEqual(index.collectCandidates([0,0,0],[0,0,-3],out),[0,1]);
+  for(const [origin,delta,options] of [
+    [[Infinity,0,0],[0,0,0],{}],
+    [[0,0,0],[1e10,0,0],{}],
+    [[0,0,0],[0,0,0],{halfSize:-1}],
+    [[0,0,0],[0,0,0],{halfSize:NaN}]
+  ]){
+    const before=[...out];
+    assert.throws(()=>index.collectCandidates(origin,delta,out,options));
+    assert.deepEqual(out,before,'invalid query must not discard prior output');
+  }
+  assert.throws(()=>index.collectCandidates([0,0,0],[0,0,0],{}),TypeError);
+  const empty=new StaticAABBIndex([]),scratch=[9,8];
+  assert.equal(empty.collectCandidates([0,0,0],[2,0,0],scratch),scratch);
+  assert.deepEqual(scratch,[]);
+  assert.deepEqual(empty.candidates([0,0,0],[2,0,0]),[]);
+});
