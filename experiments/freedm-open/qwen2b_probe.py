@@ -271,8 +271,7 @@ def execute(args, *, opener=None, source_loader=None, inventory=None):
     out = args.output
     require(not out.exists() and not out.is_symlink() and
             root not in out.resolve().parents and
-            out.resolve() != args.source.resolve() and
-            20000 > 1000,  # constant bound; no runtime ports are opened
+            out.resolve() != args.source.resolve(),
             "refusing to overwrite source or evidence checkout")
     replay.check_checkout(args.head)
     original = (source_loader or replay.load_terra_archive)(args.source)
