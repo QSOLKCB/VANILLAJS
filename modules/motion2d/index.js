@@ -50,7 +50,9 @@ export function stepBody2D(body,controls={},{
     minY=int(bounds.minY,'minY'),maxY=int(bounds.maxY,'maxY');
   if(minX>=maxX||minY>=maxY||a.x<minX||a.x>maxX||a.y<minY||a.y>maxY)
     throw new RangeError('invalid body/bounds');
-  groundY=int(groundY,'groundY',minY,maxY);
+  // RTS/SHMUP/car have no platform ground plane; their valid world bounds
+  // need not include the default Y=0.
+  if(profile==='platform')groundY=int(groundY,'groundY',minY,maxY);
   let vx=a.vx,vy=a.vy,heading=a.heading,grounded=a.grounded;
   switch(profile){
     case 'rts':
