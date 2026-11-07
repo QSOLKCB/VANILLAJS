@@ -30,6 +30,15 @@ This is the maintainer's statement, preserved as such. It must not be misreprese
 
 The excerpt is a **derived, reduced-colour visual aid**, not a byte-for-byte copy of the full source screenshot. Use the original screenshot SHA-256 to identify the immutable original if supplied independently. Do not label the excerpt itself a forensic-original capture.
 
+## Screenshot exhibits
+
+- [Original full-frame screenshot, unchanged](2026-11-07_original-screenshot.png) — SHA-256 and source dimensions pinned above
+- [Focused reduced-colour excerpt, explicitly derived](2026-11-07_x-post_excerpt.png) — a review aid, not a substitute for the original
+
+![Reduced-colour excerpt of user-provided X screenshot containing a disputed attribution post](2026-11-07_x-post_excerpt.png)
+
+The image links will resolve only after both original and derived PNG bytes have been committed and verified. The PR remains draft until that happens. A screenshot must not be interpreted as proof of the truth of the statements displayed in it.
+
 ## Research reference provided by the maintainer
 
 > SLADE, T. (2026). *COMMENT-001: YouTube comment incident and AI-mediated attribution claims — an image dataset* (Version 1.1.0) [Dataset]. Zenodo. https://doi.org/10.5281/zenodo.24026140
