@@ -52,6 +52,21 @@ test('gravity, energy and initial conditions are independent of caller mutation'
   near(specificOrbitalEnergySI({position:[5,0,0],velocity:[0,2,0],
     center:[1,0,0],mass:1e10}),2-G*1e10/4,1e-12);
 });
+test('a long step cannot tunnel across the excluded central mass',()=>{
+  const orbit=new KeplerOrbit({mass:1000,position:[2,0,0],
+    velocity:[-4,0,0],minimumRadius:.5});
+  const original=orbit.snapshot();
+  assert.throws(()=>orbit.step(1),/crosses the excluded central radius/);
+  assert.deepEqual(orbit.snapshot(),original);
+  // The true point singularity is protected even without a configured
+  // nonzero exclusion: passing through r=0 must not be accepted.
+  const point=new KeplerOrbit({mass:1000,position:[2,0,0],
+    velocity:[-4,0,0]});
+  const before=point.snapshot();
+  assert.throws(()=>point.step(1),/crosses the excluded central radius/);
+  assert.deepEqual(point.snapshot(),before);
+});
+
 test('invalid SI values, singularities and pathological steps fail without mutation',()=>{
   for(const invalid of [
     {mass:0,position:[1,0,0],velocity:[0,0,0]},
