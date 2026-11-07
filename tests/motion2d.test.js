@@ -25,6 +25,22 @@ test('RTS top-down friction, collision and boundary clamp are deterministic',()=
     {bounds:{minX:-100,maxX:2,minY:-100,maxY:100}});
   assert.equal(edge.x,2);assert.equal(edge.vx,0);
 });
+test('top-down genres accept translated bounds that exclude platform ground',()=>{
+  const translated={minX:50,maxX:500,minY:50,maxY:500};
+  const body=createBody2D({x:100,y:100});
+  for(const profile of ['rts','shmup','car']){
+    const moved=stepBody2D(body,{x:1,y:1,throttle:1},
+      {profile,bounds:translated});
+    assert.ok(moved.x>=50&&moved.x<=500&&moved.y>=50&&moved.y<=500);
+    // Ignored platform-only groundY cannot alter a top-down trajectory.
+    assert.deepEqual(moved,stepBody2D(body,{x:1,y:1,throttle:1},
+      {profile,bounds:translated,groundY:-1000}));
+  }
+  assert.throws(()=>stepBody2D(body,{x:1},{profile:'platform',bounds:translated}),
+    /groundY/);
+  assert.doesNotThrow(()=>stepBody2D(body,{x:1},
+    {profile:'platform',bounds:translated,groundY:50}));
+});
 test('SHMUP diagonal and platform jump/fall trajectories are repeatable',()=>{
   const s=stepBody2D(createBody2D(),{x:-1,y:1},{profile:'shmup',bounds});
   assert.deepEqual([s.x,s.y,s.vx,s.vy],[-16,16,-16,16]);
