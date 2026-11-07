@@ -191,6 +191,33 @@ for freeze and publication.
 
 **Phonon-inspired/QEC acoustic follow-up (proposed only):** [lattice and acoustic addendum](docs/DEMO_SYNTH_LATTICE_ACOUSTIC_ADDENDUM.md) distinguishes a 27-site GF(3) event lattice from a 512-voxel RGB scene, defines a classical coupled-oscillator audio/visual mapping and repairs the supplied Hamming syndrome mapping. QEC v177 acoustic source, noise, receiver, reference-gate, transport and evidence documents are candidate reference adapters; they are not physical-quantum audio improvements. Validate actual NB eigenvalue radius independently of normalized flow before any spectral phase-boundary claim. Reuse Psycle as a modular workflow reference, not a native plugin runtime. The first four-channel demo remains the next implementation milestone.
 
+## 2D-first movement, sound and ternary storage — experimental
+
+- Introduce `motion2d` with four fixed-tick bounded integer movement profiles:
+  RTS top-down, SHMUP, platform jump/gravity, and top-down car steering.
+  Reuse existing NavigationGrid/findPath/PooledPathfinder/FlowField, not a
+  competing 2D A* implementation. Render adapter reverses the Y axis.
+- Introduce `audio2d` with pure four-lane 48kHz PCM16/WAV procedural
+  effects. No sample identity from live AudioContext, no automatic playback
+  or third-party sound libraries.
+- Introduce `ternary-store2d` with canonical TXT/JSON bytes represented
+  as six trits per UTF-8 byte, 9/27/81-column arrays, full 256-entry byte LUT,
+  bounded inverse decode, immutable-by-ownership snapshots and OPT invariant
+  reuse. This is not compression or durable local browser storage.
+- Implement four-mode `2d-lab` and retained source/JSON CPU receipts,
+  visual Chromium smoke tests, a manually dispatched post-merge RTX
+  browser workflow, and a separate manually approved bounded GPT-6.1 Sol
+  evidence-review workflow using an owner-configured GitHub secret.
+- Do not trigger physical RTX or paid agent workflows from normal PR/push CI;
+  agent opinions are not correctness gates. Keep RTX001–005 archives untouched.
+- Next slices: 2D collision shape sweeps, continuous platform contact, more
+  complete car dynamics and configurable game sound, followed by explicit
+  2D→3D scene-coordinate adapters and DEMO//SYNTH tracker integration.
+
+See [2D Foundation](docs/2D_FOUNDATION.md); all APIs remain experimental.
+Post-merge GPU and API-credit execution require a separately reviewed and
+explicitly owner-dispatched workflow.
+
 ## Proposed next slices — not implemented
 
 1. **FPS expansion:** sloped terrain/capsules, rotating platforms, rotating-target

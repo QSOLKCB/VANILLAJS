@@ -149,3 +149,14 @@ November 2026 opt-in donor upgrade:
   movement, gamepad, replay and frame-gating patterns rather than recopied.
 No donor gameplay, art, assets, audio, vendored code or nonstandard runtime
 packages were copied. See docs/DONOR_UPGRADE_2026_11.md for source pins.
+
+2D Foundry (November 2026) supplies original, experimental integer
+two-dimensional movement, four-channel procedural PCM sound and bounded
+ternary encoded TXT/JSON array storage. The source references are
+QSOLKCB/VANILLAJS navigation, navigation-pool, time and integer math;
+QSOLKCB/OPT@7556dd36acd53ed3ed538fd03b1db44e5c1ec869 (OPT-INV-001 and
+OPT-DSP-001 high-level patterns); SPECTRAL and TONELAB deterministic
+PCM/WAV laboratory contracts; and QEC's separate data/sonification receipts.
+No donor code, commercial audio assets, hardware QEC or native plugin runtime
+are copied/imported. The 3×3×3 and 8×8×8 mathematical information-lattice
+research remains a separate, proposed DEMO//SYNTH phase.

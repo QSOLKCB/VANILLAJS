@@ -240,6 +240,27 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Bounded 3D constant-velocity intercept prediction with optional shooter-velocity inheritance"
+    },
+    "motion2d": {
+      "entry": "modules/motion2d/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Deterministic integer X/Y movement for RTS, shooter, platformer and car with explicit bounds"
+    },
+    "audio2d": {
+      "entry": "modules/audio2d/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Four-lane, bounded, integer-sample procedural audio and 48kHz mono PCM16LE WAV output"
+    },
+    "ternary-store2d": {
+      "entry": "modules/ternary-store2d/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Canonical UTF-8 TXT/JSON to 27-column radix-3 arrays with 256-byte LUT and invariant snapshot reuse"
     }
   },
   "recipes": {
