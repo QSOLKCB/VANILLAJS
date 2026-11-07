@@ -96,8 +96,13 @@ jobs:
           python3 - "$FREEDM_OPEN_EVIDENCE/replay/REPLAY.json" >> "$GITHUB_STEP_SUMMARY" <<'PY'
           import json,sys
           receipt=json.load(open(sys.argv[1],encoding='utf8'))
-          if receipt['status']!='PASS' or len(receipt['summary'])!=4:
+          expected=len(receipt['modelInventory'])*4*len(receipt['selectedRoundsPerRole'])
+          if (not receipt.get('executionComplete') or
+              receipt['status'] not in ('PASS','PARTIAL') or
+              len(receipt['summary'])!=4 or len(receipt['samples'])!=expected):
               raise SystemExit('incomplete four-model paired replay')
+          print('Execution:',receipt['status'],'; valid actions are a separate quality metric')
+          print('Protocol:',receipt['protocol'])
           print('## Four open VLMs on exact Terra in-game frames')
           print()
           print('Source match:',receipt['terraBaseline']['runId'])
@@ -108,6 +113,7 @@ jobs:
                     '; same move as Terra',metrics['sameMoveAsTerra'],
                     '; median local request ms',metrics['medianRequestMs'])
           print()
+          print('Invalid actions are retained and not repaired; this is source-backed research.')
           print('No Doom gameplay by open models in this phase. No API charges.')
           PY
       - name: Confirm FreeDM engine and source IWAD for optional live open-model pilot
@@ -115,6 +121,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Only a clean 4/4 candidate readiness assessment permits the
+          # optional live engine to start. Partial replay is useful data,
+          # but cannot silently produce neutral actions for broken models.
+          python3 - "$FREEDM_OPEN_EVIDENCE/replay/REPLAY.json" <<'PY'
+          import json,sys
+          r=json.load(open(sys.argv[1],encoding='utf-8'))
+          if not r.get('liveReadiness',{}).get('eligible'):
+              raise SystemExit('LIVE REFUSED: at least one local vision model cannot generate valid controls; inspect source-bound replay JSON')
+          print('Live readiness gate: all four local models passed each paired action')
+          PY
           command -v uv
           if [ -z "$WAD_OVERRIDE" ]; then
             WAD_OVERRIDE="$HOME/Games/FreeDM/freedm.wad"

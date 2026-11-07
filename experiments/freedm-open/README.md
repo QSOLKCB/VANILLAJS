@@ -1,8 +1,11 @@
 # FreeDM — four open-weight vision models vs Terra
 
-**Status: experimental / unexecuted on owner hardware.** This is a
-zero-paid-API follow-up to the real four-Terra FreeDM match, run 42374695320.
-It preserves the historical match bytes and its previously reported results.
+**Status: first owner-run paired replay completed; live open-model
+gameplay has NOT run.** The original zero-API [OPENVLM-001 diagnostic
+receipt](OPENVLM-001.md) contains 48 completed local inferences, of which
+20 generated valid six-field actions and 28 did not. The original evidence
+and Terra match input bytes are preserved; the new v2 protocol is a proposed
+corrective experiment, not a retroactive amendment to the first run.
 
 ## Two distinct comparisons
 
@@ -39,6 +42,32 @@ Sources: https://ollama.com/library/qwen3-vl,
 https://ollama.com/library/qwen2.5vl,
 https://ollama.com/library/moondream and
 https://github.com/ollama/ollama/blob/main/docs/api.md.
+
+## Output quality versus execution success
+
+The initial owner run [42379184873](https://github.com/QSOLKCB/VANILLAJS/actions/runs/42379184873)
+completed 48/48 inferences, but returned **28 invalid model action
+outputs**. That is a complete `PARTIAL` research result, not a valid
+four-model live-play readiness gate. The new protocol requests an
+explicit six-field Ollama JSON schema; only the Qwen3-VL 2B candidate
+also receives `think: false` and a 384-token cap to probe its previously
+empty final responses. Other models retain their default thinking and
+192-token caps. All differences are recorded as changed experimental
+settings, not concealed in a supposedly identical baseline.
+
+Invalid text is preserved in the new sealed JSON (at most 4096 characters
+per response), along with error category, original response text hash,
+`done_reason`, token/timing fields and thinking length/hash when present.
+Only opt-in evidence publication can expose these untrusted model outputs.
+
+A replay with **every expected provider response completed** now writes a
+valid research receipt whether its `status` is `PASS` or `PARTIAL`.
+Completed replies with malformed control JSON are counted as
+`INVALID_ACTION`; failed Ollama HTTP/transport/model requests are
+`LOCAL_ERROR`, producing `INCOMPLETE` and a failing workflow instead.
+**Live-mode execution refuses both `PARTIAL` and `INCOMPLETE`**, and
+requires all four candidates to emit valid actions for every paired
+frame before starting the FreeDM smoke and real match.
 
 ## Owner-controlled preparation (one time)
 

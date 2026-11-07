@@ -31,6 +31,30 @@ TERRA_SUMS_SHA256 = "54fd28f5979c99f23721f6248fd94e054df1f3d73d3551932b47a9aa19e
 TERRA_WAD_SHA256 = "d9adc4d792627e7fc47b09067b15486da724010c71dd12831e1cf8e0755b68ad"
 MODEL_TAGS = ("qwen3-vl:2b", "qwen3-vl:4b-instruct",
               "qwen2.5vl:3b", "moondream:1.8b")
+# Strict local JSON Schema is a new protocol version, not identical to the
+# earlier /api/chat format="json" run. The original run/receipt is immutable.
+PROTOCOL = "qsol.freedm.openvlm.structured-action.v2"
+ACTION_SCHEMA = {
+    "type": "object", "additionalProperties": False,
+    "required": ["move", "turn", "fire", "use", "sprint", "tactic"],
+    "properties": {
+        "move": {"type": "string", "enum": ["forward", "backward",
+                                           "left", "right", "stop"]},
+        "turn": {"type": "string", "enum": ["left", "right", "none"]},
+        "fire": {"type": "boolean"}, "use": {"type": "boolean"},
+        "sprint": {"type": "boolean"},
+        "tactic": {"type": "string", "maxLength": 160},
+    },
+}
+# Distinct model profiles are recorded as independent experimental factors.
+# Qwen3-VL:2B exhausted all 192 generation tokens with empty action content
+# in the owner's v1 evidence. Disable its thinking and allow more output.
+def generation_profile(model: str) -> dict:
+    require(model in MODEL_TAGS, "nonallowlisted model")
+    settings = {"temperature": 0, "seed": 17, "num_ctx": 2048,
+                "num_predict": 384 if model == "qwen3-vl:2b" else 192}
+    return {"options": settings, "think": False if model == "qwen3-vl:2b" else None,
+            "format": ACTION_SCHEMA}
 BASE = "http://127.0.0.1:11434"
 FRAME_COUNT = 12
 MAX_FILE_BYTES = 256 * 1024
@@ -183,23 +207,38 @@ def installed_models(*, opener=None) -> dict:
 def vision_action(model: str, prompt: str, screenshot: bytes, *, opener=None) -> dict:
     require(model in MODEL_TAGS, "nonallowlisted model")
     checked_png(screenshot)
+    profile = generation_profile(model)
     request = {
-        "model": model, "stream": False, "format": "json",
-        "keep_alive": "10m",
-        "options": {"temperature": 0, "seed": 17,
-                    "num_predict": 192, "num_ctx": 2048},
+        "model": model, "stream": False, "format": profile["format"],
+        "keep_alive": "10m", "options": profile["options"],
         "messages": [{"role": "user", "content": prompt,
                       "images": [base64.b64encode(screenshot).decode("ascii")]}],
     }
+    # Only the Qwen3 2B anomaly is subject to an explicit no-thinking
+    # intervention. Other model defaults remain unchanged and documented.
+    if profile["think"] is not None:
+        request["think"] = profile["think"]
     started = time.perf_counter_ns()
     data = local_http("/api/chat", request, opener=opener, timeout=100)
     wall_ns = time.perf_counter_ns() - started
     text = data.get("message", {}).get("content")
     require(type(text) is str and len(text) <= 4096, "missing/oversized local action text")
     raw_hash = sha256(text.encode("utf-8"))
-    metadata = {"wallNs": wall_ns, "rawTextSHA256": raw_hash,
-                "providerModel": data.get("model"),
-                "done": data.get("done")}
+    response_message = data.get("message", {})
+    thinking = response_message.get("thinking")
+    metadata = {
+        "wallNs": wall_ns, "rawTextSHA256": raw_hash,
+        "providerModel": data.get("model"), "done": data.get("done"),
+        "doneReason": data.get("done_reason"),
+        "protocol": PROTOCOL,
+        "numPredict": profile["options"]["num_predict"],
+        "thinkingRequested": profile["think"],
+        "format": "exact-six-field-json-schema",
+    }
+    if type(thinking) is str:
+        # Preserve only thinking identity/length, not private model reasoning.
+        metadata["thinkingCharacters"] = len(thinking)
+        metadata["thinkingSHA256"] = sha256(thinking.encode("utf-8"))
     for name in ("prompt_eval_count", "eval_count", "total_duration",
                  "load_duration", "prompt_eval_duration", "eval_duration"):
         value = data.get(name)
@@ -207,13 +246,19 @@ def vision_action(model: str, prompt: str, screenshot: bytes, *, opener=None) ->
             metadata[name] = value
     require(metadata["providerModel"] == model and metadata["done"] is True,
             "local model reply mismatch/incomplete")
-    # Models can produce invalid JSON. Record it as a failure, never transform
-    # guesses, strip Markdown, retry or substitute a different model.
+    # Raw invalid output is intentionally retained for diagnosis, bounded to
+    # 4096 chars and untrusted. Never repair it, auto-retry or count it valid.
     try:
         parsed = parse_action(text)
     except (ValueError, TypeError, json.JSONDecodeError) as error:
-        return {"status": "INVALID_ACTION", "meta": metadata,
-                "errorClass": type(error).__name__}
+        category = ("EMPTY_ACTION_CONTENT" if not text.strip()
+                    else "INVALID_JSON" if isinstance(error, json.JSONDecodeError)
+                    else "SCHEMA_REJECTED")
+        return {
+            "status": "INVALID_ACTION", "meta": metadata,
+            "errorClass": type(error).__name__, "errorCategory": category,
+            "rawActionText": text,
+        }
     return {"status": "VALID", "action": parsed, "meta": metadata}
 
 
@@ -234,7 +279,10 @@ def summarize(samples: list[dict]) -> dict:
     count = len(valid)
     return {
         "attempts": len(samples), "valid": count,
-        "invalid": sum(r["status"] != "VALID" for r in samples),
+        "invalid": sum(r["status"] == "INVALID_ACTION" for r in samples),
+        "localErrors": sum(r["status"] == "LOCAL_ERROR" for r in samples),
+        "providerCompleted": sum(r["status"] in ("VALID", "INVALID_ACTION")
+                                 for r in samples),
         "sameActionAsTerra": sum(r["agreement"]["all"] for r in valid),
         "sameMoveAsTerra": sum(r["agreement"]["move"] for r in valid),
         "sameTurnAsTerra": sum(r["agreement"]["turn"] for r in valid),
@@ -307,6 +355,12 @@ def evaluate(args, *, opener=None):
                           "observedFragLeader": "TERRA-ALPHA",
                           "observedLeaderFrags": 1},
         "modelInventory": inventory, "selectedRoundsPerRole": list(selected),
+        "protocol": PROTOCOL,
+        "generationProfiles": {
+            tag: {"options": generation_profile(tag)["options"],
+                  "thinkingRequested": generation_profile(tag)["think"],
+                  "format": "exact-six-field-json-schema"}
+            for tag in MODEL_TAGS},
         "temperature": 0, "seed": 17, "samples": [],
         "summary": {}, "errors": [],
         "limits": [
@@ -356,8 +410,23 @@ def evaluate(args, *, opener=None):
                     report["samples"].append(row)
             report["summary"][tag] = summarize(samples)
             no_model_reload(tag, opener=opener)
-        report["status"] = ("PASS" if all(r["status"] == "VALID" for r in report["samples"])
-                            else "PARTIAL")
+        # Distinguish complete inference that emitted invalid controls from a
+        # transport/inference failure with no usable model response. Attempting
+        # a request does not prove that the provider completed an answer.
+        expected = len(MODEL_TAGS) * len(ROLES) * len(selected)
+        report["executionComplete"] = (
+            len(report["samples"]) == expected and
+            all(row["status"] in ("VALID", "INVALID_ACTION")
+                for row in report["samples"]))
+        report["status"] = (
+            "INCOMPLETE" if not report["executionComplete"]
+            else "PASS" if all(row["status"] == "VALID"
+                               for row in report["samples"])
+            else "PARTIAL")
+        report["liveReadiness"] = {
+            "eligible": report["executionComplete"] and report["status"] == "PASS",
+            "reason": "requires all four models to return valid actions on every paired test",
+        }
     except Exception as error:
         report["errors"].append({"errorClass": type(error).__name__,
                                  "reason": str(error)[:200]})
@@ -382,7 +451,10 @@ def main():
         receipt = evaluate(args)
         print("FreeDM open-model replay:", receipt["status"],
               "completed", len(receipt["samples"]), "samples")
-        if receipt["status"] != "PASS":
+        # A complete experiment containing invalid model outputs is itself
+        # a valid research outcome. The live stage has a separate strict
+        # readiness gate and cannot start on a partial replay.
+        if not receipt.get("executionComplete") or receipt["status"] not in ("PASS", "PARTIAL"):
             raise SystemExit(1)
     except (OSError, ValueError, TypeError, RuntimeError) as error:
         print("FreeDM open-model replay FAIL:", error, file=sys.stderr)
