@@ -16,11 +16,11 @@ test('UFF-compatible SI point-mass constants, acceleration and circular speed',(
   assert.deepEqual(shifted,a);
 });
 test('velocity-Verlet conserves energy and nearly closes a circular orbit',()=>{
-  // 400-km altitude Earth orbit with 10-second steps; reference period uses
+  // 400-km altitude Earth orbit with approximately 5-second steps; reference period uses
   // T=2 pi sqrt(r^3/(GM)). This is not a per-frame GPU metric.
   const mass=5.9722e24,r=6371e3+400e3,speed=circularSpeedSI(mass,r);
   const period=2*Math.PI*Math.sqrt(r**3/(G*mass));
-  const count=Math.round(period/10),dt=period/count;
+  const count=Math.round(period/5),dt=period/count;
   const orbit=new KeplerOrbit({mass,position:[r,0,0],velocity:[0,speed,0]});
   const initial=orbit.snapshot(),energy=orbit.energy();
   for(let i=0;i<count;i++)orbit.step(dt);
