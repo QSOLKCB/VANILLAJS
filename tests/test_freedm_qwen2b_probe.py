@@ -148,5 +148,85 @@ class ProbeContracts(unittest.TestCase):
         self.assertEqual(row["status"], "LOCAL_ERROR")
 
 
+    def test_complete_empty_output_is_valid_diagnostic_not_game_readiness(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = argparse.Namespace(source=Path(tmp)/"source",
+                                      output=Path(tmp)/"out", head="a"*40)
+            def response(case, image, **kwargs):
+                prompt = p.TINY_PROMPT if case["schema"] == "tiny" else p.FULL_PROMPT
+                return {"id": case["id"], "condition": dict(case),
+                        "request": {"promptSHA256": p.sha256(prompt.encode()),
+                                    "sourceImageSHA256":
+                                    p.sha256(image) if image else None},
+                        "status": "EMPTY_CONTENT", "rawContent": "",
+                        "metrics": {"wallNs": 1_000_000}}
+            with patch.object(p.replay, "check_checkout"), \
+                 patch.object(p, "local_metadata", return_value={
+                     "ollamaVersion": "0.12.9", "thinking": None}), \
+                 patch.object(p, "run_case", side_effect=response):
+                report = p.execute(args, source_loader=lambda _: fake_source(),
+                                   inventory=identity)
+            self.assertEqual(report["status"], "COMPLETE")
+            self.assertEqual(report["summary"]["providerCompleted"], 14)
+            self.assertEqual(report["summary"]["emptyContent"], 14)
+            self.assertEqual(len(report["pairs"]), 6)
+            self.assertTrue(all(x["samePrompt"] for x in report["pairs"]))
+            self.assertTrue(report["summary"]["isDiagnosticNotGameReadiness"])
+            contents = (args.output/"PROBE.json").read_bytes()
+            checksum = (args.output/"SHA256SUMS").read_text()
+            self.assertEqual(checksum, p.sha256(contents) + "  PROBE.json\n")
+
+    def test_all_14_provider_failures_are_incomplete_with_sealed_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = argparse.Namespace(source=Path(tmp)/"source",
+                                      output=Path(tmp)/"out", head="a"*40)
+            def failure(case, image, **kwargs):
+                prompt = p.TINY_PROMPT if case["schema"] == "tiny" else p.FULL_PROMPT
+                return {"id": case["id"], "condition": dict(case),
+                        "request": {"promptSHA256": p.sha256(prompt.encode())},
+                        "status": "LOCAL_ERROR", "errorClass": "RuntimeError",
+                        "errorMessage": "Ollama unavailable"}
+            with patch.object(p.replay, "check_checkout"), \
+                 patch.object(p, "local_metadata", return_value={
+                     "ollamaVersion": "0.12.9", "thinking": None}), \
+                 patch.object(p, "run_case", side_effect=failure):
+                report = p.execute(args, source_loader=lambda _: fake_source(),
+                                   inventory=identity)
+            self.assertEqual(report["status"], "INCOMPLETE")
+            self.assertEqual(report["summary"]["providerCompleted"], 0)
+            self.assertEqual(report["summary"]["localErrors"], 14)
+            self.assertTrue((args.output/"PROBE.json").exists())
+            self.assertTrue((args.output/"SHA256SUMS").exists())
+        with patch.object(p, "execute", return_value=report), \
+             patch("sys.argv", ["qwen2b_probe.py", "--source", "/s",
+                                "--output", "/o", "--head", "a"*40]):
+            with self.assertRaises(SystemExit) as result:
+                p.main()
+            self.assertEqual(result.exception.code, 1)
+
+    def test_corrupt_source_image_aborts_before_model_request(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = argparse.Namespace(source=Path(tmp)/"source",
+                                      output=Path(tmp)/"out", head="a"*40)
+            data = fake_source()
+            data["source"]["turns"][p.IMAGE_ROUND]["observations"][0]["imageSHA256"] = "0"*64
+            with patch.object(p.replay, "check_checkout"):
+                with self.assertRaisesRegex(ValueError, "identity changed"):
+                    p.execute(args, source_loader=lambda _: data,
+                              inventory=identity)
+            self.assertFalse(args.output.exists())
+
+    def test_existing_live_gate_remains_untouched(self):
+        existing = (ROOT/".github/workflows/freedm-open-vision.yml").read_text()
+        self.assertIn("not r.get('liveReadiness',{}).get('eligible')", existing)
+        self.assertIn("LIVE REFUSED:", existing)
+        workflow = (ROOT/".github/workflows/freedm-qwen2b-probe.yml").read_text()
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertIn("github.actor == 'EmergentMonk'", workflow)
+        self.assertNotIn("OPENAI_API_KEY", workflow)
+        self.assertNotIn("ollama pull", workflow)
+        self.assertNotIn("experiments/freedm-open/live.py", workflow)
+
+
 if __name__ == "__main__":
     unittest.main()
