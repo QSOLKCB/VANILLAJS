@@ -189,6 +189,18 @@ def agent_request_payload(role: str, tactics: str, png: bytes, public_state: dic
         "store": False,
         "reasoning": {"effort": "low"},
         "max_output_tokens": MAX_OUTPUT_TOKENS,
+        "text": {"format": {"type": "json_schema", "name": "freedm_action",
+                "strict": True,
+                "schema": {"type": "object", "additionalProperties": False,
+                    "required": ["move", "turn", "fire", "use", "sprint", "tactic"],
+                    "properties": {
+                        "move": {"type": "string", "enum": list(MOVES)},
+                        "turn": {"type": "string", "enum": list(TURNS)},
+                        "fire": {"type": "boolean"},
+                        "use": {"type": "boolean"},
+                        "sprint": {"type": "boolean"},
+                        "tactic": {"type": "string"},
+                    }}}},
         "input": [{"role": "user", "content": [
             {"type": "input_text", "text": prompt},
             {"type": "input_image", "image_url": "data:image/png;base64," + data,
