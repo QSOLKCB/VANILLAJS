@@ -11,6 +11,29 @@ test('roundtrip text/json across deterministic 27-column radix-3 grid',()=>{
   assert.deepEqual(restored.snapshot(),snapshot);
   assert.ok(snapshot.rows.every(row=>row.length===27&&row.every(x=>[0,1,2].includes(x))));
 });
+test('top-level JSON string literals restore without a second lossy parse',()=>{
+  for(const literal of ['"hello"','"123"','"true"','"null"','""']){
+    const s=new TernaryGridStore2D();
+    s.put('text.json',literal);
+    const before=s.snapshot();
+    assert.equal(s.get('text.json'),JSON.parse(literal));
+    const recovered=TernaryGridStore2D.fromSnapshot(before);
+    assert.equal(recovered.get('text.json'),JSON.parse(literal));
+    assert.deepEqual(recovered.snapshot(),before);
+  }
+});
+test('a leading U+FEFF is preserved in text, including after snapshot replay',()=>{
+  const s=new TernaryGridStore2D();
+  const text='\uFEFFhello Ω';
+  s.put('bom.txt',text);
+  assert.equal(s.get('bom.txt'),text);
+  const original=s.snapshot();
+  const replay=TernaryGridStore2D.fromSnapshot(original);
+  assert.equal(replay.get('bom.txt'),text);
+  assert.deepEqual(replay.snapshot(),original);
+  // A leading BOM outside a JSON value is not canonical JSON.
+  assert.throws(()=>s.put('bad.json','\uFEFF{"a":1}'));
+});
 test('insertion order and safe JSON key order cannot alter identity',()=>{
   const a=new TernaryGridStore2D(),b=new TernaryGridStore2D();
   a.put('x.json',{b:2,a:1});a.put('z.txt','Z');
