@@ -279,7 +279,8 @@ def execute(args, *, opener=None, source_loader=None, inventory=None):
     replay.checked_png(image)
     expected_sha = original["source"]["turns"][IMAGE_ROUND]["observations"][0]["imageSHA256"]
     require(sha256(image) == expected_sha, "pinned original FreeDM PNG identity changed")
-    known = (inventory or model_inventory)(opener=opener)
+    inventory_check = inventory or model_inventory
+    known = inventory_check(opener=opener)
     capabilities = local_metadata(opener=opener)
     out.mkdir(parents=True, mode=0o700)
     report = {
@@ -326,7 +327,9 @@ def execute(args, *, opener=None, source_loader=None, inventory=None):
                            report["summary"]["providerCompleted"] == MAX_REQUESTS)
             else "INCOMPLETE"
         )
-        after = model_inventory(opener=opener)
+        # Recheck the same pinned model identity after inference; the
+        # injected checker in offline unit tests is still zero-network.
+        after = inventory_check(opener=opener)
         if after != known:
             report["status"] = "INCOMPLETE"
             report["modelDrift"] = {"before": known, "after": after}
