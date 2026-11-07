@@ -1,0 +1,94 @@
+name: 2D Foundry bounded Sol 6.1 evidence review
+
+# Not a CI correctness gate. Only the owner can authorize a paid API call.
+on:
+  workflow_dispatch:
+    inputs:
+      authorize_api_spend:
+        description: "Explicitly authorize GPT-6.1 Sol API calls using my GitHub OPENAI_API_KEY secret"
+        type: boolean
+        required: true
+        default: false
+      budget_usd:
+        description: "US-dollar run limit; up to 10.00 (each run is separate)"
+        type: string
+        required: true
+        default: '10.00'
+      publish_evidence:
+        description: "Upload public JSON evidence and untrusted reviewer suggestions"
+        type: boolean
+        required: true
+        default: true
+permissions:
+  contents: read
+concurrency:
+  group: qsol-owner-sol-review-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  review:
+    if: ${{ github.repository == 'QSOLKCB/VANILLAJS' && github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.authorize_api_spend == true }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Verify exact main and independent replay gates before API call
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          node --test tests/motion2d.test.js tests/lab2d.test.js \
+            tests/audio2d.test.js tests/ternary-store2d.test.js
+          node scripts/check.js
+          python3 -m unittest discover -s tests -p 'test_sol_lab2d_policy.py' -v
+          node scripts/lab2d-evidence.js --check > "$RUNNER_TEMP/lab2d-source.json"
+      - name: Run two read-only GPT-6.1 Sol reviewers with conservative spend reservations
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          BUDGET_USD: ${{ inputs.budget_usd }}
+        run: |
+          set -euo pipefail
+          # No tool-calling, retries, agent code execution, patching or commits.
+          # Provider account-wide spend caps remain independent of this script.
+          python3 scripts/review-lab2d-sol.py \
+            --evidence "$RUNNER_TEMP/lab2d-source.json" \
+            --output "$RUNNER_TEMP/lab2d-sol-review.json" \
+            --max-usd "$BUDGET_USD"
+          python3 -m json.tool "$RUNNER_TEMP/lab2d-sol-review.json" >/dev/null
+      - name: Record read-only review summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - "$RUNNER_TEMP/lab2d-sol-review.json" >> "$GITHUB_STEP_SUMMARY" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1],encoding='utf-8'))
+          print('## Sol 6.1 — untrusted evidence review, not CI verification')
+          print()
+          print('Model:',data['model'])
+          print()
+          print('Standard estimated API USD:',data['budget']['providerStandardEstimatedUsd'])
+          print()
+          print('Conservative pre-call reserved USD:',data['budget']['reservedUsd'])
+          print()
+          print('Reviewer perspectives:',', '.join(x['role'] for x in data['reviews']))
+          print()
+          print('No code writes, hardware RTX run, or agent-defined success gates.')
+          PY
+      - name: Preserve public evidence and analysis only on owner consent
+        if: ${{ inputs.publish_evidence == true }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: vanillajs-2d-sol-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/lab2d-source.json
+            ${{ runner.temp }}/lab2d-sol-review.json
+          retention-days: 14

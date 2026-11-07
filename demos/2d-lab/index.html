@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0c1322"><meta name="description" content="VANILLAJS 2D movement, deterministic PCM sound, A-star routing and ternary array storage.">
+<title>VANILLAJS / 2D Foundry</title><link rel="stylesheet" href="./style.css"></head>
+<body>
+<header><a href="../../index.html" class="brand">VANILLA<span>JS</span> / 2D</a><span>QSOL-IMC · ORIGINAL · OFFLINE FIRST</span></header>
+<main>
+  <section class="intro"><p class="eyebrow">EXPERIMENT 009 / 2D-TO-3D FOUNDATION</p>
+    <h1>Two dimensions. Four instincts.</h1>
+    <p>RTS routing · shoot 'em up · platformer · car control. One clock, one deterministic geometry vocabulary. Music and ternary memory are deliberately independent modules.</p>
+  </section>
+  <div class="layout">
+    <section class="stage">
+      <div class="modes" aria-label="Select genre">
+        <button data-mode="rts" aria-pressed="true">RTS / PATH</button>
+        <button data-mode="shmup" aria-pressed="false">SHOOT 'EM UP</button>
+        <button data-mode="platform" aria-pressed="false">PLATFORM</button>
+        <button data-mode="car" aria-pressed="false">CAR / TOP DOWN</button>
+      </div>
+      <div class="hud"><span>STATUS <strong id="status">READY</strong></span><span>TICK <strong id="tick">0000</strong></span><span>ROUTE <strong id="route-count">0</strong></span></div>
+      <canvas id="lab-canvas" width="780" height="510" tabindex="0" aria-label="2D demonstration. WASD or arrow keys move; Space jumps or fires; Q and E steer; Escape pauses."></canvas>
+      <div class="controls"><button id="run" class="primary">RUN</button><button id="step">ONE TICK</button><button id="pause">PAUSE</button><button id="reset">RESET</button><button id="sound">PLAY ORIGINAL PCM SFX</button></div>
+      <p id="audio-note" class="muted">Sound is rendered offline to PCM16 first, then previewed with Web Audio/device playback where supported.</p>
+    </section>
+    <aside>
+      <section><h2>Why 2D first?</h2>
+        <p>World positions use integer subunits. +Y is up, independent of Canvas coordinates. RTS calls the existing A* oracle; movement, samples and visual commands are separately testable.</p>
+        <p class="muted">WASD/arrows move; Space fires or jumps; Q/E steer a car; Escape or focus loss pauses. No networking, login, tracking, packages or runtime services.</p>
+      </section>
+      <section><h2>Ternary array store</h2>
+        <p>UTF-8 bytes are represented as six base-3 digits in a 27-column grid. Invariant snapshots, a 256-entry LUT and a bounded inverse table avoid recomputing identical data.</p>
+        <div class="controls"><button id="save-store">SAVE .JSON</button><label class="upload">RESTORE .JSON<input id="restore-file" type="file" accept=".json,application/json"></label></div>
+        <p class="muted" id="store-stats">Cache: cold</p>
+        <pre id="store-peek" aria-label="Ternary storage preview"></pre>
+      </section>
+      <section><h2>Deterministic evidence</h2>
+        <div class="controls"><button id="download-evidence">DOWNLOAD EVIDENCE</button></div>
+        <p id="evidence-note" class="muted">Identity-bearing simulation and store state only; browser frame pacing and device audio are not canonical.</p>
+      </section>
+    </aside>
+  </div>
+</main>
+<footer>VANILLAJS · EXPERIMENTAL 2D MODULES · NO AUTOMATIC GPU / API BILLING</footer>
+<script type="module" src="./app.js"></script>
+</body></html>

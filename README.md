@@ -2,7 +2,7 @@
 
 Reusable, original JavaScript game modules built directly on web standards.
 **v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-Twenty-nine experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
+32 experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
 [Donor upgrade: pacing, lead solver & RTX](docs/DONOR_UPGRADE_2026_11.md) · [UFF orbital physics & NEXUS contracts](docs/BLOAT_NEXUS_UFF.md) · [Frame invalidation](docs/FRAME_GATE.md) · [Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
@@ -34,6 +34,31 @@ message explains unsupported graphics. Serve over
 HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
+
+## 2D Foundry — gameplay movement, sound and ternary memory
+
+New experimental <a href="demos/2d-lab/index.html">2D Foundry</a> combines
+four integer-tick movement styles (RTS, shooter, platformer, top-down driving),
+existing A* pathfinding and flow-field architecture, pure local PCM16 sound
+effects, and a bounded 27-column ternary data store for UTF-8 `.txt` and
+canonical `.json` documents. A reusable base-3 LUT and OPT-style invariant
+snapshot reuse reduce redundant conversion without sacrificing independent
+snapshot ownership.
+
+**This is a 2D-first foundation, not a 3D engine or a persistent database.**
+The 2D simulation has +Y up and explicit integer coordinates. The browser
+converts them only for Canvas 2D; a future 3D adapter can map X/Y to a
+documented world plane without rewriting source events. The ternary grid
+is a lossless encoding, not compression, cryptography, storage hardware or QEC.
+Save/restore explicitly downloads/uploads JSON; there is no automatic cloud
+or disk persistence.
+
+Strict sound effects are generated from sample-indexed integer PCM,
+then optionally played through the browser's device pipeline; live playback
+is **not** an identity-bearing renderer. All modes use independently tested
+bounded input state. See [2D Foundation](docs/2D_FOUNDATION.md) for APIs,
+replay claims, OPT evidence, and optional owner RTX / agent evaluation.
+Hardware and OpenAI API services are never triggered by a push or pull request.
 
 ## November donor upgrade — clock pacing, lead solving and vault graphics
 
