@@ -23,7 +23,7 @@ def fixture():
     b.update(solutions=3200, abstentions=800, maxRelativeResidual=1e-10)
     expected={"modules/time/index.js":"b"*64,"modules/lead-solver/index.js":"c"*64}
     return {"schemaVersion":1,"kind":"qsol.vanillajs.donor-upgrade.cpu.v1",
-            "baseline":v.BASELINE,"sourceSHA256":expected,
+            "baseline":v.BASELINE,"sourceSHA256":dict(expected),
             "protocol":{"execution":"serial single Node process",
                         "warmups":2,"samples":7,"gpu":"not measured",
                         "timingGate":False},
