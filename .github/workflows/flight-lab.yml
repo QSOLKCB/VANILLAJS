@@ -48,6 +48,13 @@ jobs:
           node --check scripts/rtx5060ti-adaptive-browser.mjs
           node scripts/rtx5060ti-adaptive-browser.mjs --help > /dev/null
           python3 -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/finalize-rtx5060ti-adaptive.py').read_text())"
+      - name: Validate owner-only ARCADE RTX scripts offline (never run GPU here)
+        run: |
+          node --check scripts/rtx5060ti-frame-gate.mjs
+          node scripts/rtx5060ti-frame-gate.mjs --help > /dev/null
+          node scripts/rtx5060ti-trusted.mjs --help > /dev/null
+          python3 -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/finalize-rtx5060ti-frame-gate.py').read_text())"
+          python3 -m unittest discover -s tests -p 'test_rtx_arcade_receipt.py' -v
       - name: Verify documented navigation workload
         run: node scripts/navigation-workload.js --check > navigation-workload.json
       - name: Compare exact QwakeTF-inspired pooled A* and existing serial reference
