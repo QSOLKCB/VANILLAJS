@@ -1,7 +1,7 @@
 # DEMO//SYNTH — deterministic audio, tracker music and demoscene visuals
 
 **Status: implementation proposal, not an implemented API.**  
-Planning base: VANILLAJS \`90b2fe1f3428710eade90cc328c9e6bf7e18f457\` (the reviewed post-PR #35 main).
+Planning base: VANILLAJS `90b2fe1f3428710eade90cc328c9e6bf7e18f457` (the reviewed post-PR #35 main).
 No runtime, GPU workflow or archived RTX001–004 evidence is modified by this proposal.
 
 ## 1. Product vision and decisive design rules
@@ -22,7 +22,7 @@ demoscene binary/code or copied Second Reality assets; that demo is an
 
 1. **Music time is authoritative.** Frame presentation, DSP scheduling and
    visual events are derived from an integer sample index, never elapsed
-   \`requestAnimationFrame\` timestamps, \`Date.now\` or wall-clock rounding.
+   `requestAnimationFrame` timestamps, `Date.now` or wall-clock rounding.
 2. **DSP is pure.** The source-backed synthesizer never calls Web Audio, WebGL,
    DOM, device timers, unseeded randomness or arbitrary network services.
    A browser audio adapter is a separately owned side effect.
@@ -38,9 +38,9 @@ demoscene binary/code or copied Second Reality assets; that demo is an
      and hardware output are noncanonical. Performance capture is never
      mislabeled as a Strict archive.
 5. **Original MOD compatibility is tested, not assumed.** A proprietary
-   \`.qdem.json\` project is never renamed \`.mod\`; only a genuine documented
+   `.qdem.json` project is never renamed `.mod`; only a genuine documented
    31-sample, four-channel, 64-row ProTracker-compatible byte encoder may
-   export a \`.mod\`, with an explicit supported effect subset.
+   export a `.mod`, with an explicit supported effect subset.
 6. **Audio and graphics have distinct fidelity claims.** Samples and event
    scheduling can be byte-exact. GPU pixels may differ across drivers, shaders
    and hardware; declare native-renderer-specific pixel checks rather than
@@ -64,18 +64,18 @@ MPL-2.0 / MIT / Apache-2.0 boundaries.
 
 | Donor | Verified reference | Role / boundary |
 | --- | --- | --- |
-| **E8_MUSIC** | \`QSOLKCB/E8_MUSIC@d8e5983d84af03f03a969abe3356dcf80c0e0e97\`, \`CANONICAL_SONIFICATION.md\` | Separate exact source-forced mappings from *authored* E8/ETQ composition, source/PCM/WAV SHA chain; MPL-2.0 |
-| **TONELAB** | \`QSOLKCB/TONELAB@1801cd3f25cf63d329ede7fdb5c26a3dd640baae\`, \`dsp.js\` | Explicit oscillator/envelope/pulse/channel routing, Nyquist/headroom and bounded WAV export; MIT |
-| **SONIFICATION** | \`QSOLKCB/SONIFICATION@5a9af7876dac3f55839f2a23d7655d70c2158990\`, \`docs/ETQ_V3_EVENT_PROTOCOL.md\` | ETQ-303 exact symbolic event documents and D4-triality event adapters, **never PCM in its root runtime**; MPL-2.0 |
-| **SPECTRAL** | \`QSOLKCB/SPECTRAL@49401fa010ed673e3d3977ccd5e06d66b0d65096\`, \`APP/README.md\`, \`rb-420/README.md\` | Canonical Strict / Replay Safe boundary, versioned seeded PCM, 8-channel creative tracker, manifests and digest tests; MIT |
-| **QEC** | \`QSOLKCB/QEC@27bbc798c4e38138ca5b0fff70b15c3271a1917d\` | SHA-256 replay admissions, immutable source witnesses, independent validators; do not suggest a quantum decoder changes audio quality; MPL-2.0 |
-| **OPT** | \`QSOLKCB/OPT@7556dd36acd53ed3ed538fd03b1db44e5c1ec869\` | \`OPT-DSP-001\`, \`OPT-INV-001\`, \`OPT-INC-001\`, \`OPT-REDUCE-001\`, \`OPT-POOL-001\` for CI/evidence-gated DSP and rendering; Apache-2.0 |
-| **CorpoWars3d DOS** | \`QSOLKCB/CorpoWars3d@5701949e4ef7047b715db808b777450c3bf49d53\`, \`games/dos/src/mod.c\`, \`games/dos/tests/music.c\` | Independent **C99 four-channel MOD loader/player** and three original \`.MOD\` fixtures; *limited* supported effects (0/no command, Cxx, Fxx), not a full ProTracker oracle; Apache-2.0 |
-| **Audio-To-Video** | \`QSOLKCB/Audio-To-Video@6cd8839764b4926de4bcc71463014886bcdf1aa2\` | Later offline visualizer/video-export interoperability and deterministic visual test patterns; desktop dependency isolated from browser engine |
-| **VANILLAJS** | \`90b2fe1f3428710eade90cc328c9e6bf7e18f457\` | Fixed/integer clocks, source-pinned replay, WebGL API, retained geometry, FrameGate, OMI and E8 research, original Clockwork Vault demo. Reuse rather than replace. |
+| **E8_MUSIC** | `QSOLKCB/E8_MUSIC@d8e5983d84af03f03a969abe3356dcf80c0e0e97`, `CANONICAL_SONIFICATION.md` | Separate exact source-forced mappings from *authored* E8/ETQ composition, source/PCM/WAV SHA chain; MPL-2.0 |
+| **TONELAB** | `QSOLKCB/TONELAB@1801cd3f25cf63d329ede7fdb5c26a3dd640baae`, `dsp.js` | Explicit oscillator/envelope/pulse/channel routing, Nyquist/headroom and bounded WAV export; MIT |
+| **SONIFICATION** | `QSOLKCB/SONIFICATION@5a9af7876dac3f55839f2a23d7655d70c2158990`, `docs/ETQ_V3_EVENT_PROTOCOL.md` | ETQ-303 exact symbolic event documents and D4-triality event adapters, **never PCM in its root runtime**; MPL-2.0 |
+| **SPECTRAL** | `QSOLKCB/SPECTRAL@49401fa010ed673e3d3977ccd5e06d66b0d65096`, `APP/README.md`, `rb-420/README.md` | Canonical Strict / Replay Safe boundary, versioned seeded PCM, 8-channel creative tracker, manifests and digest tests; MIT |
+| **QEC** | `QSOLKCB/QEC@27bbc798c4e38138ca5b0fff70b15c3271a1917d` | SHA-256 replay admissions, immutable source witnesses, independent validators; do not suggest a quantum decoder changes audio quality; MPL-2.0 |
+| **OPT** | `QSOLKCB/OPT@7556dd36acd53ed3ed538fd03b1db44e5c1ec869` | `OPT-DSP-001`, `OPT-INV-001`, `OPT-INC-001`, `OPT-REDUCE-001`, `OPT-POOL-001` for CI/evidence-gated DSP and rendering; Apache-2.0 |
+| **CorpoWars3d DOS** | `QSOLKCB/CorpoWars3d@5701949e4ef7047b715db808b777450c3bf49d53`, `games/dos/src/mod.c`, `games/dos/tests/music.c` | Independent **C99 four-channel MOD loader/player** and three original `.MOD` fixtures; *limited* supported effects (0/no command, Cxx, Fxx), not a full ProTracker oracle; Apache-2.0 |
+| **Audio-To-Video** | `QSOLKCB/Audio-To-Video@6cd8839764b4926de4bcc71463014886bcdf1aa2` | Later offline visualizer/video-export interoperability and deterministic visual test patterns; desktop dependency isolated from browser engine |
+| **VANILLAJS** | `90b2fe1f3428710eade90cc328c9e6bf7e18f457` | Fixed/integer clocks, source-pinned replay, WebGL API, retained geometry, FrameGate, OMI and E8 research, original Clockwork Vault demo. Reuse rather than replace. |
 
 **Important donor limitations:** SPECTRAL RB-420's eight-channel pattern editor
-is not automatically a true \`.mod\` encoder, and its documented effect codes
+is not automatically a true `.mod` encoder, and its documented effect codes
 are initially data-only; importing its UI does not confer correct tracker
 semantics. CorpoWars3d's C99 player supports only a narrow, valid MOD subset
 and caps its own patterns; it cannot prove compatibility with every Amiga
@@ -84,7 +84,7 @@ receivers; they are not intrinsic frequencies derived from physics.
 
 ## 3. Proposed module boundaries (one-way imports)
 
-\`\`\`text
+```text
 E8_MUSIC / SONIFICATION / QEC data     local pattern editor / authored score
                  |                                    |
       bounded source/event adapter              normalized project
@@ -106,11 +106,11 @@ E8_MUSIC / SONIFICATION / QEC data     local pattern editor / authored score
                                          reference scene/command hashes
                                                   |
                                   archival AV bundle (project + evidence)
-\`\`\`
+```
 
 Suggested **public API** paths, each opt-in, with no ambient browser imports:
 
-\`\`\`text
+```text
 modules/dsp-core/         PCM16LE mixer, fixed-phase oscillators, envelope, wave tables
 modules/tracker-core/     pattern/order sequencer, four voices, deterministic tick table
 modules/tracker-mod/      constrained .MOD encoder/loader and strict compatibility tests
@@ -121,12 +121,12 @@ modules/demo-text/        deterministic bitmap glyphs, scroll and extruded text 
 modules/audio-playback/   opt-in AudioWorklet bridge (browser-only)
 modules/demo-receipt/     canonical project / PCM / MOD / visual source receipts
 demos/demoscene-lab/      tracker UI and first complete music+visual intro
-\`\`\`
+```
 
-The first PR should **not** create every directory. Start with \`dsp-core\`,
-\`tracker-core\` and \`demo-timeline\`, then one consuming lab. Add other modules
-only when justified by a working demonstrated contract. \`MODULES.json\`,
-\`docs/API.md\`, \`NOTICE\` and \`scripts/check.js\` must reflect real imports.
+The first PR should **not** create every directory. Start with `dsp-core`,
+`tracker-core` and `demo-timeline`, then one consuming lab. Add other modules
+only when justified by a working demonstrated contract. `MODULES.json`,
+`docs/API.md`, `NOTICE` and `scripts/check.js` must reflect real imports.
 
 ## 4. Authoritative timing and independent render paths
 
@@ -136,15 +136,15 @@ audio device's actual negotiated sample rate. Use exactly **50 presentation
 frames/second** (PAL-inspired) for the first demo; 60 fps and 25/30 fps exports
 are later independent profiles.
 
-For output frame \`f\` and tick \`k\`:
+For output frame `f` and tick `k`:
 
-\`\`\`text
+```text
 firstSampleOfVisualFrame(f) = floor(f * 48000 / 50)
 ProTracker tick duration     = 5 / (2 * BPM) seconds
 firstSampleOfTick(k)         = floor(k * 48000 * 5 / (2 * BPM))
-\`\`\`
+```
 
-The direct \`firstSampleOfTick\` formula applies to a **constant BPM** segment.
+The direct `firstSampleOfTick` formula applies to a **constant BPM** segment.
 Tempo changes require a carry-preserving rational accumulator; keep numerator,
 denominator, cumulative sample index and carry in the snapshot. Use integer or
 BigInt arithmetic for products that could exceed JS safe-integer limits.
@@ -152,23 +152,23 @@ At BPM 125, speed 6, one tick is 960 samples, one row is 5,760 samples,
 and a 50 Hz scene frame is exactly 960 samples. There is no browser-clock
 guesswork in that offline profile.
 
-**Realtime Web Audio:** user-gesture gated \`AudioContext\` and
-\`audioWorklet.addModule()\` run the same bounded generator logic outside the
+**Realtime Web Audio:** user-gesture gated `AudioContext` and
+`audioWorklet.addModule()` run the same bounded generator logic outside the
 main UI thread. Feed it versioned commands/initial snapshots with lead-time
 and explicit underrun/late-command reporting. The audio render sample counter
 is the transport master; the visual scheduler follows its measured position.
 Device-output latency, audio context resampling and display jitter must be
 recorded and are not identity-bearing audio samples. Never use
-\`ScriptProcessorNode\` as the mandatory real-time implementation. Under
+`ScriptProcessorNode` as the mandatory real-time implementation. Under
 unsupported/insecure contexts, offer downloaded/offline audio or an explicit
 unavailable message, **not** a fake deterministic playback claim.
 
 **Offline render:** use the pure DSP directly (not an undocumented
-\`OfflineAudioContext\` promise) to produce exact PCM16LE and WAV bytes.
+`OfflineAudioContext` promise) to produce exact PCM16LE and WAV bytes.
 Changing chunk size 128/256/4096/whole-file must leave PCM **identical**.
 Pause, seek, rewind and replay restore sample-level state exactly.
 
-**Visual frame function:** \`frameAt(sampleIndex, projectSnapshot)\` emits
+**Visual frame function:** `frameAt(sampleIndex, projectSnapshot)` emits
 bounded, complete, ordered scene commands. For a given project and sample index,
 camera, glyph positions, particles and palette indices must match regardless
 of previous presentation history. Where state evolution is necessary, use
@@ -187,11 +187,11 @@ exact checkpoints plus replay from the nearest checkpoint, with bounded work.
   stereo output profile. Do not claim Amiga Paula hardware emulation.
 - PCM16LE 48 kHz archival export, SHA-256 exact fixtures for a 45–90 s tune.
 - A 4-lane, 64-row piano-roll/tracker screen, song orders and a playback position
-  display. Fixed notes/tempo/seed in one downloadable \`.qdem.json\` project.
+  display. Fixed notes/tempo/seed in one downloadable `.qdem.json` project.
 
 ### Milestone 2: real MOD interchange
 
-- Real 31-sample / four-channel ProTracker-compatible \`M.K.\` binary layout,
+- Real 31-sample / four-channel ProTracker-compatible `M.K.` binary layout,
   64 rows/pattern, 128 order entries, signed PCM8 sample bytes,
   big-endian period/sample metadata and explicit loop/volume limits.
 - Strict **initial supported effect subset** must match independently
@@ -201,7 +201,7 @@ exact checkpoints plus replay from the nearest checkpoint, with bounded work.
   separately covered patches and with independently owned test fixtures;
   never silently ignore unsupported effects when claiming exact replay.
 - Compare our loader/encoder and sample clocks against original owned
-  CorpoWars3d \`ACTION.MOD\`, \`BOSS.MOD\` and \`MENU.MOD\` using the C99
+  CorpoWars3d `ACTION.MOD`, `BOSS.MOD` and `MENU.MOD` using the C99
   reference in optional test-only conformance. Keep assets outside the runtime
   unless their inclusion, provenance and packaging are explicitly approved.
 - MOD byte equality, track/pattern equality and **PCM equality under a declared
@@ -211,20 +211,20 @@ exact checkpoints plus replay from the nearest checkpoint, with bounded work.
 
 ### Milestone 3: mathematical instrument/effect adapters
 
-- \`E8\`: exact root inventory → selected/root-family events → *authored*
+- `E8`: exact root inventory → selected/root-family events → *authored*
   pitches/rhythms/timbres. Precompute static topology; no 240-root recompute per
   audio sample. Existing VANILLAJS E8 experiment can provide a pure fixture.
-- \`ETQ-303\`: import event documents from SONIFICATION's root protocol
+- `ETQ-303`: import event documents from SONIFICATION's root protocol
   **read-only**, then map them to tracker note/control events via a separate
   versioned artistic profile. Do not call an audio routine from SONIFICATION
   root or mutate its symbolic artifacts.
-- \`TONELAB\`: deterministic sine/poly waveform recipes, pulse envelopes,
+- `TONELAB`: deterministic sine/poly waveform recipes, pulse envelopes,
   harmonic/three-tone routing and headroom. Tone labeling is acoustical,
   not a medical treatment or physiological claim.
-- \`SPECTRAL\`: QEC/OMI event textures, fixed-rate oscillators and
+- `SPECTRAL`: QEC/OMI event textures, fixed-rate oscillators and
   optional Replay Safe spectral effects. Distinguish signal-derived
   creative mapping from direct source audification.
-- \`QEC\`: use exact event streams and cryptographically identified replay
+- `QEC`: use exact event streams and cryptographically identified replay
   receipts where appropriate; no live quantum decoder or claimed
   enhancement to sound quality.
 
@@ -256,8 +256,8 @@ the same timeline is sampled. The intended emotional style can salute
 1990s demos such as Future Crew's *Second Reality* without copying
 the music, original effects code, distinctive graphics or text.
 
-**No visual drift:** A trigger at audio sample \`s\` is visible on exactly
-the visual frame containing \`s\` under the declared sample/frame rule.
+**No visual drift:** A trigger at audio sample `s` is visible on exactly
+the visual frame containing `s` under the declared sample/frame rule.
 If rasterization is GPU-backed, require deterministic command and
 geometry hashes plus same-device pixel/visual assertions; do **not**
 claim identical pixels on NVIDIA, SwiftShader and every browser.
@@ -266,13 +266,13 @@ claim identical pixels on NVIDIA, SwiftShader and every browser.
 
 Start with a readable canonical project:
 
-\`\`\`text
+```text
 demo.qdem.json
   schemaVersion, receiverMode, seed, sourcePins
   sampleRate, visualFps, tempoSegments, orders, patterns
   instrumentProfiles, waveform/sample digests
   timeline, scenes, cues, glyphAtlasVersion, exportProfile
-\`\`\`
+```
 
 Reject unknown schema, duplicate sample IDs, invalid indices, negative/overlarge
 counts, nonfinite numeric values, sparse command arrays, cyclic references,
@@ -283,7 +283,7 @@ capabilities must not be inferred from filenames alone.
 
 Result bundle (no timestamps in identity-bearing bytes):
 
-\`\`\`text
+```text
 demo.qdem.json
 music.mod                 (only after real MOD conformance)
 music.wav                 (canonical PCM16 + RIFF)
@@ -292,7 +292,7 @@ visual-command-stream.bin (versioned, ordered)
 scene-profile.json
 SHA256SUMS
 MANIFEST.json             (non-self-referential receipt)
-\`\`\`
+```
 
 Hash the normalized project, event stream, PCM payload, WAV bytes,
 MOD bytes (if present), glyph/topology source, scene-command stream
@@ -304,7 +304,7 @@ a *distribution derivative*, with codec and encoder identities in a separate
 manifest. Use TOMBSTONE-style immutability/replay patterns rather than
 creating a new dependency.
 
-A future optional \`intro64k\` profile may cap the **payload**
+A future optional `intro64k` profile may cap the **payload**
 (song+scene+glyph+instrument data) to 64 KiB compressed; define exactly
 what counts in that budget. The browser runtime, WebGL implementation and
 web-platform library sizes do not disappear simply because the data pack
@@ -320,12 +320,12 @@ native/WebAssembly engineering target, not a v1 claim.
 - At least 3 chunk sizes must produce **identical PCM16LE**, track state and
   control-cue events. Different seeds differ; equal seeds alone are
   insufficient when other inputs change.
-- Binary \`.MOD\` header, offset, 31 sample descriptors, order/pattern,
+- Binary `.MOD` header, offset, 31 sample descriptors, order/pattern,
   64-row, supported-effect, loop bounds and PCM8 round-trip checks.
   Cross-check selected fixtures with the C99 reference without claiming
   full legacy-ecosystem conformance.
 - Separate test for Strict and Replay Safe identities; no path by which
-  an unverified browser decoder or \`Math.sin\` output enters Strict PCM.
+  an unverified browser decoder or `Math.sin` output enters Strict PCM.
 - Project serialization and SHA-256 checks; mutate hashes, wrong build IDs,
   truncated inputs, oversized loops, resource/path attacks and re-ordered
   events; all fail closed without partially issued success manifests.
@@ -338,23 +338,23 @@ native/WebAssembly engineering target, not a v1 claim.
 - Only generated local known-answer audio is used in hosted CI, **not**
   copyrighted commercial music and not external model downloads.
 
-**OPT candidates:** \`OPT-DSP-001\` (sample-rate vs control-rate separation),
-\`OPT-INV-001\` (static oscillator/E8 LUT reuse),
-\`OPT-INC-001\` (signature-bound rebuilds), \`OPT-REDUCE-001\`
-(reject inaudible/out-of-view processing), \`OPT-POOL-001\`
-(bound typed-array buffers) and \`OPT-BUDGET-001\`
+**OPT candidates:** `OPT-DSP-001` (sample-rate vs control-rate separation),
+`OPT-INV-001` (static oscillator/E8 LUT reuse),
+`OPT-INC-001` (signature-bound rebuilds), `OPT-REDUCE-001`
+(reject inaudible/out-of-view processing), `OPT-POOL-001`
+(bound typed-array buffers) and `OPT-BUDGET-001`
 (environment-specific regression budgets). Keep full-lifecycle
 memory/CPU/GC/underrun observations and inspect the slow/reference
-path. \`OPT-DSP-001\` expressly warns that holding one control value
+path. `OPT-DSP-001` expressly warns that holding one control value
 for an entire arbitrary render block is **not** a verified equivalent
 optimization. No approximation goes live without a quantified error
 bound, reference and test.
 
 **Owner RTX 5060 Ti workflow:** introduce a separate, manually dispatched
-\`rtx5060ti-demoscene.yml\` *after implementation and reviewed merge*:
-\`github.actor == EmergentMonk\`, \`main\` exact SHA,
-\`acknowledge_local_execution=true\`, runner
-\`[self-hosted, linux, x64, qsol-rtx5060ti]\`.
+`rtx5060ti-demoscene.yml` *after implementation and reviewed merge*:
+`github.actor == EmergentMonk`, `main` exact SHA,
+`acknowledge_local_execution=true`, runner
+`[self-hosted, linux, x64, qsol-rtx5060ti]`.
 Validate the original RTX archives without overwriting them.
 Run same-source/same-scene forced-fresh vs retained WebGL on a visible GPU,
 check framebuffer parity, measure draw calls, uploads, CPU prep,
@@ -363,7 +363,7 @@ DSP CPU profiles and exact source/PCM hashes. Report AMD Ryzen CPU / RTX
 driver / Chromium versions and control ambient thermals where feasible.
 No synthetic CPU timings are presented as GPU acceleration. Evidence is
 written to a fresh outside-repository directory and uploaded only by
-explicit \`publish_evidence=true\`. A later preservation PR commits the
+explicit `publish_evidence=true`. A later preservation PR commits the
 **exact downloaded ZIP bytes** and its checked SHA-256.
 
 ## 9. Incremental delivery plan and acceptance gates
@@ -372,7 +372,7 @@ explicit \`publish_evidence=true\`. A later preservation PR commits the
 | --- | --- | --- |
 | **P0: Contracts** | This ADR, canonical data/identity design, donor license/source pins | Owner review only; **no audio engine code yet** |
 | **P1: Audible vertical slice** | Pure four-voice PCM DSP, fixed-rate tracker clock, 1 original loop, exact WAV and digest; 1 animated scene synced to rows | 20 s offline fixture bytes identical on repeated and partitioned renders; scene-cue hashes match; full hosted CI |
-| **P2: Real MOD** | Four-channel \`M.K.\` encoder/loader, signed PCM8 bank, C99 independent oracle, portable song project | Valid fixture \`.mod\` loads in the declared reference subset; invalid effects/data fail; new source/receipt tests |
+| **P2: Real MOD** | Four-channel `M.K.` encoder/loader, signed PCM8 bank, C99 independent oracle, portable song project | Valid fixture `.mod` loads in the declared reference subset; invalid effects/data fail; new source/receipt tests |
 | **P3: Studio and live** | Tracker editor, sample generator, AudioWorklet adapter, import/export, intentional pause/seek | Audio-visual sync under tested environment; no underrun in stated demo workload; unsupported contexts handled |
 | **P4: Demoscene scenes** | Original vector/bitmap text, plasma, E8 scene, camera cue system, complete 45–90-second intro | Repeatable scene and audio events, exact asset hashes, sample-indexed full-run replay |
 | **P5: OPT/RTX evidence** | A/B forced-fresh vs retained and CPU DSP comparisons; owner manual workflow and receipt | Hosted exact gates then owner-dispatched actual RTX; separate follow-up immutable evidence PR |
