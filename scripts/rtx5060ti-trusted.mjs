@@ -14,7 +14,8 @@ const DEFAULT_BASELINE='1f965f4e5b6669de0f954e3a39b11aa679e56720';
 const ALLOWED_BASELINES=new Set([
   DEFAULT_BASELINE,
   '240617e8bc1a935f05eaf75a10531f194f72a173', // RTX5060TI-001 candidate
-  'b39b0bd0db5ba9b467b9e47aede4edc4dd156e9f' // RTX5060TI-002 candidate
+  'b39b0bd0db5ba9b467b9e47aede4edc4dd156e9f', // RTX5060TI-002 candidate
+  '3f5518a168652a003e8db9aa6dc0371ddb4782ea' // RTX5060TI-003 candidate
 ]);
 const root=resolve(import.meta.dirname,'..'),checkHex=x=>/^[0-9a-f]{40}$/.test(x);
 const sum=bytes=>createHash('sha256').update(bytes).digest('hex');
