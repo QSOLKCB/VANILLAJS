@@ -1,5 +1,25 @@
 # VANILLAJS roadmap
 
+## Experimental follow-up — Open-VLM vs Terra FreeDM
+
+- Compare four small, locally installed vision-language model candidates:
+  Qwen3-VL 2B, Qwen3-VL 4B Instruct, Qwen2.5-VL 3B, Moondream 1.8B.
+- Pin the owner's actual 42374695320 Terra MATCH.json and 48 original
+  screenshot SHA-256 identities. Replay identical selected source frames,
+  in-game variables, prior actions and Terra role prompts through local
+  Ollama before considering new game skill.
+- Report per-model valid JSON rate, action agreement, exact model digest,
+  prompt/screenshot hashes, local request times and explicit limitations.
+  Similarity to Terra is **not** a gameplay correctness or superiority oracle.
+- Optionally run a second real four-player open-weight FreeDM pilot using
+  original ViZDoom worker topology. Rotate serialized GPU inference order;
+  report genuine engine scores but don't falsely claim equal spawns/latency.
+- Do not download any model, access a cloud endpoint or dispatch GPU
+  execution in PR CI. Owner must approve manual main-only workflow.
+  No OpenAI API credits or account keys are consumed.
+
+See [FreeDM Open-VLM comparison](experiments/freedm-open/README.md).
+
 ## Experimental FPS research — FreeDM four-Terra match (owner only)
 
 - Stage real FreeDM v0.13.0 MAP01 deathmatch with four independent local
