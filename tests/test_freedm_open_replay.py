@@ -226,6 +226,76 @@ class ReplayTests(unittest.TestCase):
              patch("sys.argv",["replay.py","--source","/s","--output","/o","--head","a"*40]):
             replay.main()  # complete PARTIAL is not an exception
 
+    def test_ollama_transport_failure_is_incomplete_not_a_successful_partial(self):
+        dataset = fake_dataset()
+        inventory = {x: {"sha256": "a" * 64, "installedBytes": 2000000000}
+                     for x in replay.MODEL_TAGS}
+        def failing(model, prompt, screenshot, **kwargs):
+            raise RuntimeError("local Ollama unavailable")
+        with tempfile.TemporaryDirectory() as tmp:
+            args = argparse.Namespace(
+                head="b"*40, source=Path(tmp)/"source",
+                output=Path(tmp)/"output", frames_per_role=3)
+            with patch.object(replay,"check_checkout"), \
+                 patch.object(replay,"load_terra_archive",return_value=dataset), \
+                 patch.object(replay,"installed_models",return_value=inventory), \
+                 patch.object(replay,"vision_action",side_effect=failing), \
+                 patch.object(replay,"no_model_reload",return_value=True):
+                r = replay.evaluate(args)
+            self.assertEqual(len(r["samples"]), 48)
+            self.assertEqual(r["status"], "INCOMPLETE")
+            self.assertFalse(r["executionComplete"])
+            self.assertFalse(r["liveReadiness"]["eligible"])
+            self.assertEqual(len(r["errors"]), 48)
+            self.assertTrue(all(x["status"] == "LOCAL_ERROR" for x in r["samples"]))
+            self.assertEqual(r["summary"][replay.MODEL_TAGS[0]]["localErrors"], 12)
+            self.assertEqual(r["summary"][replay.MODEL_TAGS[0]]["invalid"], 0)
+            self.assertEqual(r["summary"][replay.MODEL_TAGS[0]]["providerCompleted"], 0)
+            self.assertTrue((args.output/"REPLAY.json").is_file())
+            self.assertTrue((args.output/"SHA256SUMS").is_file())
+        with patch.object(replay,"evaluate",return_value=r), \
+             patch("sys.argv",["replay.py","--source","/s",
+                               "--output","/o","--head","a"*40]):
+            with self.assertRaises(SystemExit) as caught:
+                replay.main()
+            self.assertEqual(caught.exception.code, 1)
+
+    def test_mixed_invalid_controls_and_transport_failure_still_incomplete(self):
+        dataset = fake_dataset()
+        inventory = {x: {"sha256": "a" * 64, "installedBytes": 2000000000}
+                     for x in replay.MODEL_TAGS}
+        attempts = 0
+        def mixed(model, prompt, screenshot, **kwargs):
+            nonlocal attempts
+            attempts += 1
+            if attempts == 1:
+                raise RuntimeError("local backend returned HTTP 500")
+            if attempts % 2:
+                return {"status": "INVALID_ACTION",
+                    "errorCategory": "SCHEMA_REJECTED",
+                    "rawActionText": '{"fire":true}',
+                    "meta": {"wallNs": 1000000}}
+            return {"status": "VALID", "action": neutral_action(),
+                    "meta": {"wallNs": 1000000}}
+        with tempfile.TemporaryDirectory() as tmp:
+            args = argparse.Namespace(
+                head="b"*40, source=Path(tmp)/"source",
+                output=Path(tmp)/"output", frames_per_role=3)
+            with patch.object(replay,"check_checkout"), \
+                 patch.object(replay,"load_terra_archive",return_value=dataset), \
+                 patch.object(replay,"installed_models",return_value=inventory), \
+                 patch.object(replay,"vision_action",side_effect=mixed), \
+                 patch.object(replay,"no_model_reload",return_value=True):
+                r = replay.evaluate(args)
+            self.assertEqual(attempts, 48)
+            self.assertEqual(r["status"], "INCOMPLETE")
+            self.assertFalse(r["executionComplete"])
+            self.assertFalse(r["liveReadiness"]["eligible"])
+            self.assertEqual(sum(x["providerCompleted"] for x in
+                                 r["summary"].values()), 47)
+            self.assertEqual(sum(x["localErrors"] for x in r["summary"].values()), 1)
+            self.assertTrue(any(x["status"]=="INVALID_ACTION" for x in r["samples"]))
+
     def test_one_replay_sends_exactly_48_local_inferences_and_is_not_game_score(self):
         dataset = fake_dataset()
         inventory = {x: {"sha256": "a" * 64, "installedBytes": 2000000000}
