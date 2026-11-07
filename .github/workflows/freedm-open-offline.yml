@@ -22,11 +22,15 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m unittest discover -s tests -p 'test_freedm_open_replay.py' -v
+          python3 -m unittest discover -s tests -p 'test_freedm_open_live.py' -v
+          python3 -m unittest discover -s tests -p 'test_freedm_terra.py' -v
           python3 - <<'PY'
           from pathlib import Path
           import ast,re
           source=Path('experiments/freedm-open/replay.py').read_text()
           ast.parse(source)
+          ast.parse(Path('experiments/freedm-open/live.py').read_text())
+          ast.parse(Path('experiments/freedm-terra/run.py').read_text())
           assert 'http://127.0.0.1:11434' in source
           assert 'https://api.openai.com' not in source
           assert '/api/pull' not in source
@@ -40,5 +44,9 @@ jobs:
           assert "inputs.acknowledge_local_execution == true" in workflow
           assert 'OPENAI_API_KEY' not in workflow
           assert 'ollama pull' not in workflow
+          assert "inputs.mode == 'replay-and-live'" in workflow
+          assert "uv run --offline" in workflow
+          assert "experiments/freedm-open/live.py" in workflow
+          assert "OPENAI_API_KEY" not in workflow
           print('Open-VLM comparison is owner-only, zero API credits and no automatic model download')
           PY
