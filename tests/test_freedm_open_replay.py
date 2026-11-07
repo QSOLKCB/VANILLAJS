@@ -128,6 +128,12 @@ class ReplayTests(unittest.TestCase):
             self.assertEqual(body["model"], replay.MODEL_TAGS[0])
             self.assertEqual(body["stream"], False)
             self.assertEqual(body["options"]["temperature"], 0)
+            self.assertEqual(body["options"]["num_predict"], 384)
+            self.assertIs(body["think"], False)
+            self.assertEqual(body["format"], replay.ACTION_SCHEMA)
+            self.assertEqual(set(body["format"]["required"]),
+                {"move", "turn", "fire", "use", "sprint", "tactic"})
+            self.assertEqual(body["format"]["additionalProperties"], False)
             self.assertEqual(body["messages"][0]["images"][0][:8], "iVBORw0K")
             calls.append(body)
             return {"model": replay.MODEL_TAGS[0], "done": True,
@@ -151,7 +157,74 @@ class ReplayTests(unittest.TestCase):
         with patch.object(replay, "local_http", side_effect=fake):
             r = replay.vision_action(replay.MODEL_TAGS[0], "game", png())
         self.assertEqual(r["status"], "INVALID_ACTION")
+        self.assertEqual(r["errorCategory"], "SCHEMA_REJECTED")
+        self.assertEqual(r["rawActionText"], '{"fire":true}')
+        self.assertEqual(r["meta"]["protocol"], replay.PROTOCOL)
         self.assertNotIn("action", r)
+
+    def test_new_protocol_profiles_are_explicit_and_not_silent_model_switches(self):
+        self.assertEqual(replay.generation_profile("qwen3-vl:2b")["think"], False)
+        self.assertEqual(replay.generation_profile("qwen3-vl:2b")["options"]["num_predict"], 384)
+        for tag in replay.MODEL_TAGS[1:]:
+            self.assertIsNone(replay.generation_profile(tag)["think"])
+            self.assertEqual(replay.generation_profile(tag)["options"]["num_predict"], 192)
+        self.assertEqual(replay.ACTION_SCHEMA["additionalProperties"], False)
+        with self.assertRaises(ValueError):
+            replay.generation_profile("uninstalled/cloud-only")
+
+    def test_empty_thinking_output_is_honestly_classified_and_hashed(self):
+        def fake(path, body=None, **kwargs):
+            self.assertEqual(body["think"], False)
+            return {"model": replay.MODEL_TAGS[0], "done": True,
+                "done_reason": "length",
+                "message": {"content": "", "thinking": "undisclosed reasoning"},
+                "eval_count": 384, "total_duration": 100000000}
+        with patch.object(replay, "local_http", side_effect=fake):
+            row = replay.vision_action(replay.MODEL_TAGS[0], "game", png())
+        self.assertEqual(row["status"], "INVALID_ACTION")
+        self.assertEqual(row["errorCategory"], "EMPTY_ACTION_CONTENT")
+        self.assertEqual(row["rawActionText"], "")
+        self.assertEqual(row["meta"]["thinkingCharacters"], len("undisclosed reasoning"))
+        self.assertEqual(row["meta"]["doneReason"], "length")
+        self.assertNotIn("thinking", row)
+        self.assertNotIn("undisclosed reasoning", json.dumps(row))
+
+    def test_complete_partial_replay_is_scientific_result_but_not_live_ready(self):
+        dataset = fake_dataset()
+        inventory = {x: {"sha256": "a" * 64, "installedBytes": 2000000000}
+                     for x in replay.MODEL_TAGS}
+        def simulate(model, prompt, screenshot, **kwargs):
+            if model == replay.MODEL_TAGS[0]:
+                return {"status": "INVALID_ACTION",
+                    "errorCategory": "EMPTY_ACTION_CONTENT",
+                    "rawActionText": "",
+                    "meta": {"wallNs": 1000000}}
+            return {"status": "VALID", "action": neutral_action(),
+                    "meta": {"wallNs": 1000000}}
+        with tempfile.TemporaryDirectory() as temp:
+            args = argparse.Namespace(
+                head="b"*40, source=Path(temp)/"source",
+                output=Path(temp)/"output", frames_per_role=3)
+            with patch.object(replay,"check_checkout"), \
+                 patch.object(replay,"load_terra_archive",return_value=dataset), \
+                 patch.object(replay,"installed_models",return_value=inventory), \
+                 patch.object(replay,"vision_action",side_effect=simulate), \
+                 patch.object(replay,"no_model_reload",return_value=True):
+                report = replay.evaluate(args)
+            self.assertEqual(report["status"], "PARTIAL")
+            self.assertTrue(report["executionComplete"])
+            self.assertFalse(report["liveReadiness"]["eligible"])
+            self.assertEqual(len(report["samples"]), 48)
+            self.assertEqual(report["summary"][replay.MODEL_TAGS[0]]["valid"], 0)
+            self.assertEqual(report["summary"][replay.MODEL_TAGS[1]]["valid"], 12)
+            raw = (args.output/"REPLAY.json").read_bytes()
+            receipt = json.loads(raw)
+            self.assertEqual(receipt["status"], "PARTIAL")
+            sums = (args.output/"SHA256SUMS").read_text()
+            self.assertEqual(sums, replay.sha256(raw) + "  REPLAY.json\\n".replace("\\n","\n"))
+        with patch.object(replay,"evaluate",return_value=report), \
+             patch("sys.argv",["replay.py","--source","/s","--output","/o","--head","a"*40]):
+            replay.main()  # complete PARTIAL is not an exception
 
     def test_one_replay_sends_exactly_48_local_inferences_and_is_not_game_score(self):
         dataset = fake_dataset()
@@ -173,6 +246,9 @@ class ReplayTests(unittest.TestCase):
                  patch.object(replay, "no_model_reload", return_value=True):
                 r = replay.evaluate(args)
             self.assertEqual(r["status"], "PASS")
+            self.assertTrue(r["executionComplete"])
+            self.assertTrue(r["liveReadiness"]["eligible"])
+            self.assertEqual(r["protocol"], replay.PROTOCOL)
             self.assertEqual(len(invoked), 48)
             self.assertEqual(len(r["samples"]), 48)
             self.assertEqual(sum(x["sameActionAsTerra"] for x in r["summary"].values()), 48)
