@@ -50,6 +50,12 @@ Read the [source-pinned mathematical/physics contract](docs/BLOAT_NEXUS_UFF.md)
 and use the new opt-in modules deliberately; no GPU or FPS improvement
 is claimed from them until independently measured.
 
+The owner-only [RTX 5060 Ti numerical and three-baseline validation](docs/BLOAT_NEXUS_UFF.md)
+can be dispatched from reviewed `main` after this PR is merged. It verifies the
+three historical source receipts while separately measuring new CPU numerical
+kernels. It has no PR/push trigger; hardware use and artifact upload are
+individually opt-in.
+
 ## QwakeTF-style reusable broadphase scratch
 
 The existing `StaticAABBIndex` gains an opt-in `collectCandidates()` method,
