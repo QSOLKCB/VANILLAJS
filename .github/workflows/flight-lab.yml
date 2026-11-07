@@ -50,6 +50,8 @@ jobs:
           python3 -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/finalize-rtx5060ti-adaptive.py').read_text())"
       - name: Verify documented navigation workload
         run: node scripts/navigation-workload.js --check > navigation-workload.json
+      - name: Compare exact QwakeTF-inspired pooled A* and existing serial reference
+        run: node scripts/navigation-pool-workload.js --check > navigation-pool-workload.json
       - name: Validate static geometry layer and record paired workload observations
         run: node scripts/geometry-layer2-workload.js --check > geometry-layer2-workload.json
       - name: Reproduce exhaustive OMI evidence
@@ -100,6 +102,7 @@ jobs:
             integer-evidence.json
             adaptive-query-workload.json
             navigation-workload.json
+            navigation-pool-workload.json
             geometry-layer2-workload.json
             omi-evidence.json
             omi-machine-evidence.json
