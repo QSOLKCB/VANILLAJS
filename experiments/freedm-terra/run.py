@@ -334,12 +334,25 @@ def play(args):
                 obs["framePath"] = name
                 del obs["image"]
 
-            actions = []
-            calls = []
+            # Publish the observation receipt *before* any billable request.
+            # An API failure cannot discard earlier successful decisions or
+            # the screenshots that caused those decisions.
+            round_record = {"round": turn, "phase": "OBSERVED_UNAPPLIED",
+                            "observations": observations, "actions": []}
+            receipt["turns"].append(round_record)
+            chosen = []
             if args.mode == "smoke":
-                actions = [neutral_action() for _ in ROLES]
+                for role, _ in ROLES:
+                    action = neutral_action()
+                    chosen.append(action)
+                    round_record["actions"].append({
+                        "role": role, "status": "READY_NOT_APPLIED",
+                        "action": action, "vector": buttons(action),
+                        "api": None,
+                    })
             else:
                 key = os.environ["OPENAI_API_KEY"]
+                failures = []
                 with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
                     futures = []
                     for i, (role, tactic) in enumerate(ROLES):
@@ -350,34 +363,47 @@ def play(args):
                         payload = agent_request_payload(
                             role, tactic, png, obs["variables"], last[role])
                         futures.append(pool.submit(call_terra, key, payload))
-                    failures = []
+                    # Drain all four futures, even when one fails. Valid
+                    # provider IDs and billable usage remain in MATCH.json.
                     for i, future in enumerate(futures):
                         role = ROLES[i][0]
+                        record = {"role": role, "status": "API_FAILED_NOT_APPLIED"}
                         try:
                             action, provider = future.result()
+                            record.update({
+                                "status": "RESPONSE_RECEIVED_NOT_APPLIED",
+                                "action": action,
+                                "vector": buttons(action), "api": provider,
+                            })
                             ledger.record_usage(role, provider["inputTokens"],
                                                 provider["outputTokens"])
-                            actions.append(action)
-                            calls.append(provider)
+                            record["status"] = "READY_NOT_APPLIED"
+                            chosen.append(action)
                         except Exception as error:
-                            failures.append({"role": role,
-                                             "errorClass": type(error).__name__,
-                                             "message": str(error)[:180]})
-                    require(not failures,
-                            "Terra call/usage failure; no retries: " +
-                            json.dumps(failures))
+                            record["error"] = {
+                                "errorClass": type(error).__name__,
+                                "message": str(error)[:180],
+                            }
+                            failures.append({"role": role, **record["error"]})
+                        round_record["actions"].append(record)
+                if failures:
+                    round_record["phase"] = "API_ABORTED_UNAPPLIED"
+                    raise ValueError("Terra call/usage failure; no retries: " +
+                                     json.dumps(failures))
+            # Sending an action to multiple processes is not transactional;
+            # until *all* engine acknowledgements arrive, do not claim it
+            # was definitely applied or definitely unapplied.
+            round_record["phase"] = "ENGINE_APPLY_UNCONFIRMED"
             for i, (pipe, _) in enumerate(sessions):
-                pipe.send({"op": "act", "buttons": buttons(actions[i])})
+                pipe.send({"op": "act", "buttons": buttons(chosen[i])})
             results = [receive(pipe, STEP_TIMEOUT_S, "acted")
                        for pipe, _ in sessions]
-            receipt["turns"].append({
-                "round": turn, "observations": observations,
-                "actions": [{"role": ROLES[i][0], "action": actions[i],
-                             "vector": buttons(actions[i]),
-                             "api": calls[i] if calls else None,
-                             "result": results[i]} for i in range(4)]})
+            for i, record in enumerate(round_record["actions"]):
+                record["status"] = "ENGINE_ACKNOWLEDGED"
+                record["result"] = results[i]
+            round_record["phase"] = "ENGINE_APPLIED"
             for i, (role, _) in enumerate(ROLES):
-                last[role] = actions[i]
+                last[role] = chosen[i]
             if all(result["ended"] for result in results):
                 receipt["matchEndedEarly"] = True
                 break
