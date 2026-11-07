@@ -29,8 +29,16 @@ export class FixedClock {
       } else {
         // Repay the signed remainder on the next unsnapped frame. Never let
         // rounded 59/61 Hz timestamps accumulate an unbounded clock-rate error.
-        clamped = Math.max(0, clamped + this.drift);
-        this.drift = 0;
+        const payable = clamped + this.drift;
+        if (payable < 0) {
+          // A zero or very short frame cannot repay a negative timing debt.
+          // Keep the remainder for future frames instead of discarding time.
+          clamped = 0;
+          this.drift = payable;
+        } else {
+          clamped = payable;
+          this.drift = 0;
+        }
       }
     }
     this.accumulator += clamped * timeScale;
