@@ -1,0 +1,104 @@
+name: RTX 5060 Ti 2D Foundry owner validation
+
+# Post-reviewed merge only: never trigger physical hardware on PR/push.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "Authorize 2D Foundry physical test on my visible RTX 5060 Ti runner"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Upload new checksum-sealed 2D hardware evidence for a future archive PR"
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: qsol-rtx5060ti-2d-${{ github.repository }}-${{ github.actor }}
+  cancel-in-progress: false
+jobs:
+  measure:
+    if: ${{ github.repository == 'QSOLKCB/VANILLAJS' && github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 45
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Recheck exact reviewed main, physical NVIDIA device and historical evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          test -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}"
+          command -v nvidia-smi
+          command -v node
+          command -v python3
+          python3 scripts/verify-rtx-receipt.py
+          python3 scripts/verify-rtx-adaptive-receipt.py
+          python3 scripts/verify-rtx003-comment001.py --require-binaries \
+            --archive evidence/RTX5060TI-003/vanillajs-rtx5060ti-arcade-42329114286-1.zip \
+            --screenshot evidence/COMMENT-001/2026-11-07_original-screenshot.png \
+            --excerpt evidence/COMMENT-001/2026-11-07_x-post_excerpt.png
+          python3 scripts/verify-rtx004-receipt.py
+          python3 scripts/verify-rtx005-receipt.py
+          (cd evidence/RTX5060TI-001 && sha256sum -c SHA256SUMS)
+          (cd evidence/RTX5060TI-002 && sha256sum -c SHA256SUMS)
+          (cd evidence/RTX5060TI-003 && sha256sum -c SHA256SUMS)
+          (cd evidence/RTX5060TI-004 && sha256sum -c SHA256SUMS)
+          (cd evidence/RTX5060TI-005 && sha256sum -c SHA256SUMS)
+          node --check scripts/rtx5060ti-2d.mjs
+          node scripts/rtx5060ti-2d.mjs --help
+          node scripts/rtx-playwright.mjs
+          nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader
+      - name: Verify 2D foundation source and synthesize independent public CPU fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/motion2d.test.js tests/lab2d.test.js \
+            tests/audio2d.test.js tests/ternary-store2d.test.js
+          python3 -m unittest discover -s tests -p 'test_rtx2d_finalizer.py' -v
+          node scripts/check.js
+          node scripts/build.js
+          evidence="$HOME/.local/state/qsol/vanillajs/rtx5060ti/2d-actions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          if test -e "$evidence"; then echo 'Evidence output exists; refuse overwrite' >&2; exit 1; fi
+          mkdir -m 700 -p "$evidence"
+          echo "QSOL_2D_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+          node scripts/lab2d-evidence.js --check > "$evidence/lab2d-source.json"
+      - name: Native RTX identity, headed Chromium 2D Canvas and seven paired OPT observations
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/rtx5060ti-2d.mjs \
+            --expected-head "$GITHUB_SHA" \
+            --source-evidence "$QSOL_2D_EVIDENCE/lab2d-source.json" \
+            --out "$QSOL_2D_EVIDENCE/rtx2d.json"
+      - name: Verify exact source-bound hardware data and seal outside checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/finalize-rtx5060ti-2d.py \
+            --out "$QSOL_2D_EVIDENCE" --expected-head "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID" --attempt "$GITHUB_RUN_ATTEMPT"
+          (cd "$QSOL_2D_EVIDENCE" && sha256sum -c SHA256SUMS)
+          cat "$QSOL_2D_EVIDENCE/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload new physical evidence only on explicit owner consent
+        if: ${{ inputs.publish_evidence == true }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: vanillajs-rtx5060ti-2d-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.QSOL_2D_EVIDENCE }}/lab2d-source.json
+            ${{ env.QSOL_2D_EVIDENCE }}/rtx2d.json
+            ${{ env.QSOL_2D_EVIDENCE }}/EXPERIMENT.json
+            ${{ env.QSOL_2D_EVIDENCE }}/SUMMARY.md
+            ${{ env.QSOL_2D_EVIDENCE }}/SHA256SUMS
+          retention-days: 14
