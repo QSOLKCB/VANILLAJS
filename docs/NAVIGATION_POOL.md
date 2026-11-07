@@ -33,6 +33,14 @@ const edited=grid.withBlocked([[10,10]]);
 const nextPool=new PooledPathfinder(edited);
 ~~~
 
+## Additional QwakeTF extraction: reusable collision candidate scratch
+
+QwakeTF's `world.js` changed collision candidate gathering from a per-query generator to a reused array, preserving the exact brush set and order. VANILLAJS's `StaticAABBIndex` already uses a conservative BVH, not that grid/generator; its allocating `candidates()` remains the independent reference. The added method `collectCandidates(origin, displacement, out, {halfSize=0})` uses caller-owned output and a retained traversal stack, returning the **same sorted original collider indices** as `candidates()`.
+
+An invalid origin, displacement, extent or output object fails before modifying `out`; a successful query replaces its prior contents (including a miss). A `StaticAABBIndex` is an immutable snapshot of static boxes: moving geometry must be reindexed, and one instance must not be used for reentrant traversals. The API is opt-in and does not change collision narrowphase, tie order or any existing game caller.
+
+`tests/geometry-layer2.test.js` now compares 2,400 seeded sweeps plus adversarial reuse/miss/validation cases against the old allocating `candidates()` implementation. `node scripts/geometry-candidate-workload.js --check` measures 14, 128 and 480 static colliders with seven alternating serial paired trials, keeping the same index across queries. Input validation, traversal and digest calculation are included in elapsed times; index construction and GPU timings are not. Correctness is a CI gate; timing differences are observations only.
+
 ## Evidence protocol and limitations
 
 - `node --test tests/navigation-pool.test.js` includes 2,560 seeded route/budget comparisons against unchanged `navigation.findPath()`, independent BFS shortest-distance checks, repeated invalid and successful searches, frozen-grid edit isolation, and the full 256 × 256 grid.
