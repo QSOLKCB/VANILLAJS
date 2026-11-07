@@ -9,6 +9,21 @@ two separately registered research experiments (OMI with three demonstrations an
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
+## Experimental FreeDM × Four Terra deathmatch
+
+The independent [FreeDM/Terra FPS research lab](experiments/freedm-terra/README.md)
+introduces an **owner-dispatched, opt-in four-player Doom-engine deathmatch**
+using the FreeDM WAD, four real local ViZDoom peers and four separate
+GPT-6.1 Terra vision agents. It is *not* a browser runtime dependency,
+packaged game, automatically running workflow or a validated completed match.
+An offline four-player smoke must pass before any API call. The per-dispatch
+authorization is US$5 per agent (US$20 total), with nonrefundable conservative
+pre-request reservations and no automatic retries. Source-bound screenshots,
+action vectors, actual game counters, token usage and SHA-256 manifests
+are collected outside the checkout. No self-hosted hardware or credits are
+used by ordinary PR checks. See the lab README for local WAD setup and
+the explicit owner-only [workflow](.github/workflows/freedm-terra-deathmatch.yml).
+
 ## Run the labs
 
 Download or clone the repository, then serve its root with any static HTTP server:

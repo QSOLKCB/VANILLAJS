@@ -1,0 +1,151 @@
+name: FreeDM four-Terra real deathmatch (owner only)
+
+# Never runs on pushes, PRs, forks, merge or automated checks.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "smoke: four genuine peers, $0 API; paid: four independent Terra vision agents"
+        type: choice
+        options: [smoke, paid]
+        required: true
+        default: smoke
+      acknowledge_local_execution:
+        description: "Authorize native ViZDoom on my visible QSOL workstation"
+        type: boolean
+        required: true
+        default: false
+      authorize_api_spend:
+        description: "Authorize up to $5 per Terra, $20 total for ONE paid dispatch"
+        type: boolean
+        required: true
+        default: false
+      budget_usd:
+        description: "Fixed total spending authorization, must be 20.00 in paid mode"
+        type: string
+        required: true
+        default: "20.00"
+      publish_evidence:
+        description: "Upload only FreeDM game screenshots/JSON and checksum sidecars (public artifact)"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freedm-terra-owner-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  deathmatch:
+    if: >-
+      ${{ github.repository == 'QSOLKCB/VANILLAJS' && github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true && (inputs.mode == 'smoke' || (inputs.mode == 'paid' && inputs.authorize_api_spend == true && inputs.budget_usd == '20.00')) }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 35
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      WAD_OVERRIDE: ${{ vars.FREEDM_WAD_PATH }}
+      RUN_MODE: ${{ inputs.mode }}
+      TOTAL_USD: ${{ inputs.budget_usd }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Verify clean reviewed main, runtime, local assets and zero-cost policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          case "$RUN_MODE" in smoke|paid) ;; *) exit 2;; esac
+          if [ "$RUN_MODE" = paid ]; then test "$TOTAL_USD" = "20.00"; fi
+          command -v uv
+          command -v python3
+          test "$(python3 -c 'import sys;print(sys.version_info.major)')" = 3
+          python3 -m unittest discover -s tests -p 'test_freedm_terra.py' -v
+          python3 - <<'PY'
+          import ast
+          from pathlib import Path
+          for name in ('core.py','run.py','prepare_wad.py'):
+              ast.parse((Path('experiments/freedm-terra')/name).read_text())
+          print('FreeDM/Terra scripts syntactically valid; no provider requests')
+          PY
+          if [ -z "$WAD_OVERRIDE" ]; then
+            WAD_OVERRIDE="$HOME/Games/FreeDM/freedm.wad"
+          fi
+          test -f "$WAD_OVERRIDE" || {
+            echo "FreeDM WAD absent. Install original release locally; see experiments/freedm-terra/README.md" >&2
+            exit 1
+          }
+          printf 'FREEDM_WAD=%s\n' "$WAD_OVERRIDE" >> "$GITHUB_ENV"
+          root="$HOME/.local/state/qsol/vanillajs/freedm-terra/run-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          test ! -e "$root" || { echo 'Refusing to overwrite previous run evidence' >&2; exit 1; }
+          mkdir -m 700 -p "$root"
+          printf 'FREEDM_EVIDENCE=%s\n' "$root" >> "$GITHUB_ENV"
+      - name: Four real FreeDM players - NO provider/API calls
+        shell: bash
+        run: |
+          set -euo pipefail
+          uv run --no-project --with 'vizdoom==1.3.2' --python python3 \
+            experiments/freedm-terra/run.py \
+            --mode smoke --head "$GITHUB_SHA" \
+            --wad "$FREEDM_WAD" --out "$FREEDM_EVIDENCE/smoke" \
+            --port 25029 --decisions 1 --authorized-usd 20.00
+          (cd "$FREEDM_EVIDENCE/smoke" && sha256sum -c SHA256SUMS)
+      - name: Four independent GPT-6.1 Terra clients - explicitly paid only
+        if: ${{ inputs.mode == 'paid' && inputs.authorize_api_spend == true && inputs.budget_usd == '20.00' }}
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          FREEDM_TERRA_PAID_AUTH: "YES"
+        run: |
+          set -euo pipefail
+          test -n "$OPENAI_API_KEY" || { echo 'OPENAI_API_KEY secret missing' >&2; exit 1; }
+          test "$TOTAL_USD" = "20.00"
+          # Each call nonrefundably reserves $0.40 before transmission.
+          # 12 requests max/player -> $4.80 reserve/player; <= $19.20 total.
+          # Model image inputs are LOW detail; no tools, model retries or writes.
+          uv run --no-project --with 'vizdoom==1.3.2' --python python3 \
+            experiments/freedm-terra/run.py \
+            --mode paid --head "$GITHUB_SHA" \
+            --wad "$FREEDM_WAD" --out "$FREEDM_EVIDENCE/match" \
+            --port 25030 --decisions 12 --authorized-usd 20.00
+          (cd "$FREEDM_EVIDENCE/match" && sha256sum -c SHA256SUMS)
+      - name: Local match summary (JSON counts only; no secret)
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - "$FREEDM_EVIDENCE" "$RUN_MODE" >> "$GITHUB_STEP_SUMMARY" <<'PY'
+          import json, pathlib, sys
+          folder=pathlib.Path(sys.argv[1])
+          mode=sys.argv[2]
+          path=folder/('match' if mode=='paid' else 'smoke')/'MATCH.json'
+          report=json.loads(path.read_text())
+          if report['status']!='PASS' or len(report['players'])!=4:
+              raise SystemExit('not a complete four-player run')
+          print('## FreeDM: four real multiplayer peers, '+mode)
+          print('Game:',report['game']['map'])
+          print('Model:',report['model'])
+          print('Completed decision rounds:',len(report['turns']))
+          print('Reserved USD per role:')
+          for role, row in report['budget']['roles'].items():
+              print(role, row['reservedUSD'])
+          print()
+          print('Actual frags/deaths and observed match events are in MATCH.json.')
+          print('This is game observation, not deterministic replay or benchmark proof.')
+          PY
+      - name: Preserve evidence ONLY with explicit publication consent
+        if: ${{ always() && inputs.publish_evidence == true && github.actor == 'EmergentMonk' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: freedm-terra-deathmatch-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.FREEDM_EVIDENCE }}/smoke/
+            ${{ env.FREEDM_EVIDENCE }}/match/
+          retention-days: 14
+          if-no-files-found: warn
