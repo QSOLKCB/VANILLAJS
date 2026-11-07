@@ -129,8 +129,22 @@ def verify(out, candidate, run_id, attempt):
             ["axis-range"] * 3 + ["integer-replay"] +
             ["nexus-lattice"] * 3 + ["kepler-orbit"],
             "missing or extra numerical workloads")
-    for row in rows:
+    dimensions = (
+        {"pairs": 32}, {"pairs": 256}, {"pairs": 2048},
+        {"ticks": 2048},
+        {"cells": 6, "rounds": 32},
+        {"cells": 64, "rounds": 32},
+        {"cells": 256, "rounds": 32},
+        {"steps": 512, "dtSeconds": 10},
+    )
+    for index, (row, expected) in enumerate(zip(rows, dimensions)):
+        require(all(type(row.get(field)) is int and row[field] == value
+                    for field, value in expected.items()),
+                f"numerical scenario dimensions mismatch at index {index}")
         if row["name"] == "axis-range":
+            require(type(row.get("axisRejected")) is int and
+                    0 <= row["axisRejected"] <= row["pairs"],
+                    "invalid axis rejection count")
             groups = row["strategies"]
             require(set(groups) == {"reference", "candidate"},
                     "strategy membership changed")

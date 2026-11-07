@@ -65,6 +65,22 @@ test('a long step cannot tunnel across the excluded central mass',()=>{
   const before=point.snapshot();
   assert.throws(()=>point.step(1),/crosses the excluded central radius/);
   assert.deepEqual(point.snapshot(),before);
+  // Normalisation roundoff must not permit the same crossing merely because
+  // the radial direction is diagonal rather than axis aligned.
+  const diagonal=new KeplerOrbit({mass:1000,position:[1,1,0],
+    velocity:[-2,-2,0]});
+  const diagonalBefore=diagonal.snapshot();
+  assert.throws(()=>diagonal.step(1),/crosses the excluded central radius/);
+  assert.deepEqual(diagonal.snapshot(),diagonalBefore);
+  const translated=new KeplerOrbit({mass:1000,center:[4,3,3],
+    position:[5,4,3],velocity:[-2,-2,0]});
+  const translatedBefore=translated.snapshot();
+  assert.throws(()=>translated.step(1),/crosses the excluded central radius/);
+  assert.deepEqual(translated.snapshot(),translatedBefore);
+  // A genuine nonradial chord with a resolvably nonzero miss distance passes.
+  const passing=new KeplerOrbit({mass:1000,position:[1,1,0],
+    velocity:[-2,-1.5,0]});
+  assert.doesNotThrow(()=>passing.step(1));
 });
 
 test('invalid SI values, singularities and pathological steps fail without mutation',()=>{

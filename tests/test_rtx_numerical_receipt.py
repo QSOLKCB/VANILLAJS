@@ -50,13 +50,15 @@ class NumericalEvidenceTests(unittest.TestCase):
                            for name in ("report.json", "SUMMARY.md"))
             (folder / "SHA256SUMS").write_text(sums)
             self.baselines[label] = (folder, report)
-        axis = {
-            "name": "axis-range", "sha256": "b" * 64,
-            "strategies": {
+        def axis(pairs):
+            return {
+                "name": "axis-range", "pairs": pairs,
+                "axisRejected": 0, "sha256": "b" * 64,
+                "strategies": {
                 key: {"samplesMs": [1.0] * 7, "medianMs": 1.0}
                 for key in ("reference", "candidate")
-            },
-        }
+                },
+            }
         other = lambda name: {
             "name": name, "samplesMs": [1.0] * 7, "medianMs": 1.0,
         }
@@ -69,11 +71,14 @@ class NumericalEvidenceTests(unittest.TestCase):
             "protocol": {"warmups": 2, "pairedTrials": 7, "timingGate": False,
                          "gpu": "not measured"},
             "workloads": [
-                axis, axis, axis,
-                {**other("integer-replay"), "complete": True, "digest": "1" * 8},
-                *({**other("nexus-lattice"), "inverseMismatches": 0,
-                    "sha256": "2" * 64} for _ in range(3)),
-                {**other("kepler-orbit"), "maxRelativeEnergyDrift": 1e-12,
+                axis(32), axis(256), axis(2048),
+                {**other("integer-replay"), "ticks": 2048,
+                 "complete": True, "digest": "1" * 8},
+                *({**other("nexus-lattice"), "cells": cells, "rounds": 32,
+                    "inverseMismatches": 0,
+                    "sha256": "2" * 64} for cells in (6, 64, 256)),
+                {**other("kepler-orbit"), "steps": 512, "dtSeconds": 10,
+                 "maxRelativeEnergyDrift": 1e-12,
                  "finalPosition": [1.0, 2.0, 3.0]},
             ],
         }
@@ -102,6 +107,15 @@ class NumericalEvidenceTests(unittest.TestCase):
             lambda x: x["workloads"][3].__setitem__("complete", False),
             lambda x: x["workloads"][4].__setitem__("inverseMismatches", 1),
             lambda x: x["workloads"][-1].__setitem__("maxRelativeEnergyDrift", 1),
+            lambda x: x["workloads"][0].__setitem__("pairs", 0),
+            lambda x: x["workloads"][1].__setitem__("pairs", 32),
+            lambda x: x["workloads"][2].__setitem__("axisRejected", 99999),
+            lambda x: x["workloads"][3].__setitem__("ticks", 0),
+            lambda x: x["workloads"][4].__setitem__("cells", 0),
+            lambda x: x["workloads"][5].__setitem__("cells", 6),
+            lambda x: x["workloads"][6].__setitem__("rounds", 0),
+            lambda x: x["workloads"][7].__setitem__("steps", 0),
+            lambda x: x["workloads"][7].__setitem__("dtSeconds", 0),
         ):
             with self.subTest(mutation=str(mutation)):
                 before = json.loads(json.dumps(self.numeric))

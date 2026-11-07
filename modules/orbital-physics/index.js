@@ -100,7 +100,13 @@ export class KeplerOrbit{
       const along=Math.max(0,Math.min(length,
         -initial.reduce((sum,v,i)=>sum+v*u[i],0)));
       const closest=Math.hypot(...initial.map((v,i)=>v+along*u[i]));
-      if(closest<=this.#minimumRadius)
+      // Normalising the direction and projecting the chord can leave a tiny
+      // positive distance for an exact radial crossing off the coordinate axes.
+      // Use a conservative roundoff envelope relative to the chord's scale.
+      const endpoint=nextPosition.map((v,i)=>v-this.#center[i]);
+      const roundoff=32*Number.EPSILON*Math.max(
+        Math.hypot(...initial),Math.hypot(...endpoint),length);
+      if(closest<=this.#minimumRadius+roundoff)
         throw new RangeError('orbital step crosses the excluded central radius');
     }
     const a1=centralAccelerationSI(nextPosition,this.#mass,{
