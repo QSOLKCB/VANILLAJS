@@ -1,0 +1,121 @@
+name: RTX 5060 Ti ARCADE frame-gate comparison
+
+# Strictly owner-dispatched on reviewed main, not pull_request or push.
+# Requires visible NVIDIA GPU and a dedicated self-hosted runner.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "Authorize local RTX 5060 Ti validation of reviewed main"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Opt in to temporarily upload local hardware evidence"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qsol-rtx5060ti-arcade-${{ github.repository }}-${{ github.actor }}
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    if: ${{ github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact reviewed main, both frozen receipts and native runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          git cat-file -e 240617e8bc1a935f05eaf75a10531f194f72a173^{commit}
+          git cat-file -e b39b0bd0db5ba9b467b9e47aede4edc4dd156e9f^{commit}
+          test -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}"
+          command -v nvidia-smi
+          command -v node
+          command -v python3
+          nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader
+          python3 scripts/verify-rtx-receipt.py
+          python3 scripts/verify-rtx-adaptive-receipt.py
+          (cd evidence/RTX5060TI-001 && sha256sum -c SHA256SUMS)
+          (cd evidence/RTX5060TI-002 && sha256sum -c SHA256SUMS)
+          node --check scripts/rtx5060ti-trusted.mjs
+          node --check scripts/rtx5060ti-frame-gate.mjs
+          node scripts/rtx5060ti-trusted.mjs --help
+          node scripts/rtx5060ti-frame-gate.mjs --help
+          node scripts/rtx-playwright.mjs
+
+      - name: Verify source and prepare packaged WebGL kernels
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/frame-gate.test.js
+          node scripts/check.js
+          node scripts/build.js
+
+      - name: Compare against RTX5060TI-001 exact source using original workload
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$HOME/.local/state/qsol/vanillajs/rtx5060ti/arcade-actions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          if test -e "$evidence"; then echo "Evidence path already exists; refusing overwrite" >&2; exit 1; fi
+          mkdir -m 700 -p "$evidence"
+          echo "QSOL_ARCADE_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+          node scripts/rtx5060ti-trusted.mjs \
+            --baseline 240617e8bc1a935f05eaf75a10531f194f72a173 \
+            --expected-head "$GITHUB_SHA" --out "$evidence/baseline-001"
+
+      - name: Compare against RTX5060TI-002 exact source using same workload
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/rtx5060ti-trusted.mjs \
+            --baseline b39b0bd0db5ba9b467b9e47aede4edc4dd156e9f \
+            --expected-head "$GITHUB_SHA" --out "$QSOL_ARCADE_EVIDENCE/baseline-002"
+
+      - name: Benchmark ARCADE-inspired gate against forced redraw on native RTX
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/rtx5060ti-frame-gate.mjs --expected-head "$GITHUB_SHA" \
+            --out "$QSOL_ARCADE_EVIDENCE/frame-gate.json"
+
+      - name: Finalise new evidence manifest and verify every byte
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/finalize-rtx5060ti-frame-gate.py \
+            --out "$QSOL_ARCADE_EVIDENCE" --expected-head "$GITHUB_SHA"
+          (cd "$QSOL_ARCADE_EVIDENCE" && sha256sum -c SHA256SUMS)
+          cat "$QSOL_ARCADE_EVIDENCE/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish hardware samples only if owner opted in
+        if: ${{ inputs.publish_evidence == true }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: vanillajs-rtx5060ti-arcade-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.QSOL_ARCADE_EVIDENCE }}/EXPERIMENT.json
+            ${{ env.QSOL_ARCADE_EVIDENCE }}/SUMMARY.md
+            ${{ env.QSOL_ARCADE_EVIDENCE }}/SHA256SUMS
+            ${{ env.QSOL_ARCADE_EVIDENCE }}/frame-gate.json
+            ${{ env.QSOL_ARCADE_EVIDENCE }}/baseline-001/report.json
+            ${{ env.QSOL_ARCADE_EVIDENCE }}/baseline-001/SUMMARY.md
+            ${{ env.QSOL_ARCADE_EVIDENCE }}/baseline-001/SHA256SUMS
+            ${{ env.QSOL_ARCADE_EVIDENCE }}/baseline-002/report.json
+            ${{ env.QSOL_ARCADE_EVIDENCE }}/baseline-002/SUMMARY.md
+            ${{ env.QSOL_ARCADE_EVIDENCE }}/baseline-002/SHA256SUMS
+          retention-days: 14
