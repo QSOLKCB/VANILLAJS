@@ -37,7 +37,7 @@ The excerpt is a **derived, reduced-colour visual aid**, not a byte-for-byte cop
 
 ![Reduced-colour excerpt of user-provided X screenshot containing a disputed attribution post](2026-11-07_x-post_excerpt.png)
 
-The image links will resolve only after both original and derived PNG bytes have been committed and verified. The PR remains draft until that happens. A screenshot must not be interpreted as proof of the truth of the statements displayed in it.
+Both PNG originals are committed at Git commit `489b667138df1e109b043d2a015a513c10b56d0f` with the exact Git blob SHA-1 IDs pinned in `EVIDENCE_MANIFEST.json`. The original screenshot bytes were not altered or re-encoded; the excerpt remains an explicitly labelled reduced-colour derivative. The strict hosted gate now requires and independently verifies both PNG files as well as RTX5060TI-003. A screenshot must not be interpreted as proof of the truth of the statements displayed in it.
 
 ## Research reference provided by the maintainer
 
