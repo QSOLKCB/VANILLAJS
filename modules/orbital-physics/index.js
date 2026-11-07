@@ -87,6 +87,22 @@ export class KeplerOrbit{
       center:this.#center,minimumRadius:this.#minimumRadius});
     const nextPosition=this.#position.map((x,i)=>
       x+this.#velocity[i]*seconds+.5*a0[i]*seconds*seconds);
+    // A large time step can leap from one side of the central mass to the
+    // other while both endpoints are outside the exclusion radius. Reject
+    // any chord intersecting that region; the chord is a conservative
+    // guard, not a continuous solver for the intervening curved trajectory.
+    const segment=nextPosition.map((v,i)=>v-this.#position[i]);
+    const length=Math.hypot(...segment);
+    if(!Number.isFinite(length))throw new RangeError('orbital step displacement overflow');
+    if(length>0){
+      const u=segment.map(v=>v/length);
+      const initial=this.#position.map((v,i)=>v-this.#center[i]);
+      const along=Math.max(0,Math.min(length,
+        -initial.reduce((sum,v,i)=>sum+v*u[i],0)));
+      const closest=Math.hypot(...initial.map((v,i)=>v+along*u[i]));
+      if(closest<=this.#minimumRadius)
+        throw new RangeError('orbital step crosses the excluded central radius');
+    }
     const a1=centralAccelerationSI(nextPosition,this.#mass,{
       center:this.#center,minimumRadius:this.#minimumRadius});
     const nextVelocity=this.#velocity.map((x,i)=>x+.5*(a0[i]+a1[i])*seconds);
