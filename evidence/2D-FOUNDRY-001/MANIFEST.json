@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "kind": "qsol.vanillajs.2d-foundry.archive.v1",
+  "repository": "QSOLKCB/VANILLAJS",
+  "verificationDateUtc": "2026-11-07",
+  "verificationCommit": "4aaa87971068a603b49e72799a6c7ef0615e8305",
+  "strictSHA256": "8776f16830a2a7d65dac4140bd06e432f656036f1b785314f021be319c557ab5",
+  "artifactDigestProvenance": "Both ZIP digests match the owner-supplied SHA-256 values and GitHub connector artifact records.",
+  "recoveryProvenance": "The tar.gz was created locally after offline finalization; it is not a GitHub Actions artifact. Original measurement bytes were unchanged.",
+  "archives": [
+    {
+      "filename": "vanillajs-2d-sol-evidence-42362943052-1.zip",
+      "sha256": "d8eda5079019ff35118af113d0e86283c68eabf0062dd17e2994fb3c2bf79123",
+      "runId": "42362943052",
+      "attempt": 1,
+      "jobId": "128374924733",
+      "jobConclusion": "success",
+      "sourceSha": "412184efbae8d3ab421a4eee0a4fbd13e488415f",
+      "artifactId": 13570472279,
+      "origin": "Original GitHub Actions ZIP; CPU evidence and read-only model review",
+      "sizeBytes": 4601,
+      "gitBlobSha1": "861072ae67572c2b01018192a9176a454c79056d",
+      "runUrl": "https://github.com/QSOLKCB/VANILLAJS/actions/runs/42362943052",
+      "offlineVerification": {
+        "status": "PASS",
+        "sourceByteBinding": true,
+        "strictIdentity": true,
+        "sourceFilesAtPinnedCommit": true,
+        "limitation": "Model findings remain untrusted hypotheses; verification does not validate their conclusions."
+      },
+      "members": {
+        "lab2d-sol-review.json": {
+          "sha256": "f2515139b639b07ff09eb2a96ca5f9dbd5ce2fa4ba7131409444b372627afe03",
+          "sizeBytes": 8579
+        },
+        "lab2d-source.json": {
+          "sha256": "19d55134435438c9732a342a96b613eded1a76773fd8c4a30f3b9437c52377ca",
+          "sizeBytes": 3522
+        }
+      }
+    },
+    {
+      "filename": "vanillajs-rtx5060ti-2d-42363350613-1.tar.gz",
+      "sha256": "76bb881b9e1a3698f1a915bb3e627e35526d472cfa9fbc4d5aeae686d50c6d9c",
+      "runId": "42363350613",
+      "attempt": 1,
+      "jobId": "128376134684",
+      "jobConclusion": "failure",
+      "sourceSha": "412184efbae8d3ab421a4eee0a4fbd13e488415f",
+      "artifactId": null,
+      "origin": "Local archive after offline recovery of original owner-run measurements",
+      "offlineRecovery": {
+        "status": "PASS",
+        "finalizerCommit": "4aaa87971068a603b49e72799a6c7ef0615e8305",
+        "gpuRerun": false,
+        "originalRunRemainsFailed": true
+      },
+      "sizeBytes": 3419,
+      "gitBlobSha1": "3ba0f96c364e26a90b179160e879851c475dc30c",
+      "runUrl": "https://github.com/QSOLKCB/VANILLAJS/actions/runs/42363350613",
+      "offlineVerification": {
+        "status": "PASS",
+        "finalizerCommit": "4aaa87971068a603b49e72799a6c7ef0615e8305",
+        "reproducedAllFiveFiles": true,
+        "result": {
+          "source": "412184efbae8d3ab421a4eee0a4fbd13e488415f",
+          "pairedTrials": 7,
+          "pixelFrames": 7,
+          "canvasIntervals": 95
+        },
+        "observedZeroFrameIntervals": 1
+      },
+      "members": {
+        "EXPERIMENT.json": {
+          "sha256": "b495626516f62201dac71fce233f24e17b7f5e4e60b51dbf69eae6563380cb1f",
+          "sizeBytes": 772
+        },
+        "SHA256SUMS": {
+          "sha256": "4da61bedf7e863a9cfa303f06f51661323c4fe9656e8d8e0be080ace40ba837b",
+          "sizeBytes": 320
+        },
+        "SUMMARY.md": {
+          "sha256": "bd50fc24a52e9828bd25ad628fbeef6d6d0bcab5c56c7a116204339be67ed5b0",
+          "sizeBytes": 455
+        },
+        "lab2d-source.json": {
+          "sha256": "90d52218b2eef27030a756ec1ab00234d45af17237b87440e4149b491f16e332",
+          "sizeBytes": 3525
+        },
+        "rtx2d.json": {
+          "sha256": "48b28eb31719701ef3ba0795cdea1b524156a733004809773d1aa23b58d1ccda",
+          "sizeBytes": 7696
+        }
+      }
+    },
+    {
+      "filename": "vanillajs-rtx5060ti-2d-42364527661-1.zip",
+      "sha256": "e1e59c1ec3070af13d4aa8edf2fbd9a6f9918d6592f1c2f58105587b21db5111",
+      "runId": "42364527661",
+      "attempt": 1,
+      "jobId": "128379688363",
+      "jobConclusion": "success",
+      "sourceSha": "4aaa87971068a603b49e72799a6c7ef0615e8305",
+      "artifactId": 13570488480,
+      "origin": "Original GitHub Actions ZIP; successful owner-run hardware evidence",
+      "sizeBytes": 4398,
+      "gitBlobSha1": "8a2c76cab4137ecd1ee309ad0ca3644bd9712259",
+      "runUrl": "https://github.com/QSOLKCB/VANILLAJS/actions/runs/42364527661",
+      "offlineVerification": {
+        "status": "PASS",
+        "finalizerCommit": "4aaa87971068a603b49e72799a6c7ef0615e8305",
+        "reproducedAllFiveFiles": true,
+        "result": {
+          "source": "4aaa87971068a603b49e72799a6c7ef0615e8305",
+          "pairedTrials": 7,
+          "pixelFrames": 7,
+          "canvasIntervals": 95
+        },
+        "observedZeroFrameIntervals": 0
+      },
+      "members": {
+        "EXPERIMENT.json": {
+          "sha256": "5719acb15d55a0f5e96006d0e25a19e1f188dac4e65070d330d71369a37585fe",
+          "sizeBytes": 772
+        },
+        "SHA256SUMS": {
+          "sha256": "428d818d4a09eb8c4e2ecedec6f7be0b7cb641fa6d605a8f07e715867c5b7dc4",
+          "sizeBytes": 320
+        },
+        "SUMMARY.md": {
+          "sha256": "76ca738848a0b7e0b00d81f79fe830461359577e07e6ad333daafbf6c5375c29",
+          "sizeBytes": 455
+        },
+        "lab2d-source.json": {
+          "sha256": "6ecd1325d378d0605f33ef7e2af0710be52d7867ec1c5ba05c1b35d8117c2a05",
+          "sizeBytes": 3526
+        },
+        "rtx2d.json": {
+          "sha256": "8f715190481847664c30c2019271323a42ace8d78d4c9596ff01d1e8f1c524f9",
+          "sizeBytes": 7655
+        }
+      }
+    }
+  ]
+}
