@@ -117,3 +117,19 @@ and a related dataset citation provided by the maintainer:
 Slade, T. (2026), COMMENT-001: YouTube comment incident and AI-mediated
 attribution claims — an image dataset, v1.1.0,
 DOI 10.5281/zenodo.24026140. See evidence/COMMENT-001/README.md.
+
+The opt-in BLOAT-OPS/NEXUS/UFF research kernels independently implement
+source-pinned general-purpose contracts from:
+- QSOLKCB/BLOAT-OPS 6f290dc818759ca49bcdec54b31d738b33c7946f
+  (strict replay/checkpoint completeness; Apache-2.0);
+- QSOLKCB/CorpoWars3d PR #10 a81b7b03d0c8b730b830f9d92459ef2193793b7f
+  (conservative Euclidean axis early reject; donor unmerged at inspection);
+- QSOLKCB/NEXUS ac9ef5ac79008b46be3351c57cab946b93dd37e8
+  (public mathematical cuboctahedral lattice contract, source MPL-2.0;
+   JavaScript code newly authored and tested independently);
+- QSOLKCB/UFF 596cd732df61587aa1a9801cad1ec13483b1347f
+  (Newtonian gravitational constant and classical point-mass dynamics;
+   Apache-2.0).
+No game assets, UFF empirical physics assertion, NEXUS Rust/Lean source files,
+or other donor-specific runtime code are transplanted. See
+docs/BLOAT_NEXUS_UFF.md for mathematical assumptions and limits.
