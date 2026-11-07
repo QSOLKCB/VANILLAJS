@@ -92,7 +92,7 @@ class NumericalEvidenceTests(unittest.TestCase):
         note = json.loads((self.root / "NUMERICAL-RECEIPT.json").read_text())
         self.assertEqual(note["candidateSha"], HEAD)
         self.assertEqual(set(note["originalArchives"]), set(m.OLD))
-        with self.assertRaisesRegex(ValueError, "overwrite"):
+        with self.assertRaisesRegex(ValueError, "overwrit"):
             self.run_check()
 
     def test_partial_or_forged_numerical_evidence_refused_without_receipt(self):
