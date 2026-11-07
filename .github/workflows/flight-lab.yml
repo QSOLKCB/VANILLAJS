@@ -40,6 +40,11 @@ jobs:
           python3 scripts/verify-rtx004-receipt.py
           python3 -m unittest discover -s tests -p 'test_rtx004_receipt.py' -v
           (cd evidence/RTX5060TI-004 && sha256sum -c SHA256SUMS)
+      - name: Verify immutable RTX5060TI-005 donor-upgrade hardware archive
+        run: |
+          python3 scripts/verify-rtx005-receipt.py
+          PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_rtx005_receipt.py' -v
+          (cd evidence/RTX5060TI-005 && sha256sum -c SHA256SUMS)
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
