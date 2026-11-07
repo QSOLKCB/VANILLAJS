@@ -143,7 +143,7 @@ function overlapsSegment(min,max,origin,delta,halfSize){
  * Moving/rotating objects must NOT use this snapshot until rebuilt.
  * Indexed casting delegates narrowphase to the canonical collision module. */
 export class StaticAABBIndex{
-  #entries;#root;
+  #entries;#root;#candidateStack=[];
   constructor(colliders){
     if(!Array.isArray(colliders)||colliders.length>MAX_INDEXED_BOXES)throw new RangeError('bounded collider list required');
     const ids=new Set();
@@ -177,6 +177,40 @@ export class StaticAABBIndex{
       }else{stack.push(node.right,node.left);}
     }
     return hits.sort((a,b)=>a-b);
+  }
+  /** Collect sorted candidate indices into a caller-owned, reusable array.
+   * The original candidates() stays the independently allocating reference.
+   * Traversal is serial and uses one retained stack per immutable index.
+   * Invalid inputs leave the caller's output untouched; after success, its
+   * previous contents are discarded. Do not share one index reentrantly. */
+  collectCandidates(origin,displacement,out,{halfSize=0}={}){
+    if(!Array.isArray(out))throw new TypeError('output must be a reusable array');
+    origin=triple(origin,'origin',MAX_COORD);
+    displacement=triple(displacement,'displacement',MAX_COORD);
+    if(origin.some((x,i)=>Math.abs(x+displacement[i])>MAX_COORD))
+      throw new RangeError('segment endpoint exceeds indexed coordinate domain');
+    if(!Number.isFinite(halfSize)||halfSize<0||halfSize>MAX_COORD)
+      throw new RangeError('invalid halfSize');
+    out.length=0;
+    if(!this.#root)return out;
+    const stack=this.#candidateStack;
+    stack.length=0;
+    stack.push(this.#root);
+    try{
+      while(stack.length){
+        const node=stack.pop();
+        if(!overlapsSegment(node.min,node.max,origin,displacement,halfSize))
+          continue;
+        if(node.items){
+          for(const index of node.items){
+            const box=this.#entries[index].box;
+            if(overlapsSegment(box.min,box.max,origin,displacement,halfSize))
+              out.push(index);
+          }
+        }else stack.push(node.right,node.left);
+      }
+      return out.sort((a,b)=>a-b);
+    }finally{stack.length=0;}
   }
   /** Exact reference narrowphase, preserving original input index/tie order. */
   castSegment(origin,displacement,options={}){
