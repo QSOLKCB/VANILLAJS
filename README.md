@@ -2,10 +2,10 @@
 
 Reusable, original JavaScript game modules built directly on web standards.
 **v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-Twenty-three experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
+Twenty-four experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
-[Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
+[Frame invalidation](docs/FRAME_GATE.md) · [Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
@@ -42,6 +42,14 @@ which writes the same sorted candidate indices into a caller-reused array.
 The original allocating `candidates()` remains the reference. Paired serial
 measurements and exact candidate-set tests are documented alongside the
 [pooled navigation experiment](docs/NAVIGATION_POOL.md).
+
+## ARCADE-inspired idle frame reuse
+
+An opt-in `FrameGate` uses explicit complete presentation keys to avoid
+clearing or drawing unchanged images. Its synchronous transactional boundary
+rejects failed renders and invalidates after resize, context change or an
+explicit call. The original game loops and WebGL API are unchanged.
+See [source-pinned contract and owner-only RTX comparison](docs/FRAME_GATE.md).
 
 ## Experimental pooled navigation
 
