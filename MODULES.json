@@ -168,7 +168,7 @@
     },
     "integer-replay": {
       "entry": "modules/integer-replay/index.js",
-      "depends": ["integer-engine"],
+      "depends": ["integer-engine", "integer-math"],
       "environment": "pure-js",
       "status": "experimental",
       "description": "Source-pinned complete integer command tapes, strict validation and checked replay admission"
