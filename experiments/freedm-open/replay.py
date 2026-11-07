@@ -279,7 +279,10 @@ def summarize(samples: list[dict]) -> dict:
     count = len(valid)
     return {
         "attempts": len(samples), "valid": count,
-        "invalid": sum(r["status"] != "VALID" for r in samples),
+        "invalid": sum(r["status"] == "INVALID_ACTION" for r in samples),
+        "localErrors": sum(r["status"] == "LOCAL_ERROR" for r in samples),
+        "providerCompleted": sum(r["status"] in ("VALID", "INVALID_ACTION")
+                                 for r in samples),
         "sameActionAsTerra": sum(r["agreement"]["all"] for r in valid),
         "sameMoveAsTerra": sum(r["agreement"]["move"] for r in valid),
         "sameTurnAsTerra": sum(r["agreement"]["turn"] for r in valid),
@@ -407,10 +410,19 @@ def evaluate(args, *, opener=None):
                     report["samples"].append(row)
             report["summary"][tag] = summarize(samples)
             no_model_reload(tag, opener=opener)
-        report["status"] = ("PASS" if all(r["status"] == "VALID" for r in report["samples"])
-                            else "PARTIAL")
-        report["executionComplete"] = len(report["samples"]) == (
-            len(MODEL_TAGS) * len(ROLES) * len(selected))
+        # Distinguish complete inference that emitted invalid controls from a
+        # transport/inference failure with no usable model response. Attempting
+        # a request does not prove that the provider completed an answer.
+        expected = len(MODEL_TAGS) * len(ROLES) * len(selected)
+        report["executionComplete"] = (
+            len(report["samples"]) == expected and
+            all(row["status"] in ("VALID", "INVALID_ACTION")
+                for row in report["samples"]))
+        report["status"] = (
+            "INCOMPLETE" if not report["executionComplete"]
+            else "PASS" if all(row["status"] == "VALID"
+                               for row in report["samples"])
+            else "PARTIAL")
         report["liveReadiness"] = {
             "eligible": report["executionComplete"] and report["status"] == "PASS",
             "reason": "requires all four models to return valid actions on every paired test",
