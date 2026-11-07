@@ -10,7 +10,12 @@ import {resolve,join,sep,dirname} from 'node:path';
 import {runBrowserProbe} from './rtx5060ti-browser.mjs';
 import {findPlaywright} from './rtx-playwright.mjs';
 
-const BASELINE='1f965f4e5b6669de0f954e3a39b11aa679e56720';
+const DEFAULT_BASELINE='1f965f4e5b6669de0f954e3a39b11aa679e56720';
+const ALLOWED_BASELINES=new Set([
+  DEFAULT_BASELINE,
+  '240617e8bc1a935f05eaf75a10531f194f72a173', // RTX5060TI-001 candidate
+  'b39b0bd0db5ba9b467b9e47aede4edc4dd156e9f' // RTX5060TI-002 candidate
+]);
 const root=resolve(import.meta.dirname,'..'),checkHex=x=>/^[0-9a-f]{40}$/.test(x);
 const sum=bytes=>createHash('sha256').update(bytes).digest('hex');
 const cmd=(program,args,{cwd=root,timeout=120000,env=process.env}={})=>{
@@ -24,11 +29,11 @@ function parse(){
   for(let i=0;i<args.length;i++){
     const a=args[i];
     if(a==='--help'||a==='-h'){
-      console.log('node scripts/rtx5060ti-trusted.mjs [--chrome /absolute/path] [--out /outside/repo] [--expected-head 40hex]');
+      console.log('node scripts/rtx5060ti-trusted.mjs [--chrome /absolute/path] [--out /outside/repo] [--expected-head 40hex] [--baseline 40hex-allowlisted]');
       console.log('Requires a clean reviewed checkout, full Git history, a visible desktop, native RTX 5060 Ti WebGL, nvidia-smi and locally installed Playwright.');
       process.exit(0);
     }
-    if(!['--chrome','--out','--expected-head'].includes(a)||!args[i+1])throw Error('Unknown or incomplete option: '+a);
+    if(!['--chrome','--out','--expected-head','--baseline'].includes(a)||!args[i+1])throw Error('Unknown or incomplete option: '+a);
     options[a.slice(2)]=args[++i];
   }
   return options;
@@ -84,6 +89,8 @@ const serve=(baselineRoot,candidateRoot)=>{
 const require=createRequire(import.meta.url);
 async function main(){
   const options=parse();
+  const baseline=options.baseline??DEFAULT_BASELINE;
+  if(!ALLOWED_BASELINES.has(baseline))throw Error('Baseline is not one of the pinned reviewed source commits');
   if(!process.env.DISPLAY&&!process.env.WAYLAND_DISPLAY)throw Error('Headed GPU validation requires a visible X11/Wayland desktop; no Xvfb or headless fallback');
   const branch=git('branch','--show-current');
   if(branch!=='main')throw Error('Trusted GPU validation requires a reviewed local main checkout; found '+(branch||'detached HEAD'));
@@ -93,8 +100,8 @@ async function main(){
   const head=git('rev-parse','HEAD');
   if(!checkHex(head))throw Error('Invalid candidate commit');
   if(options['expected-head']&&options['expected-head']!==head)throw Error('Expected SHA differs from checkout HEAD');
-  if(git('cat-file','-t',BASELINE)!=='commit')throw Error('Pinned baseline commit is not locally available; fetch full history explicitly');
-  git('merge-base','--is-ancestor',BASELINE,head);
+  if(git('cat-file','-t',baseline)!=='commit')throw Error('Pinned baseline commit is not locally available; fetch full history explicitly');
+  git('merge-base','--is-ancestor',baseline,head);
   const gpu=hardware();
   const chrome=options.chrome?realpathSync(resolve(options.chrome)):
     findProgram(['google-chrome-stable','google-chrome','chromium','chromium-browser']);
@@ -109,7 +116,7 @@ async function main(){
   let server,browser;
   try{
     const a=join(temp,'baseline'),b=join(temp,'candidate');
-    for(const [dir,sha] of [[a,BASELINE],[b,head]]){
+    for(const [dir,sha] of [[a,baseline],[b,head]]){
       git('worktree','add','--detach','--',dir,sha);worktrees.push(dir);
       if(git('-C',dir,'rev-parse','HEAD')!==sha)throw Error('Worktree SHA mismatch');
       // Use exactly the build script from each pinned checkout, no dependencies.
@@ -127,7 +134,7 @@ async function main(){
     const proof=await runBrowserProbe(browser,local);
     const report={
       schemaVersion:1,kind:'qsol.vanillajs.rtx5060ti.trusted-comparison.v1',
-      baseline:{sha:BASELINE,tree:git('-C',a,'rev-parse','HEAD^{tree}'),
+      baseline:{sha:baseline,tree:git('-C',a,'rev-parse','HEAD^{tree}'),
         manifestSha256:sum(readFileSync(join(a,'dist','manifest.json')))},
       candidate:{sha:head,tree:git('-C',b,'rev-parse','HEAD^{tree}'),
         manifestSha256:sum(readFileSync(join(b,'dist','manifest.json')))},
@@ -150,7 +157,7 @@ async function main(){
     const lines=[
       '# VANILLAJS — local RTX 5060 Ti full-path validation',
       '',
-      'Baseline: '+BASELINE,
+      'Baseline: '+baseline,
       'Candidate: '+head,
       'Native WebGL: '+proof.nativeRenderer.renderer,
       'NVIDIA driver: '+gpu.driverVersion,
@@ -181,7 +188,7 @@ async function main(){
     const checks=['report.json','SUMMARY.md'].map(file=>sum(readFileSync(join(output,file)))+'  '+file).join('\n')+'\n';
     writeFileSync(join(output,'SHA256SUMS'),checks,{mode:0o600});
     console.log('PASS: RTX 5060 Ti headed native WebGL, exact geometry, casts and pixel parity');
-    console.log('Baseline '+BASELINE+' vs candidate '+head);
+    console.log('Baseline '+baseline+' vs candidate '+head);
     console.log('Evidence directory: '+output);
     console.log(lines.join('\n'));
   }catch(error){
@@ -190,7 +197,7 @@ async function main(){
       for(const file of ['report.json','SUMMARY.md','SHA256SUMS'])
         rmSync(join(output,file),{force:true});
       const failure={schemaVersion:1,kind:'qsol.vanillajs.rtx5060ti.failed.v1',
-        status:'FAILED',timeUtc:new Date().toISOString(),baselineSha:BASELINE,
+        status:'FAILED',timeUtc:new Date().toISOString(),baselineSha:baseline,
         candidateSha:head,nvidiaGpu:gpu,chromeVersion,
         error:{name:error?.name??'Error',message:error?.message??String(error)},
         note:'Partial or failed execution is not a validated performance result.'};
