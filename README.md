@@ -359,6 +359,28 @@ package without deploying. Pushes to `main` deploy the same artifact only after
 simulation, contract and Chromium checks pass. The workflow separates read-only
 validation from Pages deployment permissions. No tag or release is created by CI.
 
+## Authorship and attribution clarification — COMMENT-001
+
+**Maintainer statement (Trent Slade, QSOL-IMC): I did not steal or copy
+the work of the X account referenced in COMMENT-001 into VANILLAJS.**
+I dispute the copying/attribution allegation shown in the preserved screenshot.
+
+VANILLAJS is developed within QSOL-IMC. Its original implementations, external
+references and specifically adapted donor techniques are distinguished in
+[NOTICE](NOTICE), the [technical provenance documents](docs/ARCHITECTURE.md)
+and Git's source history. Where another QSOL repository informs a technique,
+the source commit and licence are documented; that is not a claim of authorship
+over the donor's work.
+
+The screenshot documents an **allegation**, not proof of plagiarism; it does
+not identify a matching file, commit, code excerpt or asset. See the dated
+[COMMENT-001 evidence and full citation](evidence/COMMENT-001/README.md),
+including Slade (2026), *COMMENT-001: YouTube comment incident and AI-mediated
+attribution claims — an image dataset*, v1.1.0,
+[DOI:10.5281/zenodo.24026140](https://doi.org/10.5281/zenodo.24026140).
+This attribution statement is the maintainer's position; it is not represented
+as an independent adjudication. Specific checkable source comparisons remain welcome.
+
 ## Scope and licence
 
 This is a compact foundation, not a general rigid-body contact solver. Colliders
@@ -395,3 +417,11 @@ preserved as [RTX5060TI-002](evidence/RTX5060TI-002/README.md), pinned to
 is byte-identical to the uploaded artifact and verified in hosted CI.
 The new serial-circle and retained/fresh WebGL workloads have **no historical
 RTX5060TI-001 equivalent**, and the observed results are not universal FPS claims.
+
+The successful ARCADE frame-invalidation comparison is recorded as
+[RTX5060TI-003](evidence/RTX5060TI-003/README.md), tied to
+`3f5518a168652a003e8db9aa6dc0371ddb4782ea`. Both original RTX001 and
+RTX002 source candidates were rerun under the same current hardware protocol.
+The new FrameGate workload achieved nine matching pixel checkpoints per pair
+and omitted 39 of 48 draws; the measured completion-time benefit was modest
+(10.4 ms vs 10.0 ms). This is **not a native-game FPS improvement claim**.
