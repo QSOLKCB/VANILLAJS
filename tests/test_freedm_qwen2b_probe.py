@@ -216,6 +216,67 @@ class ProbeContracts(unittest.TestCase):
                               inventory=identity)
             self.assertFalse(args.output.exists())
 
+    def test_postflight_digest_drift_aborts_completed_probe_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = argparse.Namespace(source=Path(tmp)/"source",
+                                      output=Path(tmp)/"out", head="a"*40)
+            calls = []
+            def inventory(**kwargs):
+                calls.append(1)
+                row = identity()
+                if len(calls) == 2:
+                    row["sha256"] = "f"*64
+                return row
+            def response(case, image, **kwargs):
+                prompt = p.TINY_PROMPT if case["schema"] == "tiny" else p.FULL_PROMPT
+                return {"id": case["id"], "condition": dict(case),
+                        "request": {"promptSHA256": p.sha256(prompt.encode())},
+                        "status": "VALID_EXACT", "metrics": {"wallNs": 1}}
+            with patch.object(p.replay,"check_checkout"), \
+                 patch.object(p,"local_metadata",return_value={
+                     "ollamaVersion":"0.12.9","thinking":None}), \
+                 patch.object(p,"run_case",side_effect=response):
+                report = p.execute(args, source_loader=lambda _: fake_source(),
+                                   inventory=inventory)
+            self.assertEqual(len(calls), 2)
+            self.assertEqual(report["summary"]["providerCompleted"], 14)
+            self.assertEqual(report["status"], "INCOMPLETE")
+            self.assertEqual(report["modelDrift"]["before"]["sha256"], p.MODEL_DIGEST)
+            self.assertEqual(report["modelDrift"]["after"]["sha256"], "f"*64)
+            self.assertEqual(json.loads((args.output/"PROBE.json").read_text())["status"],
+                             "INCOMPLETE")
+
+    def test_postflight_exception_never_seals_complete_status(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = argparse.Namespace(source=Path(tmp)/"source",
+                                      output=Path(tmp)/"out", head="a"*40)
+            calls = []
+            def inventory(**kwargs):
+                calls.append(1)
+                if len(calls) == 2:
+                    raise RuntimeError("Ollama unreachable after inference")
+                return identity()
+            def response(case, image, **kwargs):
+                prompt = p.TINY_PROMPT if case["schema"] == "tiny" else p.FULL_PROMPT
+                return {"id": case["id"], "condition": dict(case),
+                        "request": {"promptSHA256": p.sha256(prompt.encode())},
+                        "status": "VALID_EXACT", "metrics": {"wallNs": 1}}
+            with patch.object(p.replay,"check_checkout"), \
+                 patch.object(p,"local_metadata",return_value={
+                     "ollamaVersion":"0.12.9","thinking":None}), \
+                 patch.object(p,"run_case",side_effect=response):
+                with self.assertRaisesRegex(RuntimeError, "Ollama unreachable"):
+                    p.execute(args, source_loader=lambda _: fake_source(),
+                              inventory=inventory)
+            self.assertEqual(len(calls), 2)
+            saved = json.loads((args.output/"PROBE.json").read_text())
+            self.assertEqual(saved["status"], "INCOMPLETE")
+            self.assertEqual(saved["fatalError"]["class"], "RuntimeError")
+            self.assertEqual(saved["summary"]["providerCompleted"], 14)
+            raw = (args.output/"PROBE.json").read_bytes()
+            self.assertEqual((args.output/"SHA256SUMS").read_text(),
+                             p.sha256(raw)+"  PROBE.json\n")
+
     def test_existing_live_gate_remains_untouched(self):
         existing = (ROOT/".github/workflows/freedm-open-vision.yml").read_text()
         self.assertIn("not r.get('liveReadiness',{}).get('eligible')", existing)
