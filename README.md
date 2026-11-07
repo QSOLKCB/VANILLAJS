@@ -2,10 +2,10 @@
 
 Reusable, original JavaScript game modules built directly on web standards.
 **v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-Twenty-eight experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
+Twenty-nine experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
-[UFF orbital physics & NEXUS contracts](docs/BLOAT_NEXUS_UFF.md) · [Frame invalidation](docs/FRAME_GATE.md) · [Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
+[Donor upgrade: pacing, lead solver & RTX](docs/DONOR_UPGRADE_2026_11.md) · [UFF orbital physics & NEXUS contracts](docs/BLOAT_NEXUS_UFF.md) · [Frame invalidation](docs/FRAME_GATE.md) · [Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
@@ -34,6 +34,27 @@ message explains unsupported graphics. Serve over
 HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
+
+## November donor upgrade — clock pacing, lead solving and vault graphics
+
+The pure-JS `FixedClock` optionally accepts `snapTolerance:.0005` (seconds)
+to smooth browser-rounded presentation timestamps while **repaying every
+accumulated clock adjustment**. The default is zero and preserves existing
+timing behaviour. The `lead-solver` module computes bounded constant-velocity
+intercepts, including configurable shooter-velocity inheritance. It returns
+`null` for unreachable targets and does not implement gravity, target
+acceleration, occlusion or gameplay auto-aim. Both features are independently
+tested without changing existing games.
+
+The Clockwork Vault now publishes its initial WebGL scene before signalling
+graphics readiness. Its packaged browser test requires this first render and
+samples a bounded number of actual animation frames, retaining the existing
+visible-pixel threshold rather than accepting a blank canvas.
+
+See the [source-pinned donor review, APIs and test limitations](docs/DONOR_UPGRADE_2026_11.md).
+Physical RTX measurements require a separate **owner-dispatched, reviewed-main**
+workflow after merge. Any evidence produced will be new; RTX001–004 remain
+immutable, and CPU numerical timings are not GPU-compute or game FPS claims.
 
 ## BLOAT-OPS, NEXUS and UFF experimental research kernels
 

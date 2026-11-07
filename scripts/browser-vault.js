@@ -27,11 +27,32 @@ export async function verifyVault(browser,baseURL){
     await page.waitForFunction(n=>document.querySelector('#seal-count').textContent===`${String(n).padStart(2,'0')} / 06 SEALS`,index+1);
   }
   await page.goto(baseURL);await page.locator('.vault-link').click();assert.match(page.url(),/\/VANILLAJS\/demos\/clockwork-vault\/index.html$/);
-  assert.equal(await page.locator('#status').textContent(),'READY');assert.equal(await page.locator('#interact').isDisabled(),true);
-  const pixels=await page.locator('#vault-view').evaluate(canvas=>new Promise(resolve=>requestAnimationFrame(()=>{
-    const gl=canvas.getContext('webgl'),data=new Uint8Array(canvas.width*canvas.height*4);gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,data);
-    let bright=0;for(let i=0;i<data.length;i+=4)if(data[i]+data[i+1]+data[i+2]>110)bright++;resolve(bright);
-  })));assert.ok(pixels>500,'the chamber must draw visible WebGL geometry');
+  // HTML ships with READY already present; require the actual first WebGL
+  // render before probing pixels. Preserve the real >500 pixel contract,
+  // sampling bounded animation frames to tolerate browser/compositor startup.
+  await page.waitForFunction(()=>document.querySelector('#vault-view').dataset.firstFrame==='ready'||
+    document.querySelector('#status').textContent==='UNAVAILABLE',null,{timeout:20000});
+  assert.equal(await page.locator('#status').textContent(),'READY');
+  assert.equal(await page.locator('#interact').isDisabled(),true);
+  const pixels=await page.locator('#vault-view').evaluate(canvas=>new Promise(resolve=>{
+    const result={bright:0,frames:0,width:0,height:0,contextLost:false,glError:0};
+    const sample=()=>{
+      const gl=canvas.getContext('webgl');
+      if(!gl||gl.isContextLost()){result.contextLost=true;resolve(result);return;}
+      const {width,height}=canvas;result.width=width;result.height=height;
+      const data=new Uint8Array(width*height*4);
+      gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,data);
+      result.glError=gl.getError();
+      let bright=0;for(let i=0;i<data.length;i+=4)
+        if(data[i]+data[i+1]+data[i+2]>110)bright++;
+      result.bright=Math.max(result.bright,bright);result.frames++;
+      if(result.bright>500||result.frames===120||result.glError!==gl.NO_ERROR)
+        resolve(result);
+      else requestAnimationFrame(sample);
+    };
+    requestAnimationFrame(sample);
+  }));
+  assert.ok(pixels.bright>500,'the chamber must draw visible WebGL geometry: '+JSON.stringify(pixels));
   await page.screenshot({path:'browser-artifacts/clockwork-vault.png',fullPage:true});
   await page.locator('#launch').click();await page.keyboard.down('w');await page.waitForFunction(()=>parseFloat(document.querySelector('#position-z').textContent)<3.3);
   await page.keyboard.press('Escape');const paused=await freeze();await page.waitForTimeout(180);assert.deepEqual(await freeze(),paused);

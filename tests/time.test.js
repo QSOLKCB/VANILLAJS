@@ -25,7 +25,45 @@ test('zero scale freezes and hitch budget bounds work with reported dropped time
 test('pausing inside an update stops the current catch-up batch',()=>{
   const c=new FixedClock();let n=0;c.advance(.2,()=>{n++;c.setPaused(true);});assert.equal(n,1);
 });
+test('opt-in frame snap repays drift at 30/59/60/61/75/120/144 Hz',()=>{
+  for(const hz of [30,59,60,61,75,120,144]){
+    const clock=new FixedClock({step:1/120,snapTolerance:.0005});
+    for(let i=0;i<hz*60;i++)clock.advance(1/hz,()=>{});
+    assert.ok(Math.abs(clock.ticks-7200)<=1,'steady '+hz+' Hz drifted: '+clock.ticks);
+    assert.ok(Math.abs(clock.drift)<.0005,'drift must be bounded');
+  }
+  const rounded=new FixedClock({step:1/60,snapTolerance:.0005});
+  for(let i=0;i<3600;i++)rounded.advance((i%3===0?16.6:16.7)/1000,()=>{});
+  assert.equal(rounded.ticks,3600,'rounded 60 Hz must produce one tick per frame');
+});
+test('snapping is optional and pause, reset and scaled time repay/clear drift',()=>{
+  const unchanged=new FixedClock(),explicit=new FixedClock({snapTolerance:0});
+  for(const dt of [.002,.012,.008,.17,.001]){
+    assert.deepEqual(unchanged.advance(dt,()=>{}),explicit.advance(dt,()=>{}));
+  }
+  assert.equal(unchanged.ticks,explicit.ticks);
+  const clock=new FixedClock({step:1/120,snapTolerance:.0005});
+  clock.advance(1/61,()=>{});
+  assert.notEqual(clock.drift,0);
+  clock.setPaused(true);assert.equal(clock.drift,0);
+  clock.setPaused(false);clock.advance(1/61,()=>{});assert.notEqual(clock.drift,0);
+  clock.advance(1/61,()=>{},.25);assert.equal(clock.drift,0);
+  clock.advance(1/61,()=>{});clock.reset();assert.equal(clock.drift,0);
+  assert.equal(clock.ticks,0);
+});
+test('short and zero-duration frames never erase unpaid negative snap drift',()=>{
+  const clock=new FixedClock({step:1/60,snapTolerance:.0005});
+  for(let i=0;i<10000;i++){
+    clock.advance(.0166,()=>{});
+    clock.advance(0,()=>{});
+  }
+  // A 166-second tape contains exactly 9,960 60 Hz ticks; the flawed
+  // clamp-and-clear implementation incorrectly admitted 10,000.
+  assert.equal(clock.ticks,9960);
+  assert.ok(Math.abs(clock.drift)<.0005);
+});
 test('invalid times and limits are rejected',()=>{
-  assert.throws(()=>new FixedClock({step:0}));assert.throws(()=>new FixedClock().advance(-1,()=>{}));
+  assert.throws(()=>new FixedClock({step:0}));assert.throws(()=>new FixedClock({snapTolerance:-1}));
+  assert.throws(()=>new FixedClock({snapTolerance:1}));assert.throws(()=>new FixedClock().advance(-1,()=>{}));
   assert.throws(()=>new FixedClock().advance(.1,()=>{},NaN));
 });

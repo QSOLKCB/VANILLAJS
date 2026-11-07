@@ -1,0 +1,114 @@
+name: RTX 5060 Ti donor upgrade validation
+
+# Physically execute only on explicitly reviewed main and owner's visible RTX runner.
+# This workflow is never launched by push, pull_request, forks or automation.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "Authorize running reviewed main on my visible RTX 5060 Ti workstation"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Opt in to a short-lived upload of hardware and CPU evidence"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qsol-rtx5060ti-donor-${{ github.repository }}-${{ github.actor }}
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    if: ${{ github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 90
+    # Python synthetic tests import scripts and tests. Never create pycache
+    # files in the exact-head checkout consumed by trusted GPU validation.
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Exact reviewed checkout, source baseline, RTX runner and immutable receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          git cat-file -e e82d51be222d99951d70509468eaae8f3efc9fcd^{commit}
+          test -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}"
+          command -v nvidia-smi
+          command -v node
+          command -v python3
+          nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader
+          python3 scripts/verify-rtx-receipt.py
+          python3 scripts/verify-rtx-adaptive-receipt.py
+          python3 scripts/verify-rtx003-comment001.py --require-binaries \
+            --archive evidence/RTX5060TI-003/vanillajs-rtx5060ti-arcade-42329114286-1.zip \
+            --screenshot evidence/COMMENT-001/2026-11-07_original-screenshot.png \
+            --excerpt evidence/COMMENT-001/2026-11-07_x-post_excerpt.png
+          python3 scripts/verify-rtx004-receipt.py
+          (cd evidence/RTX5060TI-001 && sha256sum -c SHA256SUMS)
+          (cd evidence/RTX5060TI-002 && sha256sum -c SHA256SUMS)
+          (cd evidence/RTX5060TI-003 && sha256sum -c SHA256SUMS)
+          (cd evidence/RTX5060TI-004 && sha256sum -c SHA256SUMS)
+          node --check scripts/rtx5060ti-trusted.mjs
+          node scripts/rtx5060ti-trusted.mjs --help
+          node scripts/rtx-playwright.mjs
+      - name: Verify optional donor kernels and complete packaged source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/time.test.js tests/lead-solver.test.js
+          python3 -m unittest discover -s tests -p 'test_rtx_donor_receipt.py' -v
+          node scripts/check.js
+          node scripts/build.js
+      - name: Re-run pinned historical full-path WebGL workload on actual RTX
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$HOME/.local/state/qsol/vanillajs/rtx5060ti/donor-actions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          if test -e "$evidence"; then echo 'Refusing to overwrite prior hardware evidence' >&2; exit 1; fi
+          mkdir -m 700 -p "$evidence"
+          echo "QSOL_DONOR_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+          node scripts/rtx5060ti-trusted.mjs \
+            --baseline e82d51be222d99951d70509468eaae8f3efc9fcd \
+            --expected-head "$GITHUB_SHA" --out "$evidence/fullpath"
+      - name: Measure NEW opt-in CPU-only pacing and intercept workloads
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/donor-upgrade-workload.js --check > \
+            "$QSOL_DONOR_EVIDENCE/donor-upgrade-workload.json"
+      - name: Finalize fail-closed source-pinned receipt and verify checksum chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/finalize-rtx5060ti-donor.py \
+            --out "$QSOL_DONOR_EVIDENCE" --expected-head "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID" --attempt "$GITHUB_RUN_ATTEMPT"
+          (cd "$QSOL_DONOR_EVIDENCE" && sha256sum -c SHA256SUMS)
+          cat "$QSOL_DONOR_EVIDENCE/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload new evidence only on explicit owner consent
+        if: ${{ inputs.publish_evidence == true }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: vanillajs-rtx5060ti-donor-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.QSOL_DONOR_EVIDENCE }}/EXPERIMENT.json
+            ${{ env.QSOL_DONOR_EVIDENCE }}/SUMMARY.md
+            ${{ env.QSOL_DONOR_EVIDENCE }}/SHA256SUMS
+            ${{ env.QSOL_DONOR_EVIDENCE }}/donor-upgrade-workload.json
+            ${{ env.QSOL_DONOR_EVIDENCE }}/fullpath/report.json
+            ${{ env.QSOL_DONOR_EVIDENCE }}/fullpath/SUMMARY.md
+            ${{ env.QSOL_DONOR_EVIDENCE }}/fullpath/SHA256SUMS
+          retention-days: 14
