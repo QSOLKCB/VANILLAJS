@@ -1,0 +1,113 @@
+name: FreeDM open-VLM comparison (owner local, zero API credits)
+
+# NEVER on PR/push. No pulls, API keys, cloud calls, downloads or outbound URLs.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "Authorize local Ollama/VLM inference on my QSOL workstation"
+        type: boolean
+        required: true
+        default: false
+      frames_per_role:
+        description: "Paired Terra screenshots per role (3=12/model; 12=48/model)"
+        type: choice
+        options: ['3', '12']
+        required: true
+        default: '3'
+      publish_evidence:
+        description: "Upload source-pinned comparison JSON; contains no raw screenshots or model weights"
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+concurrency:
+  group: qsol-freedm-open-owner-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    if: >-
+      ${{ github.repository == 'QSOLKCB/VANILLAJS' && github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 100
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONNOUSERSITE: '1'
+      HTTP_PROXY: ''
+      HTTPS_PROXY: ''
+      ALL_PROXY: ''
+      NO_PROXY: '127.0.0.1,localhost'
+      LOCAL_FRAMES: ${{ inputs.frames_per_role }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Exact main, original owner Terra match and local-only model admission
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          command -v python3
+          command -v ollama
+          PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
+            -s tests -p 'test_freedm_open_replay.py' -v
+          source="$HOME/.local/state/qsol/vanillajs/freedm-terra/run-42374695320-1/match"
+          test -f "$source/MATCH.json" && test -f "$source/SHA256SUMS" || {
+            echo "Missing original Terra game frames and JSON. Keep owner run 42374695320 intact." >&2
+            exit 1
+          }
+          echo "FREEDM_TERRA_SOURCE=$source" >> "$GITHUB_ENV"
+          evidence="$HOME/.local/state/qsol/vanillajs/freedm-open/replay-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          if test -e "$evidence"; then
+            echo "Refusing existing Open-VLM receipt path" >&2; exit 1
+          fi
+          echo "FREEDM_OPEN_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+      - name: Four locally installed image models on exact Terra camera observations
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Native stdlib only; reaches exactly http://127.0.0.1:11434
+          # via an explicit proxy-free transport. No model installation.
+          python3 experiments/freedm-open/replay.py \
+            --source "$FREEDM_TERRA_SOURCE" \
+            --output "$FREEDM_OPEN_EVIDENCE" \
+            --head "$GITHUB_SHA" \
+            --frames-per-role "$LOCAL_FRAMES"
+      - name: Validate source-bound replay and write distinctions to job summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd "$FREEDM_OPEN_EVIDENCE" && sha256sum -c SHA256SUMS)
+          python3 - "$FREEDM_OPEN_EVIDENCE/REPLAY.json" >> "$GITHUB_STEP_SUMMARY" <<'PY'
+          import json,sys
+          receipt=json.load(open(sys.argv[1],encoding='utf8'))
+          if receipt['status']!='PASS' or len(receipt['summary'])!=4:
+              raise SystemExit('incomplete four-model paired replay')
+          print('## Four open VLMs on exact Terra in-game frames')
+          print()
+          print('Source match:',receipt['terraBaseline']['runId'])
+          print()
+          print('Models: valid JSON / total; agreement is NOT game skill.')
+          for tag,metrics in receipt['summary'].items():
+              print(tag,metrics['valid'],'/',metrics['attempts'],
+                    '; same move as Terra',metrics['sameMoveAsTerra'],
+                    '; median local request ms',metrics['medianRequestMs'])
+          print()
+          print('No Doom gameplay by open models in this phase. No API charges.')
+          PY
+      - name: Publish JSON and integrity sidecar only on explicit owner consent
+        if: ${{ always() && inputs.publish_evidence == true && github.actor == 'EmergentMonk' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: freedm-open-vlm-replay-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.FREEDM_OPEN_EVIDENCE }}/REPLAY.json
+            ${{ env.FREEDM_OPEN_EVIDENCE }}/SHA256SUMS
+          retention-days: 14
+          if-no-files-found: warn
