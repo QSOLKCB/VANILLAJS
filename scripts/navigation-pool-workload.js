@@ -54,7 +54,7 @@ for(const size of [24,48]){
     const coldRun=coldPool.findPath(workload[0],goal,{maxExpanded:65536});
     assert.deepEqual(coldRun,findPath(grid,workload[0],goal,{maxExpanded:65536}));
     trials.push({
-      grid:[size,size],queries:units,coldPoolBuildMs,
+      grid:[size,size],queries:units,coldPoolBuildMs:coldBuildMs,
       sha256:expected.sha256,expanded:expected.expanded,found:expected.found,
       paths:Object.fromEntries(Object.entries(out).map(([mode,samples])=>[mode,{
         medianMs:median(samples.map(x=>x.elapsedMs)),
