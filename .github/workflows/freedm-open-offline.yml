@@ -1,0 +1,52 @@
+name: FreeDM open-model offline safety checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: freedm-open-offline-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: No-network open-model parity, SHA and action checks
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tests -p 'test_freedm_open_replay.py' -v
+          python3 -m unittest discover -s tests -p 'test_freedm_open_live.py' -v
+          python3 -m unittest discover -s tests -p 'test_freedm_terra.py' -v
+          python3 - <<'PY'
+          from pathlib import Path
+          import ast,re
+          source=Path('experiments/freedm-open/replay.py').read_text()
+          ast.parse(source)
+          ast.parse(Path('experiments/freedm-open/live.py').read_text())
+          ast.parse(Path('experiments/freedm-terra/run.py').read_text())
+          assert 'http://127.0.0.1:11434' in source
+          assert 'https://api.openai.com' not in source
+          assert '/api/pull' not in source
+          assert 'TERRA_MATCH_SHA256' in source and 'TERRA_SUMS_SHA256' in source
+          workflow=Path('.github/workflows/freedm-open-vision.yml').read_text()
+          head=workflow.split('permissions:',1)[0]
+          assert 'workflow_dispatch:' in head
+          assert not re.search(r'^\s+(push|pull_request|schedule):',head,re.M)
+          assert "github.actor == 'EmergentMonk'" in workflow
+          assert "github.ref == 'refs/heads/main'" in workflow
+          assert "inputs.acknowledge_local_execution == true" in workflow
+          assert 'OPENAI_API_KEY' not in workflow
+          assert 'ollama pull' not in workflow
+          assert "inputs.mode == 'replay-and-live'" in workflow
+          assert "uv run --offline" in workflow
+          assert "experiments/freedm-open/live.py" in workflow
+          assert "OPENAI_API_KEY" not in workflow
+          print('Open-VLM comparison is owner-only, zero API credits and no automatic model download')
+          PY

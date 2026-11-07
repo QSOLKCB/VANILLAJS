@@ -9,6 +9,22 @@ two separately registered research experiments (OMI with three demonstrations an
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
+## FreeDM open-weight model comparison — experimental
+
+The separate [FreeDM open-model FPS lab](experiments/freedm-open/README.md)
+compares four small, locally hosted vision-language models against the **exact
+48-screen Terra match evidence** (original Actions run 42374695320).
+Qwen3-VL 2B/4B, Qwen2.5-VL 3B and Moondream 1.8B are executed through the
+local-only Ollama API. A paired screenshot replay establishes behavioral
+agreement and inference latency without randomized-spawn confounding.
+A separately selected real four-client FreeDM pilot collects actual gameplay
+but is explicitly marked exploratory because local model inference latency
+and spawn conditions differ.
+
+Both modes run **only after owner workflow dispatch on reviewed main**.
+No paid API credentials, cloud inference, automatic model downloads or changes
+to the previously preserved Terra/RTX evidence are involved.
+
 ## Experimental FreeDM × Four Terra deathmatch
 
 The independent [FreeDM/Terra FPS research lab](experiments/freedm-terra/README.md)

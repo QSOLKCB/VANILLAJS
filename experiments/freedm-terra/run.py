@@ -38,10 +38,12 @@ STEP_TIMEOUT_S = 100
 MAX_MATCH_SECONDS = 12 * 60
 
 
-def worker(index: int, transport, wad: str, port: int):
+def worker(index: int, transport, wad: str, port: int, role_names=ROLES):
+    # Optional explicit participant identities for local open-model pilots.
+    # The original Terra callers use the unchanged default role tuple.
     game = None
     config_dir = None
-    role = ROLES[index][0]
+    role = role_names[index][0]
     try:
         import vizdoom as vzd  # intentionally unavailable in hosted offline CI
 
@@ -212,13 +214,18 @@ def seal(folder: Path):
         manifest.writelines(entries)
 
 
-def spawn_players(ctx, wad: str, port: int):
+def spawn_players(ctx, wad: str, port: int, role_names=ROLES):
+    require(len(role_names) == 4 and
+            len(set(name for name, _ in role_names)) == 4 and
+            all(type(name) is str and re.fullmatch(r'[A-Z0-9-]{2,30}', name)
+                for name, _ in role_names),
+            'exactly four distinct bounded player identities required')
     sessions = []
     try:
         for i in range(4):
             parent, child = ctx.Pipe(duplex=True)
-            process = ctx.Process(target=worker, args=(i, child, wad, port),
-                                  name="FreeDM-" + ROLES[i][0])
+            process = ctx.Process(target=worker, args=(i, child, wad, port, role_names),
+                                  name="FreeDM-" + role_names[i][0])
             process.start()
             child.close()
             sessions.append((parent, process))
