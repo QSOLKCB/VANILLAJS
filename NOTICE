@@ -79,3 +79,12 @@ Apache-2.0. This repository retains only original bounded general-purpose
 implementations, test oracles and provenance: no game characters, skins,
 artwork, GPL/third-party engines or media are transplanted. The precise
 scope and original sources are documented in docs/ADAPTIVE_DONOR_EXTRACTION.md.
+
+The optional renderer-neutral appearance composition module is independently
+generalised from the Apache-2.0 colour-LUT, seeded-crowd-variant and
+high/low-detail cuboid emission design in QSOLKCB/CorpoWars3d PR #8,
+source commit 7b42cae4d7f46a36f00e86beee35cf4258994dab, merged as
+678da3a3d94e544c722a540ad218daf1535e7f9e.
+Only general-purpose bounded appearance interfaces are reimplemented here;
+no named characters, art, audio, skins, weapons, maps or game content are copied.
+See docs/APPEARANCE.md for contract and validation limitations.
