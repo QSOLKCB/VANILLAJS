@@ -1,35 +1,32 @@
-# Binary evidence staging — remaining owner step
+# COMMENT-001 original PNG transfer — completed
 
-The RTX5060TI-003 ZIP has now been committed to Git **byte-for-byte** (Git blob `4b35e831027783618b6508a898883456c17b6aef`). This PR remains **not complete** until the two screenshot PNGs (original and derived excerpt) are also committed and verified. A GitHub Actions artifact URL alone is temporary and **not** permanent archival. The original source screenshot was supplied in the conversation; its byte-for-byte copy must be committed, not merely its crop or checksum manifest.
+**Status:** both exact screenshot Git blobs committed to the corrective evidence branch at
+`489b667138df1e109b043d2a015a513c10b56d0f`.
 
-The assistant created `VANILLAJS_RTX003_COMMENT001_RAW_EVIDENCE_TRANSFER.zip` outside this repository. It contains these repo-relative files. The first file is **already in Git** and will be skipped by `unzip -n`:
+| Exhibit | Git blob SHA-1 | SHA-256 |
+| --- | --- | --- |
+| Original full-resolution PNG | `d3cb1bbad91c316ec5e4e3607fff68d1b7c48320` | `7b575405c975030c952d04c12441e2e9b85d0d55acc7dfa472fdcf3e95e06654` |
+| Labelled reduced-colour excerpt PNG | `0c970a6f7ed71092ed2b0c18cbcb05d2b4ef8b5c` | `0840808768ddab18fa6faca9df8e92acf67a27817d5a17b6c48845680aaa9d86` |
 
-```text
-evidence/RTX5060TI-003/vanillajs-rtx5060ti-arcade-42329114286-1.zip
-evidence/COMMENT-001/2026-11-07_original-screenshot.png
-evidence/COMMENT-001/2026-11-07_x-post_excerpt.png
-```
+## Transfer method
 
-**Transport ZIP SHA-256:** `29c52bc6f6969bb9845f60e10afa3b9119a460dedba394cb18cc82a0665eef3f` (392,055 bytes). This transfer ZIP is not the canonical RTX benchmark artifact; the nested 25,481-byte RTX ZIP is.
+The original image and derived excerpt were read from the previously constructed immutable transfer ZIP. Its SHA-256 is `29c52bc6f6969bb9845f60e10afa3b9119a460dedba394cb18cc82a0665eef3f`. Each PNG's original byte size and SHA-256 were checked against `EVIDENCE_MANIFEST.json`, and its byte representation was transported to GitHub using the Git Data API's `create_blob` operation with `encoding: base64`.
 
-After downloading that transfer archive to a local location, run from a clean checkout:
+GitHub returned the exact expected Git blob SHA-1 for **both** images. One new tree and commit attached the blobs to the original `evidence/COMMENT-001/` paths, using a non-force update of the corrective branch. There was no image decoding, recompression or modification. RTX5060TI-003 remained the identical Git blob `4b35e831027783618b6508a898883456c17b6aef`.
 
-```bash
-git fetch origin
-git switch --track origin/evidence/rtx5060ti-003-comment-001-provenance
-sha256sum /path/to/VANILLAJS_RTX003_COMMENT001_RAW_EVIDENCE_TRANSFER.zip
-unzip -n /path/to/VANILLAJS_RTX003_COMMENT001_RAW_EVIDENCE_TRANSFER.zip -d .
+The standard-library `scripts/upload-comment001-blobs.py` remains as a documented alternative transport tool for auditing the method, but intentionally refuses to overwrite already-committed screenshots. **It does not need to be rerun.**
+
+## Release gate
+
+Hosted CI must execute:
+
+```sh
 python3 scripts/verify-rtx003-comment001.py --require-binaries \
   --archive evidence/RTX5060TI-003/vanillajs-rtx5060ti-arcade-42329114286-1.zip \
   --screenshot evidence/COMMENT-001/2026-11-07_original-screenshot.png \
   --excerpt evidence/COMMENT-001/2026-11-07_x-post_excerpt.png
 (cd evidence/COMMENT-001 && sha256sum -c SHA256SUMS)
 (cd evidence/RTX5060TI-003 && sha256sum -c SHA256SUMS)
-git add evidence/COMMENT-001 evidence/RTX5060TI-003
-git commit -m 'evidence: add exact RTX003 and COMMENT001 binary captures'
-git push origin HEAD
 ```
 
-`unzip -n` refuses to overwrite pre-existing file names. Before committing, the full verifier must report `PASS binary evidence bytes...`. Do **not** regenerate or repackage the benchmark ZIP; do not change the screenshot's pixels. Preserve the reduced-colour excerpt as a separately labelled derivative.
-
-**Trust boundary:** `--manifest-only` verifies metadata structure only and is never a substitute for raw-file verification. Hosted CI already verifies the exact committed RTX003 ZIP, but not the screenshot pixels. Once both PNGs are present, hosted CI can be changed to invoke the full checker and require all raw files on every run. Until then, this PR should remain draft/unmerged.
+`--manifest-only` and `--rtx-only` are deliberately **not accepted as proof of full archival completion**. The raw PNG bytes, ZIP, nested manifests, dimensions and Git hashes must verify. This is documentation of a disputed public statement, not an adjudication of its accuracy.
