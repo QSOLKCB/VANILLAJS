@@ -78,6 +78,14 @@ jobs:
           node scripts/rtx5060ti-trusted.mjs --help > /dev/null
       - name: Verify source-pinned BLOAT-OPS/NEXUS/UFF serial parity workloads
         run: node scripts/bloat-nexus-uff-workload.js --check > bloat-nexus-uff-workload.json
+      - name: Verify donor-upgrade CPU drift repayment and interception evidence
+        run: node scripts/donor-upgrade-workload.js --check > donor-upgrade-workload.json
+      - name: Check owner-dispatched RTX donor follow-up scripts offline only
+        run: |
+          node --check scripts/rtx5060ti-trusted.mjs
+          node scripts/rtx5060ti-trusted.mjs --help > /dev/null
+          python3 -c "import ast,pathlib;ast.parse(pathlib.Path('scripts/finalize-rtx5060ti-donor.py').read_text())"
+          python3 -m unittest discover -s tests -p 'test_rtx_donor_receipt.py' -v
       - name: Verify documented navigation workload
         run: node scripts/navigation-workload.js --check > navigation-workload.json
       - name: Compare exact QwakeTF-inspired pooled A* and existing serial reference
@@ -137,6 +145,7 @@ jobs:
             navigation-pool-workload.json
             geometry-candidate-workload.json
             bloat-nexus-uff-workload.json
+            donor-upgrade-workload.json
             geometry-layer2-workload.json
             omi-evidence.json
             omi-machine-evidence.json
