@@ -77,8 +77,10 @@ function bytesFor(name,value){
 function decode(name,bytes){
   const str=decoder.decode(bytes);
   if(name.endsWith('.txt'))return str;
-  const parsed=canonical(JSON.parse(str));
-  if(JSON.stringify(parsed)!==str)throw new TypeError('noncanonical JSON document');
+  const parsed=JSON.parse(str),validated=canonical(parsed);
+  if(JSON.stringify(validated)!==str)throw new TypeError('noncanonical JSON document');
+  // API consumers receive ordinary parsed JSON objects. Validation uses
+  // null-prototype scratch objects only and rejects poison keys first.
   return parsed;
 }
 function trits(bytes,width){
