@@ -418,6 +418,8 @@ is byte-identical to the uploaded artifact and verified in hosted CI.
 The new serial-circle and retained/fresh WebGL workloads have **no historical
 RTX5060TI-001 equivalent**, and the observed results are not universal FPS claims.
 
+The subsequent [RTX5060TI-003 and COMMENT-001 documentary record](evidence/COMMENT-001/README.md) includes the exact original and derived screenshots, independently pinned by SHA-256 and Git blob IDs. The screenshot records a disputed public allegation and the maintainer's response; it does not independently prove that copying occurred.
+
 The successful ARCADE frame-invalidation comparison is recorded as
 [RTX5060TI-003](evidence/RTX5060TI-003/README.md), tied to
 `3f5518a168652a003e8db9aa6dc0371ddb4782ea`. Both original RTX001 and
