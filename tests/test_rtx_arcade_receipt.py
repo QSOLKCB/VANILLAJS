@@ -62,7 +62,8 @@ class ReceiptTests(unittest.TestCase):
                 "warmupPairs": 2, "measuredPairs": 7,
                 "framesPerTrial": 48, "snapshotsPerTrial": 9,
             },
-            "paritySha256": PIXEL,
+            "paritySha256": sha(json.dumps([PIXEL] * 9,
+                 separators=(",", ":")).encode("utf-8")),
             "strategies": {
                 "forced": {"medianMs": 15, "samples": [
                     {"ms": 15, "pixels": [PIXEL] * 9,
@@ -114,6 +115,17 @@ class ReceiptTests(unittest.TestCase):
 
     def test_reject_pixel_drift(self):
         self.native["strategies"]["gated"]["samples"][2]["pixels"][4] = "b" * 64
+        self.assertNotEqual(self.execute().returncode, 0)
+        self.assertFalse((self.root / "EXPERIMENT.json").exists())
+
+
+    def test_reject_false_pixel_digest_even_with_matching_frames(self):
+        self.native["paritySha256"] = "b" * 64
+        self.assertNotEqual(self.execute().returncode, 0)
+        self.assertFalse((self.root / "EXPERIMENT.json").exists())
+
+    def test_reject_forged_median(self):
+        self.native["strategies"]["gated"]["medianMs"] = 200
         self.assertNotEqual(self.execute().returncode, 0)
         self.assertFalse((self.root / "EXPERIMENT.json").exists())
 
