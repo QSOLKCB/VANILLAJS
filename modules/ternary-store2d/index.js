@@ -3,7 +3,9 @@
 // This is a reversible experimental indexing layout, NOT compression,
 // persistence, an encrypted database or quantum/physical information storage.
 const MAX_DOCS=64,MAX_BYTES=16384,NAME=/^(?!\/)(?!.*\/\/)(?!.*(?:^|\/)\.\.?\/)[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*\.(?:txt|json)$/;
-const encoder=new TextEncoder(),decoder=new TextDecoder('utf-8',{fatal:true});
+// ignoreBOM=true means U+FEFF at the *start* of .txt is kept as data.
+// The JSON parser still rejects a BOM prefix outside the JSON value.
+const encoder=new TextEncoder(),decoder=new TextDecoder('utf-8',{fatal:true,ignoreBOM:true});
 const TRITS_PER_BYTE=6, TRIT_SPACE=729;
 // Small, immutable-by-encapsulation LUTs: 1,536 forward bytes + 1,458 inverse
 // bytes. Built once, reused for every encode/decode and store snapshot.
@@ -201,8 +203,14 @@ export class TernaryGridStore2D {
         count=finite(entry.length,'length',0,length);
       if(name<=previous||offset!==start||offset+count>length)
         throw new RangeError('noncanonical/overlapping ternary index');
-      const payload=bytes.slice(offset,offset+count),value=decode(name,payload);
-      store.put(name,value);start+=count;previous=name;
+      // The exact bytes have already passed strict UTF-8, canonical JSON,
+      // bounds and payload index validation. Do not pass a decoded top-level
+      // JSON string through put(): that API parses incoming strings as text,
+      // and a second parse can change its type or reject a valid snapshot.
+      const payload=bytes.slice(offset,offset+count);
+      decode(name,payload);
+      store.#docs.set(name,payload);
+      start+=count;previous=name;
     }
     if(start!==length)throw new RangeError('unreferenced ternary payload');
     if(JSON.stringify(store.snapshot())!==JSON.stringify(data))
