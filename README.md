@@ -9,6 +9,16 @@ two separately registered research experiments (OMI with three demonstrations an
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
+## Qwen3-VL 2B text/image response isolation
+
+The owner-only, no-API-credit
+[QWEN2B-ISOLATE-001](experiments/freedm-open/QWEN2B-ISOLATE-001.md)
+isolates the previously observed empty final output from the 2B
+vision model. A pinned 14-case text-only versus original-game-image
+matrix varies JSON schema mode and thinking settings, with local
+Ollama version, model digest and complete source-bound JSON receipts.
+It neither runs the FreeDM engine nor modifies the four-player live gate.
+
 ## FreeDM open-weight model comparison — experimental
 
 The separate [FreeDM open-model FPS lab](experiments/freedm-open/README.md)
