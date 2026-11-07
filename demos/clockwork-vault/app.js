@@ -258,5 +258,8 @@ function frame(now){
   });
   render(active()?result.alpha:1);updateHud();frameHandle=requestAnimationFrame(frame);
 }
-try{renderer=new Renderer(canvas);buildScene();updateHud();frameHandle=requestAnimationFrame(frame);}
+// Publish the first real scene before advertising graphics readiness. Browser
+// tests must not confuse the static HTML READY label with a completed WebGL draw.
+try{renderer=new Renderer(canvas);buildScene();render(1);canvas.dataset.firstFrame='ready';
+  updateHud();frameHandle=requestAnimationFrame(frame);}
 catch(error){graphicsFailure(error.message);}
