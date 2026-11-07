@@ -35,7 +35,9 @@ function validateIndex(value,count,label){
 const validName=(s)=>typeof s==='string'&&/^[a-z][a-z0-9_-]{0,31}$/.test(s);
 
 function partsFor(raw,slotMap,bounds,kind){
-  if(!Array.isArray(raw)||raw.length>MAX_PARTS)throw new RangeError(kind+' must contain <=256 parts');
+  if(!Array.isArray(raw)||raw.length>MAX_PARTS||
+     !Array.from({length:raw.length},(_,i)=>own(raw,i)).every(Boolean))
+    throw new RangeError(kind+' must be a dense array of <=256 parts');
   return Object.freeze(raw.map((part,i)=>{
     const label=kind+'['+i+']';
     if(!part||typeof part!=='object')throw new TypeError(label+' must be an object');
@@ -63,10 +65,12 @@ function partsFor(raw,slotMap,bounds,kind){
  * All bounding-volume checks occur before the model becomes usable. */
 export function createAppearance({palette,slots,colours,parts,fallen=[],
   variants={},bounds={}}={}){
-  if(!Array.isArray(palette)||palette.length<1||palette.length>MAX_PALETTE)
+  if(!Array.isArray(palette)||palette.length<1||palette.length>MAX_PALETTE||
+     !Array.from({length:palette.length},(_,i)=>own(palette,i)).every(Boolean))
     throw new RangeError('palette must have 1..256 colours');
   const lut=Object.freeze(palette.map(colour));
   if(!Array.isArray(slots)||slots.length<1||slots.length>MAX_SLOTS||
+    !Array.from({length:slots.length},(_,i)=>own(slots,i)).every(Boolean)||
     slots.some(x=>!validName(x))||new Set(slots).size!==slots.length)
     throw new TypeError('slots must be 1..32 distinct lower-case identifiers');
   const slotNames=Object.freeze([...slots]);
@@ -87,7 +91,8 @@ export function createAppearance({palette,slots,colours,parts,fallen=[],
   const options=new Array(slotNames.length).fill(null);
   for(const [slot,values] of Object.entries(variants)){
     const i=slotMap.get(slot);
-    if(i===undefined||!Array.isArray(values)||values.length<1||values.length>MAX_PALETTE)
+    if(i===undefined||!Array.isArray(values)||values.length<1||values.length>MAX_PALETTE||
+       !Array.from({length:values.length},(_,j)=>own(values,j)).every(Boolean))
       throw new TypeError('variant choices must be a nonempty palette-index list for a known slot');
     options[i]=Object.freeze(values.map((x,j)=>validateIndex(x,lut.length,slot+'['+j+']')));
   }
