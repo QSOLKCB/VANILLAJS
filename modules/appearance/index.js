@@ -172,5 +172,6 @@ export function emitAppearanceToStream(model,stream,pose={}){
   if(!(stream instanceof CuboidStream))throw new TypeError('CuboidStream required');
   const p=poseInput(pose),count=countParts(model,p);
   if(count>16384-stream.count)throw new RangeError('appearance exceeds remaining stream capacity');
-  return emitAppearance(model,(...args)=>stream.box(...args),p);
+  return emitAppearance(model,(x,y,z,w,h,d,rgb,glow,yaw)=>
+    stream.box(x,y,z,w,h,d,rgb,glow,yaw),p);
 }
