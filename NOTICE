@@ -97,3 +97,10 @@ QSOLKCB/QwakeTF/docs/OPTIMIZATION.md (OPT-INV-001, OPT-POOL-001).
 It preserves VANILLAJS's previous result/tie-order contract; no QwakeTF game
 data, assets, rendering code or third-party runtime dependencies are copied.
 See docs/NAVIGATION_POOL.md for provenance and parity limits.
+
+The experimental opt-in FrameGate is independently implemented from
+QSOLKCB/ARCADE PR #2 and release v0.4.0 at
+430b16466e6c589bb92650d2a221772a3fd328d4 (Apache-2.0),
+drawing on its explicit frame invalidation and retained-terminal contracts.
+No arcade cabinet mechanics, artwork, music, game assets or runtime code were
+copied. See docs/FRAME_GATE.md for source pins and correctness limitations.
