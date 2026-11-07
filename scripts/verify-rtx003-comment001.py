@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import stat
 import struct
 import sys
 import zipfile
@@ -54,6 +55,8 @@ def read_manifest():
 
 
 def verify_bytes(item, path):
+    require(stat.S_ISREG(path.lstat().st_mode),
+            f"expected regular evidence file, not a link: {path.name}")
     raw = path.read_bytes()
     require(len(raw) == item["size"], f"size mismatch: {path.name}")
     require(digest(raw) == item["sha256"], f"SHA-256 mismatch: {path.name}")
