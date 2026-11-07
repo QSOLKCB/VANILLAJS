@@ -152,6 +152,13 @@
       "status": "experimental",
       "description": "Generation-stamped reusable typed-array A* workspace with exact navigation.findPath parity and retained parallel heap"
     },
+    "frame-gate": {
+      "entry": "modules/frame-gate/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Transactional opt-in presentation invalidation, exact primitive keys and skipped idle rendering"
+    },
     "integer-math": {
       "entry": "modules/integer-math/index.js",
       "depends": [],
