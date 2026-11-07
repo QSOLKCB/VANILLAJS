@@ -64,8 +64,13 @@ do not claim universal inference throughput or game success.
    digest/character count if available. No text rewriting, model swapping,
    auto-retries or hidden action-fallback is permitted. Model reasoning
    content itself is **not** retained.
-5. A replay with the exact expected sample count can be marked
-   `status: PARTIAL` while successfully collecting research data.
+5. A replay with the exact expected sample count **and a completed model
+   response for every attempted inference** can be marked `PARTIAL`
+   while successfully collecting research data. A local transport/model
+   error produces a `LOCAL_ERROR` sample and status `INCOMPLETE`,
+   with nonzero exit, even when all 48 fixture attempts were scheduled.
+   This preserves partial diagnostics without falsely counting missing
+   provider responses as completed inferences.
    **The optional live stage remains fail-closed** unless all four
    models produce valid six-field controls in every selected replay
    fixture. Real engine action validation is independent.
