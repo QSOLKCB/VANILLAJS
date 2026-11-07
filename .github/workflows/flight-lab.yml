@@ -54,6 +54,23 @@ jobs:
       - run: node --test tests/*.test.js
       - run: node scripts/check.js
       - run: node scripts/build.js
+      - name: Verify 2D evidence, owner-only RTX scripts and no-network Sol policy
+        run: |
+          set -euo pipefail
+          node scripts/lab2d-evidence.js --check > lab2d-evidence.json
+          node --check scripts/rtx5060ti-2d.mjs
+          node scripts/rtx5060ti-2d.mjs --help > /dev/null
+          PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_sol_lab2d_policy.py' -v
+          PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_rtx2d_finalizer.py' -v
+          PYTHONDONTWRITEBYTECODE=1 python3 - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('solreview',Path('scripts/review-lab2d-sol.py'))
+          module=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          evidence=module.preflight(Path('lab2d-evidence.json'),10.0)
+          assert evidence['strict']['kind']=='qsol.vanillajs.lab2d.evidence.v1'
+          PY
       - name: Syntax-check optional owner-run RTX validation (no GPU execution in hosted CI)
         run: |
           node --check scripts/rtx5060ti-browser.mjs
@@ -151,6 +168,7 @@ jobs:
             geometry-candidate-workload.json
             bloat-nexus-uff-workload.json
             donor-upgrade-workload.json
+            lab2d-evidence.json
             geometry-layer2-workload.json
             omi-evidence.json
             omi-machine-evidence.json
