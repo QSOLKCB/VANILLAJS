@@ -2,10 +2,10 @@
 
 Reusable, original JavaScript game modules built directly on web standards.
 **v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-Twenty-four experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
+Twenty-eight experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
 two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
 
-[Frame invalidation](docs/FRAME_GATE.md) · [Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
+[UFF orbital physics & NEXUS contracts](docs/BLOAT_NEXUS_UFF.md) · [Frame invalidation](docs/FRAME_GATE.md) · [Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
@@ -34,6 +34,21 @@ message explains unsupported graphics. Serve over
 HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
 The local server works without internet access. Hosted offline reload via a
 service worker is a future feature, not included in this milestone.
+
+## BLOAT-OPS, NEXUS and UFF experimental research kernels
+
+Four opt-in modules add a conservative Euclidean distance prefilter,
+source-pinned complete integer replay validation, a bounded reversible
+cuboctahedral Z4 lattice, and physically grounded **Newtonian orbital motion**
+with explicit SI units and a velocity-Verlet integrator. The NEXUS model is
+classical and its published Lean proofs do not automatically prove this new
+JavaScript implementation. UFF's empirical extra-field galaxy model is
+**not** represented as established physics. Existing simulation, collision
+and rendering systems are unchanged.
+
+Read the [source-pinned mathematical/physics contract](docs/BLOAT_NEXUS_UFF.md)
+and use the new opt-in modules deliberately; no GPU or FPS improvement
+is claimed from them until independently measured.
 
 ## QwakeTF-style reusable broadphase scratch
 
