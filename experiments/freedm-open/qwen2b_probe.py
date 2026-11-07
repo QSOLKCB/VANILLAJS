@@ -334,6 +334,11 @@ def execute(args, *, opener=None, source_loader=None, inventory=None):
             report["status"] = "INCOMPLETE"
             report["modelDrift"] = {"before": known, "after": after}
     except Exception as error:
+        # A failed postflight model digest/transport check invalidates the
+        # whole protocol receipt even if all prior model replies completed.
+        # Preserve the original rows, but never seal contradictory COMPLETE
+        # status alongside fatalError.
+        report["status"] = "INCOMPLETE"
         report["fatalError"] = {"class": type(error).__name__,
                                "message": str(error)[:200]}
         raise
