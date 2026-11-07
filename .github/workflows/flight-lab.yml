@@ -34,6 +34,7 @@ jobs:
           (cd evidence/COMMENT-001 && sha256sum -c SHA256SUMS)
           (cd evidence/RTX5060TI-003 && sha256sum -c SHA256SUMS)
           python3 -m unittest discover -s tests -p 'test_rtx003_comment001.py' -v
+          python3 -m unittest discover -s tests -p 'test_comment001_blob_import.py' -v
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
