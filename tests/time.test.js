@@ -51,6 +51,17 @@ test('snapping is optional and pause, reset and scaled time repay/clear drift',(
   clock.advance(1/61,()=>{});clock.reset();assert.equal(clock.drift,0);
   assert.equal(clock.ticks,0);
 });
+test('short and zero-duration frames never erase unpaid negative snap drift',()=>{
+  const clock=new FixedClock({step:1/60,snapTolerance:.0005});
+  for(let i=0;i<10000;i++){
+    clock.advance(.0166,()=>{});
+    clock.advance(0,()=>{});
+  }
+  // A 166-second tape contains exactly 9,960 60 Hz ticks; the flawed
+  // clamp-and-clear implementation incorrectly admitted 10,000.
+  assert.equal(clock.ticks,9960);
+  assert.ok(Math.abs(clock.drift)<.0005);
+});
 test('invalid times and limits are rejected',()=>{
   assert.throws(()=>new FixedClock({step:0}));assert.throws(()=>new FixedClock({snapTolerance:-1}));
   assert.throws(()=>new FixedClock({snapTolerance:1}));assert.throws(()=>new FixedClock().advance(-1,()=>{}));
