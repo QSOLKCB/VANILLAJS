@@ -1,8 +1,8 @@
 # Binary evidence staging — remaining owner step
 
-This documentation-only PR is intentionally **not complete** until the three raw binary files are committed to its branch and their content hashes are validated. A GitHub Actions artifact URL alone is temporary and **not** permanent archival. The original source screenshot was supplied in the conversation; its byte-for-byte copy must be committed, not merely its crop or manifest.
+The RTX5060TI-003 ZIP has now been committed to Git **byte-for-byte** (Git blob `4b35e831027783618b6508a898883456c17b6aef`). This PR remains **not complete** until the two screenshot PNGs (original and derived excerpt) are also committed and verified. A GitHub Actions artifact URL alone is temporary and **not** permanent archival. The original source screenshot was supplied in the conversation; its byte-for-byte copy must be committed, not merely its crop or checksum manifest.
 
-The assistant created `VANILLAJS_RTX003_COMMENT001_RAW_EVIDENCE_TRANSFER.zip` outside this repository. It contains only these repo-relative files:
+The assistant created `VANILLAJS_RTX003_COMMENT001_RAW_EVIDENCE_TRANSFER.zip` outside this repository. It contains these repo-relative files. The first file is **already in Git** and will be skipped by `unzip -n`:
 
 ```text
 evidence/RTX5060TI-003/vanillajs-rtx5060ti-arcade-42329114286-1.zip
@@ -32,4 +32,4 @@ git push origin HEAD
 
 `unzip -n` refuses to overwrite pre-existing file names. Before committing, the full verifier must report `PASS binary evidence bytes...`. Do **not** regenerate or repackage the benchmark ZIP; do not change the screenshot's pixels. Preserve the reduced-colour excerpt as a separately labelled derivative.
 
-**Trust boundary:** `--manifest-only` verifies metadata structure only and is never a substitute for raw-file verification. Once the binaries are present, hosted CI can be changed to invoke the full checker and require the raw files on every run. Until then, this PR should remain draft/unmerged.
+**Trust boundary:** `--manifest-only` verifies metadata structure only and is never a substitute for raw-file verification. Hosted CI already verifies the exact committed RTX003 ZIP, but not the screenshot pixels. Once both PNGs are present, hosted CI can be changed to invoke the full checker and require all raw files on every run. Until then, this PR should remain draft/unmerged.
