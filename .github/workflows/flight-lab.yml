@@ -25,6 +25,10 @@ jobs:
           python3 scripts/verify-rtx-adaptive-receipt.py
           python3 -m unittest discover -s tests -p 'test_rtx_adaptive_archive.py' -v
           (cd evidence/RTX5060TI-002 && sha256sum -c SHA256SUMS)
+      - name: Validate RTX003 and COMMENT-001 provenance metadata (not raw archive proof)
+        run: |
+          python3 scripts/verify-rtx003-comment001.py --manifest-only
+          python3 -m unittest discover -s tests -p 'test_rtx003_comment001.py' -v
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
