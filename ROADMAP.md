@@ -158,6 +158,39 @@
 This is a future research/benchmark slice, **not** a v1.1.1 feature or a claim
 that the new WebGL API has already improved physical GPU performance.
 
+## DEMO//SYNTH — deterministic audio and demoscene engine (proposed)
+
+**Design proposal only — no audio API, demo, MOD export or RTX measurement
+is implemented by this roadmap entry.** See the [source-pinned implementation
+plan](docs/DEMO_SYNTH_PLAN.md).
+
+- Four-channel original sample/synth tracker with exact integer sample timing,
+  48 kHz PCM16LE rendering and one short audible/visible consumer from day one.
+  Strict rendered audio stays separate from best-effort browser Web Audio playback.
+- Independent ProTracker-compatible `M.K.` MOD encoder/loader after C99
+  interoperability checks against CorpoWars3d's *limited* MOD player; no
+  unsupported-effect silence or fabricated format compatibility.
+- E8_MUSIC, SONIFICATION, TONELAB and SPECTRAL adapters only through declared
+  versioned source-to-musical-event mappings. Preserve SONIFICATION's
+  root-event-only, no-PCM policy. QEC informs receipts and replay, not audio quality.
+- Sample-indexed 50 Hz visual timeline; procedural copper bars, plasma, E8
+  geometry, waveform triggers and original deterministic 2D/3D text objects.
+  GPU command equality is distinct from cross-device framebuffer equality.
+- OPT evidence gates: invariant/control-rate reuse, bounded buffers, forced-fresh
+  reference, exact PCM/chunk independence, C99 tracker oracles, invalid-file tests,
+  packaged Chromium AudioWorklet and offline-export checks.
+- A separate post-merge owner-only RTX 5060 Ti workflow will compare scene
+  rendering and record CPU DSP timing, with exact SHA-256 receipts. Never modify
+  historical RTX001–004 or dispatch an owner runner from PR/push.
+
+Build as small reviewed phases: P0 contracts → P1 original 45–90s musical
+vertical slice → P2 real MOD → P3 live studio → P4 full visual intro
+→ P5 OPT/RTX evidence → P6 optional 64 KiB data-pack/portable video.
+Keep tests, provenance and releases separate and obtain owner authorization
+for freeze and publication.
+
+**Phonon-inspired/QEC acoustic follow-up (proposed only):** [lattice and acoustic addendum](docs/DEMO_SYNTH_LATTICE_ACOUSTIC_ADDENDUM.md) distinguishes a 27-site GF(3) event lattice from a 512-voxel RGB scene, defines a classical coupled-oscillator audio/visual mapping and repairs the supplied Hamming syndrome mapping. QEC v177 acoustic source, noise, receiver, reference-gate, transport and evidence documents are candidate reference adapters; they are not physical-quantum audio improvements. Validate actual NB eigenvalue radius independently of normalized flow before any spectral phase-boundary claim. Reuse Psycle as a modular workflow reference, not a native plugin runtime. The first four-channel demo remains the next implementation milestone.
+
 ## Proposed next slices — not implemented
 
 1. **FPS expansion:** sloped terrain/capsules, rotating platforms, rotating-target
