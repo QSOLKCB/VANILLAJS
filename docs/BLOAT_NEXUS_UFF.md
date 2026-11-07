@@ -7,7 +7,7 @@
 | Donor | Exact source | What is reused | Source boundary |
 | --- | --- | --- | --- |
 | BLOAT-OPS | `QSOLKCB/BLOAT-OPS@6f290dc818759ca49bcdec54b31d738b33c7946f`, `src/game/replay.js` and `tests/checkpoint.test.mjs` | complete-input replay/checkpoint admission, never accepting commands remaining after termination | Apache-2.0; no mission code or game assets copied |
-| CorpoWars3d PR #10 | `QSOLKCB/CorpoWars3d@a81b7b03d0c8b730b830f9d92459ef2193793b7f`, `src/simulation.js` | OPT-REDUCE axis early reject before Euclidean distance | Unmerged at donor inspection; no autonomous pursuit or campaign rules copied |
+| CorpoWars3d v1.2.0 / PR #10 | `QSOLKCB/CorpoWars3d@5701949e4ef7047b715db808b777450c3bf49d53`, `src/simulation.js` | OPT-REDUCE axis early reject before Euclidean distance | Merged release v1.2.0, originally reviewed at `a81b7b03d0c8b730b830f9d92459ef2193793b7f`; no autonomous pursuit or campaign rules copied |
 | NEXUS | `QSOLKCB/NEXUS@ac9ef5ac79008b46be3351c57cab946b93dd37e8`, `docs/LATTICE.md`, `src/ve/graph.rs`, `formal/Nexus/Lattice.lean` | coordinate-derived cuboctahedral topology and reversible classical `Z_4` state-transition contract | NEXUS source is MPL-2.0. VANILLAJS's implementation is independently authored from published mathematics, not an unlicensed source transplant; Lean proves its own formal model, not this JavaScript |
 | UFF | `QSOLKCB/UFF@596cd732df61587aa1a9801cad1ec13483b1347f`, `uff/constants.py`, `docs/MODELS.md` §3 and `tests/test_models.py` | explicit SI gravitational constant and established Newtonian central-mass formula | Apache-2.0. UFF's empirical extra-field velocity law, MOND sensitivity models, Kerr and LQG diagnostics are **not** assumed to be physically proven force laws |
 
