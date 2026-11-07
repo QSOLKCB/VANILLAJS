@@ -189,6 +189,8 @@ vertical slice → P2 real MOD → P3 live studio → P4 full visual intro
 Keep tests, provenance and releases separate and obtain owner authorization
 for freeze and publication.
 
+**Phonon-inspired/QEC acoustic follow-up (proposed only):** [lattice and acoustic addendum](docs/DEMO_SYNTH_LATTICE_ACOUSTIC_ADDENDUM.md) distinguishes a 27-site GF(3) event lattice from a 512-voxel RGB scene, defines a classical coupled-oscillator audio/visual mapping and repairs the supplied Hamming syndrome mapping. QEC v177 acoustic source, noise, receiver, reference-gate, transport and evidence documents are candidate reference adapters; they are not physical-quantum audio improvements. Validate actual NB eigenvalue radius independently of normalized flow before any spectral phase-boundary claim. Reuse Psycle as a modular workflow reference, not a native plugin runtime. The first four-channel demo remains the next implementation milestone.
+
 ## Proposed next slices — not implemented
 
 1. **FPS expansion:** sloped terrain/capsules, rotating platforms, rotating-target

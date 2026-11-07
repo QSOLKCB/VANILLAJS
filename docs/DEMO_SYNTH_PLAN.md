@@ -4,6 +4,8 @@
 Planning base: VANILLAJS `90b2fe1f3428710eade90cc328c9e6bf7e18f457` (the reviewed post-PR #35 main).
 No runtime, GPU workflow or archived RTX001–004 evidence is modified by this proposal.
 
+**Addendum (QEC acoustic contracts, classical phonon-inspired lattices, GF(3) coding, NB spectral audit and Psycle):** [DEMO_SYNTH_LATTICE_ACOUSTIC_ADDENDUM.md](DEMO_SYNTH_LATTICE_ACOUSTIC_ADDENDUM.md). The two-geometry `3×3×3` and `8×8×8` design, corrected Hamming(7,4), provenance boundaries and QEC acoustic source/receiver distinction are planned extensions, not implemented APIs.
+
 ## 1. Product vision and decisive design rules
 
 Build a small, offline-first **VANILLAJS DEMO//SYNTH** API from existing engine primitives.
