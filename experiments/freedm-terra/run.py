@@ -23,6 +23,7 @@ import re
 import stat
 import sys
 import time
+import tempfile
 
 from core import (
     MODEL, ROLES, BUTTONS, MAX_DECISIONS, Budget, agent_request_payload,
@@ -39,11 +40,17 @@ MAX_MATCH_SECONDS = 12 * 60
 
 def worker(index: int, transport, wad: str, port: int):
     game = None
+    config_dir = None
     role = ROLES[index][0]
     try:
         import vizdoom as vzd  # intentionally unavailable in hosted offline CI
 
         game = vzd.DoomGame()
+        # Every process needs a private config file. The engine's default
+        # _vizdoom.ini could otherwise collide across four clients or dirty
+        # the exact-head repository checkout before paid dispatch.
+        config_dir = tempfile.TemporaryDirectory(prefix=f'qsol-freedm-p{index}-')
+        game.set_doom_config_path(str(Path(config_dir.name) / 'doom.ini'))
         game.set_doom_game_path(wad)
         game.set_doom_map(MAP)
         game.set_screen_resolution(vzd.ScreenResolution.RES_320X240)
@@ -147,6 +154,8 @@ def worker(index: int, transport, wad: str, port: int):
     finally:
         if game is not None:
             game.close()
+        if config_dir is not None:
+            config_dir.cleanup()
         transport.close()
 
 
