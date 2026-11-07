@@ -79,6 +79,8 @@ def verify(out, candidate):
                 "historical pinned source mismatch " + label)
         env = report["environment"]
         require("RTX 5060 Ti" in env["nativeWebGL"]["renderer"] and
+                not re.search(r"software|swiftshader|llvmpipe|lavapipe",
+                              env["nativeWebGL"]["renderer"], re.I) and
                 env["gpu"]["verifiedModel"] == "NVIDIA GeForce RTX 5060 Ti",
                 "historical comparison was not native RTX")
         for key in ("baseline", "candidate"):
@@ -92,8 +94,10 @@ def verify(out, candidate):
             native.get("kind") == "qsol.vanillajs.arcade-frame-gate.native.v1" and
             native.get("sourceSha") == candidate and native.get("status") == "PASS",
             "new frame-gate provenance mismatch")
-    require("RTX 5060 Ti" in native["native"]["renderer"],
-            "new workload did not identify RTX")
+    require("RTX 5060 Ti" in native["native"]["renderer"] and
+            not re.search(r"software|swiftshader|llvmpipe|lavapipe",
+                          native["native"]["renderer"], re.I),
+            "new workload did not identify native RTX")
     require(native["protocol"]["warmupPairs"] == 2 and
             native["protocol"]["measuredPairs"] == 7 and
             native["protocol"]["framesPerTrial"] == 48 and
@@ -105,15 +109,22 @@ def verify(out, candidate):
             "frame-gate paired trials incomplete")
     require(re.fullmatch(r"[a-f0-9]{64}", native["paritySha256"]),
             "invalid pixel receipt")
+    observed = forced["samples"][0]["pixels"]
+    digest = sha(json.dumps(observed, separators=(",", ":")).encode("utf-8"))
+    require(digest == native["paritySha256"],
+            "pixel receipt digest does not match checkpoint bytes")
     for f, g in zip(forced["samples"], gated["samples"]):
         require(len(f["pixels"]) == len(g["pixels"]) == 9 and
-                f["pixels"] == g["pixels"], "frame-gate checkpoint parity failed")
+                f["pixels"] == g["pixels"] and
+                all(re.fullmatch(r"[a-f0-9]{64}", value) for value in f["pixels"]),
+                "frame-gate checkpoint parity failed")
         require(f["actualDrawn"] == f["drawCalls"] == 48 and
                 g["actualDrawn"] == g["drawCalls"] == 9 and
                 g["skipped"] == 39, "frame-gate work counts changed")
         require(all(math.isfinite(s["ms"]) and s["ms"] >= 0 for s in (f, g)),
                 "invalid timing sample")
-    require(all(math.isfinite(group["medianMs"]) and group["medianMs"] >= 0
+    require(all(math.isfinite(group["medianMs"]) and group["medianMs"] >= 0 and
+                group["medianMs"] == sorted(sample["ms"] for sample in group["samples"])[3]
                 for group in (forced, gated)), "invalid timing summary")
 
     summary = [
