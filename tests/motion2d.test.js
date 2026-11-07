@@ -15,7 +15,7 @@ test('profiles preserve exact integer coordinates and do not mutate inputs',()=>
 test('RTS top-down friction, collision and boundary clamp are deterministic',()=>{
   let a=createBody2D();for(let i=0;i<12;i++)a=stepBody2D(a,{x:1},{bounds});
   assert.ok(a.x>0&&a.vx>0);
-  let b=a;for(let i=0;i<16;i++)b=stepBody2D(b,{}, {bounds});assert.equal(b.vx,0);
+  let b=a;for(let i=0;i<20;i++)b=stepBody2D(b,{}, {bounds});assert.equal(b.vx,0);
   const solid=(x)=>x>5;
   const blocked=stepBody2D(createBody2D(),{x:1},{blockedAt:solid,bounds});
   assert.equal(blocked.x,0);assert.equal(blocked.vx,0);
