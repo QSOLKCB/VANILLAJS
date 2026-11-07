@@ -61,6 +61,47 @@ class ReportTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     v.verify(src,report,SHA)
 
+    def test_zero_delta_is_retained_as_a_real_browser_observation(self):
+        # Two rAF callbacks may carry identical timestamps under reduced
+        # timer resolution. Never rewrite that measurement into 16.67 ms.
+        src, report = fixture()
+        report["canvas2D"]["frameIntervalsMs"][0] = 0.0
+        self.assertEqual(v.verify(src, report, SHA)["canvasIntervals"], 95)
+        self.assertEqual(report["canvas2D"]["frameIntervalsMs"][0], 0.0)
+
+    def test_all_zero_or_malformed_rAF_data_fail_closed_with_specific_reason(self):
+        for samples, message in (
+            ([0.0] * 95, "no positive elapsed"),
+            ([16.0] * 94 + [-1.0], "negative/nonfinite"),
+            ([16.0] * 94 + [None], "negative/nonfinite"),
+            ([16.0] * 94 + [float("nan")], "negative/nonfinite"),
+            ([16.0] * 94, "interval count"),
+        ):
+            with self.subTest(message=message):
+                src, report = fixture()
+                report["canvas2D"]["frameIntervalsMs"] = samples
+                with self.assertRaisesRegex(ValueError, message):
+                    v.verify(src, report, SHA)
+
+    def test_image_and_quantile_evidence_still_fail_closed(self):
+        for change, message in (
+            (lambda x: x["canvas2D"].__setitem__("brightPixels", 0),
+             "image missing or blank"),
+            (lambda x: x["canvas2D"].__setitem__("pixelSHA256", "f" * 3),
+             "pixel SHA-256"),
+            (lambda x: x["canvas2D"].__setitem__("rendererMode", "WebGL"),
+             "pixel SHA-256"),
+            (lambda x: x["canvas2D"].__setitem__("sampleCount", 94),
+             "interval count"),
+            (lambda x: x["canvas2D"].__setitem__("p95FrameIntervalMs", 0.0),
+             "frame p95"),
+        ):
+            with self.subTest(message=message):
+                src, report = fixture()
+                change(report)
+                with self.assertRaisesRegex(ValueError, message):
+                    v.verify(src, report, SHA)
+
     def test_nonfinite_samples_are_rejected(self):
         src,report=fixture()
         report["comparison"]["forced"]["samples"][0]["ms"]=float("nan")

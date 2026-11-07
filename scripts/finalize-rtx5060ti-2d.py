@@ -70,17 +70,30 @@ def verify(source, report, expected_head):
                       native["renderer"], re.I) is None,
             "native NVIDIA WebGL identity missing")
     c = report.get("canvas2D", {})
+    require(type(c) is dict, "Canvas2D observation must be an object")
     assert_sha = lambda x: type(x) is str and _HEX64.fullmatch(x) is not None
-    require(type(c.get("brightPixels")) is int and c["brightPixels"] > 500 and
-            assert_sha(c.get("pixelSHA256")) and
-            c.get("rendererMode") == "Canvas2D" and
-            c.get("sampleCount") == 95 and
-            len(c.get("frameIntervalsMs", [])) == 95 and
-            all(type(x) in (int, float) and math.isfinite(x) and x > 0
-                for x in c["frameIntervalsMs"]),
-            "incomplete measured Canvas2D observation")
-    samples = sorted(c["frameIntervalsMs"])
-    require(c.get("p95FrameIntervalMs") == samples[math.ceil(len(samples) * .95) - 1],
+    require(type(c.get("brightPixels")) is int and c["brightPixels"] > 500,
+            "Canvas2D image missing or blank: brightPixels")
+    require(assert_sha(c.get("pixelSHA256")) and
+            c.get("rendererMode") == "Canvas2D",
+            "Canvas2D pixel SHA-256/renderer mode missing or invalid")
+    samples = c.get("frameIntervalsMs")
+    require(c.get("sampleCount") == 95 and type(samples) is list and
+            len(samples) == 95,
+            "Canvas2D requestAnimationFrame interval count mismatch")
+    # A browser can report consecutive identical rAF timestamp values, e.g.
+    # from clock precision/quantization. Zero delta is then an *observed*
+    # value, not a negative time or a missing sample. Preserve every raw
+    # measurement, including zero; never substitute synthetic frame time.
+    require(all(type(x) in (int, float) and math.isfinite(x) and x >= 0
+                for x in samples),
+            "Canvas2D intervals contain negative/nonfinite/nonnumeric values")
+    require(any(x > 0 for x in samples),
+            "Canvas2D timestamps contain no positive elapsed interval")
+    samples = sorted(samples)
+    require(type(c.get("p95FrameIntervalMs")) in (int, float) and
+            math.isfinite(c["p95FrameIntervalMs"]) and
+            c["p95FrameIntervalMs"] == samples[math.ceil(len(samples) * .95) - 1],
             "frame p95 does not match raw observations")
     comparison = report.get("comparison", {})
     require(comparison.get("protocol") ==
