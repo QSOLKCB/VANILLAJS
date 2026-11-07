@@ -168,7 +168,10 @@
     },
     "integer-replay": {
       "entry": "modules/integer-replay/index.js",
-      "depends": ["integer-engine", "integer-math"],
+      "depends": [
+        "integer-engine",
+        "integer-math"
+      ],
       "environment": "pure-js",
       "status": "experimental",
       "description": "Source-pinned complete integer command tapes, strict validation and checked replay admission"
@@ -230,6 +233,13 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Atomic integer simulation ticks, canonical snapshots and bounded replay"
+    },
+    "lead-solver": {
+      "entry": "modules/lead-solver/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded 3D constant-velocity intercept prediction with optional shooter-velocity inheritance"
     }
   },
   "recipes": {

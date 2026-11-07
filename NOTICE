@@ -133,3 +133,19 @@ source-pinned general-purpose contracts from:
 No game assets, UFF empirical physics assertion, NEXUS Rust/Lean source files,
 or other donor-specific runtime code are transplanted. See
 docs/BLOAT_NEXUS_UFF.md for mathematical assumptions and limits.
+
+November 2026 opt-in donor upgrade:
+- BLOAT-OPS PR #6 (head 200234c764a49f30ab1b740b78ef70a746f3532e,
+  merged as b92ecf10036f371ea68929cb5eb7cacbb7aa4a71) and
+  ARCADE PR #3 (merge a3164f6c2c94332d7be10c324fe3cd4aa1c42fbe)
+  demonstrate the compensation needed when snapping browser frame timestamps.
+  VANILLAJS's float FixedClock gains its own opt-in drift-repayment variant.
+- Ski-Shooter v0.2.0 (cb384f8e2e806604fde93140d7a4c41563d6165b)
+  and AFTER-ZERO (406a45927b819f7383f71649d261de675552ca9c)
+  inform the independently authored, general-purpose lead-solver contract.
+- ARCADE v0.4.0, QwakeTF v0.2.0, CorpoWars v0.5.0,
+  CorpoWars3d v1.2.0, GAMES v1.4.0 and BLOAT-OPS PR #5
+  are considered for overlapping already-present routing, retained-geometry,
+  movement, gamepad, replay and frame-gating patterns rather than recopied.
+No donor gameplay, art, assets, audio, vendored code or nonstandard runtime
+packages were copied. See docs/DONOR_UPGRADE_2026_11.md for source pins.
