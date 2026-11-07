@@ -74,6 +74,8 @@ test('bounded state and malformed checkpoint validation reject without mutation'
     {...original,registers:[...original.registers,0]},
     {...original,registers:original.registers.map((x,i)=>i===3?4:x)},
     {...original,extra:0},
+    {...original,cells:undefined},
+    {...original,seed:undefined},
     {...original,registers:Array(72)}
   ])assert.throws(()=>NexusLattice.fromSnapshot(bad));
   assert.throws(()=>lattice.rewind(1));
@@ -84,6 +86,15 @@ test('bounded state and malformed checkpoint validation reject without mutation'
   assert.equal(lattice.round,3);
 });
 
+test('undefined seed cannot silently replan a restored checkpoint',()=>{
+  const original=new NexusLattice({cells:6,seed:17}).forward(10).snapshot();
+  assert.throws(()=>NexusLattice.fromSnapshot({...original,seed:undefined}),RangeError);
+  assert.throws(()=>NexusLattice.fromSnapshot({...original,cells:undefined}),RangeError);
+  const restored=NexusLattice.fromSnapshot(original);
+  restored.forward(1);
+  const reference=new NexusLattice({cells:6,seed:17}).forward(11);
+  assert.deepEqual(restored.snapshot(),reference.snapshot());
+});
 test('different bounded partitions remain exactly reversible',()=>{
   for(const cells of [2,4,6,12,32,64,128,256]){
     const lattice=new NexusLattice({cells,seed:123});

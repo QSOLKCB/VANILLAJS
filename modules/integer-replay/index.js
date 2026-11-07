@@ -4,10 +4,16 @@
 // 6f290dc818759ca49bcdec54b31d738b33c7946f.
 // Original, independent adapter; no mission rules/assets are copied.
 import {IntegerEngine,integerChecksum} from '../integer-engine/index.js';
+import {int32,vector3} from '../integer-math/index.js';
 
 const FORMAT='qsol.integer-replay/1',MAX_FRAMES=36000;
-const dense=a=>Array.isArray(a)&&Array.from({length:a.length},
-  (_,i)=>Object.hasOwn(a,i)).every(Boolean);
+// Check bounds before inspecting indices: untrusted sparse lengths must not
+// create an auxiliary array proportional to the claimed tape size.
+const dense=(a,max)=>{
+  if(!Array.isArray(a)||a.length>max)return false;
+  for(let i=0;i<a.length;i++)if(!Object.hasOwn(a,i))return false;
+  return true;
+};
 const keys=(value,required)=>{
   if(!value||typeof value!=='object'||Array.isArray(value)||
      Object.keys(value).sort().join(',')!==[...required].sort().join(','))
@@ -18,27 +24,32 @@ const buildId=value=>{
     throw new TypeError('buildId must be a pinned lowercase 40-hex Git source SHA');
   return value;
 };
-function checkedFrames(frames){
-  if(!dense(frames)||frames.length>MAX_FRAMES)
+function checkedFrames(frames,source){
+  if(!dense(frames,MAX_FRAMES))
     throw new RangeError('replay must be a dense bounded frame array');
+  // The source checkpoint defines the only IDs accepted by IntegerEngine.step.
+  const bodyIds=new Set(source.bodies.map(body=>body.id));
   return frames.map((commands,i)=>{
-    if(!dense(commands)||commands.length>256)throw new TypeError('invalid command frame '+i);
+    if(!dense(commands,source.bodies.length))
+      throw new TypeError('invalid command frame '+i);
+    const seen=new Set();
     return commands.map((c,j)=>{
       if(!c||typeof c!=='object'||Array.isArray(c)||
          !Object.hasOwn(c,'id')||Object.keys(c).some(
            k=>!['id','velocity','acceleration'].includes(k)))
         throw new TypeError('invalid command '+i+'/'+j);
-      // Keep only admitted fields. JSON is not used to coerce values.
-      const copy={id:c.id};
-      if(Object.hasOwn(c,'velocity')){
-        if(!dense(c.velocity)||c.velocity.length!==3)
-          throw new TypeError('invalid velocity '+i+'/'+j);
-        copy.velocity=[...c.velocity];
-      }
-      if(Object.hasOwn(c,'acceleration')){
-        if(!dense(c.acceleration)||c.acceleration.length!==3)
-          throw new TypeError('invalid acceleration '+i+'/'+j);
-        copy.acceleration=[...c.acceleration];
+      const id=int32(c.id,'command id');
+      if(!bodyIds.has(id)||seen.has(id))
+        throw new RangeError('unknown or duplicate body command '+i+'/'+j);
+      seen.add(id);
+      // Validate numeric values before admitting a tape; no coercion of strings,
+      // fractions, sparse vectors, nonfinite or out-of-range integers.
+      const copy={id};
+      for(const field of ['velocity','acceleration']){
+        if(!Object.hasOwn(c,field))continue;
+        if(!dense(c[field],3)||c[field].length!==3)
+          throw new TypeError('invalid '+field+' '+i+'/'+j);
+        copy[field]=vector3(c[field],field);
       }
       return copy;
     });
@@ -52,7 +63,7 @@ function initialState(snapshot){
  * Failed steps never leave an output record. */
 export function sealIntegerReplay(initial,frames,{build}={}){
   buildId(build);
-  const source=initialState(initial),commands=checkedFrames(frames);
+  const source=initialState(initial),commands=checkedFrames(frames,source);
   const engine=IntegerEngine.fromSnapshot(source);
   for(const input of commands)engine.step(input);
   return {format:FORMAT,build,initial:source,frames:commands,
@@ -65,7 +76,7 @@ export function validateIntegerReplay(tape,{expectedBuild}={}){
   keys(tape,['format','build','initial','frames','ticks','digest','truncated']);
   if(tape.format!==FORMAT||tape.build!==expectedBuild||tape.truncated!==false)
     throw new RangeError('replay schema, source or completeness mismatch');
-  const source=initialState(tape.initial),frames=checkedFrames(tape.frames);
+  const source=initialState(tape.initial),frames=checkedFrames(tape.frames,source);
   if(!Number.isSafeInteger(tape.ticks)||tape.ticks!==frames.length)
     throw new RangeError('replay declared ticks disagree with input count');
   if(typeof tape.digest!=='string'||!/^[0-9a-f]{8}$/.test(tape.digest))

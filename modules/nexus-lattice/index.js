@@ -10,6 +10,11 @@ const uint32=(v,label)=>{
     throw new RangeError(label+' must be uint32');
   return v>>>0;
 };
+const checkedCells=cells=>{
+  if(!Number.isSafeInteger(cells)||cells<2||cells>MAX_CELLS||cells%2)
+    throw new RangeError('cells must be even in [2,256]');
+  return cells;
+};
 const rotate7=x=>((x<<7)|(x>>>25))>>>0;
 function stir(input){
   let n=input>>>0;
@@ -83,9 +88,7 @@ function plan(seed,round){
 export class NexusLattice{
   #seed;#cells;#round=0;#values;
   constructor({cells=6,seed=0x4e455853}={}){
-    if(!Number.isSafeInteger(cells)||cells<2||cells>MAX_CELLS||cells%2)
-      throw new RangeError('cells must be even in [2,256]');
-    this.#seed=uint32(seed,'seed');this.#cells=cells;
+    this.#seed=uint32(seed,'seed');this.#cells=checkedCells(cells);
     this.#values=Uint8Array.from({length:cells*V},
       (_,i)=>seedValue(this.#seed,Math.floor(i/V),i%V));
   }
@@ -100,7 +103,10 @@ export class NexusLattice{
        Object.keys(value).sort().join(',')!=='cells,registers,round,schema,seed'||
        value.schema!=='qsol-nexus-lattice/1')
       throw new TypeError('unsupported lattice snapshot shape');
-    const lattice=new NexusLattice({cells:value.cells,seed:value.seed});
+    // Explicit checks prevent undefined checkpoint fields from activating
+    // constructor defaults and silently changing the reversible round plan.
+    const cells=checkedCells(value.cells),seed=uint32(value.seed,'seed');
+    const lattice=new NexusLattice({cells,seed});
     if(!Number.isSafeInteger(value.round)||value.round<0||value.round>MAX_ROUNDS)
       throw new RangeError('invalid lattice round');
     if(!Array.isArray(value.registers)||value.registers.length!==lattice.#values.length||

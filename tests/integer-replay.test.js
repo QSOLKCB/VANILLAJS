@@ -67,6 +67,31 @@ test('unknown build, unknown fields, truncation, sparse frames and digest drift 
   const actual=verifyIntegerReplay(forged,{expectedBuild:BUILD});
   assert.equal(actual.complete,true);assert.equal(actual.match,false);
 });
+test('preflight rejects invalid body commands before replay execution',()=>{
+  const accepted=tape(3);
+  const invalid=[
+    [{id:1,velocity:['bad',0,0]}],
+    [{id:1,velocity:[0,Infinity,0]}],
+    [{id:1,acceleration:[0,0.5,0]}],
+    [{id:1,acceleration:[0,0,2147483648]}],
+    [{id:1,velocity:[0,,0]}],
+    [{id:99,velocity:[0,0,0]}],
+    [{id:-1}],
+    [{id:1},{id:1}],
+    Array(1000000),
+    [{id:1,velocity:Array(1000000)}]
+  ];
+  for(const commands of invalid){
+    const record=structuredClone(accepted);
+    record.frames[0]=commands;
+    assert.throws(()=>validateIntegerReplay(record,{expectedBuild:BUILD}));
+    assert.throws(()=>verifyIntegerReplay(record,{expectedBuild:BUILD}));
+  }
+  const huge=structuredClone(accepted);
+  huge.frames=Array(100000000);
+  huge.ticks=huge.frames.length;
+  assert.throws(()=>validateIntegerReplay(huge,{expectedBuild:BUILD}),RangeError);
+});
 test('tape stores independently owned snapshots and command records',()=>{
   const initial=scene(),commands=frames(30);
   const record=sealIntegerReplay(initial,commands,{build:BUILD});
