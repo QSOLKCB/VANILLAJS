@@ -86,6 +86,9 @@ test('60/120/144 Hz presentation schedules skip tickless and paused frames',()=>
   for(const hz of [60,120,144]){
     const clock=new FixedClock({step:1/60,maxFrame:.1,maxSteps:6});
     const gate=new FrameGate(),drawLog=[];let ticks=0,frames=0;
+    // The first image is presented before rAF pacing begins. It is not a
+    // redundant refresh, even when the first 120/144 Hz frame has no tick.
+    assert.equal(gate.present(ctx(ticks),()=>drawLog.push(ticks)),true);
     for(let frame=0;frame<hz;frame++){
       const {steps}=clock.advance(1/hz,()=>ticks++);
       if(steps)gate.invalidate();
@@ -93,7 +96,7 @@ test('60/120/144 Hz presentation schedules skip tickless and paused frames',()=>
       frames+=Number(wasDrawn);
     }
     assert.equal(ticks,60,'every refresh schedule advances sixty simulation ticks');
-    assert.equal(drawLog.length,frames);
+    assert.equal(drawLog.length,frames+1);
     assert.equal(frames,60,'no repeat image should be redrawn at higher refresh');
     const recorded=gate.stats();
     for(let i=0;i<hz;i++)gate.present(ctx(ticks),()=>{throw Error('paused redraw');});
