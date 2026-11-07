@@ -1,0 +1,139 @@
+name: RTX 5060 Ti BLOAT NEXUS UFF validation
+
+# Explicit owner-dispatch only after reviewed merge to main.
+# Physical RTX historical comparisons are independent of CPU numerical tests.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "Authorize reviewed main on my visible RTX 5060 Ti"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Upload temporary source-specific hardware evidence"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qsol-rtx5060ti-bloat-nexus-uff-${{ github.repository }}-${{ github.actor }}
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    if: ${{ github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 95
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Exact reviewed source, original archives, regular PNGs and native GPU preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          test -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}"
+          command -v nvidia-smi
+          command -v node
+          command -v python3
+          nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader
+          git cat-file -e 240617e8bc1a935f05eaf75a10531f194f72a173^{commit}
+          git cat-file -e b39b0bd0db5ba9b467b9e47aede4edc4dd156e9f^{commit}
+          git cat-file -e 3f5518a168652a003e8db9aa6dc0371ddb4782ea^{commit}
+          python3 scripts/verify-rtx-receipt.py
+          python3 scripts/verify-rtx-adaptive-receipt.py
+          python3 scripts/verify-rtx003-comment001.py --require-binaries \
+            --archive evidence/RTX5060TI-003/vanillajs-rtx5060ti-arcade-42329114286-1.zip \
+            --screenshot evidence/COMMENT-001/2026-11-07_original-screenshot.png \
+            --excerpt evidence/COMMENT-001/2026-11-07_x-post_excerpt.png
+          (cd evidence/RTX5060TI-001 && sha256sum -c SHA256SUMS)
+          (cd evidence/RTX5060TI-002 && sha256sum -c SHA256SUMS)
+          (cd evidence/RTX5060TI-003 && sha256sum -c SHA256SUMS)
+          (cd evidence/COMMENT-001 && sha256sum -c SHA256SUMS)
+          node --check scripts/rtx5060ti-trusted.mjs
+          node scripts/rtx5060ti-trusted.mjs --help
+          node scripts/rtx-playwright.mjs
+
+      - name: Validate source-locked new numerical kernels, contracts and package
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/range2d.test.js tests/integer-replay.test.js \
+            tests/nexus-lattice.test.js tests/orbital-physics.test.js
+          node scripts/check.js
+          node scripts/build.js
+
+      - name: Historical native RTX full-path comparison against RTX001 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$HOME/.local/state/qsol/vanillajs/rtx5060ti/bloat-nexus-uff-actions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          if test -e "$evidence"; then echo 'Refusing preexisting evidence directory' >&2; exit 1; fi
+          mkdir -m 700 -p "$evidence"
+          echo "QSOL_NUMERICAL_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+          node scripts/rtx5060ti-trusted.mjs \
+            --baseline 240617e8bc1a935f05eaf75a10531f194f72a173 \
+            --expected-head "$GITHUB_SHA" --out "$evidence/baseline-001"
+
+      - name: Historical native RTX full-path comparison against RTX002 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/rtx5060ti-trusted.mjs \
+            --baseline b39b0bd0db5ba9b467b9e47aede4edc4dd156e9f \
+            --expected-head "$GITHUB_SHA" --out "$QSOL_NUMERICAL_EVIDENCE/baseline-002"
+
+      - name: Historical native RTX full-path comparison against RTX003 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/rtx5060ti-trusted.mjs \
+            --baseline 3f5518a168652a003e8db9aa6dc0371ddb4782ea \
+            --expected-head "$GITHUB_SHA" --out "$QSOL_NUMERICAL_EVIDENCE/baseline-003"
+
+      - name: Collect NEW serial CPU numerical measurements on owner workstation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/bloat-nexus-uff-workload.js --check > \
+            "$QSOL_NUMERICAL_EVIDENCE/bloat-nexus-uff-workload.json"
+
+      - name: Finalise numerical receipt; verify sealed source and all nested evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/finalize-rtx5060ti-numerical.py \
+            --out "$QSOL_NUMERICAL_EVIDENCE" --expected-head "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID" --attempt "$GITHUB_RUN_ATTEMPT"
+          (cd "$QSOL_NUMERICAL_EVIDENCE" && sha256sum -c SHA256SUMS)
+          cat "$QSOL_NUMERICAL_EVIDENCE/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload new owner evidence only with explicit publication consent
+        if: ${{ inputs.publish_evidence == true }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: vanillajs-rtx5060ti-bloat-nexus-uff-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/NUMERICAL-RECEIPT.json
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/SUMMARY.md
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/SHA256SUMS
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/bloat-nexus-uff-workload.json
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/baseline-001/report.json
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/baseline-001/SUMMARY.md
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/baseline-001/SHA256SUMS
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/baseline-002/report.json
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/baseline-002/SUMMARY.md
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/baseline-002/SHA256SUMS
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/baseline-003/report.json
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/baseline-003/SUMMARY.md
+            ${{ env.QSOL_NUMERICAL_EVIDENCE }}/baseline-003/SHA256SUMS
+          retention-days: 14

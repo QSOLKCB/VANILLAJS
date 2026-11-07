@@ -65,6 +65,14 @@ jobs:
           node scripts/rtx5060ti-trusted.mjs --help > /dev/null
           python3 -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/finalize-rtx5060ti-frame-gate.py').read_text())"
           python3 -m unittest discover -s tests -p 'test_rtx_arcade_receipt.py' -v
+      - name: Verify owner-only RTX three-source workflow and forged numerical receipts offline
+        run: |
+          python3 -m unittest discover -s tests -p 'test_rtx_numerical_receipt.py' -v
+          python3 -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/finalize-rtx5060ti-numerical.py').read_text())"
+          node --check scripts/bloat-nexus-uff-workload.js
+          node scripts/rtx5060ti-trusted.mjs --help > /dev/null
+      - name: Verify source-pinned BLOAT-OPS/NEXUS/UFF serial parity workloads
+        run: node scripts/bloat-nexus-uff-workload.js --check > bloat-nexus-uff-workload.json
       - name: Verify documented navigation workload
         run: node scripts/navigation-workload.js --check > navigation-workload.json
       - name: Compare exact QwakeTF-inspired pooled A* and existing serial reference
@@ -123,6 +131,7 @@ jobs:
             navigation-workload.json
             navigation-pool-workload.json
             geometry-candidate-workload.json
+            bloat-nexus-uff-workload.json
             geometry-layer2-workload.json
             omi-evidence.json
             omi-machine-evidence.json
