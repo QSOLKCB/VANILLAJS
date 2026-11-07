@@ -7,6 +7,18 @@ receipt](OPENVLM-001.md) contains 48 completed local inferences, of which
 and Terra match input bytes are preserved; the new v2 protocol is a proposed
 corrective experiment, not a retroactive amendment to the first run.
 
+## Qwen3-VL 2B output-isolation follow-up
+
+Owner-run OpenVLM v2 demonstrated 12/12 empty final action responses
+from Qwen3-VL 2B, despite completed local model replies. The separate
+[QWEN2B-ISOLATE-001](QWEN2B-ISOLATE-001.md) experiment probes the
+identical one-field JSON prompt first as text only, then with one
+checksum-verified historical Terra frame, varying generic JSON vs schema
+constraints and Ollama thinking settings. A distinct full controller
+schema test stays diagnostic, not a permission to launch the live game.
+The model digest is fixed to the verified owner's v2 local model weights;
+this probe is read-only and consumes no paid API credits.
+
 ## Two distinct comparisons
 
 **Stage A: paired screenshot replay** (recommended first). Four locally
