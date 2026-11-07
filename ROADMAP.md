@@ -1,5 +1,26 @@
 # VANILLAJS roadmap
 
+## Experimental FPS research — FreeDM four-Terra match (owner only)
+
+- Stage real FreeDM v0.13.0 MAP01 deathmatch with four independent local
+  ViZDoom multiplayer peers (one host, three loopback joiners), not a
+  synthetic FPS score generator.
+- Each peer is controlled by GPT-6.1 Terra vision on actual 320×240 game
+  screenshots; exclude privileged labels, depth, map coordinates and console.
+- Owner-only manual workflow: no API spend on PR/push; mandatory zero-cost
+  four-peer smoke, then up to 12 paid requests per role with US$0.40
+  nonrefundable reservations, US$5 per role / US$20 per dispatch.
+- Record original screenshot PNG hashes, API decisions and usage, exact
+  button vectors, engine frag/death telemetry and checksum manifest.
+  Honest failure/abort receipts; no claimed win until physically played.
+- Infer targeting, cover, navigation and input-cadence hypotheses only;
+  evaluate any VANILLAJS optimization separately with deterministic
+  golden baselines and tested invariants.
+- Keep all WADs and ViZDoom engine packages outside the deployable
+  VANILLAJS game bundle. No changes to RTX001–005 or 2D Foundry archives.
+
+See [FreeDM/Terra experiment](experiments/freedm-terra/README.md).
+
 ## v0.1.0 — Flight Lab
 
 - Shared maths, fixed-step clock, input actions, rigid-body flight and static
