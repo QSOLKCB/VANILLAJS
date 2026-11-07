@@ -159,6 +159,34 @@
       "status": "experimental",
       "description": "Transactional opt-in presentation invalidation, exact primitive keys and skipped idle rendering"
     },
+    "range2d": {
+      "entry": "modules/range2d/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Conservative Euclidean 2D axis rejection preserving exact Math.hypot range decisions"
+    },
+    "integer-replay": {
+      "entry": "modules/integer-replay/index.js",
+      "depends": ["integer-engine"],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Source-pinned complete integer command tapes, strict validation and checked replay admission"
+    },
+    "nexus-lattice": {
+      "entry": "modules/nexus-lattice/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded reversible Z4 cuboctahedral lattice derived from integer graph geometry"
+    },
+    "orbital-physics": {
+      "entry": "modules/orbital-physics/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Classical Newtonian central-mass gravity in SI units with velocity-Verlet orbit integration"
+    },
     "integer-math": {
       "entry": "modules/integer-math/index.js",
       "depends": [],
