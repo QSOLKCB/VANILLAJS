@@ -1,0 +1,58 @@
+name: FreeDM/Terra offline safety and evidence contracts
+
+# This is ordinary FREE source validation. It may run on PR/push.
+# It never installs ViZDoom, launches a game, or calls the OpenAI API.
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: freedm-terra-offline-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Pure Python source syntax, four-agent controls and budget limits
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import ast
+          from pathlib import Path
+          for name in ('core.py', 'run.py', 'prepare_wad.py'):
+              path=Path('experiments/freedm-terra')/name
+              ast.parse(path.read_text(encoding='utf8'), filename=str(path))
+              print('Checked', path)
+          PY
+          python3 -m unittest discover -s tests -p 'test_freedm_terra.py' -v
+      - name: Enforce action-only restrictions and no automatic paid dispatch
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          content=Path('.github/workflows/freedm-terra-deathmatch.yml').read_text()
+          head=content.split('permissions:',1)[0]
+          assert 'workflow_dispatch:' in head
+          assert not re.search(r'^\s+(push|pull_request|schedule):',head,re.M)
+          assert "github.actor == 'EmergentMonk'" in content
+          assert "inputs.authorize_api_spend == true" in content
+          assert "inputs.budget_usd == '20.00'" in content
+          assert 'OPENAI_API_KEY' in content
+          assert "FREEDM_TERRA_PAID_AUTH" in content
+          core=Path('experiments/freedm-terra/core.py').read_text()
+          assert 'RESERVE_PER_CALL_CENTS = 40' in core
+          assert 'MAX_DECISIONS = 12' in core
+          assert 'PER_AGENT_LIMIT_CENTS = 500' in core
+          assert '"store": False' in core
+          assert '"detail": "low"' in core
+          print('FreeDM/Terra non-automatic/owner-only budget gates present')
+          PY
