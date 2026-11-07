@@ -33,8 +33,19 @@ PINS = {
     "nexus": "ac9ef5ac79008b46be3351c57cab946b93dd37e8",
     "uff": "596cd732df61587aa1a9801cad1ec13483b1347f",
 }
-MODULES = tuple("modules/" + name + "/index.js" for name in
-                ("range2d", "integer-replay", "nexus-lattice", "orbital-physics"))
+# Independently SHA-256-verified from the four source files at the exact
+# historical candidate HEAD, 05883459a6ffd355c3336a03f1085bb5d8ac5d5f.
+# These are immutable evidence inputs, not hashes of the current checkout.
+HISTORICAL_MODULE_SHA256 = {
+    "modules/range2d/index.js":
+        "a57f4c97337f124c5783bb8070845513ebab60ae479a46e875ad10adf07d3475",
+    "modules/integer-replay/index.js":
+        "3ecdc82603efe64476f795a8ec8b9b1c74269cfbf09c2e4c7ba8f72c517c622f",
+    "modules/nexus-lattice/index.js":
+        "1dc251e2ce33eebe2063464a7040bf8b1a4cffb128e1fb649be05018b7df0f8b",
+    "modules/orbital-physics/index.js":
+        "04001b0d8aca2e6c7b1300ccdeb2c2aa9293a0e6a5bbb254c75613ca209bc134",
+}
 NAMES = {"NUMERICAL-RECEIPT.json", "SHA256SUMS", "SUMMARY.md",
          "bloat-nexus-uff-workload.json"}
 for label in BASELINES:
@@ -83,7 +94,7 @@ def samples(row):
     return sorted(row)[3]
 
 
-def verify_zip(raw, *, check_sources=True):
+def verify_zip(raw):
     with zipfile.ZipFile(io.BytesIO(raw)) as z:
         infos = z.infolist()
         names = [info.filename for info in infos]
@@ -138,12 +149,8 @@ def verify_zip(raw, *, check_sources=True):
         require(data.get("schemaVersion") == 1 and
                 data.get("kind") == "qsol.vanillajs.bloat-nexus-uff.serial-workloads.v1" and
                 data.get("sourcePins") == PINS and
-                set(data.get("sourceSHA256", {})) == set(MODULES),
-                "numerical source identity drift")
-        if check_sources:
-            for path in MODULES:
-                require(sha((ROOT / path).read_bytes()) == data["sourceSHA256"][path],
-                        "module source bytes differ: " + path)
+                data.get("sourceSHA256") == HISTORICAL_MODULE_SHA256,
+                "historical numerical module SHA-256 identity mismatch")
         protocol = data["protocol"]
         require(protocol.get("warmups") == 2 and protocol.get("pairedTrials") == 7 and
                 protocol.get("timingGate") is False and protocol.get("gpu") == "not measured" and

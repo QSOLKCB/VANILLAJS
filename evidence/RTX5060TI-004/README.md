@@ -63,6 +63,10 @@ The Python standard-library verifier checks outer ZIP length, SHA-256 and Git
 blob identity; all member allowlists, CRC and checksum chains; run/source and
 historical comparison identities; native RTX renderer records; seven-trial
 cardinality; the separate CPU workload dimensions and diagnostic contracts;
-and exact source module hashes. The test suite exercises mutation rejection.
+and exact source module SHA-256 hashes **independently verified and pinned to**
+the tested commit `05883459a6ffd355c3336a03f1085bb5d8ac5d5f`, not the live
+checkout. Future module development does not invalidate frozen observations.
+Adversarial tests cover later checkout edits and a forged source hash with
+a recomputed internal checksum.
 The artifact was originally obtained from GitHub Actions; this committed exact
 byte copy is the durable evidence once Actions' short-lived artifact expires.
