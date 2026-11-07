@@ -128,8 +128,9 @@ def main():
     listing = api("GET", "/git/trees/" + tree + "?recursive=1", credential)
     require(not listing.get("truncated"), "repository tree listing truncated")
     items = {item["path"]: item for item in listing["tree"]}
-    require(items.get(EXISTING[0], {}).get("sha") ==
-            git_blob(zipfile.ZipFile(args.transfer_zip).read(EXISTING[0])),
+    with zipfile.ZipFile(args.transfer_zip) as z:
+        stored_rtx = z.read(EXISTING[0])
+    require(items.get(EXISTING[0], {}).get("sha") == git_blob(stored_rtx),
             "already committed RTX003 evidence changed")
     require(not any(path in items for path in contents),
             "one or both screenshots already exist; refusing overwrite")
