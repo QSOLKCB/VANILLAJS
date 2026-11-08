@@ -4,6 +4,8 @@ from pathlib import Path
 import sys
 import unittest
 import urllib.error
+import urllib.request
+import urllib.response
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,16 +42,11 @@ class OllamaPreflightTests(unittest.TestCase):
         self.assertEqual(len(calls), 1)
 
     def test_http_redirects_never_leave_exact_loopback_endpoint(self):
-        import urllib.request
         opener = health.local_opener()
         redirects = [h for h in opener.handlers
                      if isinstance(h, urllib.request.HTTPRedirectHandler)]
         self.assertEqual(len(redirects), 1)
         self.assertIsInstance(redirects[0], health.RejectRedirects)
-        proxies = [h for h in opener.handlers
-                   if isinstance(h, urllib.request.ProxyHandler)]
-        self.assertEqual(len(proxies), 1)
-        self.assertEqual(proxies[0].proxies, {})
         pinned = urllib.request.Request(health.URL)
         for destination in (
             "http://127.0.0.1:11435/api/version",
@@ -61,6 +58,27 @@ class OllamaPreflightTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "redirect refused"):
                     redirects[0].redirect_request(pinned, None, 302,
                                                   "Found", {}, destination)
+
+    def test_configured_proxy_is_bypassed_without_network(self):
+        response = urllib.response.addinfourl(
+            io.BytesIO(b'{"version":"0.12.9"}'), {}, health.URL, 200)
+        response.msg = "OK"
+        # An empty ProxyHandler disables proxy discovery, but urllib may omit
+        # it from opener.handlers because it has no protocol methods to add.
+        # Disable host bypass rules so NO_PROXY cannot hide a regression.
+        with patch.object(urllib.request, "getproxies", return_value={
+            "http": "http://proxy.invalid:3128",
+        }), patch.object(urllib.request, "proxy_bypass", return_value=False), \
+             patch.object(urllib.request.HTTPHandler, "do_open",
+                         return_value=response) as transport:
+            self.assertEqual(health.ollama_version(), "0.12.9")
+        transport.assert_called_once()
+        request = transport.call_args.args[1]
+        self.assertEqual(request.host, "127.0.0.1:11434")
+        self.assertEqual(request.selector, "/api/version")
+        self.assertEqual(request.get_method(), "GET")
+        self.assertEqual(request.timeout, 2.0)
+        self.assertFalse(request.has_proxy())
 
     def test_unavailable_server_has_actionable_fixed_boundary(self):
         calls = []
