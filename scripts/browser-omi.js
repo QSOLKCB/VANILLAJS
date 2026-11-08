@@ -5,7 +5,13 @@ export async function verifyOmi(browser, baseURL) {
   page.on('pageerror',error=>errors.push(error.message));page.setDefaultTimeout(15000);
   const word=()=>page.locator('#word').textContent();
   async function load(value){await page.locator('#seed').fill(value);await page.locator('#load').click();}
-  await page.goto(baseURL);await page.locator('.omi-link').click();assert.match(page.url(),/\/VANILLAJS\/demos\/omi-lab\/index.html$/);
+  await page.goto(baseURL);
+  // The click can finish at navigation commit, before deferred ES modules run.
+  await Promise.all([
+    page.waitForURL('**/VANILLAJS/demos/omi-lab/index.html',{waitUntil:'load'}),
+    page.locator('.omi-link').click()
+  ]);
+  assert.match(page.url(),/\/VANILLAJS\/demos\/omi-lab\/index.html$/);
   assert.equal(await word(),'0x1234');assert.equal(await page.locator('#period').textContent(),'8');assert.equal(await page.locator('#bits button').count(),16);
   await load('10000');assert.equal(await word(),'0x1234');assert.match(await page.locator('#message').textContent(),/hexadecimal/);await load('1234');
   await page.locator('[data-bit="0"]').click();assert.equal(await word(),'0x1235');await page.locator('[data-bit="0"]').click();

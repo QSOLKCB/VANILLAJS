@@ -255,6 +255,20 @@
       "status": "experimental",
       "description": "Four-lane, bounded, integer-sample procedural audio and 48kHz mono PCM16LE WAV output"
     },
+    "logical-sampling": {
+      "entry": "modules/logical-sampling/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Exact positive-u64 logical population sampling and bounded deterministic resident work partitions"
+    },
+    "gf3-lattice": {
+      "entry": "modules/gf3-lattice/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded reversible GF(3) SUM/SWAP state transforms on periodic 2D lattices"
+    },
     "ternary-store2d": {
       "entry": "modules/ternary-store2d/index.js",
       "depends": [],

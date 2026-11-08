@@ -23,10 +23,13 @@ available. This foundation is unreleased; it does not change the 1.0.0 tag.
 JavaScript stores these integers in `Number`, exactly within their admitted
 ranges. Checked addition/subtraction and collision intermediates stay below
 2^53. Scalar Q16.16 multiply/divide now uses independently designed
-unsigned 16-bit limb products and checked binary long division. All partials,
-carry terms and division remainders stay exactly representable as Number,
-so no low bits can silently disappear before signed truncation. The algorithm,
-proof bounds and historical baseline are in [Q16-INDEPENDENT-001](Q16_INDEPENDENT_REIMPLEMENTATION.md). Only the explicit PRNG uses
+unsigned 16-bit limb products, a safe-integer quotient fast path and exact
+four-digit radix-65536 division with corrected estimates. All partials,
+carry terms and division checks remain exact Number integers, without losing
+product low bits. The original independent rewrite is in
+[Q16-INDEPENDENT-001](Q16_INDEPENDENT_REIMPLEMENTATION.md); the optimized
+implementation and its mathematical bounds are in
+[Q16-GALAXY-RADIX-001](Q16_GALAXY_RADIX.md). Only the explicit PRNG uses
 specified modulo-2^32 arithmetic. This is an integer arithmetic contract, not a
 claim about the CPU instructions emitted by a JavaScript JIT.
 
