@@ -39,6 +39,29 @@ class OllamaPreflightTests(unittest.TestCase):
             health.ollama_version(opener=fetch, timeout=30)
         self.assertEqual(len(calls), 1)
 
+    def test_http_redirects_never_leave_exact_loopback_endpoint(self):
+        import urllib.request
+        opener = health.local_opener()
+        redirects = [h for h in opener.handlers
+                     if isinstance(h, urllib.request.HTTPRedirectHandler)]
+        self.assertEqual(len(redirects), 1)
+        self.assertIsInstance(redirects[0], health.RejectRedirects)
+        proxies = [h for h in opener.handlers
+                   if isinstance(h, urllib.request.ProxyHandler)]
+        self.assertEqual(len(proxies), 1)
+        self.assertEqual(proxies[0].proxies, {})
+        pinned = urllib.request.Request(health.URL)
+        for destination in (
+            "http://127.0.0.1:11435/api/version",
+            "http://example.org/api/version",
+            "https://example.org/private",
+            "/different",
+        ):
+            with self.subTest(redirect=destination):
+                with self.assertRaisesRegex(ValueError, "redirect refused"):
+                    redirects[0].redirect_request(pinned, None, 302,
+                                                  "Found", {}, destination)
+
     def test_unavailable_server_has_actionable_fixed_boundary(self):
         calls = []
         def refused(request, timeout):
