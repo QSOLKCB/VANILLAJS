@@ -23,6 +23,7 @@ jobs:
           set -euo pipefail
           python3 -m unittest discover -s tests -p 'test_freedm_open_replay.py' -v
           python3 -m unittest discover -s tests -p 'test_freedm_qwen2b_probe.py' -v
+          python3 -m unittest discover -s tests -p 'test_freedm_ollama_health.py' -v
           python3 -m unittest discover -s tests -p 'test_freedm_open_live.py' -v
           python3 -m unittest discover -s tests -p 'test_freedm_terra.py' -v
           python3 - <<'PY'
@@ -32,6 +33,7 @@ jobs:
           ast.parse(source)
           ast.parse(Path('experiments/freedm-open/live.py').read_text())
           ast.parse(Path('experiments/freedm-open/qwen2b_probe.py').read_text())
+          ast.parse(Path('experiments/freedm-open/ollama_health.py').read_text())
           ast.parse(Path('experiments/freedm-terra/run.py').read_text())
           assert 'http://127.0.0.1:11434' in source
           assert 'https://api.openai.com' not in source
