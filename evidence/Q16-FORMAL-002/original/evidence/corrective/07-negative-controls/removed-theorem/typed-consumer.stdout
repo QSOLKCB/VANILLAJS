@@ -1,0 +1,2 @@
+../../evidence/ExactStatements.lean:41:65: error(lean.unknownIdentifier): Unknown identifier `zero_is_canonical`
+PASS: 14 full theorem propositions and 5 helper definition identities checked

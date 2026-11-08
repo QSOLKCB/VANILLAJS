@@ -1,0 +1,23 @@
+{
+  "verification_target_commit": "b99f5a4af17babe1215bc36872a18a4c72714faf",
+  "original_execution_commit": "b99f5a4af17babe1215bc36872a18a4c72714faf",
+  "recovery_validation_source_commit": "b99f5a4af17babe1215bc36872a18a4c72714faf",
+  "publication_branch": "evidence/q16-formal-002-independent-replay-20261108",
+  "evidence_publication_commit": "Resolve the Git commit first adding this package; its exact SHA is recorded in the draft PR. It is not the execution commit.",
+  "formalization_last_change_commit": "f4a5be4cf6522ff2d11f41fa9dc00b50396f38ed",
+  "proof_git_blob": "84ea668446d4217b526fd12c64224743efb81954",
+  "audit_git_blob": "ddabca35acf9d1c7d6fd2a43189efdd70c548bf3",
+  "production_git_blob": "d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9",
+  "expected_inventory_sha256": "9dd94f76d6c7343c162f35d4fe0f5fcd79146bdc740d2cbae333aabd5580984c",
+  "lean_distribution_manifest_sha256": "462a8305814ae8ef9994c4b9a01b543e977b3c6cad65db7b602841fd835f2e22",
+  "original_run_id": "Q16-FORMAL-002-local-20261108T090744Z",
+  "recovery_attempt_id": "10-recovery-validation",
+  "recovery_acquisition_utc": "2026-11-08T09:35:16Z",
+  "historical_checksum_coverage": {
+    "prior_evidence_files": 91,
+    "audit_tool_files": 7,
+    "owner_payload_files": 8
+  },
+  "recovery_acquisition_files": 602,
+  "universal_lean_to_ecmascript_refinement": "OPEN"
+}

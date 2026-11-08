@@ -1,0 +1,15 @@
+{
+  "attempt_id": "12-seal-verification",
+  "scope": "post-power-loss recovery validation",
+  "command_argv": [
+    "sha256sum",
+    "-c",
+    "SHA256SUMS"
+  ],
+  "working_directory": "/home/trent/q16-formal-002-20261108T090744Z/publication/evidence/Q16-FORMAL-002",
+  "started_utc": "2026-11-08T09:41:15.581240+00:00",
+  "finished_utc": "2026-11-08T09:41:15.612307+00:00",
+  "exit_status": 0,
+  "stdout": "sha256-all.stdout",
+  "stderr": "sha256-all.stderr"
+}

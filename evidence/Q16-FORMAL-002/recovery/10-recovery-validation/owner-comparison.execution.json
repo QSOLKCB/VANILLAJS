@@ -1,0 +1,16 @@
+{
+  "attempt_id": "10-recovery-validation",
+  "scope": "post-power-loss recovery validation",
+  "command_argv": [
+    "python3",
+    "../evidence/compare-owner.py",
+    "../evidence",
+    "../owner-reference/owner-reference-original.zip"
+  ],
+  "working_directory": "/home/trent/q16-formal-002-20261108T090744Z/source-corrective-repro",
+  "started_utc": "2026-11-08T09:37:45.736297+00:00",
+  "finished_utc": "2026-11-08T09:37:45.770880+00:00",
+  "exit_status": 0,
+  "stdout": "owner-comparison.stdout",
+  "stderr": "owner-comparison.stderr"
+}

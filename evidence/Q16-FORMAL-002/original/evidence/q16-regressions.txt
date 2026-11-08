@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: integer arithmetic rejects fractions, unsafe values, wraparound and zero divisors
+ok 1 - integer arithmetic rejects fractions, unsafe values, wraparound and zero divisors
+  ---
+  duration_ms: 0.857341
+  type: 'test'
+  ...
+# Subtest: scaled ratios, signed truncation and large intermediate products are exact
+ok 2 - scaled ratios, signed truncation and large intermediate products are exact
+  ---
+  duration_ms: 0.21637
+  type: 'test'
+  ...
+# Subtest: 10000 products agree with an independent magnitude/remainder oracle
+ok 3 - 10000 products agree with an independent magnitude/remainder oracle
+  ---
+  duration_ms: 20.074088
+  type: 'test'
+  ...
+# Subtest: integer square root brackets the exact scaled radicand
+ok 4 - integer square root brackets the exact scaled radicand
+  ---
+  duration_ms: 0.626
+  type: 'test'
+  ...
+# Subtest: new scalar kernel uses 16-bit limb arithmetic, not BigInt intermediates
+ok 5 - new scalar kernel uses 16-bit limb arithmetic, not BigInt intermediates
+  ---
+  duration_ms: 4.980648
+  type: 'test'
+  ...
+# Subtest: exhaustive signed edge combinations agree with independent exact quotient
+ok 6 - exhaustive signed edge combinations agree with independent exact quotient
+  ---
+  duration_ms: 25.373796
+  type: 'test'
+  ...
+# Subtest: 50k seeded full-range signed quotients and signed division signs match oracle
+ok 7 - 50k seeded full-range signed quotients and signed division signs match oracle
+  ---
+  duration_ms: 133.574448
+  type: 'test'
+  ...
+# Subtest: small exact products, exact halfway signs, extreme overflow and zero divisor
+ok 8 - small exact products, exact halfway signs, extreme overflow and zero divisor
+  ---
+  duration_ms: 0.322961
+  type: 'test'
+  ...
+# Subtest: integer API rejects fractional/non-number input and sparse vectors
+ok 9 - integer API rejects fractional/non-number input and sparse vectors
+  ---
+  duration_ms: 0.745001
+  type: 'test'
+  ...
+# Subtest: integer sqrt brackets exact Q16.16 scaled radicand including extremes
+ok 10 - integer sqrt brackets exact Q16.16 scaled radicand including extremes
+  ---
+  duration_ms: 1.242742
+  type: 'test'
+  ...
+# Subtest: deterministic RNG continuity is unchanged, including zero state
+ok 11 - deterministic RNG continuity is unchanged, including zero state
+  ---
+  duration_ms: 0.712311
+  type: 'test'
+  ...
+# Subtest: raw vector exactness and right-handed determinant are independently derived
+ok 12 - raw vector exactness and right-handed determinant are independently derived
+  ---
+  duration_ms: 0.515771
+  type: 'test'
+  ...
+# Subtest: vector scalar scaling and widened lerp match exact oracle over 8192 pairs
+ok 13 - vector scalar scaling and widened lerp match exact oracle over 8192 pairs
+  ---
+  duration_ms: 104.403837
+  type: 'test'
+  ...
+# Subtest: radix kernel has no BigInt production arithmetic and preserves Q16 API
+ok 14 - radix kernel has no BigInt production arithmetic and preserves Q16 API
+  ---
+  duration_ms: 3.817405
+  type: 'test'
+  ...
+# Subtest: adversarial signed boundaries and exact safe-integer quotient
+ok 15 - adversarial signed boundaries and exact safe-integer quotient
+  ---
+  duration_ms: 17.269994
+  type: 'test'
+  ...
+# Subtest: radix division and direct safe-integer path agree with independent oracle
+ok 16 - radix division and direct safe-integer path agree with independent oracle
+  ---
+  duration_ms: 391.504033
+  type: 'test'
+  ...
+# Subtest: sqrt exact bracketing across contiguous, seeded and extreme inputs
+ok 17 - sqrt exact bracketing across contiguous, seeded and extreme inputs
+  ---
+  duration_ms: 52.264084
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 507.577617

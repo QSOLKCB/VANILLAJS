@@ -1,0 +1,5 @@
+✖ [2/3] Building Q16Formal (660ms)
+trace: .> LEAN_PATH=/home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-06/opaque-unapproved-axiom/.lake/build/lib/lean /home/trent/.elan/toolchains/leanprover--lean4---v4.35.0/bin/lean /home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-06/opaque-unapproved-axiom/Q16Formal.lean -o /home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-06/opaque-unapproved-axiom/.lake/build/lib/lean/Q16Formal.olean -i /home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-06/opaque-unapproved-axiom/.lake/build/lib/lean/Q16Formal.ilean -c /home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-06/opaque-unapproved-axiom/.lake/build/ir/Q16Formal.c --setup /home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-06/opaque-unapproved-axiom/.lake/build/ir/Q16Formal.setup.json --json
+error: Q16Formal.lean:171:7: `Foreign.unapproved` not supported by code generator; consider marking definition as `noncomputable`
+Some required targets logged failures:
+- Q16Formal

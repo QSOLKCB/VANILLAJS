@@ -1,0 +1,34 @@
+{
+  "recorded_utc": "2026-11-08T09:35:17.013350+00:00",
+  "original_root": "/home/trent/q16-formal-002-20261108T090744Z",
+  "worktrees": [
+    {
+      "path": "/home/trent/q16-formal-002-20261108T090744Z/publication",
+      "head": "b99f5a4af17babe1215bc36872a18a4c72714faf",
+      "status": "# branch.oid b99f5a4af17babe1215bc36872a18a4c72714faf\n# branch.head evidence/q16-formal-002-independent-replay-20261108\n# branch.upstream origin/main\n# branch.ab +0 -0\n"
+    },
+    {
+      "path": "/home/trent/q16-formal-002-20261108T090744Z/source",
+      "head": "b99f5a4af17babe1215bc36872a18a4c72714faf",
+      "status": "# branch.oid b99f5a4af17babe1215bc36872a18a4c72714faf\n# branch.head (detached)\n? .lake/build/ir/Q16Formal.c\n? .lake/build/ir/Q16Formal.c.hash\n? .lake/build/ir/Q16Formal.setup.json\n? .lake/build/lib/lean/Q16Formal.ilean\n? .lake/build/lib/lean/Q16Formal.ilean.hash\n? .lake/build/lib/lean/Q16Formal.olean\n? .lake/build/lib/lean/Q16Formal.olean.hash\n? .lake/build/lib/lean/Q16Formal.trace\n? lake-manifest.json\n"
+    },
+    {
+      "path": "/home/trent/q16-formal-002-20261108T090744Z/source-retry",
+      "head": "b99f5a4af17babe1215bc36872a18a4c72714faf",
+      "status": "# branch.oid b99f5a4af17babe1215bc36872a18a4c72714faf\n# branch.head (detached)\n? .lake/build/ir/Q16Formal.c\n? .lake/build/ir/Q16Formal.c.hash\n? .lake/build/ir/Q16Formal.setup.json\n? .lake/build/lib/lean/Q16Formal.ilean\n? .lake/build/lib/lean/Q16Formal.ilean.hash\n? .lake/build/lib/lean/Q16Formal.olean\n? .lake/build/lib/lean/Q16Formal.olean.hash\n? .lake/build/lib/lean/Q16Formal.trace\n? lake-manifest.json\n"
+    },
+    {
+      "path": "/home/trent/q16-formal-002-20261108T090744Z/source-corrective",
+      "head": "b99f5a4af17babe1215bc36872a18a4c72714faf",
+      "status": "# branch.oid b99f5a4af17babe1215bc36872a18a4c72714faf\n# branch.head (detached)\n? .lake/build/ir/Q16Formal.c\n? .lake/build/ir/Q16Formal.c.hash\n? .lake/build/ir/Q16Formal.setup.json\n? .lake/build/lib/lean/Q16Formal.ilean\n? .lake/build/lib/lean/Q16Formal.ilean.hash\n? .lake/build/lib/lean/Q16Formal.olean\n? .lake/build/lib/lean/Q16Formal.olean.hash\n? .lake/build/lib/lean/Q16Formal.trace\n? lake-manifest.json\n"
+    },
+    {
+      "path": "/home/trent/q16-formal-002-20261108T090744Z/source-corrective-repro",
+      "head": "b99f5a4af17babe1215bc36872a18a4c72714faf",
+      "status": "# branch.oid b99f5a4af17babe1215bc36872a18a4c72714faf\n# branch.head (detached)\n? .lake/build/ir/Q16Formal.c\n? .lake/build/ir/Q16Formal.c.hash\n? .lake/build/ir/Q16Formal.setup.json\n? .lake/build/lib/lean/Q16Formal.ilean\n? .lake/build/lib/lean/Q16Formal.ilean.hash\n? .lake/build/lib/lean/Q16Formal.olean\n? .lake/build/lib/lean/Q16Formal.olean.hash\n? .lake/build/lib/lean/Q16Formal.trace\n? lake-manifest.json\n"
+    }
+  ],
+  "github_pr_searches": "No Q16-FORMAL-002 title or evidence branch matches returned; branch search returned no remote evidence branch",
+  "existing_final_manifest": false,
+  "acquired_files": 602
+}

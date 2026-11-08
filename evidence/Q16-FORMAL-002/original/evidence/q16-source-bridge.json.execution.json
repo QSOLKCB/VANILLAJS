@@ -1,0 +1,16 @@
+{
+  "run_id": "Q16-FORMAL-002-local-20261108T090744Z",
+  "command": "node scripts/q16-formal-bridge.mjs | tee \"$Q16_EVIDENCE/q16-source-bridge.json\"",
+  "shell": "bash -c; set -euo pipefail",
+  "working_directory": "frozen-source-root",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "Q16_EVIDENCE": "<new-evidence-directory>"
+  },
+  "started_utc": "2026-11-08T09:10:12.990480+00:00",
+  "finished_utc": "2026-11-08T09:10:13.340859+00:00",
+  "exit_status": 0,
+  "status": "PASS",
+  "stdout": "q16-source-bridge.json",
+  "stderr": "q16-source-bridge.json.stderr"
+}

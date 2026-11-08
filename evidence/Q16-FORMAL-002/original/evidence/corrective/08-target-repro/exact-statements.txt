@@ -1,0 +1,1 @@
+PASS: 14 full theorem propositions and 5 helper definition identities checked

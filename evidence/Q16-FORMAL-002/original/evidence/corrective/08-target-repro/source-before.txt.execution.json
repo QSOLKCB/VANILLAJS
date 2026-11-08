@@ -1,0 +1,16 @@
+{
+  "run_id": "Q16-FORMAL-002-local-20261108T090744Z",
+  "command": "git rev-parse HEAD\ntest \"$(git rev-parse HEAD)\" = b99f5a4af17babe1215bc36872a18a4c72714faf\ngit hash-object Q16Formal.lean Q16Audit.lean modules/integer-math/index.js\ngit status --porcelain=v1 --untracked-files=all\ntest -z \"$(git status --porcelain=v1 --untracked-files=all)\"\ntest ! -e .lake\ncat lean-toolchain lakefile.toml\nlean --version\nlake --version",
+  "shell": "bash -c; set -euo pipefail",
+  "working_directory": "frozen-source-root",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "Q16_EVIDENCE": "<new-evidence-directory>"
+  },
+  "started_utc": "2026-11-08T09:25:44.712672+00:00",
+  "finished_utc": "2026-11-08T09:25:44.798506+00:00",
+  "exit_status": 0,
+  "status": "PASS",
+  "stdout": "source-before.txt",
+  "stderr": "source-before.txt.stderr"
+}

@@ -1,0 +1,16 @@
+{
+  "run_id": "Q16-FORMAL-002-local-20261108T090744Z",
+  "command": "node --test tests/q16-radix.test.js tests/q16-independent.test.js tests/integer-math.test.js | tee \"$Q16_EVIDENCE/q16-regressions.txt\"",
+  "shell": "bash -c; set -euo pipefail",
+  "working_directory": "frozen-source-root",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "Q16_EVIDENCE": "<new-evidence-directory>"
+  },
+  "started_utc": "2026-11-08T09:10:13.362973+00:00",
+  "finished_utc": "2026-11-08T09:10:13.895449+00:00",
+  "exit_status": 0,
+  "status": "PASS",
+  "stdout": "q16-regressions.txt",
+  "stderr": "q16-regressions.txt.stderr"
+}

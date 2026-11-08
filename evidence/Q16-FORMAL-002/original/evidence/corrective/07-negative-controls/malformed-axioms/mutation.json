@@ -1,0 +1,7 @@
+{
+  "case": "malformed-axioms",
+  "input_sha256": "09c906b2d8e55f1cdeae5ae92b04fd529012326fc51951f2cbbf890427ee6e38",
+  "recipe": "negative-controls.py report_case construction; canonical input is corrective/04-target/inventory.json",
+  "expected_sha256": "9dd94f76d6c7343c162f35d4fe0f5fcd79146bdc740d2cbae333aabd5580984c",
+  "identity_sha256": null
+}

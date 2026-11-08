@@ -1,0 +1,26 @@
+../evidence/corrective/tools/Inventory.lean:33:17: error: Type mismatch
+  liftTermElabM (liftM (Meta.ppExpr c.type))
+has type
+  CommandElabM Format
+but is expected to have type
+  TermElabM ?m.119
+../evidence/corrective/tools/Inventory.lean:64:2: error: Type mismatch
+  liftIO (IO.println report.compress)
+has type
+  CommandElabM Unit
+but is expected to have type
+  TermElabM ?m.2
+../evidence/corrective/tools/Inventory.lean:39:22: error(lean.invalidField): Invalid field notation: Type of
+  pretty
+is not known; cannot resolve field `pretty`
+
+Hint: Consider replacing the field projection with a call to one of the following:
+  • `Json.pretty`
+  • `Format.pretty`
+  • `PrettyPrinter.OneLine.pretty`
+  • `Widget.CodeWithInfos.pretty`
+  • `Widget.InteractiveGoal.pretty`
+  • `Widget.InteractiveGoalCore.pretty`
+  • `Widget.InteractiveTermGoal.pretty`
+  • `Meta.Tactic.TryThis.Suggestion.pretty`
+  • `Meta.Tactic.TryThis.SuggestionText.pretty`

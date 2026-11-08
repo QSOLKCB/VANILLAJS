@@ -1,0 +1,29 @@
+PASS removed-theorem -> MISSING_DECLARATION
+PASS removed-theorem exact typed consumer rejected
+PASS weakened-proposition -> TYPE_MISMATCH
+PASS weakened-proposition exact typed consumer rejected
+PASS unexpected-other-namespace -> UNEXPECTED_DECLARATION
+PASS opaque-unapproved-axiom -> UNAPPROVED_AXIOM
+PASS opaque-sorry -> UNAPPROVED_AXIOM
+PASS unexplained-opaque -> UNEXPLAINED_OPAQUE
+PASS empty-report -> EMPTY_REPORT
+PASS truncated-report -> MALFORMED_REPORT
+PASS duplicate-json-key -> MALFORMED_REPORT
+PASS duplicate-declaration -> DUPLICATE_DECLARATION
+PASS omitted-declaration -> MISSING_DECLARATION
+PASS missing-type -> MALFORMED_REPORT
+PASS malformed-axioms -> MALFORMED_REPORT
+PASS duplicate-axiom -> MALFORMED_REPORT
+PASS omitted-dependency -> INCOMPLETE_CLOSURE
+PASS duplicate-dependency -> DUPLICATE_DECLARATION
+PASS generated-lemma-sorryAx-report -> UNAPPROVED_AXIOM
+PASS effective-toolchain-mismatch -> TOOLCHAIN_MISMATCH
+PASS configured-toolchain-mismatch -> TOOLCHAIN_MISMATCH
+PASS tool-binary-mismatch -> TOOLCHAIN_MISMATCH
+PASS frozen-commit-mismatch -> SOURCE_COMMIT_MISMATCH
+PASS production-blob-mismatch -> SOURCE_CONTENT_MISMATCH
+PASS dirty-source -> DIRTY_WORKTREE
+PASS unimported-nested-module -> UNEXPECTED_SOURCE_MODULE
+PASS unexpected-dependency-package -> DEPENDENCY_MISMATCH
+PASS repinned-expected-inventory -> BASELINE_IDENTITY_MISMATCH
+PASS all 28 negative controls; expected failures are preserved as nonzero command exits

@@ -1,0 +1,16 @@
+{
+  "run_id": "Q16-FORMAL-002-local-20261108T090744Z",
+  "command": "lake env lean Q16Audit.lean | tee \"$Q16_EVIDENCE/q16-axiom-audit.txt\"",
+  "shell": "bash -c; set -euo pipefail",
+  "working_directory": "frozen-source-root",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "Q16_EVIDENCE": "<new-evidence-directory>"
+  },
+  "started_utc": "2026-11-08T09:09:32.954631+00:00",
+  "finished_utc": "2026-11-08T09:09:33.618943+00:00",
+  "exit_status": 0,
+  "status": "PASS",
+  "stdout": "q16-axiom-audit.txt",
+  "stderr": "q16-axiom-audit.txt.stderr"
+}

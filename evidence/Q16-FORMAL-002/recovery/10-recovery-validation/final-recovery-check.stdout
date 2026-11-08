@@ -1,0 +1,6 @@
+PASS current complete tool identity equals pre-interruption record: 17938 Lean files, executable and linked-library hashes, source inputs, environment and build metadata
+PASS current source identity equals frozen execution identity; generated artifacts remain unchanged
+PASS 602 archived members and original files still byte-identical to recovery acquisition
+PASS all 16 proof-relevant files equal frozen Git objects
+PASS all four original execution worktrees retain frozen HEAD and unchanged tracked files
+PASS recovery complete; original Lean and arithmetic executions did not require rerunning

@@ -1,0 +1,7 @@
+{
+  "case": "truncated-report",
+  "input_sha256": "940c70e40bc5f19d6b305e374ee5f97d4f2508a594e3db1fd8158a6bd619cb0d",
+  "recipe": "negative-controls.py report_case construction; canonical input is corrective/04-target/inventory.json",
+  "expected_sha256": "9dd94f76d6c7343c162f35d4fe0f5fcd79146bdc740d2cbae333aabd5580984c",
+  "identity_sha256": null
+}

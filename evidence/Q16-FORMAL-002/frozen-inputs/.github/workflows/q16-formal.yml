@@ -1,0 +1,67 @@
+name: Q16-FORMAL-001 Lean proof and exact-source bridge
+on:
+  pull_request:
+    paths:
+      - 'Q16Formal.lean'
+      - 'Q16Audit.lean'
+      - 'lakefile.toml'
+      - 'lean-toolchain'
+      - '.github/workflows/q16-formal.yml'
+      - 'scripts/q16-formal-bridge.mjs'
+      - 'scripts/verify-q16-proof-boundary.py'
+      - 'scripts/install-q16-lean.sh'
+      - 'scripts/verify-q16-axioms.py'
+      - 'modules/integer-math/index.js'
+      - 'formal/**'
+  push:
+    branches: [main]
+    paths:
+      - 'Q16Formal.lean'
+      - 'Q16Audit.lean'
+      - 'lakefile.toml'
+      - 'lean-toolchain'
+      - '.github/workflows/q16-formal.yml'
+      - 'scripts/q16-formal-bridge.mjs'
+      - 'scripts/verify-q16-proof-boundary.py'
+      - 'scripts/install-q16-lean.sh'
+      - 'modules/integer-math/index.js'
+      - 'formal/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Check theorem inventory without proof escapes
+        run: python3 scripts/verify-q16-proof-boundary.py
+      - name: Install pinned Lean with checked elan and bounded retry
+        run: bash scripts/install-q16-lean.sh
+      - name: Kernel-build required Lean source module
+        run: lake build Q16Formal
+      - name: Recheck typed statements and transitive axioms
+        run: |
+          set -euo pipefail
+          lake env lean --version
+          lake build Q16Formal
+          lake env lean Q16Audit.lean | tee q16-axiom-audit.txt
+          python3 scripts/verify-q16-axioms.py q16-axiom-audit.txt
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Source-pinned finite conformance (not universal JS refinement)
+        run: |
+          node scripts/q16-formal-bridge.mjs | tee q16-source-bridge.json
+          node --test tests/q16-radix.test.js tests/q16-independent.test.js tests/integer-math.test.js
+      - name: Archive proof audit and observed bridge
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: q16-formal-evidence
+          path: |
+            q16-axiom-audit.txt
+            q16-source-bridge.json
+          if-no-files-found: warn
+          retention-days: 30

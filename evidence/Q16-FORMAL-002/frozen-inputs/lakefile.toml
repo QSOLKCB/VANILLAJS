@@ -1,0 +1,6 @@
+name = "vanillajs_q16_proof"
+version = "0.1.0"
+defaultTargets = ["Q16Formal"]
+
+[[lean_lib]]
+name = "Q16Formal"

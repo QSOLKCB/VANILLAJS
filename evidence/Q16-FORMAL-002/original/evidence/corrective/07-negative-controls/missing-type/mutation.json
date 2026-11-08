@@ -1,0 +1,7 @@
+{
+  "case": "missing-type",
+  "input_sha256": "0e474b8d923d5c918f6979ae44ad075a35a5ecf10905e6833d5e6430d193f92e",
+  "recipe": "negative-controls.py report_case construction; canonical input is corrective/04-target/inventory.json",
+  "expected_sha256": "9dd94f76d6c7343c162f35d4fe0f5fcd79146bdc740d2cbae333aabd5580984c",
+  "identity_sha256": null
+}

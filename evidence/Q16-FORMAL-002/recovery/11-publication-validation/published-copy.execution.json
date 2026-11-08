@@ -1,0 +1,16 @@
+{
+  "attempt_id": "11-publication-validation",
+  "scope": "post-power-loss recovery validation",
+  "command_argv": [
+    "python3",
+    "recovery/recovery-audit.py",
+    "original",
+    "original/ACQUISITION.sha256"
+  ],
+  "working_directory": "/home/trent/q16-formal-002-20261108T090744Z/publication/evidence/Q16-FORMAL-002",
+  "started_utc": "2026-11-08T09:40:49.325960+00:00",
+  "finished_utc": "2026-11-08T09:40:49.492367+00:00",
+  "exit_status": 0,
+  "stdout": "published-copy.stdout",
+  "stderr": "published-copy.stderr"
+}

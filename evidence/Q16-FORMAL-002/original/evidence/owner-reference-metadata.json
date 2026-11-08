@@ -1,0 +1,25 @@
+{
+  "workflow": "Q16-FORMAL-001 owner local Lean proof",
+  "job_id": 128684033791,
+  "artifact": {
+    "id": 13611880145,
+    "name": "q16-owner-proof-42465527244-1",
+    "size_in_bytes": 4275,
+    "url": "https://api.github.com/repos/QSOLKCB/VANILLAJS/actions/artifacts/13611880145",
+    "archive_download_url": "https://api.github.com/repos/QSOLKCB/VANILLAJS/actions/artifacts/13611880145/zip",
+    "expired": false,
+    "created_at": "2026-11-08T09:03:44Z",
+    "expires_at": "2026-11-22T09:03:42Z",
+    "updated_at": "2026-11-08T09:03:44Z",
+    "digest": "sha256:e28d6a4af857fccdaa74e35325b74a532570922603d107a5b64b5042e5e0acd4",
+    "workflow_run": {
+      "id": 42465527244,
+      "repository_id": 1442976859,
+      "head_repository_id": 1442976859,
+      "head_branch": "main",
+      "head_sha": "b99f5a4af17babe1215bc36872a18a4c72714faf"
+    }
+  },
+  "downloaded_zip_sha256": "e28d6a4af857fccdaa74e35325b74a532570922603d107a5b64b5042e5e0acd4",
+  "custody": "Read-only original ZIP held separately; no original artifact or logs relabelled as new execution."
+}

@@ -1,0 +1,44 @@
+{
+  "commit": "b99f5a4af17babe1215bc36872a18a4c72714faf",
+  "tracked_status": "",
+  "untracked": [
+    ".lake/build/ir/Q16Formal.c",
+    ".lake/build/ir/Q16Formal.c.hash",
+    ".lake/build/ir/Q16Formal.setup.json",
+    ".lake/build/lib/lean/Q16Formal.ilean",
+    ".lake/build/lib/lean/Q16Formal.ilean.hash",
+    ".lake/build/lib/lean/Q16Formal.olean",
+    ".lake/build/lib/lean/Q16Formal.olean.hash",
+    ".lake/build/lib/lean/Q16Formal.trace",
+    "lake-manifest.json"
+  ],
+  "source_modules": [
+    "Q16Audit.lean",
+    "Q16Formal.lean"
+  ],
+  "proof_blob": "84ea668446d4217b526fd12c64224743efb81954",
+  "production_blob": "d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9",
+  "proof_inputs_sha256": {
+    "Q16Formal.lean": "1eb16d2fbd8491750d556b643408ced75a0b77e4bf2f91711f260ea5fd26ad81",
+    "Q16Audit.lean": "1bd7bd9f3567ed52e61ceb7b9191561ae540d69a22abe519889c6a0e672d8fbe",
+    "lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
+    "lakefile.toml": "8936999c4e2630a4586d085f05b98383f976fd53463c53e9ce8ee695440f180c",
+    "scripts/verify-q16-proof-boundary.py": "35ef5297ccfcc42b2ae73ad0a4c04488d545c8e5e2f91a00f5d4c0fc3e048fd0",
+    "scripts/verify-q16-axioms.py": "1523ce456304737267b8abc380a6592656f2ab6d7e339f8f3b7996bb8936291e",
+    "scripts/q16-formal-bridge.mjs": "c3d09311711c3e2cfc73f4ff879e71a1ca982aa036f401b7821e6e93fec6d8ef",
+    "modules/integer-math/index.js": "4c0bb66780bf9e810efb1963c0238d9356814abf79c959dcd1734164de57905f",
+    "modules/integer-vector/index.js": "e47b8380b0b8c387c9da31a2af854684c4a6ea1abab761dec5f507fbdbf88cf2",
+    "tests/q16-radix.test.js": "cd1965298780a71514fec63e05cf164d0c0c31219a503d2d508217b4ae5338e0",
+    "tests/q16-independent.test.js": "e2c8a7c78135acef0f474af7b02988db55f20241867378ac97f8d8ebf257dcda",
+    "tests/integer-math.test.js": "19f41292e4b34e72ce0e43a98d3bddd9b7f30a6e9486d77830796a00cbecd772",
+    ".github/workflows/q16-formal.yml": "7bc3e6b4043c6d5c140996e78abdf6c6b3520cd49d22c3bd1fa66957ece05b71",
+    ".github/workflows/q16-formal-local.yml": "23dccd0ae40ba60f7c2fb753437a9b487e64a92615ed28650281c9ed7d89ec80",
+    "docs/Q16_FORMAL_001.md": "3a167542623023fda8d84d9cfa6f16be5fddd89560bbeb799326d2fca4c5a0cb",
+    "formal/context/q16-project.json": "faa5f5eb4223f8916fac6ea54512904291e09b907b1474b4b2df9a1e04c78a8d"
+  },
+  "toolchain_pin": "leanprover/lean4:v4.35.0",
+  "lean_banner": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+  "lean_binary_sha256": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38",
+  "lake_binary_sha256": "8ba83c98f76562d03b8dbc33f1057151ba6cbb121679dde76b2260ccc90495e1",
+  "packages": []
+}

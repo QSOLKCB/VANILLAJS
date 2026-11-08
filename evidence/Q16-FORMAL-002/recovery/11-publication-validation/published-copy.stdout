@@ -1,0 +1,42 @@
+RECOVERY VALIDATION ONLY; original execution timestamps and outcomes retained
+PASS acquisition byte identity: 602 files
+PASS pre-interruption prior-evidence checksums: 91
+PASS pre-interruption audit-tool checksums: 7
+PASS 113 completed receipts: timestamps, exit statuses, stdout and stderr present
+PASS required original failure preserved: 01-sandbox
+PASS required original failure preserved: 02-origin-audit-v1
+PASS 04-target : exact 31 declarations, types, origins, 1706 dependency closure, axiom allowlist
+PASS 08-target-repro : exact 31 declarations, types, origins, 1706 dependency closure, axiom allowlist
+PASS complete independent console copy equals ordered outputs: corrective-console.txt
+PASS complete independent console copy equals ordered outputs: corrective-repro-console.txt
+PASS retained corrective control: removed-theorem -> MISSING_DECLARATION
+PASS retained corrective control: removed-theorem-typed-consumer -> unknown identifier
+PASS retained corrective control: weakened-proposition -> TYPE_MISMATCH
+PASS retained corrective control: weakened-proposition-typed-consumer -> type mismatch
+PASS retained corrective control: unexpected-other-namespace -> UNEXPECTED_DECLARATION
+PASS retained corrective control: opaque-unapproved-axiom -> UNAPPROVED_AXIOM
+PASS retained corrective control: opaque-sorry -> UNAPPROVED_AXIOM
+PASS retained corrective control: unexplained-opaque -> UNEXPLAINED_OPAQUE
+PASS retained corrective control: empty-report -> EMPTY_REPORT
+PASS retained corrective control: truncated-report -> MALFORMED_REPORT
+PASS retained corrective control: duplicate-json-key -> MALFORMED_REPORT
+PASS retained corrective control: duplicate-declaration -> DUPLICATE_DECLARATION
+PASS retained corrective control: omitted-declaration -> MISSING_DECLARATION
+PASS retained corrective control: missing-type -> MALFORMED_REPORT
+PASS retained corrective control: malformed-axioms -> MALFORMED_REPORT
+PASS retained corrective control: duplicate-axiom -> MALFORMED_REPORT
+PASS retained corrective control: omitted-dependency -> INCOMPLETE_CLOSURE
+PASS retained corrective control: duplicate-dependency -> DUPLICATE_DECLARATION
+PASS retained corrective control: generated-lemma-sorryAx-report -> UNAPPROVED_AXIOM
+PASS retained corrective control: effective-toolchain-mismatch -> TOOLCHAIN_MISMATCH
+PASS retained corrective control: configured-toolchain-mismatch -> TOOLCHAIN_MISMATCH
+PASS retained corrective control: tool-binary-mismatch -> TOOLCHAIN_MISMATCH
+PASS retained corrective control: frozen-commit-mismatch -> SOURCE_COMMIT_MISMATCH
+PASS retained corrective control: production-blob-mismatch -> SOURCE_CONTENT_MISMATCH
+PASS retained corrective control: dirty-source -> DIRTY_WORKTREE
+PASS retained corrective control: unimported-nested-module -> UNEXPECTED_SOURCE_MODULE
+PASS retained corrective control: unexpected-dependency-package -> DEPENDENCY_MISMATCH
+PASS retained corrective control: repinned-expected-inventory -> BASELINE_IDENTITY_MISMATCH
+PASS retained finite conformance: 220921 accepted; 33992 rejected; 1148 canonical zeros; 200009 root brackets; 17/17 regressions
+PASS original five controls enabled: frozen verifier calls negative_controls() before its report gate; prior successful receipts and owner comparison retained
+PASS recovery record validation complete; no Lean build, numerical rerun, or rewritten original result

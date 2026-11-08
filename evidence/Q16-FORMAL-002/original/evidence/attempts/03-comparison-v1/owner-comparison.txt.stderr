@@ -1,0 +1,4 @@
+  File "/home/trent/q16-formal-002-20261108T090744Z/source-retry/../evidence/compare-owner.py", line 58
+    assert totals == dict(tests='17', suites='0', pass='17', fail='0', cancelled='0', skipped='0', todo='0')
+                                                  ^^^^
+SyntaxError: invalid syntax

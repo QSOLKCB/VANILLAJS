@@ -1,0 +1,16 @@
+{
+  "run_id": "Q16-FORMAL-002-local-20261108T090744Z",
+  "command": "git diff --exit-code\ngit diff --cached --exit-code\ngit status --porcelain=v1 --untracked-files=all\ngit rev-parse HEAD\ngit hash-object Q16Formal.lean Q16Audit.lean modules/integer-math/index.js\ncat lake-manifest.json",
+  "shell": "bash -c; set -euo pipefail",
+  "working_directory": "frozen-source-root",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "Q16_EVIDENCE": "<new-evidence-directory>"
+  },
+  "started_utc": "2026-11-08T09:21:24.858987+00:00",
+  "finished_utc": "2026-11-08T09:21:24.872693+00:00",
+  "exit_status": 0,
+  "status": "PASS",
+  "stdout": "source-after.txt",
+  "stderr": "source-after.txt.stderr"
+}

@@ -1,0 +1,13 @@
+{
+  "scope": "External seal verification receipt; outside the manifest it verifies to avoid a hash cycle",
+  "manifest": "../Q16-FORMAL-002/SHA256SUMS",
+  "manifest_sha256": "ac45d96baf3b63a467f00ae98025c84daf9d0d507b782c5cb0b8408641065690",
+  "listed_members": 650,
+  "sha256sum_exit_status": 0,
+  "membership_check_exit_status": 0,
+  "missing_duplicate_or_unlisted_members": 0,
+  "verification_receipts": [
+    "sha256-all.execution.json",
+    "membership.execution.json"
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "$schema": "../schemas/packet.schema.json",
+  "protocol": "QSOL-FORMALISATION/1",
+  "kind": "project",
+  "role": "live",
+  "project_id": "VANILLAJS-Q16-FORMAL-001",
+  "goal": "Prove integer certificates for radix Q16 division with a separate exact-source finite JS observation.",
+  "target": {
+    "repository_url": "https://github.com/QSOLKCB/VANILLAJS",
+    "commit": "2a0ad1fd067682c73076e1f1c83b6e83aef089da",
+    "specification_id": "Q16-GALAXY-RADIX-001",
+    "files": []
+  },
+  "scope": {
+    "included": [
+      "mathematical quotient and radix-step proof",
+      "finite pinned-source scalar conformance"
+    ],
+    "excluded": [
+      "authorship and legal claims",
+      "universal ECMAScript refinement",
+      "speedup claims"
+    ]
+  },
+  "definitions": [
+    {
+      "id": "D01",
+      "definition": "radix=65536; expanded = remainder*radix+digit",
+      "source_locator": "Q16Formal.lean"
+    },
+    {
+      "id": "D02",
+      "definition": "signed int32 Q16.16; overflow rejected, truncation toward zero",
+      "source_locator": "modules/integer-math/index.js"
+    }
+  ],
+  "claims": [
+    {
+      "id": "C01",
+      "statement": "A corrected digit satisfying exact inequalities equals the exact quotient.",
+      "kind": "MATHEMATICAL_MODEL",
+      "quantification": "all naturals satisfying inequalities",
+      "domain": "Nat",
+      "bounds": [
+        "positive divisor",
+        "candidate*divisor <= expanded < (candidate+1)*divisor"
+      ],
+      "assumption_ids": [
+        "A01"
+      ],
+      "obligation_ids": [
+        "O01"
+      ],
+      "state": "IN_PROGRESS",
+      "evidence_ids": [],
+      "limitations": [
+        "no JS refinement"
+      ]
+    },
+    {
+      "id": "C02",
+      "statement": "At pinned source identity, finite scalar cases agree with independent BigInt oracle.",
+      "kind": "FINITE_CONFORMANCE",
+      "quantification": "finite seeded and adversarial corpus",
+      "domain": "signed int32 JS Number",
+      "bounds": [
+        "source blob pinned",
+        "Node 22"
+      ],
+      "assumption_ids": [
+        "A02"
+      ],
+      "obligation_ids": [
+        "O02"
+      ],
+      "state": "IN_PROGRESS",
+      "evidence_ids": [],
+      "limitations": [
+        "does not prove universal source equivalence"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "A01",
+      "statement": "Lean 4.35.0 kernel and its trusted logic.",
+      "category": "KERNEL_TOOLCHAIN",
+      "disposition": "OPEN",
+      "closure_obligation_ids": [
+        "O01"
+      ],
+      "evidence_ids": []
+    },
+    {
+      "id": "A02",
+      "statement": "Node 22 executes JavaScript source in finite hosted CI cases.",
+      "category": "COMPILER_ABI",
+      "disposition": "ACCEPTED_RESIDUAL",
+      "closure_obligation_ids": [
+        "O02"
+      ],
+      "evidence_ids": []
+    }
+  ],
+  "obligations": [
+    {
+      "id": "O01",
+      "claim_id": "C01",
+      "statement": "Kernel-check each exact theorem statement and audit transitive axioms.",
+      "method_route_id": "M01",
+      "depends_on": [],
+      "assumption_ids": [
+        "A01"
+      ],
+      "status": "NOT_RUN",
+      "evidence_ids": []
+    },
+    {
+      "id": "O02",
+      "claim_id": "C02",
+      "statement": "Execute pinned-source finite oracle checks and preserve logs.",
+      "method_route_id": "M02",
+      "depends_on": [],
+      "assumption_ids": [
+        "A02"
+      ],
+      "status": "NOT_RUN",
+      "evidence_ids": []
+    }
+  ],
+  "tools": [
+    {
+      "name": "Lean",
+      "version": "4.35.0",
+      "command_argv": [
+        "lake",
+        "env",
+        "lean",
+        "Q16Audit.lean"
+      ],
+      "working_directory": ".",
+      "expected_ids": [
+        "O01"
+      ]
+    },
+    {
+      "name": "Node",
+      "version": "22",
+      "command_argv": [
+        "node",
+        "scripts/q16-formal-bridge.mjs"
+      ],
+      "working_directory": ".",
+      "expected_ids": [
+        "O02"
+      ]
+    }
+  ],
+  "status": "ACTIVE",
+  "review": {
+    "status": "NOT_REQUESTED",
+    "commit": null,
+    "locator": null
+  },
+  "next_action": "Execute GitHub hosted Lean CI and source bridge. Preserve distinct mathematical and implementation evidence.",
+  "limitations": [
+    "no formal ECMAScript refinement",
+    "no theorem about provenance or copying"
+  ]
+}

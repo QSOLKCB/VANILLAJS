@@ -1,0 +1,13 @@
+b99f5a4af17babe1215bc36872a18a4c72714faf
+84ea668446d4217b526fd12c64224743efb81954
+ddabca35acf9d1c7d6fd2a43189efdd70c548bf3
+d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9
+leanprover/lean4:v4.35.0
+name = "vanillajs_q16_proof"
+version = "0.1.0"
+defaultTargets = ["Q16Formal"]
+
+[[lean_lib]]
+name = "Q16Formal"
+Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)
+Lake version 5.0.0-src+eb6cafb (Lean version 4.35.0)
