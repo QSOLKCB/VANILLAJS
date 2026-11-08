@@ -16,14 +16,17 @@ available. This foundation is unreleased; it does not change the 1.0.0 tag.
 | RNG | Explicit uint32 LCG state; seed 0 is valid |
 | Static / body IDs | Unique positive signed int32 within each collection |
 | Numeric range | −32768 to 32767 + 65535/65536 metres; body extents must also fit |
-| Multiply/divide | Exact BigInt intermediate; quotient truncates toward zero |
+| Multiply/divide | Exact signed widened arithmetic via unsigned 16-bit limbs; quotient truncates toward zero |
 | Overflow | Throws; no saturating, wrapping or silently rounded world state |
 | Square root | Integer floor of the scaled square root |
 
 JavaScript stores these integers in `Number`, exactly within their admitted
 ranges. Checked addition/subtraction and collision intermediates stay below
-2^53. Products and quotients use BigInt, so multiplying two large signed values
-cannot silently lose low bits before division. Only the explicit PRNG uses
+2^53. Scalar Q16.16 multiply/divide now uses independently designed
+unsigned 16-bit limb products and checked binary long division. All partials,
+carry terms and division remainders stay exactly representable as Number,
+so no low bits can silently disappear before signed truncation. The algorithm,
+proof bounds and historical baseline are in [Q16-INDEPENDENT-001](Q16_INDEPENDENT_REIMPLEMENTATION.md). Only the explicit PRNG uses
 specified modulo-2^32 arithmetic. This is an integer arithmetic contract, not a
 claim about the CPU instructions emitted by a JavaScript JIT.
 
@@ -197,5 +200,6 @@ failure atomicity, clock partition/catch-up controls and complete-course replay.
 
 Deterministic state is the contract being checked. Visual pixel equality across
 drivers, all-browser conformance, production API stability and performance wins
-are not claimed. BigInt intermediates and full-state validation prioritise
-correctness; optimisation requires paired measurements on equivalent workloads.
+are not claimed. Exact scalar limb arithmetic, widened BigInt raw-vector
+results and full-state validation prioritise correctness; the rewrite has
+no claimed speedup without paired measurements on equivalent workloads.
