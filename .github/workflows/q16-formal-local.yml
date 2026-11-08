@@ -1,0 +1,140 @@
+name: Q16-FORMAL-001 owner local Lean proof
+
+# Owner-controlled proof on a trusted, already-running workstation.
+# No push or pull_request trigger: never run unreviewed PR code on a local host.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "I authorize running the reviewed main commit on my QSOL desktop runner"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Explicitly upload local proof logs/receipts to GitHub Actions artifacts"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vanillajs-q16-owner-local
+  cancel-in-progress: false
+
+jobs:
+  local-proof:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Require exact reviewed main, pinned local Lean and existing Node
+        id: prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=all)"
+          test "$(cat lean-toolchain)" = "leanprover/lean4:v4.35.0"
+          command -v python3
+          command -v node
+          command -v git
+          command -v sha256sum
+          command -v lean
+          command -v lake
+
+          # Elan proxy binaries can attempt a download merely on --version.
+          # Fail before calling them unless the pinned toolchain is installed.
+          if command -v elan >/dev/null 2>&1; then
+            if ! elan toolchain list | awk '{print $1}' | grep -Fxq 'leanprover/lean4:v4.35.0'; then
+              echo "::error::Local Lean 4.35.0 is not installed. Install/cache it manually, then rerun. No network install on the owner runner."
+              exit 1
+            fi
+            echo 'LEAN_TOOLCHAIN=leanprover/lean4:v4.35.0' >> "$GITHUB_ENV"
+            export LEAN_TOOLCHAIN=leanprover/lean4:v4.35.0
+          fi
+          banner="$(lean --version)"
+          case "$banner" in
+            *4.35.0*) ;;
+            *) echo "::error::Expected Lean 4.35.0, received: $banner"; exit 1 ;;
+          esac
+          lake --version
+          node --version
+          python3 --version
+          evidence="$HOME/.local/state/qsol/vanillajs/q16-formal/actions-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          if test -e "$evidence"; then
+            echo "::error::Refusing to reuse local evidence directory"
+            exit 1
+          fi
+          mkdir -p -m 700 "$evidence"
+          echo "Q16_LOCAL_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+          echo "path=$evidence" >> "$GITHUB_OUTPUT"
+          printf 'Lean: %s\nCommit: %s\n' "$banner" "$GITHUB_SHA" > "$evidence/TOOLCHAIN.txt"
+          node --version >> "$evidence/TOOLCHAIN.txt"
+          python3 --version >> "$evidence/TOOLCHAIN.txt"
+          printf 'Q16-FORMAL-001 local, manually owner-dispatched.\n' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify complete static theorem inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify-q16-proof-boundary.py | tee "$Q16_LOCAL_EVIDENCE/proof-inventory.txt"
+
+      - name: Kernel-check all 14 Lean theorems on local CPU
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake build Q16Formal 2>&1 | tee "$Q16_LOCAL_EVIDENCE/lean-build.txt"
+          lake env lean Q16Audit.lean > "$Q16_LOCAL_EVIDENCE/q16-axiom-audit.txt"
+          python3 scripts/verify-q16-axioms.py "$Q16_LOCAL_EVIDENCE/q16-axiom-audit.txt" \
+            | tee "$Q16_LOCAL_EVIDENCE/axiom-verification.txt"
+
+      - name: Recheck exact production source against independent BigInt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/q16-formal-bridge.mjs | tee "$Q16_LOCAL_EVIDENCE/q16-source-bridge.json"
+          node --test tests/q16-radix.test.js tests/q16-independent.test.js tests/integer-math.test.js \
+            | tee "$Q16_LOCAL_EVIDENCE/q16-regressions.txt"
+
+      - name: Seal evidence and report the local result
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$Q16_LOCAL_EVIDENCE"
+          printf 'Source commit: %s\n' "$GITHUB_SHA" > "$evidence/SUMMARY.md"
+          printf 'Lean version: %s\n' "$(lean --version)" >> "$evidence/SUMMARY.md"
+          printf 'Model theorem count: 14\n' >> "$evidence/SUMMARY.md"
+          printf 'Production relation: source-pinned finite conformance, not a universal refinement.\n' >> "$evidence/SUMMARY.md"
+          (cd "$evidence" && sha256sum TOOLCHAIN.txt proof-inventory.txt lean-build.txt \
+             q16-axiom-audit.txt axiom-verification.txt q16-source-bridge.json \
+             q16-regressions.txt SUMMARY.md > SHA256SUMS)
+          (cd "$evidence" && sha256sum -c SHA256SUMS)
+          cat "$evidence/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"
+          echo "Evidence retained locally at $evidence"
+
+      - name: Publish local proof evidence only with explicit opt-in
+        if: inputs.publish_evidence == true && success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: q16-owner-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ steps.prepare.outputs.path }}/TOOLCHAIN.txt
+            ${{ steps.prepare.outputs.path }}/proof-inventory.txt
+            ${{ steps.prepare.outputs.path }}/lean-build.txt
+            ${{ steps.prepare.outputs.path }}/q16-axiom-audit.txt
+            ${{ steps.prepare.outputs.path }}/axiom-verification.txt
+            ${{ steps.prepare.outputs.path }}/q16-source-bridge.json
+            ${{ steps.prepare.outputs.path }}/q16-regressions.txt
+            ${{ steps.prepare.outputs.path }}/SUMMARY.md
+            ${{ steps.prepare.outputs.path }}/SHA256SUMS
+          retention-days: 14

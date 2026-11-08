@@ -90,6 +90,19 @@ node scripts/q16-formal-bridge.mjs
 
 Lean is a development-time proof tool; the browser runtime remains dependency-free.
 
+**Owner workstation (offline-first):** After a reviewed merge to `main`, open
+[Q16-FORMAL-001 owner local Lean proof](.github/workflows/q16-formal-local.yml)
+under **Actions → Run workflow**, choose `main`, and explicitly authorize
+local execution. It targets the already-registered
+`[self-hosted, linux, x64, qsol-rtx5060ti]` runner. This workflow requires a
+**pre-installed or cached Lean 4.35.0** and an existing Node executable; it
+does not fetch a toolchain or run any unreviewed PR code on your desktop.
+The signed-off proof logs and SHA-256 manifest remain under
+`~/.local/state/qsol/vanillajs/q16-formal/` by default. Artifact upload is
+off unless the owner explicitly enables it. If Lean is unavailable, the
+workflow fails with a prerequisite diagnosis rather than marking a theorem
+as failed. The GitHub-hosted CI remains a separate validation surface.
+
 ## Qwen3-VL 2B text/image response isolation
 
 The owner-only, no-API-credit
