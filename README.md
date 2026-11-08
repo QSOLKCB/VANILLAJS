@@ -1,17 +1,17 @@
-# VANILLAJS — integer game engine and reusable modules
+<p align="center">
+  <img src="assets/vanillajs-hero.svg" width="100%" alt="VANILLAJS — You Didn't Invent Doom Edition. Exact Q16.16 arithmetic, deterministic replay, and Lean formal proofs." />
+</p>
 
-[![FP-HIST-001 dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24049474.svg)](https://doi.org/10.5281/zenodo.24049474)
+<p align="center">
+  <a href="https://doi.org/10.5281/zenodo.24049474"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24049474.svg" alt="FP-HIST-001 dataset DOI" /></a>
+</p>
 
 **You Didn't Invent Doom Edition — independently specified arithmetic, formally checked mathematics.**
 
 Reusable JavaScript game modules built directly on web standards. The latest
-**published** release is [v1.1.1 — Exact Vectors, Terrain Physics & the QSOL
-WebGL API](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.1.1).
-The *You Didn't Invent Doom Edition* describes the merged
-[#46](https://github.com/QSOLKCB/VANILLAJS/pull/46),
-[#47](https://github.com/QSOLKCB/VANILLAJS/pull/47), and
-[#48](https://github.com/QSOLKCB/VANILLAJS/pull/48) development changes;
-this edition is **not a published tag yet**.
+published release is **[v1.2.0 — You Didn't Invent Doom Edition](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.2.0)**,
+covering the independently reworked Q16.16 kernel, optimized radix arithmetic,
+Lean formal verification and sealed evidence from merged PRs #46–#50.
 
 The v1.0.0 showcase was The Clockwork Vault: six OMI seals in one expedition.
 The engine has 32 experimental game modules and sixteen recipes including
