@@ -1,0 +1,16 @@
+{
+  "run_id": "Q16-FORMAL-002-local-20261108T090744Z",
+  "command": "git rev-parse HEAD\ntest \"$(git rev-parse HEAD)\" = b99f5a4af17babe1215bc36872a18a4c72714faf\ngit rev-parse HEAD:modules/integer-math/index.js\ngit hash-object modules/integer-math/index.js\ntest \"$(git hash-object modules/integer-math/index.js)\" = d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9\ngit status --porcelain=v1 --untracked-files=all\ntest -z \"$(git status --porcelain=v1 --untracked-files=all)\"\ntest ! -e .lake\ntest \"$(cat lean-toolchain)\" = leanprover/lean4:v4.35.0\ngit ls-files \"*.lean\"\ngit ls-files -s",
+  "shell": "bash -c; set -euo pipefail",
+  "working_directory": "frozen-source-root",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "Q16_EVIDENCE": "<new-evidence-directory>"
+  },
+  "started_utc": "2026-11-08T09:09:31.810462+00:00",
+  "finished_utc": "2026-11-08T09:09:31.833127+00:00",
+  "exit_status": 0,
+  "status": "PASS",
+  "stdout": "source-before.txt",
+  "stderr": "source-before.txt.stderr"
+}

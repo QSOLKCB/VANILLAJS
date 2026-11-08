@@ -1,0 +1,174 @@
+{
+  "status": "PASS",
+  "controls": [
+    {
+      "case": "removed-theorem",
+      "expected_rejection": "MISSING_DECLARATION",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "removed-theorem-typed-consumer",
+      "expected_rejection": "unknown identifier",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "weakened-proposition",
+      "expected_rejection": "TYPE_MISMATCH",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "weakened-proposition-typed-consumer",
+      "expected_rejection": "type mismatch",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "unexpected-other-namespace",
+      "expected_rejection": "UNEXPECTED_DECLARATION",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "opaque-unapproved-axiom",
+      "expected_rejection": "UNAPPROVED_AXIOM",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "opaque-sorry",
+      "expected_rejection": "UNAPPROVED_AXIOM",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "unexplained-opaque",
+      "expected_rejection": "UNEXPLAINED_OPAQUE",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "empty-report",
+      "expected_rejection": "EMPTY_REPORT",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "truncated-report",
+      "expected_rejection": "MALFORMED_REPORT",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate-json-key",
+      "expected_rejection": "MALFORMED_REPORT",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate-declaration",
+      "expected_rejection": "DUPLICATE_DECLARATION",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "omitted-declaration",
+      "expected_rejection": "MISSING_DECLARATION",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "missing-type",
+      "expected_rejection": "MALFORMED_REPORT",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "malformed-axioms",
+      "expected_rejection": "MALFORMED_REPORT",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate-axiom",
+      "expected_rejection": "MALFORMED_REPORT",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "omitted-dependency",
+      "expected_rejection": "INCOMPLETE_CLOSURE",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate-dependency",
+      "expected_rejection": "DUPLICATE_DECLARATION",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "generated-lemma-sorryAx-report",
+      "expected_rejection": "UNAPPROVED_AXIOM",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "effective-toolchain-mismatch",
+      "expected_rejection": "TOOLCHAIN_MISMATCH",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "configured-toolchain-mismatch",
+      "expected_rejection": "TOOLCHAIN_MISMATCH",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "tool-binary-mismatch",
+      "expected_rejection": "TOOLCHAIN_MISMATCH",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "frozen-commit-mismatch",
+      "expected_rejection": "SOURCE_COMMIT_MISMATCH",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "production-blob-mismatch",
+      "expected_rejection": "SOURCE_CONTENT_MISMATCH",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "dirty-source",
+      "expected_rejection": "DIRTY_WORKTREE",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "unimported-nested-module",
+      "expected_rejection": "UNEXPECTED_SOURCE_MODULE",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "unexpected-dependency-package",
+      "expected_rejection": "DEPENDENCY_MISMATCH",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    },
+    {
+      "case": "repinned-expected-inventory",
+      "expected_rejection": "BASELINE_IDENTITY_MISMATCH",
+      "actual_exit_status": 1,
+      "status": "PASS"
+    }
+  ],
+  "count": 28
+}

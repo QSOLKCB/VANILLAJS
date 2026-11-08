@@ -1,0 +1,5 @@
+PASS removed-theorem -> MISSING_DECLARATION
+PASS removed-theorem exact typed consumer rejected
+PASS weakened-proposition -> TYPE_MISMATCH
+PASS weakened-proposition exact typed consumer rejected
+PASS unexpected-other-namespace -> UNEXPECTED_DECLARATION

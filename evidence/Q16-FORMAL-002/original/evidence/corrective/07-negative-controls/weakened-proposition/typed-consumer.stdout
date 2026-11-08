@@ -1,0 +1,7 @@
+../../evidence/ExactStatements.lean:41:65: error: Type mismatch
+  zero_is_canonical
+has type
+  ∀ (negative : Bool), True
+but is expected to have type
+  ∀ (negative : Bool), signedMagnitude negative 0 = 0
+PASS: 14 full theorem propositions and 5 helper definition identities checked

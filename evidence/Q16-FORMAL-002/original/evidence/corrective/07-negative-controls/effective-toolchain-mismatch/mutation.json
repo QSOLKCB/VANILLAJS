@@ -1,0 +1,7 @@
+{
+  "case": "effective-toolchain-mismatch",
+  "input_sha256": "b2c9cdd382040c88df48534df2f76db42ce815a25611fa9786ea4350af9882d8",
+  "recipe": "negative-controls.py report_case construction; canonical input is corrective/04-target/inventory.json",
+  "expected_sha256": "9dd94f76d6c7343c162f35d4fe0f5fcd79146bdc740d2cbae333aabd5580984c",
+  "identity_sha256": "0de1b6c4446b9803e9bc3c7e0014b60e1628b7f3f443d1babc8a8d805ad42854"
+}

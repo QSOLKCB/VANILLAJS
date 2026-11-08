@@ -1,0 +1,42 @@
+PASS owner ZIP SHA-256: e28d6a4af857fccdaa74e35325b74a532570922603d107a5b64b5042e5e0acd4
+PASS owner manifest: all 8 entries; no missing, duplicate or unlisted payload files
+PASS byte-identical owner/new: proof-inventory.txt
+PASS byte-identical owner/new: q16-axiom-audit.txt
+PASS byte-identical owner/new: axiom-verification.txt
+PASS transitive axioms: Quot.sound, propext
+PASS complete bridge JSON equality: {"accepted": 220921, "canonical_zeros": 1148, "claim": "FINITE_CONFORMANCE_ONLY", "rejected": 33992, "root_checks": 200009, "schema": "qsol.q16.formal-bridge.v1", "source_blob": "d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9"}
+PASS exact test identity/outcome equality: 17 pass, 0 fail/cancelled/skipped/todo
+Regression raw bytes equal: False (durations are not arithmetic outcomes)
+Owner/new source and toolchain identities:
+  MATCH b99f5a4af17babe1215bc36872a18a4c72714faf
+  MATCH 4.35.0
+  MATCH eb6cafb7290e8bd5f2937522d8d804f58f02bafc
+  MATCH v22.18.0
+  MATCH Python 3.14.4
+Owner member SHA-256 identities (reference bytes, not new execution):
+f7ecaf5561e2f5aa49f4032fc15799aab8562312330fc327fb8c7c44adb2ee77 SHA256SUMS
+d004437bbaaaef6769dd4b58f60da088f81dfbd25cba9e27f1c9d8a4db8e7280 SUMMARY.md
+f91cf09e62d274f51d5149f789965a910f2e825eaca30d9735f9e2e20e28242c TOOLCHAIN.txt
+9b75a9e9ee2a34181bedddcdf6e021bda44c019681914207fbdc801a0d2ce4aa axiom-verification.txt
+a3ff6ba63ab3d6b59e2bbf7ed38746cfad7ae1b9f000d91c5cc37bc826f9c5c8 lean-build.txt
+e4b3027ffb72718c81e7c18913793c989b63dec48eefbf3b1573231470122bb1 proof-inventory.txt
+dc50dd1b0f444c18540fb8f88990334d8202af9c2f4ec8067ea63a81bcf4982a q16-axiom-audit.txt
+e5998f6883063f72df2d0b44b3fb6635d939d6cf122a9ea65ce36ea15b4e784b q16-regressions.txt
+c5cd5729ac7302896324ca81ecfed24810f9327f40df3766ecafcf20b9e2ee63 q16-source-bridge.json
+PASS actual command exit=0: source-before.txt
+PASS actual command exit=0: TOOLCHAIN.txt
+PASS actual command exit=0: proof-inventory.txt
+PASS actual command exit=0: lean-build.txt
+PASS actual command exit=0: effective-lean.txt
+PASS actual command exit=0: q16-axiom-audit.txt
+PASS actual command exit=0: axiom-verification.txt
+PASS actual command exit=0: q16-source-bridge.json
+PASS actual command exit=0: q16-regressions.txt
+PASS actual command exit=0: source-after.txt
+PASS actual command exit=0: exact-statements.txt
+PASS actual command exit=0: origin-audit.txt
+PASS rejected: empty report
+PASS rejected: unapproved axiom Classical.choice
+PASS rejected: undeclared project axiom
+PASS rejected: partial record
+PASS unchanged original adversarial controls: 5; supplemental malformed-report controls: 4

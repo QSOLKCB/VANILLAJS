@@ -1,0 +1,7 @@
+{
+  "case": "duplicate-json-key",
+  "input_sha256": "5281ebe052a5f83613ecd687364009c70c452a6b08621dcd79f97e31edec409b",
+  "recipe": "negative-controls.py report_case construction; canonical input is corrective/04-target/inventory.json",
+  "expected_sha256": "9dd94f76d6c7343c162f35d4fe0f5fcd79146bdc740d2cbae333aabd5580984c",
+  "identity_sha256": null
+}

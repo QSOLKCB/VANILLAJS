@@ -1,0 +1,31 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["55c0ada2ce3fe422.olean"],
+  "m": false,
+  "i": "2fa3582fe460095e.ilean",
+  "c": "8b1bd2e8d5b611a5.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-07/removed-theorem/.lake/build/lib/lean /home/trent/.elan/toolchains/leanprover--lean4---v4.35.0/bin/lean /home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-07/removed-theorem/Q16Formal.lean -o /home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-07/removed-theorem/.lake/build/lib/lean/Q16Formal.olean -i /home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-07/removed-theorem/.lake/build/lib/lean/Q16Formal.ilean -c /home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-07/removed-theorem/.lake/build/ir/Q16Formal.c --setup /home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-07/removed-theorem/.lake/build/ir/Q16Formal.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["deps",
+   [["vanillajs_q16_proof/Q16Formal:extraDep",
+     [["@vanillajs_q16_proof:extraDep", "00000000000006bb"]]],
+    ["imports", "00000000000006bb"]]],
+  ["libs",
+   [["import dynlibs", "00000000000006bb"],
+    ["package external libraries", "00000000000006bb"],
+    ["module dynlibs", "00000000000006bb"],
+    ["module plugins", "00000000000006bb"]]],
+  ["Lean 4.35.0, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc",
+   "407ce514b71d5a10"],
+  ["/home/trent/q16-formal-002-20261108T090744Z/negative-fixtures-07/removed-theorem/Q16Formal.lean",
+   "7e3c284d8ea39746"],
+  ["options", "00000000000006bb"],
+  ["isModule: false", "feefd2a0d3a1847e"],
+  ["Module.name: Q16Formal", "212eea67a882183b"],
+  ["Package.id?: (some vanillajs_q16_proof)", "45a5ce0ea8af832e"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "905bf13ca7d87453"}

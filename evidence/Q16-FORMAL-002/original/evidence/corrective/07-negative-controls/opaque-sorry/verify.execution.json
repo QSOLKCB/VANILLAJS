@@ -1,0 +1,30 @@
+{
+  "command_argv": [
+    "python3",
+    "../../evidence/corrective/tools/verify.py",
+    "../../evidence/corrective/expected-inventory.json",
+    "../../evidence/corrective/07-negative-controls/opaque-sorry/inventory.stdout"
+  ],
+  "exit_status": 1,
+  "started_utc": "2026-11-08T09:24:39.515677+00:00",
+  "finished_utc": "2026-11-08T09:24:39.549105+00:00",
+  "cwd": "isolated-mutation/opaque-sorry",
+  "frozen_base_commit": "b99f5a4af17babe1215bc36872a18a4c72714faf",
+  "environment_reference": "corrective/04-target/identity.json",
+  "worktree_state": "deliberately mutated standalone fixture; not a production checkout",
+  "input_sha256": {
+    "Q16Formal.lean": "32cc2943aeb712c7bc05391bd079cca02a1dbdc6ac537a1dd78971d46dbb5c72",
+    "lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
+    "lakefile.toml": "8936999c4e2630a4586d085f05b98383f976fd53463c53e9ce8ee695440f180c"
+  },
+  "stdout": "verify.stdout",
+  "stderr": "verify.stderr",
+  "lake_manifest": {
+    "version": "1.3.0",
+    "packagesDir": ".lake/packages",
+    "packages": [],
+    "name": "vanillajs_q16_proof",
+    "lakeDir": ".lake",
+    "fixedToolchain": false
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "case": "duplicate-axiom",
+  "input_sha256": "716ef2dc192cf941c750356b4f829b3c33aa34df6f62f635119197d56669eaec",
+  "recipe": "negative-controls.py report_case construction; canonical input is corrective/04-target/inventory.json",
+  "expected_sha256": "9dd94f76d6c7343c162f35d4fe0f5fcd79146bdc740d2cbae333aabd5580984c",
+  "identity_sha256": null
+}

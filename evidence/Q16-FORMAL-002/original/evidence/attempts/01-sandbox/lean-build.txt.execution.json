@@ -1,0 +1,16 @@
+{
+  "run_id": "Q16-FORMAL-002-local-20261108T090744Z",
+  "command": "lake build Q16Formal",
+  "shell": "bash -c; set -euo pipefail",
+  "working_directory": "frozen-source-root",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "Q16_EVIDENCE": "<new-evidence-directory>"
+  },
+  "started_utc": "2026-11-08T09:09:32.008921+00:00",
+  "finished_utc": "2026-11-08T09:09:32.847113+00:00",
+  "exit_status": 0,
+  "status": "PASS",
+  "stdout": "lean-build.txt",
+  "stderr": "lean-build.txt.stderr"
+}

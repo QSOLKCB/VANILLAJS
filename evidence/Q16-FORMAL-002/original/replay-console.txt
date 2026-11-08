@@ -1,0 +1,558 @@
+b99f5a4af17babe1215bc36872a18a4c72714faf
+d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9
+d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9
+Q16Audit.lean
+Q16Formal.lean
+100644 8ea41fa6221ac8dd490e2118e2b8e3cad75b11b3 0	.github/workflows/flight-lab.yml
+100644 a134f2f23899ab3c618ec946651d9042aab9063e 0	.github/workflows/freedm-open-offline.yml
+100644 33ef822fb194605dceec5e6985eed526a2f06435 0	.github/workflows/freedm-open-vision.yml
+100644 d2f99512db1e06bf25ef75baddb711643d53a7cc 0	.github/workflows/freedm-qwen2b-probe.yml
+100644 9a6479219f16b8e7e64a2cb3a457eb463c72955c 0	.github/workflows/freedm-terra-deathmatch.yml
+100644 3acda6cdadd15e097c25fc29470ff9a1873390be 0	.github/workflows/freedm-terra-offline.yml
+100644 6308902686a8579b40f0a735f233a688236aedbd 0	.github/workflows/lab2d-sol-review.yml
+100644 d60cba08f39415e9c156ec5812da09e95c66d13c 0	.github/workflows/q16-formal-local.yml
+100644 9cf3b537e638abae2f7ffff7cf49df0b49b95337 0	.github/workflows/q16-formal.yml
+100644 62f38fb864c990dedf84b98d8c5ef47d72aff43e 0	.github/workflows/rtx5060ti-2d.yml
+100644 fa43031900cba5203d5026e2d06a2ef4d271353b 0	.github/workflows/rtx5060ti-adaptive.yml
+100644 7f7f837cb064cc83edb4bba14c15e15c0a2d64ed 0	.github/workflows/rtx5060ti-arcade.yml
+100644 a92079a8f2401a5427218f8baf39bf88db7d2351 0	.github/workflows/rtx5060ti-donor-upgrade.yml
+100644 594eae287996b20ec73f2658a051a123176104da 0	.github/workflows/rtx5060ti-numerical.yml
+100644 f801ef3c47c8d9549a4602809cf6e713a2dc0ab0 0	.github/workflows/rtx5060ti-trusted.yml
+100644 79f018fdd3c01b90823af8d36a077da9b5185769 0	.gitignore
+100644 840f7fb6d93178d46e6b8d072d495fda496382f3 0	AGENTS.md
+100644 a7c0fcd7e92ef665dd81b86d2380975a8d5c311c 0	BUILD_A_GAME.md
+100644 c0eae99194909d34d990b83f4178243184039c25 0	CHANGELOG.md
+100644 261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64 0	LICENSE
+100644 5661b341fa8c51ddf1dacbaab6275c631ba5a02e 0	MODULES.json
+100644 87822290769251e2402b05275918c835e75a8a1f 0	NOTICE
+100644 ddabca35acf9d1c7d6fd2a43189efdd70c548bf3 0	Q16Audit.lean
+100644 84ea668446d4217b526fd12c64224743efb81954 0	Q16Formal.lean
+100644 f88063af7d344a48dbb548fad51cc7d4c25ee1a4 0	README.md
+100644 b1ac0b72acee7b3452d444b1f20239bb259a17bd 0	ROADMAP.md
+100644 327ec4dc8f2f2e2af5620b276b298417e1dab35b 0	api/README.md
+100644 9a895b51eeb096a6ceb9e892f3e1403fcd29a215 0	api/webgl/index.js
+100644 58f0e51d0c2246e1b3a666c82257bae9f8f39413 0	demos/2d-lab/app.js
+100644 21c3e329ecb6342e6092b148a09daa46907e6033 0	demos/2d-lab/index.html
+100644 627b838d3ad547221384ce24cea1c470889ba8a6 0	demos/2d-lab/style.css
+100644 0d8cf71dc2e0a84c31dac2370b846bd7acf74fef 0	demos/2d-lab/world.js
+100644 f923270083da86574ccb776f2d226633cc46e507 0	demos/ancient-machine/app.js
+100644 7b6b987a796281cb3e6912ff10c6c72f8aef459e 0	demos/ancient-machine/index.html
+100644 e5e56f58b93eb0e258c61dddaab2bcb3dd98f38e 0	demos/ancient-machine/machine.js
+100644 6624e28b86400528a21db8fd6f1b005db2091780 0	demos/ancient-machine/style.css
+100644 03f3ab634c0e22ff01d74cc3a9dc70959f92fb4b 0	demos/clockwork-vault/app.js
+100644 4fc63fa369ae4a76310aa2b5bcc5508d4f024989 0	demos/clockwork-vault/index.html
+100644 4e63480a6cad7ca30217a4eeceb6b7375d347264 0	demos/clockwork-vault/puzzles.js
+100644 0ab0770cabc2f2ea31d9201044b57ad29d8e3d07 0	demos/clockwork-vault/style.css
+100644 27d127f35d90c9791237335cd4d21a9ea3bb1396 0	demos/clockwork-vault/view.js
+100644 7dd61e168b7c80354462dc955335a6b6d5cf322d 0	demos/clockwork-vault/world.js
+100644 7af1e3ce02724bddc6a64173ba7b98f9b786aa08 0	demos/flight-lab/app.js
+100644 8ae301f521a305da3a30c67cdfba0ebd8ad4f016 0	demos/flight-lab/style.css
+100644 36e079437d5b80a6a879fb5598ad68a2553d0a6a 0	demos/flight-lab/worlds.js
+100644 b451a3f72776e9dbc1416a03feba27a06c2f7df0 0	demos/fps-lab/app.js
+100644 35e2e6d5f4742827dba63e1abfab9646156ede98 0	demos/fps-lab/index.html
+100644 1d7135cf5bba384be8fd47c5d17a2b9129d18007 0	demos/fps-lab/style.css
+100644 dc0d674de4c7ecd5a4bd2fc013ad9d81136f431c 0	demos/fps-lab/worlds.js
+100644 b9de3b70766e7049b027e9761753110b5a6cd646 0	demos/integer-foundry/app.js
+100644 7885ba767e2644b06a33fea4c06530e037f5ae0f 0	demos/integer-foundry/index.html
+100644 09573473a7516886c5c838bf0c27ed7d7acd584a 0	demos/integer-foundry/style.css
+100644 7ec68a8ba8412b24309987a427fe103675a13b23 0	demos/integer-foundry/world.js
+100644 5c48b50a2714be259ce44a304f7367ddc056856a 0	demos/interaction-lab/app.js
+100644 cd775156f9efab8c4c7340381640d52d19d36cb9 0	demos/interaction-lab/index.html
+100644 c80873ae94b18821e883eeb0cffc6c424bdb72c4 0	demos/interaction-lab/recipes.js
+100644 adb4a37252a2cc63f89bb15eecc2d05d8a5cd229 0	demos/interaction-lab/style.css
+100644 53a3e9bedb3e6971128d114fc912c42537ca537a 0	demos/omi-lab/app.js
+100644 27a9fd3546fcd0dd82bc4274b23a77f6c600c1c7 0	demos/omi-lab/experiment.js
+100644 10d1945e1222b8e1b5caf0aa1cd48e8f7730246c 0	demos/omi-lab/index.html
+100644 bdc5f6452c5054049e647f8109d930566a521d29 0	demos/omi-lab/style.css
+100644 c07d59b45916c1f7d40c88a80bdfb4b571a9284d 0	demos/rts-lab/app.js
+100644 81b88fb16ac25b6a19d2d77a095b5ddba4c82038 0	demos/rts-lab/flow-worlds.js
+100644 3ffd6c622207f24714e847c7a7435af49c146a21 0	demos/rts-lab/index.html
+100644 f4f648bb90dcdeb250cf60d8ac0152a630fa2193 0	demos/rts-lab/style.css
+100644 7e15b87390a3b13fdfa9265b21731357538ec0b2 0	demos/rts-lab/traffic.js
+100644 6ba9dfed706a72ae3291fae07667815ea1f9517f 0	demos/rts-lab/worlds.js
+100644 7532c968281b827a0fc7014365b0f8f601cd5ffe 0	docs/2D_FOUNDATION.md
+100644 ff6df353a8fce77c2cd1e0e59178ae3e0feea4cf 0	docs/ADAPTIVE_DONOR_EXTRACTION.md
+100644 6de31d4d906b57564e5f8a9a6dedee221fd4dfe7 0	docs/API.md
+100644 ab337d645bf89f5a82ce873e5fe49d5cab44be60 0	docs/APPEARANCE.md
+100644 3d5f71da60251dfb4cd2a8a4e221518f8ec0ea0d 0	docs/ARCHITECTURE.md
+100644 20a7faddca5f79d0ea9296aa9a4677bb449b0c95 0	docs/ARCH_OMI.md
+100644 9487f720d8a7ffa9b33703fc00765ce4d9393404 0	docs/BLOAT_NEXUS_UFF.md
+100644 d0e8a4b5eafe44391153a188aa38a3acd09a57d5 0	docs/BRASS_ENGINE.md
+100644 257adde156535f5edadd34467f8edc2dd4445ec1 0	docs/CLOCKWORK_VAULT.md
+100644 d37611996d6171fbb162ea3a1b6cf71c80f2a782 0	docs/DEMO_SYNTH_LATTICE_ACOUSTIC_ADDENDUM.md
+100644 86b4acfd8b01f2e7357e1ec5a4c2681ea81b6d58 0	docs/DEMO_SYNTH_PLAN.md
+100644 c5427e34a2df5dfa8fd1bc751c024ca78473c87b 0	docs/DONOR_UPGRADE_2026_11.md
+100644 6bdf74ac50e233182e78ebe9244a77c372444c1a 0	docs/FLOW_FIELDS.md
+100644 2aeee51ad49f50d3acc8e7e651da8420c0d7cf08 0	docs/FPS_LAB.md
+100644 eb60a999ed09f08069230b9f8f3580912121374a 0	docs/FRAME_GATE.md
+100644 70750b1bac7aa3ab224f8b93422d383548e3a144 0	docs/GEOMETRY_BATCHING.md
+100644 966fa6db0065ed28179e59d87bac9e24af1a227b 0	docs/GEOMETRY_LAYER2.md
+100644 7fa8e2f6f4b53a3b9e29f08194e5d5383487dd2f 0	docs/GEOMETRY_OPTIMIZATION.md
+100644 cad578773fabd4f83f8f00b81089f6595197a85a 0	docs/GLUBALL_QEC_FIXEDPOINT_RESEARCH.md
+100644 387c9dfdb9bf2e93cebe2f7cd895dfd05c28b2ed 0	docs/INTEGER_ENGINE.md
+100644 17bd0d8ce0f5d5f9f3cdf455fbd677e7421eccbc 0	docs/INTEGER_EVIDENCE.json
+100644 77a50c68f124483eb90a9712b26034c0f9a36db4 0	docs/INTEGER_VECTORS.md
+100644 bd9dbc2200532dc0d187ef04ff1e2afa82b1d33b 0	docs/INTERACTION_LAB.md
+100644 16737aee714856a1e7b6cf7c323b0b9a3a473c3f 0	docs/NAVIGATION_POOL.md
+100644 9d7043c2be3d1dca146e3ebfdaea69d05ed8b5cc 0	docs/NAVIGATION_WORKLOAD.json
+100644 98eb9b118567fe81542f0d2b136b95cb0d62175a 0	docs/OMI_EVIDENCE.json
+100644 7612cff3093781e560c4c5bc7701befbf42cfa62 0	docs/OMI_MACHINE_EVIDENCE.json
+100644 80ed1ad337c5a164fcd5ffb160a506a2dec8ec01 0	docs/OPTIMIZATION.md
+100644 78226ed3569e589a45b10e4ae8cdd942459ad422 0	docs/OPT_RENDER_LOCAL.json
+100644 f3706118a3bc68720e9a833eae1ef549872dd583 0	docs/Q16_FORMAL_001.md
+100644 5c832582df952caebe084c05e2dcd2b013cb06a3 0	docs/Q16_GALAXY_RADIX.md
+100644 c91d9123b33aa08835d847e104ee143b85135ca7 0	docs/Q16_INDEPENDENT_REIMPLEMENTATION.md
+100644 84297cd7784050834e642d979cfa9a55e3c85099 0	docs/QSOL_DONOR_REVIEW.md
+100644 cfc400b135fc4825ec31a51b26c4571a75a88a0b 0	docs/RTS_LAB.md
+100644 356fdca2029d0db2ad9e6ba334f1be113074eabf 0	docs/RTX5060TI_ADAPTIVE_VALIDATION.md
+100644 d7387328b5142432cb21ed0d7387172fef14d08f 0	docs/RTX5060TI_TRUSTED_VALIDATION.md
+100644 5f8aa5a834447b5c57a84d5bed5dae550649649e 0	docs/TERRAIN_BALLISTICS.md
+100644 7c054805555571e379c66cd2ab9ab60c44c9c664 0	docs/VAULT_EVIDENCE.json
+100644 e6f534a59be07bb706a03310b692016b57c9ea50 0	docs/VERIFICATION.md
+100644 a69a28ba97dbbdbfd692b966c7993aea07c63b36 0	evidence/2D-FOUNDRY-001/MANIFEST.json
+100644 3ff5e68e222ed5fbb849c8d04b42ee37d72e48c7 0	evidence/2D-FOUNDRY-001/README.md
+100644 5e73a1814500ad91c8325124688f34a2b9cb38f1 0	evidence/2D-FOUNDRY-001/SHA256SUMS
+100644 861072ae67572c2b01018192a9176a454c79056d 0	evidence/2D-FOUNDRY-001/vanillajs-2d-sol-evidence-42362943052-1.zip
+100644 3ba0f96c364e26a90b179160e879851c475dc30c 0	evidence/2D-FOUNDRY-001/vanillajs-rtx5060ti-2d-42363350613-1.tar.gz
+100644 44ac39afe1729c8b3615d004be0713ae8dd26433 0	evidence/2D-FOUNDRY-001/vanillajs-rtx5060ti-2d-42363350613-1.tar.gz.sha256sum
+100644 8a2c76cab4137ecd1ee309ad0ca3644bd9712259 0	evidence/2D-FOUNDRY-001/vanillajs-rtx5060ti-2d-42364527661-1.zip
+100644 d3cb1bbad91c316ec5e4e3607fff68d1b7c48320 0	evidence/COMMENT-001/2026-11-07_original-screenshot.png
+100644 0c970a6f7ed71092ed2b0c18cbcb05d2b4ef8b5c 0	evidence/COMMENT-001/2026-11-07_x-post_excerpt.png
+100644 5d0dd3e748ed9e9734541eef15fa51230b48b524 0	evidence/COMMENT-001/BINARY_UPLOAD.md
+100644 b69936a332e8496ac93d171b9eea4bb6e3604a10 0	evidence/COMMENT-001/EVIDENCE_MANIFEST.json
+100644 88c5e35510db0b497909bbf15c94f09232d3c9ea 0	evidence/COMMENT-001/README.md
+100644 3a13a767318223a95535fce6e5683e3a71c7a0eb 0	evidence/COMMENT-001/SHA256SUMS
+100644 ebb3777f117026d1ed5bc89de68b48892b8e6f20 0	evidence/RTX5060TI-001/LOCAL-VERIFICATION.md
+100644 e055190ca1032a1e9b8585f2394a41507233fe95 0	evidence/RTX5060TI-001/README.md
+100644 d3930e3a0dd2a011feda34a9c88b27c99d9b26a6 0	evidence/RTX5060TI-001/SHA256SUMS
+100644 691e9e812d789da47b72dae49c433889fdf95370 0	evidence/RTX5060TI-001/vanillajs-rtx5060ti-42203888152.zip
+100644 9fd12c35606fdb1952e66aaa4c75bf6605d01279 0	evidence/RTX5060TI-002/README.md
+100644 3fe6ddce258a1b74fe56fe2dfb442360ea2cc093 0	evidence/RTX5060TI-002/SHA256SUMS
+100644 2f570ff7789fb313b2e8d6b68ff3b31c2a2996ff 0	evidence/RTX5060TI-002/vanillajs-rtx5060ti-adaptive-42310094400-1.zip
+100644 769aec2fff7a14b6f910761aa7ee27e52ecb9dd2 0	evidence/RTX5060TI-003/README.md
+100644 0754249db44dbfb48a5a45d41d2616c7039fd510 0	evidence/RTX5060TI-003/SHA256SUMS
+100644 4b35e831027783618b6508a898883456c17b6aef 0	evidence/RTX5060TI-003/vanillajs-rtx5060ti-arcade-42329114286-1.zip
+100644 61ed5656e695b77f0befe997710edcf0531571ad 0	evidence/RTX5060TI-004/README.md
+100644 7eb7986cddfd5e7f16cf4df6a7b409e2d0a68336 0	evidence/RTX5060TI-004/SHA256SUMS
+100644 47ec60d25a8c1817d48f690e7102be1d845122fa 0	evidence/RTX5060TI-004/vanillajs-rtx5060ti-bloat-nexus-uff-42347306980-1.zip
+100644 7087ec1f1c7f9b8ce6630ea64437c02892ff910c 0	evidence/RTX5060TI-005/README.md
+100644 1e8874dc6375236e17f31e3eae5148d7315563c8 0	evidence/RTX5060TI-005/SHA256SUMS
+100644 f0227c9c08f26826b8eafe00c03384cbffff78df 0	evidence/RTX5060TI-005/vanillajs-rtx5060ti-donor-42353698285-1.zip
+100644 1ebf8d7d12550195d8c426e7358b3a3e38a546de 0	experiments/arch-omi/index.js
+100644 4e0579292681be6820d4cbafbe92a1cc340b7e2e 0	experiments/e8-geometry/index.js
+100644 d62964dcd97b2e559d45ca4eeb34f6800c319b5c 0	experiments/freedm-open/OPENVLM-001.md
+100644 f28f4b866091980a69d04f05f2a5467c2b0ec185 0	experiments/freedm-open/QWEN2B-ISOLATE-001.md
+100644 94a86932f1eada656f118ffe81f0b3828992a4d9 0	experiments/freedm-open/README.md
+100644 2b9be186d32488e56afe7b3f8a2a4b6db734fb6a 0	experiments/freedm-open/live.py
+100644 9d44f43a1b3a7a1def89be61e58ce2fed32de77c 0	experiments/freedm-open/ollama_health.py
+100644 fc33177024ebe802561926c264ae1f07503278c9 0	experiments/freedm-open/qwen2b_probe.py
+100644 ad8a0e633fa765fccfd5bde653f428f99942d1f6 0	experiments/freedm-open/replay.py
+100644 87d0d56c44ac37b149136a2769c4afe59966284e 0	experiments/freedm-terra/README.md
+100644 c021c27296049720706caaf4da7a5265adfcf7e8 0	experiments/freedm-terra/core.py
+100644 867e3ab095a4292e1b349e6517f3413e15e4faa2 0	experiments/freedm-terra/prepare_wad.py
+100644 7da890474a7ca9ca8b1e6bbfa6b4996f96e38f03 0	experiments/freedm-terra/run.py
+100644 afc08bd5c617534b69c3c0824ff3319ae67b0608 0	formal/context/q16-project.json
+100644 f702c1774caec91afc8c9a005de7ea9a9bb8a35d 0	formal/schemas/packet.schema.json
+100644 7961a2b9cba4f73298c71cb2489f9df43861ffbd 0	index.html
+100644 73ceb3712b07ad0d999a6f57ff1faf204914350c 0	lakefile.toml
+100644 a6aff065db2882c535684f8c5bcd4f16e9a23915 0	lean-toolchain
+100644 cd304870382eb4694133888ba551a960ce2612a6 0	modules/adaptive-circles/index.js
+100644 790e133a41b35a6edda76cd10a07caea7a91b5d4 0	modules/appearance/index.js
+100644 698d2cf9238999cbd6dfd50010c7ba3e49bc5e3a 0	modules/audio2d/index.js
+100644 52a091e8c2bc3858c4c0f7a0d722dc673b33cdc6 0	modules/ballistics/index.js
+100644 79bb115fc36c1e06af20f79406a7088882a13efd 0	modules/character/index.js
+100644 60975e1e1d5914f0610de2e3ed3cbb241ce7f571 0	modules/collision/index.js
+100644 4718703140ba70e846a22db7a205de4ede33df5e 0	modules/cuboid-stream/index.js
+100644 01da403f0251ff21c45689e8eafc17d7a9c9ad12 0	modules/flight/index.js
+100644 3657ee3ce3eac5e6a46d5239a5070763c00c9121 0	modules/frame-gate/index.js
+100644 921ec893482a37e2503886ef42af3cd0bb2baca4 0	modules/geometry/index.js
+100644 3056050314fd791c1b133eadc041d2600d401a25 0	modules/gf3-lattice/index.js
+100644 86ace0c541434c01a1ede954a8a2e67ad77f5a6f 0	modules/input/index.js
+100644 583da7656e88174547a5099f32e76c55bea55460 0	modules/integer-engine/index.js
+100644 d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9 0	modules/integer-math/index.js
+100644 033a85d5602e96c6316c7c954a67758127ba29cc 0	modules/integer-physics/index.js
+100644 1fa9fc9f2988614d05fe6c5c5b7947675de01f5b 0	modules/integer-replay/index.js
+100644 62f217bd03360813ba5d3239e37aabf9d96f8ae9 0	modules/integer-time/index.js
+100644 d1470afd8a6046fe551a31601ef08bbd300cc096 0	modules/integer-vector/index.js
+100644 6d686b1adb5c89b17613b1728ebf0631c3040376 0	modules/interactions/index.js
+100644 a39427287fb93fbca08919e3b7df16f74a3c261c 0	modules/lead-solver/index.js
+100644 48f6cd6e969178ba6c4415c5077517a003b5a8e2 0	modules/logical-sampling/index.js
+100644 45e5fc4d6c6daa472a89fa59c80e6fd70b2c1455 0	modules/math/index.js
+100644 5930d4efb40a996df419f4841f4a95abd6847021 0	modules/motion2d/index.js
+100644 e87566d6f897b432864767c526c509e6dcf205b3 0	modules/navigation-pool/index.js
+100644 a1eb1814db836b6a8c841d2d41552232e23fdf78 0	modules/navigation/index.js
+100644 b529bc08c8592c30e9eeb466da56b1e4122b95fe 0	modules/nexus-lattice/index.js
+100644 be914d72a720862da3814fe17d9cec5e1fc0136d 0	modules/orbital-physics/index.js
+100644 7e54b12237e09472dfe3b03464cae833bcea818a 0	modules/projectiles/index.js
+100644 3c57697b3f91b53c0bcd4d638c19c6798bf80db5 0	modules/range2d/index.js
+100644 11e162698872b52bad4f50177c7cfdbf054d2241 0	modules/render-webgl/index.js
+100644 14a87353f640106a30407a9d15de61092d4ee66b 0	modules/ternary-store2d/index.js
+100644 bf717a82272c69e16f58875d009da7b6567edbd2 0	modules/terrain/index.js
+100644 60c1532aaaac36beceb3e81f1a935c59478976b2 0	modules/time/index.js
+100644 c11129c5e36c3d04f277f434236f580d24d4b3c7 0	modules/weapons/index.js
+100644 9f57aeb11982766c8b5c3e4d3a92c221ee958893 0	package.json
+100644 db420b50f4edad604028bbf6944978fe1bb89ca0 0	scripts/adaptive-query-workload.js
+100644 1e1e9f9e33f9232c1f62876099ac089cc2fc2fc2 0	scripts/bloat-nexus-uff-workload.js
+100644 cb04fcbe8078e0ce3a2d0e9426905ed047402453 0	scripts/browser-2d.js
+100644 bcb8e901c4bcea4a2836c5669be1f62c1c925bdb 0	scripts/browser-check.js
+100644 7f0212d34b67e317754965a9d44d9835eeb91b2c 0	scripts/browser-flow.js
+100644 282fec7b3c328ada6276df02f05a815e0712fb37 0	scripts/browser-fps-motion.js
+100644 c47d418fe33e4abcd203a13ac846e4187fa56564 0	scripts/browser-fps.js
+100644 051be8db6a6c4104c085a03c179fbe44667cdf2f 0	scripts/browser-frame-gate.js
+100644 e1d27443f53ce20bee29f3ea3ed1971017862c45 0	scripts/browser-integer.js
+100644 7feae0b0211529d918d1854beeaa468ba642a13c 0	scripts/browser-interactions.js
+100644 ab5c38c3d27656fe2f7e163b91c23bae973baf19 0	scripts/browser-machine.js
+100644 edddbd91610da496743fd92a59850bce80d3c8b1 0	scripts/browser-mouse.js
+100644 2432f118d93b6a0c861d0c25a279db0928a221d6 0	scripts/browser-omi.js
+100644 0c2ebf1bc154512a11cd7ec319e3be455453f6f6 0	scripts/browser-opt-render.js
+100644 dfff169953ced02af2710c171c342c1ef4365baa 0	scripts/browser-platforms.js
+100644 00bf17137efb6e98acd6c5729dc3e74f1439249b 0	scripts/browser-rts.js
+100644 c06aec41ebd335790cdfca79086d0c305f9cfdb8 0	scripts/browser-vault.js
+100644 8bf327d30ecbd0003f64e87d041a82cc17ec8940 0	scripts/browser-webgl-api.js
+100644 41125942fe5b0b45dac767d334b298cf1293caad 0	scripts/build.js
+100644 fc3232bd9f9ed994a6294957361f0d020d2da0f5 0	scripts/check.js
+100644 56f6d0693ece054eada1624a765487094b906108 0	scripts/donor-upgrade-workload.js
+100644 5d56558bb7ce8c0ced6cf3e4254822a51816f3b7 0	scripts/finalize-rtx5060ti-2d.py
+100644 cb1d6477059162db1850e0ed6aaf82c84a2b0eec 0	scripts/finalize-rtx5060ti-adaptive.py
+100644 97edf50334ce608ad339e4630fe9e430a96b563e 0	scripts/finalize-rtx5060ti-donor.py
+100644 b268c624b26d5d7612c619604e49754667d06b93 0	scripts/finalize-rtx5060ti-frame-gate.py
+100644 0f738a925b39f15b20e4b52e13b73d33a991f35d 0	scripts/finalize-rtx5060ti-numerical.py
+100644 0300a88307d05c966f65bb6b42ca1b4301be145f 0	scripts/flight-browser-preflight.mjs
+100644 caba6d197f261d4603a1387cbbb336859b6b1f32 0	scripts/geometry-batch-workload.js
+100644 c8d8a47d7fda90fd69d93545ddee372bbe35cbc0 0	scripts/geometry-candidate-workload.js
+100644 abacc6b52c8d150c17a842ee4d510ade0b058778 0	scripts/geometry-layer2-workload.js
+100644 e2ff3da3af99337b79f81137934a65c6274e8817 0	scripts/geometry-rsqrt-control.js
+100644 15b9e0de89ea9ef266d4dde9ccee47207ed4feff 0	scripts/geometry-workload.js
+100644 4ada603330bcb641040e44510e01066320f2efe5 0	scripts/install-q16-lean.sh
+100644 330c7ca5c6b3d646b523e24251233728935e37ad 0	scripts/integer-fixture.js
+100644 aa6a0686d2983048777fca0cee59b560bd13a1bd 0	scripts/lab2d-evidence.js
+100644 44aba55f5aff1c935f14e66f9fc9ab65663ee5e1 0	scripts/navigation-pool-workload.js
+100644 891157b930c544b4dff743d2515fadd3940ed02d 0	scripts/navigation-workload.js
+100644 6204b9ee871c16feb81fa3b2bc501e5d42bf0fe7 0	scripts/omi-oracle.js
+100644 af6a06115698fbdef1c6e178258ea93250406b3b 0	scripts/opt-render-fixtures.js
+100644 4712679c3e078e3a35f9fed1b4b6429ee4fe1578 0	scripts/opt-render-reference.js
+100644 b5223cb026ada549ac202c1f47efb32335d93e50 0	scripts/opt-render-workload.js
+100644 ac71ed6b7ab7dc575de9fb7a5c889a3d97726f03 0	scripts/q16-formal-bridge.mjs
+100644 5ed34ef61a9a9416e245d932dfc19312d3e65b75 0	scripts/q16-radix-workload.js
+100644 f2dd51961a52d52e2da3a2bbbe93bebddf2c10f3 0	scripts/review-lab2d-sol.py
+100644 3995506533c83de27b13a918af00896c68f8dc62 0	scripts/rtx-playwright.mjs
+100644 a59f28063b851b48d33f1efa06bcf2984d675ad1 0	scripts/rtx5060ti-2d.mjs
+100644 568e7a8a98a2bbf4c0e38a2dc16a20d71401c44b 0	scripts/rtx5060ti-adaptive-browser.mjs
+100644 565905c9053921fd5617bb339271290fc674320c 0	scripts/rtx5060ti-browser.mjs
+100644 ddfb69c3e7e0fa1419bd0edba8fec647350c8c54 0	scripts/rtx5060ti-frame-gate.mjs
+100644 c53ed84e1f760ba1662c73cd1000ec6a91c7dea0 0	scripts/rtx5060ti-trusted.mjs
+100644 83f8baf63a3fd3da9d7e8c80c7c11c0795ec99c5 0	scripts/upload-comment001-blobs.py
+100644 819e2b522556d91a9356ec4243e164ec4b96affb 0	scripts/vault-oracle.js
+100644 17486944498f65f20ead420db38c299198a459ba 0	scripts/verify-integer.js
+100644 9a71290ec82d52da72ba7a82c9f8c51d673a3b43 0	scripts/verify-machine.js
+100644 0432940d820401a4dae6358c552b55296ab532bf 0	scripts/verify-omi.js
+100644 266c84d78d02a90391ae8c8f9829e8a884408909 0	scripts/verify-q16-axioms.py
+100644 18e48096a988c4e2b92dbc83d2729dda7f7c0d8f 0	scripts/verify-q16-proof-boundary.py
+100644 10c5bc2967395e2718e21990dd684f3af5eec663 0	scripts/verify-rtx-adaptive-receipt.py
+100644 91edb144445255d4807dca49f0ea543f10d53620 0	scripts/verify-rtx-receipt.py
+100644 2342e98ad5ee6b2792651ae9479f7438f61a09d9 0	scripts/verify-rtx003-comment001.py
+100644 10c2ff008f21c83b1752943ab372a591fb86c4c4 0	scripts/verify-rtx004-receipt.py
+100644 af21ce6691b45889b19b4a581eaac602703555f2 0	scripts/verify-rtx005-receipt.py
+100644 1765ca272f2d343ee4dfec1eb89d294b6d8fbf2e 0	scripts/verify-vault.js
+100644 e96c3a099c785349232534d242b6ac32e89b9ba9 0	tests/adaptive-circles.test.js
+100644 edda412050bb4b7e745341d8172edd1928298f93 0	tests/appearance.test.js
+100644 7784d08c791f83891a19c2d4201424b9614b5c4d 0	tests/audio2d.test.js
+100644 88acff97337b0b9d56f2cfcf8c6d16934403afb5 0	tests/ballistics.test.js
+100644 1c51dc99c5854f0e9fa8a73e03f13e81b67321d3 0	tests/brass-machine.test.js
+100644 1b3d89f74c45c984b1b251a691a433c4d2b7eb84 0	tests/character.test.js
+100644 cb97b6870da6e3f91b6425f8b47e2ecfcd8ec396 0	tests/collision.test.js
+100644 b27817c45b8b656f9c950aee38ecb64693d371cc 0	tests/crouch.test.js
+100644 c321fa1f0939b54f722196d6217f7146ad245cbf 0	tests/cuboid-stream.test.js
+100644 1ca49dec4ca8920117ad64b8c3f8dbffbc7033c5 0	tests/e8-geometry.test.js
+100644 47ae7ef5268545e03190da7aeb779620b77d4815 0	tests/fixtures/QEC-FIXTURE-LICENSE.txt
+100644 9a2ed76f9810d000495da496ac2fa64374e5399e 0	tests/fixtures/qec-qutrit-css-decoupling-v1.json
+100644 ce5eb6a876e84da94f05b70f351fab42882f3a7c 0	tests/flight-browser-preflight.test.js
+100644 10865213d774e75a72d6d53bac6c1a73a7c95059 0	tests/flight.test.js
+100644 9461a6a6f847e79899599cc3530f29350a82a169 0	tests/flow-fields.test.js
+100644 ff36b0b05b1a1320f4e2f62415665108d7f16225 0	tests/flow-lab.test.js
+100644 2ab88191b240860dbd0dafde29fb7fe42bd294a4 0	tests/fps-lab.test.js
+100644 1d31f8bf88a303874d42f7d4ebad87a95a4613c6 0	tests/fps-motion.test.js
+100644 f8533c3f152f514c892a2e6fbe16eb4a16cc7f0a 0	tests/frame-gate.test.js
+100644 e00c8c4383aeabe2c73afbf9d28e123b96455f53 0	tests/geometry-batch.test.js
+100644 dde0455a95e0d57733e19989bf9aac2c7cf864f6 0	tests/geometry-layer2.test.js
+100644 7a0126c210d16a6a1c73d8c72ea2933d2e60addc 0	tests/geometry-opt.test.js
+100644 82ee3b99a6c09dc396f79beb07cdb3d6a807141e 0	tests/geometry-plane-exact.test.js
+100644 4b11d74646317c5dd2f24912383eddb40dd9f320 0	tests/input.test.js
+100644 60f7838b849850a702639db988ca1b1e2f804647 0	tests/integer-engine.test.js
+100644 cc00dda782d16913f60f9d7b044dadb4c1b06d28 0	tests/integer-foundry.test.js
+100644 355c5d4732b37fb17d4ae503c2bc5bacd93f2e22 0	tests/integer-math.test.js
+100644 f54bb9056e578239ef3476296a97f2db457e4b0e 0	tests/integer-replay.test.js
+100644 ad631f1307947a83412f52e08948e14981d1006d 0	tests/integer-vector.test.js
+100644 4c9d58481031b8a282219823c6d71940253f0be5 0	tests/interaction-lab.test.js
+100644 311c3d6189925619449144594a6e55040abf9761 0	tests/interactions.test.js
+100644 eaf74d986df9c27919fbd715004261eeb6591a13 0	tests/lab2d.test.js
+100644 a3f88594c2dc32b5a1392eae72a77f24b068b788 0	tests/lead-solver.test.js
+100644 141a0bc18e543dafa5d6767735d90f11bcc47093 0	tests/logical-sampling.test.js
+100644 128633225602e830e840c6bf8eaeb49031a6feb0 0	tests/math.test.js
+100644 39bf5dd43f0b33dbace4f213088e7613c4879eac 0	tests/motion2d.test.js
+100644 3eb98db544d279d097372b6d8a1f81cc45635f92 0	tests/mouse-look.test.js
+100644 7f592ef3492a3b62abbcd28815932250257fc3f9 0	tests/moving-collision.test.js
+100644 8d36af0e72f37ddfb4382e363f9e5adceeffbea6 0	tests/navigation-pool.test.js
+100644 07ddc81d82a4f494f31165264115e993af88100d 0	tests/navigation.test.js
+100644 32143c325550952e337a1f8cb07f698a19c47468 0	tests/nexus-lattice.test.js
+100644 00becb95ef138dd305c551514c0f75c50840790c 0	tests/omi-lab.test.js
+100644 110e24755e27efa0b007976a4f2134989207ce55 0	tests/omi.test.js
+100644 5a989ab03a42673515bef7a344f067bf1bc112b8 0	tests/orbital-physics.test.js
+100644 88f835738d40a010604c30401c882f61938f30c2 0	tests/platform-lab.test.js
+100644 482acacbccb6117b13ff067be9d2736a0b328267 0	tests/platforms.test.js
+100644 b43aca45d571da3559ec0d6f66fabe295ecbd2f5 0	tests/projectiles.test.js
+100644 5582f511594e41206e7c6cba221778b6429fb86b 0	tests/q16-independent.test.js
+100644 0f90d1998b1f2fc428b40f5cee7645602fc206d8 0	tests/q16-radix.test.js
+100644 cc1a87eb7d70288eab9b0d14a6c1dc0711d1dc98 0	tests/qec-gf3-lattice.test.js
+100644 b0621b1a6262c49ca9bfaa69672771eed4139369 0	tests/queries.test.js
+100644 3632c7fad2a47ddb06f6db3e1cb91bfce75b79aa 0	tests/range2d.test.js
+100644 649b51c08ca72ed67627f3f56008241e4edba367 0	tests/render-webgl.test.js
+100644 94c648a2ec44768010ae20441ac10988aadbf6eb 0	tests/rts-lab.test.js
+100644 4379340a9c4d3b46a666372cbd2f3069542e8bdb 0	tests/rtx-baseline-allowlist.test.js
+100644 677ab06f69c9ebd07c627b812c3ab8442b2a7a23 0	tests/rtx-gpu-collector.test.js
+100644 4089fc050a07189852f90c5781c4cb4bded1d55e 0	tests/rtx-idle-scene.test.js
+100644 0c2464f6fad7c09ead5c8f997e45e9af9915a146 0	tests/rtx-playwright.test.js
+100644 7c9efe1eac3575fb606ba66905129dc773f04fa9 0	tests/ternary-store2d.test.js
+100644 9c7c58cc799afe5108eaa104bc2103adf4719ea9 0	tests/terrain.test.js
+100644 7b27ba69ebd228d85b0e015843262ff6c8fe16e8 0	tests/test_comment001_blob_import.py
+100644 4db063aea3b6213a0907752613e23cbae1ff1084 0	tests/test_freedm_ollama_health.py
+100644 bd8d54b9e229c3a1204e390ad42779f32879d396 0	tests/test_freedm_open_live.py
+100644 bc2d7bbedad72151df1e3f59e2f38201e4546ece 0	tests/test_freedm_open_replay.py
+100644 c818fcd7ae5f14a5fd75e5c9aeb14c7d7a298943 0	tests/test_freedm_qwen2b_probe.py
+100644 1d888b5af1e605cc1c08747d62cd11498e3e0bf3 0	tests/test_freedm_terra.py
+100644 fbf504866fe6665ff518072f0367b9afca21aaa5 0	tests/test_rtx003_comment001.py
+100644 dc16673f3f28f95e27b843856f8448e28679f3aa 0	tests/test_rtx004_receipt.py
+100644 f03ef1ee5d12124a0d48680db6bc3025b0636cf1 0	tests/test_rtx005_receipt.py
+100644 41448af36618d0fc13aa5905f274a0ede0b68ab3 0	tests/test_rtx2d_finalizer.py
+100644 62541bef8e1301095c778307828b6c9315c08271 0	tests/test_rtx_adaptive_archive.py
+100644 1f76931b37712713515bf37f3c0073613ba2be72 0	tests/test_rtx_adaptive_receipt.py
+100644 4d94763695b7f7bd84e51c81c47aba25b070b44e 0	tests/test_rtx_arcade_receipt.py
+100644 7c25ca2234bf0adacf36ea8fb1337b7a15213df5 0	tests/test_rtx_donor_receipt.py
+100644 2cc7c6b64f1ace31b4fe17a141a84c4956f7c2ce 0	tests/test_rtx_numerical_receipt.py
+100644 3499cc5ccc36199e0d8a8511afe7bf691d300574 0	tests/test_rtx_receipt.py
+100644 d884539d023c57dbf52d998f85ee44ac6ed37481 0	tests/test_sol_lab2d_policy.py
+100644 80921e33b45db4994d1cffb00f5c09bd76a3ab0f 0	tests/time.test.js
+100644 f0225b95492aad2605b67ddc9f76a655d4b4c290 0	tests/vault-render.test.js
+100644 1b0875cddde4defd01e45621c5b1c4acbbb775ca 0	tests/vault.test.js
+100644 5f8d23a6687f9e3f56163513b382f1c01205b459 0	tests/weapons.test.js
+100644 8a8f2363b9bda015faf605a6613ee33f57650578 0	tests/webgl-api.test.js
+100644 705105d9fa8c3eaa53d813d3a3b914c024a6a5c3 0	tests/worlds.test.js
+leanprover/lean4:v4.35.0
+Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)
+Lake version 5.0.0-src+eb6cafb (Lean version 4.35.0)
+v22.18.0
+Python 3.14.4
+git version 2.53.0
+GNU bash, version 5.3.9(1)-release (x86_64-pc-linux-gnu)
+Copyright (C) 2025 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Linux 7.0.0-42-generic x86_64
+PRETTY_NAME="Ubuntu 26.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="26.04"
+VERSION="26.04.1 LTS (Resolute Raccoon)"
+VERSION_CODENAME=resolute
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=resolute
+LOGO=ubuntu-logo
+leanprover/lean4:v4.19.0
+leanprover/lean4:v4.33.0
+leanprover/lean4:v4.33.1
+leanprover/lean4:v4.35.0
+Q16-FORMAL-001 static inventory PASS: 14 named theorems
+✔ [2/3] Built Q16Formal (658ms)
+Build completed successfully (3 jobs).
+Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)
+Q16Formal.corrected_digit_is_quotient (expanded divisor candidate : Nat) (hlower : candidate * divisor ≤ expanded)
+  (hupper : expanded < (candidate + 1) * divisor) : expanded / divisor = candidate
+Q16Formal.quotient_certificate_sound (numerator divisor quotient remainder : Nat) (_hpositive : 0 < divisor)
+  (hdecomp : numerator = quotient * divisor + remainder) (hrem : remainder < divisor) : numerator / divisor = quotient
+Q16Formal.radix_digit_lt (remainder digit divisor : Nat) (hpositive : 0 < divisor) (hrem : remainder < divisor)
+  (hdigit : digit < Q16Formal.radix) : (remainder * Q16Formal.radix + digit) / divisor < Q16Formal.radix
+Q16Formal.radix_step_decomposition (remainder digit divisor : Nat) :
+  have expanded := remainder * Q16Formal.radix + digit;
+  expanded = expanded / divisor * divisor + expanded % divisor
+Q16Formal.radix_step_remainder_bounded (remainder digit divisor : Nat) (hpositive : 0 < divisor) :
+  (remainder * Q16Formal.radix + digit) % divisor < divisor
+Q16Formal.radix_prefix_invariant (prefixValue quotient remainder digit divisor : Nat)
+  (hprefix : prefixValue = quotient * divisor + remainder) :
+  prefixValue * Q16Formal.radix + digit =
+    (quotient * Q16Formal.radix + (remainder * Q16Formal.radix + digit) / divisor) * divisor +
+      (remainder * Q16Formal.radix + digit) % divisor
+Q16Formal.exact_safe_product_path (product divisor : Nat) (hpositive : 0 < divisor) :
+  (product - product % divisor) / divisor = product / divisor
+Q16Formal.checked_magnitude_within_int32 (negative : Bool) (magnitude : Nat)
+  (h : magnitude ≤ Q16Formal.magnitudeLimit negative) :
+  -2147483648 ≤ Q16Formal.signedMagnitude negative magnitude ∧ Q16Formal.signedMagnitude negative magnitude ≤ 2147483647
+Q16Formal.zero_is_canonical (negative : Bool) : Q16Formal.signedMagnitude negative 0 = 0
+Q16Formal.sign_asymmetry :
+  Q16Formal.checkedSign false 2147483648 = none ∧ Q16Formal.checkedSign true 2147483648 = some (-2147483648)
+Q16Formal.expanded_remainder_lt_2pow47 (remainder digit divisor : Nat) (hrem : remainder < divisor)
+  (hdiv : divisor ≤ 2147483648) (hdigit : digit < Q16Formal.radix) :
+  remainder * Q16Formal.radix + digit < 140737488355328
+Q16Formal.trial_product_lt_2pow47 (digit divisor : Nat) (hdigit : digit < Q16Formal.radix)
+  (hdiv : divisor ≤ 2147483648) : digit * divisor < 140737488355328
+Q16Formal.scaled_radicand_lt_2pow47 (value : Nat) (h : value ≤ 2147483647) : value * Q16Formal.radix < 140737488355328
+Q16Formal.sqrt_certificate_is_bracket (radicand root : Nat) (hlo : root * root ≤ radicand)
+  (hhi : radicand < (root + 1) * (root + 1)) : Q16Formal.sqrtBracket radicand root
+'Q16Formal.corrected_digit_is_quotient' depends on axioms: [propext]
+'Q16Formal.quotient_certificate_sound' depends on axioms: [propext, Quot.sound]
+'Q16Formal.radix_digit_lt' depends on axioms: [propext, Quot.sound]
+'Q16Formal.radix_step_decomposition' depends on axioms: [propext]
+'Q16Formal.radix_step_remainder_bounded' does not depend on any axioms
+'Q16Formal.radix_prefix_invariant' depends on axioms: [propext, Quot.sound]
+'Q16Formal.exact_safe_product_path' depends on axioms: [propext, Quot.sound]
+'Q16Formal.checked_magnitude_within_int32' depends on axioms: [propext, Quot.sound]
+'Q16Formal.zero_is_canonical' does not depend on any axioms
+'Q16Formal.sign_asymmetry' does not depend on any axioms
+'Q16Formal.expanded_remainder_lt_2pow47' depends on axioms: [propext, Quot.sound]
+'Q16Formal.trial_product_lt_2pow47' depends on axioms: [propext, Quot.sound]
+'Q16Formal.scaled_radicand_lt_2pow47' depends on axioms: [propext, Quot.sound]
+'Q16Formal.sqrt_certificate_is_bracket' does not depend on any axioms
+Lean Q16 axiom audit PASS: 14 theorems; allowed axioms Quot.sound, propext
+{
+  "schema": "qsol.q16.formal-bridge.v1",
+  "source_blob": "d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9",
+  "claim": "FINITE_CONFORMANCE_ONLY",
+  "accepted": 220921,
+  "rejected": 33992,
+  "canonical_zeros": 1148,
+  "root_checks": 200009
+}
+TAP version 13
+# Subtest: integer arithmetic rejects fractions, unsafe values, wraparound and zero divisors
+ok 1 - integer arithmetic rejects fractions, unsafe values, wraparound and zero divisors
+  ---
+  duration_ms: 0.857341
+  type: 'test'
+  ...
+# Subtest: scaled ratios, signed truncation and large intermediate products are exact
+ok 2 - scaled ratios, signed truncation and large intermediate products are exact
+  ---
+  duration_ms: 0.21637
+  type: 'test'
+  ...
+# Subtest: 10000 products agree with an independent magnitude/remainder oracle
+ok 3 - 10000 products agree with an independent magnitude/remainder oracle
+  ---
+  duration_ms: 20.074088
+  type: 'test'
+  ...
+# Subtest: integer square root brackets the exact scaled radicand
+ok 4 - integer square root brackets the exact scaled radicand
+  ---
+  duration_ms: 0.626
+  type: 'test'
+  ...
+# Subtest: new scalar kernel uses 16-bit limb arithmetic, not BigInt intermediates
+ok 5 - new scalar kernel uses 16-bit limb arithmetic, not BigInt intermediates
+  ---
+  duration_ms: 4.980648
+  type: 'test'
+  ...
+# Subtest: exhaustive signed edge combinations agree with independent exact quotient
+ok 6 - exhaustive signed edge combinations agree with independent exact quotient
+  ---
+  duration_ms: 25.373796
+  type: 'test'
+  ...
+# Subtest: 50k seeded full-range signed quotients and signed division signs match oracle
+ok 7 - 50k seeded full-range signed quotients and signed division signs match oracle
+  ---
+  duration_ms: 133.574448
+  type: 'test'
+  ...
+# Subtest: small exact products, exact halfway signs, extreme overflow and zero divisor
+ok 8 - small exact products, exact halfway signs, extreme overflow and zero divisor
+  ---
+  duration_ms: 0.322961
+  type: 'test'
+  ...
+# Subtest: integer API rejects fractional/non-number input and sparse vectors
+ok 9 - integer API rejects fractional/non-number input and sparse vectors
+  ---
+  duration_ms: 0.745001
+  type: 'test'
+  ...
+# Subtest: integer sqrt brackets exact Q16.16 scaled radicand including extremes
+ok 10 - integer sqrt brackets exact Q16.16 scaled radicand including extremes
+  ---
+  duration_ms: 1.242742
+  type: 'test'
+  ...
+# Subtest: deterministic RNG continuity is unchanged, including zero state
+ok 11 - deterministic RNG continuity is unchanged, including zero state
+  ---
+  duration_ms: 0.712311
+  type: 'test'
+  ...
+# Subtest: raw vector exactness and right-handed determinant are independently derived
+ok 12 - raw vector exactness and right-handed determinant are independently derived
+  ---
+  duration_ms: 0.515771
+  type: 'test'
+  ...
+# Subtest: vector scalar scaling and widened lerp match exact oracle over 8192 pairs
+ok 13 - vector scalar scaling and widened lerp match exact oracle over 8192 pairs
+  ---
+  duration_ms: 104.403837
+  type: 'test'
+  ...
+# Subtest: radix kernel has no BigInt production arithmetic and preserves Q16 API
+ok 14 - radix kernel has no BigInt production arithmetic and preserves Q16 API
+  ---
+  duration_ms: 3.817405
+  type: 'test'
+  ...
+# Subtest: adversarial signed boundaries and exact safe-integer quotient
+ok 15 - adversarial signed boundaries and exact safe-integer quotient
+  ---
+  duration_ms: 17.269994
+  type: 'test'
+  ...
+# Subtest: radix division and direct safe-integer path agree with independent oracle
+ok 16 - radix division and direct safe-integer path agree with independent oracle
+  ---
+  duration_ms: 391.504033
+  type: 'test'
+  ...
+# Subtest: sqrt exact bracketing across contiguous, seeded and extreme inputs
+ok 17 - sqrt exact bracketing across contiguous, seeded and extreme inputs
+  ---
+  duration_ms: 52.264084
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 507.577617
+b99f5a4af17babe1215bc36872a18a4c72714faf
+d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9
+?? .lake/build/ir/Q16Formal.c
+?? .lake/build/ir/Q16Formal.c.hash
+?? .lake/build/ir/Q16Formal.setup.json
+?? .lake/build/lib/lean/Q16Formal.ilean
+?? .lake/build/lib/lean/Q16Formal.ilean.hash
+?? .lake/build/lib/lean/Q16Formal.olean
+?? .lake/build/lib/lean/Q16Formal.olean.hash
+?? .lake/build/lib/lean/Q16Formal.trace
+?? lake-manifest.json
+{"version": "1.3.0",
+ "packagesDir": ".lake/packages",
+ "packages": [],
+ "name": "vanillajs_q16_proof",
+ "lakeDir": ".lake",
+ "fixedToolchain": false}

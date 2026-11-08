@@ -1,0 +1,6 @@
+PASS corrective/04-target : 11 actual zero-exit commands; 31 declarations; 1706 dependencies; exact prior theorem audit; pinned complete Lean distribution
+PASS corrective/08-target-repro : 11 actual zero-exit commands; 31 declarations; 1706 dependencies; exact prior theorem audit; pinned complete Lean distribution
+PASS 28 negative controls: every intended rejection recorded with actual nonzero exit
+PASS negative-control harness exit 0
+PASS frozen source unchanged after corrective tests
+PASS previous numerical evidence retained; its independent execution is not relabelled as a new arithmetic run

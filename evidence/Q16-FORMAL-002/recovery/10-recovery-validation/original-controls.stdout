@@ -1,0 +1,32 @@
+{
+  "scope": "recovery execution of unchanged original five controls",
+  "status": "PASS",
+  "source_sha256": "1523ce456304737267b8abc380a6592656f2ab6d7e339f8f3b7996bb8936291e",
+  "controls": [
+    {
+      "case": "sorryAx",
+      "outcome": "rejected",
+      "reason": "unapproved axiom: ['sorryAx']"
+    },
+    {
+      "case": "missing-theorem",
+      "outcome": "rejected",
+      "reason": "incomplete theorem/axiom inventory"
+    },
+    {
+      "case": "duplicate-theorem",
+      "outcome": "rejected",
+      "reason": "unknown or duplicate audited theorem: corrected_digit_is_quotient"
+    },
+    {
+      "case": "unexpected-theorem",
+      "outcome": "rejected",
+      "reason": "unknown or duplicate audited theorem: unexpected"
+    },
+    {
+      "case": "malformed-record",
+      "outcome": "rejected",
+      "reason": "unrecognized or partial Q16 axiom record"
+    }
+  ]
+}

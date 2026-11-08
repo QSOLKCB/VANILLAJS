@@ -1,0 +1,14 @@
+{
+  "attempt_id": "12-seal-verification",
+  "scope": "post-power-loss recovery validation",
+  "command_argv": [
+    "python3",
+    "verify-seal.py"
+  ],
+  "working_directory": "/home/trent/q16-formal-002-20261108T090744Z/publication/evidence/Q16-FORMAL-002",
+  "started_utc": "2026-11-08T09:41:15.634348+00:00",
+  "finished_utc": "2026-11-08T09:41:15.710019+00:00",
+  "exit_status": 0,
+  "stdout": "membership.stdout",
+  "stderr": "membership.stderr"
+}

@@ -1,0 +1,14 @@
+{
+  "attempt_id": "10-recovery-validation",
+  "scope": "post-power-loss recovery validation",
+  "command_argv": [
+    "python3",
+    "../evidence/tool-identity.py"
+  ],
+  "working_directory": "/home/trent/q16-formal-002-20261108T090744Z/source-corrective-repro",
+  "started_utc": "2026-11-08T09:37:16.573907+00:00",
+  "finished_utc": "2026-11-08T09:37:24.841397+00:00",
+  "exit_status": 0,
+  "stdout": "tool-identity.stdout",
+  "stderr": "tool-identity.stderr"
+}

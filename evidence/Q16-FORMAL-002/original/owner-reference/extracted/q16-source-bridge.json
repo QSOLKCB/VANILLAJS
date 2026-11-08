@@ -1,0 +1,9 @@
+{
+  "schema": "qsol.q16.formal-bridge.v1",
+  "source_blob": "d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9",
+  "claim": "FINITE_CONFORMANCE_ONLY",
+  "accepted": 220921,
+  "rejected": 33992,
+  "canonical_zeros": 1148,
+  "root_checks": 200009
+}

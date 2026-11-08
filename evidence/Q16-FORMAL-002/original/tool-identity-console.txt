@@ -1,0 +1,450 @@
+{
+  "tools": {
+    "lean": {
+      "invoked_path": "/usr/bin/lean",
+      "effective_resolved_path": "<LEAN_TOOLCHAIN_ROOT>/bin/lean",
+      "sha256": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38",
+      "invoked_binary_sha256": "f7f2abfd94493557451cc5b856b30088dbaa9460f4cdf30fdb8c857ffb335671",
+      "dynamic_libraries": [
+        {
+          "path": "<LEAN_TOOLCHAIN_ROOT>/lib/lean/libInit_shared.so",
+          "sha256": "7831b707e868cee76c353d26649fbd8981b2f4d7e0329af55bbf4fa9e0c69350"
+        },
+        {
+          "path": "<LEAN_TOOLCHAIN_ROOT>/lib/lean/libleanshared_2.so",
+          "sha256": "141cbfdb3bc2016cd68e0bebc2e5494818213b462ed985afa6d975d4872fb8ec"
+        },
+        {
+          "path": "<LEAN_TOOLCHAIN_ROOT>/lib/lean/libleanshared_1.so",
+          "sha256": "691bf49d9e542a15808fad9d1f8c5df45860166f77efa57961b5335e65a3a0ed"
+        },
+        {
+          "path": "<LEAN_TOOLCHAIN_ROOT>/lib/lean/libleanshared.so",
+          "sha256": "efef27df56f2197139afe12f1a2b63913a05f1aba81ce88824c44100431ed8c4"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+          "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libpthread.so.0",
+          "sha256": "1327fc40710691dbd94e88b6cf4efce27fefe8fbb93f7d1164a75b4dccaea696"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libdl.so.2",
+          "sha256": "59d725ca30596a9863f4fa2552a7125f834842abc86b40890231c129358965d2"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+          "sha256": "1c488db6f4fe8cecb72456bc018de000b7a9b539c2994864b0416b5e8371b3d8"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+          "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/librt.so.1",
+          "sha256": "9f3cc59207bcaaac74aaf7aca961f4816f0f4d945e4bd1c3cb98ec516becf161"
+        }
+      ],
+      "ldd_exit_status": 0
+    },
+    "lake": {
+      "invoked_path": "/usr/bin/lake",
+      "effective_resolved_path": "<LEAN_TOOLCHAIN_ROOT>/bin/lake",
+      "sha256": "8ba83c98f76562d03b8dbc33f1057151ba6cbb121679dde76b2260ccc90495e1",
+      "invoked_binary_sha256": "f7f2abfd94493557451cc5b856b30088dbaa9460f4cdf30fdb8c857ffb335671",
+      "dynamic_libraries": [
+        {
+          "path": "<LEAN_TOOLCHAIN_ROOT>/lib/lean/libLake_shared.so",
+          "sha256": "d68867df340056b40726fde3939a9d2021901cc6944f971dd6a6a778bd9ea25b"
+        },
+        {
+          "path": "<LEAN_TOOLCHAIN_ROOT>/lib/lean/libInit_shared.so",
+          "sha256": "7831b707e868cee76c353d26649fbd8981b2f4d7e0329af55bbf4fa9e0c69350"
+        },
+        {
+          "path": "<LEAN_TOOLCHAIN_ROOT>/lib/lean/libleanshared_2.so",
+          "sha256": "141cbfdb3bc2016cd68e0bebc2e5494818213b462ed985afa6d975d4872fb8ec"
+        },
+        {
+          "path": "<LEAN_TOOLCHAIN_ROOT>/lib/lean/libleanshared_1.so",
+          "sha256": "691bf49d9e542a15808fad9d1f8c5df45860166f77efa57961b5335e65a3a0ed"
+        },
+        {
+          "path": "<LEAN_TOOLCHAIN_ROOT>/lib/lean/libleanshared.so",
+          "sha256": "efef27df56f2197139afe12f1a2b63913a05f1aba81ce88824c44100431ed8c4"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+          "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libpthread.so.0",
+          "sha256": "1327fc40710691dbd94e88b6cf4efce27fefe8fbb93f7d1164a75b4dccaea696"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libdl.so.2",
+          "sha256": "59d725ca30596a9863f4fa2552a7125f834842abc86b40890231c129358965d2"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+          "sha256": "1c488db6f4fe8cecb72456bc018de000b7a9b539c2994864b0416b5e8371b3d8"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+          "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/librt.so.1",
+          "sha256": "9f3cc59207bcaaac74aaf7aca961f4816f0f4d945e4bd1c3cb98ec516becf161"
+        }
+      ],
+      "ldd_exit_status": 0
+    },
+    "node": {
+      "invoked_path": "<USER_HOME>/.local/bin/node",
+      "effective_resolved_path": "<USER_HOME>/.local/opt/node/bin/node",
+      "sha256": "ccacb2d6d87ba6d118b2bffc1ae33747a05cc5fc6b1f1ec4fc1d420b687e952d",
+      "invoked_binary_sha256": "ccacb2d6d87ba6d118b2bffc1ae33747a05cc5fc6b1f1ec4fc1d420b687e952d",
+      "dynamic_libraries": [
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libdl.so.2",
+          "sha256": "59d725ca30596a9863f4fa2552a7125f834842abc86b40890231c129358965d2"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.35",
+          "sha256": "5bb0d21308f123b6ad46c6f35b42cedfcb8d6d439a53aa3dae04d880aaffdde3"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+          "sha256": "1c488db6f4fe8cecb72456bc018de000b7a9b539c2994864b0416b5e8371b3d8"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+          "sha256": "9d339ecb409578d6a5d587e6c537a8f9589b8a13fefba30d167433a4b5758bee"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libpthread.so.0",
+          "sha256": "1327fc40710691dbd94e88b6cf4efce27fefe8fbb93f7d1164a75b4dccaea696"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+          "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+          "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+        }
+      ],
+      "ldd_exit_status": 0
+    },
+    "python3": {
+      "invoked_path": "/usr/bin/python3",
+      "effective_resolved_path": "/usr/bin/python3.14",
+      "sha256": "52e0a13e60a981d8c4b6478be2ba5176f69da07948a056bf49cf6f077e30cb41",
+      "invoked_binary_sha256": "52e0a13e60a981d8c4b6478be2ba5176f69da07948a056bf49cf6f077e30cb41",
+      "dynamic_libraries": [
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+          "sha256": "1c488db6f4fe8cecb72456bc018de000b7a9b539c2994864b0416b5e8371b3d8"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libz.so.1.3.1",
+          "sha256": "27fa6c6cb94fb5b099ead61758a300dbc392d1dbf307fff6c16a9b8e57fdc9de"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libexpat.so.1.11.2",
+          "sha256": "2e5f66e2784c2746775567ff9916f6e7503182a8f1f2deb8ca729dfc1463849f"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+          "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+          "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+        }
+      ],
+      "ldd_exit_status": 0
+    },
+    "git": {
+      "invoked_path": "/usr/bin/git",
+      "effective_resolved_path": "/usr/bin/git",
+      "sha256": "ed8b2df973b28c0fb773b9c0dc0816d3ee2b3835bb932d9153c21417bb51b362",
+      "invoked_binary_sha256": "ed8b2df973b28c0fb773b9c0dc0816d3ee2b3835bb932d9153c21417bb51b362",
+      "dynamic_libraries": [
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.14.0",
+          "sha256": "1896c0dee31c0b04cf749092fafc383178817b02a2304e9128246108920d5156"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libz.so.1.3.1",
+          "sha256": "27fa6c6cb94fb5b099ead61758a300dbc392d1dbf307fff6c16a9b8e57fdc9de"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+          "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+          "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+        }
+      ],
+      "ldd_exit_status": 0
+    },
+    "bash": {
+      "invoked_path": "/usr/bin/bash",
+      "effective_resolved_path": "/usr/bin/bash",
+      "sha256": "3efccc187bafa75ff1e37d246270ab3e7aa559f242c7a52bf3ec2a1b5450bdbd",
+      "invoked_binary_sha256": "3efccc187bafa75ff1e37d246270ab3e7aa559f242c7a52bf3ec2a1b5450bdbd",
+      "dynamic_libraries": [
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.6",
+          "sha256": "085dbbe5dc38619276bdd0af37ae588969b1308baded09a2990ce8824a602912"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+          "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+          "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+        }
+      ],
+      "ldd_exit_status": 0
+    },
+    "sha256sum": {
+      "invoked_path": "/usr/bin/sha256sum",
+      "effective_resolved_path": "/usr/lib/cargo/bin/coreutils/sha256sum",
+      "sha256": "f84e76ea4da1e0c4e92254bd0d7dccdabe2c8b3098e734f27997dae3ee5d8e02",
+      "invoked_binary_sha256": "f84e76ea4da1e0c4e92254bd0d7dccdabe2c8b3098e734f27997dae3ee5d8e02",
+      "dynamic_libraries": [
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.42.0",
+          "sha256": "7c8bd89f59b9f96fdb933eb1414f449c2db45fbb078c8d793cc46f9173be7934"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libselinux.so.1",
+          "sha256": "7538ee77765a27966563c0d22437a3080dcdb346ff76cc16d71a3ce3379a716a"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+          "sha256": "9d339ecb409578d6a5d587e6c537a8f9589b8a13fefba30d167433a4b5758bee"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+          "sha256": "1c488db6f4fe8cecb72456bc018de000b7a9b539c2994864b0416b5e8371b3d8"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+          "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+          "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.14.0",
+          "sha256": "1896c0dee31c0b04cf749092fafc383178817b02a2304e9128246108920d5156"
+        }
+      ],
+      "ldd_exit_status": 0
+    },
+    "elan": {
+      "invoked_path": "/usr/bin/elan",
+      "effective_resolved_path": "/usr/bin/elan",
+      "sha256": "f7f2abfd94493557451cc5b856b30088dbaa9460f4cdf30fdb8c857ffb335671",
+      "invoked_binary_sha256": "f7f2abfd94493557451cc5b856b30088dbaa9460f4cdf30fdb8c857ffb335671",
+      "dynamic_libraries": [
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/liblzma.so.5.8.3",
+          "sha256": "515749273a91ca5e3b273b4025dc2c1f8827f90005baea0ab85ffb594e74f72f"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libzstd.so.1.5.7",
+          "sha256": "060eeb79531d435306665fd78329d8a9dd579f95876c5960bb67937825362a80"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libcurl.so.4.8.0",
+          "sha256": "346d21bb3015ba756e00f06ca1efe9bc6843531828e958c40a5e89d81160deb8"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+          "sha256": "9d339ecb409578d6a5d587e6c537a8f9589b8a13fefba30d167433a4b5758bee"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+          "sha256": "85e64f97e348786a8fb4d9f3d52fec289e2fb86bba20f0731dfe61990525e0f7"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14.29.2",
+          "sha256": "2655558fee787cb4724ad59c72ce75b20847efc92a1c52fc202aea1d812c9b20"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libidn2.so.0.4.0",
+          "sha256": "cdb48484c43a795c3722e286c31eb6238b4b7c3780043895dd9fa6b6041f78da"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/librtmp.so.1",
+          "sha256": "fceac319eac32ab0d6e9d6d641f0abf2f4aa097aa1a1355ea9e7419e81d45b62"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libldap.so.2.0.200",
+          "sha256": "0aa894b6d72690723015f6056bb6730a1cca41a2fac8224ef38cd7880c8e7860"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/liblber.so.2.0.200",
+          "sha256": "e2f9e23d75b37be7bdcdc39d2f74e2355a68f2ccd86e7f6534969ad8b359834b"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libssh2.so.1.0.1",
+          "sha256": "34287a1e8942e6fdf1c154e8c615a8dab7a69dc6a4e8d76913afb323fdc6fd6f"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libpsl.so.5.3.4",
+          "sha256": "18d125c725a498d66f971ceb60bfc7cf660f6a0149b54e5caa3f4651c3d2b3c6"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+          "sha256": "63b47f444efa588e291e9b650a5ba2ab02f856356f2d50f13a2e477db9119e09"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libcrypto.so.3",
+          "sha256": "5385f0436ac2e284ba8c5fb1488874057c29c04be72dea32add832694f381e28"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2",
+          "sha256": "18e2ba0b2f421b780e7265337e52996f382857df63d0f9e63f391a75a14cdbe7"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libbrotlidec.so.1.2.0",
+          "sha256": "470ed7f6b9053163b65b83efebc53bb98ca0d7a5a30ead2b545a4e5574da9c91"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libz.so.1.3.1",
+          "sha256": "27fa6c6cb94fb5b099ead61758a300dbc392d1dbf307fff6c16a9b8e57fdc9de"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+          "sha256": "bda779ea9e9ad234f60315477d7cfd0bdde861cd8ddd9df8cdaf62f18c4cec14"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libunistring.so.5.2.0",
+          "sha256": "c762a289c02f716a12549d544a811715126067b9a6377057671d3fad9453a1fc"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libgnutls.so.30.41.1",
+          "sha256": "ebcc6a4dfae904dc956feb61cef5c36917cf36c19c5718d3c2be7e377ac65d27"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libhogweed.so.6.11",
+          "sha256": "67bdc12f1ffe643142d5e185a6a8f654fd38cd14e77bae68201cf9aa71b00b61"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libnettle.so.8.11",
+          "sha256": "68c2f760d329a85ce1aa5cfc5e48ffece235258159005726798ad14e6f96a789"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libgmp.so.10.5.0",
+          "sha256": "fda9699eef15deda5f1c626e9140377a7f5d88c41516a54278ac02429cb20fa5"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libsasl2.so.2.0.25",
+          "sha256": "25163eb0a23ffe7d4170f9e219886dfdb831bbb1031a2cfac2227284a7f51e02"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libkrb5.so.3.3",
+          "sha256": "aca607790a4349c5053390fa22b24e717b2c5ea101d7b468ece6507140c6ff7b"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1",
+          "sha256": "ee77156da39841edfaa7c5fcdca4cf98ae34d60323095617b484188a4d9965e3"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libcom_err.so.2.1",
+          "sha256": "6fb3115b11fe7e14c26f3e086c4dc1fb41061130869a66c976e0ea69fdb912d6"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1",
+          "sha256": "8cc61cecc016710e7134c1621b5a6537c55eea91d2a074f6f05fa6f6e36ec8d6"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1.2.0",
+          "sha256": "7f3acc17bffda6f12f7b022e9386514cfd83e77de67e71218bcbf19ec3577a99"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libp11-kit.so.0.4.8",
+          "sha256": "2611eeb039dbed48839d90afe3d9ad3e5bd9edca2989af05dc62a93c3ff41fed"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libtasn1.so.6.6.5",
+          "sha256": "1255353abfae7b9f52aedb0264876cd4c852f13c2acf3e2203ebd2aab79bce02"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10",
+          "sha256": "c0c8f8d5adec4abe76fa462d8ad7c010f50c61e2b67b9feaa6f44e462c12cf41"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libresolv.so.2",
+          "sha256": "6b99ecf94bcb81732ed1e81615084a5cfe7383eb89ce83106fa51077409ce609"
+        },
+        {
+          "path": "/usr/lib/x86_64-linux-gnu/libffi.so.8.2.0",
+          "sha256": "1a0dc86f787f73e025a6e521056360afcbe70f2a82cd808132fefc2b4ee95daa"
+        }
+      ],
+      "ldd_exit_status": 0
+    }
+  },
+  "lean_distribution": {
+    "file_count": 17938,
+    "byte_count": 3365301905,
+    "sorted_sha256_manifest_digest": "462a8305814ae8ef9994c4b9a01b543e977b3c6cad65db7b602841fd835f2e22",
+    "algorithm": "SHA256 of UTF-8 SHA256(file) + two spaces + POSIX relative path + LF, sorted by relative path; regular files including resolved symlinks",
+    "origin": "Preinstalled elan toolchain; publisher signature and independent bootstrap NOT_RUN"
+  },
+  "environment_allowlist": {
+    "LEAN_TOOLCHAIN": null,
+    "ELAN_TOOLCHAIN": null,
+    "LEAN_PATH": null,
+    "LEAN_SYSROOT": null,
+    "NODE_OPTIONS": null,
+    "NODE_PATH": null,
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "proof_inputs_sha256": {
+    "Q16Formal.lean": "1eb16d2fbd8491750d556b643408ced75a0b77e4bf2f91711f260ea5fd26ad81",
+    "Q16Audit.lean": "1bd7bd9f3567ed52e61ceb7b9191561ae540d69a22abe519889c6a0e672d8fbe",
+    "lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
+    "lakefile.toml": "8936999c4e2630a4586d085f05b98383f976fd53463c53e9ce8ee695440f180c",
+    "scripts/verify-q16-proof-boundary.py": "35ef5297ccfcc42b2ae73ad0a4c04488d545c8e5e2f91a00f5d4c0fc3e048fd0",
+    "scripts/verify-q16-axioms.py": "1523ce456304737267b8abc380a6592656f2ab6d7e339f8f3b7996bb8936291e",
+    "scripts/q16-formal-bridge.mjs": "c3d09311711c3e2cfc73f4ff879e71a1ca982aa036f401b7821e6e93fec6d8ef",
+    "modules/integer-math/index.js": "4c0bb66780bf9e810efb1963c0238d9356814abf79c959dcd1734164de57905f",
+    "modules/integer-vector/index.js": "e47b8380b0b8c387c9da31a2af854684c4a6ea1abab761dec5f507fbdbf88cf2",
+    "tests/q16-radix.test.js": "cd1965298780a71514fec63e05cf164d0c0c31219a503d2d508217b4ae5338e0",
+    "tests/q16-independent.test.js": "e2c8a7c78135acef0f474af7b02988db55f20241867378ac97f8d8ebf257dcda",
+    "tests/integer-math.test.js": "19f41292e4b34e72ce0e43a98d3bddd9b7f30a6e9486d77830796a00cbecd772",
+    ".github/workflows/q16-formal.yml": "7bc3e6b4043c6d5c140996e78abdf6c6b3520cd49d22c3bd1fa66957ece05b71",
+    ".github/workflows/q16-formal-local.yml": "23dccd0ae40ba60f7c2fb753437a9b487e64a92615ed28650281c9ed7d89ec80",
+    "docs/Q16_FORMAL_001.md": "3a167542623023fda8d84d9cfa6f16be5fddd89560bbeb799326d2fca4c5a0cb",
+    "formal/context/q16-project.json": "faa5f5eb4223f8916fac6ea54512904291e09b907b1474b4b2df9a1e04c78a8d"
+  },
+  "generated_build_metadata_sha256": {
+    "lake-manifest.json": "321dc6d7c29052de6685cff92667c9ae6766398cbadf8972de1cffc8e9d10da4",
+    ".lake/build/ir/Q16Formal.setup.json": "0ce4105e5334673fe8afa9598dc486c27fdf61bf8ac32948dc82e980a322d9fc",
+    ".lake/build/lib/lean/Q16Formal.olean": "c101a455f51365eb0d46edff124a3a1a50e13c526fdcd1a01c0a1f4de533a403",
+    ".lake/build/lib/lean/Q16Formal.trace": "c946957279203669a16baf7c52e5eb65832b49c1733927c7e1559578a5070956"
+  },
+  "lake_manifest": {
+    "version": "1.3.0",
+    "packagesDir": ".lake/packages",
+    "packages": [],
+    "name": "vanillajs_q16_proof",
+    "lakeDir": ".lake",
+    "fixedToolchain": false
+  }
+}

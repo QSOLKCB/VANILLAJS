@@ -1,0 +1,16 @@
+{
+  "run_id": "Q16-FORMAL-002-local-20261108T090744Z",
+  "command": "python3 scripts/verify-q16-proof-boundary.py",
+  "shell": "bash -c; set -euo pipefail",
+  "working_directory": "frozen-source-root",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "Q16_EVIDENCE": "<new-evidence-directory>"
+  },
+  "started_utc": "2026-11-08T09:09:31.967335+00:00",
+  "finished_utc": "2026-11-08T09:09:31.986011+00:00",
+  "exit_status": 0,
+  "status": "PASS",
+  "stdout": "proof-inventory.txt",
+  "stderr": "proof-inventory.txt.stderr"
+}

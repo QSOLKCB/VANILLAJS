@@ -1,0 +1,16 @@
+{
+  "run_id": "Q16-FORMAL-002-local-20261108T090744Z",
+  "command": "(cd ../evidence && sha256sum -c corrective/prior-evidence.sha256)",
+  "shell": "bash -c; set -euo pipefail",
+  "working_directory": "frozen-source-root",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "Q16_EVIDENCE": "<new-evidence-directory>"
+  },
+  "started_utc": "2026-11-08T09:26:35.880803+00:00",
+  "finished_utc": "2026-11-08T09:26:35.885943+00:00",
+  "exit_status": 0,
+  "status": "PASS",
+  "stdout": "prior-evidence-check.txt",
+  "stderr": "prior-evidence-check.txt.stderr"
+}

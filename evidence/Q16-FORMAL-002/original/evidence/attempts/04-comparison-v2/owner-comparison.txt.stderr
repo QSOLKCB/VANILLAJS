@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/trent/q16-formal-002-20261108T090744Z/source-retry/../evidence/compare-owner.py", line 63, in <module>
+    assert parse_tap(owner_tap) == parse_tap(new_tap)
+           ~~~~~~~~~^^^^^^^^^^^
+  File "/home/trent/q16-formal-002-20261108T090744Z/source-retry/../evidence/compare-owner.py", line 56, in parse_tap
+    assert not re.search(r'^not ok |# (?:SKIP|TODO)', raw, re.M | re.I)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

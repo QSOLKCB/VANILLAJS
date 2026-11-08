@@ -1,0 +1,7 @@
+PASS owner ZIP SHA-256: e28d6a4af857fccdaa74e35325b74a532570922603d107a5b64b5042e5e0acd4
+PASS owner manifest: all 8 entries; no missing, duplicate or unlisted payload files
+PASS byte-identical owner/new: proof-inventory.txt
+PASS byte-identical owner/new: q16-axiom-audit.txt
+PASS byte-identical owner/new: axiom-verification.txt
+PASS transitive axioms: Quot.sound, propext
+PASS complete bridge JSON equality: {"accepted": 220921, "canonical_zeros": 1148, "claim": "FINITE_CONFORMANCE_ONLY", "rejected": 33992, "root_checks": 200009, "schema": "qsol.q16.formal-bridge.v1", "source_blob": "d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9"}

@@ -1,0 +1,46 @@
+Q16Formal.corrected_digit_is_quotient (expanded divisor candidate : Nat) (hlower : candidate * divisor ≤ expanded)
+  (hupper : expanded < (candidate + 1) * divisor) : expanded / divisor = candidate
+Q16Formal.quotient_certificate_sound (numerator divisor quotient remainder : Nat) (_hpositive : 0 < divisor)
+  (hdecomp : numerator = quotient * divisor + remainder) (hrem : remainder < divisor) : numerator / divisor = quotient
+Q16Formal.radix_digit_lt (remainder digit divisor : Nat) (hpositive : 0 < divisor) (hrem : remainder < divisor)
+  (hdigit : digit < Q16Formal.radix) : (remainder * Q16Formal.radix + digit) / divisor < Q16Formal.radix
+Q16Formal.radix_step_decomposition (remainder digit divisor : Nat) :
+  have expanded := remainder * Q16Formal.radix + digit;
+  expanded = expanded / divisor * divisor + expanded % divisor
+Q16Formal.radix_step_remainder_bounded (remainder digit divisor : Nat) (hpositive : 0 < divisor) :
+  (remainder * Q16Formal.radix + digit) % divisor < divisor
+Q16Formal.radix_prefix_invariant (prefixValue quotient remainder digit divisor : Nat)
+  (hprefix : prefixValue = quotient * divisor + remainder) :
+  prefixValue * Q16Formal.radix + digit =
+    (quotient * Q16Formal.radix + (remainder * Q16Formal.radix + digit) / divisor) * divisor +
+      (remainder * Q16Formal.radix + digit) % divisor
+Q16Formal.exact_safe_product_path (product divisor : Nat) (hpositive : 0 < divisor) :
+  (product - product % divisor) / divisor = product / divisor
+Q16Formal.checked_magnitude_within_int32 (negative : Bool) (magnitude : Nat)
+  (h : magnitude ≤ Q16Formal.magnitudeLimit negative) :
+  -2147483648 ≤ Q16Formal.signedMagnitude negative magnitude ∧ Q16Formal.signedMagnitude negative magnitude ≤ 2147483647
+Q16Formal.zero_is_canonical (negative : Bool) : Q16Formal.signedMagnitude negative 0 = 0
+Q16Formal.sign_asymmetry :
+  Q16Formal.checkedSign false 2147483648 = none ∧ Q16Formal.checkedSign true 2147483648 = some (-2147483648)
+Q16Formal.expanded_remainder_lt_2pow47 (remainder digit divisor : Nat) (hrem : remainder < divisor)
+  (hdiv : divisor ≤ 2147483648) (hdigit : digit < Q16Formal.radix) :
+  remainder * Q16Formal.radix + digit < 140737488355328
+Q16Formal.trial_product_lt_2pow47 (digit divisor : Nat) (hdigit : digit < Q16Formal.radix)
+  (hdiv : divisor ≤ 2147483648) : digit * divisor < 140737488355328
+Q16Formal.scaled_radicand_lt_2pow47 (value : Nat) (h : value ≤ 2147483647) : value * Q16Formal.radix < 140737488355328
+Q16Formal.sqrt_certificate_is_bracket (radicand root : Nat) (hlo : root * root ≤ radicand)
+  (hhi : radicand < (root + 1) * (root + 1)) : Q16Formal.sqrtBracket radicand root
+'Q16Formal.corrected_digit_is_quotient' depends on axioms: [propext]
+'Q16Formal.quotient_certificate_sound' depends on axioms: [propext, Quot.sound]
+'Q16Formal.radix_digit_lt' depends on axioms: [propext, Quot.sound]
+'Q16Formal.radix_step_decomposition' depends on axioms: [propext]
+'Q16Formal.radix_step_remainder_bounded' does not depend on any axioms
+'Q16Formal.radix_prefix_invariant' depends on axioms: [propext, Quot.sound]
+'Q16Formal.exact_safe_product_path' depends on axioms: [propext, Quot.sound]
+'Q16Formal.checked_magnitude_within_int32' depends on axioms: [propext, Quot.sound]
+'Q16Formal.zero_is_canonical' does not depend on any axioms
+'Q16Formal.sign_asymmetry' does not depend on any axioms
+'Q16Formal.expanded_remainder_lt_2pow47' depends on axioms: [propext, Quot.sound]
+'Q16Formal.trial_product_lt_2pow47' depends on axioms: [propext, Quot.sound]
+'Q16Formal.scaled_radicand_lt_2pow47' depends on axioms: [propext, Quot.sound]
+'Q16Formal.sqrt_certificate_is_bracket' does not depend on any axioms

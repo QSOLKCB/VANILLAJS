@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "declarations": 31,
+  "classification": {
+    "specified_theorem": 14,
+    "generated_auxiliary_lemma": 12,
+    "definition": 5
+  },
+  "dependency_constants": 1706,
+  "axioms": [
+    "Quot.sound",
+    "propext"
+  ],
+  "reviewed_opaque_dependencies": [
+    "String.Internal.append"
+  ],
+  "unexpected_declarations": [],
+  "scope": "identity-and-origin"
+}

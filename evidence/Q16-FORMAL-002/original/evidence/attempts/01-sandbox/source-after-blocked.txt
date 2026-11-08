@@ -1,0 +1,10 @@
+b99f5a4af17babe1215bc36872a18a4c72714faf
+?? .lake/build/ir/Q16Formal.c
+?? .lake/build/ir/Q16Formal.c.hash
+?? .lake/build/ir/Q16Formal.setup.json
+?? .lake/build/lib/lean/Q16Formal.ilean
+?? .lake/build/lib/lean/Q16Formal.ilean.hash
+?? .lake/build/lib/lean/Q16Formal.olean
+?? .lake/build/lib/lean/Q16Formal.olean.hash
+?? .lake/build/lib/lean/Q16Formal.trace
+?? lake-manifest.json
