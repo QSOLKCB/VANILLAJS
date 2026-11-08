@@ -275,6 +275,13 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Canonical UTF-8 TXT/JSON to 27-column radix-3 arrays with 256-byte LUT and invariant snapshot reuse"
+    },
+    "time-domains": {
+      "entry": "modules/time-domains/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Deterministic independent real, world, player and weapon time domains for fixed-tick simulation"
     }
   },
   "recipes": {
@@ -487,6 +494,27 @@
         "render-webgl"
       ],
       "preset": "foundry"
+    },
+    "bullet-time-range": {
+      "entry": "demos/bullet-time-lab/world.js",
+      "modules": [
+        "time-domains",
+        "collision",
+        "geometry",
+        "time",
+        "frame-gate"
+      ],
+      "preset": "bullet-time"
+    },
+    "arcade-ricochet": {
+      "entry": "demos/arcade-lab/world.js",
+      "modules": [
+        "collision",
+        "geometry",
+        "time",
+        "frame-gate"
+      ],
+      "preset": "brick-bank"
     }
   },
   "experiments": {

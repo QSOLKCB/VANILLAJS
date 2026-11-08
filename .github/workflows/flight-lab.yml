@@ -54,6 +54,7 @@ jobs:
       - run: node --test tests/*.test.js
       - run: node scripts/check.js
       - run: node scripts/build.js
+      - run: node scripts/verify-offline.js
       - name: Verify 2D evidence, owner-only RTX scripts and no-network Sol policy
         run: |
           set -euo pipefail

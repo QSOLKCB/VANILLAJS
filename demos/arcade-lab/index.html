@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a111c"><meta name="description" content="ARCADE Lab: new deterministic paddle collision, bank shots and OPT index reuse.">
+<title>ARCADE Lab · VANILLAJS</title><link rel="stylesheet" href="../shared-lab/style.css"></head>
+<body><header><a href="../../index.html"><b>VANILLAJS</b> / ARCADE LAB</a>
+<nav><a href="../bullet-time-lab/index.html">BULLET TIME LAB</a><a href="../2d-lab/index.html">2D FOUNDRY</a><a href="../../index.html">HOME</a></nav></header>
+<main><p class="eyebrow">EXPERIMENT 012 / ARCADE MECHANICS</p><h1>Bank the shot. Preserve the result.</h1>
+<p class="lead">Two new simulations beyond the existing RTS, shmup, platform and car examples: breakable bricks and ricochet banks. Deterministic swept collision, paddle deflection and score receipts use the same exact reference semantics with or without a reused spatial index.</p>
+<div class="layout"><section class="stage"><div class="controls" aria-label="Choose arcade experiment">
+<button data-mode="brick" aria-pressed="true">01 / BREAK BLOCKS</button>
+<button data-mode="bank" aria-pressed="false">02 / BANK SHOTS</button></div>
+<div class="hud"><span>STATUS <strong id="status">READY</strong></span><span>TICK <strong id="tick">0</strong></span><span>MODE <strong id="mode">BRICK</strong></span></div>
+<canvas id="scene" width="900" height="500" tabindex="0" aria-label="Paddle and ricochet simulation. Use A and D or left/right arrows to move. Space launches. Escape pauses."></canvas>
+<div class="controls"><button id="run" class="primary">RUN / RESUME</button><button id="step">ONE TICK</button>
+<button id="pause">PAUSE</button><button id="reset">RESET</button></div>
+<div class="controls" aria-label="Optional pointer controls"><button data-held="left">◀ LEFT</button><button data-held="right">RIGHT ▶</button>
+<button id="launch">LAUNCH BALL / SPACE</button></div>
+<p class="muted">A / D or ← / → · SPACE to launch · ESC to pause. Indexed and scalar paths share one swept AABB narrowphase. No frame or gameplay outcomes are reused by assumption.</p>
+</section><aside><section class="panel"><p class="eyebrow">OPT EXPERIMENT</p><h2>Reuse what does not change</h2>
+<label><input id="optimized" type="checkbox" checked> Static index reuse</label>
+<p>All bricks remain in the immutable index; destroyed brick IDs are excluded by the collision query. We never retain a stale index of mutated geometry.</p></section>
+<section class="panel"><p class="eyebrow">COUNTERS</p><div class="stats">
+<div><small>SCORE</small><strong id="score">0</strong></div><div><small>LIVES</small><strong id="lives">3</strong></div>
+<div><small>BOUNCES</small><strong id="bounces">0</strong></div><div><small>BRICKS</small><strong id="bricks">0</strong></div>
+<div><small>STATIC CANDIDATES</small><strong id="candidates">0</strong></div><div><small>REFERENCE BOXES</small><strong id="full">0</strong></div>
+</div><p class="note" id="last">Ready.</p></section>
+<section class="panel"><p class="eyebrow">WHY THIS LAB?</p><p>ARCADE supplied gameplay requirements and proven frame-invalidation patterns, but not a copied cabinet. This isolates new ball-and-paddle behaviour as an inspectable engine research recipe.</p></section></aside></div></main>
+<footer>QSOL–IMC · EXPERIMENTAL · APACHE-2.0 · NO RUNTIME DEPENDENCIES</footer>
+<script type="module" src="./app.js"></script><script type="module" src="../../offline/register.js"></script></body></html>
