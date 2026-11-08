@@ -1,5 +1,7 @@
 # VANILLAJS — integer game engine and reusable modules
 
+[![FP-HIST-001 dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24049474.svg)](https://doi.org/10.5281/zenodo.24049474)
+
 **You Didn't Invent Doom Edition — independently specified arithmetic, formally checked mathematics.**
 
 Reusable JavaScript game modules built directly on web standards. The latest
