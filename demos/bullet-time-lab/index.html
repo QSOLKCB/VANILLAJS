@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a111c"><meta name="description" content="Deterministic bullet-time simulation with independently scaled clocks and OPT collision witnesses.">
+<title>Bullet Time Lab · VANILLAJS</title><link rel="stylesheet" href="../shared-lab/style.css"></head>
+<body><header><a href="../../index.html"><b>VANILLAJS</b> / BULLET TIME LAB</a>
+<nav><a href="../arcade-lab/index.html">ARCADE LAB</a><a href="../fps-lab/index.html">FPS LAB</a><a href="../../index.html">HOME</a></nav></header>
+<main><p class="eyebrow">EXPERIMENT 011 / TIME DOMAINS</p><h1>Slow the world. Keep the aim.</h1>
+<p class="lead">An original projected firing-range experiment adapted from Bullet-Time. A fixed real-time tick drives three independent clocks. The camera/controls remain responsive; cover and targets use swept collision. Switch between the exact indexed and reference collision paths.</p>
+<div class="layout"><section class="stage"><div class="hud"><span>ENGINE <strong id="status">READY</strong></span>
+<span>DOMAIN <strong id="domain">1.00×</strong></span><span>TICK <strong id="tick">0</strong></span></div>
+<canvas id="scene" width="900" height="500" tabindex="0" aria-label="Projected bullet range. A and D or arrows strafe. Space fires. Hold Q for bullet time and Shift for dodge. Escape pauses."></canvas>
+<div class="controls"><button id="run" class="primary">RUN / RESUME</button><button id="step">ONE TICK</button>
+<button id="pause">PAUSE</button><button id="reset">RESET</button></div>
+<div class="controls" aria-label="Optional pointer controls"><button data-held="left">◀ STRAFE</button><button data-held="right">STRAFE ▶</button>
+<button data-held="fire">FIRE</button><button data-held="focus">BULLET TIME</button><button data-held="dodge">DODGE</button></div>
+<p class="muted">WASD horizontal / ← → · SPACE to fire · Q slow · SHIFT dodge · ESC pause. Losing focus cancels held controls. 120 real ticks/s; no network gameplay dependencies.</p>
+<div id="trace" class="trace" role="log" aria-live="polite">Ready for input.</div></section>
+<aside><section class="panel"><p class="eyebrow">REPLAY CONTRACT</p><h2>Independent clocks</h2>
+<p>World (projectiles and targets), player (strafe and dodge), weapon (fire cadence). Slow motion cannot modify real-time input sampling.</p>
+<label><input id="optimized" type="checkbox" checked> Use static AABB index (OPT)</label>
+<p class="note">Static cover is indexed once, reused only while geometry is immutable. Moving actors always use their own swept queries.</p></section>
+<section class="panel"><p class="eyebrow">MEASURE</p><h2>Live instrumentation</h2>
+<div class="stats"><div><small>FOCUS</small><strong id="focus">70</strong></div>
+<div><small>HEALTH</small><strong id="health">4</strong></div>
+<div><small>TARGET KILLS</small><strong id="kills">0</strong></div>
+<div><small>PROJECTILES</small><strong id="shots">0</strong></div>
+<div><small>STATIC CANDIDATES</small><strong id="candidates">0</strong></div>
+<div><small>REFERENCE BOXES</small><strong id="full">0</strong></div>
+</div><p class="muted">Candidate counts are workload observations, not FPS or guaranteed speedups.</p></section>
+<section class="panel"><p class="eyebrow">PROVENANCE</p><p>Bullet-Time clock split · VANILLAJS swept AABB and geometry index · OPT-INV-001 and OPT-REDUCE-001. No source game code or assets are required.</p></section></aside></div></main>
+<footer>QSOL–IMC · EXPERIMENTAL · APACHE-2.0 · 100% LOCAL SIMULATION</footer>
+<script type="module" src="./app.js"></script><script type="module" src="../../offline/register.js"></script></body></html>
