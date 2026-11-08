@@ -1,73 +1,100 @@
 // SPDX-License-Identifier: Apache-2.0
-// Right-handed world: +Y up, -Z forward. Coordinates use int32 16.16 units.
-// BigInt is used for exact intermediate products; no intermediate float rounding.
-import {int32, vector3, SCALE} from '../integer-math/index.js';
+// Independently expressed right-handed integer vector operations (Q16.16).
+// Exact raw multi-axis expressions retain BigInt because their public output
+// domain can exceed 64 bits; scalar quotients use the new checked limb kernel.
+import {int32, vector3, mulDiv, SCALE} from '../integer-math/index.js';
 
-const Q = BigInt(SCALE);
-const pair = (a, b) => [vector3(a, 'a'), vector3(b, 'b')];
-const narrowed = (raw, label) => int32(Number(raw), label);
-const scaled = (raw, label) => narrowed(raw / Q, label); // Round once toward zero.
+const UNIT = BigInt(SCALE);
 
-/** Component-wise checked signed int32 addition; does not mutate arguments. */
+function axes(a, b) {
+  return [vector3(a, 'a'), vector3(b, 'b')];
+}
+
+function narrow(raw, label) {
+  return int32(Number(raw), label);
+}
+
+function scaled(raw, label) {
+  return narrow(raw / UNIT, label); // One truncation after the complete sum.
+}
+
+/** Each return value is a newly allocated, validated ordinary array. */
 export function add3(a, b) {
-  [a, b] = pair(a, b);
-  return a.map((x, i) => int32(x + b[i], 'sum[' + i + ']'));
+  const [left, right] = axes(a, b);
+  return left.map((value, i) => int32(value + right[i], 'sum[' + i + ']'));
 }
 
-/** Component-wise checked signed int32 subtraction. */
 export function subtract3(a, b) {
-  [a, b] = pair(a, b);
-  return a.map((x, i) => int32(x - b[i], 'difference[' + i + ']'));
+  const [left, right] = axes(a, b);
+  return left.map((value, i) => int32(value - right[i], 'difference[' + i + ']'));
 }
 
-/** Exact dot product in Q32.32 raw units. Returns BigInt (not JSON-safe). */
+/** Raw Q32.32 signed sum; BigInt is required by the public return contract. */
 export function dotRaw3(a, b) {
-  [a, b] = pair(a, b);
-  return a.reduce((sum, x, i) => sum + BigInt(x) * BigInt(b[i]), 0n);
+  const [u, v] = axes(a, b);
+  let result = 0n;
+  for (let i = 0; i < 3; i++) result += BigInt(u[i]) * BigInt(v[i]);
+  return result;
 }
 
-/** Q16.16 dot product, truncating exact widened sum once toward zero. */
-export const dot3 = (a, b) => scaled(dotRaw3(a, b), 'dot product');
+export function dot3(a, b) {
+  return scaled(dotRaw3(a, b), 'dot product');
+}
 
-/** Exact cross-product components in Q32.32 raw units (BigInt). */
+/** Right-handed determinant, returned as three exact Q32.32 BigInts. */
 export function crossRaw3(a, b) {
-  [a, b] = pair(a, b);
-  const [x, y, z] = a.map(BigInt), [X, Y, Z] = b.map(BigInt);
-  return [y * Z - z * Y, z * X - x * Z, x * Y - y * X];
+  const [u, v] = axes(a, b);
+  const products = (i, j, k, l) =>
+    BigInt(u[i]) * BigInt(v[j]) - BigInt(u[k]) * BigInt(v[l]);
+  return [products(1, 2, 2, 1),
+          products(2, 0, 0, 2),
+          products(0, 1, 1, 0)];
 }
 
-/** Q16.16 right-handed cross product, checked after truncating each axis. */
-export const cross3 = (a, b) =>
-  crossRaw3(a, b).map((x, i) => scaled(x, 'cross[' + i + ']'));
+export function cross3(a, b) {
+  return crossRaw3(a, b).map((v, i) => scaled(v, 'cross[' + i + ']'));
+}
 
-/** Exact sum of squared vector components in Q32.32 units (BigInt). */
-export const lengthSquaredRaw3 = a => dotRaw3(a, a);
+export function lengthSquaredRaw3(a) {
+  const u = vector3(a, 'a');
+  return u.reduce((total, v) => total + BigInt(v) ** 2n, 0n);
+}
 
-/** Exact sum of squared differences in Q32.32 units (BigInt). */
 export function distanceSquaredRaw3(a, b) {
-  [a, b] = pair(a, b);
-  return a.reduce((sum, x, i) => {
-    const delta = BigInt(x) - BigInt(b[i]);
-    return sum + delta * delta;
-  }, 0n);
+  const [u, v] = axes(a, b);
+  let total = 0n;
+  for (let i = 0; i < 3; i++) {
+    // Differences of two signed int32 values can require 33 bits.
+    const delta = BigInt(u[i]) - BigInt(v[i]);
+    total += delta * delta;
+  }
+  return total;
 }
 
-/** Scale each component by an exact rational; truncate toward zero. */
+/** Checked rational scaling with scalar exact 16-bit-limb division. */
 export function scaleRatio3(value, numerator, denominator) {
-  const a = vector3(value);
+  const u = vector3(value);
   numerator = int32(numerator, 'numerator');
   denominator = int32(denominator, 'denominator');
   if (denominator === 0) throw new RangeError('division by zero');
-  return a.map((x, i) =>
-    narrowed(BigInt(x) * BigInt(numerator) / BigInt(denominator), 'scaled[' + i + ']'));
+  return u.map((x, i) => int32(mulDiv(x, numerator, denominator),
+                              'scaled[' + i + ']'));
 }
 
-/** Fixed-point lerp at fraction t in [0, SCALE], with widened endpoint delta. */
-export function lerp3(a, b, t) {
-  [a, b] = pair(a, b);
-  t = int32(t, 'fraction');
-  if (t < 0 || t > SCALE) throw new RangeError('fraction must be within [0, SCALE]');
-  const T = BigInt(t);
-  return a.map((x, i) =>
-    narrowed(BigInt(x) + (BigInt(b[i]) - BigInt(x)) * T / Q, 'lerp[' + i + ']'));
+/** Interpolate using an exact Number product: |b-a| <2^32 and t <=2^16.
+ *
+ * Every widened product is below 2^48, still exact in JS Number. Division
+ * by the power-of-two SCALE is exact before truncation toward zero. The
+ * endpoint delta may exceed int32 and must be narrowed only at the end.
+ */
+export function lerp3(a, b, fraction) {
+  const [u, v] = axes(a, b);
+  const t = int32(fraction, 'fraction');
+  if (t < 0 || t > SCALE) {
+    throw new RangeError('fraction must be within [0, SCALE]');
+  }
+  return u.map((x, i) => {
+    const delta = v[i] - x;
+    return int32(x + Math.trunc(delta * t / SCALE), 'lerp[' + i + ']');
+  });
 }
