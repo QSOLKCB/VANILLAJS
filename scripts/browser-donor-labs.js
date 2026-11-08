@@ -25,8 +25,9 @@ export async function verifyDonorLabs(browser,base){
   }finally{await bullet.close();}
   // This context deliberately persists across an online and offline navigation
   // so only the activated service worker can satisfy the second page load.
-  const arcade=await browser.newPage({viewport:{width:1280,height:860}});
+  const context=await browser.newContext({viewport:{width:1280,height:860}});
   try{
+    const arcade=await context.newPage();
     await arcade.goto(base+'demos/arcade-lab/index.html');
     await arcade.waitForFunction(()=>document.documentElement.dataset.labReady==='arcade');
     await arcade.locator('#step').click();
@@ -51,7 +52,6 @@ export async function verifyDonorLabs(browser,base){
     });
     await arcade.reload(); // A newly activated worker starts controlling on navigation.
     assert.equal(await arcade.evaluate(()=>Boolean(navigator.serviceWorker.controller)),true);
-    const context=arcade.context();
     await context.setOffline(true);
     try{
       const offlinePage=await context.newPage();
@@ -61,6 +61,6 @@ export async function verifyDonorLabs(browser,base){
         assert.equal(await offlinePage.locator('#status').textContent(),'READY');
       }finally{await offlinePage.close();}
     }finally{await context.setOffline(false);}
-  }finally{await arcade.close();}
+  }finally{await context.close();}
   console.log('Chromium donor labs: real ticks, clock scaling, both modes, mobile layout and verified offline navigation passed.');
 }
