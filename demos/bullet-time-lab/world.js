@@ -29,7 +29,7 @@ export function stepBulletLab(state,input={},optimized=true){
     throw new TypeError('invalid lab input');
   const focusHeld=Boolean(input.focus)&&state.focus>=8;
   const diveStart=Boolean(input.dodge)&&state.dive===0&&(input.move??0)!==0;
-  const dive=Math.max(0,diveStart?.36:state.dive-BULLET_TICK);
+  const dive=diveStart?0.36:Math.max(0,state.dive-BULLET_TICK);
   const domains=stepTimeDomains(state.domains,BULLET_TICK,{focus:focusHeld,dive:dive>0});
   const worldDt=domains.world-state.domains.world;
   const playerDt=domains.player-state.domains.player;
