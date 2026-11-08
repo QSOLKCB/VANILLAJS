@@ -39,7 +39,16 @@ export async function verifyDonorLabs(browser,base){
     await arcade.keyboard.up('Space');await arcade.locator('#pause').click();
     await arcade.screenshot({path:'browser-artifacts/arcade-lab.png'});
     await arcade.waitForFunction(()=>document.documentElement.dataset.offlineWorker==='registered');
-    await arcade.evaluate(async()=>{await navigator.serviceWorker.ready;});
+    await arcade.evaluate(async()=>{
+      // No unbounded wait: a failed install must be an actionable CI failure.
+      const registered=await navigator.serviceWorker.getRegistration();
+      await Promise.race([
+        navigator.serviceWorker.ready,
+        new Promise((_,reject)=>setTimeout(()=>reject(new Error(
+          'offline worker did not activate: '+(registered?.installing?.state??'no installing worker')
+        )),15000))
+      ]);
+    });
     await arcade.reload(); // A newly activated worker starts controlling on navigation.
     assert.equal(await arcade.evaluate(()=>Boolean(navigator.serviceWorker.controller)),true);
     const context=arcade.context();
