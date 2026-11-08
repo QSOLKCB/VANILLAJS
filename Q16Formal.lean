@@ -70,9 +70,9 @@ theorem radix_step_remainder_bounded
 
 /-- Appending one digit preserves the full prefix reconstruction invariant. -/
 theorem radix_prefix_invariant
-    (prefix quotient remainder digit divisor : Nat)
-    (hprefix : prefix = quotient * divisor + remainder) :
-    prefix * radix + digit =
+    (prefixValue quotient remainder digit divisor : Nat)
+    (hprefix : prefixValue = quotient * divisor + remainder) :
+    prefixValue * radix + digit =
     (quotient * radix + (remainder * radix + digit) / divisor) * divisor +
       (remainder * radix + digit) % divisor := by
   rw [hprefix]
