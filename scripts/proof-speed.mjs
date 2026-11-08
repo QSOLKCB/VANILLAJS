@@ -31,7 +31,7 @@ if(check){
     method:{warmupPairs:2,measuredPairs:9,order:'AB,BA,AB,BA,...',
       correctness:'full per-tick gameplay states, complete collision hits or retained framebuffer bytes',
       timing:'wall-clock JavaScript CPU, no browser GPU timing, no automatic performance budget',
-      indexLifecycle:'static index constructed once outside hot-query timers; construction cost reported separately',
+      indexLifecycle:'query-only medians are separate from seven explicit index build timing samples',
       sourceSha256:sha(source)},cases};
   const raw=JSON.stringify(report,null,2)+'\n';
   await writeFile(out,raw,{flag:'wx'});
