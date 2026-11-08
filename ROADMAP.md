@@ -164,7 +164,9 @@ See [FreeDM/Terra experiment](experiments/freedm-terra/README.md).
 3. Projectile and weapon adapters using integer lifetime/cooldown ticks and
    stable contact ordering; migrate one complete existing game at a time.
 4. Broader browser/runtime conformance and measured CPU/allocation workloads.
-   BigInt exactness is implemented; a performance improvement is not claimed.
+   Exact source-independent limb arithmetic replaces scalar BigInt products;
+   raw vector BigInt results remain required by the API. A performance
+   improvement is not claimed without paired measurements.
 
 ## Post-v1.1.1 WebGL API research — proposed, not implemented
 
