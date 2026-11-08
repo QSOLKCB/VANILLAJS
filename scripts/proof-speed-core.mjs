@@ -137,7 +137,16 @@ export function measure(f,{pairs=9,warmups=2}={}){
   for(let i=0;i<pairs;i++)for(const mode of i%2?[true,false]:[false,true])
     samplesMs[mode?'optimized':'baseline'].push(timed(f,mode));
   const baseline=median(samplesMs.baseline),optimized=median(samplesMs.optimized);
-  return {...oracle,samplesMs,medianMs:{baseline,optimized},
+  // Construction is NOT free; retain its cold/warm distribution alongside
+  // query-only timings. A small workload may lose even when queries are pruned.
+  const indexBuildMs=[];
+  if(f.kind==='collision')for(let i=0;i<7;i++){
+    const start=performance.now();new StaticAABBIndex(f.boxes);
+    indexBuildMs.push(round(performance.now()-start));
+  }
+  return {...oracle,samplesMs,indexBuildMs,
+    indexBuildMedianMs:indexBuildMs.length?median(indexBuildMs):null,
+    medianMs:{baseline,optimized},
     medianRatio:optimized>0?round(baseline/optimized):null,
     note:'CPU observations on this host, not guaranteed GPU/FPS or cross-host speedup'};
 }
