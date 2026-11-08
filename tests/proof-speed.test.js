@@ -34,10 +34,10 @@ test('complete receipts exclude performance counters but include per-tick outcom
   assert.ok(a.work.referenceChecks>=b.work.conservativeCandidates);
 });
 test('fixture validation and unknown modes fail closed',()=>{
-  assert.throws(()=>collisionFixture({side:41}),/assert/);
-  assert.throws(()=>collisionFixture({rayCount:0}),/assert/);
-  assert.throws(()=>labFixture('unknown'),/assert/);
-  assert.throws(()=>frameFixture(0),/assert/);
+  assert.throws(()=>collisionFixture({side:41}),{code:'ERR_ASSERTION'});
+  assert.throws(()=>collisionFixture({rayCount:0}),{code:'ERR_ASSERTION'});
+  assert.throws(()=>labFixture('unknown'),{code:'ERR_ASSERTION'});
+  assert.throws(()=>frameFixture(0),{code:'ERR_ASSERTION'});
   assert.throws(()=>runFixture({kind:'surprise'},true),/unknown/);
-  assert.throws(()=>measure(frameFixture(2),{pairs:1}),/assert/);
+  assert.throws(()=>measure(frameFixture(2),{pairs:1}),{code:'ERR_ASSERTION'});
 });
