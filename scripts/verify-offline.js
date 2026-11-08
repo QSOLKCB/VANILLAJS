@@ -27,9 +27,15 @@ for(const [path,entry] of listed){
 }
 const worker=await readFile(resolve(root,'service-worker.js'),'utf8');
 assert.ok(!worker.includes('__PACKAGE_SHA256__')&&!worker.includes('__ASSET_ENTRIES__'));
-const cached=[...listed.keys()].filter(p=>p!=='service-worker.js');
-assert.ok(worker.includes('const FILES=')&&worker.includes('const VERSION='));
-for(const path of cached)assert.ok(worker.includes(JSON.stringify(path)),path+' in precache manifest');
+const expected=manifest.files.filter(f=>f.path!=='service-worker.js');
+const inventory=worker.match(/^const FILES=(\[.*\]);$/m);
+const version=worker.match(/^const VERSION='([0-9a-f]{64})';$/m);
+assert.ok(inventory&&version,'full generated worker inventory and identity required');
+assert.deepEqual(JSON.parse(inventory[1]),expected,'worker membership/hash inventory differs');
+const template=await readFile(resolve(import.meta.dirname,'service-worker.template.js'),'utf8');
+const expectedVersion=createHash('sha256').update(JSON.stringify(expected))
+  .update('\0').update(template).digest('hex');
+assert.equal(version[1],expectedVersion,'worker version must bind all assets and worker code');
 const shell=listed.get('index.html'),reg=listed.get('offline/register.js');
 assert.ok(shell&&reg);
 console.log(JSON.stringify({kind:'qsol.vanillajs.offline-package.v1',verified:listed.size,
