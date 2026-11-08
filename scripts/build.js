@@ -19,8 +19,11 @@ await walk(out);files.sort((a,b)=>a.path.localeCompare(b.path));
 // The worker is generated from this immutable input list (no stale manual bump).
 const size=files.reduce((total,f)=>total+f.bytes,0);
 if(size>16*1024*1024)throw new RangeError('offline precache exceeds 16 MiB budget');
-const versionHash=createHash('sha256').update(JSON.stringify(files)).digest('hex');
 const template=await readFile(resolve(root,'scripts/service-worker.template.js'),'utf8');
+// Include worker implementation bytes as well as all asset inputs; a security
+// fix to the worker must force a fresh cache namespace without a manual bump.
+const versionHash=createHash('sha256').update(JSON.stringify(files))
+  .update('\0').update(template).digest('hex');
 const worker=template.replace('__PACKAGE_SHA256__',versionHash)
   .replace('__ASSET_ENTRIES__',JSON.stringify(files));
 await writeFile(resolve(out,'service-worker.js'),worker);
