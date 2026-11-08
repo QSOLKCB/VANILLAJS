@@ -18,13 +18,24 @@ URL = "http://127.0.0.1:11434/api/version"
 MAX_BYTES = 4096
 
 
+class RejectRedirects(urllib.request.HTTPRedirectHandler):
+    """Never leave the pinned loopback URL, even if a local port redirects."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise ValueError("Ollama local readiness HTTP redirect refused")
+
+
+def local_opener():
+    return urllib.request.build_opener(
+        urllib.request.ProxyHandler({}), RejectRedirects())
+
+
 def ollama_version(*, opener=None, timeout=2.0) -> str:
     if not 0 < timeout <= 5:
         raise ValueError("bounded timeout required")
     request = urllib.request.Request(
         URL, method="GET", headers={"Accept": "application/json"})
-    open_url = opener or urllib.request.build_opener(
-        urllib.request.ProxyHandler({})).open
+    open_url = opener or local_opener().open
     try:
         with open_url(request, timeout=timeout) as response:
             if response.status != 200:
