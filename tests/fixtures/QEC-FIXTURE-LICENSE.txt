@@ -1,0 +1,11 @@
+QEC research fixture provenance and license
+===========================================
+File: qec-qutrit-css-decoupling-v1.json
+Source: QSOLKCB/QEC/tests/fixtures/research/qutrit-css-decoupling-v1.json
+Source Git blob SHA: 9a2ed76f9810d000495da496ac2fa64374e5399e
+Source repository license: Mozilla Public License 2.0 (MPL-2.0)
+Source path: https://github.com/QSOLKCB/QEC/blob/main/tests/fixtures/research/qutrit-css-decoupling-v1.json
+The JSON fixture is an unmodified, separate research/test data file.
+Its provenance includes third-party MIT donor metadata documented inside
+the fixture. No third-party generator, donor code or QEC executable module
+is copied into VANILLAJS.
