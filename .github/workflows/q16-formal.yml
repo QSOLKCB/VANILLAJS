@@ -34,12 +34,19 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Check theorem inventory without proof escapes
         run: python3 scripts/verify-q16-proof-boundary.py
-      - name: Install Lean 4.35.0 and kernel-check every Q16Formal theorem
-        uses: leanprover/lean-action@ba3fdfe5c4476c925da13bf11a005ddb47e47aee # v1
-        with:
-          auto-config: false
-          build: true
-          test: false
+      - name: Install pinned Lean 4.35.0 without third-party CI action
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location \
+            --max-time 90 \
+            https://raw.githubusercontent.com/leanprover/elan/9605b24b08cf68b78dce0014b6fa01be1f8e2cee/elan-init.sh \
+            -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y \
+            --default-toolchain leanprover/lean4:v4.35.0 --no-modify-path
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Kernel-build required Lean source module
+        run: lake build Q16Formal
       - name: Recheck typed statements and transitive axioms
         run: |
           set -euo pipefail
