@@ -31,7 +31,7 @@ theorem corrected_digit_is_quotient
 /-- Exact quotient follows from a quotient/remainder certificate. -/
 theorem quotient_certificate_sound
     (numerator divisor quotient remainder : Nat)
-    (hpositive : 0 < divisor)
+    (_hpositive : 0 < divisor)
     (hdecomp : numerator = quotient * divisor + remainder)
     (hrem : remainder < divisor) :
     numerator / divisor = quotient := by

@@ -9,6 +9,7 @@ on:
       - '.github/workflows/q16-formal.yml'
       - 'scripts/q16-formal-bridge.mjs'
       - 'scripts/verify-q16-proof-boundary.py'
+      - 'scripts/verify-q16-axioms.py'
       - 'modules/integer-math/index.js'
       - 'formal/**'
   push:
@@ -53,7 +54,7 @@ jobs:
           lake env lean --version
           lake build Q16Formal
           lake env lean Q16Audit.lean | tee q16-axiom-audit.txt
-          if grep -E 'sorryAx' q16-axiom-audit.txt; then exit 1; fi
+          python3 scripts/verify-q16-axioms.py q16-axiom-audit.txt
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'

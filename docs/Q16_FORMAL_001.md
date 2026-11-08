@@ -21,7 +21,9 @@ canonical zero, INT_MIN sign asymmetry, 2^47 intermediate bounds, and exact
 square-root bracket as a validation certificate.
 
 Q16Audit.lean performs typed #check and #print axioms for every named theorem.
-The static inventory script and GitHub Actions prove and audit the named set.
+The static inventory script checks statement membership and rejects unchecked escapes.
+The separate axiom verifier requires all 14 named reports, rejects unknown axioms,
+and executes five negative controls for missing, duplicate and forged records.
 Source bridge uses independent BigInt tests and refuses source blob mismatch.
 Only passing actual CI execution provides checked-proof evidence.
 
