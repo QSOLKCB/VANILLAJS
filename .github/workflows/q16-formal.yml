@@ -9,6 +9,7 @@ on:
       - '.github/workflows/q16-formal.yml'
       - 'scripts/q16-formal-bridge.mjs'
       - 'scripts/verify-q16-proof-boundary.py'
+      - 'scripts/install-q16-lean.sh'
       - 'scripts/verify-q16-axioms.py'
       - 'modules/integer-math/index.js'
       - 'formal/**'
@@ -22,6 +23,7 @@ on:
       - '.github/workflows/q16-formal.yml'
       - 'scripts/q16-formal-bridge.mjs'
       - 'scripts/verify-q16-proof-boundary.py'
+      - 'scripts/install-q16-lean.sh'
       - 'modules/integer-math/index.js'
       - 'formal/**'
   workflow_dispatch:
@@ -35,17 +37,8 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Check theorem inventory without proof escapes
         run: python3 scripts/verify-q16-proof-boundary.py
-      - name: Install pinned Lean 4.35.0 without third-party CI action
-        run: |
-          set -euo pipefail
-          curl --fail --silent --show-error --location \
-            --max-time 90 \
-            https://raw.githubusercontent.com/leanprover/elan/9605b24b08cf68b78dce0014b6fa01be1f8e2cee/elan-init.sh \
-            -o "$RUNNER_TEMP/elan-init.sh"
-          sh "$RUNNER_TEMP/elan-init.sh" -y \
-            --default-toolchain leanprover/lean4:v4.35.0 --no-modify-path
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          "$HOME/.elan/bin/lean" --version
+      - name: Install pinned Lean with checked elan and bounded retry
+        run: bash scripts/install-q16-lean.sh
       - name: Kernel-build required Lean source module
         run: lake build Q16Formal
       - name: Recheck typed statements and transitive axioms

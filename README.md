@@ -1,13 +1,94 @@
 # VANILLAJS — integer game engine and reusable modules
 
-Reusable, original JavaScript game modules built directly on web standards.
-**v1.0.0 — The Clockwork Vault: six OMI seals in one playable expedition.**
-32 experimental game modules; sixteen recipes including Integer Foundry and The Clockwork Vault;
-two separately registered research experiments (OMI with three demonstrations and an optional E8 point atlas).
+**You Didn't Invent Doom Edition — independently specified arithmetic, formally checked mathematics.**
+
+Reusable JavaScript game modules built directly on web standards. The latest
+**published** release is [v1.1.1 — Exact Vectors, Terrain Physics & the QSOL
+WebGL API](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.1.1).
+The *You Didn't Invent Doom Edition* describes the merged
+[#46](https://github.com/QSOLKCB/VANILLAJS/pull/46),
+[#47](https://github.com/QSOLKCB/VANILLAJS/pull/47), and
+[#48](https://github.com/QSOLKCB/VANILLAJS/pull/48) development changes;
+this edition is **not a published tag yet**.
+
+The v1.0.0 showcase was The Clockwork Vault: six OMI seals in one expedition.
+The engine has 32 experimental game modules and sixteen recipes including
+Integer Foundry, alongside the registered OMI and optional E8 research labs.
 
 [Donor upgrade: pacing, lead solver & RTX](docs/DONOR_UPGRADE_2026_11.md) · [UFF orbital physics & NEXUS contracts](docs/BLOAT_NEXUS_UFF.md) · [Frame invalidation](docs/FRAME_GATE.md) · [Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
+
+## You Didn't Invent Doom Edition — exact Q16.16 and formal verification
+
+**Modern convenience. Minimal dependencies. Old-school correctness.**
+
+The integer simulation subsystem underwent an independent Q16.16 rewrite in
+[PR #46](https://github.com/QSOLKCB/VANILLAJS/pull/46), followed by the
+GALAXY-inspired numerical optimization in
+[PR #47](https://github.com/QSOLKCB/VANILLAJS/pull/47).
+
+- **Q16.16 simulation:** 65,536 subunits per metre; signed-int32 state,
+  exact truncation toward zero, explicit overflow rejection and canonical zero.
+  Existing RNG, engine snapshots and deterministic replay are preserved.
+- **Optimized scalar mathematics:** safe-integer arithmetic fast path,
+  corrected radix-65,536 quotient digits, and fast square-root estimates
+  accepted only after exact integer-square bracketing.
+- **Optional GLUBALL/QEC techniques:** exact u64 logical sampling,
+  bounded partitions, and reversible GF(3) periodic lattice transforms
+  validated against six pinned finite QEC fixtures. They are not changes
+  to authoritative gameplay physics.
+
+The design and limitations are documented in
+[Q16-INDEPENDENT-001](docs/Q16_INDEPENDENT_REIMPLEMENTATION.md),
+[Q16-GALAXY-RADIX-001](docs/Q16_GALAXY_RADIX.md), and
+[GLUBALL/QEC numerical research](docs/GLUBALL_QEC_FIXEDPOINT_RESEARCH.md).
+Preliminary numerical microbenchmarks are workload-specific, **not**
+universal game-engine, GPU or frame-rate improvement claims.
+
+### Q16-FORMAL-001 — Lean theorem and source-conformance evidence
+
+Merged [PR #48](https://github.com/QSOLKCB/VANILLAJS/pull/48)
+introduces **14 Lean 4.35.0 kernel-checked theorems** for quotient
+certificates, exact radix-prefix invariants, signed bounds, precision
+limits and integer square-root bracketing. The proof audit checks
+every named declaration's transitive axioms, accepting only the
+standard `propext` and `Quot.sound` where applicable. The successful
+run reported no `sorryAx` or custom axioms.
+
+The separate, finite BigInt oracle checked the exact production
+`modules/integer-math/index.js` source (Git blob
+`d457b0154d9dfc8b50fd593b5e9dff75e1ea66b9`):
+
+| Executed verification | Observed result |
+| --- | ---: |
+| Lean mathematical theorems | 14 PASS |
+| Accepted exact quotient cases | 220,921 PASS |
+| Expected arithmetic rejection cases | 33,992 PASS |
+| Integer square-root brackets | 200,009 PASS |
+| Existing Q16 regression tests | 17 PASS |
+
+[Successful Lean proof CI](https://github.com/QSOLKCB/VANILLAJS/actions/runs/42463350488)
+· [Proof and claim boundaries](docs/Q16_FORMAL_001.md)
+· [QSOL formalization context protocol](https://github.com/QSOLKCB/Private-Context-For-Formalization)
+
+**Scope:** A Lean proof establishes named mathematical propositions.
+Finite source-pinned testing supports the observed JavaScript implementation,
+but does not prove full ECMAScript refinement, historical authorship,
+copyright ownership, or the absence of copied material throughout history.
+Existing provenance notices and Git history remain independently inspectable.
+
+To reproduce after installing the toolchain pinned in `lean-toolchain`:
+
+```sh
+python3 scripts/verify-q16-proof-boundary.py
+lake build Q16Formal
+lake env lean Q16Audit.lean | tee q16-axiom-audit.txt
+python3 scripts/verify-q16-axioms.py q16-axiom-audit.txt
+node scripts/q16-formal-bridge.mjs
+```
+
+Lean is a development-time proof tool; the browser runtime remains dependency-free.
 
 ## Qwen3-VL 2B text/image response isolation
 
@@ -204,7 +285,8 @@ Neither kernel replaces the existing character solver, Integer Foundry or render
 
 The new core runs authoritative game state on checked signed 32-bit fixed-point
 values: **65,536 subunits per metre**, integer ticks and exact
-independently rewritten 16-bit-limb scalar multiplication/division. Exact raw
+16-bit-limb scalar arithmetic with an optimized radix-65,536 quotient path.
+Exact raw
 vector operations continue returning BigInt where required by the API. It provides atomic kinematic world updates,
 static box collision, seeded integer randomness, canonical snapshots and bounded
 input replay. Browser presentation converts positions to metres at the renderer.
@@ -450,6 +532,11 @@ node scripts/verify-omi.js --check
 node scripts/verify-machine.js --check
 node scripts/verify-vault.js --check
 node scripts/opt-render-workload.js --check
+# Optional formal verification (requires pinned Lean in lean-toolchain)
+lake build Q16Formal
+lake env lean Q16Audit.lean | tee q16-axiom-audit.txt
+python3 scripts/verify-q16-axioms.py q16-axiom-audit.txt
+node scripts/q16-formal-bridge.mjs
 ```
 
 The build stages an allowlisted `dist/` and generates `manifest.json` with sizes
