@@ -97,7 +97,7 @@ local execution. It targets the already-registered
 `[self-hosted, linux, x64, qsol-rtx5060ti]` runner. This workflow requires a
 **pre-installed or cached Lean 4.35.0** and an existing Node executable; it
 does not fetch a toolchain or run any unreviewed PR code on your desktop.
-The signed-off proof logs and SHA-256 manifest remain under
+Proof logs and a SHA-256 integrity manifest remain under
 `~/.local/state/qsol/vanillajs/q16-formal/` by default. Artifact upload is
 off unless the owner explicitly enables it. If Lean is unavailable, the
 workflow fails with a prerequisite diagnosis rather than marking a theorem
