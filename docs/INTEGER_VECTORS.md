@@ -19,7 +19,7 @@ Each vector is an ordinary, dense, three-element array of signed int32 *subunits
 | `scaleRatio3(v,n,d)` | `number[3]` | Checked `trunc(v[i] × n / d)`, with signed int32 `n,d`, nonzero `d` |
 | `lerp3(a,b,t)` | `number[3]` | `a[i] + trunc((b[i]-a[i]) × t / SCALE)`; integer `0 ≤ t ≤ SCALE` |
 
-All products, sums and signed differences that could exceed JavaScript's safe-integer range are evaluated as **BigInt** before rounding/narrowing. Operators returning signed int32 reject overflow with `RangeError`; there is no wrapping, saturating or silent floating-point fallback. No partial vector is returned on failure.
+Raw dot/cross/squared-distance expressions use **BigInt** to preserve the public exact widened outputs. Checked scalar vector ratios instead call the independently implemented 16-bit-limb `mulDiv` kernel. Lerp products use exact `Number` arithmetic below 2^48, with once-only signed truncation and checked final int32 results. Operators returning signed int32 reject overflow with `RangeError`; there is no wrapping, saturating or silent floating-point fallback. No partial vector is returned on failure. See [Q16-INDEPENDENT-001](Q16_INDEPENDENT_REIMPLEMENTATION.md).
 
 The `Raw3` family returns `BigInt` values that can exceed 53-bit precision. **BigInt cannot be directly serialised with `JSON.stringify`.** If a game saves snapshots or publishes receipts, convert deliberately with a documented decimal-string schema or a validated bounded result, not implicit `Number` coercion. Raw Q32.32 values represent *squared* subunits, not metres or seconds.
 
@@ -50,4 +50,4 @@ node scripts/check.js
 node scripts/build.js
 ```
 
-Regression coverage checks the right-handed basis, overflow, negative truncation, full-range interpolation, input rejection, non-mutation and **4,096 seeded vector pairs against a separately written BigInt oracle**. These are deterministic software arithmetic tests, not RTX hardware performance evidence or proof that the JIT emits integer instructions. The existing RTX5060TI-001 receipt remains unmodified, tied to its historical source commit.
+Regression coverage checks the right-handed basis, overflow, negative truncation, full-range interpolation, input rejection, non-mutation, **4,096 original seeded vector cases** and **8,192 new independently refactored vector cases** against mathematical BigInt referees. These are deterministic software arithmetic tests, not RTX hardware performance evidence or proof that the JIT emits integer instructions. The existing RTX5060TI-001 receipt remains unmodified, tied to its historical source commit.
