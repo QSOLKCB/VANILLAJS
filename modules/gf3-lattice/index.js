@@ -10,7 +10,7 @@ function integer(value, lo, hi, name) {
       value < lo || value > hi) throw new RangeError(name + ' outside accepted range');
   return value;
 }
-function residue(value) { const r = value % 3; return r < 0 ? r + 3 : r; }
+function residue(value) { const r = value % 3; return r === 0 ? 0 : r < 0 ? r + 3 : r; }
 function cyclic(value, modulus) {
   const r = value % modulus;
   return r < 0 ? r + modulus : r;
