@@ -80,7 +80,7 @@ build budget). A service worker can reduce repeat downloads and enable
 offline navigation **after** initial activation; it does not accelerate
 game loops, guarantee speedups or eliminate first-install bandwidth.
 
-Version identity changes with any output member byte, path or size.
+Version identity changes with any asset byte, path or size, or any worker-template code byte.
 The service worker script itself is also recorded in the post-generation
 package manifest. No `npm install`, CDN, third-party runtime dependency,
 telemetry, cloud call or storage of user session data is added.
