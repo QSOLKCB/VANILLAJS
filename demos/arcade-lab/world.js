@@ -37,7 +37,7 @@ export function stepArcadeLab(state,input={},optimized=true){
   if(state.waiting&&!input.launch)return {...state,tick:state.tick+1,paddle,work};
   let ball={...state.ball},waiting=false,lives=state.lives,score=state.score;
   let broken=state.broken,bounces=state.bounces,last=state.last,remaining=ARCADE_TICK;
-  const ignored=state.kind==='brick'?broken:[];
+  const ignored=state.kind==='brick'?[...broken]:[];
   for(let hitCount=0;hitCount<4&&remaining>1e-9;hitCount++){
     const origin=[ball.x,1,ball.z],delta=[ball.vx*remaining,0,ball.vz*remaining];
     work.queries++;work.full+=FIELDS[state.kind].length;
