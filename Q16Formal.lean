@@ -89,7 +89,8 @@ theorem radix_prefix_invariant
       ac_rfl
     _ = (quotient * radix) * divisor +
           (((remainder * radix + digit) / divisor) * divisor +
-            (remainder * radix + digit) % divisor) := by rw [hstep]
+            (remainder * radix + digit) % divisor) := by
+      exact congrArg (fun x : Nat => (quotient * radix) * divisor + x) hstep
     _ = (quotient * radix + (remainder * radix + digit) / divisor) *
           divisor + (remainder * radix + digit) % divisor := by
       simp only [Nat.add_mul, Nat.add_assoc]
