@@ -23,6 +23,21 @@ test('bullet time has independently slower world and authentic swept collision',
   assert.ok(s.shots.length<96&&s.health>=0);
   assert.throws(()=>stepBulletLab(s,{move:2}));
 });
+test('simultaneous lethal rounds cannot underflow target health or prevent respawn',()=>{
+  const start=createBulletLab();
+  const state={...start,targetHealth:1,nextId:3,
+    shots:[{id:1,team:'player',x:0,z:19,vz:31},
+      {id:2,team:'player',x:0,z:19,vz:31}]};
+  const after=stepBulletLab(state,{},true);
+  assert.equal(after.targetHealth,0);
+  assert.equal(after.stats.kills,1);
+  assert.ok(after.respawn>0);
+  assert.equal(state.targetHealth,1,'caller state not mutated');
+  let current=after;
+  for(let i=0;i<1200&&current.respawn>0;i++)
+    current=stepBulletLab(current,{});
+  assert.equal(current.targetHealth,3);
+});
 for(const kind of ['brick','bank'])test('arcade '+kind+' exact replay vs full scan and no input mutation',()=>{
   let ref=createArcadeLab(kind),opt=createArcadeLab(kind),less=false;
   for(let i=0;i<2600;i++){
