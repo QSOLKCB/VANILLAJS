@@ -1,0 +1,121 @@
+name: FreeDM Qwen3-VL 2B isolation (owner-only, no API credits)
+
+# Strict manual opt-in. Never runs on PR/push, never starts ViZDoom.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "Run a 14-condition local Qwen3-VL 2B diagnostic on my QSOL workstation"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Upload PROBE.json and SHA256SUMS only (no screenshots or weights)"
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qsol-qwen3vl2b-owner-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  isolate:
+    if: >-
+      ${{ github.repository == 'QSOLKCB/VANILLAJS' && github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 35
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONNOUSERSITE: "1"
+      HTTP_PROXY: ""
+      HTTPS_PROXY: ""
+      ALL_PROXY: ""
+      NO_PROXY: "127.0.0.1,localhost"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact reviewed main and original Terra visual evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          command -v python3
+          command -v ollama
+          python3 -m unittest discover -s tests \
+            -p 'test_freedm_qwen2b_probe.py' -v
+          # The runner's existing owner-paid Terra evidence is immutable.
+          source="$HOME/.local/state/qsol/vanillajs/freedm-terra/run-42374695320-1/match"
+          test -f "$source/MATCH.json" && test -f "$source/SHA256SUMS" || {
+            echo "Original Terra run 42374695320 is missing; no probe started" >&2
+            exit 1
+          }
+          echo "FREEDM_QWEN2B_SOURCE=$source" >> "$GITHUB_ENV"
+          evidence="$HOME/.local/state/qsol/vanillajs/freedm-qwen2b/probe-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          test ! -e "$evidence" || {
+            echo "Refuse to overwrite a previous Qwen3-VL 2B probe" >&2
+            exit 1
+          }
+          echo "FREEDM_QWEN2B_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+      - name: Qwen3-VL 2B text-only then exact-paired image response isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          # 14 one-shot requests to local Ollama only; no pulls, external APIs,
+          # arbitrary shell from model output, game engine or paid services.
+          # Both modalities use byte-identical prompts per experiment pair.
+          python3 experiments/freedm-open/qwen2b_probe.py \
+            --source "$FREEDM_QWEN2B_SOURCE" \
+            --output "$FREEDM_QWEN2B_EVIDENCE" \
+            --head "$GITHUB_SHA"
+      - name: Verify sealed receipt and summarize diagnostic contrasts
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd "$FREEDM_QWEN2B_EVIDENCE" && sha256sum -c SHA256SUMS)
+          python3 - "$FREEDM_QWEN2B_EVIDENCE/PROBE.json" >> "$GITHUB_STEP_SUMMARY" <<'PY'
+          import json,sys
+          from pathlib import Path
+          data=json.loads(Path(sys.argv[1]).read_text(encoding='utf8'))
+          if (data['status']!='COMPLETE' or
+              data['summary']['providerCompleted']!=14 or
+              len(data['records'])!=14 or len(data['pairs'])!=6):
+              raise SystemExit('incomplete Qwen3-VL 2B diagnostic')
+          print('## Qwen3-VL 2B — source-pinned output isolation')
+          print()
+          print('Model SHA-256:',data['testModel']['sha256'])
+          print()
+          print('Ollama:',data['ollama']['ollamaVersion'])
+          print()
+          print('Provider responses:',data['summary']['providerCompleted'],'/14')
+          print()
+          print('Exact expected JSON:',data['summary']['validExact'])
+          print()
+          print('Empty final content:',data['summary']['emptyContent'])
+          print()
+          print('JSON/schema/instruction mismatches are separate from transport failures.')
+          print()
+          for pair in data['pairs']:
+              print('Format:',pair['formatMode'],'think:',pair['thinkMode'],
+                    'text:',pair['textStatus'],'image:',pair['imageStatus'])
+          print()
+          print('Minimal actions are NOT FreeDM live readiness. Existing live gate unchanged.')
+          print('No OpenAI API calls, no model downloads, no ViZDoom game.')
+          PY
+      - name: Upload source-bound diagnostic JSON only with owner permission
+        if: ${{ always() && inputs.publish_evidence == true && github.actor == 'EmergentMonk' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: freedm-qwen3vl2b-isolation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.FREEDM_QWEN2B_EVIDENCE }}/PROBE.json
+            ${{ env.FREEDM_QWEN2B_EVIDENCE }}/SHA256SUMS
+          retention-days: 14
+          if-no-files-found: warn

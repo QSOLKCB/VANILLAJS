@@ -161,7 +161,8 @@ def local_opener():
 
 def local_http(path: str, body: dict | None = None, *, timeout=90,
                opener=None) -> dict:
-    require(path in ("/api/tags", "/api/chat", "/api/generate"),
+    require(path in ("/api/tags", "/api/chat", "/api/generate",
+                     "/api/show", "/api/version"),
             "nonallowlisted Ollama endpoint")
     url = BASE + path
     data = None if body is None else json.dumps(body, separators=(",", ":")).encode()

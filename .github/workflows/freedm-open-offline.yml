@@ -22,6 +22,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m unittest discover -s tests -p 'test_freedm_open_replay.py' -v
+          python3 -m unittest discover -s tests -p 'test_freedm_qwen2b_probe.py' -v
           python3 -m unittest discover -s tests -p 'test_freedm_open_live.py' -v
           python3 -m unittest discover -s tests -p 'test_freedm_terra.py' -v
           python3 - <<'PY'
@@ -30,6 +31,7 @@ jobs:
           source=Path('experiments/freedm-open/replay.py').read_text()
           ast.parse(source)
           ast.parse(Path('experiments/freedm-open/live.py').read_text())
+          ast.parse(Path('experiments/freedm-open/qwen2b_probe.py').read_text())
           ast.parse(Path('experiments/freedm-terra/run.py').read_text())
           assert 'http://127.0.0.1:11434' in source
           assert 'https://api.openai.com' not in source
@@ -48,5 +50,19 @@ jobs:
           assert "uv run --offline" in workflow
           assert "experiments/freedm-open/live.py" in workflow
           assert "OPENAI_API_KEY" not in workflow
-          print('Open-VLM comparison is owner-only, zero API credits and no automatic model download')
+          probe=Path('.github/workflows/freedm-qwen2b-probe.yml').read_text()
+          head=probe.split('permissions:',1)[0]
+          assert 'workflow_dispatch:' in head
+          assert not re.search(r'^\s+(push|pull_request|schedule):',head,re.M)
+          assert "github.actor == 'EmergentMonk'" in probe
+          assert "github.ref == 'refs/heads/main'" in probe
+          assert "inputs.acknowledge_local_execution == true" in probe
+          assert 'OPENAI_API_KEY' not in probe
+          assert 'ollama pull' not in probe
+          assert 'experiments/freedm-open/live.py' not in probe
+          probe_script=Path('experiments/freedm-open/qwen2b_probe.py').read_text()
+          assert 'qwen3-vl:2b' in probe_script
+          assert 'https://api.openai.com' not in probe_script
+          assert 'TERRA_MATCH_SHA256' in source
+          print('Open-VLM and Qwen2B isolation are owner-only, zero API credits, and do not auto-download models')
           PY
