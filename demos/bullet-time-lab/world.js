@@ -60,7 +60,7 @@ export function stepBulletLab(state,input={},optimized=true){
     const wall=optimized?COVER_INDEX.castSegment(origin,delta,{halfSize:.065}):
       castSegment(origin,delta,COVER,{halfSize:.065});
     const actor=shot.team==='player'?
-      (respawn>0?null:castMovingSegment(origin,delta,[{
+      (respawn>0||targetHealth<=0?null:castMovingSegment(origin,delta,[{
         ...person('target',state.enemyX,19.5),displacement:[enemyX-state.enemyX,0,0]
       }],{halfSize:.065})):
       castMovingSegment(origin,delta,[{
