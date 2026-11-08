@@ -64,12 +64,50 @@ jobs:
             exit 1
           }
           echo "FREEDM_QWEN2B_EVIDENCE=$evidence" >> "$GITHUB_ENV"
-      - name: Qwen3-VL 2B text-only then exact-paired image response isolation
+      - name: Qwen3-VL 2B source-pinned local model isolation with bounded Ollama lifecycle
         shell: bash
+        env:
+          OLLAMA_HOST: "127.0.0.1:11434"
         run: |
           set -euo pipefail
-          # 14 one-shot requests to local Ollama only; no pulls, external APIs,
-          # arbitrary shell from model output, game engine or paid services.
+          # A CLI binary does not imply the Ollama HTTP server is running.
+          # Reuse a healthy localhost server; otherwise start ONLY an owned
+          # ephemeral loopback process for this step. No systemd, service
+          # installation, model pulling, cloud routing or external API.
+          ollama_pid=''
+          stop_owned_ollama() {
+            if [ -n "$ollama_pid" ]; then
+              kill "$ollama_pid" 2>/dev/null || true
+              wait "$ollama_pid" 2>/dev/null || true
+            fi
+          }
+          trap stop_owned_ollama EXIT
+          health() {
+            python3 experiments/freedm-open/ollama_health.py --quiet
+          }
+          if health; then
+            echo 'Local Ollama HTTP server already responsive; leaving it running.'
+          else
+            log="$RUNNER_TEMP/freedm-qwen2b-ollama-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT.log"
+            # An unprivileged, non-persistent child; process PID is tracked.
+            (umask 077; exec ollama serve > "$log" 2>&1) &
+            ollama_pid=$!
+            ready=false
+            for attempt in $(seq 1 30); do
+              if health; then ready=true; break; fi
+              if ! kill -0 "$ollama_pid" 2>/dev/null; then break; fi
+              sleep 1
+            done
+            if [ "$ready" != true ]; then
+              echo 'Local Ollama did not become ready at 127.0.0.1:11434.' >&2
+              echo 'Check whether another process owns port 11434 or model service startup failed.' >&2
+              tail -n 15 "$log" >&2 || true
+              exit 1
+            fi
+            echo 'Started temporary loopback Ollama; will stop only our child on step exit.'
+          fi
+          python3 experiments/freedm-open/ollama_health.py
+          # 14 one-shot requests; no pulls, OpenAI API keys or ViZDoom.
           # Both modalities use byte-identical prompts per experiment pair.
           python3 experiments/freedm-open/qwen2b_probe.py \
             --source "$FREEDM_QWEN2B_SOURCE" \

@@ -111,11 +111,27 @@ exist at:
 
     ~/.local/state/qsol/vanillajs/freedm-terra/run-42374695320-1/match/
 
-Ollama must be running locally on 127.0.0.1:11434 with the **exact**
-model digest above. This experiment refuses any silent upgrade or
-model replacement. If the digest is different, investigate and
-revise the experiment through a separately reviewed PR; do not
-suppress the identity gate.
+Ollama must be reachable locally on 127.0.0.1:11434 with the
+**exact** model digest above. The owner-only workflow now checks the
+local HTTP /api/version endpoint first. It reuses a healthy service if
+one is already present, **otherwise starts an unprivileged temporary
+`ollama serve` process bound to 127.0.0.1:11434** and terminates only
+that owned process when the probe step exits. It does not install
+packages, start a system service, pull model weights, use cloud endpoints
+or terminate a preexisting healthy Ollama service.
+
+If the temporary server cannot bind or become ready, the workflow
+fails with a specific local-service diagnostic and startup log instead
+of the earlier generic URLError. For manual verification on the runner:
+
+~~~sh
+python3 experiments/freedm-open/ollama_health.py
+ollama list
+~~~
+
+The model digest is checked independently before and after inference.
+If different, investigate and revise the experiment through another
+reviewed PR; never bypass the identity gate.
 
 No model installation is required if the same v2 model is still
 installed. The script uses only the Python standard library plus
