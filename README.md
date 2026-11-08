@@ -203,7 +203,7 @@ Neither kernel replaces the existing character solver, Integer Foundry or render
 ## Integer engine — new development track
 
 The new core runs authoritative game state on checked signed 32-bit fixed-point
-values: **65,536 subunits per metre**, integer ticks and exact BigInt
+values: **65,536 subunits per metre**, integer ticks and independently rewritten exact 16-bit-limb scalar arithmetic with BigInt
 multiply/divide intermediates. It provides atomic kinematic world updates,
 static box collision, seeded integer randomness, canonical snapshots and bounded
 input replay. Browser presentation converts positions to metres at the renderer.
