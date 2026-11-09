@@ -1,0 +1,91 @@
+{
+  "kind": "qsol.vanillajs.qfloat.arcade-witness.v1",
+  "status": "PASS",
+  "sourceHead": "16f252aaea93b8956d2055e49689372164b2b356",
+  "arcadeCommit": "f29b780734a50171d55ae2f770930db8a487b31c",
+  "sourceManifest": [
+    {
+      "path": "arcade3/qfloat-lab.html",
+      "bytes": 4547,
+      "sha256": "96330c49775216f805d8a6595f48b15cbac38affe76830742105b5eb981b29da",
+      "sourceCommit": "f29b780734a50171d55ae2f770930db8a487b31c"
+    },
+    {
+      "path": "arcade3/qfloat-lab.css",
+      "bytes": 4392,
+      "sha256": "670ceeeeb480ece97bf0c3c31700b90b96e84cd383e153b330825d373aa99d55",
+      "sourceCommit": "f29b780734a50171d55ae2f770930db8a487b31c"
+    },
+    {
+      "path": "arcade3/qfloat-lab.js",
+      "bytes": 6280,
+      "sha256": "776ded66add7c3822c7ee123b44eaa1a7725b865cbf3df3e56d544d7fc4af3e4",
+      "sourceCommit": "f29b780734a50171d55ae2f770930db8a487b31c"
+    },
+    {
+      "path": "arcade3/qfloat-sim.js",
+      "bytes": 2860,
+      "sha256": "e4bc03daf1dc481fb8ff2cf882d83de2ac68ff300297a3c89e24154259d318dd",
+      "sourceCommit": "f29b780734a50171d55ae2f770930db8a487b31c"
+    },
+    {
+      "path": "arcade2/qfloat.js",
+      "bytes": 4016,
+      "sha256": "ad34ff36359587c66a6f3098eb8a4c9624b10ffc05f93ed8e1dfb365be77114b",
+      "sourceCommit": "f29b780734a50171d55ae2f770930db8a487b31c"
+    },
+    {
+      "path": "arcade2/engine.js",
+      "bytes": 15407,
+      "sha256": "ae44302ce1c1030982ef84d2e995c3f0af22777044f72beda896ed9746e0dae4",
+      "sourceCommit": "f29b780734a50171d55ae2f770930db8a487b31c"
+    }
+  ],
+  "runnerTools": [
+    {
+      "path": "scripts/qfloat-arcade-witness.mjs",
+      "sha256": "9be7af8105373519fda4c632a54ea6b25fe9ec6eb9f16aaf833aa817cfc1c4e4"
+    },
+    {
+      "path": "scripts/rtx-playwright.mjs",
+      "sha256": "e6ce1b16c954ebfcc38293df5c29a8e0e0b9aa8dce09cf339925f44da488e7e8"
+    },
+    {
+      "path": ".github/workflows/rtx5060ti-qfloat.yml",
+      "sha256": "74f299d1bff9b005b33204562f36999347bac90ade3fe1e83605e72230c74b72"
+    }
+  ],
+  "host": {
+    "runner": "ubuntu",
+    "os": "linux",
+    "cpu": "AMD Ryzen 9 5950X 16-Core Processor",
+    "node": "v22.18.0",
+    "playwright": "1.64.0"
+  },
+  "startedAt": "2026-11-09T13:35:57.957Z",
+  "completedAt": "2026-11-09T13:36:03.504Z",
+  "browser": "156.0.8078.79",
+  "observation": {
+    "passed": true,
+    "checks": [
+      "decimal illusion and exact 19660 subunits",
+      "actual Canvas2D pixels",
+      "focus loss while already paused, missing keyup",
+      "real keyboard and exact 81920 raw subunit tick",
+      "simultaneous keyboard aliases",
+      "real 60Hz timer with stable pause",
+      "guarded speed rejection and integer reset",
+      "invalid decimal input rejection",
+      "390px responsive display without overflow"
+    ],
+    "errors": [],
+    "pixel": [
+      134,
+      255,
+      226,
+      255
+    ],
+    "overflow": -15
+  },
+  "failures": []
+}
