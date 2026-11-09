@@ -14,7 +14,7 @@ from urllib.request import Request, urlopen
 
 MODEL = "gpt-6-astra"
 MAX_INPUT_BYTES = 20_000
-MAX_OUTPUT_TOKENS = 3_000
+MAX_OUTPUT_TOKENS = 10_000
 MAX_CALLS = 3
 MAX_AUTHORIZED_USD = 30.0
 # Deliberately much higher than documented Standard prices ($5/$25 per
@@ -27,8 +27,10 @@ STANDARD_OUTPUT_PER_M = 25.0
 LENSES = (
     ("statistics", "Audit paired order, independence, warmups, noise, medians, "
      "selection bias, uncertainty and unsupported speedup extrapolations."),
-    ("systems", "Audit whether collision query, index construction, rendering, "
-     "CacheStorage validation, WebGL and memory are measured in compatible ways."),
+    ("systems", "Identify concrete, falsifiable optimization opportunities beyond "
+     "existing query/index/frame reuse, including topology-aware spatial indexing, "
+     "CacheStorage validation cost and WebGL pipeline boundaries. For each, "
+     "propose a minimal exact reference fixture and an independent benchmark."),
     ("adversarial", "Construct falsifiable negative controls for missed hits, stale "
      "frame keys, cache corruption and hidden performance regressions."),
 )
