@@ -91,6 +91,159 @@ function syncEditor(){
   parentSelect.value=e.parent??'';
   requestFrame();
 }
+function syncAssets(){
+  const list=$('asset-list'),previous=chosenAsset;
+  list.replaceChildren();
+  for(const asset of library.assets){
+    const option=document.createElement('option');
+    option.value=asset.id;
+    option.textContent=asset.kind.toUpperCase()+' · '+asset.name+
+      (asset.sourceSha256?' · '+asset.sourceSha256.slice(0,8):'');
+    list.append(option);
+  }
+  if(previous&&library.assets.some(asset=>asset.id===previous))list.value=previous;
+  else chosenAsset=null;
+  $('asset-count').textContent=library.assets.length+' assets';
+  const current=library.assets.find(asset=>asset.id===chosenAsset);
+  $('asset-attach').disabled=playing||!selected||!current||
+    !['mesh','material'].includes(current.kind);
+  $('asset-instance').disabled=playing||current?.kind!=='prefab';
+  $('asset-make-prefab').disabled=playing||!selected;
+  $('asset-clear').disabled=playing||!selected;
+}
+function activeAsset(){return library.assets.find(asset=>asset.id===chosenAsset)??null;}
+function assetUpdated(message){
+  markGeometry();syncEditor();inform(message);
+}
+async function digestSource(bytes){
+  const result=await crypto.subtle.digest('SHA-256',bytes);
+  return [...new Uint8Array(result)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+}
+async function importObjFile(file){
+  if(file.size>64*1024)throw new RangeError('OBJ source exceeds 64 KiB');
+  const bytes=await file.arrayBuffer();
+  const text=new TextDecoder('utf-8',{fatal:true}).decode(bytes);
+  const result=addMeshAsset(library,{
+    name:file.name.slice(0,64),sourceName:file.name.slice(0,64),
+    sourceSha256:await digestSource(bytes),license:$('asset-license').value,text
+  });
+  library=result.library;chosenAsset=result.id;
+  assetUpdated('Verified local OBJ geometry · '+file.name);
+}
+async function importPngFile(file){
+  if(file.size>64*1024)throw new RangeError('PNG source exceeds 64 KiB');
+  const raw=new Uint8Array(await file.arrayBuffer());
+  const signature=[137,80,78,71,13,10,26,10];
+  if(!signature.every((n,i)=>raw[i]===n))throw new TypeError('Not a PNG file');
+  const image=await createImageBitmap(new Blob([raw],{type:'image/png'}),
+    {colorSpaceConversion:'none',premultiplyAlpha:'none'});
+  try{
+    if(image.width<1||image.height<1||image.width>64||image.height>64)
+      throw new RangeError('PNG must be at most 64×64 pixels');
+    const buffer=document.createElement('canvas');
+    buffer.width=image.width;buffer.height=image.height;
+    const ctx=buffer.getContext('2d',{willReadFrequently:true});
+    if(!ctx)throw new Error('2D image decoder unavailable');
+    ctx.drawImage(image,0,0);
+    const rgba=new Uint8Array(ctx.getImageData(0,0,image.width,image.height).data);
+    const result=addTextureAsset(library,{
+      name:file.name.slice(0,64),sourceName:file.name.slice(0,64),
+      sourceSha256:await digestSource(raw),license:$('asset-license').value,
+      width:image.width,height:image.height,bytes:rgba
+    });
+    library=result.library;chosenAsset=result.id;
+    assetUpdated('Imported canonical opaque PNG texels · '+file.name);
+  }finally{image.close();}
+}
+for(const [element,run]of [['asset-obj',importObjFile],['asset-png',importPngFile]]){
+  $(element).addEventListener('change',async event=>{
+    if(playing)return;
+    const file=event.target.files?.[0];event.target.value='';if(!file)return;
+    try{await run(file);}
+    catch(error){inform('Asset rejected: '+error.message,true);}
+  });
+}
+$('asset-list').addEventListener('change',event=>{
+  chosenAsset=event.target.value||null;syncAssets();
+});
+$('asset-attach').addEventListener('click',()=>{
+  if(playing||!selected)return;
+  try{
+    const asset=activeAsset();if(!asset||!['mesh','material'].includes(asset.kind))
+      throw new TypeError('Select a mesh or material first');
+    const clean=prunePlacements(editScene(),library),
+      previous=clean.placements.find(p=>p.entityId===selected);
+    library=setPlacement(editScene(),clean,selected,
+      asset.kind==='mesh'?asset.id:previous?.meshId??null,
+      asset.kind==='material'?asset.id:previous?.materialId??null);
+    assetUpdated('Attached '+asset.kind+' · '+asset.name);
+  }catch(error){inform('Attachment rejected: '+error.message,true);}
+});
+$('asset-clear').addEventListener('click',()=>{
+  if(playing||!selected)return;
+  try{
+    library=setPlacement(editScene(),prunePlacements(editScene(),library),selected);
+    assetUpdated('Cleared selected object asset attachments');
+  }catch(error){inform(error.message,true);}
+});
+$('asset-make-material').addEventListener('click',()=>{
+  if(playing)return;
+  try{
+    const color=$('asset-material-color').value,texture=activeAsset(),
+      rgb=[1,3,5].map(i=>parseInt(color.slice(i,i+2),16)/255);
+    const result=addMaterialAsset(prunePlacements(editScene(),library),{
+      name:'Material '+library.nextId,license:$('asset-license').value,color:rgb,
+      textureId:texture?.kind==='texture'?texture.id:null
+    });
+    library=result.library;chosenAsset=result.id;
+    assetUpdated('Authored material · '+result.id);
+  }catch(error){inform('Material rejected: '+error.message,true);}
+});
+$('asset-make-prefab').addEventListener('click',()=>{
+  if(playing||!selected)return;
+  try{
+    const scene=editScene(),o=scene.objects.find(e=>e.id===selected);
+    const result=addPrefabAsset(scene,prunePlacements(scene,library),selected,
+      (o.name+' Prefab').slice(0,64),$('asset-license').value);
+    library=result.library;chosenAsset=result.id;
+    assetUpdated('Saved reusable prefab · '+result.id);
+  }catch(error){inform('Prefab rejected: '+error.message,true);}
+});
+$('asset-instance').addEventListener('click',()=>{
+  if(playing)return;
+  try{
+    const asset=activeAsset();
+    if(asset?.kind!=='prefab')throw new TypeError('Select a prefab first');
+    const result=instantiatePrefab(editScene(),
+      prunePlacements(editScene(),library),asset.id);
+    library=result.library;
+    applyScene(result.scene,result.selected);
+    inform('Prefab instantiated · '+asset.name);
+  }catch(error){inform('Instantiation rejected: '+error.message,true);}
+});
+$('asset-save-project').addEventListener('click',()=>{
+  if(playing)return;
+  try{
+    const scene=editScene(),raw=serializeProject(scene,prunePlacements(scene,library));
+    download('vanillajs-'+scene.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')+
+      '.vproject.json',raw);
+    inform('Exported complete local project (scene + assets + provenance)');
+  }catch(error){inform('Project export rejected: '+error.message,true);}
+});
+$('asset-open-project').addEventListener('change',async event=>{
+  if(playing)return;
+  const file=event.target.files?.[0];event.target.value='';if(!file)return;
+  try{
+    if(file.size>MAX_PROJECT_BYTES)throw new RangeError('project exceeds 256 KiB');
+    const imported=parseProject(await file.text());
+    const scene=upgradeScene(imported.scene);
+    library=validateAssetLibrary(imported.library,scene);
+    history=makeHistory(scene);selected=scene.objects[0]?.id??null;draft=null;
+    chosenAsset=null;markGeometry();syncEditor();
+    inform('Loaded local asset project · '+file.name);
+  }catch(error){inform('Project rejected: '+error.message,true);}
+});
+
 function select(id){
   if(selected===id)return;
   selected=id;markGeometry();syncEditor();
