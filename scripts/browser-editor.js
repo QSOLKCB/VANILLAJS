@@ -17,16 +17,21 @@ export async function verifyEditor(browser,base){
     // presenting an HTML editor mockup. Draw a frame first, then read back
     // pixels in the same animation callback (preserveDrawingBuffer:false).
     const bright=await page.locator('#view').evaluate(canvas=>new Promise(resolve=>{
+      // Trigger an actual renderer frame before readback, since the WebGL
+      // backbuffer is not preserved between compositor frames by default.
+      canvas.dispatchEvent(new WheelEvent('wheel',{deltaY:1,bubbles:true,cancelable:true}));
       requestAnimationFrame(()=>{
-        const gl=canvas.getContext('webgl'),p=new Uint8Array(4*16*16);
-        gl.readPixels(Math.floor(canvas.width/2)-8,Math.floor(canvas.height/2)-8,
-          16,16,gl.RGBA,gl.UNSIGNED_BYTE,p);
-        let nonempty=0;
-        for(let i=0;i<p.length;i+=4)if(p[i]+p[i+1]+p[i+2]>8)nonempty++;
-        resolve(nonempty);
+        const gl=canvas.getContext('webgl'),w=Math.min(canvas.width,200),h=Math.min(canvas.height,160);
+        const x=Math.floor((canvas.width-w)/2),y=Math.floor((canvas.height-h)/2);
+        const pixels=new Uint8Array(w*h*4);
+        gl.readPixels(x,y,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+        let colored=0;
+        for(let i=0;i<pixels.length;i+=4)
+          if(pixels[i]>65||pixels[i+1]>65||pixels[i+2]>65)colored++;
+        resolve(colored);
       });
     }));
-    assert.ok(bright>0,'WebGL output must have pixels');
+    assert.ok(bright>0,'actual WebGL geometry must produce colored pixels');
 
     await page.locator('#add').click();
     assert.equal(await page.locator('#count').textContent(),'5');
