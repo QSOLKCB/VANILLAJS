@@ -22,7 +22,34 @@
 <div class="tree-tools"><button id="add" title="Add a root cube">+ Cube</button><button id="add-child" title="Add child under selection">+ Child</button>
 <button id="duplicate" title="Duplicate selection and descendants">Duplicate</button><button id="remove" title="Delete selected subtree">Delete</button></div>
 <div id="hierarchy" class="hierarchy" role="tree" aria-label="Scene objects"></div>
-<div class="panel-foot">Component-driven scenes · 128-object maximum · local JSON projects</div></aside>
+<section class="asset-foundry" aria-label="Asset Foundry">
+  <div class="asset-header"><small>ASSET FOUNDRY · v1.6</small><strong id="asset-count">0 assets</strong></div>
+  <label>Asset rights / provenance<select id="asset-license">
+    <option value="OWNER-LOCAL-ONLY">Owner / local only</option>
+    <option value="CC0-1.0">CC0-1.0 (declare rights)</option>
+    <option value="CC-BY-4.0">CC-BY-4.0 (declare rights)</option>
+    <option value="Apache-2.0">Apache-2.0 (declare rights)</option>
+    <option value="MIT">MIT (declare rights)</option>
+  </select></label>
+  <div class="asset-buttons">
+    <label class="import">Import OBJ<input id="asset-obj" type="file" accept=".obj,text/plain"></label>
+    <label class="import">Import PNG<input id="asset-png" type="file" accept="image/png,.png"></label>
+  </div>
+  <label>Asset library<select id="asset-list" size="5" aria-label="Project assets"></select></label>
+  <div class="asset-buttons">
+    <button id="asset-attach" type="button">Attach to selected</button>
+    <button id="asset-clear" type="button">Clear attachment</button>
+  </div>
+  <label>New material colour<input id="asset-material-color" type="color" value="#54bff2"></label>
+  <div class="asset-buttons"><button id="asset-make-material" type="button">Create material</button>
+    <button id="asset-make-prefab" type="button">Save prefab</button>
+    <button id="asset-instance" type="button">Instance prefab</button></div>
+  <div class="asset-buttons project-actions"><button id="asset-save-project" type="button">Export project</button>
+    <label class="import">Open project<input id="asset-open-project" type="file" accept=".vproject.json,.json"></label>
+  </div>
+  <p class="asset-note">Local assets only · source SHA-256 · strict OBJ · PNG max 64×64 · image colours baked into mesh vertices. No external downloads.</p>
+</section>
+<div class="panel-foot">Component-driven scenes · local OBJ/PNG/material/prefab projects · Apache-2.0 engine</div></aside>
 <section class="center"><div class="viewport-head"><span><i></i> <strong id="mode">EDIT</strong> · <span id="active-scene">New World</span></span>
 <span id="selection-name">No selection</span></div>
 <div class="forge-tools" id="forge-tools" role="toolbar" aria-label="Transform gizmo tools">
@@ -72,6 +99,6 @@
 <h3>Engine boundaries</h3><p>Box mesh editor with X/Y/Z move and scale, Y rotation, snapping and authored components. Dynamic-dynamic and rotated collisions, imported meshes, scripting, materials and standalone export are not yet implemented.</p>
 <a href="../../docs/EDITOR_WORKBENCH.md">Contracts and roadmap ↗</a></section>
 </aside></main>
-<footer>QSOL–IMC · Make amazing alien tech and put it under an Apache 2.0 license. · The Component Forge v1.5.0 Alpha</footer>
+<footer>QSOL–IMC · Make amazing alien tech and put it under an Apache 2.0 license. · The Asset Foundry v1.6.0 Alpha · Sound Forge is next</footer>
 <script type="module" src="./app.js"></script><script type="module" src="../../offline/register.js"></script>
 </body></html>
