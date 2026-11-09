@@ -3,6 +3,7 @@
 import {boxMeshBatch} from '../../modules/geometry/index.js';
 import {perspective,multiplyMatrices,normalize,cross,dot} from '../../modules/math/index.js';
 import {sceneWorld} from './model.js';
+import {validateAssetLibrary} from './asset-foundry.js';
 
 const FOV=Math.PI/2.6;
 export function cameraBasis(camera){
@@ -100,23 +101,55 @@ export function displayWorld(scene,preview=null){
 }
 // Static resource model, not a measure of total process RSS or GPU driver VRAM.
 export const MAX_EDITOR_GEOMETRY_BYTES=128*36*6*4;
-export function sceneResourceBudget(world){
-  if(!Array.isArray(world))throw new TypeError('world entities must be an array');
-  const visible=world.filter(entity=>entity.visible).length;
-  if(visible>128)throw new RangeError('editor geometry budget exceeded');
-  const vertexBytes=visible*36*6*4;
-  return Object.freeze({visibleBoxes:visible,vertexBytes,
-    estimatedRetainedBytes:vertexBytes*3,geometryBudgetBytes:MAX_EDITOR_GEOMETRY_BYTES});
+export const MAX_FOUNDRY_GEOMETRY_BYTES=2*1024*1024;
+const tint=(color,texture,u,v)=>{
+  if(!texture)return color;
+  const x=Math.min(texture.width-1,Math.max(0,Math.round(u*(texture.width-1)))),
+    y=Math.min(texture.height-1,Math.max(0,Math.round((1-v)*(texture.height-1))));
+  return color.map((value,i)=>value*texture.pixels[(y*texture.width+x)*4+i]/255);
+};
+function prepare(world,library){
+  const assets=library?validateAssetLibrary(library):null,
+    map=new Map(assets?.assets.map(a=>[a.id,a])??[]),
+    placement=new Map(assets?.placements.map(p=>[p.entityId,p])??[]);
+  const boxes=[],models=[];
+  for(const e of world)if(e.visible){
+    const p=placement.get(e.id),mesh=p?.meshId?map.get(p.meshId):null;
+    if(mesh&&mesh.kind==='mesh'){
+      const mat=p.materialId?map.get(p.materialId):null,
+        tex=mat?.textureId?map.get(mat.textureId):null;
+      const texture=tex?{width:tex.width,height:tex.height,
+        pixels:Uint8Array.from(atob(tex.rgba),x=>x.charCodeAt(0))}:null;
+      models.push({e,mesh,material:mat,texture});
+    }else{
+      const material=p?.materialId?map.get(p.materialId):null;
+      boxes.push(material?.kind==='material'?{...e,color:material.color}:e);
+    }
+  }
+  return {boxes,models};
 }
-export function createSceneVertices(world,selected=null){
-  sceneResourceBudget(world);
-  const boxes=world.filter(e=>e.visible);
+function budgetPrepared({boxes,models},hasLibrary){
+  const visible=boxes.length+models.length;
+  if(visible>128)throw new RangeError('editor geometry budget exceeded');
+  const vertices=boxes.length*36+models.reduce((n,o)=>n+o.mesh.vertices.length/5,0),
+    vertexBytes=vertices*6*4,limit=hasLibrary?MAX_FOUNDRY_GEOMETRY_BYTES:MAX_EDITOR_GEOMETRY_BYTES;
+  if(vertexBytes>limit)throw new RangeError('mesh upload exceeds retained geometry budget');
+  return Object.freeze({visibleBoxes:visible,vertexBytes,
+    estimatedRetainedBytes:vertexBytes*3,geometryBudgetBytes:limit});
+}
+export function sceneResourceBudget(world,library=null){
+  if(!Array.isArray(world))throw new TypeError('world entities must be an array');
+  return budgetPrepared(prepare(world,library),Boolean(library));
+}
+export function createSceneVertices(world,selected=null,library=null){
+  if(!Array.isArray(world))throw new TypeError('world entities must be an array');
+  const {boxes,models}=prepare(world,library);
+  budgetPrepared({boxes,models},Boolean(library));
   const packed=boxMeshBatch(boxes.map(e=>({
     center:e.position,size:e.scale,
     color:e.id===selected?e.color.map(x=>Math.min(1,x*.65+.35)):e.color
   })));
-  // Geometry layer provides exact unrotated Float32 upload bytes. Rotation
-  // is an explicit editor extension applied once per dirty scene revision.
+  // Geometry layer provides exact unrotated Float32 box bytes.
   const perBox=36*6;
   for(let j=0;j<boxes.length;j++){
     const box=boxes[j],a=box.rotationY*Math.PI/180,
@@ -128,5 +161,25 @@ export function createSceneVertices(world,selected=null){
       packed[i+2]=box.position[2]-s*dx+c*dz;
     }
   }
-  return packed;
+  if(!models.length)return packed;
+  const output=new Float32Array(packed.length+
+    models.reduce((n,o)=>n+o.mesh.vertices.length/5*6,0));
+  output.set(packed);let offset=packed.length;
+  for(const {e,mesh,material,texture} of models){
+    const color=material?.color??e.color,a=e.rotationY*Math.PI/180,
+      c=Math.cos(a),s=Math.sin(a),values=mesh.vertices;
+    for(let i=0;i<values.length;i+=5){
+      const dx=values[i]*e.scale[0],y=values[i+1]*e.scale[1],
+        dz=values[i+2]*e.scale[2];
+      const rgb=tint(color,texture,values[i+3],values[i+4])
+        .map(x=>e.id===selected?Math.min(1,x*.65+.35):x);
+      output[offset++]=e.position[0]+c*dx+s*dz;
+      output[offset++]=e.position[1]+y;
+      output[offset++]=e.position[2]-s*dx+c*dz;
+      output[offset++]=rgb[0];
+      output[offset++]=rgb[1];
+      output[offset++]=rgb[2];
+    }
+  }
+  return output;
 }

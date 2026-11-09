@@ -146,6 +146,68 @@ export async function verifyEditor(browser,base){
       buffer:Buffer.from('{"schemaVersion":1,"objects":[],"untrusted":true}')});
     assert.equal(await page.locator('#count').textContent(),'6');
     assert.match(await page.locator('#status').textContent(),/rejected/i);
+    // Asset Foundry: import a real local OBJ without external material URLs.
+    const sourceObj=['o AlienPlane','v -1 0 -1','v 1 0 -1','v 0 0 1',
+      'vt 0 0','vt 1 0','vt 0.5 1','f 1/1 2/2 3/3',''].join('\n');
+    await page.locator('#asset-obj').setInputFiles({
+      name:'alien.obj',mimeType:'text/plain',buffer:Buffer.from(sourceObj)});
+    await page.waitForFunction(()=>document.querySelector('#asset-count').textContent==='1 assets');
+    assert.match(await page.locator('#status').textContent(),/Verified local OBJ/);
+    await page.locator('#asset-attach').click();
+    assert.match(await page.locator('#status').textContent(),/Attached mesh/);
+
+    // Browser-generated PNG proves actual image decoding and canonical RGBA
+    // import without depending on an externally hosted image or test fixture.
+    const png64=await page.evaluate(()=>{
+      const c=document.createElement('canvas');c.width=2;c.height=2;
+      const ctx=c.getContext('2d');
+      ctx.fillStyle='#ff0000';ctx.fillRect(0,0,1,1);
+      ctx.fillStyle='#00ff00';ctx.fillRect(1,0,1,1);
+      ctx.fillStyle='#0000ff';ctx.fillRect(0,1,1,1);
+      ctx.fillStyle='#ffffff';ctx.fillRect(1,1,1,1);
+      return c.toDataURL('image/png').split(',')[1];
+    });
+    await page.locator('#asset-png').setInputFiles({
+      name:'pixels.png',mimeType:'image/png',buffer:Buffer.from(png64,'base64')});
+    await page.waitForFunction(()=>document.querySelector('#asset-count').textContent==='2 assets');
+    await page.locator('#asset-make-material').click();
+    assert.equal(await page.locator('#asset-count').textContent(),'3 assets');
+    await page.locator('#asset-attach').click();
+    assert.match(await page.locator('#status').textContent(),/Attached material/);
+
+    await page.locator('#asset-make-prefab').click();
+    assert.equal(await page.locator('#asset-count').textContent(),'4 assets');
+    const projectPromise=page.waitForEvent('download');
+    await page.locator('#asset-save-project').click();
+    const assetDownload=await projectPromise,assetStream=await assetDownload.createReadStream(),
+      assetChunks=[];
+    for await(const chunk of assetStream)assetChunks.push(chunk);
+    const complete=Buffer.concat(assetChunks).toString('utf8'),exported=JSON.parse(complete);
+    assert.equal(exported.format,'qsol.vanillajs.asset-project.v1');
+    assert.equal(exported.scene.schemaVersion,2);
+    assert.equal(exported.library.assets.length,4);
+    assert.ok(exported.library.assets.some(a=>a.kind==='mesh'&&/^[0-9a-f]{64}$/.test(a.sourceSha256)));
+    assert.ok(exported.library.assets.some(a=>a.kind==='texture'&&a.width===2));
+    assert.ok(exported.library.assets.some(a=>a.kind==='prefab'));
+    assert.ok(exported.library.placements.some(p=>p.entityId==='entity-4'));
+
+    await page.locator('#asset-instance').click();
+    assert.equal(await page.locator('#count').textContent(),'7');
+    await page.locator('#asset-open-project').setInputFiles({
+      name:'saved.vproject.json',mimeType:'application/json',buffer:Buffer.from(complete)});
+    await page.waitForFunction(()=>document.querySelector('#status').textContent===
+      'Loaded local asset project · saved.vproject.json');
+    assert.equal(await page.locator('#count').textContent(),'6');
+    assert.equal(await page.locator('#asset-count').textContent(),'4 assets');
+
+    await page.locator('#asset-open-project').setInputFiles({
+      name:'untrusted.vproject.json',mimeType:'application/json',
+      buffer:Buffer.from('{"format":"bad","scene":{},"library":{}}')});
+    await page.waitForFunction(()=>document.querySelector('#status').textContent.startsWith('Project rejected:'));
+    assert.match(await page.locator('#status').textContent(),/Project rejected/);
+    assert.equal(await page.locator('#asset-count').textContent(),'4 assets');
+    assert.equal(await page.locator('#count').textContent(),'6');
+
     assert.deepEqual(errors,[]);
     console.log('Visual Editor: real WebGL, hierarchy, inspector, undo/redo, duplicate, export/import, play/pause/stop, invalid import, 390px responsive layout passed.');
   }finally{await page.close();}

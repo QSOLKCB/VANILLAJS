@@ -50,3 +50,20 @@ footer{height:44px;display:flex;align-items:center;justify-content:center;paddin
 #components .row-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 #components input[type=number]{width:100%}
 @media(max-width:750px){.forge-tools{gap:5px}.forge-tools button{padding:6px 7px}.forge-tools .snap-label{flex-basis:100%}}
+
+/* Asset Foundry: all assets stay local, with explicit user-declared rights. */
+.asset-foundry{border-top:1px solid var(--line);margin-top:12px;padding:14px 0 6px}
+.asset-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+.asset-header small{font:10px ui-monospace,monospace;color:var(--accent);letter-spacing:1px}
+.asset-header strong{font:11px ui-monospace,monospace;color:var(--muted)}
+.asset-foundry>label{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted);margin-bottom:8px}
+.asset-foundry select,.asset-foundry input[type=color]{width:100%;font-size:12px}
+.asset-foundry select[size]{min-height:105px;padding:4px}
+.asset-foundry select option{padding:5px}
+.asset-buttons{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0}
+.asset-buttons button,.asset-buttons .import{font-size:11px;padding:7px 8px}
+.asset-foundry input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.asset-foundry .import{position:relative;overflow:hidden}
+.asset-foundry .asset-note{font-size:10px;color:var(--muted);line-height:1.5;margin:8px 0}
+.asset-foundry button:disabled,.asset-foundry .import:has(input:disabled){opacity:.4;pointer-events:none}
+@media(max-width:750px){.asset-foundry{max-width:480px}.hierarchy{max-height:150px}}
