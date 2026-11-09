@@ -61,7 +61,7 @@ jobs:
           print('Three independent model critiques completed; not a performance proof.')
           PY
       - name: Preserve sanitized research only on separate owner opt-in
-        if: ${{ inputs.publish_evidence == true }}
+        if: ${{ always() && inputs.publish_evidence == true && env.QSOL_RESEARCH_EVIDENCE != '' }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: proof-speed-research-${{ github.run_id }}-${{ github.run_attempt }}
@@ -72,3 +72,4 @@ jobs:
             ${{ env.QSOL_RESEARCH_EVIDENCE }}/systems.json
             ${{ env.QSOL_RESEARCH_EVIDENCE }}/adversarial.json
           retention-days: 14
+          if-no-files-found: warn
