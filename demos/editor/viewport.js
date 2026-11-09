@@ -95,7 +95,18 @@ export function displayWorld(scene,preview=null){
     return entity;
   });
 }
+// Static resource model, not a measure of total process RSS or GPU driver VRAM.
+export const MAX_EDITOR_GEOMETRY_BYTES=128*36*6*4;
+export function sceneResourceBudget(world){
+  if(!Array.isArray(world))throw new TypeError('world entities must be an array');
+  const visible=world.filter(entity=>entity.visible).length;
+  if(visible>128)throw new RangeError('editor geometry budget exceeded');
+  const vertexBytes=visible*36*6*4;
+  return Object.freeze({visibleBoxes:visible,vertexBytes,
+    estimatedRetainedBytes:vertexBytes*3,geometryBudgetBytes:MAX_EDITOR_GEOMETRY_BYTES});
+}
 export function createSceneVertices(world,selected=null){
+  sceneResourceBudget(world);
   const boxes=world.filter(e=>e.visible);
   const packed=boxMeshBatch(boxes.map(e=>({
     center:e.position,size:e.scale,
