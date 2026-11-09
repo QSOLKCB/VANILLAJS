@@ -1,0 +1,75 @@
+name: Proof of Speed - owner-authorized OpenAI adversarial research
+# Deliberately no push, PR or schedule triggers.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_paid_api:
+        description: "Authorize three bounded API critiques; US$30 is a total owner allocation"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Opt in to upload the sanitized source-bound research JSON"
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: proof-speed-paid-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  critique:
+    if: ${{ github.repository == 'QSOLKCB/VANILLAJS' && github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && github.run_attempt == 1 && inputs.acknowledge_paid_api == true }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Exact reviewed main, offline contract and source-bound preflight
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          python3 -m unittest discover -s tests -p 'test_proof_speed_research.py' -v
+          node --test tests/proof-speed.test.js
+          node scripts/proof-speed.mjs --check > /dev/null
+      - name: Generate measured evidence first, without API calls
+        run: |
+          node scripts/proof-speed.mjs --measure --out proof-speed.json
+          sha256sum -c proof-speed.SHA256SUMS
+          python3 scripts/proof_speed_research.py --report proof-speed.json --dry-run
+      - name: Three no-tool, single-request critiques; no retries
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/proof-speed-research-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          test ! -e "$evidence"
+          echo "QSOL_RESEARCH_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+          python3 scripts/proof_speed_research.py --report proof-speed.json --out "$evidence"
+          (cd "$evidence" && sha256sum -c SHA256SUMS)
+          python3 - "$evidence/RESEARCH.json" <<'PY'
+          import json,sys
+          r=json.load(open(sys.argv[1],encoding='utf-8'))
+          assert r['status']=='COMPLETE' and len(r['reports'])==3
+          print('Three independent model critiques completed; not a performance proof.')
+          PY
+      - name: Preserve sanitized research only on separate owner opt-in
+        if: ${{ always() && inputs.publish_evidence == true && env.QSOL_RESEARCH_EVIDENCE != '' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: proof-speed-research-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.QSOL_RESEARCH_EVIDENCE }}/RESEARCH.json
+            ${{ env.QSOL_RESEARCH_EVIDENCE }}/SHA256SUMS
+            ${{ env.QSOL_RESEARCH_EVIDENCE }}/statistics.json
+            ${{ env.QSOL_RESEARCH_EVIDENCE }}/systems.json
+            ${{ env.QSOL_RESEARCH_EVIDENCE }}/adversarial.json
+          retention-days: 14
+          if-no-files-found: warn

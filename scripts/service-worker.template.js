@@ -24,11 +24,15 @@ self.addEventListener('install',event=>event.waitUntil((async()=>{
   try{
     // Bounded parallel fetches; partial cache never becomes an active worker.
     for(let i=0;i<FILES.length;i+=6){
-      await Promise.all(FILES.slice(i,i+6).map(async entry=>{
+      // Await *every* in-flight write even if one request fails, so that
+      // partial-install cleanup cannot race with still-running cache puts.
+      const results=await Promise.allSettled(FILES.slice(i,i+6).map(async entry=>{
         const url=new URL(entry.path,self.registration.scope).href;
         const response=await verify(await fetch(url,{cache:'reload'}),entry);
         await cache.put(url,response);
       }));
+      const rejected=results.find(result=>result.status==='rejected');
+      if(rejected)throw rejected.reason;
     }
     const index=await cache.match(INDEX);
     if(!index)throw new Error('offline shell absent');
@@ -47,7 +51,12 @@ self.addEventListener('fetch',event=>{
   if(!entry)return; // Never cache third-party, user data, query URLs or API calls.
   event.respondWith((async()=>{
     const cache=await caches.open(CACHE),hit=await cache.match(url);
-    if(hit)return hit;
+    if(hit){
+      // CacheStorage is not an integrity oracle: detect post-install byte
+      // damage too. No persistent "verified key" shortcut across mutations.
+      try{return await verify(hit,entry);}
+      catch{await cache.delete(url);}
+    }
     try{
       const response=await verify(await fetch(req),entry);
       await cache.put(url,response.clone());

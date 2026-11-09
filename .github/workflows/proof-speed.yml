@@ -1,0 +1,63 @@
+name: Proof of Speed - paired CPU evidence
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: proof-speed-cpu-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  witness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Assert exact checkout
+        run: test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Verify full-output oracle, negative controls, cache failures and paid-API dry-run
+        run: |
+          node --test tests/proof-speed.test.js tests/offline-worker-proof.test.js
+          python3 -m unittest discover -s tests -p 'test_proof_speed_research.py' -v
+          node scripts/proof-speed.mjs --check > proof-speed-preflight.json
+      - name: Verify package and SHA-256 offline inventory
+        run: |
+          node scripts/check.js
+          node scripts/build.js
+          node scripts/verify-offline.js
+      - name: Record alternating, paired CPU observations including regressions
+        run: |
+          node scripts/proof-speed.mjs --measure --out proof-speed.json
+          sha256sum -c proof-speed.SHA256SUMS
+      - name: Summarise without claiming GPU FPS
+        run: |
+          python3 - <<'PY'
+          import json,os
+          report=json.load(open('proof-speed.json',encoding='utf-8'))
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as out:
+              out.write('## Proof of Speed — exact parity then host-local timings\n\n')
+              out.write('| Fixture | Reference median ms | Indexed/gated median ms | Ratio |\n|---|---:|---:|---:|\n')
+              for c in report['cases']:
+                  m=c['medianMs']
+                  out.write(f"| {c['fixture']} | {m['baseline']:.3f} | {m['optimized']:.3f} | {c['medianRatio']}× |\n")
+              out.write('\nRatios are CPU-only measurements and may be below 1. No GPU speedup is inferred.\n')
+          PY
+      - name: Preserve source-bound receipts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: proof-speed-cpu-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            proof-speed.json
+            proof-speed.SHA256SUMS
+            proof-speed-preflight.json
+            dist/manifest.json
+          retention-days: 14
+          if-no-files-found: warn

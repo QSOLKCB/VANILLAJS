@@ -21,10 +21,10 @@ export function createBulletLab(){
     stats:{fired:0,hits:0,kills:0,dodged:0},
     events:[],work:{staticCandidates:0,staticFull:0,staticQueries:0}};
 }
-export function stepBulletLab(state,input={},optimized=true){
+export function stepBulletLab(state,input={},optimized=true,instrument=true){
   if(!state||!Number.isSafeInteger(state.tick)||state.tick<0||state.tick>=108000)
     throw new RangeError('invalid or exhausted lab state');
-  if(typeof optimized!=='boolean'||![-1,0,1].includes(input.move??0)||
+  if(typeof optimized!=='boolean'||typeof instrument!=='boolean'||![-1,0,1].includes(input.move??0)||
      ['fire','focus','dodge'].some(k=>input[k]!==undefined&&typeof input[k]!=='boolean'))
     throw new TypeError('invalid lab input');
   const focusHeld=Boolean(input.focus)&&state.focus>=8;
@@ -56,7 +56,7 @@ export function stepBulletLab(state,input={},optimized=true){
   for(const shot of shots){
     const origin=[shot.x,1,shot.z],delta=[0,0,shot.vz*worldDt];
     work.staticQueries++;work.staticFull+=COVER.length;
-    work.staticCandidates+=optimized?COVER_INDEX.candidates(origin,delta,{halfSize:.065}).length:COVER.length;
+    if(instrument)work.staticCandidates+=optimized?COVER_INDEX.candidates(origin,delta,{halfSize:.065}).length:COVER.length;
     const wall=optimized?COVER_INDEX.castSegment(origin,delta,{halfSize:.065}):
       castSegment(origin,delta,COVER,{halfSize:.065});
     const actor=shot.team==='player'?

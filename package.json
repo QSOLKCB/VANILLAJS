@@ -8,6 +8,8 @@
   "scripts": {
     "test": "node --test tests/*.test.js",
     "check": "node scripts/check.js",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "proof:check": "node scripts/proof-speed.mjs --check",
+    "proof:measure": "node scripts/proof-speed.mjs --measure --out proof-speed.json"
   }
 }
