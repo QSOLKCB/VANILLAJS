@@ -94,6 +94,35 @@ export async function verifyEditor(browser,base){
     assert.equal(await meshEnabled.isChecked(),false);
     await meshEnabled.check();
 
+    // Native pointer-driven world X gizmo: edit, undo and redo one drag.
+    await page.locator('#hierarchy button[data-id="entity-4"]').click();
+    await page.locator('#gizmo-space').selectOption('world');
+    await page.locator('#gizmo-snap').check();
+    await page.locator('#tool-move').click();
+    const beforeX=Number(await page.locator('[data-axis="position"][data-i="0"]').inputValue());
+    const drag=await page.locator('#view').evaluate(async canvas=>{
+      const {projectPoint}=await import('/VANILLAJS/demos/editor/gizmos.js');
+      const rect=canvas.getBoundingClientRect(),
+        camera={yaw:38,pitch:23,distance:18,target:[0,1,0]};
+      const from=projectPoint(camera,[3,1,-3],rect.width,rect.height),
+        to=projectPoint(camera,[5.15,1,-3],rect.width,rect.height);
+      if(!from||!to)throw Error('cannot project world X gizmo');
+      return {start:{x:rect.x+from.x+(to.x-from.x)*.55,
+          y:rect.y+from.y+(to.y-from.y)*.55},
+        end:{x:rect.x+from.x+(to.x-from.x)*1.05,
+          y:rect.y+from.y+(to.y-from.y)*1.05}};
+    });
+    await page.mouse.move(drag.start.x,drag.start.y);
+    await page.mouse.down();
+    await page.mouse.move(drag.end.x,drag.end.y,{steps:7});
+    await page.mouse.up();
+    const movedX=Number(await page.locator('[data-axis="position"][data-i="0"]').inputValue());
+    assert.ok(movedX>beforeX+.25,'gizmo must commit a visible world-X move');
+    await page.locator('#undo').click();
+    assert.equal(Number(await page.locator('[data-axis="position"][data-i="0"]').inputValue()),beforeX);
+    await page.locator('#redo').click();
+    assert.equal(Number(await page.locator('[data-axis="position"][data-i="0"]').inputValue()),movedX);
+
     await page.locator('#play').click();
     assert.equal(await page.locator('#mode').textContent(),'PLAY');
     assert.equal(await page.locator('#object-name').isDisabled(),true);
