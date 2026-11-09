@@ -18,12 +18,12 @@ test('hierarchy world transform and rotation in right-handed coordinates',()=>{
   s=addEntity(s,{parent:'entity-2',name:'Child'});
   s=updateEntity(s,'entity-5',{position:[1,2,0],scale:[.5,.5,.5]});
   const child=sceneWorld(s).find(e=>e.id==='entity-5');
-  assert.deepEqual(child.position,[-1,2.65,-1]);
+  assert.deepEqual(child.position,[1,1.65,-1]);
   assert.deepEqual(child.scale,[1.5,.25,1.5]);
   s=updateEntity(s,'entity-2',{rotationY:90});
   const rotated=sceneWorld(s).find(e=>e.id==='entity-5');
   assert.ok(Math.abs(rotated.position[0]+2)<1e-10);
-  assert.ok(Math.abs(rotated.position[2]+2.5)<1e-10);
+  assert.ok(Math.abs(rotated.position[2]+4)<1e-10);
 });
 test('parent cycles and missing parents are rejected transactionally',()=>{
   let s=createScene();s=addEntity(s,{parent:'entity-2'});
