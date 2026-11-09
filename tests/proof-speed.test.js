@@ -3,6 +3,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {collisionFixture,labFixture,frameFixture,parity,negativeControl,measure,
   runFixture,fixtureSet} from '../scripts/proof-speed-core.mjs';
+import {createBulletLab,stepBulletLab,bulletReceipt} from '../demos/bullet-time-lab/world.js';
+import {createArcadeLab,stepArcadeLab,arcadeReceipt} from '../demos/arcade-lab/world.js';
 test('all fixture families have exact optimized/reference output parity',()=>{
   const kinds=new Set();
   for(const f of fixtureSet()){
@@ -40,4 +42,22 @@ test('fixture validation and unknown modes fail closed',()=>{
   assert.throws(()=>frameFixture(0),{code:'ERR_ASSERTION'});
   assert.throws(()=>runFixture({kind:'surprise'},true),/unknown/);
   assert.throws(()=>measure(frameFixture(2),{pairs:1}),{code:'ERR_ASSERTION'});
+});
+test('timed steppers omit diagnostic candidate scans without changing physics',()=>{
+  const b=createBulletLab(),input={fire:true,focus:true,move:1};
+  const withWork=stepBulletLab(b,input,true,true);
+  const withoutWork=stepBulletLab(b,input,true,false);
+  assert.deepEqual(bulletReceipt(withoutWork),bulletReceipt(withWork));
+  assert.equal(withoutWork.work.staticCandidates,0);
+  const a=createArcadeLab('brick');
+  const measured=stepArcadeLab(a,{launch:true,move:1},true,true);
+  const timed=stepArcadeLab(a,{launch:true,move:1},true,false);
+  assert.deepEqual(arcadeReceipt(timed),arcadeReceipt(measured));
+  assert.equal(timed.work.candidates,0);
+});
+test('arcade event receipts count only actual lives lost',()=>{
+  for(const [kind,expected] of [['brick',3],['bank',2]]){
+    const result=runFixture(labFixture(kind,1200),false,{audit:true});
+    assert.equal(result.events,expected,kind+' actual ball losses');
+  }
 });
