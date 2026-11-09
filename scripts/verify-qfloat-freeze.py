@@ -2,7 +2,7 @@
 """QFLOAT-001 receipt verification. Python stdlib; read-only and offline.
 
 Without --archive verifies only the frozen text receipts in Git.
-With --archive verifies all four original ZIP members and ZIP hash.
+With --archive verifies all five original ZIP members (including SHA256SUMS) and ZIP hash.
 Never claim screenshot bytes are present when only their hashes are known.
 """
 import argparse
@@ -25,6 +25,11 @@ EXPECTED = {
     "qfloat-desktop.png": "b2f3b9f2f28aad643c3a1cb723cfeae387ba089cbcb76177be0cd56444191d40",
     "qfloat-mobile.png": "fdc18ff5dc1fedf7fad3657a3374d0a4b2de93f3b297d64949ad3b3f8e2346fb",
 }
+# The self-checksum manifest has four entries; the original Actions ZIP has
+# those four payloads PLUS the SHA256SUMS manifest itself. Pin its own bytes
+# independently rather than rewriting the historical four-file manifest.
+MANIFEST_SHA256 = "822b994e0147e776ec94b29caf5530bf4fbd8fb702a3bc7dc9db95ab10d7b6db"
+EXPECTED_ZIP = {**EXPECTED, "SHA256SUMS": MANIFEST_SHA256}
 ASSETS = [
     "arcade3/qfloat-lab.html",
     "arcade3/qfloat-lab.css",
@@ -118,6 +123,7 @@ def verify(archive=None):
         "textReceiptsVerified": 2,
         "screenshotsVerified": 0,
         "archiveVerified": False,
+        "manifestMemberVerified": False,
     }
     if archive is not None:
         archive = Path(archive)
@@ -128,8 +134,8 @@ def verify(archive=None):
               "original artifact ZIP SHA-256 mismatch")
         with zipfile.ZipFile(archive) as package:
             items = package.infolist()
-            check(len(items) == len(EXPECTED), "ZIP file count mismatch")
-            check({item.filename for item in items} == set(EXPECTED),
+            check(len(items) == len(EXPECTED_ZIP), "ZIP file count mismatch")
+            check({item.filename for item in items} == set(EXPECTED_ZIP),
                   "ZIP contains unknown/missing members")
             check(sum(item.file_size for item in items) <= 512 * 1024,
                   "archive expanded byte limit exceeded")
@@ -137,13 +143,15 @@ def verify(archive=None):
                 check(item.file_size <= 256 * 1024, "oversized ZIP member")
                 check(not stat.S_ISLNK(item.external_attr >> 16), "symlink ZIP member")
                 raw = package.read(item)
-                check(digest(raw) == EXPECTED[item.filename],
+                check(digest(raw) == EXPECTED_ZIP[item.filename],
                       item.filename + " original ZIP member SHA-256 mismatch")
-                if item.filename in ("QFLOAT_ARCADE_REPORT.json", "SUMMARY.md"):
+                if item.filename in ("QFLOAT_ARCADE_REPORT.json", "SUMMARY.md",
+                                     "SHA256SUMS"):
                     check(raw == (FREEZE / item.filename).read_bytes(),
                           item.filename + " differs from original archive")
         result.update(scope="complete-original-artifact",
-                      screenshotsVerified=2, archiveVerified=True)
+                      screenshotsVerified=2, archiveVerified=True,
+                      manifestMemberVerified=True)
     return result
 
 
