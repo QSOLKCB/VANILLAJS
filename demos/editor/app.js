@@ -9,9 +9,13 @@ import {cameraMatrix,cameraRay,pickObject,createGridVertices,createSceneVertices
   displayWorld} from './viewport.js';
 import {PREVIEW_DT,createPreview,stepPreview} from './preview.js';
 import {gizmoLines,pickGizmo,axisDragAmount,applyGizmo} from './gizmos.js';
+import {createAssetLibrary,validateAssetLibrary,addMeshAsset,addTextureAsset,
+  addMaterialAsset,addPrefabAsset,instantiatePrefab,setPlacement,prunePlacements,
+  parseProject,serializeProject,MAX_PROJECT_BYTES} from './asset-foundry.js';
 
 const $=id=>document.getElementById(id),canvas=$('view');
 let history=makeHistory(createForgeScene()),selected='entity-3',draft=null,
+  library=createAssetLibrary(),chosenAsset=null,
   camera={yaw:38,pitch:23,distance:18,target:[0,1,0]},api=null,grid=null,mesh=null,
   gizmoMesh=null,gizmoTool='move',gizmoSpace='world',snapEnabled=true,
   playing=false,paused=false,simulation=null,geometryDirty=true,frameId=0,
@@ -38,6 +42,7 @@ function syncEditor(){
   $('pause').textContent=paused?'Resume':'Pause';
   $('stop').disabled=!playing;
   for(const id of editorIds)$(id).disabled=playing;
+  for(const el of $('asset-foundry-controls').querySelectorAll('button,input,select'))el.disabled=playing;
   $('undo').disabled=playing||history.past.length===0;
   $('redo').disabled=playing||history.future.length===0;
   $('properties').hidden=!selected;$('empty').hidden=!!selected;
@@ -63,6 +68,7 @@ function syncEditor(){
       hierarchy.append(row);visit(e.id,depth+1);
     }
   };visit(null,0);
+  syncAssets();
   if(!selected){requestFrame();return;}
   const e=byId.get(selected);
   $('object-name').value=e.name;$('object-body').value=e.body;
@@ -123,6 +129,7 @@ $('scene-name').addEventListener('change',()=>{
 $('new-scene').addEventListener('click',()=>{
   if(!confirm('Start a new scene? Save your current JSON project first if needed.'))return;
   history=makeHistory(createForgeScene());selected='entity-3';draft=null;
+  library=createAssetLibrary();chosenAsset=null;
   markGeometry();syncEditor();inform('New scene created');
 });
 function download(name,content){
@@ -141,6 +148,7 @@ $('open').addEventListener('change',async event=>{
     if(file.size>128*1024)throw new RangeError('scene exceeds 128 KiB');
     const raw=parseScene(await file.text()),scene=upgradeScene(raw);
     history=makeHistory(scene);selected=scene.objects[0]?.id??null;draft=null;
+    library=createAssetLibrary();chosenAsset=null;
     markGeometry();syncEditor();inform((raw.schemaVersion===1?'Migrated v1 → v2 · ':'Loaded v2 scene · ')+file.name);
   }catch(error){inform('Scene rejected: '+error.message,true);}
 });
@@ -205,7 +213,7 @@ function frame(now){
       if(geometryDirty){
         const world=displayWorld(history.present===editScene()?history.present:editScene(),
           playing?simulation:null);
-        api.updateMesh(mesh,createSceneVertices(world,playing?null:selected));
+        api.updateMesh(mesh,createSceneVertices(world,playing?null:selected,library));
         api.updateMesh(gizmoMesh,!playing&&selected?
           gizmoLines(sceneWorld(editScene()),selected,gizmoSpace,gizmoTool):new Float32Array());
         geometryDirty=false;
