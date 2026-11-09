@@ -207,7 +207,7 @@ function frame(now){
           playing?simulation:null);
         api.updateMesh(mesh,createSceneVertices(world,playing?null:selected));
         api.updateMesh(gizmoMesh,!playing&&selected?
-          gizmoLines(sceneWorld(editScene()),selected,gizmoSpace):new Float32Array());
+          gizmoLines(sceneWorld(editScene()),selected,gizmoSpace,gizmoTool):new Float32Array());
         geometryDirty=false;
       }
       api.beginFrame({vp:cameraMatrix(camera,width,height),fog:.008});
@@ -282,7 +282,7 @@ canvas.addEventListener('pointerdown',event=>{
         object=sceneWorld(editScene()).find(e=>e.id===selected);
       const axis=pickGizmo(camera,object,
         event.clientX-rect.left,event.clientY-rect.top,
-        rect.width,rect.height,gizmoSpace);
+        rect.width,rect.height,gizmoSpace,gizmoTool);
       if(axis&&(gizmoTool!=='rotate'||axis==='y'))
         gesture={kind:'gizmo',id:selected,axis,tool:gizmoTool,
           space:gizmoSpace,snapping:snapEnabled,object,
