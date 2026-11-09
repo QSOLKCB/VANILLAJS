@@ -1,5 +1,14 @@
 # VANILLAJS roadmap
 
+## QFLOAT-001 — integer-owned float-like authoring and RTX witness (development)
+
+- Native immutable QFloat numeric adapter over checked Q16.16 integer-math, with canonical decimal-string parsing and explicit presentation-only Number conversion.
+- Executed unit and exactness regressions precede any release. No new float math authority or performance claim.
+- Owner-only VANILLAJS RTX runner workflow validates the actual ARCADE QFloat Lab at a SHA-256-verified immutable ARCADE merge commit. The old ARCADE-only runner dispatch cannot reach the VANILLAJS repository runner.
+- No physical desktop execution before an approved merge and owner workflow_dispatch. Preserve original integer engine/replay/proofs.
+
+Details: [QFLOAT-001](docs/QFLOAT_001.md).
+
 ## Infrastructure — incremental Chromium witnesses (development)
 
 - Partition the six-minute all-browser experience into seven independent source-bound suites; restore identical reviewed-main PASS receipts and execute only stale suite closures.
