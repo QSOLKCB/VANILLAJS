@@ -60,12 +60,39 @@ export async function verifyEditor(browser,base){
     const chunks=[];for await(const chunk of bytes)chunks.push(chunk);
     const serialized=Buffer.concat(chunks).toString('utf8');
     const project=JSON.parse(serialized);
-    assert.equal(project.schemaVersion,1);
+    assert.equal(project.schemaVersion,2);
+    assert.ok(project.objects.every(e=>e.components?.mesh&&e.components?.collider));
+    assert.ok(project.objects.some(e=>e.components?.controller?.enabled));
     assert.equal(project.objects.length,6);
     assert.ok(project.objects.some(e=>e.name==='Alien Probe'));
     await page.locator('#open').setInputFiles({name:'saved.vscene.json',
       mimeType:'application/json',buffer:Buffer.from(serialized)});
     assert.equal(await page.locator('#count').textContent(),'6');
+    // A v1 export remains importable, and gets migrated to v2 in memory.
+    const oldFile={...project,schemaVersion:1,
+      objects:project.objects.map(({components,...legacy})=>legacy)};
+    await page.locator('#open').setInputFiles({name:'legacy.vscene.json',
+      mimeType:'application/json',buffer:Buffer.from(JSON.stringify(oldFile))});
+    assert.equal(await page.locator('#count').textContent(),'6');
+    assert.match(await page.locator('#status').textContent(),/Migrated v1/);
+    await page.locator('#open').setInputFiles({name:'saved.vscene.json',
+      mimeType:'application/json',buffer:Buffer.from(serialized)});
+    assert.equal(await page.locator('#count').textContent(),'6');
+    // New component controls are actual serialized, validated data.
+    await page.locator('#hierarchy button[data-id="entity-3"]').click();
+    const controller=page.locator('[data-component="controller"][data-field="enabled"]');
+    assert.equal(await controller.isChecked(),true);
+    await page.locator('#tool-rotate').click();
+    assert.equal(await page.locator('#tool-rotate').getAttribute('aria-pressed'),'true');
+    await page.locator('#tool-scale').click();
+    assert.equal(await page.locator('#tool-scale').getAttribute('aria-pressed'),'true');
+    await page.locator('#tool-move').click();
+    await page.locator('#gizmo-space').selectOption('local');
+    await page.locator('#gizmo-snap').uncheck();
+    const meshEnabled=page.locator('[data-component="mesh"][data-field="enabled"]');
+    await meshEnabled.uncheck();
+    assert.equal(await meshEnabled.isChecked(),false);
+    await meshEnabled.check();
 
     await page.locator('#play').click();
     assert.equal(await page.locator('#mode').textContent(),'PLAY');
