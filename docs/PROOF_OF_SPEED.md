@@ -74,9 +74,9 @@ state-machine harness. No unrelated users' caches are deleted.
 The OpenAI research workflow calls Responses with model gpt-6-astra, no tools,
 no server-side response storage and no retries. Three bounded critiques cover
 statistical inference, CPU/GPU/cache boundaries and adversarial negative controls.
-Each request is restricted to 20,000 UTF-8 bytes and 3,000 output tokens.
+Each request is restricted to 20,000 UTF-8 bytes and 10,000 output tokens.
 The budget uses a deliberately inflated US$60/US$300 per million
-input/output-token envelope, at most US$6.30 per dispatch versus the owner's
+input/output-token envelope, at most US$12.60 per dispatch versus the owner's
 US$30 **total** allocation. Provider pricing is subject to change; this is
 an engineering estimate, not a billing guarantee or account-wide budget.
 Do not dispatch again without independently reconciling earlier spending.
