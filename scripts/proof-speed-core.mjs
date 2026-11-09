@@ -72,11 +72,14 @@ function labRun(f,optimized,audit){
   let state=isBullet?createBulletLab():createArcadeLab(f.mode);
   let events=0,referenceChecks=0,conservativeCandidates=0;
   for(const input of f.input){
-    state=isBullet?stepBulletLab(state,input,optimized):stepArcadeLab(state,input,optimized);
+    const previousLives=isBullet?null:state.lives;
+    // Keep observer-only candidate traversals out of both timed paths.
+    state=isBullet?stepBulletLab(state,input,optimized,audit):
+      stepArcadeLab(state,input,optimized,audit);
     if(audit){
       const receipt=isBullet?bulletReceipt(state):arcadeReceipt(state);
       digest.update(JSON.stringify(receipt));digest.update('\n');
-      events+=isBullet?state.events.length:Number(state.last==='BALL LOST');
+      events+=isBullet?state.events.length:Math.max(0,previousLives-state.lives);
       referenceChecks+=state.work.staticFull??state.work.full;
       conservativeCandidates+=state.work.staticCandidates??state.work.candidates;
     }
