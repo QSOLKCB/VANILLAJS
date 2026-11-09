@@ -195,12 +195,15 @@ export async function verifyEditor(browser,base){
     assert.equal(await page.locator('#count').textContent(),'7');
     await page.locator('#asset-open-project').setInputFiles({
       name:'saved.vproject.json',mimeType:'application/json',buffer:Buffer.from(complete)});
+    await page.waitForFunction(()=>document.querySelector('#status').textContent===
+      'Loaded local asset project · saved.vproject.json');
     assert.equal(await page.locator('#count').textContent(),'6');
     assert.equal(await page.locator('#asset-count').textContent(),'4 assets');
 
     await page.locator('#asset-open-project').setInputFiles({
       name:'untrusted.vproject.json',mimeType:'application/json',
       buffer:Buffer.from('{"format":"bad","scene":{},"library":{}}')});
+    await page.waitForFunction(()=>document.querySelector('#status').textContent.startsWith('Project rejected:'));
     assert.match(await page.locator('#status').textContent(),/Project rejected/);
     assert.equal(await page.locator('#asset-count').textContent(),'4 assets');
     assert.equal(await page.locator('#count').textContent(),'6');
