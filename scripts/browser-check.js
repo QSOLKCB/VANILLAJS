@@ -4,6 +4,7 @@ import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 import assert from 'node:assert/strict';
+import {SUITES} from './browser-suite-cache.mjs';
 
 
 
@@ -22,7 +23,7 @@ import assert from 'node:assert/strict';
 
 
 // Hosted CI may run only the groups whose source-bound witness is stale.
-const SUITES=['home','render','play','worlds','research','donor','editor'];
+// One shared suite inventory governs both actual execution and cache planning.
 const args=process.argv.slice(2);
 if(args.length>1||(args.length===1&&!args[0].startsWith('--suites=')))
   throw new Error('usage: node scripts/browser-check.js [--suites=home,render,...]');
