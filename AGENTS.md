@@ -1,5 +1,8 @@
 # Repository engineering rules
 
+- QSOL-IMC motto: **Make amazing alien tech and put it under an Apache 2.0 license.**
+  Preserve Apache-2.0 SPDX headers and third-party attribution when adapting code.
+
 - Preserve the existing Apache-2.0 licence and provenance notices.
 - Runtime code uses native ES modules and browser standards. Keep third-party
   engines, npm runtime dependencies, CDNs and downloaded assets out of the core.
