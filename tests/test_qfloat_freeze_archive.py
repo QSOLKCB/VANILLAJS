@@ -8,16 +8,24 @@ that extra, missing, duplicate and corrupted members fail closed.
 """
 from contextlib import ExitStack
 import hashlib
+import importlib.util
 from pathlib import Path
-import sys
 import tempfile
 import unittest
 from unittest.mock import patch
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
-import verify_qfloat_freeze as verifier  # noqa: E402
+# The production CLI intentionally has a hyphenated filename. Import it by
+# its exact on-disk path rather than incorrectly treating it as a Python
+# identifier with underscores.
+spec = importlib.util.spec_from_file_location(
+    "qfloat_freeze_verifier", ROOT / "scripts" / "verify-qfloat-freeze.py"
+)
+if spec is None or spec.loader is None:
+    raise RuntimeError("unable to load canonical QFloat verifier")
+verifier = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(verifier)
 
 
 def digest(data):
