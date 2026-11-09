@@ -25,6 +25,15 @@ test('hierarchy world transform and rotation in right-handed coordinates',()=>{
   assert.ok(Math.abs(rotated.position[0]+2)<1e-10);
   assert.ok(Math.abs(rotated.position[2]+4)<1e-10);
 });
+test('invisible ancestors hide descendants without changing local visibility',()=>{
+  let scene=createScene();
+  scene=addEntity(scene,{parent:'entity-2',name:'Local Child'});
+  scene=updateEntity(scene,'entity-2',{visible:false});
+  assert.equal(scene.objects.find(o=>o.id==='entity-5').visible,true);
+  assert.equal(sceneWorld(scene).find(o=>o.id==='entity-5').visible,false);
+  scene=updateEntity(scene,'entity-2',{visible:true});
+  assert.equal(sceneWorld(scene).find(o=>o.id==='entity-5').visible,true);
+});
 test('parent cycles and missing parents are rejected transactionally',()=>{
   let s=createScene();s=addEntity(s,{parent:'entity-2'});
   const original=serializeScene(s);
