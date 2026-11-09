@@ -143,7 +143,11 @@ export function sceneWorld(scene){
         p.position[2]-t[0]*sin+t[2]*c];
       scale=scale.map((x,i)=>x*p.scale[i]);rotationY+=p.rotationY;
     }
-    const result={...e,position,scale,rotationY};
+    const visible=e.visible&&(e.parent===null||memo.get(e.parent).visible);
+    if(![...position,...scale].every(Number.isFinite)||
+       position.some(x=>Math.abs(x)>1e6)||scale.some(x=>x>1e6))
+      throw new RangeError('composed world transform exceeds render-safe bounds');
+    const result={...e,position,scale,rotationY,visible};
     memo.set(e.id,result);return result;
   }
   return s.objects.map(world);
