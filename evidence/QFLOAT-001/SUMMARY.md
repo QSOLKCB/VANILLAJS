@@ -1,0 +1,7 @@
+# VANILLAJS QFloat ARCADE browser witness
+
+Result: **PASS**
+VANILLAJS HEAD: 16f252aaea93b8956d2055e49689372164b2b356
+ARCADE source commit: f29b780734a50171d55ae2f770930db8a487b31c
+Runner: ubuntu
+Browser: 156.0.8078.79

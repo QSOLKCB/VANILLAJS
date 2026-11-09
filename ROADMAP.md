@@ -9,6 +9,10 @@
 
 Details: [QFLOAT-001](docs/QFLOAT_001.md).
 
+- Owner-run browser witness completed successfully (run 42626854784).
+- Evidence-only research freeze: original textual receipts + SHA256SUMS; screenshots are retained in the original ZIP pending attachment to the separate research prerelease. Preserve v1.5.0 unchanged.
+
+
 ## Infrastructure — incremental Chromium witnesses (development)
 
 - Partition the six-minute all-browser experience into seven independent source-bound suites; restore identical reviewed-main PASS receipts and execute only stale suite closures.

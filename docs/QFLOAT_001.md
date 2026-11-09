@@ -89,8 +89,13 @@ a FAIL report and nonzero process exit status.
     node scripts/build.js
 
 Complete existing Node tests also run in hosted VANILLAJS CI. The
-owner-run desktop browser check has not executed just because hosted CI
-is green.
+owner-run headed browser check **has now executed successfully** as
+GitHub Actions run 42626854784 against VANILLAJS main
+16f252aaea93b8956d2055e49689372164b2b356 and ARCADE pinned commit
+f29b780734a50171d55ae2f770930db8a487b31c. This is a historical
+execution claim, not an assertion that hosted CI alone proved browser
+behavior. The immutable receipt and limited-claim release gate are in
+[evidence/QFLOAT-001](../evidence/QFLOAT-001/README.md).
 
 ## Preservation boundaries
 

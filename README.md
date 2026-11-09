@@ -10,7 +10,7 @@
 
 **QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
 
-**QFLOAT-001 (development):** [Native exact-integer QFloat facade and ARCADE QFloat Lab RTX browser witness](docs/QFLOAT_001.md). Readable decimal authoring is explicitly quantized into checked Q16.16; the pre-existing VANILLAJS self-hosted runner can source-pin and test ARCADE's published browser lab by owner-only manual dispatch. No production float replacement.
+**QFLOAT-001 (development):** [Native exact-integer QFloat facade and ARCADE QFloat Lab RTX browser witness](docs/QFLOAT_001.md) · [QFLOAT-001 executed evidence freeze](evidence/QFLOAT-001/README.md). Readable decimal authoring is explicitly quantized into checked Q16.16; the pre-existing VANILLAJS self-hosted runner can source-pin and test ARCADE's published browser lab by owner-only manual dispatch. No production float replacement.
 
 **Faster, fail-closed CI:** [Incremental Chromium verification](docs/BROWSER_INCREMENTAL_CI.md) reuses only exact source-bound, main-branch PASS evidence. Shared/new source changes invalidate affected browser suites; all unit and package integrity checks still run.
 
