@@ -33,8 +33,8 @@ performance guarantees.
 Static indexes are constructed once outside timed queries, preserving the
 actual immutable-scene reuse contract. Seven separate construction timing
 samples are retained. A changing-geometry or cold-start use case must include
-this cost. Candidate instrumentation is outside timed queries to avoid charging
-an extra index traversal to the optimized path.
+this cost. Candidate instrumentation is disabled on both timed gameplay paths and
+performed only during the independently audited parity replay.
 
 The retained Canvas test measures CPU software raster reuse, not native
 GPU timing or rendered-game FPS. Native RTX WebGL evidence uses the existing
