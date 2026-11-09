@@ -19,7 +19,7 @@ export function stepPreview(scene,state,input={}){
     (input.jump!==undefined&&typeof input.jump!=='boolean'))
     throw new TypeError('invalid preview controls');
   const world=sceneWorld(scene);
-  const floors=world.filter(e=>e.visible&&e.body==='static'&&e.rotationY%180===0);
+  const floors=world.filter(e=>e.visible&&e.body==='static'&&e.parent===null&&e.rotationY%180===0);
   const bodies={};
   for(const e of world)if(e.visible&&e.body!=='static'){
     const old=state.bodies[e.id];
