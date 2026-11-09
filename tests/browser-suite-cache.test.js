@@ -107,6 +107,8 @@ test('GitHub Actions publishes source-bound witnesses on main only',async()=>{
   assert.equal(restores.length,7);
   assert.equal([...yaml.matchAll(/github\.event_name != 'pull_request'/g)].length>=7,true);
   assert.ok(yaml.includes("run: node scripts/browser-suite-cache.mjs execute"));
+  assert.ok(yaml.includes("BROWSER_FORCE_FULL:"));
+  assert.ok(yaml.includes("full_browser:"),"manual forced full audit must remain available");
   assert.ok(yaml.includes("node --test tests/*.test.js"),'unit tests are not skipped');
   assert.ok(yaml.includes("node scripts/verify-offline.js"),'package integrity is never skipped');
 });
