@@ -1,5 +1,14 @@
 # VANILLAJS roadmap
 
+## Visual Workbench — Unity/Unreal-style authoring (alpha)
+
+- **Now:** browser-native WebGL1 viewport, hierarchy, property inspector, root translation drag, undo/redo, validated JSON files and bounded fixed-step Play/Stop.
+- **Next:** component architecture, transform gizmos, scene assets, deterministic replay and safe standalone game packaging; not implemented by this alpha.
+- **Scope:** no third-party runtime, no cloud backend and no misleading claim of Unity/Unreal feature parity.
+- **Motto:** Make amazing alien tech and put it under an Apache 2.0 license.
+
+See [Visual Editor contracts](docs/EDITOR_WORKBENCH.md).
+
 ## v1.4.0 — The Proof of Speed (implementation under review)
 
 - Source-bound seven-case paired CPU benchmark harness with exact full-output parity admission, independent negative controls, alternating AB/BA samples and archived raw receipts.
