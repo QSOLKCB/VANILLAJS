@@ -282,6 +282,15 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Deterministic independent real, world, player and weapon time domains for fixed-tick simulation"
+    },
+    "qfloat": {
+      "entry": "modules/qfloat/index.js",
+      "depends": [
+        "integer-math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Float-like decimal authoring facade backed entirely by checked signed Q16.16, explicit quantization, no implicit Float64 arithmetic"
     }
   },
   "recipes": {
