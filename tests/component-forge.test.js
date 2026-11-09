@@ -101,6 +101,9 @@ test('trigger-enter emits only on first overlap, with stable authored tag',()=>{
   let s=createForgeScene();
   s=updateEntity(s,'entity-4',{position:[0,2.5,2],scale:[2,2,2]});
   s=setEntityComponent(s,'entity-4','trigger',{enabled:true,tag:'alien_gate'});
+  // A trigger volume is a sensor here, not a solid object that ejects
+  // the player from its interior before the enter event is sampled.
+  s=setEntityComponent(s,'entity-4','collider',{enabled:false});
   const start=createPreview(s),a=stepPreview(s,start,{}),b=stepPreview(s,a,{});
   assert.deepEqual(a.events,[{
     type:'trigger-enter',entityId:'entity-3',triggerId:'entity-4',tag:'alien_gate',tick:1
