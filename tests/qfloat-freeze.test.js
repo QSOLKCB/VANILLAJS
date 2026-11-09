@@ -49,8 +49,10 @@ test('Python stdlib receipt verifier reports only the scope actually checked',()
   assert.equal(parsed.arcadeCommit,'f29b780734a50171d55ae2f770930db8a487b31c');
 });
 test('the original executable Q16 kernel is unchanged by research freeze',()=>{
-  const source=readFileSync(resolve(root,'modules/integer-math/index.js'));
-  assert.equal(SHA(source),
-    'SOURCE_DIGEST_PLACEHOLDER',
-    'integer-math source changed in evidence-only PR');
+  const run=spawnSync('git',['hash-object','modules/integer-math/index.js'],
+    {cwd:root,encoding:'utf8',timeout:10000});
+  assert.equal(run.status,0,run.stderr);
+  assert.equal(run.stdout.trim(),
+    'd457b0154d9dfc8b50fd593b5e9dff75e1ea66b9',
+    'integer-math Git blob changed in evidence-only PR');
 });
