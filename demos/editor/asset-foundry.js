@@ -145,8 +145,16 @@ export function validateAssetLibrary(library,scene=null){
   const assets=library.assets.map(validateAsset),map=new Map(assets.map(a=>[a.id,a]));
   if(map.size!==assets.length||assets.some(a=>Number(a.id.slice(6))>=library.nextId))
     throw new TypeError('duplicate or reused asset ID');
-  for(const a of assets)if(a.kind==='material'&&a.textureId!==null&&
-    map.get(a.textureId)?.kind!=='texture')throw new TypeError('unknown material texture');
+  for(const a of assets){
+    if(a.kind==='material'&&a.textureId!==null&&
+      map.get(a.textureId)?.kind!=='texture')throw new TypeError('unknown material texture');
+    if(a.kind==='prefab')for(const o of a.objects){
+      if(o.meshId!==null&&map.get(o.meshId)?.kind!=='mesh')
+        throw new TypeError('missing prefab mesh asset');
+      if(o.materialId!==null&&map.get(o.materialId)?.kind!=='material')
+        throw new TypeError('missing prefab material asset');
+    }
+  }
   const placements=library.placements.map(p=>{
     exact(p,['entityId','meshId','materialId'],'placement');
     if(!entityId.test(p.entityId))throw new TypeError('invalid placement entity');
@@ -215,7 +223,15 @@ export function addPrefabAsset(scene,library,root,nameValue,licenseValue){
   const subtree=new Set([root]);let changed=true;
   while(changed){changed=false;for(const e of s.objects)
     if(subtree.has(e.parent)&&!subtree.has(e.id)){subtree.add(e.id);changed=true;}}
-  const items=s.objects.filter(e=>subtree.has(e.id)),indexes=new Map(items.map((e,i)=>[e.id,i]));
+  // Parent-first stable order even when source scene objects are interleaved.
+  const items=[],pending=s.objects.filter(e=>subtree.has(e.id));
+  while(pending.length){
+    const index=pending.findIndex(e=>!subtree.has(e.parent)||
+      items.some(parent=>parent.id===e.parent));
+    if(index<0)throw new TypeError('invalid prefab dependency graph');
+    items.push(pending.splice(index,1)[0]);
+  }
+  const indexes=new Map(items.map((e,i)=>[e.id,i]));
   const objects=items.map(e=>{
     const assignment=l.placements.find(p=>p.entityId===e.id);
     const {id,parent,...object}=structuredClone(e);
