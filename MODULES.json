@@ -515,6 +515,17 @@
         "frame-gate"
       ],
       "preset": "brick-bank"
+    },
+    "visual-editor-alpha": {
+      "entry": "demos/editor/model.js",
+      "modules": [
+        "math",
+        "geometry",
+        "time",
+        "frame-gate"
+      ],
+      "preset": "visual-workbench",
+      "description": "Local JSON scene editor with hierarchy, inspector, WebGL and fixed-step preview (experimental)"
     }
   },
   "experiments": {
