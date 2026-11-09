@@ -129,8 +129,8 @@ jobs:
         run: node scripts/geometry-workload.js --check > geometry-workload.json
       - name: Verify streamed geometry batching and record paired CPU observations
         run: node scripts/geometry-batch-workload.js --check > geometry-batch-workload.json
-      # Tooling is invariant across source revisions at this exact OS/arch/Playwright/browser key.
-      # Do not cache test outcomes, app builds, evidence, source files or GPU results.
+      # Only immutable source-bound PASS receipts from reviewed main may be reused.
+      # Source/unit/package/archival checks run every time; shared changes invalidate suites.
       - name: Restore pinned Playwright headless tooling
         id: playwright-tooling
         uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
@@ -150,16 +150,111 @@ jobs:
           node "$RUNNER_TEMP/flight-browser/node_modules/playwright/cli.js" install --only-shell chromium
       - name: Validate pinned Playwright and launch its cached browser
         run: node scripts/flight-browser-preflight.mjs
-      - name: Verify packaged browser experience
+      - name: Fingerprint source-bound browser suite closures
+        id: browser-suite-keys
+        run: node scripts/browser-suite-cache.mjs plan >> "$GITHUB_OUTPUT"
+      - name: Restore protected-main home browser witness
+        id: browser-home
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/home.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.home }}
+      - name: Restore protected-main render browser witness
+        id: browser-render
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/render.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.render }}
+      - name: Restore protected-main play browser witness
+        id: browser-play
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/play.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.play }}
+      - name: Restore protected-main worlds browser witness
+        id: browser-worlds
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/worlds.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.worlds }}
+      - name: Restore protected-main research browser witness
+        id: browser-research
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/research.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.research }}
+      - name: Restore protected-main donor browser witness
+        id: browser-donor
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/donor.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.donor }}
+      - name: Restore protected-main editor browser witness
+        id: browser-editor
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/editor.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.editor }}
+      - name: Verify changed browser suites and validate reused main witnesses
         env:
           NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
-        run: node scripts/browser-check.js
+          BROWSER_CACHE_HIT_HOME: ${{ steps.browser-home.outputs.cache-hit }}
+          BROWSER_CACHE_HIT_RENDER: ${{ steps.browser-render.outputs.cache-hit }}
+          BROWSER_CACHE_HIT_PLAY: ${{ steps.browser-play.outputs.cache-hit }}
+          BROWSER_CACHE_HIT_WORLDS: ${{ steps.browser-worlds.outputs.cache-hit }}
+          BROWSER_CACHE_HIT_RESEARCH: ${{ steps.browser-research.outputs.cache-hit }}
+          BROWSER_CACHE_HIT_DONOR: ${{ steps.browser-donor.outputs.cache-hit }}
+          BROWSER_CACHE_HIT_EDITOR: ${{ steps.browser-editor.outputs.cache-hit }}
+        run: node scripts/browser-suite-cache.mjs execute
+      - name: Publish home PASS witness on reviewed main only
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-home.outputs.cache-hit != 'true'
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/home.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.home }}
+      - name: Publish render PASS witness on reviewed main only
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-render.outputs.cache-hit != 'true'
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/render.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.render }}
+      - name: Publish play PASS witness on reviewed main only
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-play.outputs.cache-hit != 'true'
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/play.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.play }}
+      - name: Publish worlds PASS witness on reviewed main only
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-worlds.outputs.cache-hit != 'true'
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/worlds.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.worlds }}
+      - name: Publish research PASS witness on reviewed main only
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-research.outputs.cache-hit != 'true'
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/research.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.research }}
+      - name: Publish donor PASS witness on reviewed main only
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-donor.outputs.cache-hit != 'true'
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/donor.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.donor }}
+      - name: Publish editor PASS witness on reviewed main only
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-editor.outputs.cache-hit != 'true'
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-suite-evidence/editor.json
+          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.editor }}
       - name: Preserve browser screenshots and package manifest
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: flight-lab-evidence
           path: |
+            ${{ runner.temp }}/flight-suite-evidence/*.json
             browser-artifacts/
             dist/manifest.json
             integer-evidence.json
