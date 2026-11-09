@@ -81,9 +81,18 @@ export function createGridVertices(size=10){
 export function displayWorld(scene,preview=null){
   const world=sceneWorld(scene);
   if(!preview)return world;
+  const byId=new Map(world.map(e=>[e.id,e]));
   return world.map(entity=>{
     const body=preview.bodies[entity.id];
-    return body?{...entity,position:[...body.position]}:entity;
+    if(body)return {...entity,position:[...body.position]};
+    let ancestor=entity;
+    while(ancestor.parent!==null){
+      ancestor=byId.get(ancestor.parent);
+      const moving=preview.bodies[ancestor.id];
+      if(moving)return {...entity,position:entity.position.map((x,i)=>
+        x+moving.position[i]-ancestor.position[i])};
+    }
+    return entity;
   });
 }
 export function createSceneVertices(world,selected=null){
