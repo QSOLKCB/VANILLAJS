@@ -164,6 +164,9 @@ def run(report_path: Path, output_dir: Path, dry_run: bool = False) -> dict:
             plan["reports"].append(record)
             (output_dir / (label + ".json")).write_text(
                 json.dumps(record, indent=2) + "\n", encoding="utf-8")
+            if answer.get("status") != "completed":
+                # Token usage can be billable even on incomplete responses.
+                raise ValueError("provider response is not completed")
             if not text.strip():
                 # Provider may already have billed a response with only
                 # reasoning tokens. Preserve usage and response ID even when
