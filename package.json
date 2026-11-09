@@ -1,6 +1,6 @@
 {
   "name": "qsol-vanillajs",
-  "version": "1.0.0",
+  "version": "1.4.0",
   "private": true,
   "type": "module",
   "description": "Native JavaScript game engine with integer simulation, replay and procedural browser labs",
@@ -8,6 +8,8 @@
   "scripts": {
     "test": "node --test tests/*.test.js",
     "check": "node scripts/check.js",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "proof:check": "node scripts/proof-speed.mjs --check",
+    "proof:measure": "node scripts/proof-speed.mjs --measure --out proof-speed.json"
   }
 }
