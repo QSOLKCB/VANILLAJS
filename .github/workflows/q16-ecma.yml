@@ -1,0 +1,54 @@
+name: Q16-ECMA-001 bounded Lean/ECMAScript refinement
+on:
+  pull_request:
+    paths:
+      - 'Q16ECMA.lean'
+      - 'Q16ECMAAudit.lean'
+      - 'lakefile.toml'
+      - 'lean-toolchain'
+      - 'docs/Q16_ECMA_001.md'
+      - 'scripts/verify-q16-ecma-axioms.py'
+      - 'tests/q16-ecma.test.js'
+      - '.github/workflows/q16-ecma.yml'
+      - 'modules/integer-math/index.js'
+  push:
+    branches: [main]
+    paths:
+      - 'Q16ECMA.lean'
+      - 'Q16ECMAAudit.lean'
+      - 'lakefile.toml'
+      - 'lean-toolchain'
+      - 'docs/Q16_ECMA_001.md'
+      - 'scripts/verify-q16-ecma-axioms.py'
+      - 'tests/q16-ecma.test.js'
+      - '.github/workflows/q16-ecma.yml'
+      - 'modules/integer-math/index.js'
+permissions:
+  contents: read
+jobs:
+  checked-domain:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Install verified pinned Lean 4.35.0
+        run: bash scripts/install-q16-lean.sh
+      - name: Kernel check the new bounded ECMA-262 integer projection
+        run: |
+          set -euo pipefail
+          lake build Q16ECMA
+          lake env lean Q16ECMAAudit.lean | tee q16-ecma-axioms.txt
+          python3 scripts/verify-q16-ecma-axioms.py q16-ecma-axioms.txt
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Check exact production blob and finite JS Number semantics
+        run: node --test tests/q16-ecma.test.js
+      - name: Save proof audit output, not a universal source-proof claim
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: q16-ecma-001-axiom-report
+          path: q16-ecma-axioms.txt
+          if-no-files-found: warn
+          retention-days: 30
