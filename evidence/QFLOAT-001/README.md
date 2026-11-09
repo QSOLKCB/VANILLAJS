@@ -64,7 +64,8 @@ python3 scripts/verify-qfloat-freeze.py \
 The verifier reports `scope=text-receipts-only` when the original ZIP is
 not supplied; it reports `scope=complete-original-artifact` and
 `screenshotsVerified=2` **only** after checking the original ZIP SHA-256,
-all four member hashes, exact text bytes, member list and size bounds.
+all five ZIP members (four manifest-listed payloads plus SHA256SUMS),
+exact manifest and text bytes, member hashes, member list and size bounds.
 
 ## Research-context linkage
 
