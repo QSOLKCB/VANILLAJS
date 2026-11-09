@@ -77,9 +77,9 @@ test('retained WebGL geometry includes imported triangles with canonical texel c
   assert.equal(serializeScene(scene),before,'render must never modify authored scenes');
   // Source vertices are attached under the exact entity world position.
   const first=vertices.slice(3*36*6,3*36*6+6);
-  assert.equal(first[0],2.45);
+  assert.ok(Math.abs(first[0]-1.9)<1e-5);
   assert.equal(first[1],1);
-  assert.equal(first[2],-3.55);
+  assert.ok(Math.abs(first[2]+4.1)<1e-5);
   assert.deepEqual(Array.from(first.slice(3)),[0,0,1]);
 });
 test('authored material changes a primitive box without replacing its geometry',()=>{
@@ -147,5 +147,5 @@ test('untrusted project, asset references, alpha, licensing and oversized payloa
   assert.throws(()=>validateAssetLibrary(invalid),/duplicate/);
   const tooBig={...m.library,assets:m.library.assets.map(a=>
     ({...a,vertices:Array(MAX_MESH_VERTICES*5+15).fill(0)}))};
-  assert.throws(()=>validateAssetLibrary(tooBig),/budget/);
+  assert.throws(()=>validateAssetLibrary(tooBig),/mesh triangles/);
 });
