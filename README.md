@@ -8,6 +8,8 @@
 
 **You Didn't Invent Doom Edition — independently specified arithmetic, formally checked mathematics.**
 
+**QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
+
 Reusable JavaScript game modules built directly on web standards. The latest
 published release is **[v1.3.0 — The Invariant Machine](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.3.0)**,
 with Bullet Time and ARCADE labs, deterministic optimized/reference collision
@@ -18,7 +20,7 @@ The v1.0.0 showcase was The Clockwork Vault: six OMI seals in one expedition.
 The engine has 32 experimental game modules and sixteen recipes including
 Integer Foundry, alongside the registered OMI and optional E8 research labs.
 
-[v1.4.0 Proof of Speed (in development)](docs/PROOF_OF_SPEED.md) · [Bullet Time Lab](demos/bullet-time-lab/index.html) · [ARCADE Lab](demos/arcade-lab/index.html) · [Offline build & OPT contracts](docs/DONOR_LABS_OFFLINE.md) · [Donor upgrade: pacing, lead solver & RTX](docs/DONOR_UPGRADE_2026_11.md) · [UFF orbital physics & NEXUS contracts](docs/BLOAT_NEXUS_UFF.md) · [Frame invalidation](docs/FRAME_GATE.md) · [Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
+[v1.4.0 Proof of Speed (in development)](docs/PROOF_OF_SPEED.md) · [Visual Editor (alpha)](demos/editor/index.html) · [Editor contracts](docs/EDITOR_WORKBENCH.md) · [Bullet Time Lab](demos/bullet-time-lab/index.html) · [ARCADE Lab](demos/arcade-lab/index.html) · [Offline build & OPT contracts](docs/DONOR_LABS_OFFLINE.md) · [Donor upgrade: pacing, lead solver & RTX](docs/DONOR_UPGRADE_2026_11.md) · [UFF orbital physics & NEXUS contracts](docs/BLOAT_NEXUS_UFF.md) · [Frame invalidation](docs/FRAME_GATE.md) · [Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
 [Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
 [Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
 
