@@ -151,8 +151,6 @@ def run(report_path: Path, output_dir: Path, dry_run: bool = False) -> dict:
             if not all(isinstance(n, int) and n >= 0 for n in (in_tokens, out_tokens)):
                 raise ValueError("provider omitted countable token usage")
             text = extract_text(answer)
-            if not text.strip():
-                raise ValueError("provider returned no visible research content")
             record = {
                 "lens": label, "responseId": answer.get("id"),
                 "model": answer.get("model"), "status": answer.get("status"),
@@ -166,6 +164,11 @@ def run(report_path: Path, output_dir: Path, dry_run: bool = False) -> dict:
             plan["reports"].append(record)
             (output_dir / (label + ".json")).write_text(
                 json.dumps(record, indent=2) + "\n", encoding="utf-8")
+            if not text.strip():
+                # Provider may already have billed a response with only
+                # reasoning tokens. Preserve usage and response ID even when
+                # the critique is incomplete; do not attempt a paid retry.
+                raise ValueError("provider returned no visible research content")
         except Exception as exc:
             plan["status"] = "INCOMPLETE"
             plan["errorType"] = type(exc).__name__
