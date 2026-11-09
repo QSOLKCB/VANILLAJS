@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
-// Hosted-CI-only invariant: reuse exact Playwright tooling, never a prior test result.
-// Reused tools MUST still pass this check and all browser tests on the current source.
+// Hosted-CI invariant: reuse only pinned Playwright tooling. Source-bound
+// PASS witness reuse is controlled *separately* by browser-suite-cache.mjs,
+// and only for identical closures from reviewed main. This preflight always
+// launches real Chromium; all stale or unknown suites always execute.
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {readFileSync,realpathSync} from 'node:fs';
