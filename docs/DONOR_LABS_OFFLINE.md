@@ -1,6 +1,6 @@
 # Bullet Time Lab + ARCADE Lab — deterministic OPT adaptation
 
-**Status:** experimental source implementation. Do not infer a released feature,
+**Status:** laboratories shipped in v1.3.0; v1.4.0 performance and cache-negative-control work is described in [PROOF_OF_SPEED.md](PROOF_OF_SPEED.md). Do not infer a universal
 hardware speedup, browser consistency, or a formal proof from this document.
 
 ## Source identity and license
