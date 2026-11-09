@@ -11,10 +11,10 @@
 **QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
 
 Reusable JavaScript game modules built directly on web standards. The latest
-published release is **[v1.3.0 — The Invariant Machine](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.3.0)**,
-with Bullet Time and ARCADE labs, deterministic optimized/reference collision
-parity and SHA-256-bound offline caching. The v1.2.0 exact Q16.16 engine and
-formal verification remain part of that foundation.
+published release is **[v1.4.0 — The Proof of Speed](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.4.0)**,
+with source-bound CPU and physical RTX optimization evidence, complete-output
+parity and fail-closed offline cache tests. Bullet Time and ARCADE labs arrived
+in v1.3.0; the exact Q16.16 and formal-verification foundation remains intact.
 
 The v1.0.0 showcase was The Clockwork Vault: six OMI seals in one expedition.
 The engine has 32 experimental game modules and sixteen recipes including
