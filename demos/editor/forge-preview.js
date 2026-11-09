@@ -52,7 +52,8 @@ export function stepForgePreview(scene,state,input={}){
   if(!state||!Number.isSafeInteger(state.tick)||state.tick<0||state.tick>=36000||
      !state.bodies||typeof state.bodies!=='object')
     throw new RangeError('invalid or exhausted forge preview state');
-  const world=worldOf(scene),obstacles=staticColliders(world),byId=new Map(world.map(e=>[e.id,e]));
+  const world=worldOf(scene),obstacles=staticColliders(world).map(({min,max})=>({min,max})),
+    byId=new Map(world.map(e=>[e.id,e]));
   const bodies={},events=[];
   for(const e of world){
     if(!e.visible||e.components.rigidbody.mode!=='dynamic')continue;
@@ -68,7 +69,7 @@ export function stepForgePreview(scene,state,input={}){
     nextVelocity[1]-=15*e.components.rigidbody.gravityScale*FORGE_DT;
     const half=e.scale.map(v=>v*.5),swept=moveAndSlideAABB(
       old.position,nextVelocity,FORGE_DT,half,
-      obstacles.map(({min,max})=>({min,max})),6
+      obstacles,6
     );
     if(swept.truncated)throw new RangeError('preview collision solve truncated');
     const position=swept.position.map(v=>clamp(v,-995,995));
