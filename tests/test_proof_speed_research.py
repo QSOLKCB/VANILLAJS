@@ -57,9 +57,10 @@ class ResearchGate(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             path = Path(d) / "report.json"
             path.write_text(json.dumps(report()))
-            with patch.object(module, "send_once",
-                              side_effect=AssertionError("network forbidden")):
-                summary = module.run(path, Path(d) / "unused", dry_run=True)
+            with patch.dict("os.environ", {}, clear=True):
+                with patch.object(module, "send_once",
+                                  side_effect=AssertionError("network forbidden")):
+                    summary = module.run(path, Path(d) / "unused", dry_run=True)
             self.assertEqual(summary["plannedRequests"], 3)
             self.assertFalse((Path(d) / "unused").exists())
 
