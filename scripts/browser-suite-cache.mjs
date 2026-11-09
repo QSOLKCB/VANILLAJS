@@ -35,6 +35,7 @@ const BROWSER_SCRIPTS=Object.freeze({
   editor:['browser-editor.js']
 });
 const toSha=(label,bytes)=>({path:label,sha256:DIGEST(bytes)});
+const sortByPath=(a,b)=>a.path.localeCompare(b.path);
 async function artifact(path){return readFile(join(ROOT,path));}
 const allOwn=Object.values(OWN).flat();
 function owners(path){return SUITES.filter(group=>
@@ -43,6 +44,8 @@ export function partitionPackage(files){
   if(!Array.isArray(files)||files.some(f=>typeof f?.path!=='string'||
       !/^[a-zA-Z0-9._/-]+$/.test(f.path)||typeof f.sha256!=='string'||
       !/^[a-f0-9]{64}$/.test(f.sha256)))throw new TypeError('invalid package inventory');
+  if(files.some(f=>f.path.split('/').includes('..')||f.path.startsWith('/')))
+    throw new TypeError('unsafe package path');
   if(new Set(files.map(f=>f.path)).size!==files.length)
     throw new TypeError('duplicate package inventory paths');
   const global=[],own=Object.fromEntries(SUITES.map(g=>[g,[]]));
@@ -68,11 +71,25 @@ export function partitionPackage(files){
   }
   return {global,own};
 }
-export async function sourceProfile({manifest,scriptSource,environment}={}){
+export function digestClosures(files,sharedCode,suiteCode,environment){
+  const {global,own}=partitionPackage(files);
+  const results={};
+  for(const group of SUITES){
+    const runtime=[...global,...own[group]].map(f=>({path:f.path,sha256:f.sha256}));
+    runtime.sort(sortByPath);
+    const identity={protocol:PROFILE,group,env:environment,runtime,
+      sharedCode:[...sharedCode].sort(sortByPath),
+      suiteCode:[...suiteCode[group]].sort(sortByPath)};
+    results[group]=DIGEST(Buffer.from(JSON.stringify(identity)));
+  }
+  return results;
+}
+export async function sourceProfile({manifest,environment}={}){
   const packageManifest=manifest??JSON.parse(await artifact('dist/manifest.json'));
   if(!packageManifest||!Array.isArray(packageManifest.files))
     throw new TypeError('dist manifest missing or malformed');
-  const {global,own}=partitionPackage(packageManifest.files);
+  // Reject incomplete inventories before interpreting any cache identity.
+  partitionPackage(packageManifest.files);
   const external=[
     '.github/workflows/flight-lab.yml','scripts/browser-check.js',
     'scripts/browser-suite-cache.mjs','scripts/flight-browser-preflight.mjs',
@@ -90,18 +107,13 @@ export async function sourceProfile({manifest,scriptSource,environment}={}){
   const env=environment??{platform:process.platform,arch:process.arch,node:process.version,
     imageVersion:process.env.ImageVersion??'local-untrusted',
     playwright:'1.64.0-only-shell'};
-  const results={};
+  const scripts={};
   for(const group of SUITES){
-    const suitescripts=[];
+    scripts[group]=[];
     for(const file of BROWSER_SCRIPTS[group])
-      suitescripts.push(toSha('scripts/'+file,await artifact('scripts/'+file)));
-    const runtime=[...global,...own[group]].map(f=>({path:f.path,sha256:f.sha256}));
-    runtime.sort((a,b)=>a.path.localeCompare(b.path));
-    const identity={protocol:PROFILE,group,env,runtime,sharedCode:code,
-      suiteCode:suitescripts.sort((a,b)=>a.path.localeCompare(b.path))};
-    results[group]=DIGEST(Buffer.from(JSON.stringify(identity)));
+      scripts[group].push(toSha('scripts/'+file,await artifact('scripts/'+file)));
   }
-  return results;
+  return digestClosures(packageManifest.files,code,scripts,env);
 }
 export function witness(suite,fingerprint,run='main-verified'){
   if(!SUITES.includes(suite)||!/^[0-9a-f]{64}$/.test(fingerprint))
