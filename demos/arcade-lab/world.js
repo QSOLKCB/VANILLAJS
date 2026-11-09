@@ -25,10 +25,10 @@ export function createArcadeLab(kind='brick'){
     waiting:true,lives:3,score:0,broken:[],bounces:0,last:'READY',
     work:{candidates:0,full:0,queries:0}};
 }
-export function stepArcadeLab(state,input={},optimized=true){
+export function stepArcadeLab(state,input={},optimized=true,instrument=true){
   if(!state||!(state.kind in FIELDS)||state.tick>=108000||!Number.isSafeInteger(state.tick))
     throw new RangeError('invalid arcade state');
-  if(typeof optimized!=='boolean'||![-1,0,1].includes(input.move??0)||
+  if(typeof optimized!=='boolean'||typeof instrument!=='boolean'||![-1,0,1].includes(input.move??0)||
      (input.launch!==undefined&&typeof input.launch!=='boolean'))
     throw new TypeError('invalid arcade controls');
   const paddle=clamp(state.paddle+(input.move??0)*7.2*ARCADE_TICK,-4.15,4.15);
@@ -41,7 +41,7 @@ export function stepArcadeLab(state,input={},optimized=true){
   for(let hitCount=0;hitCount<4&&remaining>1e-9;hitCount++){
     const origin=[ball.x,1,ball.z],delta=[ball.vx*remaining,0,ball.vz*remaining];
     work.queries++;work.full+=FIELDS[state.kind].length;
-    work.candidates+=optimized?INDEX[state.kind].candidates(origin,delta,{halfSize:.13,ignoreIds:ignored}).length:FIELDS[state.kind].length;
+    if(instrument)work.candidates+=optimized?INDEX[state.kind].candidates(origin,delta,{halfSize:.13,ignoreIds:ignored}).length:FIELDS[state.kind].length;
     const walls=optimized?INDEX[state.kind].castSegment(origin,delta,{halfSize:.13,ignoreIds:ignored}):
       castSegment(origin,delta,FIELDS[state.kind],{halfSize:.13,ignoreIds:ignored});
     // Paddle occupies its new tick position, matching both comparison modes.
