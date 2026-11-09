@@ -1,5 +1,15 @@
 # VANILLAJS roadmap
 
+## v1.5.0 — The Component Forge (in development)
+
+- Typed, bounded component data: Mesh Renderer, Collider, Rigidbody, Player Controller, Trigger, Camera, with Transform retained as canonical authored fields.
+- Explicit v1 scene migration to canonical schemaVersion=2 without rewriting historical input documents; strict v2 serialization and per-component validation.
+- WebGL XYZ transform handles and projected hit testing, local/world movement, Y-yaw rotation, local scale, snapping and undoable drag transactions.
+- Component-driven fixed 60Hz Play mode using reusable VANILLAJS AABB movement and deterministic trigger-enter events; preserve Stop rollback.
+- Future phases: full quaternion transforms, true rotated collision, mesh/material asset import, prefab composition and standalone game export.
+
+See [Component Forge contracts](docs/COMPONENT_FORGE.md).
+
 ## Visual Workbench — Unity/Unreal-style authoring (alpha)
 
 - **Now:** browser-native WebGL1 viewport, hierarchy, property inspector, root translation drag, undo/redo, validated JSON files and bounded fixed-step Play/Stop.
