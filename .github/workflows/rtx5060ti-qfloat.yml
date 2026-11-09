@@ -1,0 +1,93 @@
+name: QFLOAT-001 — ARCADE Lab browser witness on VANILLAJS runner
+
+# Only the repository owner may execute reviewed main on the desktop.
+# No push, pull_request or schedule triggers.
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "Authorize visible Chromium tests of ARCADE's QFloat Lab on my VANILLAJS desktop runner"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Upload the source-bound report and screenshots to a 14-day GitHub artifact"
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qsol-vanillajs-qfloat-owner-${{ github.repository }}-${{ github.actor }}
+  cancel-in-progress: false
+
+jobs:
+  qfloat-browser:
+    if: ${{ github.repository == 'QSOLKCB/VANILLAJS' && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 20
+    steps:
+      - name: Check out only reviewed VANILLAJS main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Verify reviewed local source and existing pinned Playwright
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = QSOLKCB/VANILLAJS
+          test "$GITHUB_REF" = refs/heads/main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          test -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}"
+          command -v node
+          node --check scripts/qfloat-arcade-witness.mjs
+          node scripts/rtx-playwright.mjs
+          echo "Runner: ${RUNNER_NAME:-unknown}"
+
+      - name: Run native Q16 facade and runner-security tests without installs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/qfloat.test.js tests/qfloat-arcade-witness.test.js
+          node scripts/check.js
+
+      - name: Reserve a never-overwritten local evidence directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$HOME/.local/state/qsol/vanillajs/qfloat"
+          mkdir -m 700 -p "$root"
+          evidence="$root/qfloat-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          test ! -e "$evidence"
+          echo "QSOL_QFLOAT_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+
+      - name: Visible native Chromium, exact ARCADE source and published Pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qfloat-arcade-witness.mjs \
+            --head "$GITHUB_SHA" \
+            --out "$QSOL_QFLOAT_EVIDENCE"
+
+      - name: Check sealed report and present the outcome
+        if: ${{ always() && env.QSOL_QFLOAT_EVIDENCE != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "$QSOL_QFLOAT_EVIDENCE/SHA256SUMS"
+          (cd "$QSOL_QFLOAT_EVIDENCE" && sha256sum -c SHA256SUMS)
+          cat "$QSOL_QFLOAT_EVIDENCE/SUMMARY.md" >> "$GITHUB_STEP_SUMMARY"
+          echo "Evidence retained locally at $QSOL_QFLOAT_EVIDENCE"
+
+      - name: Optional GitHub artifact (owner opt-in only)
+        if: ${{ always() && inputs.publish_evidence == true && env.QSOL_QFLOAT_EVIDENCE != '' }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: vanillajs-qfloat-arcade-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.QSOL_QFLOAT_EVIDENCE }}
+          if-no-files-found: error
+          retention-days: 14

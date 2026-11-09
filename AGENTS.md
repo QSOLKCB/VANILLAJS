@@ -26,3 +26,5 @@
   honestly; do not promise cross-browser bit-exactness or unmeasured performance.
 - Submit changes through a PR. Do not merge, publish a release or move an existing
   release tag as part of implementation work unless the user authorises it.
+
+- QFLOAT-001 is a pure, native decimal-authoring adapter over integer-math, never a new arithmetic backend. Its physical Chromium witness is workflow_dispatch only on owner-approved reviewed main in VANILLAJS; allow only bytes verified against immutable ARCADE commit f29b780734a50171d55ae2f770930db8a487b31c. Never trigger PR code on the user's personal runner or silently reinstall Playwright.
