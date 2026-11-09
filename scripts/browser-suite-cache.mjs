@@ -143,11 +143,13 @@ async function execute(){
   if(!temp)throw new Error('RUNNER_TEMP required for isolated witness paths');
   const cacheRoot=join(temp,'flight-suite-evidence');
   await mkdir(cacheRoot,{recursive:true});
+  const forceFull=process.env.BROWSER_FORCE_FULL==='true';
+  if(forceFull)console.log('MANUAL FULL AUDIT: all source-bound browser receipts will be ignored');
   const stale=[],reused=[];
   for(const group of SUITES){
     const hit=process.env['BROWSER_CACHE_HIT_'+group.toUpperCase()]??'false';
     const path=join(cacheRoot,group+'.json');
-    if(await reuse(path,group,fingerprints[group],hit))reused.push(group);
+    if(!forceFull&&await reuse(path,group,fingerprints[group],hit))reused.push(group);
     else stale.push(group);
   }
   console.log('REUSED reviewed-main browser suites: '+(reused.join(', ')||'none'));
