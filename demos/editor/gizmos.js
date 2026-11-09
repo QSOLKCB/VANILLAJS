@@ -27,11 +27,12 @@ export function axisDirection(world,axis,space='world'){
   if(!['world','local'].includes(space))throw new TypeError('unknown transform space');
   return space==='local'?rotateY(basis[i],world.rotationY):[...basis[i]];
 }
-export function gizmoLines(world,selected,space='world'){
+export function gizmoLines(world,selected,space='world',tool='move'){
   const object=world.find(e=>e.id===selected);
   if(!object)return new Float32Array();
   const data=[],size=2.15;
   for(let i=0;i<3;i++){
+    if(tool==='rotate'&&i!==1)continue; // only yaw is supported
     const unit=axisDirection(object,AXES[i],space),color=COLORS[i];
     const from=object.position,to=from.map((v,k)=>v+unit[k]*size);
     data.push(...from,...color,...to,...color);
@@ -59,12 +60,13 @@ function distSegment(px,py,a,b){
   const t=Math.max(0,Math.min(1,u));
   return Math.hypot(px-a.x-dx*t,py-a.y-dy*t);
 }
-export function pickGizmo(camera,object,px,py,width,height,space='world'){
+export function pickGizmo(camera,object,px,py,width,height,space='world',tool='move'){
   if(!object)return null;
   const from=projectPoint(camera,object.position,width,height);
   if(!from)return null;
   let nearest=null;
   for(const axis of AXES){
+    if(tool==='rotate'&&axis!=='y')continue;
     const dir=axisDirection(object,axis,space);
     const end=projectPoint(camera,object.position.map((v,i)=>v+dir[i]*2.15),width,height);
     if(!end)continue;
