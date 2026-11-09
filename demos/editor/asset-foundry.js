@@ -216,7 +216,7 @@ export function prunePlacements(scene,library){
   return validateAssetLibrary(l,scene);
 }
 export function addPrefabAsset(scene,library,root,nameValue,licenseValue){
-  const s=validateScene(scene),l=validateAssetLibrary(l,s);
+  const s=validateScene(scene),l=validateAssetLibrary(library,s);
   if(s.schemaVersion!==2)throw new TypeError('prefabs require Component Forge v2 scenes');
   const selected=s.objects.find(e=>e.id===root);
   if(!selected)throw new TypeError('unknown prefab root');
@@ -241,7 +241,7 @@ export function addPrefabAsset(scene,library,root,nameValue,licenseValue){
   return next(l,{kind:'prefab',name:name(nameValue),license:license(licenseValue),objects});
 }
 export function instantiatePrefab(scene,library,prefabId){
-  const s=validateScene(scene),l=validateAssetLibrary(l,s);
+  const s=validateScene(scene),l=validateAssetLibrary(library,s);
   if(s.schemaVersion!==2)throw new TypeError('prefab instantiation requires v2 scene');
   const prefab=l.assets.find(a=>a.id===prefabId&&a.kind==='prefab');
   if(!prefab)throw new TypeError('unknown prefab');
@@ -266,7 +266,7 @@ export function instantiatePrefab(scene,library,prefabId){
   return {scene:validateScene(s),library:validateAssetLibrary(l,s),selected:ids[0]};
 }
 export function serializeProject(scene,library){
-  const s=validateScene(scene),l=validateAssetLibrary(l,s);
+  const s=validateScene(scene),l=validateAssetLibrary(library,s);
   const raw=JSON.stringify({format:'qsol.vanillajs.asset-project.v1',scene:s,library:l},null,2)+'\n';
   if(new TextEncoder().encode(raw).length>MAX_PROJECT_BYTES)
     throw new RangeError('project exceeds 256 KiB');
