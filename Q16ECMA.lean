@@ -21,20 +21,56 @@ def int32Word (x : Int) : Int :=
 theorem uint32Word_bounds (x : Int) :
     0 ≤ uint32Word x ∧ uint32Word x < modulus := by
   unfold uint32Word modulus
-  omega
+  constructor
+  · exact Int.emod_nonneg x (by decide)
+  · exact Int.emod_lt_of_pos x (by decide)
+
+private theorem int32Projection_bounds (word : Int)
+    (hlo : 0 ≤ word) (hhi : word < 4294967296) :
+    -2147483648 ≤ (if word ≥ 2147483648 then word - 4294967296 else word) ∧
+      (if word ≥ 2147483648 then word - 4294967296 else word) ≤ 2147483647 := by
+  cases (inferInstance : Decidable (word ≥ 2147483648)) with
+  | isTrue h =>
+    rw [ite_eq_left h]
+    constructor
+    · have hShift : (-2147483648 : Int) + 4294967296 ≤
+          (word - 4294967296) + 4294967296 := by
+        rw [Int.sub_add_cancel]
+        have hConst : (-2147483648 : Int) + 4294967296 = 2147483648 := by decide
+        rw [hConst]
+        exact h
+      exact Int.le_of_add_le_add_right hShift
+    · have hConst : (4294967295 : Int) + 1 = 4294967296 := by decide
+      have hWord : word ≤ 4294967295 := Int.le_of_lt_add_one (by
+        rw [hConst]
+        exact hhi)
+      have hLimit : (4294967295 : Int) ≤ 2147483647 + 4294967296 := by decide
+      have hUpper : word ≤ 2147483647 + 4294967296 := Int.le_trans hWord hLimit
+      have hShift : (word - 4294967296) + 4294967296 ≤
+          (2147483647 : Int) + 4294967296 := by
+        rw [Int.sub_add_cancel]
+        exact hUpper
+      exact Int.le_of_add_le_add_right hShift
+  | isFalse h =>
+    rw [ite_eq_right h]
+    constructor
+    · exact Int.le_trans (by decide) hlo
+    · have hLT : word < 2147483648 := Int.lt_of_not_ge h
+      have hConst : (2147483647 : Int) + 1 = 2147483648 := by decide
+      have hLT' : word < (2147483647 : Int) + 1 := by
+        rw [hConst]
+        exact hLT
+      exact Int.le_of_lt_add_one hLT'
 
 /-- Integer-domain signed projection always fits signed int32. -/
 theorem int32Word_bounds (x : Int) :
     -2147483648 ≤ int32Word x ∧ int32Word x ≤ 2147483647 := by
   obtain ⟨hlo, hhi⟩ := uint32Word_bounds x
-  unfold int32Word
-  by_cases h : uint32Word x ≥ midpoint
-  · simp [h]
-    unfold modulus midpoint at *
-    omega
-  · simp [h]
-    unfold midpoint at *
-    omega
+  change -2147483648 ≤
+      (if uint32Word x ≥ midpoint then uint32Word x - modulus else uint32Word x) ∧
+    (if uint32Word x ≥ midpoint then uint32Word x - modulus else uint32Word x) ≤
+      2147483647
+  exact int32Projection_bounds (uint32Word x) hlo (by simpa [modulus] using hhi)
 
 /-- Sanitized unsigned inputs are unchanged by uint32 projection. -/
 theorem uint32Word_checked_identity (x : Int)
