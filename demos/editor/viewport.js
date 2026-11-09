@@ -106,7 +106,6 @@ const tint=(color,texture,u,v)=>{
   if(!texture)return color;
   const x=Math.min(texture.width-1,Math.max(0,Math.round(u*(texture.width-1)))),
     y=Math.min(texture.height-1,Math.max(0,Math.round((1-v)*(texture.height-1))));
-  const pixel=texture.pixels[(y*texture.width+x)*4];
   return color.map((value,i)=>value*texture.pixels[(y*texture.width+x)*4+i]/255);
 };
 function prepare(world,library){
@@ -122,24 +121,30 @@ function prepare(world,library){
       const texture=tex?{width:tex.width,height:tex.height,
         pixels:Uint8Array.from(atob(tex.rgba),x=>x.charCodeAt(0))}:null;
       models.push({e,mesh,material:mat,texture});
-    }else boxes.push(e);
+    }else{
+      const material=p?.materialId?map.get(p.materialId):null;
+      boxes.push(material?.kind==='material'?{...e,color:material.color}:e);
+    }
   }
   return {boxes,models};
 }
-export function sceneResourceBudget(world,library=null){
-  if(!Array.isArray(world))throw new TypeError('world entities must be an array');
-  const {boxes,models}=prepare(world,library);
+function budgetPrepared({boxes,models},hasLibrary){
   const visible=boxes.length+models.length;
   if(visible>128)throw new RangeError('editor geometry budget exceeded');
   const vertices=boxes.length*36+models.reduce((n,o)=>n+o.mesh.vertices.length/5,0),
-    vertexBytes=vertices*6*4,limit=library?MAX_FOUNDRY_GEOMETRY_BYTES:MAX_EDITOR_GEOMETRY_BYTES;
+    vertexBytes=vertices*6*4,limit=hasLibrary?MAX_FOUNDRY_GEOMETRY_BYTES:MAX_EDITOR_GEOMETRY_BYTES;
   if(vertexBytes>limit)throw new RangeError('mesh upload exceeds retained geometry budget');
   return Object.freeze({visibleBoxes:visible,vertexBytes,
     estimatedRetainedBytes:vertexBytes*3,geometryBudgetBytes:limit});
 }
+export function sceneResourceBudget(world,library=null){
+  if(!Array.isArray(world))throw new TypeError('world entities must be an array');
+  return budgetPrepared(prepare(world,library),Boolean(library));
+}
 export function createSceneVertices(world,selected=null,library=null){
-  sceneResourceBudget(world,library);
+  if(!Array.isArray(world))throw new TypeError('world entities must be an array');
   const {boxes,models}=prepare(world,library);
+  budgetPrepared({boxes,models},Boolean(library));
   const packed=boxMeshBatch(boxes.map(e=>({
     center:e.position,size:e.scale,
     color:e.id===selected?e.color.map(x=>Math.min(1,x*.65+.35)):e.color
