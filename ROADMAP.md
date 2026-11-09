@@ -1,5 +1,29 @@
 # VANILLAJS roadmap
 
+## Infrastructure — incremental Chromium witnesses (development)
+
+- Partition the six-minute all-browser experience into seven independent source-bound suites; restore identical reviewed-main PASS receipts and execute only stale suite closures.
+- A changed shared module, package generator, browser verifier or unknown new demo invalidates the safe closure. Every Node test, offline verifier and package build still runs on every commit.
+- Provide an explicit manual full-browser audit. A reused witness is not presented as a fresh browser test.
+
+See [Incremental browser CI](docs/BROWSER_INCREMENTAL_CI.md).
+
+## v1.6.0 — The Asset Foundry (next implementation)
+
+- First-party bounded mesh import, initially limited to a strict subset of OBJ geometry and deterministic primitive conversions.
+- Retained WebGL RGB interleaved vertices, explicit material/color data and checksum-addressed local assets.
+- Editor asset browser, asset-to-entity attachment, reusable local prefabs and strict scene import/export compatibility.
+- No remote CDN, third-party runtime, unbounded uploaded files or scripts embedded in assets; provenance and license metadata are mandatory.
+- Real browser rendering and byte-for-byte deterministic export/import tests. No claim that the entire glTF/FBX pipeline exists.
+
+## v1.7.0 — Sound Forge (after Asset Foundry)
+
+- Native browser DSP Audio Lab with deterministic fixed-point or explicit float-rounding semantics, scheduled note/event tracks and reproducible offline PCM/WAV export.
+- Demoscene tracker and procedural music workflows informed by SPECTRAL and SONIFICATION, with explicit attribution and independently checked mapping receipts.
+- Preserve the SONIFICATION project's distinction between scientific model/surrogate mappings and measured material properties: no invented superfluid/absolute-zero material sound claims.
+- Build on existing audio2d and synth research, then expose an authored Sound component in the visual Inspector; live audio device timing is measured separately from offline waveform determinism.
+- Sound Forge is a **future phase**, not shipped with the Asset Foundry or Component Forge.
+
 ## v1.5.0 — The Component Forge (in development)
 
 - Typed, bounded component data: Mesh Renderer, Collider, Rigidbody, Player Controller, Trigger, Camera, with Transform retained as canonical authored fields.

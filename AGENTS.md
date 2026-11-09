@@ -16,7 +16,8 @@
 - Preserve fixed-step simulation, bounded catch-up and input cancellation on
   pause/focus changes. Gameplay tests must include relevant failure paths.
 - Run `node --test tests/*.test.js`, `node scripts/check.js`, and
-  `node scripts/build.js` for implementation changes. Browser changes also require
+  `node scripts/build.js` for implementation changes.
+- Incremental Chromium CI may reuse only source-bound PASS witnesses produced on reviewed main; unknown/shared source changes must fail closed to the real browser. Always rerun Node tests, package verification and archived evidence checks. Maintain manual full-browser override. Browser changes also require
   the packaged Chromium check in CI. Record actual execution separately from
   inferred behaviour and unavailable device coverage.
 - Keep public packaging allowlisted. Never include tooling dependencies, secrets,

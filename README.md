@@ -10,6 +10,8 @@
 
 **QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
 
+**Faster, fail-closed CI:** [Incremental Chromium verification](docs/BROWSER_INCREMENTAL_CI.md) reuses only exact source-bound, main-branch PASS evidence. Shared/new source changes invalidate affected browser suites; all unit and package integrity checks still run.
+
 **Next-generation editor (development):** [v1.5.0 — The Component Forge](docs/COMPONENT_FORGE.md) extends the visual workbench with strict schema-v2 components, real XYZ transform handles, snap-aware editing and component-driven Play mode. Existing v1 scene files migrate explicitly; the v1.4.0 benchmark release remains unchanged.
 
 Reusable JavaScript game modules built directly on web standards. The latest

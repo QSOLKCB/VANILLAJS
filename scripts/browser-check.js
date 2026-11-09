@@ -4,23 +4,34 @@ import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
 import assert from 'node:assert/strict';
-import {verifyIntegerFoundry} from './browser-integer.js';
-import {verifyInteractions} from './browser-interactions.js';
-import {verifyMouseLook} from './browser-mouse.js';
-import {verifyFps} from './browser-fps.js';
-import {verifyFpsMotion} from './browser-fps-motion.js';
-import {verifyPlatforms} from './browser-platforms.js';
-import {verifyRts} from './browser-rts.js';
-import {verifyFlow} from './browser-flow.js';
-import {verify2DLab} from './browser-2d.js';
-import {verifyOmi} from './browser-omi.js';
-import {verifyMachine} from './browser-machine.js';
-import {verifyVault} from './browser-vault.js';
-import {verifyRenderReuse} from './browser-opt-render.js';
-import {verifyWebGLAPI} from './browser-webgl-api.js';
-import {verifyFrameGate} from './browser-frame-gate.js';
-import {verifyDonorLabs} from './browser-donor-labs.js';
-import {verifyEditor} from './browser-editor.js';
+import {SUITES} from './browser-suite-cache.mjs';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Hosted CI may run only the groups whose source-bound witness is stale.
+// One shared suite inventory governs both actual execution and cache planning.
+const args=process.argv.slice(2);
+if(args.length>1||(args.length===1&&!args[0].startsWith('--suites=')))
+  throw new Error('usage: node scripts/browser-check.js [--suites=home,render,...]');
+const chosen=args.length?args[0].slice('--suites='.length).split(','):SUITES;
+if(chosen.length===0||new Set(chosen).size!==chosen.length||
+    chosen.some(x=>!SUITES.includes(x)))throw new Error('invalid browser suite selection');
+const requested=new Set(chosen);
+const needs=name=>requested.has(name);
 const require=createRequire(import.meta.url),{chromium}=require('playwright');
 const root=resolve(import.meta.dirname,'../dist');
 const server=createServer(async(req,res)=>{
@@ -33,11 +44,19 @@ const server=createServer(async(req,res)=>{
   }catch{res.writeHead(404);res.end();}
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
+const base=`http://127.0.0.1:${server.address().port}/VANILLAJS/`;
+async function runSuite(group,file,exported){
+  if(!needs(group))return;
+  const fn=(await import(file))[exported];
+  if(typeof fn!=='function')throw new TypeError('browser suite function not found: '+exported);
+  await fn(browser,base);
+}
 const browser=await chromium.launch({args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 try{
-  await page.goto(`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
+  if(needs('home')){
+    await page.goto(base);
   await page.waitForFunction(()=>document.querySelector('#status').textContent==='READY');
   assert.equal(await page.locator('#error').isVisible(),false);
   const pixels=await page.locator('#flight').evaluate(canvas=>new Promise(resolve=>requestAnimationFrame(()=>{
@@ -79,25 +98,29 @@ try{
   await page.setViewportSize({width:390,height:844});
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile layout must not overflow');
   await page.screenshot({path:'browser-artifacts/flight-lab-mobile.png',fullPage:true});
-  await verifyIntegerFoundry(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyRenderReuse(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyWebGLAPI(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyFrameGate(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyInteractions(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyMouseLook(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyFps(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyFpsMotion(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyPlatforms(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyRts(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyFlow(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verify2DLab(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyOmi(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyMachine(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyVault(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyDonorLabs(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
-  await verifyEditor(browser,`http://127.0.0.1:${server.address().port}/VANILLAJS/`);
+  }
+  await runSuite('render','./browser-integer.js','verifyIntegerFoundry');
+  await runSuite('render','./browser-opt-render.js','verifyRenderReuse');
+  await runSuite('render','./browser-webgl-api.js','verifyWebGLAPI');
+  await runSuite('render','./browser-frame-gate.js','verifyFrameGate');
+  await runSuite('play','./browser-interactions.js','verifyInteractions');
+  await runSuite('play','./browser-mouse.js','verifyMouseLook');
+  await runSuite('play','./browser-fps.js','verifyFps');
+  await runSuite('play','./browser-fps-motion.js','verifyFpsMotion');
+  await runSuite('play','./browser-platforms.js','verifyPlatforms');
+  await runSuite('worlds','./browser-rts.js','verifyRts');
+  await runSuite('worlds','./browser-flow.js','verifyFlow');
+  await runSuite('worlds','./browser-2d.js','verify2DLab');
+  await runSuite('research','./browser-omi.js','verifyOmi');
+  await runSuite('research','./browser-machine.js','verifyMachine');
+  await runSuite('render','./browser-vault.js','verifyVault');
+  await runSuite('donor','./browser-donor-labs.js','verifyDonorLabs');
+  await runSuite('editor','./browser-editor.js','verifyEditor');
+  if(needs('home')){
   const unsupported=await browser.newPage();await unsupported.addInitScript(()=>HTMLCanvasElement.prototype.getContext=()=>null);
   await unsupported.goto(page.url());await unsupported.locator('#error').waitFor({state:'visible'});
   assert.match(await unsupported.locator('#error').textContent(),/WebGL is unavailable/);
   assert.deepEqual(errors,[]);console.log('Chromium: rendered geometry, both modes, thrust, braking, rotation, pause, held-key repeat cancellation, blur, reset, project subpath, mobile layout and unsupported WebGL passed.');
+  }
+  console.log('Browser verification finished for suites: '+chosen.join(','));
 }finally{await browser.close();await new Promise(r=>server.close(r));}
