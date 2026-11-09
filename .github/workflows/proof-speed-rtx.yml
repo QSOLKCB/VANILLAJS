@@ -54,7 +54,8 @@ jobs:
           echo "QSOL_SPEED_EVIDENCE=$evidence" >> "$GITHUB_ENV"
           node scripts/proof-speed.mjs --measure --out proof-speed.json
           sha256sum -c proof-speed.SHA256SUMS
-          mv proof-speed.json "$evidence/"
+          mv proof-speed.json proof-speed.SHA256SUMS "$evidence/"
+          (cd "$evidence" && sha256sum -c proof-speed.SHA256SUMS)
           node scripts/rtx5060ti-frame-gate.mjs --expected-head "$GITHUB_SHA" --out "$evidence/frame-gate.json"
           (cd "$evidence" && sha256sum proof-speed.json frame-gate.json > SHA256SUMS)
           (cd "$evidence" && sha256sum -c SHA256SUMS)
