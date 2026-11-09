@@ -47,8 +47,14 @@ theorem uint32Word_checked_identity (x : Int)
 theorem int32Word_checked_identity (x : Int)
     (hlo : -2147483648 ≤ x) (hhi : x ≤ 2147483647) :
     int32Word x = x := by
-  unfold int32Word uint32Word modulus midpoint
-  omega
+  change (if x % 4294967296 ≥ 2147483648 then
+    x % 4294967296 - 4294967296
+    else x % 4294967296) = x
+  by_cases h : x % 4294967296 ≥ 2147483648
+  · simp [h]
+    omega
+  · simp [h]
+    omega
 
 /-- Concrete edge: unconstrained 32-bit coercion wraps the first invalid
 signed positive integer; the JavaScript checked int32 API rejects it. -/
