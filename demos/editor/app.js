@@ -134,7 +134,15 @@ async function importPngFile(file){
   if(file.size>64*1024)throw new RangeError('PNG source exceeds 64 KiB');
   const raw=new Uint8Array(await file.arrayBuffer());
   const signature=[137,80,78,71,13,10,26,10];
-  if(!signature.every((n,i)=>raw[i]===n))throw new TypeError('Not a PNG file');
+  if(raw.length<33||!signature.every((n,i)=>raw[i]===n)||
+     String.fromCharCode(...raw.slice(12,16))!=='IHDR')
+    throw new TypeError('Malformed PNG header');
+  const view=new DataView(raw.buffer,raw.byteOffset,raw.byteLength),
+    width=view.getUint32(16,false),height=view.getUint32(20,false);
+  // Check declared IHDR dimensions BEFORE invoking a browser image decoder
+  // to avoid decompressing an oversized untrusted local image.
+  if(width<1||height<1||width>64||height>64)
+    throw new RangeError('PNG IHDR exceeds 64×64 texture budget');
   const image=await createImageBitmap(new Blob([raw],{type:'image/png'}),
     {colorSpaceConversion:'none',premultiplyAlpha:'none'});
   try{
@@ -265,8 +273,22 @@ $('add').addEventListener('click',()=>add());
 $('add-child').addEventListener('click',()=>add(selected));
 $('duplicate').addEventListener('click',()=>{
   if(!selected)return;
-  try{const {scene,selected:id}=duplicateEntity(editScene(),selected);applyScene(scene,id);}
-  catch(error){inform(error.message,true);}
+  try{
+    const original=editScene(),subtree=new Set([selected]);let changed=true;
+    while(changed){changed=false;for(const e of original.objects)
+      if(subtree.has(e.parent)&&!subtree.has(e.id)){subtree.add(e.id);changed=true;}}
+    const copied=original.objects.filter(e=>subtree.has(e.id)),
+      result=duplicateEntity(original,selected),
+      added=result.scene.objects.slice(original.objects.length);
+    let nextLibrary=prunePlacements(original,library);
+    for(let i=0;i<added.length;i++){
+      const source=nextLibrary.placements.find(p=>p.entityId===copied[i].id);
+      if(source)nextLibrary=setPlacement(result.scene,nextLibrary,added[i].id,
+        source.meshId,source.materialId);
+    }
+    library=nextLibrary;
+    applyScene(result.scene,result.selected);
+  }catch(error){inform(error.message,true);}
 });
 $('remove').addEventListener('click',()=>{
   if(selected)try{applyScene(removeEntity(editScene(),selected),null);}
