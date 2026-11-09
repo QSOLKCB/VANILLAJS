@@ -114,5 +114,25 @@ class ResearchGate(unittest.TestCase):
             self.assertEqual(evidence["reports"][0]["research"], "")
             self.assertTrue((Path(d) / "evidence" / "SHA256SUMS").exists())
 
+    def test_provider_incomplete_status_is_not_promoted_to_complete(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "report.json"
+            path.write_text(json.dumps(report()))
+            answer = {
+                "id": "resp-incomplete", "model": module.MODEL,
+                "status": "incomplete",
+                "usage": {"input_tokens": 900, "output_tokens": 10000},
+                "output": [{"content": [
+                    {"type": "output_text", "text": "partial feedback"}]}],
+            }
+            with patch.dict("os.environ", {"OPENAI_API_KEY": "TEST-ONLY"},
+                            clear=True):
+                with patch.object(module, "send_once", return_value=answer) as mock:
+                    evidence = module.run(path, Path(d) / "evidence")
+            self.assertEqual(mock.call_count, 1)
+            self.assertEqual(evidence["status"], "INCOMPLETE")
+            self.assertEqual(evidence["reports"][0]["outputTokens"], 10000)
+            self.assertEqual(evidence["reports"][0]["status"], "incomplete")
+
 if __name__ == "__main__":
     unittest.main()
