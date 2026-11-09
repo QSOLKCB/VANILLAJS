@@ -34,3 +34,19 @@ footer{height:44px;display:flex;align-items:center;justify-content:center;paddin
 @media(max-width:1100px){.workbench{grid-template-columns:195px minmax(240px,1fr) 245px}.brand small{display:none}}
 @media(max-width:750px){.workbench{height:auto;min-height:0;grid-template-columns:1fr}.center{min-height:470px}.tree,.inspector{border:0;border-bottom:1px solid var(--line)}.sidebar{max-height:none}.hierarchy{max-height:190px}.topbar{align-items:start}.tips{gap:8px}.viewport{height:380px;flex:auto}footer{height:auto}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+/* Component Forge: UI controls are owned by VANILLAJS, no CSS framework. */
+.forge-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 14px;
+ background:#101e2a;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.forge-tools button{font-size:12px;padding:6px 9px}
+.forge-tools button.active,.forge-tools button[aria-pressed=true]{background:#235c53;color:#e3fff6;border-color:var(--accent)}
+.forge-tools kbd{margin-left:4px;color:inherit}
+.forge-tools label{display:inline-flex;flex-direction:row;align-items:center;gap:6px;
+ margin:0;color:var(--muted);font-size:11px}
+.forge-tools select{width:auto;padding:5px 8px;font-size:12px}
+.forge-tools input[type=checkbox]{accent-color:var(--accent)}
+#components{margin-top:14px}
+#components label.component-switch{flex-direction:row;align-items:center;gap:9px;padding:5px 0}
+#components .component-switch input{width:auto;accent-color:var(--accent)}
+#components .row-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#components input[type=number]{width:100%}
+@media(max-width:750px){.forge-tools{gap:5px}.forge-tools button{padding:6px 7px}.forge-tools .snap-label{flex-basis:100%}}
