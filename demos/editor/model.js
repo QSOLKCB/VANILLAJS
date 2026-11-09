@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // VANILLAJS visual editor project model. Pure JS, explicit owned snapshots.
 // Experimental box-only hierarchy: +Y up, rotation about Y, local TRS.
+import {defaultComponents,normalizeComponents,bodyForComponents,
+  reconcileComponentsForBody,patchComponent} from './components.js';
 const MAX_OBJECTS=128,MAX_DEPTH=16,MAX_COORD=1000,MAX_SCALE=100,MAX_NAME=64;
 const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
 const exactKeys=(obj,keys,label)=>{
@@ -24,8 +26,8 @@ const text=(s,label,max)=>{
 };
 const idPattern=/^entity-[1-9][0-9]{0,5}$/;
 const fields=['id','name','parent','position','rotationY','scale','color','body','visible'];
-function normalize(entity){
-  exactKeys(entity,fields,'entity');
+function normalize(entity,version=1){
+  exactKeys(entity,version===2?[...fields,'components']:fields,'entity');
   if(!idPattern.test(entity.id))throw new TypeError('invalid entity id');
   text(entity.name,'entity name',MAX_NAME);
   if(entity.parent!==null&&(!idPattern.test(entity.parent)||entity.parent===entity.id))
@@ -33,22 +35,30 @@ function normalize(entity){
   if(!['static','dynamic','player'].includes(entity.body))
     throw new TypeError('unknown body type');
   if(typeof entity.visible!=='boolean')throw new TypeError('visible must be boolean');
-  return {id:entity.id,name:entity.name,parent:entity.parent,
+  const result={id:entity.id,name:entity.name,parent:entity.parent,
     position:vector(entity.position,'position',-MAX_COORD,MAX_COORD),
     rotationY:bounded(entity.rotationY,'rotationY',-360000,360000),
     scale:vector(entity.scale,'scale',.01,MAX_SCALE),
     color:vector(entity.color,'color',0,1),
     body:entity.body,visible:entity.visible};
+  if(version===2){
+    result.components=normalizeComponents(entity.components);
+    if(bodyForComponents(result.components)!==result.body)
+      throw new TypeError('body and components disagree');
+  }
+  return result;
 }
 export function validateScene(input){
   exactKeys(input,['schemaVersion','name','nextId','objects'],'scene');
-  if(input.schemaVersion!==1)throw new RangeError('unsupported scene schema');
+  if(input.schemaVersion!==1&&input.schemaVersion!==2)
+    throw new RangeError('unsupported scene schema');
   text(input.name,'scene name',MAX_NAME);
   if(!Number.isSafeInteger(input.nextId)||input.nextId<1||input.nextId>999999)
     throw new RangeError('invalid nextId');
   if(!Array.isArray(input.objects)||input.objects.length>MAX_OBJECTS)
     throw new RangeError('too many scene entities');
-  const objects=input.objects.map(normalize),ids=new Map(objects.map(e=>[e.id,e]));
+  const objects=input.objects.map(e=>normalize(e,input.schemaVersion)),
+    ids=new Map(objects.map(e=>[e.id,e]));
   if(ids.size!==objects.length)throw new TypeError('duplicate entity ids');
   for(const e of objects)if(e.parent!==null&&!ids.has(e.parent))
     throw new TypeError('parent does not exist');
@@ -68,7 +78,7 @@ export function validateScene(input){
   if(objects.filter(e=>e.body==='player').length>1)throw new TypeError('only one player allowed');
   if(objects.some(e=>e.body!=='static'&&e.parent!==null))
     throw new TypeError('physics bodies must be root entities in editor v0.1');
-  return {schemaVersion:1,name:input.name,nextId:input.nextId,objects};
+  return {schemaVersion:input.schemaVersion,name:input.name,nextId:input.nextId,objects};
 }
 const entity=(id,name,position,scale,color,body='static')=>({
   id:'entity-'+id,name,parent:null,position,rotationY:0,scale,color,body,visible:true
@@ -81,12 +91,30 @@ export function createScene(){
     entity(4,'Beacon',[3,1,-3],[1.1,2,1.1],[.86,.35,.53])
   ]});
 }
+// Schema v1 remains importable/round-trippable unchanged. v2 is explicit.
+export function upgradeScene(scene){
+  const s=validateScene(scene);
+  if(s.schemaVersion===2)return s;
+  return validateScene({...s,schemaVersion:2,
+    objects:s.objects.map(e=>({...e,components:defaultComponents(e.body)}))});
+}
+export function createForgeScene(){return upgradeScene(createScene());}
+export function setEntityComponent(scene,id,kind,patch){
+  const s=validateScene(scene);
+  if(s.schemaVersion!==2)throw new TypeError('upgrade v1 scene first');
+  const entity=s.objects.find(e=>e.id===id);
+  if(!entity)throw new TypeError('unknown entity');
+  entity.components=patchComponent(entity.components,kind,patch);
+  entity.body=bodyForComponents(entity.components);
+  return validateScene(s);
+}
 export function addEntity(scene,{parent=null,name='Cube'}={}){
   const s=validateScene(scene);
   if(s.objects.length>=MAX_OBJECTS||s.nextId>=999999)throw new RangeError('scene capacity exhausted');
   if(parent!==null&&!s.objects.some(e=>e.id===parent))throw new TypeError('missing parent');
   const next=entity(s.nextId,text(name,'name',MAX_NAME),[0,1,0],[1,1,1],[.37,.78,.93]);
   next.parent=parent;
+  if(s.schemaVersion===2)next.components=defaultComponents();
   s.objects.push(next);s.nextId++;
   return validateScene(s);
 }
@@ -97,6 +125,8 @@ export function updateEntity(scene,id,changes){
       Object.keys(changes).some(k=>!fields.includes(k)||k==='id'))
     throw new TypeError('invalid edit fields');
   s.objects[i]={...s.objects[i],...changes};
+  if(s.schemaVersion===2&&Object.hasOwn(changes,'body'))
+    s.objects[i].components=reconcileComponentsForBody(s.objects[i].components,changes.body);
   return validateScene(s);
 }
 export function removeEntity(scene,id){
@@ -125,7 +155,10 @@ export function duplicateEntity(scene,id){
       parent:map.get(e.parent)??e.parent,position:[...e.position],
       scale:[...e.scale],color:[...e.color]};
     if(n.name.length>MAX_NAME)n.name=n.name.slice(0,MAX_NAME);
-    if(n.body==='player')n.body='dynamic';
+    if(n.body==='player'){
+      n.body='dynamic';
+      if(s.schemaVersion===2)n.components=reconcileComponentsForBody(n.components,'dynamic');
+    }
     s.objects.push(n);
   }
   s.nextId+=subtree.length;

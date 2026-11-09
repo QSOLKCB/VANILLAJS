@@ -60,12 +60,68 @@ export async function verifyEditor(browser,base){
     const chunks=[];for await(const chunk of bytes)chunks.push(chunk);
     const serialized=Buffer.concat(chunks).toString('utf8');
     const project=JSON.parse(serialized);
-    assert.equal(project.schemaVersion,1);
+    assert.equal(project.schemaVersion,2);
+    assert.ok(project.objects.every(e=>e.components?.mesh&&e.components?.collider));
+    assert.ok(project.objects.some(e=>e.components?.controller?.enabled));
     assert.equal(project.objects.length,6);
     assert.ok(project.objects.some(e=>e.name==='Alien Probe'));
     await page.locator('#open').setInputFiles({name:'saved.vscene.json',
       mimeType:'application/json',buffer:Buffer.from(serialized)});
     assert.equal(await page.locator('#count').textContent(),'6');
+    // A v1 export remains importable, and gets migrated to v2 in memory.
+    const oldFile={...project,schemaVersion:1,
+      objects:project.objects.map(({components,...legacy})=>legacy)};
+    await page.locator('#open').setInputFiles({name:'legacy.vscene.json',
+      mimeType:'application/json',buffer:Buffer.from(JSON.stringify(oldFile))});
+    assert.equal(await page.locator('#count').textContent(),'6');
+    assert.match(await page.locator('#status').textContent(),/Migrated v1/);
+    await page.locator('#open').setInputFiles({name:'saved.vscene.json',
+      mimeType:'application/json',buffer:Buffer.from(serialized)});
+    assert.equal(await page.locator('#count').textContent(),'6');
+    // New component controls are actual serialized, validated data.
+    await page.locator('#hierarchy button[data-id="entity-3"]').click();
+    const controller=page.locator('[data-component="controller"][data-field="enabled"]');
+    assert.equal(await controller.isChecked(),true);
+    await page.locator('#tool-rotate').click();
+    assert.equal(await page.locator('#tool-rotate').getAttribute('aria-pressed'),'true');
+    await page.locator('#tool-scale').click();
+    assert.equal(await page.locator('#tool-scale').getAttribute('aria-pressed'),'true');
+    await page.locator('#tool-move').click();
+    await page.locator('#gizmo-space').selectOption('local');
+    await page.locator('#gizmo-snap').uncheck();
+    const meshEnabled=page.locator('[data-component="mesh"][data-field="enabled"]');
+    await meshEnabled.uncheck();
+    assert.equal(await meshEnabled.isChecked(),false);
+    await meshEnabled.check();
+
+    // Native pointer-driven world X gizmo: edit, undo and redo one drag.
+    await page.locator('#hierarchy button[data-id="entity-4"]').click();
+    await page.locator('#gizmo-space').selectOption('world');
+    await page.locator('#gizmo-snap').check();
+    await page.locator('#tool-move').click();
+    const beforeX=Number(await page.locator('[data-axis="position"][data-i="0"]').inputValue());
+    const drag=await page.locator('#view').evaluate(async canvas=>{
+      const {projectPoint}=await import('/VANILLAJS/demos/editor/gizmos.js');
+      const rect=canvas.getBoundingClientRect(),
+        camera={yaw:38,pitch:23,distance:18,target:[0,1,0]};
+      const from=projectPoint(camera,[3,1,-3],rect.width,rect.height),
+        to=projectPoint(camera,[5.15,1,-3],rect.width,rect.height);
+      if(!from||!to)throw Error('cannot project world X gizmo');
+      return {start:{x:rect.x+from.x+(to.x-from.x)*.55,
+          y:rect.y+from.y+(to.y-from.y)*.55},
+        end:{x:rect.x+from.x+(to.x-from.x)*1.05,
+          y:rect.y+from.y+(to.y-from.y)*1.05}};
+    });
+    await page.mouse.move(drag.start.x,drag.start.y);
+    await page.mouse.down();
+    await page.mouse.move(drag.end.x,drag.end.y,{steps:7});
+    await page.mouse.up();
+    const movedX=Number(await page.locator('[data-axis="position"][data-i="0"]').inputValue());
+    assert.ok(movedX>beforeX+.25,'gizmo must commit a visible world-X move');
+    await page.locator('#undo').click();
+    assert.equal(Number(await page.locator('[data-axis="position"][data-i="0"]').inputValue()),beforeX);
+    await page.locator('#redo').click();
+    assert.equal(Number(await page.locator('[data-axis="position"][data-i="0"]').inputValue()),movedX);
 
     await page.locator('#play').click();
     assert.equal(await page.locator('#mode').textContent(),'PLAY');

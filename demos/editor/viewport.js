@@ -79,7 +79,10 @@ export function createGridVertices(size=10){
   return new Float32Array(data);
 }
 export function displayWorld(scene,preview=null){
-  const world=sceneWorld(scene);
+  // Component Forge: an entity without MeshRenderer remains available to
+  // physics, triggers and authored metadata, but is not drawn or pickable.
+  const world=sceneWorld(scene).map(e=>e.components?
+    {...e,visible:e.visible&&e.components.mesh.enabled}:e);
   if(!preview)return world;
   const byId=new Map(world.map(e=>[e.id,e]));
   return world.map(entity=>{

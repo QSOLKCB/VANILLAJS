@@ -10,6 +10,8 @@
 
 **QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
 
+**Next-generation editor (development):** [v1.5.0 — The Component Forge](docs/COMPONENT_FORGE.md) extends the visual workbench with strict schema-v2 components, real XYZ transform handles, snap-aware editing and component-driven Play mode. Existing v1 scene files migrate explicitly; the v1.4.0 benchmark release remains unchanged.
+
 Reusable JavaScript game modules built directly on web standards. The latest
 published release is **[v1.4.0 — The Proof of Speed](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.4.0)**,
 with source-bound CPU and physical RTX optimization evidence, complete-output

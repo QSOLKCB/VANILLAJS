@@ -526,6 +526,18 @@
       ],
       "preset": "visual-workbench",
       "description": "Local JSON scene editor with hierarchy, inspector, WebGL and fixed-step preview (experimental)"
+    },
+    "component-forge-editor": {
+      "entry": "demos/editor/model.js",
+      "modules": [
+        "math",
+        "geometry",
+        "collision",
+        "time",
+        "frame-gate"
+      ],
+      "preset": "component-forge-v1.5",
+      "description": "Schema-v2 typed scene components, local/world gizmos and deterministic component-driven preview (experimental)"
     }
   },
   "experiments": {

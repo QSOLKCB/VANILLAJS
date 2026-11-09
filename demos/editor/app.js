@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: Apache-2.0
-// VANILLAJS Workbench v0.1: DOM is the adapter; project/simulation stay pure.
+// VANILLAJS Component Forge v1.5: DOM only adapts owned scene data.
 import {WebGLAPI} from '../../api/webgl/index.js';
 import {FixedClock} from '../../modules/time/index.js';
-import {createScene,validateScene,addEntity,updateEntity,removeEntity,
+import {createForgeScene,upgradeScene,validateScene,addEntity,updateEntity,removeEntity,
   duplicateEntity,sceneWorld,serializeScene,parseScene,makeHistory,commitHistory,
-  undoHistory,redoHistory} from './model.js';
+  undoHistory,redoHistory,setEntityComponent} from './model.js';
 import {cameraMatrix,cameraRay,pickObject,createGridVertices,createSceneVertices,
   displayWorld} from './viewport.js';
 import {PREVIEW_DT,createPreview,stepPreview} from './preview.js';
+import {gizmoLines,pickGizmo,axisDragAmount,applyGizmo} from './gizmos.js';
 
 const $=id=>document.getElementById(id),canvas=$('view');
-let history=makeHistory(createScene()),selected='entity-3',draft=null,
+let history=makeHistory(createForgeScene()),selected='entity-3',draft=null,
   camera={yaw:38,pitch:23,distance:18,target:[0,1,0]},api=null,grid=null,mesh=null,
+  gizmoMesh=null,gizmoTool='move',gizmoSpace='world',snapEnabled=true,
   playing=false,paused=false,simulation=null,geometryDirty=true,frameId=0,
   lastTime=null,rendered=0,gesture=null;
 const keys=new Set(),clock=new FixedClock({step:PREVIEW_DT,maxFrame:.12,maxSteps:8});
@@ -40,6 +42,11 @@ function syncEditor(){
   $('redo').disabled=playing||history.future.length===0;
   $('properties').hidden=!selected;$('empty').hidden=!!selected;
   for(const el of $('properties').querySelectorAll('input,select'))el.disabled=playing;
+  for(const el of $('forge-tools').querySelectorAll('input,select,button'))el.disabled=playing;
+  for(const name of ['move','rotate','scale']){
+    $('tool-'+name).classList.toggle('active',gizmoTool===name);
+    $('tool-'+name).setAttribute('aria-pressed',String(gizmoTool===name));
+  }
   const hierarchy=$('hierarchy');hierarchy.replaceChildren();
   const visit=(parent,depth)=>{
     for(const e of scene.objects.filter(e=>e.parent===parent)){
@@ -61,6 +68,11 @@ function syncEditor(){
   $('object-name').value=e.name;$('object-body').value=e.body;
   $('object-visible').checked=e.visible;$('object-yaw').value=e.rotationY;
   $('object-color').value='#'+e.color.map(c=>Math.round(c*255).toString(16).padStart(2,'0')).join('');
+  for(const field of $('components').querySelectorAll('[data-component]')){
+    const value=e.components?.[field.dataset.component]?.[field.dataset.field];
+    if(field.type==='checkbox')field.checked=Boolean(value);
+    else field.value=value??'';
+  }
   for(const el of $('properties').querySelectorAll('[data-axis]')){
     el.value=e[el.dataset.axis][Number(el.dataset.i)];
   }
@@ -110,7 +122,7 @@ $('scene-name').addEventListener('change',()=>{
 });
 $('new-scene').addEventListener('click',()=>{
   if(!confirm('Start a new scene? Save your current JSON project first if needed.'))return;
-  history=makeHistory(createScene());selected='entity-3';draft=null;
+  history=makeHistory(createForgeScene());selected='entity-3';draft=null;
   markGeometry();syncEditor();inform('New scene created');
 });
 function download(name,content){
@@ -127,15 +139,23 @@ $('open').addEventListener('change',async event=>{
   const file=event.target.files?.[0];event.target.value='';if(!file)return;
   try{
     if(file.size>128*1024)throw new RangeError('scene exceeds 128 KiB');
-    const scene=parseScene(await file.text());
+    const raw=parseScene(await file.text()),scene=upgradeScene(raw);
     history=makeHistory(scene);selected=scene.objects[0]?.id??null;draft=null;
-    markGeometry();syncEditor();inform('Loaded validated scene · '+file.name);
+    markGeometry();syncEditor();inform((raw.schemaVersion===1?'Migrated v1 → v2 · ':'Loaded v2 scene · ')+file.name);
   }catch(error){inform('Scene rejected: '+error.message,true);}
 });
 $('properties').addEventListener('change',event=>{
   if(!selected||playing)return;
   const target=event.target,entity=editScene().objects.find(e=>e.id===selected);
   if(!entity)return;
+  if(target.dataset.component){
+    const kind=target.dataset.component,field=target.dataset.field;
+    const value=target.type==='checkbox'?target.checked:
+      target.type==='number'?Number(target.value):target.value;
+    try{applyScene(setEntityComponent(editScene(),selected,kind,{[field]:value}));}
+    catch(error){inform('Component rejected: '+error.message,true);syncEditor();}
+    return;
+  }
   let patch;
   if(target.dataset.axis){
     const name=target.dataset.axis,vector=[...entity[name]];
@@ -157,6 +177,7 @@ function initGraphics(){
   api=new WebGLAPI(canvas);
   grid=api.createMesh(createGridVertices(),'lines');
   mesh=api.createMesh([], 'triangles');
+  gizmoMesh=api.createMesh([], 'lines');
   geometryDirty=true;
 }
 function input(){
@@ -171,6 +192,7 @@ function frame(now){
     const dt=lastTime===null?0:max((now-lastTime)/1000,0,.12);
     lastTime=now;
     try{clock.advance(dt,()=>{simulation=stepPreview(history.present,simulation,input());
+      if(simulation.events?.length)inform('Trigger · '+simulation.events.map(e=>e.tag).join(', '));
       geometryDirty=true;});}
     catch(error){inform('Play preview stopped: '+error.message,true);stop();}
   }
@@ -184,10 +206,12 @@ function frame(now){
         const world=displayWorld(history.present===editScene()?history.present:editScene(),
           playing?simulation:null);
         api.updateMesh(mesh,createSceneVertices(world,playing?null:selected));
+        api.updateMesh(gizmoMesh,!playing&&selected?
+          gizmoLines(sceneWorld(editScene()),selected,gizmoSpace,gizmoTool):new Float32Array());
         geometryDirty=false;
       }
       api.beginFrame({vp:cameraMatrix(camera,width,height),fog:.008});
-      api.draw(grid);api.draw(mesh);api.endFrame();
+      api.draw(grid);api.draw(mesh);if(!playing)api.draw(gizmoMesh);api.endFrame();
       rendered++;
       const metrics=api.stats();
       $('stats').textContent=rendered+' frames · '+metrics.uploadedBytes+
@@ -221,6 +245,21 @@ $('pause').addEventListener('click',togglePause);
 $('frame').addEventListener('click',()=>{
   camera={yaw:38,pitch:23,distance:18,target:[0,1,0]};requestFrame();
 });
+function selectTool(tool){
+  if(playing)return;
+  if(!['move','rotate','scale'].includes(tool))throw new TypeError('invalid tool');
+  gizmoTool=tool;syncEditor();markGeometry();
+  inform('Gizmo: '+tool+' · '+gizmoSpace+' space'+(snapEnabled?' · snap on':''));
+}
+for(const tool of ['move','rotate','scale'])
+  $('tool-'+tool).addEventListener('click',()=>selectTool(tool));
+$('gizmo-space').addEventListener('change',event=>{
+  gizmoSpace=event.target.value;markGeometry();
+  inform('Gizmo space: '+gizmoSpace);
+});
+$('gizmo-snap').addEventListener('change',event=>{
+  snapEnabled=event.target.checked;inform('Gizmo snapping '+(snapEnabled?'on':'off'));
+});
 function planeContact(ray,y){
   if(Math.abs(ray.dir[1])<1e-9)return null;
   const t=(y-ray.origin[1])/ray.dir[1];
@@ -238,7 +277,19 @@ canvas.addEventListener('pointerdown',event=>{
     if(!api)return;
     gesture={kind:'orbit',x:event.clientX,y:event.clientY};
   }else if(event.button===0){
-    if(!playing&&event.shiftKey&&selected){
+    if(!playing&&selected&&!event.shiftKey){
+      const rect=canvas.getBoundingClientRect(),
+        object=sceneWorld(editScene()).find(e=>e.id===selected);
+      const axis=pickGizmo(camera,object,
+        event.clientX-rect.left,event.clientY-rect.top,
+        rect.width,rect.height,gizmoSpace,gizmoTool);
+      if(axis&&(gizmoTool!=='rotate'||axis==='y'))
+        gesture={kind:'gizmo',id:selected,axis,tool:gizmoTool,
+          space:gizmoSpace,snapping:snapEnabled,object,
+          scene:history.present,
+          start:{x:event.clientX-rect.left,y:event.clientY-rect.top}};
+    }
+    if(!gesture&&!playing&&event.shiftKey&&selected){
       const e=editScene().objects.find(e=>e.id===selected);
       if(e&&e.parent===null){
         const world=sceneWorld(editScene()).find(o=>o.id===selected),
@@ -260,6 +311,18 @@ canvas.addEventListener('pointermove',event=>{
     camera.yaw+=.35*(event.clientX-gesture.x);
     camera.pitch=max(camera.pitch+.30*(event.clientY-gesture.y),-80,80);
     gesture.x=event.clientX;gesture.y=event.clientY;requestFrame();
+  }else if(gesture.kind==='gizmo'&&!playing){
+    const rect=canvas.getBoundingClientRect();
+    const end={x:event.clientX-rect.left,y:event.clientY-rect.top};
+    const raw=axisDragAmount(camera,gesture.object,gesture.axis,
+      gesture.start,end,rect.width,rect.height,gesture.space);
+    const amount=gesture.tool==='rotate'?raw*60:
+      gesture.tool==='scale'?raw*.6:raw;
+    try{
+      draft=applyGizmo(gesture.scene,gesture.id,gesture.tool,
+        gesture.axis,amount,{space:gesture.space,snapping:gesture.snapping});
+      markGeometry();
+    }catch(error){inform('Transform rejected: '+error.message,true);}
   }else if(gesture.kind==='move'&&!playing){
     const hit=planeContact(mouseRay(event),gesture.entity.position[1]);
     if(!hit)return;
@@ -272,7 +335,7 @@ canvas.addEventListener('pointermove',event=>{
   }
 });
 function finishGesture(commit){
-  if(gesture?.kind==='move'){
+  if(gesture?.kind==='move'||gesture?.kind==='gizmo'){
     const next=draft;draft=null;
     if(commit&&next)applyScene(next);
     else{markGeometry();syncEditor();}
@@ -301,6 +364,11 @@ window.addEventListener('keydown',event=>{
     if(playing)togglePause();else{selected=null;markGeometry();syncEditor();}
     return;
   }
+  if(!playing&&['KeyW','KeyE','KeyR'].includes(event.code)){
+    event.preventDefault();
+    selectTool({KeyW:'move',KeyE:'rotate',KeyR:'scale'}[event.code]);
+    return;
+  }
   if(!playing&&(event.code==='Delete'||event.code==='Backspace')&&selected){
     event.preventDefault();applyScene(removeEntity(editScene(),selected),null);return;
   }
@@ -316,7 +384,7 @@ document.addEventListener('visibilitychange',()=>{
 });
 window.addEventListener('pagehide',()=>{resetKeys();clock.setPaused(true);});
 canvas.addEventListener('webglcontextlost',event=>{
-  event.preventDefault();api=null;grid=null;mesh=null;
+  event.preventDefault();api=null;grid=null;mesh=null;gizmoMesh=null;
   if(playing&&!paused)togglePause();inform('WebGL context lost; preview paused',true);
 });
 canvas.addEventListener('webglcontextrestored',()=>{

@@ -1,5 +1,8 @@
 # VANILLAJS Workbench — visual scene editor alpha
 
+**v1.5 follow-up:** [The Component Forge](COMPONENT_FORGE.md) introduces schema-v2 typed components, real axis gizmos, local/world transform modes, snapping and component-driven Play/Trigger behavior. This document retains the original v1 alpha contract for migration and historical evidence.
+
+
 **QSOL–IMC motto: Make amazing alien tech and put it under an Apache 2.0 license.**
 
 This is the first **usable visual-authoring slice** of a Unity/Unreal-style
