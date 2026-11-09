@@ -34,6 +34,7 @@ test('parent hierarchy transforms local translation, yaw and scale and catches c
   let s=createScene();
   s=updateEntity(s,'entity-4',{rotationY:90,scale:[2,2,2],position:[3,0,0]});
   s=addEntity(s,{parent:'entity-4',name:'Child'});
+  s=updateEntity(s,'entity-5',{position:[0,1,1]});
   const w=sceneWorld(s).at(-1);
   assert.equal(w.parent,'entity-4');
   assert.ok(Math.abs(w.position[0]-5)<1e-12);
