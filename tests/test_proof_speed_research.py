@@ -93,5 +93,26 @@ class ResearchGate(unittest.TestCase):
                              (Path(d) / "evidence" / "RESEARCH.json").read_text())
 
 
+    def test_billed_empty_output_is_preserved_without_retry(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "report.json"
+            path.write_text(json.dumps(report()))
+            answer = {
+                "id": "resp-test", "model": module.MODEL,
+                "status": "completed",
+                "usage": {"input_tokens": 1200, "output_tokens": 6000},
+                "output": [],
+            }
+            with patch.dict("os.environ", {"OPENAI_API_KEY": "TEST-ONLY"},
+                            clear=True):
+                with patch.object(module, "send_once", return_value=answer) as mock:
+                    evidence = module.run(path, Path(d) / "evidence")
+            self.assertEqual(mock.call_count, 1)
+            self.assertEqual(evidence["status"], "INCOMPLETE")
+            self.assertEqual(evidence["reports"][0]["responseId"], "resp-test")
+            self.assertEqual(evidence["reports"][0]["outputTokens"], 6000)
+            self.assertEqual(evidence["reports"][0]["research"], "")
+            self.assertTrue((Path(d) / "evidence" / "SHA256SUMS").exists())
+
 if __name__ == "__main__":
     unittest.main()
