@@ -4,3 +4,6 @@ defaultTargets = ["Q16Formal"]
 
 [[lean_lib]]
 name = "Q16Formal"
+
+[[lean_lib]]
+name = "Q16ECMA"
