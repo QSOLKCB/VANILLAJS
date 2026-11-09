@@ -56,3 +56,12 @@ test('the original executable Q16 kernel is unchanged by research freeze',()=>{
     'd457b0154d9dfc8b50fd593b5e9dff75e1ea66b9',
     'integer-math Git blob changed in evidence-only PR');
 });
+
+test('five-member ZIP inventory and adversarial manifest mutations pass Python stdlib regressions',()=>{
+  const run=spawnSync('python3',['-m','unittest','discover','-s','tests',
+    '-p','test_qfloat_freeze_archive.py','-v'],
+    {cwd:root,encoding:'utf8',timeout:30000});
+  assert.equal(run.status,0,run.stderr+'\n'+run.stdout);
+  assert.match(run.stderr,/Ran 7 tests/);
+  assert.match(run.stderr,/OK/);
+});
