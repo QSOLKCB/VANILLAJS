@@ -36,7 +36,8 @@ ZIP SHA-256:
 c0c2e23254147caa4e2a8a6e2a4682a8466868f7285b3df5429df8d250323005
 ```
 
-Verify all four members and metadata with:
+Verify all **five ZIP members** (the four manifest-listed evidence files
+plus the original SHA256SUMS manifest), exact bytes and metadata with:
 
 ```sh
 python3 scripts/verify-qfloat-freeze.py --archive /path/to/vanillajs-qfloat-arcade-42626854784-1.zip
