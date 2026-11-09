@@ -1,5 +1,14 @@
 # VANILLAJS roadmap
 
+## v1.4.0 — The Proof of Speed (implementation under review)
+
+- Source-bound seven-case paired CPU benchmark harness with exact full-output parity admission, independent negative controls, alternating AB/BA samples and archived raw receipts.
+- Offline Service Worker torture tests: interruption, corrupt installs, post-install corruption, scope isolation and fail-closed recovery.
+- Optional owner-only native RTX measurement and *separate*, owner-authorized, bounded OpenAI API adversarial research. No GPU or paid API on PR/push.
+- Require complete hosted tests and browser validation before publishing a v1.4.0 tag. Performance regressions are reportable results, not a reason to weaken the test oracle.
+
+See [Proof of Speed protocol](docs/PROOF_OF_SPEED.md).
+
 ## Experimental follow-up — Open-VLM vs Terra FreeDM
 
 - Compare four small, locally installed vision-language model candidates:
