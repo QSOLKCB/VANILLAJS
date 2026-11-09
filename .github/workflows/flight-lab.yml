@@ -4,6 +4,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      full_browser:
+        description: "Force all Chromium suites, ignoring previously verified source-bound cache receipts"
+        type: boolean
+        required: false
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -198,6 +204,7 @@ jobs:
       - name: Verify changed browser suites and validate reused main witnesses
         env:
           NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
+          BROWSER_FORCE_FULL: ${{ github.event_name == 'workflow_dispatch' && inputs.full_browser == true }}
           BROWSER_CACHE_HIT_HOME: ${{ steps.browser-home.outputs.cache-hit }}
           BROWSER_CACHE_HIT_RENDER: ${{ steps.browser-render.outputs.cache-hit }}
           BROWSER_CACHE_HIT_PLAY: ${{ steps.browser-play.outputs.cache-hit }}
