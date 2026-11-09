@@ -3,9 +3,11 @@
 // Y-axis gravity and axis-aligned static platform top faces only.
 // Rotated static shapes are visual geometry, NOT physical colliders.
 import {sceneWorld} from './model.js';
+import {createForgePreview,stepForgePreview} from './forge-preview.js';
 export const PREVIEW_DT=1/60;
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 export function createPreview(scene){
+  if(scene?.schemaVersion===2)return createForgePreview(scene);
   const world=sceneWorld(scene),bodies={};
   for(const e of world)if(e.visible&&e.body!=='static'){
     bodies[e.id]={position:[...e.position],vy:0,grounded:false};
@@ -13,6 +15,7 @@ export function createPreview(scene){
   return {tick:0,bodies};
 }
 export function stepPreview(scene,state,input={}){
+  if(scene?.schemaVersion===2)return stepForgePreview(scene,state,input);
   if(!state||!Number.isSafeInteger(state.tick)||state.tick<0||state.tick>=36000)
     throw new RangeError('invalid preview state');
   if(![-1,0,1].includes(input.x??0)||![-1,0,1].includes(input.z??0)||
