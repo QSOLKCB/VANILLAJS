@@ -1,0 +1,70 @@
+name: Proof of Speed - owner-only RTX 5060 Ti physical witness
+on:
+  workflow_dispatch:
+    inputs:
+      acknowledge_local_execution:
+        description: "Authorize native RTX device and source-bound browser workload"
+        type: boolean
+        required: true
+        default: false
+      publish_evidence:
+        description: "Upload checksum-sealed hardware results"
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: proof-speed-rtx-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  witness:
+    if: ${{ github.repository == 'QSOLKCB/VANILLAJS' && github.ref == 'refs/heads/main' && github.actor == 'EmergentMonk' && inputs.acknowledge_local_execution == true }}
+    runs-on: [self-hosted, linux, x64, qsol-rtx5060ti]
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Require exact reviewed main and a visible native GPU
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          env | grep -Eq '^(DISPLAY|WAYLAND_DISPLAY)=.+'
+          command -v nvidia-smi
+          nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader
+          node scripts/rtx-playwright.mjs
+      - name: Verify local exact simulation and offline contracts
+        run: |
+          node --test tests/proof-speed.test.js tests/offline-worker-proof.test.js
+          node scripts/check.js
+          node scripts/build.js
+          node scripts/verify-offline.js
+      - name: Capture CPU paired evidence and native WebGL frame-gate comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$HOME/.local/state/qsol/vanillajs/proof-speed/rtx-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          test ! -e "$evidence"
+          mkdir -m 700 -p "$evidence"
+          echo "QSOL_SPEED_EVIDENCE=$evidence" >> "$GITHUB_ENV"
+          node scripts/proof-speed.mjs --measure --out proof-speed.json
+          sha256sum -c proof-speed.SHA256SUMS
+          mv proof-speed.json "$evidence/"
+          node scripts/rtx5060ti-frame-gate.mjs --expected-head "$GITHUB_SHA" --out "$evidence/frame-gate.json"
+          (cd "$evidence" && sha256sum proof-speed.json frame-gate.json > SHA256SUMS)
+          (cd "$evidence" && sha256sum -c SHA256SUMS)
+      - name: Publish physical evidence only after owner opt-in
+        if: ${{ inputs.publish_evidence == true }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: proof-speed-rtx-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.QSOL_SPEED_EVIDENCE }}/proof-speed.json
+            ${{ env.QSOL_SPEED_EVIDENCE }}/frame-gate.json
+            ${{ env.QSOL_SPEED_EVIDENCE }}/SHA256SUMS
+          retention-days: 14
