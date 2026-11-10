@@ -82,6 +82,42 @@ test('policy admission is explicit, strict and rejects unintended accessors', ()
   assert.equal(quantizeQ16(a, Object.assign(Object.create(null), cfg('floor'))), 21845);
 });
 
+test('forged ExactRational prototypes cannot bypass private-field invariants', () => {
+  // This is the original review reproducer: prototype identity is NOT a brand.
+  const negativeDenominator = Object.create(ExactRational.prototype, {
+    numerator: {value: 1n},
+    denominator: {value: -3n},
+  });
+  assert.equal(Object.getPrototypeOf(negativeDenominator), ExactRational.prototype);
+  assert.throws(() => quantizeQ16(negativeDenominator, cfg('ceil')), TypeError);
+  assert.throws(() => quantizeQ16(negativeDenominator, cfg('toward-zero', 'saturate')), TypeError);
+
+  for (const [n, d] of [
+    [1n, 0n], [1n << 300n, 1n], [1n, 1n << 300n], [1n, 3n],
+  ]) {
+    const forged = Object.create(ExactRational.prototype, {
+      numerator: {value: n},
+      denominator: {value: d},
+    });
+    assert.throws(() => quantizeQ16(forged, cfg('nearest-even')), TypeError);
+  }
+  assert.throws(() => quantizeQ16(Object.create(ExactRational.prototype),
+    cfg('toward-zero')), TypeError);
+
+  // A forged object must not get to run its shadowed, potentially hostile getters.
+  let shadowReads = 0;
+  const shadow = Object.create(ExactRational.prototype, {
+    numerator: {get() { shadowReads++; return 1n; }},
+    denominator: {get() { shadowReads++; return 3n; }},
+  });
+  assert.throws(() => quantizeQ16(shadow, cfg('ceil')), TypeError);
+  assert.equal(shadowReads, 0);
+
+  // A Proxy of a valid instance has no private slots on the Proxy itself.
+  assert.throws(() => quantizeQ16(new Proxy(q(1, 3), {}), cfg('ceil')), TypeError);
+  assert.equal(quantizeQ16(q(1, 3), cfg('ceil')), 21846);
+});
+
 test('inverse mapping validates signed-int32 values; arbitrary raw round-trips exactly', () => {
   for (const raw of [INT_MIN, INT_MIN + 1, -65536, -1, -0, 0, 1,
     65536, INT_MAX - 1, INT_MAX]) {

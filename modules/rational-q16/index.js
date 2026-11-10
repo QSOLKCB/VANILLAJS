@@ -10,6 +10,13 @@ const MAX_BIG = BigInt(INT_MAX);
 const MODES = new Set(['exact', 'toward-zero', 'floor', 'ceil', 'nearest-even', 'nearest-away']);
 const OVERFLOWS = new Set(['reject', 'saturate']);
 
+// Cache the constructor's private-field-backed accessors. Prototype identity alone
+// is forgeable with Object.create(ExactRational.prototype).
+const rationalNumerator = Object.getOwnPropertyDescriptor(
+  ExactRational.prototype, 'numerator').get;
+const rationalDenominator = Object.getOwnPropertyDescriptor(
+  ExactRational.prototype, 'denominator').get;
+
 /** Both rounding and overflow are mandatory, immutable-snapshot policy inputs. */
 function policies(options) {
   if (options === null || typeof options !== 'object' ||
@@ -43,8 +50,17 @@ export function quantizeQ16(value, options) {
       Object.getPrototypeOf(value) !== ExactRational.prototype) {
     throw new TypeError('ExactRational required');
   }
-  const scaled = value.numerator * SCALE_BIG;
-  const denominator = value.denominator; // Canonical > 0 in ALIEN-MATH-001.
+  // Invoke the original accessors to prove this object has #n and #d.
+  // Own shadow properties must never be trusted as validated components.
+  let numerator, denominator;
+  try {
+    numerator = rationalNumerator.call(value);
+    denominator = rationalDenominator.call(value);
+  } catch (error) {
+    if (error instanceof TypeError) throw new TypeError('ExactRational required');
+    throw error;
+  }
+  const scaled = numerator * SCALE_BIG;
   let rounded = scaled / denominator; // BigInt truncates toward zero.
   const remainder = scaled % denominator;
   if (remainder !== 0n) {
