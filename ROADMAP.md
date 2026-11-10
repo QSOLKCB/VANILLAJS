@@ -1,5 +1,14 @@
 # VANILLAJS roadmap
 
+## ALIEN-MATH-001 — bounded exact rational authoring (experimental PR)
+
+- Standalone native module for normalized BigInt rationals, strict bounded decimal strings and canonical serialization; no runtime imports.
+- Independent integer cross-product tests, Python Fraction reference vectors, explicit nonclaims and research DOIs.
+- Authoring only: no Q16.16 conversion or simulation/replay integration in this phase. QFLOAT-001, immutable releases, Lean/SPARK proofs, evidence freezes and RTX runner workflows remain unchanged.
+- Follow-up ALIEN-MATH-002 is optional and must first specify rational-to-Q16 rounding, overflow and performance contracts.
+
+Details: [ALIEN-MATH-001](docs/ALIEN_MATH_001.md).
+
 ## QFLOAT-001 — integer-owned float-like authoring and RTX witness (development)
 
 - Native immutable QFloat numeric adapter over checked Q16.16 integer-math, with canonical decimal-string parsing and explicit presentation-only Number conversion.

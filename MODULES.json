@@ -291,6 +291,13 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Float-like decimal authoring facade backed entirely by checked signed Q16.16, explicit quantization, no implicit Float64 arithmetic"
+    },
+    "exact-rational": {
+      "entry": "modules/exact-rational/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded immutable BigInt rationals, strict decimal-string parsing and exact canonical serialization; authoring only"
     }
   },
   "recipes": {

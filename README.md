@@ -12,6 +12,8 @@
 
 **QFLOAT-001 (development):** [Native exact-integer QFloat facade and ARCADE QFloat Lab RTX browser witness](docs/QFLOAT_001.md) · [QFLOAT-001 executed evidence freeze](evidence/QFLOAT-001/README.md). Readable decimal authoring is explicitly quantized into checked Q16.16; the pre-existing VANILLAJS self-hosted runner can source-pin and test ARCADE's published browser lab by owner-only manual dispatch. No production float replacement.
 
+**ALIEN-MATH-001 (experimental):** [Zero-dependency exact rational authoring](docs/ALIEN_MATH_001.md) retains decimal values as bounded BigInt fractions before any deliberately specified Q16.16 quantization. Independent Node and Python Fraction oracles; no simulation-kernel, QFLOAT-001, runner, proof or release changes.
+
 **Faster, fail-closed CI:** [Incremental Chromium verification](docs/BROWSER_INCREMENTAL_CI.md) reuses only exact source-bound, main-branch PASS evidence. Shared/new source changes invalidate affected browser suites; all unit and package integrity checks still run.
 
 **Next-generation editor (development):** [v1.5.0 — The Component Forge](docs/COMPONENT_FORGE.md) extends the visual workbench with strict schema-v2 components, real XYZ transform handles, snap-aware editing and component-driven Play mode. Existing v1 scene files migrate explicitly; the v1.4.0 benchmark release remains unchanged.
