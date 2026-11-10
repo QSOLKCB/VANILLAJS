@@ -1,0 +1,9 @@
+{
+  "fixed_cases": 37,
+  "generated_cases": 2048,
+  "observations": 25020,
+  "oracle": "CPython fractions.Fraction with independently specified rounding",
+  "schema": "qsol.alien-math-002.fraction-oracle.v1",
+  "seed": "0x6a09e667",
+  "sha256": "f20af2f472414bf666f3e99c4ebc307caeb07d8f7091023cd3a67f7a8fe6e27b"
+}

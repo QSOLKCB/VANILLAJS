@@ -1,11 +1,20 @@
 # VANILLAJS roadmap
 
-## ALIEN-MATH-001 — bounded exact rational authoring (experimental PR)
+## ALIEN-MATH-002 — explicit rational-to-Q16.16 boundary (experimental PR)
+
+- A new native ES module converts ALIEN-MATH-001 rational authoring values into existing checked signed-int32 Q16.16 raw units.
+- Both policies are mandatory: exact/toward-zero/floor/ceil/nearest-even/nearest-away and reject/opt-in saturate; exact+saturate is invalid.
+- Independent CPython Fraction oracle digest for 25,020 outcomes, half-step truth tables, 25,000 raw round trips, 6,000 exact error-bound trials.
+- No integration with simulation, QFLOAT, renderer or replay; preserve existing Lean/SPARK proof work, immutable releases, QFLOAT and RTX evidence and owner-only runner policy.
+
+Details: [ALIEN-MATH-002](docs/ALIEN_MATH_002.md).
+
+## ALIEN-MATH-001 — bounded exact rational authoring (merged PR #63)
 
 - Standalone native module for normalized BigInt rationals, strict bounded decimal strings and canonical serialization; no runtime imports.
 - Independent integer cross-product tests, Python Fraction reference vectors, explicit nonclaims and research DOIs.
 - Authoring only: no Q16.16 conversion or simulation/replay integration in this phase. QFLOAT-001, immutable releases, Lean/SPARK proofs, evidence freezes and RTX runner workflows remain unchanged.
-- Follow-up ALIEN-MATH-002 is optional and must first specify rational-to-Q16 rounding, overflow and performance contracts.
+- ALIEN-MATH-002 adds the separately reviewed, explicit quantization boundary; ALIEN-MATH-001 remains unchanged.
 
 Details: [ALIEN-MATH-001](docs/ALIEN_MATH_001.md).
 
