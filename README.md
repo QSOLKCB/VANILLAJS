@@ -14,6 +14,8 @@
 
 **ALIEN-MATH-001 (experimental):** [Zero-dependency exact rational authoring](docs/ALIEN_MATH_001.md) retains decimal values as bounded BigInt fractions before any deliberately specified Q16.16 quantization. Independent Node and Python Fraction oracles; no simulation-kernel, QFLOAT-001, runner, proof or release changes.
 
+**ALIEN-MATH-002 (experimental):** [Explicit rational-to-Q16.16 conversion](docs/ALIEN_MATH_002.md) adds six deliberately selected rounding modes (including exact-only and ties-to-even) and explicit overflow rejection or opt-in saturation. A source-independent Python Fraction oracle checks 25,020 ordered outcomes; signed-int32 round-trip and error-bound regressions protect the conversion boundary. No gameplay kernel, QFLOAT, proof, RTX, workflow or release changes.
+
 **Faster, fail-closed CI:** [Incremental Chromium verification](docs/BROWSER_INCREMENTAL_CI.md) reuses only exact source-bound, main-branch PASS evidence. Shared/new source changes invalidate affected browser suites; all unit and package integrity checks still run.
 
 **Next-generation editor (development):** [v1.5.0 — The Component Forge](docs/COMPONENT_FORGE.md) extends the visual workbench with strict schema-v2 components, real XYZ transform handles, snap-aware editing and component-driven Play mode. Existing v1 scene files migrate explicitly; the v1.4.0 benchmark release remains unchanged.

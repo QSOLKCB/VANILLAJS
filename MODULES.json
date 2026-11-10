@@ -298,6 +298,16 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Bounded immutable BigInt rationals, strict decimal-string parsing and exact canonical serialization; authoring only"
+    },
+    "rational-q16": {
+      "entry": "modules/rational-q16/index.js",
+      "depends": [
+        "exact-rational",
+        "integer-math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Explicit bounded exact-rational to checked Q16.16 quantization with six rounding policies, fail-closed or opt-in saturating overflow, and exact inverse"
     }
   },
   "recipes": {
