@@ -708,6 +708,16 @@
         "lead-solver"
       ],
       "preset": "space-lab"
+    },
+    "4x-game-lab": {
+      "entry": "demos/4x-game-lab/world.js",
+      "modules": [
+        "integer-math",
+        "exact-rational",
+        "exact-graph"
+      ],
+      "preset": "seeded-sector",
+      "description": "Experimental turn-based 4X: seeded starlanes, fog of war, colonies, exact economy, rival fleets and command replay"
     }
   },
   "experiments": {

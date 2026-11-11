@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — 4X Game Lab
+
+- Add Ternary Reach, a seeded turn-based sector conquest game with exploration,
+  colonies, exact resource yields, research, fleets and a deterministic rival.
+- Reuse ALIEN MATH rational and graph APIs for economic rules and starlane routes.
+- Add bounded command replay, native keyboard/touch controls, offline packaging
+  and packaged Chromium gameplay coverage.
+
 ## Unreleased — integer engine foundation
 
 - Add four experimental native ES modules for signed 16.16 fixed-point math,

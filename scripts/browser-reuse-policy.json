@@ -51,14 +51,16 @@
     "worlds": {
       "roots": [
         "demos/rts-lab/",
-        "demos/2d-lab/"
+        "demos/2d-lab/",
+        "demos/4x-game-lab/"
       ],
       "scripts": [
         "scripts/browser-rts.js",
         "scripts/browser-flow.js",
-        "scripts/browser-2d.js"
+        "scripts/browser-2d.js",
+        "scripts/browser-4x.js"
       ],
-      "serviceWorker": false,
+      "serviceWorker": true,
       "consumes": [
         "worlds"
       ]
