@@ -1,18 +1,26 @@
 # VANILLAJS roadmap
 
-## ALIEN-MATH-006 — source-pinned formal correspondence (owner review)
+## ALIEN-MATH-FINAL — research freeze preparation (owner review)
+
+- [Audit, scoped source capsule and complete reproduction guide](docs/ALIEN_MATH_FINAL.md).
+- Deterministic SHA-256 inventory, original Git provenance witnesses, adversarial archive checks and draft publication metadata.
+- PR70 browser initialization race repaired without weakening its exact assertions.
+- Mathematical implementations and historical evidence preserved; OPEN refinement obligations remain OPEN.
+- STOP for owner review and merge. Publication, tagging and deposit require separate authorization.
+
+## ALIEN-MATH-006 — source-pinned formal correspondence (merged PR #70)
 
 - 21 Lean model theorems with independent typed statements and transitive axiom auditing.
 - Source/contract/verifier/domain pins, 856 Lean/JavaScript/Python finite observations and six compiled negative controls.
 - [Assertion inventory, proof scope and OPEN refinement obligations](docs/ALIEN_MATH_006.md). No universal ECMAScript refinement or physical/hardware claim.
-- The final research freeze remains planned only, requiring explicit authorization after this PR merges. No release, tag or deposit is authorized.
+- The owner authorized the final preparation below after PR70 merged. No release, tag or deposit is authorized.
 
 ## ALIEN-MATH-005 — graph traversal and spectral lab (merged PR #69)
 
 - At most 16 vertices; canonical simple undirected graphs, BFS/DFS and exact integer/rational invariants.
 - BigInt characteristic polynomial with independent subset-determinant oracle, relabeling and D4 grid tests.
 - Standalone [Graph & Spectral Lab](demos/graph-lab/index.html); exact results and illustrative pixels are distinct.
-- [Contract and reproduction](docs/ALIEN_MATH_005.md). Phase 006 is now authorized above; the final freeze still requires explicit owner approval.
+- [Contract and reproduction](docs/ALIEN_MATH_005.md). Phase 006 merged as PR70; final preparation is now authorized.
 
 ## ALIEN-MATH-004 — exact D4 symmetry (merged PR #68)
 

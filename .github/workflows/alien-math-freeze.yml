@@ -1,0 +1,73 @@
+name: ALIEN-MATH-FINAL research capsule and browser race
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  capsule:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Adversarial archive and draft identity checks (never reused)
+        run: node --test tests/alien-math-final.test.js
+      - name: Install the existing pinned Lean compiler
+        run: bash scripts/install-q16-lean.sh
+      - name: Build twice, verify external source identity and reproduce from capsule
+        run: |
+          set -euo pipefail
+          candidate_sha=$(git rev-parse HEAD)
+          python3 scripts/alien_math_bundle.py build --revision "$candidate_sha" --archive "$RUNNER_TEMP/alien-final-a.tar.gz"
+          python3 scripts/alien_math_bundle.py build --revision "$candidate_sha" --archive "$RUNNER_TEMP/alien-final-b.tar.gz"
+          cmp "$RUNNER_TEMP/alien-final-a.tar.gz" "$RUNNER_TEMP/alien-final-b.tar.gz"
+          sha256sum "$RUNNER_TEMP/alien-final-a.tar.gz" > "$RUNNER_TEMP/alien-final.sha256"
+          python3 scripts/alien_math_bundle.py reproduce --revision "$candidate_sha" --archive "$RUNNER_TEMP/alien-final-a.tar.gz" --destination "$RUNNER_TEMP/alien-final-reproduction" --lean "$(lean --print-prefix)/bin/lean"
+      - name: Upload review artifact (not a release or reusable main witness)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: alien-math-final-review-capsule
+          path: |
+            ${{ runner.temp }}/alien-final-a.tar.gz
+            ${{ runner.temp }}/alien-final.sha256
+            ${{ runner.temp }}/alien-final-reproduction/MANIFEST.json
+            ${{ runner.temp }}/alien-final-reproduction/formal-result.json
+          if-no-files-found: error
+          retention-days: 30
+  browser-race:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/flight-browser/browsers
+      NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        id: playwright-tooling
+        with:
+          path: ${{ runner.temp }}/flight-browser
+          key: flight-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24.04-node22-playwright1.64.0-only-shell-v1
+      - name: Install isolated pinned tooling on miss
+        if: steps.playwright-tooling.outputs.cache-hit != 'true'
+        run: |
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --prefix "$RUNNER_TEMP/flight-browser" --ignore-scripts --no-save --package-lock=false --no-audit --no-fund playwright@1.64.0
+          node "$RUNNER_TEMP/flight-browser/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Real preflight and delayed-module negative controls (never reused)
+        run: |
+          node scripts/flight-browser-preflight.mjs
+          node scripts/build.js
+          node scripts/verify-offline.js
+          node scripts/alien-math-browser-regression.mjs

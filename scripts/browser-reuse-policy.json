@@ -321,7 +321,7 @@
     "scripts/browser-flow.js": "e23164c7b72502b0f5d6d1753a9e1baa351211ad7191a1757139e94babeddc93",
     "scripts/browser-2d.js": "e63c4e84fc8f360fff5af349daceed6b44946d0fa697d6122aed69937eca423b",
     "scripts/browser-omi.js": "cf2042c1eea7b273908cf19c37783b630d58d1483f3d5b5343534d9ab23ec9fd",
-    "scripts/browser-machine.js": "5c7e430c956d8e81ed2e8f11e1feb9ff86613a4a57c30b16d1b3bf22facdff30",
+    "scripts/browser-machine.js": "b5b22e40e92110baf51cc07c50db92f083d4961fd182c600b105c377e00e084a",
     "scripts/browser-donor-labs.js": "f2d09b5be5082df40beefb18ca03ba88c83d28afdb35fcb7909cd05602145665",
     "scripts/browser-optional-labs.js": "9f433cb891e5f22d4bff8022538d498467322af1fce43f9c0d6be453d21d03e3",
     "scripts/browser-editor.js": "73376a3e60a3643ab3043468970cfff07f20b3dda01d35327444254526001679",

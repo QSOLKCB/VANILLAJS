@@ -1,0 +1,77 @@
+{
+  "schema": "qsol.alien-math-final.audit.v1",
+  "status": "REVIEW_CANDIDATE",
+  "base": "dd5e1557a35f032e949fa542ee024c6b011a83ea",
+  "formalBaseline": "ce7e38eb3c7412407a3ba2bc472120b589e6eb9e",
+  "javascriptRefinement": "OPEN",
+  "newHardwareVerification": false,
+  "phases": [
+    {
+      "phase": "ALIEN-MATH-001",
+      "contract": "docs/ALIEN_MATH_001.md",
+      "oracle": "scripts/alien_math_001_oracle.py",
+      "specifiedEvidence": "16 fixed Fraction pairs; 12000 seeded JS pairs",
+      "fixtures": {
+        "tests/fixtures/alien-math-001-vectors.json": "df8610fca20931fc7188df8c6857554829f3e31b53b9016db121da96ebaca5d4"
+      }
+    },
+    {
+      "phase": "ALIEN-MATH-002",
+      "contract": "docs/ALIEN_MATH_002.md",
+      "oracle": "scripts/alien_math_002_oracle.py",
+      "specifiedEvidence": "25020 policy observations",
+      "fixtures": {
+        "tests/fixtures/alien-math-002-oracle.json": "4c6740a1d8253a18ee3df46d3a00b7d0caf83c0e37e1e23a391188a79cabdc71"
+      }
+    },
+    {
+      "phase": "ALIEN-MATH-003",
+      "contract": "docs/ALIEN_MATH_003.md",
+      "oracle": "scripts/alien_math_003_oracle.py",
+      "specifiedEvidence": "2066 oracle cases",
+      "fixtures": {
+        "tests/fixtures/alien-math-003-oracle.json": "796057e3f16593541ee33524f0e5fc07b1047f975a43745fa27757fa57d4c509"
+      }
+    },
+    {
+      "phase": "ALIEN-MATH-004",
+      "contract": "docs/ALIEN_MATH_004.md",
+      "oracle": "scripts/alien_math_004_oracle.py",
+      "specifiedEvidence": "8320 observations",
+      "fixtures": {
+        "tests/fixtures/alien-math-004-input.json": "338db435363f81b7cdf7d6b20c98dc8df008729f8f71b6d719a7f1a89a5418d1",
+        "tests/fixtures/alien-math-004-oracle.json": "2ff7b7c00270d309b4b9a62d6d50ee03cddf73989f9b38e4d71b792c58121f4d"
+      }
+    },
+    {
+      "phase": "ALIEN-MATH-005",
+      "contract": "docs/ALIEN_MATH_005.md",
+      "oracle": "scripts/alien_math_005_oracle.py",
+      "specifiedEvidence": "211 graphs; 1536 exhaustive relabelings",
+      "fixtures": {
+        "tests/fixtures/alien-math-005-input.json": "1af74b8cf95716d1f8236944265855cc5724d6a6067640bd5d06014a23ea324c",
+        "tests/fixtures/alien-math-005-oracle.json": "1f11b52be6fea27a3432719f516dbe219582b9534b59e56d066513725e1558fc"
+      }
+    },
+    {
+      "phase": "ALIEN-MATH-006",
+      "contract": "docs/ALIEN_MATH_006.md",
+      "oracle": "scripts/alien_math_006_oracle.py",
+      "specifiedEvidence": "21 model theorems; 856 finite observations; 6 compiled negative controls",
+      "fixtures": {
+        "tests/fixtures/alien-math-006-input.json": "390a7400f1ab01b0243979ea707e1498d5090fe64afccd9b38962ec878782c7c",
+        "tests/fixtures/alien-math-006-oracle.json": "1866040c3fdd08477f190b47c44f6bfb47c9ca66d3e51c7352d8a6b417a23b45"
+      }
+    }
+  ],
+  "evidencePolicy": "Specification inventory, not a PASS receipt. Execute all stated gates and inspect the PR handoff.",
+  "preserved": [
+    "integer simulation backend",
+    "Q16.16 and QFLOAT",
+    "replay contracts",
+    "Lean/SPARK historical proofs",
+    "archived hardware receipts",
+    "existing release tags"
+  ],
+  "license": "Apache-2.0; existing LICENSE and NOTICE retained; unrelated historical evidence excluded"
+}
