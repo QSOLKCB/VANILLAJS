@@ -67,7 +67,8 @@
       "roots": [
         "demos/omi-lab/",
         "demos/ancient-machine/",
-        "demos/graph-lab/"
+        "demos/graph-lab/",
+        "demos/alien-course-lab/"
       ],
       "scripts": [
         "scripts/browser-omi.js",
@@ -232,6 +233,12 @@
       "tests/fixtures/alien-math-006-input.json",
       "tests/fixtures/alien-math-006-oracle.json",
       ".github/workflows/alien-math-formal.yml"
+    ],
+    "modules/exact-course/": [
+      "docs/ALIEN_COURSE_BRIDGE.md",
+      "scripts/alien_course_oracle.py",
+      "tests/alien-course.test.js",
+      "demos/alien-course-lab/sample.js"
     ]
   },
   "shared": [
@@ -321,7 +328,7 @@
     "scripts/browser-flow.js": "e23164c7b72502b0f5d6d1753a9e1baa351211ad7191a1757139e94babeddc93",
     "scripts/browser-2d.js": "e63c4e84fc8f360fff5af349daceed6b44946d0fa697d6122aed69937eca423b",
     "scripts/browser-omi.js": "cf2042c1eea7b273908cf19c37783b630d58d1483f3d5b5343534d9ab23ec9fd",
-    "scripts/browser-machine.js": "b5b22e40e92110baf51cc07c50db92f083d4961fd182c600b105c377e00e084a",
+    "scripts/browser-machine.js": "e57f1bf6958e0683a9948fda76e57689eae18bdcb0867f34dc9a702a62b654bd",
     "scripts/browser-donor-labs.js": "f2d09b5be5082df40beefb18ca03ba88c83d28afdb35fcb7909cd05602145665",
     "scripts/browser-optional-labs.js": "3b6d95f5050fc116976f16ddc30a58d75ec25021912d21b9359b9840e63a4404",
     "scripts/browser-editor.js": "73376a3e60a3643ab3043468970cfff07f20b3dda01d35327444254526001679",
@@ -329,7 +336,7 @@
     "scripts/omi-oracle.js": "c18dbd54d18295d03ec4681885d6e165feee4b8ef8136b935e4c425cbce1928c",
     "scripts/opt-render-reference.js": "7bfca288f555317228606b7f698105306f6635ef847a41af3d6143fc666395a3",
     "scripts/integer-fixture.js": "b36beb739f134fbbd6a49f238429d071f5603f5b6b3d09dcd9b381fe6144d793",
-    "scripts/browser-graph.js": "4d20b826a35c8e38e348938b661080a11bf55d28da9d401ce937932675a94be8"
+    "scripts/browser-graph.js": "1658e6d4023bf8dec1c3bca6262fa3f7b34f2f153a40e49c8ecfde5eedcb85fc"
   },
   "auditedRuntime": {
     "modules/adaptive-circles/index.js": "47333bd2221ca928a594d5f66e01e4482d23c69c4c722243a782078f3dd99f03",
@@ -425,6 +432,9 @@
     "demos/graph-lab/app.js": "4daf2ca8fff4e307ef2d1565c9a11f1266c79a365f999f29f7cd70707bc2abc3",
     "demos/graph-lab/presets.js": "9e6175b70d0b289b61c6aa997e181d073d4dabc09e89295196c6557890af3ba0",
     "demos/gpu-lab/scene.js": "d290458963f87970fb7c0a4077589fb78948dadffff026ccfd085383d4455c51",
-    "demos/space-lab/app.js": "092cf918dd7595ed67bae88baffdbcd935af1e38a73a59002c778a6d20d6bcdb"
+    "demos/space-lab/app.js": "092cf918dd7595ed67bae88baffdbcd935af1e38a73a59002c778a6d20d6bcdb",
+    "demos/alien-course-lab/app.js": "566e99c136a06a78f1045febe87be5c7afc50c3a87573676cecca48373224f5e",
+    "demos/alien-course-lab/sample.js": "561db80d7952111be683a19b0791390a368d1490df6d68f6fbf80f8b76feae0b",
+    "modules/exact-course/index.js": "1dae7f274c83f233bf9e56fec6ddcf3399ace6c4c4d93713851445f8210e18dd"
   }
 }

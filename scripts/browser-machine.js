@@ -70,7 +70,13 @@ export async function verifyMachine(browser, baseURL) {
   await page.locator('#motor').click();await page.waitForFunction(()=>document.querySelector('#status').textContent==='COUNTER FULL');
   assert.equal(await page.locator('#motor').isDisabled(),true);assert.equal(await detents(),'524280');await page.locator('#back').click();assert.equal(await detents(),'524279');
   await page.locator('#reset').click();assert.equal(await detents(),'000000');assert.equal(await word(),'0x1234');
-  await page.locator('nav a').first().click();assert.match(page.url(),/omi-lab/);await page.locator('.machine-link').click();assert.match(page.url(),/ancient-machine/);
+  await page.locator('nav a').first().click();
+  // Returning to OMI can commit the navigation before its link layout is
+  // ready. Wait for the actual destination load, not an arbitrary delay.
+  await page.waitForURL(/\/omi-lab\/index\.html$/);
+  await page.waitForLoadState('load');
+  assert.match(page.url(),/omi-lab/);
+  await page.locator('.machine-link').click();assert.match(page.url(),/ancient-machine/);
   const mobile=await browser.newPage({viewport:{width:390,height:844},hasTouch:true,reducedMotion:'reduce'});
   mobile.on('pageerror',e=>errors.push(e.message));await mobile.goto(baseURL+'demos/ancient-machine/index.html');
   assert.equal(await mobile.locator('#reduced-motion').isChecked(),true);await mobile.locator('#crank').tap();assert.equal(await mobile.locator('#detents').textContent(),'000001');

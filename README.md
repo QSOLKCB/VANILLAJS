@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/vanillajs-hero.svg" width="100%" alt="VANILLAJS — You Didn't Invent Doom Edition. Exact Q16.16 arithmetic, deterministic replay, and Lean formal proofs." />
+  <img src="assets/vanillajs-hero.svg" width="100%" alt="VANILLAJS Mod SDK — Build games. Extend the engine. Own your creations. This is not a product. This is INDEPENDENCE." />
 </p>
 
 <p align="center">
@@ -8,9 +8,15 @@
 
 **VANILLAJS Mod SDK — Build games. Extend the engine. Own your creations.**
 
+**Roadmap status:** The full, stable Mod SDK is planned, not yet shipped. Experimental ALIEN MATH, browser labs, source-owned game creation and Visual Workbench are available now.
+
 **This is not a product. This is INDEPENDENCE. 👽**
 
 **QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
+
+**NEW — ALIEN Course Foundry:** [Try exact drone-course authoring](demos/alien-course-lab/index.html) · [Read the Q16.16 gate contract](docs/ALIEN_COURSE_BRIDGE.md) · [Play DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/). The live game currently uses earlier VANILLAJS flight modules; adoption of this optional exact course bridge is planned for **DRONE-RACER PR #2**.
+
+**Released:** [VANILLAJS v1.6.0 — Operation ALIEN MATH 👽](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.6.0). The original ALIEN MATH 001–FINAL programme is already published as experimental math and research evidence.
 
 **QFLOAT-001 (development):** [Native exact-integer QFloat facade and ARCADE QFloat Lab RTX browser witness](docs/QFLOAT_001.md) · [QFLOAT-001 executed evidence freeze](evidence/QFLOAT-001/README.md). Readable decimal authoring is explicitly quantized into checked Q16.16; the pre-existing VANILLAJS self-hosted runner can source-pin and test ARCADE's published browser lab by owner-only manual dispatch. No production float replacement.
 
@@ -34,8 +40,7 @@
 
 **Next-generation editor (development):** [v1.5.0 — The Component Forge](docs/COMPONENT_FORGE.md) extends the visual workbench with strict schema-v2 components, real XYZ transform handles, snap-aware editing and component-driven Play mode. Existing v1 scene files migrate explicitly; the v1.4.0 benchmark release remains unchanged.
 
-Reusable JavaScript game modules built directly on web standards. The latest
-published release is **[v1.4.0 — The Proof of Speed](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.4.0)**,
+Reusable JavaScript game modules built directly on web standards. The latest published milestone is **[v1.6.0 — Operation ALIEN MATH](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.6.0)**, building on **[v1.4.0 — The Proof of Speed](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.4.0)**,
 with source-bound CPU and physical RTX optimization evidence, complete-output
 parity and fail-closed offline cache tests. Bullet Time and ARCADE labs arrived
 in v1.3.0; the exact Q16.16 and formal-verification foundation remains intact.

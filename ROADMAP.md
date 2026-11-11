@@ -1,5 +1,15 @@
 # VANILLAJS roadmap
 
+## ALIEN COURSE BRIDGE / DRONE-RACER — post-v1.6.0 (experimental)
+
+- Introduce an opt-in exact decimal course-authoring bridge with mandatory Q16.16 conversion policies and widened BigInt swept crossing classification.
+- [ALIEN Course Foundry](demos/alien-course-lab/index.html) provides an interactive lab and a source-bound sample matching the separate DRONE-RACER six-gate prototype.
+- [DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/) remains on its earlier flight engine until a separately reviewed PR #2 integrates the new math boundary. Do not advertise float flight as bit-exact across browsers.
+- A full VANILLAJS Mod SDK is future work: local manifests, extension lifecycle, data-only content packs, trusted-code policy, moddable labs, editor plugins, game construction guides, tested offline packaging.
+
+**This is not a product. This is INDEPENDENCE.**
+
+
 ## ALIEN-MATH-FINAL — research freeze preparation (owner review)
 
 - [Audit, scoped source capsule and complete reproduction guide](docs/ALIEN_MATH_FINAL.md).

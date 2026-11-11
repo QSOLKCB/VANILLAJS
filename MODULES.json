@@ -355,6 +355,18 @@
       "status": "experimental",
       "demo": "demos/graph-lab/index.html",
       "description": "Bounded simple undirected graphs, deterministic BFS/DFS, exact rational/integer invariants and BigInt adjacency characteristic polynomials; authoring only"
+    },
+    "exact-course": {
+      "entry": "modules/exact-course/index.js",
+      "depends": [
+        "exact-rational",
+        "rational-q16",
+        "integer-math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/alien-course-lab/index.html",
+      "description": "Opt-in exact decimal drone-course authoring, explicit Q16.16 aperture bounds and widened BigInt swept crossing predicates"
     }
   },
   "recipes": {
