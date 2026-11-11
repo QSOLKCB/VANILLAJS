@@ -1,0 +1,1 @@
+PASS: pinned Playwright 1.64.0 headless Chromium 156.0.8078.4 launches from cached/isolated tooling; full browser suite still required.

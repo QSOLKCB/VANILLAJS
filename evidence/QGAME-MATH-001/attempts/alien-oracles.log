@@ -1,0 +1,13 @@
+PASS: 16 independently computed rational pairs
+PASS: Fraction oracle, 2085 inputs x 12 policies
+PASS: ALIEN-MATH-003 Fraction oracle, 2066 cases
+PASS: ALIEN-MATH-004 independent matrix/Fraction oracle 2ff7b7c00270d309b4b9a62d6d50ee03cddf73989f9b38e4d71b792c58121f4d
+PASS: ALIEN-MATH-005 independent determinant oracle 1f11b52be6fea27a3432719f516dbe219582b9534b59e56d066513725e1558fc
+PASS: ALIEN-MATH-006 independent finite oracle 1866040c3fdd08477f190b47c44f6bfb47c9ca66d3e51c7352d8a6b417a23b45
+FAIL / NOT VERIFIED: source digest mismatch: .github/workflows/flight-lab.yml
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "/home/trent/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/lib/python3.13/subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/home/trent/.venv/bin/python3', 'scripts/verify_alien_math_006.py', '--pins-only']' returned non-zero exit status 1.

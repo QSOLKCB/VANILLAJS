@@ -1,0 +1,58 @@
+{
+  "home": {
+    "reuse": false,
+    "reason": "unsupported dependency analysis: unclassified browser harness: scripts/browser-qgame.js; unclassified package member: demos/quantum-game-lab/app.js; unclassified package member: demos/quantum-game-lab/experiment.js; unclassified package member: demos/quantum-game-lab/index.html; unclassified package member: demos/quantum-game-lab/style.css; unreviewed shared browser dispatcher",
+    "runs": [],
+    "changed": [
+      "no prior authenticated execution"
+    ]
+  },
+  "render": {
+    "reuse": false,
+    "reason": "unsupported dependency analysis: unclassified browser harness: scripts/browser-qgame.js; unclassified package member: demos/quantum-game-lab/app.js; unclassified package member: demos/quantum-game-lab/experiment.js; unclassified package member: demos/quantum-game-lab/index.html; unclassified package member: demos/quantum-game-lab/style.css; unreviewed shared browser dispatcher",
+    "runs": [],
+    "changed": [
+      "no prior authenticated execution"
+    ]
+  },
+  "play": {
+    "reuse": false,
+    "reason": "unsupported dependency analysis: unclassified browser harness: scripts/browser-qgame.js; unclassified package member: demos/quantum-game-lab/app.js; unclassified package member: demos/quantum-game-lab/experiment.js; unclassified package member: demos/quantum-game-lab/index.html; unclassified package member: demos/quantum-game-lab/style.css; unreviewed shared browser dispatcher",
+    "runs": [],
+    "changed": [
+      "no prior authenticated execution"
+    ]
+  },
+  "worlds": {
+    "reuse": false,
+    "reason": "unsupported dependency analysis: unclassified browser harness: scripts/browser-qgame.js; unclassified package member: demos/quantum-game-lab/app.js; unclassified package member: demos/quantum-game-lab/experiment.js; unclassified package member: demos/quantum-game-lab/index.html; unclassified package member: demos/quantum-game-lab/style.css; unreviewed shared browser dispatcher",
+    "runs": [],
+    "changed": [
+      "no prior authenticated execution"
+    ]
+  },
+  "research": {
+    "reuse": false,
+    "reason": "unsupported dependency analysis: unclassified browser harness: scripts/browser-qgame.js; unclassified package member: demos/quantum-game-lab/app.js; unclassified package member: demos/quantum-game-lab/experiment.js; unclassified package member: demos/quantum-game-lab/index.html; unclassified package member: demos/quantum-game-lab/style.css; unreviewed shared browser dispatcher",
+    "runs": [],
+    "changed": [
+      "no prior authenticated execution"
+    ]
+  },
+  "donor": {
+    "reuse": false,
+    "reason": "unsupported dependency analysis: unclassified browser harness: scripts/browser-qgame.js; unclassified package member: demos/quantum-game-lab/app.js; unclassified package member: demos/quantum-game-lab/experiment.js; unclassified package member: demos/quantum-game-lab/index.html; unclassified package member: demos/quantum-game-lab/style.css; unreviewed executable closure: demos/editor/app.js; unreviewed executable closure: demos/editor/authoring-math.js; unreviewed executable closure: demos/editor/gizmos.js; unreviewed executable closure: demos/editor/viewport.js; unreviewed executable closure: demos/editor/workflows.js; unreviewed shared browser dispatcher",
+    "runs": [],
+    "changed": [
+      "no prior authenticated execution"
+    ]
+  },
+  "editor": {
+    "reuse": false,
+    "reason": "unsupported dependency analysis: scripts/browser-editor.js: unmodeled URL resource; scripts/browser-editor.js: unsupported dependency /VANILLAJS/demos/editor/gizmos.js; unclassified browser harness: scripts/browser-qgame.js; unclassified package member: demos/quantum-game-lab/app.js; unclassified package member: demos/quantum-game-lab/experiment.js; unclassified package member: demos/quantum-game-lab/index.html; unclassified package member: demos/quantum-game-lab/style.css; unreviewed browser harness closure: scripts/browser-editor.js; unreviewed executable closure: demos/editor/app.js; unreviewed executable closure: demos/editor/authoring-math.js; unreviewed executable closure: demos/editor/gizmos.js; unreviewed executable closure: demos/editor/viewport.js; unreviewed executable closure: demos/editor/workflows.js; unreviewed shared browser dispatcher",
+    "runs": [],
+    "changed": [
+      "no prior authenticated execution"
+    ]
+  }
+}

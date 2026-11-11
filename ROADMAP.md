@@ -1,5 +1,14 @@
 # VANILLAJS roadmap
 
+## QGAME-MATH-001 — Quantum-Inspired Game-Math Laboratory (this PR)
+
+- [x] Bounded exact GF(3) vectors/matrices, invertible affine maps and syndromes
+- [x] Declared deterministic symbolic events and independently checked audio2d reference PCM
+- [x] Data-only Mod SDK experiment packs and offline [Ternary Constellation](demos/quantum-game-lab/index.html)
+- [x] Existing classical orbital solver, separate 60-digit Decimal reference and explicit numerical boundaries
+- [ ] Advanced N-body/Barnes–Hut/WASM, physical quantum simulation and longer segmented scores are outside this milestone
+- [Contract, provenance and executed evidence](docs/QGAME_MATH_001.md)
+
 ## MOD-SDK-001 — bounded local data-only registry (merged PR #75)
 
 - Strict versioned manifest admission, copied and frozen inert data, 32 KiB input limit

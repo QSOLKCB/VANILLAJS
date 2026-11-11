@@ -133,6 +133,7 @@ try{
   await runSuite('research','./browser-omi.js','verifyOmi');
   await runSuite('research','./browser-machine.js','verifyMachine');
   await runSuite('research','./browser-graph.js','verifyGraphLab');
+  await runSuite('research','./browser-qgame.js','verifyQuantumGameLab');
   await runSuite('render','./browser-vault.js','verifyVault');
   await runSuite('donor','./browser-optional-labs.js','verifyOptionalLabs');
   await runSuite('donor','./browser-donor-labs.js','verifyDonorLabs');

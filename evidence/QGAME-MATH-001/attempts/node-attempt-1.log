@@ -1,0 +1,67 @@
+TAP version 13
+# Subtest: tests/adaptive-circles.test.js
+ok 1 - tests/adaptive-circles.test.js
+  ---
+  duration_ms: 154.319205
+  type: 'test'
+  ...
+# Subtest: tests/alien-course.test.js
+ok 2 - tests/alien-course.test.js
+  ---
+  duration_ms: 119.523026
+  type: 'test'
+  ...
+# Subtest: tests/alien-math-006.test.js
+not ok 3 - tests/alien-math-006.test.js
+  ---
+  duration_ms: 218.205542
+  type: 'test'
+  location: '/home/trent/vanillajs-qgame-math-001/tests/alien-math-006.test.js:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: tests/alien-math-final.test.js
+ok 4 - tests/alien-math-final.test.js
+  ---
+  duration_ms: 624.099838
+  type: 'test'
+  ...
+# Subtest: tests/appearance.test.js
+ok 5 - tests/appearance.test.js
+  ---
+  duration_ms: 86.145957
+  type: 'test'
+  ...
+# Subtest: tests/asset-foundry.test.js
+ok 6 - tests/asset-foundry.test.js
+  ---
+  duration_ms: 87.419187
+  type: 'test'
+  ...
+# Subtest: tests/audio2d.test.js
+ok 7 - tests/audio2d.test.js
+  ---
+  duration_ms: 91.029397
+  type: 'test'
+  ...
+# Subtest: tests/ballistics.test.js
+ok 8 - tests/ballistics.test.js
+  ---
+  duration_ms: 94.481576
+  type: 'test'
+  ...
+# Subtest: tests/brass-machine.test.js
+ok 9 - tests/brass-machine.test.js
+  ---
+  duration_ms: 428.796215
+  type: 'test'
+  ...
+# Subtest: tests/browser-donor-labs.test.js
+ok 10 - tests/browser-donor-labs.test.js
+  ---
+  duration_ms: 98.811656
+  type: 'test'
+  ...

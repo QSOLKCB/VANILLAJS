@@ -1,0 +1,27 @@
+OMI Lab: exact word vectors, invalid edits, bits, face fault/common-mask limits, all 65,536 states, minimal periods, fixed-point step count, atlas pointer/keyboard, fresh press, pause/blur/hidden/reset, Canvas failure and 390 px touch-emulated layout passed.
+Brass Engine: visible SVG, eight staged detents, exact words, reverse, short periods, fixed point, motor pause, fractional JSON download/restore, malformed replay rejection, keyboard repeat/late pointer cancellation, blur/hidden, counter limit, reduced motion and 390/320 px touch-emulated layouts passed.
+ALIEN Course Foundry: actual browser module, Q16 output, multi-gate sweep, bad data rejection, rounding and 320px viewport passed.
+MOD-SDK-002 Circuit Foundry: packaged v2 course, exact gate, ordered sweep, reject/restore, 320px and Canvas fallback passed.
+Graph Lab: exact polynomial, cospectral distinction, traversal/relabel/D4 controls, empty/disconnected cases, Canvas fallback and 320px layout passed.
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ '4:swap:21>12'
+- '4:swap:02>20'
+          ^
+
+    at verifyQuantumGameLab (file:///home/trent/vanillajs-qgame-math-001/scripts/browser-qgame.js:36:12)
+    at async runSuite (file:///home/trent/vanillajs-qgame-math-001/scripts/browser-check.js:52:3)
+    at async file:///home/trent/vanillajs-qgame-math-001/scripts/browser-check.js:136:3 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '4:swap:21>12',
+  expected: '4:swap:02>20',
+  operator: 'strictEqual'
+}
+
+Node.js v22.18.0

@@ -1,0 +1,19 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'4 / 32' !== '0 / 32'
+
+    at verifyQuantumGameLab (file:///home/trent/vanillajs-qgame-math-001/scripts/browser-qgame.js:45:12)
+    at async runSuite (file:///tmp/qgame-math-evidence/browser-qgame-run.mjs:52:3)
+    at async file:///tmp/qgame-math-evidence/browser-qgame-run.mjs:136:3 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '4 / 32',
+  expected: '0 / 32',
+  operator: 'strictEqual'
+}
+
+Node.js v22.18.0
