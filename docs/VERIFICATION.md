@@ -1,5 +1,39 @@
 # Verification — VANILLAJS 1.0.0
 
+## ALIEN-MATH-004 — executed local evidence, owner review pending
+
+Base: `0d2aaf4dd0d9e6fa889d6bb273164247e640d5a8` (PR #67 merge).
+
+- 579 Node tests passed, zero failures in the final run. D4 checks cover all 64
+  products and 512 associativity triples, point/box actions and inverses,
+  orientation covariance, distance/relations, hostile inputs and 256-bit bounds.
+- The independent Python integer-matrix/Fraction oracle reproduced all 8,320
+  observations and the frozen Cayley table. ALIEN-MATH-001–003 and CI invariant
+  Python fixture checks also passed unchanged.
+- Tests first failed as expected before the new module existed. Four intentional
+  defects in disposable copies (composition, reflection, distance and box action)
+  were each rejected; the unmodified copy passed. No failing gate was waived.
+- Source check passed: 220 JavaScript files, 42 module contracts, two experiments.
+  Build and independent offline verification passed for all 122 packaged files.
+- Real isolated Playwright 1.64.0 / Chromium 156.0.8078.4 headless SwiftShader
+  preflight and all seven packaged suites passed. Seven executed / zero reused:
+  local GitHub authority was unavailable, and a separate read-only API audit
+  confirmed main remains unprotected. No qualifying receipt was published.
+- The existing 11 archival/offline check blocks and 14 CPU reference workload
+  steps passed. No archived receipt changed; no GPU/self-hosted workflow ran.
+
+The new module is packaged but not imported by any game. Browser passes establish
+package/lab regression coverage, not browser execution of D4 or physical hardware
+verification. The contract/test/oracle/fixture identity is added to the reuse
+policy for full-package consumers; source, policy and workflow changes cannot
+reuse stale results. No arithmetic backend, ALIEN-MATH-001–003 semantics, QFLOAT,
+Lean/SPARK proof boundary, replay, tag or release changed. Formal ECMAScript
+refinement and later campaign phases remain OPEN and outside this PR.
+
+See [ALIEN-MATH-004](ALIEN_MATH_004.md) for the full mathematical contract,
+resource bounds, commands, frozen input/fixture SHA-256 and limitations.
+
+
 ## CI-INVARIANT-001 — local executed evidence, owner review pending
 
 - 573 Node tests passed, including the A–M cache regression matrix; zero failures

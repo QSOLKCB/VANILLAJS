@@ -739,3 +739,11 @@ CPU-first renderer, explicit player opt-in, editor project setting and playable
 HTML export, exact-math preparation, resource limits, and local test commands.
 The project v2 envelope preserves graphics policy; legacy v1 projects still load.
 Existing WebGL APIs remain supported.
+
+## Exact D4 authoring symmetry (experimental)
+
+`modules/exact-d4/index.js` exports `D4_ELEMENTS`, `composeD4`, `inverseD4`,
+`determinantD4`, `transformPoint2`, `transformBox2` and `squaredDistance2`.
+Composition applies the right operand first. Actions use existing genuine rational
+XY points/boxes; reduced squared-distance overflow rejects rather than quantizes.
+See [ALIEN-MATH-004](ALIEN_MATH_004.md) for the complete bounded contract and example.

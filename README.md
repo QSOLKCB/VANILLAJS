@@ -18,9 +18,11 @@
 
 **ALIEN-MATH-002 (experimental):** [Explicit rational-to-Q16.16 conversion](docs/ALIEN_MATH_002.md) adds six deliberately selected rounding modes (including exact-only and ties-to-even) and explicit overflow rejection or opt-in saturation. A source-independent Python Fraction oracle checks 25,020 ordered outcomes; signed-int32 round-trip and error-bound regressions protect the conversion boundary. No gameplay kernel, QFLOAT, proof, RTX, workflow or release changes.
 
+**ALIEN-MATH-004 (experimental):** [Exact D4 symmetry](docs/ALIEN_MATH_004.md) adds origin-centred rational XY point/box actions, explicit composition and inverses, and bounded exact squared distance. Exhaustive finite group checks and an independent matrix/Fraction oracle; authoring only.
+
 **ALIEN-MATH-003 (experimental):** [Exact closed intervals and XY geometry predicates](docs/ALIEN_MATH_003.md) add positive-area rectangle classification, directed orientation and closed segment relations over authenticated BigInt rationals. Reproducible independent Python Fraction oracle: 2,066 cases; 4,000 seeded metamorphic geometry checks. No renderer, Q16 kernel, QFLOAT, proofs, personal RTX runner, archived evidence or release changes.
 
-**CI-INVARIANT-001 (review):** [Auditable browser reuse](docs/BROWSER_INCREMENTAL_CI.md) binds dependencies and verifier inputs to three authenticated main executions. Main currently lacks required approval protection, so reuse fails closed to Chromium execution. Unreachable math can preserve the worlds witness once authoritative qualification is available.
+**CI-INVARIANT-001 (merged PR #67):** [Auditable browser reuse](docs/BROWSER_INCREMENTAL_CI.md) binds dependencies and verifier inputs to three authenticated main executions. Main currently lacks required approval protection, so reuse fails closed to Chromium execution. Unreachable math can preserve the worlds witness once authoritative qualification is available.
 
 **Next-generation editor (development):** [v1.5.0 — The Component Forge](docs/COMPONENT_FORGE.md) extends the visual workbench with strict schema-v2 components, real XYZ transform handles, snap-aware editing and component-driven Play mode. Existing v1 scene files migrate explicitly; the v1.4.0 benchmark release remains unchanged.
 
