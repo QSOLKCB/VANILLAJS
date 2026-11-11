@@ -1,5 +1,45 @@
 # Verification — VANILLAJS 1.0.0
 
+
+## ALIEN-MATH-FINAL — executed candidate evidence, owner review pending
+
+Base: `dd5e1557a35f032e949fa542ee024c6b011a83ea` (merged PR70).
+
+- PR70 hosted CI failed at Machine Lab's exact drum count (0 versus 64).
+  Holding the application module reproduced that failure while the static word
+  and counter assertions still passed. Waiting for module load fixes the race;
+  the full verifier passes delayed delivery and still rejects an empty module.
+  No count was weakened and no runtime/gameplay file changed.
+- 591 Node tests passed, zero final failures; the added capsule Python suite
+  covers 13 adversarial/determinism cases. Source check: 227 JavaScript files,
+  43 module contracts and two experiments. Package/offline checks: 127 files,
+  820,136 bytes, byte-identical to the phase006 runtime package.
+- All six independent math fixtures and the CI invariant oracle reproduced
+  unchanged. Full phase006 Lean verification passed: 21 typed/axiom-audited
+  theorems, 856 three-way observations and all six compiled negative controls.
+  The active manifest changes only its browser-policy hash; the frozen baseline,
+  mathematical contracts, proof statements and fixture bytes are preserved.
+- Pinned Playwright 1.64.0 / Chromium 156.0.8078.4 software-rendered preflight,
+  all seven suites and the delayed-module regression passed. Seven executed,
+  zero reused: local authenticated authority was unavailable. Live GitHub reads
+  separately confirmed `main.protected=false`, no effective main rules and only
+  the existing QFLOAT tag-protection ruleset. No trusted PASS witness was issued.
+- Existing 11 archival/offline blocks and 14 CPU reference steps passed. Older
+  Q16 proof compilation/axiom audit passed (14 theorems, unchanged allowance);
+  its bridge checked 220,921 accepted, 33,992 rejected and 200,009 root cases.
+- Two builds of the committed candidate capsule were byte-identical. Extraction
+  into a fresh directory reproduced 57 selected Node tests, all independent
+  oracles, full phase006 Lean/negative controls and the unchanged runtime package.
+  Archive integrity/source binding and executed proof results are separate claims.
+  The final PR handoff supplies the exact candidate commit, tree and archive hash.
+
+The old CI assertion failure is the defect repaired here; no other verification
+failure was waived. Full repo checks ran separately from the intentionally scoped
+capsule. No physical GPU, owner-only workflow or self-hosted runner was used.
+No release/tag/Zenodo record was published. [The final audit and reproduction
+instructions](ALIEN_MATH_FINAL.md) enumerate OPEN refinement obligations and
+licensing/provenance exclusions. STOP for owner review and merge.
+
 ## ALIEN-MATH-006 — executed local evidence, owner review pending
 
 Base: `ce7e38eb3c7412407a3ba2bc472120b589e6eb9e` (PR #69 merge).

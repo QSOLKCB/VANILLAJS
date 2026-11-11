@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 import hashlib
+import gzip
 import importlib.util
 import io
 import json
@@ -118,6 +119,12 @@ class CapsuleTests(unittest.TestCase):
         entries = [(n, t, b'bad' if n == 'SHA256SUMS' else raw) for n, t, raw in entries]
         self.malicious_tar(entries)
         with self.assertRaisesRegex(ValueError, 'SHA256SUMS'): bundle.check(self.path, self.revision)
+
+    def test_hidden_members_after_tar_end_rejected(self):
+        self.write()
+        raw = gzip.decompress(self.path.read_bytes())
+        self.path.write_bytes(gzip.compress(raw + b'hidden unlisted content'))
+        with self.assertRaisesRegex(ValueError, 'hidden members'): bundle.check(self.path, self.revision)
 
     def test_bounds_reject_before_extraction(self):
         self.write()

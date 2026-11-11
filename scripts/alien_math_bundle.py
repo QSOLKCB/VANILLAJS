@@ -189,16 +189,12 @@ def write_archive(payload, revision, target):
 def check(archive_path, revision):
     need(bool(re.fullmatch('[0-9a-f]{40}', revision)), 'explicit full source commit required')
     need(Path(archive_path).stat().st_size <= MAX_BYTES, 'oversized archive')
-    members, total = {}, 0
-    class BoundedStream:
-        def __init__(self, stream):
-            self.stream, self.total = stream, 0
-        def read(self, size):
-            raw = self.stream.read(size)
-            self.total += len(raw)
-            need(self.total <= MAX_BYTES, 'oversized decompressed tar stream')
-            return raw
-    with gzip.open(archive_path, 'rb') as zipped, tarfile.open(fileobj=BoundedStream(zipped), mode='r|') as archive:
+    members, total, end = {}, 0, 0
+    # Bound the entire decompressed stream, including PAX headers and trailers.
+    with gzip.open(archive_path, 'rb') as zipped:
+        expanded = zipped.read(MAX_BYTES + 1)
+    need(len(expanded) <= MAX_BYTES, 'oversized decompressed tar stream')
+    with tarfile.open(fileobj=io.BytesIO(expanded), mode='r:') as archive:
         for entry in archive:
             safe(entry.name)
             need(entry.isfile() and not entry.issparse() and not entry.linkname, 'nonregular archive member')
@@ -207,6 +203,8 @@ def check(archive_path, revision):
             total += entry.size
             need(total <= MAX_BYTES, 'oversized expanded archive')
             members[entry.name] = archive.extractfile(entry).read()
+            end = entry.offset_data + ((entry.size + 511) // 512) * 512
+    need(len(expanded) >= end + 1024 and not any(expanded[end:]), 'invalid tar trailer or hidden members')
     need('MANIFEST.json' in members and 'SHA256SUMS' in members, 'missing archive inventory')
     sums = members.pop('SHA256SUMS')
     need(sums == ''.join(f'{sha(raw)}  {p}\n' for p, raw in sorted(members.items())).encode(), 'SHA256SUMS mismatch')
