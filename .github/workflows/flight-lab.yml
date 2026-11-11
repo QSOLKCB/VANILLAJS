@@ -164,97 +164,104 @@ jobs:
         uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/home.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.home }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.home }}-${{ github.run_id }}
+          restore-keys: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.home }}-
       - name: Restore protected-main render browser witness
         id: browser-render
         uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/render.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.render }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.render }}-${{ github.run_id }}
+          restore-keys: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.render }}-
       - name: Restore protected-main play browser witness
         id: browser-play
         uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/play.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.play }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.play }}-${{ github.run_id }}
+          restore-keys: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.play }}-
       - name: Restore protected-main worlds browser witness
         id: browser-worlds
         uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/worlds.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.worlds }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.worlds }}-${{ github.run_id }}
+          restore-keys: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.worlds }}-
       - name: Restore protected-main research browser witness
         id: browser-research
         uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/research.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.research }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.research }}-${{ github.run_id }}
+          restore-keys: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.research }}-
       - name: Restore protected-main donor browser witness
         id: browser-donor
         uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/donor.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.donor }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.donor }}-${{ github.run_id }}
+          restore-keys: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.donor }}-
       - name: Restore protected-main editor browser witness
         id: browser-editor
         uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/editor.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.editor }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.editor }}-${{ github.run_id }}
+          restore-keys: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.editor }}-
       - name: Verify changed browser suites and validate reused main witnesses
         env:
           NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
           BROWSER_FORCE_FULL: ${{ github.event_name == 'workflow_dispatch' && inputs.full_browser == true }}
-          BROWSER_CACHE_HIT_HOME: ${{ steps.browser-home.outputs.cache-hit }}
-          BROWSER_CACHE_HIT_RENDER: ${{ steps.browser-render.outputs.cache-hit }}
-          BROWSER_CACHE_HIT_PLAY: ${{ steps.browser-play.outputs.cache-hit }}
-          BROWSER_CACHE_HIT_WORLDS: ${{ steps.browser-worlds.outputs.cache-hit }}
-          BROWSER_CACHE_HIT_RESEARCH: ${{ steps.browser-research.outputs.cache-hit }}
-          BROWSER_CACHE_HIT_DONOR: ${{ steps.browser-donor.outputs.cache-hit }}
-          BROWSER_CACHE_HIT_EDITOR: ${{ steps.browser-editor.outputs.cache-hit }}
+          BROWSER_CACHE_HIT_HOME: ${{ steps.browser-home.outputs.cache-matched-key != '' }}
+          BROWSER_CACHE_HIT_RENDER: ${{ steps.browser-render.outputs.cache-matched-key != '' }}
+          BROWSER_CACHE_HIT_PLAY: ${{ steps.browser-play.outputs.cache-matched-key != '' }}
+          BROWSER_CACHE_HIT_WORLDS: ${{ steps.browser-worlds.outputs.cache-matched-key != '' }}
+          BROWSER_CACHE_HIT_RESEARCH: ${{ steps.browser-research.outputs.cache-matched-key != '' }}
+          BROWSER_CACHE_HIT_DONOR: ${{ steps.browser-donor.outputs.cache-matched-key != '' }}
+          BROWSER_CACHE_HIT_EDITOR: ${{ steps.browser-editor.outputs.cache-matched-key != '' }}
         run: node scripts/browser-suite-cache.mjs execute
       - name: Publish home PASS witness on reviewed main only
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-home.outputs.cache-hit != 'true'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.BROWSER_EXECUTED_HOME == 'true'
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/home.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.home }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.home }}-${{ github.run_id }}
       - name: Publish render PASS witness on reviewed main only
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-render.outputs.cache-hit != 'true'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.BROWSER_EXECUTED_RENDER == 'true'
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/render.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.render }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.render }}-${{ github.run_id }}
       - name: Publish play PASS witness on reviewed main only
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-play.outputs.cache-hit != 'true'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.BROWSER_EXECUTED_PLAY == 'true'
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/play.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.play }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.play }}-${{ github.run_id }}
       - name: Publish worlds PASS witness on reviewed main only
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-worlds.outputs.cache-hit != 'true'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.BROWSER_EXECUTED_WORLDS == 'true'
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/worlds.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.worlds }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.worlds }}-${{ github.run_id }}
       - name: Publish research PASS witness on reviewed main only
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-research.outputs.cache-hit != 'true'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.BROWSER_EXECUTED_RESEARCH == 'true'
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/research.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.research }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.research }}-${{ github.run_id }}
       - name: Publish donor PASS witness on reviewed main only
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-donor.outputs.cache-hit != 'true'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.BROWSER_EXECUTED_DONOR == 'true'
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/donor.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.donor }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.donor }}-${{ github.run_id }}
       - name: Publish editor PASS witness on reviewed main only
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.browser-editor.outputs.cache-hit != 'true'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.BROWSER_EXECUTED_EDITOR == 'true'
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ runner.temp }}/flight-suite-evidence/editor.json
-          key: vanillajs-browser-suite-v1-${{ steps.browser-suite-keys.outputs.editor }}
+          key: vanillajs-browser-suite-v2-${{ steps.browser-suite-keys.outputs.editor }}-${{ github.run_id }}
       - name: Preserve browser screenshots and package manifest
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

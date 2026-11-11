@@ -68,3 +68,11 @@ node scripts/build.js
 ~~~
 
 Instrumentation counts calls and submitted API bytes, **not** physical PCIe transfer, GPU memory allocation, actual GPU milliseconds or end-user FPS. Quantitative performance claims require a separate, source-pinned hardware workload and baseline comparison. The RTX5060TI-001 archive remains immutable and independent.
+
+## Optional CPU / GPU graphics and space labs
+
+See [the GPU/WASM and Space Game Lab guide](../docs/OPTIONAL_GPU_WASM.md) for the experimental
+CPU-first renderer, explicit player opt-in, editor project setting and playable
+HTML export, exact-math preparation, resource limits, and local test commands.
+The project v2 envelope preserves graphics policy; legacy v1 projects still load.
+Existing WebGL APIs remain supported.

@@ -327,6 +327,13 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Explicit bounded exact-rational to checked Q16.16 quantization with six rounding policies, fail-closed or opt-in saturating overflow, and exact inverse"
+    },
+    "render-optional": {
+      "entry": "modules/render-optional/index.js",
+      "depends": [],
+      "environment": "browser-canvas2d with opt-in WebGPU/WASM",
+      "status": "experimental",
+      "description": "Bounded retained XYZ/RGB geometry, CPU default, lazy explicit GPU consent and CPU recovery"
     }
   },
   "recipes": {
@@ -583,6 +590,29 @@
       ],
       "preset": "component-forge-v1.5",
       "description": "Schema-v2 typed scene components, local/world gizmos and deterministic component-driven preview (experimental)"
+    },
+    "gpu-lab": {
+      "entry": "demos/gpu-lab/app.js",
+      "modules": [
+        "render-optional",
+        "time",
+        "geometry",
+        "logical-sampling"
+      ],
+      "preset": "gpu-lab"
+    },
+    "space-lab": {
+      "entry": "demos/space-lab/world.js",
+      "modules": [
+        "render-optional",
+        "time",
+        "exact-rational",
+        "rational-q16",
+        "exact-geometry",
+        "orbital-physics",
+        "lead-solver"
+      ],
+      "preset": "space-lab"
     }
   },
   "experiments": {

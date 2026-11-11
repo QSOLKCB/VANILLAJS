@@ -113,3 +113,11 @@ are suitable foundations, but sound playback, formal mathematical mapping
 and scientific material claims require separate evidence.
 
 **QSOL-IMC — Make amazing alien tech and put it under an Apache 2.0 license.**
+
+## Optional CPU / GPU graphics and space labs
+
+See [the GPU/WASM and Space Game Lab guide](OPTIONAL_GPU_WASM.md) for the experimental
+CPU-first renderer, explicit player opt-in, editor project setting and playable
+HTML export, exact-math preparation, resource limits, and local test commands.
+The project v2 envelope preserves graphics policy; legacy v1 projects still load.
+Existing WebGL APIs remain supported.

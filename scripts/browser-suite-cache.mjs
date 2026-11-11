@@ -4,14 +4,14 @@
 // package verification; an unknown/shared dependency invalidates ALL suites.
 // PRs can read reviewed main receipts but NEVER publish trusted cache entries.
 import {createHash} from 'node:crypto';
-import {readFile,lstat,mkdir,writeFile} from 'node:fs/promises';
+import {readFile,lstat,mkdir,writeFile,rename} from 'node:fs/promises';
 import {resolve,join,posix} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import assert from 'node:assert/strict';
 
 export const SUITES=Object.freeze(['home','render','play','worlds','research','donor','editor']);
-export const PROFILE='browser-suite-source-v1';
+export const PROFILE='browser-suite-source-v2-three-executions';
 const ROOT=resolve(import.meta.dirname,'..');
 const DIGEST=bytes=>createHash('sha256').update(bytes).digest('hex');
 const OWN=Object.freeze({
@@ -20,7 +20,7 @@ const OWN=Object.freeze({
   play:['demos/interaction-lab/','demos/fps-lab/'],
   worlds:['demos/rts-lab/','demos/2d-lab/'],
   research:['demos/omi-lab/','demos/ancient-machine/'],
-  donor:['demos/bullet-time-lab/','demos/arcade-lab/','demos/shared-lab/'],
+  donor:['demos/bullet-time-lab/','demos/arcade-lab/','demos/shared-lab/','demos/gpu-lab/','demos/space-lab/'],
   editor:['demos/editor/']
 });
 const BROWSER_SCRIPTS=Object.freeze({
@@ -31,7 +31,7 @@ const BROWSER_SCRIPTS=Object.freeze({
     'browser-fps-motion.js','browser-platforms.js'],
   worlds:['browser-rts.js','browser-flow.js','browser-2d.js'],
   research:['browser-omi.js','browser-machine.js'],
-  donor:['browser-donor-labs.js'],
+  donor:['browser-donor-labs.js','browser-optional-labs.js'],
   editor:['browser-editor.js']
 });
 const toSha=(label,bytes)=>({path:label,sha256:DIGEST(bytes)});
@@ -75,7 +75,11 @@ export function digestClosures(files,sharedCode,suiteCode,environment){
   const {global,own}=partitionPackage(files);
   const results={};
   for(const group of SUITES){
-    const runtime=[...global,...own[group]].map(f=>({path:f.path,sha256:f.sha256}));
+    // The donor verifier opens the editor/player, and editor controls import
+    // GPU-lab code. Include both complete directory closures, independently
+    // of generated service-worker hashes. Keep exclusive ownership for validation.
+    const consumers=(group==='donor'||group==='editor')?['donor','editor']:[group];
+    const runtime=[...new Map([...global,...consumers.flatMap(g=>own[g])].map(f=>[f.path,f])).values()].map(f=>({path:f.path,sha256:f.sha256}));
     runtime.sort(sortByPath);
     const identity={protocol:PROFILE,group,env:environment,runtime,
       sharedCode:[...sharedCode].sort(sortByPath),
@@ -115,24 +119,35 @@ export async function sourceProfile({manifest,environment}={}){
   }
   return digestClosures(packageManifest.files,code,scripts,env);
 }
-export function witness(suite,fingerprint,run='main-verified'){
-  if(!SUITES.includes(suite)||!/^[0-9a-f]{64}$/.test(fingerprint))
-    throw new TypeError('invalid source identity');
-  return {kind:'qsol.vanillajs.browser.suite.witness.v1',
-    suite,fingerprint,status:'PASS',provenance:'protected-main-only',run};
+export const REQUIRED_PASSES=3;
+const KIND='qsol.vanillajs.browser.suite.witness.v2';
+export function validWitness(data,suite,fingerprint){
+  return Boolean(data&&data.kind===KIND&&SUITES.includes(suite)&&
+    /^[0-9a-f]{64}$/.test(fingerprint)&&data.suite===suite&&data.fingerprint===fingerprint&&
+    data.status==='PASS'&&data.provenance==='protected-main-only'&&
+    Array.isArray(data.runs)&&data.runs.length>=1&&data.runs.length<=REQUIRED_PASSES&&
+    data.runs.every(r=>typeof r==='string'&&/^[1-9][0-9]{0,19}$/.test(r))&&
+    new Set(data.runs).size===data.runs.length);
 }
-export async function reuse(cachePath,suite,fingerprint,cacheHit){
-  if(cacheHit!=='true')return false;
+export function witness(suite,fingerprint,run,previous=null){
+  if(!SUITES.includes(suite)||!/^[0-9a-f]{64}$/.test(fingerprint)||
+    typeof run!=='string'||! /^[1-9][0-9]{0,19}$/.test(run))throw new TypeError('invalid source or execution identity');
+  const runs=validWitness(previous,suite,fingerprint)?[...previous.runs]:[];
+  if(!runs.includes(run)&&runs.length<REQUIRED_PASSES)runs.push(run);
+  return {kind:KIND,suite,fingerprint,status:'PASS',provenance:'protected-main-only',runs};
+}
+export async function readWitness(cachePath,suite,fingerprint,cacheHit){
+  if(cacheHit!=='true')return null;
   try{
     const st=await lstat(cachePath);
-    if(!st.isFile()||st.size>4096||st.size<80)return false;
+    if(!st.isFile()||st.size>4096||st.size<80)return null;
+    // Parse one owned byte snapshot; never reopen the path after validation.
     const data=JSON.parse(await readFile(cachePath,'utf8'));
-    if(data.kind!=='qsol.vanillajs.browser.suite.witness.v1'||
-      data.suite!==suite||data.fingerprint!==fingerprint||
-      data.status!=='PASS'||data.provenance!=='protected-main-only'||
-      typeof data.run!=='string'||data.run.length>96)return false;
-    return true;
-  }catch{return false;}
+    return validWitness(data,suite,fingerprint)?data:null;
+  }catch{return null;}
+}
+export async function reuse(cachePath,suite,fingerprint,cacheHit){
+  return (await readWitness(cachePath,suite,fingerprint,cacheHit))?.runs.length===REQUIRED_PASSES;
 }
 async function plan(){
   const fingerprints=await sourceProfile();
@@ -145,11 +160,12 @@ async function execute(){
   await mkdir(cacheRoot,{recursive:true});
   const forceFull=process.env.BROWSER_FORCE_FULL==='true';
   if(forceFull)console.log('MANUAL FULL AUDIT: all source-bound browser receipts will be ignored');
-  const stale=[],reused=[];
+  const stale=[],reused=[],previous={};
   for(const group of SUITES){
     const hit=process.env['BROWSER_CACHE_HIT_'+group.toUpperCase()]??'false';
     const path=join(cacheRoot,group+'.json');
-    if(!forceFull&&await reuse(path,group,fingerprints[group],hit))reused.push(group);
+    previous[group]=await readWitness(path,group,fingerprints[group],hit);
+    if(!forceFull&&previous[group]?.runs.length===REQUIRED_PASSES)reused.push(group);
     else stale.push(group);
   }
   console.log('REUSED reviewed-main browser suites: '+(reused.join(', ')||'none'));
@@ -164,13 +180,21 @@ async function execute(){
       // Atomic replacement. The complete run must have succeeded before any
       // PASS witnesses are written. GitHub saves ONLY on main after job success.
       const target=join(cacheRoot,group+'.json');
-      await writeFile(target,JSON.stringify(witness(group,fingerprints[group],
-        process.env.GITHUB_RUN_ID??'local'))+'\n',{mode:0o600});
+      // Local and PR executions never contribute trusted maturity.
+      const trusted=process.env.GITHUB_REF==='refs/heads/main'&&
+        ['push','workflow_dispatch'].includes(process.env.GITHUB_EVENT_NAME);
+      if(trusted){
+        await writeFile(target+'.tmp',JSON.stringify(witness(group,fingerprints[group],
+          process.env.GITHUB_RUN_ID,previous[group]))+'\n',{mode:0o600});
+        await rename(target+'.tmp',target);
+        if(process.env.GITHUB_ENV)await writeFile(process.env.GITHUB_ENV,
+          'BROWSER_EXECUTED_'+group.toUpperCase()+'=true\n',{flag:'a'});
+      }
     }
   }
   const summary=['## Source-bound incremental browser verification','','| Suite | Result | Source fingerprint |','|---|---|---|'];
   for(const group of SUITES){
-    summary.push('| '+group+' | '+(reused.includes(group)?'Reused protected-main PASS':'Executed on current source')+
+    summary.push('| '+group+' | '+(reused.includes(group)?'Reused three protected-main executions':'Executed on current source')+
       ' | '+fingerprints[group].slice(0,16)+'… |');
   }
   summary.push('','All source/unit/package/archival checks execute on every run. Shared or unknown runtime changes invalidate all relevant browser suites.',

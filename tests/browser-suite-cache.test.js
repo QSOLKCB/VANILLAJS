@@ -38,12 +38,12 @@ test('all seven groups are explicit; no runtime fixture is silently unowned',()=
     assert.equal(p.global.some(x=>x.path===scoped[group]),false);
   }
 });
-test('editor-only code invalidates editor witness but not unrelated suites',()=>{
+test('editor code invalidates both consuming suites but not unrelated suites',()=>{
   const original=inventory(),next=structuredClone(original);
   next.find(x=>x.path===scoped.editor).sha256=sha('f');
   const before=compute(original),after=compute(next);
   for(const group of SUITES)
-    assert.equal(after[group]===before[group],group!=='editor',
+    assert.equal(after[group]===before[group],!['editor','donor'].includes(group),
       group+' must have the correct cache dependency boundary');
 });
 test('shared renderer/physics module change invalidates all suite witnesses',()=>{
@@ -80,13 +80,13 @@ test('a PASS witness is reused only with actual cache hit and exact source finge
   const dir=await mkdtemp(join(tmpdir(),'qsol-browser-suite-'));
   try{
     const digest=sha('e'),path=join(dir,'editor.json');
-    await writeFile(path,JSON.stringify(witness('editor',digest,'123'))+'\n');
+    await writeFile(path,JSON.stringify(witness('editor',digest,'125',witness('editor',digest,'124',witness('editor',digest,'123'))))+'\n');
     assert.equal(await reuse(path,'editor',digest,'true'),true);
     assert.equal(await reuse(path,'editor',digest,'false'),false);
     assert.equal(await reuse(path,'editor',sha('a'),'true'),false);
     await writeFile(path,'{}');
     assert.equal(await reuse(path,'editor',digest,'true'),false);
-    await writeFile(path,JSON.stringify({...witness('editor',digest),
+    await writeFile(path,JSON.stringify({...witness('editor',digest,'123'),
       provenance:'untrusted-pr'})+'\n');
     assert.equal(await reuse(path,'editor',digest,'true'),false);
   }finally{await rm(dir,{recursive:true,force:true});}
@@ -111,4 +111,38 @@ test('GitHub Actions publishes source-bound witnesses on main only',async()=>{
   assert.ok(yaml.includes("full_browser:"),"manual forced full audit must remain available");
   assert.ok(yaml.includes("node --test tests/*.test.js"),'unit tests are not skipped');
   assert.ok(yaml.includes("node scripts/verify-offline.js"),'package integrity is never skipped');
+});
+
+test('three distinct real runs required; reused or repeated run IDs do not count',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'three-passes-')),path=join(dir,'w.json'),fp=sha('c');
+  try{let w=null;
+    for(const run of ['1','1','2','3']){
+      w=witness('home',fp,run,w);await writeFile(path,JSON.stringify(w));
+      assert.equal(await reuse(path,'home',fp,'true'),run==='3');
+    }
+    assert.deepEqual(w.runs,['1','2','3']);
+    assert.deepEqual(witness('home',sha('d'),'4',w).runs,['4']);
+    for(const runs of [['1','1','1'],['1','2','local'],['1','2','3','4']]){
+      await writeFile(path,JSON.stringify({...w,runs}));assert.equal(await reuse(path,'home',fp,'true'),false);
+    }
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('environment, verifier changes and unknown browser tools invalidate identities',()=>{
+  const original=inventory(),first=digestClosures(original,[],scripts(),env());
+  for(const changed of [
+    digestClosures(original,[],scripts(),{...env(),node:'v22.1.0'}),
+    digestClosures(original,[{path:'scripts/new-verifier.js',sha256:sha('f')}],scripts(),env())
+  ])for(const group of SUITES)assert.notEqual(changed[group],first[group]);
+  const scopedScripts=scripts();scopedScripts.donor=[{path:'scripts/browser-optional-labs.js',sha256:sha('a')}];
+  const after=digestClosures(original,[],scopedScripts,env());
+  for(const group of SUITES)assert.equal(after[group]===first[group],group!=='donor');
+});
+
+test('cross-suite imports invalidate both consumers without a worker hash change',()=>{
+  for(const path of ['demos/editor/viewport.js','demos/editor/game-player.js','demos/editor/scene-meshes.js','demos/gpu-lab/controls.js']){
+    const files=[...inventory(),{path,sha256:sha('a')}],before=compute(files);
+    files[files.length-1].sha256=sha('b');const after=compute(files);
+    for(const group of SUITES)assert.equal(before[group]===after[group],!['donor','editor'].includes(group),path+' '+group);
+  }
 });

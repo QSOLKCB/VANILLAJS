@@ -265,9 +265,10 @@ export function instantiatePrefab(scene,library,prefabId){
   s.nextId+=ids.length;
   return {scene:validateScene(s),library:validateAssetLibrary(l,s),selected:ids[0]};
 }
-export function serializeProject(scene,library){
+export function serializeProject(scene,library,graphics=null){
+  if(graphics!==null&&(Object.keys(graphics).length!==1||typeof graphics.optionalGPU!=="boolean"))throw new TypeError("invalid graphics settings");
   const s=validateScene(scene),l=validateAssetLibrary(library,s);
-  const raw=JSON.stringify({format:'qsol.vanillajs.asset-project.v1',scene:s,library:l},null,2)+'\n';
+  const raw=JSON.stringify({format:graphics?'qsol.vanillajs.asset-project.v2':'qsol.vanillajs.asset-project.v1',scene:s,library:l,...(graphics?{graphics}:{})},null,2)+'\n';
   if(new TextEncoder().encode(raw).length>MAX_PROJECT_BYTES)
     throw new RangeError('project exceeds 256 KiB');
   return raw;
@@ -276,9 +277,11 @@ export function parseProject(raw){
   if(typeof raw!=='string'||new TextEncoder().encode(raw).length>MAX_PROJECT_BYTES)
     throw new RangeError('project exceeds 256 KiB');
   const value=JSON.parse(raw);
-  exact(value,['format','scene','library'],'project');
-  if(value.format!=='qsol.vanillajs.asset-project.v1')
+  const v2=value.format==='qsol.vanillajs.asset-project.v2';
+  exact(value,v2?['format','scene','library','graphics']:['format','scene','library'],'project');
+  if(v2){exact(value.graphics,['optionalGPU'],'graphics');if(typeof value.graphics.optionalGPU!=='boolean')throw new TypeError('invalid graphics option');}
+  if(!v2&&value.format!=='qsol.vanillajs.asset-project.v1')
     throw new TypeError('unknown asset project format');
   const scene=validateScene(value.scene),library=validateAssetLibrary(value.library,scene);
-  return {scene,library};
+  return {scene,library,...(v2?{graphics:{optionalGPU:value.graphics.optionalGPU}}:{})};
 }

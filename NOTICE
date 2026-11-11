@@ -160,3 +160,8 @@ PCM/WAV laboratory contracts; and QEC's separate data/sonification receipts.
 No donor code, commercial audio assets, hardware QEC or native plugin runtime
 are copied/imported. The 3×3×3 and 8×8×8 mathematical information-lattice
 research remains a separate, proposed DEMO//SYNTH phase.
+
+Optional renderer WASM projection: adapted from QSOLKCB/OFFLINE-GAMES
+commit ec11d845f6bf284619e2f46e768ebfb326f3be3c, Apache-2.0.
+Space Lab spiral population is independently implemented using VANILLAJS
+logical-sampling; GALAXY is a design reference, not copied runtime code.
