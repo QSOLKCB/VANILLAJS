@@ -22,7 +22,8 @@ migrate to v2; asset project import/export and playable exports keep their contr
   stale attachments when an undone entity ID is reused. Asset definitions remain
   in the library and asset-only edits do not create history entries.
 - F or Frame fits the selection and descendants; Shift+F fits the visible scene.
-  Camera framing includes imported mesh bounds and portrait aspect ratios.
+  Camera framing includes imported mesh bounds and portrait aspect ratios; fog
+  density scales down with orbit distance so large framed scenes remain visible.
 - W/E/R select transform tools. Snap uses 0.25 m / 15 degrees / 0.1 scale.
   Shift-drag root movement now honors the same snap toggle and metre grid.
   Escape cancels a live drag; focus loss cancels it too. A cancelled drag adds
@@ -115,7 +116,9 @@ verification passed for 137 files. Independent ALIEN MATH 001–004 oracles pass
 Pinned Playwright 1.64.0 / Chromium 156.0.8078.4 executed all seven packaged suite
 groups. The broad run passed render, play, worlds, research and donor; after the
 final editor fixes, `--suites=home,editor` passed against the rebuilt package,
-including the home harness's final failure paths. No cached browser witness was
+including the home harness's final failure paths. The editor group passed again
+after the distance-scaled fog fix: the distant-scene WebGL regression observed
+1,028 bright pixels versus zero with the previous constant fog setting. No cached browser witness was
 used for these local runs. Browser checks use software graphics; physical GPU
 performance and other browser/OS coverage are not inferred. Hosted PR CI remains
 an independent gate and does not authorize merge or deployment.

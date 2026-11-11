@@ -548,7 +548,9 @@ function frame(now){
         if(optionalCanvas.width!==width)optionalCanvas.width=width;
         if(optionalCanvas.height!==height)optionalCanvas.height=height;
       }
-      api.beginFrame({vp:cameraMatrix(camera,width,height),fog:.008});
+      // Preserve the default view while keeping distant framed scenes visible.
+      const fog=.008*Math.min(1,18/camera.distance);
+      api.beginFrame({vp:cameraMatrix(camera,width,height),fog});
       api.draw(grid);mesh.draw();if(!playing)api.draw(gizmoMesh);api.endFrame();
       rendered++;
       const metrics=api.stats();

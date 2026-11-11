@@ -233,8 +233,9 @@ export async function verifyEditor(browser,base){
     await verifyEditorQoL(browser,base);
     await verifyEditorFallback(browser,base);
     await verifyConcurrentAssetImports(browser,base);
+    await verifyDistantFraming(browser,base);
     assert.deepEqual(errors,[]);
-    console.log('Visual Editor: real WebGL, hierarchy/search/keyboard navigation, native text undo, scene history/shortcuts, exact decimal/Q16/D4 authoring and rejection, gesture cancellation, project migration/assets/exports, recovery and quota failure, CPU fallback, play controls, and 320px/390px layouts passed.');
+    console.log('Visual Editor: real WebGL, hierarchy/search/keyboard navigation, native text undo, scene history/shortcuts, exact decimal/Q16/D4 authoring and rejection, gesture cancellation, project migration/assets/exports, recovery and quota failure, CPU fallback, distant-camera visibility, play controls, and 320px/390px layouts passed.');
   }finally{await page.close();}
 }
 
@@ -536,5 +537,37 @@ async function verifyConcurrentAssetImports(browser,base){
     await page.evaluate(()=>window.pendingAssetDigests[2]());
     assert.equal(await page.locator('#asset-count').textContent(),'0 assets');
     assert.deepEqual(errors,[]);
+  }finally{await page.close();}
+}
+
+export async function verifyDistantFraming(browser,base){
+  const page=await browser.newPage({viewport:{width:1380,height:900}}),errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  try{
+    await page.goto(base+'demos/editor/index.html');
+    await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready');
+    await page.locator('#hierarchy button[data-id="entity-4"]').click();
+    for(const [axis,values]of [['position',[1000,1,-1000]],['scale',[100,100,100]]]){
+      for(const [index,value]of values.entries()){
+        const input=page.locator(`[data-axis="${axis}"][data-i="${index}"]`);
+        await input.fill(String(value));await input.dispatchEvent('change');
+      }
+    }
+    await page.locator('#view').focus();await page.keyboard.press('Shift+f');
+    // Inspect the WebGL backbuffer in the render callback. Camera-space fitting
+    // alone cannot establish visibility when distance-based fog hides the mesh.
+    const bright=await page.locator('#view').evaluate(canvas=>new Promise(resolve=>{
+      canvas.dispatchEvent(new WheelEvent('wheel',{deltaY:0,bubbles:true,cancelable:true}));
+      requestAnimationFrame(()=>{
+        const gl=canvas.getContext('webgl'),pixels=new Uint8Array(canvas.width*canvas.height*4);
+        gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+        let count=0;for(let i=0;i<pixels.length;i+=4)
+          if(pixels[i]>65||pixels[i+1]>65||pixels[i+2]>65)count++;
+        resolve(count);
+      });
+    }));
+    assert.ok(bright>100,`framed distant scene must remain visible, observed ${bright} bright pixels`);
+    assert.deepEqual(errors,[]);
+    return bright;
   }finally{await page.close();}
 }
