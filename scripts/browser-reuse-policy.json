@@ -67,7 +67,8 @@
       "roots": [
         "demos/omi-lab/",
         "demos/ancient-machine/",
-        "demos/graph-lab/"
+        "demos/graph-lab/",
+        "demos/alien-course-lab/"
       ],
       "scripts": [
         "scripts/browser-omi.js",
@@ -232,6 +233,12 @@
       "tests/fixtures/alien-math-006-input.json",
       "tests/fixtures/alien-math-006-oracle.json",
       ".github/workflows/alien-math-formal.yml"
+    ],
+    "modules/exact-course/": [
+      "docs/ALIEN_COURSE_BRIDGE.md",
+      "scripts/alien_course_oracle.py",
+      "tests/alien-course.test.js",
+      "demos/alien-course-lab/sample.js"
     ]
   },
   "shared": [
@@ -321,7 +328,7 @@
     "scripts/browser-flow.js": "e23164c7b72502b0f5d6d1753a9e1baa351211ad7191a1757139e94babeddc93",
     "scripts/browser-2d.js": "e63c4e84fc8f360fff5af349daceed6b44946d0fa697d6122aed69937eca423b",
     "scripts/browser-omi.js": "cf2042c1eea7b273908cf19c37783b630d58d1483f3d5b5343534d9ab23ec9fd",
-    "scripts/browser-machine.js": "b5b22e40e92110baf51cc07c50db92f083d4961fd182c600b105c377e00e084a",
+    "scripts/browser-machine.js": "e57f1bf6958e0683a9948fda76e57689eae18bdcb0867f34dc9a702a62b654bd",
     "scripts/browser-donor-labs.js": "f2d09b5be5082df40beefb18ca03ba88c83d28afdb35fcb7909cd05602145665",
     "scripts/browser-optional-labs.js": "3b6d95f5050fc116976f16ddc30a58d75ec25021912d21b9359b9840e63a4404",
     "scripts/browser-editor.js": "73376a3e60a3643ab3043468970cfff07f20b3dda01d35327444254526001679",
