@@ -1,6 +1,46 @@
 # Verification — VANILLAJS 1.0.0
 
 
+## Distinct GPU / Space labs and freeze-workflow repair — owner review pending
+
+Base: `45fd19119dfdd3db430f8ba6477ee6e1f229dfa6` (PR71 merge).
+
+- Kinetic Foundry now owns its sculpture application and presets. Orbital Proving
+  Ground owns a separate flight application, navigation course, docking guidance,
+  projectiles, orbit trail, cameras and on-screen controls. CPU remains the default;
+  graphics consent is explicit and never persisted. No engine mathematics changed.
+- 596 Node tests passed. Source check passed: 230 JavaScript files, 43 modules,
+  two experiments. Build/offline verification passed: 130 packaged files,
+  848,781 bytes. Updated CPU geometry and fixed model budgets are documented in
+  [the lab guide](OPTIONAL_GPU_WASM.md); timings are observations, not speedups.
+- Pinned Playwright 1.64.0 / Chromium 156.0.8078.4 preflight and all seven browser
+  suites passed, including the editor/export consumers. Seven executed, zero
+  reused because authenticated local receipt authority was unavailable.
+- Lab browser regressions cover different scene identities, all sculpture
+  presets, largest geometry budget and JS/WASM parity, idle draw suppression,
+  course progress, docking admission, broadside hits, orbit radius/trails, camera
+  selection, focus restoration, held-pointer cancellation, real Chromium touch
+  emulation/hidden-page cancellation, reduced-motion startup, 320px layouts and
+  Canvas failure. Desktop and mobile screenshots were inspected.
+- Existing 11 archival/offline blocks and 14 CPU workload steps passed. The
+  refreshed active source inventory passed phase006 Lean verification: 21 model
+  theorems, 856 finite observations and six compiled negative controls. The
+  historical baseline, mathematical fixtures, proofs and receipts are unchanged.
+- [Run 43022927953](https://github.com/QSOLKCB/VANILLAJS/actions/runs/43022927953)
+  failed before starting jobs. Actionlint 1.7.12 reproduced two invalid
+  job-level `runner.temp` references. Moving browser-path setup into a runner
+  step passes actionlint and an executed environment-path check with spaces.
+  GitHub's [context availability rules](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability)
+  explain the restriction. No verification gate was removed.
+- Physical GPU testing was attempted with installed headless Chrome, including
+  a Vulkan configuration. No adapter was exposed; those hardware tests could not
+  proceed. CPU rendering and explicit unsupported-GPU behavior passed. No physical
+  GPU success, performance improvement or hardware receipt is claimed.
+
+The v1.6.0 tag and release remain untouched. Hosted CI will separately validate
+this PR; no self-hosted or owner-only GPU workflow was dispatched.
+
+
 ## ALIEN-MATH-FINAL — executed candidate evidence, owner review pending
 
 Base: `dd5e1557a35f032e949fa542ee024c6b011a83ea` (merged PR70).

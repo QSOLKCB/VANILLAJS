@@ -18,6 +18,8 @@
 
 **ALIEN-MATH-002 (experimental):** [Explicit rational-to-Q16.16 conversion](docs/ALIEN_MATH_002.md) adds six deliberately selected rounding modes (including exact-only and ties-to-even) and explicit overflow rejection or opt-in saturation. A source-independent Python Fraction oracle checks 25,020 ordered outcomes; signed-int32 round-trip and error-bound regressions protect the conversion boundary. No gameplay kernel, QFLOAT, proof, RTX, workflow or release changes.
 
+**Distinct optional-rendering labs:** [The Kinetic Foundry](demos/gpu-lab/index.html) explores animated procedural geometry and JS/WASM parity. [Orbital Proving Ground](demos/space-lab/index.html) tests flight courses, docking, visible broadsides and orbit trails. Both start on CPU; compatible GPU acceleration requires explicit opt-in. [Controls and budgets](docs/OPTIONAL_GPU_WASM.md).
+
 **ALIEN-MATH-FINAL (review candidate):** [Research audit and reproducible source capsule](docs/ALIEN_MATH_FINAL.md), with draft release/Zenodo metadata and explicit OPEN proof obligations. Includes the PR70 Machine Lab initialization-race regression. No release, tag or deposit is published.
 
 **ALIEN-MATH-006 (research):** [Source-pinned formal correspondence](docs/ALIEN_MATH_006.md) separates 21 Lean model theorems, an audited axiom boundary, 856 three-way finite observations and explicitly OPEN JavaScript refinement obligations. Historical Q16/SPARK proofs and runtime mathematics are unchanged.

@@ -323,7 +323,7 @@
     "scripts/browser-omi.js": "cf2042c1eea7b273908cf19c37783b630d58d1483f3d5b5343534d9ab23ec9fd",
     "scripts/browser-machine.js": "b5b22e40e92110baf51cc07c50db92f083d4961fd182c600b105c377e00e084a",
     "scripts/browser-donor-labs.js": "f2d09b5be5082df40beefb18ca03ba88c83d28afdb35fcb7909cd05602145665",
-    "scripts/browser-optional-labs.js": "9f433cb891e5f22d4bff8022538d498467322af1fce43f9c0d6be453d21d03e3",
+    "scripts/browser-optional-labs.js": "3b6d95f5050fc116976f16ddc30a58d75ec25021912d21b9359b9840e63a4404",
     "scripts/browser-editor.js": "73376a3e60a3643ab3043468970cfff07f20b3dda01d35327444254526001679",
     "scripts/browser-check.js": "7a4b3b957d7848d03fe33c8118eb603cf04f8fb737e4aef2b76b1ebbed21a390",
     "scripts/omi-oracle.js": "c18dbd54d18295d03ec4681885d6e165feee4b8ef8136b935e4c425cbce1928c",
@@ -402,7 +402,7 @@
     "demos/flight-lab/worlds.js": "58b3ce05ddb2f7bd50782499a815a093058321d506478cdfa5a62a99e9df5262",
     "demos/fps-lab/app.js": "b20c8cca0dd297f4be1a27d32f15100f231f4aefba6574f7dda7e3e5ea3843bc",
     "demos/fps-lab/worlds.js": "3d4f8208792168d9573559fa7e1c671062810c81d6b338b2f6b7b6047d0b4be4",
-    "demos/gpu-lab/app.js": "b9a34d6b778917f64aa679cbc2a13c3a6203edb461d22cda9cc2aef381f330fd",
+    "demos/gpu-lab/app.js": "55b1ddedf9cc328472632ddbe334e5ed76c88f8dba19884fa8c9f8a87ba387a5",
     "demos/gpu-lab/controls.js": "89860cedff23993e910670fb031050fe2822ed432a4b0f040f4d8013d6642340",
     "demos/integer-foundry/app.js": "5535235297241e3fd5a8b43bc41d0ebf9aea9e9c23120845e709cfe51bdac872",
     "demos/integer-foundry/world.js": "2f5d266fc5b5a79e3bd56c5f6164ee595741f641904d489c40501601a95e4026",
@@ -414,8 +414,8 @@
     "demos/rts-lab/flow-worlds.js": "d5ba9f2181cd8ba1d9236679b3f0b747f9674bedc3386f94c4530e0e910350ef",
     "demos/rts-lab/traffic.js": "da4c065c1a24e3135f1b802de21182e419b0764798ed48b471c09805ce43bc00",
     "demos/rts-lab/worlds.js": "57d14fd5d06f40260c5b90ac80dcd3b9fa5f260c50ebce1bd0bba0efbfa75eb0",
-    "demos/space-lab/geometry.js": "44bb2c7b4a3e86881486592d2f48dd55c065574dfebeef40df1ff1a5a996151c",
-    "demos/space-lab/world.js": "8a4a686417228c3b3eae856facc6a167df070d834973a1089907e2345adde54a",
+    "demos/space-lab/geometry.js": "bf0030541cd78ef8a3f3d101692b64257e670411ff5927bd5d7e9e535447347d",
+    "demos/space-lab/world.js": "21d5556679eec5dc5ed36a2c251e3bd84c911c649ffb732576dc0e2d255e55cd",
     "api/webgl/index.js": "0f791aa8e118ad82a7d2aced4bf22633fbd4f94bcf9c54e695b571a3ae28d342",
     "offline/register.js": "9d17c57a7c03a5b05c36556b712c8f5b2990a6cae4e358d217e378405eb24db9",
     "experiments/arch-omi/index.js": "1b49eb986c72b108a7a5ca90480a2a70f65a9ee430937ee80af3e17a2f14dbf6",
@@ -423,6 +423,8 @@
     "modules/exact-graph/index.js": "cdfb0e74a330e62ea1312ff042b570856707bfac2c491e3e3125647b2867aa10",
     "modules/exact-d4/index.js": "b28a4567bf068a4b7beca70a45b527c620b537f5a7ba334e0f86a7c6e7364f78",
     "demos/graph-lab/app.js": "4daf2ca8fff4e307ef2d1565c9a11f1266c79a365f999f29f7cd70707bc2abc3",
-    "demos/graph-lab/presets.js": "9e6175b70d0b289b61c6aa997e181d073d4dabc09e89295196c6557890af3ba0"
+    "demos/graph-lab/presets.js": "9e6175b70d0b289b61c6aa997e181d073d4dabc09e89295196c6557890af3ba0",
+    "demos/gpu-lab/scene.js": "d290458963f87970fb7c0a4077589fb78948dadffff026ccfd085383d4455c51",
+    "demos/space-lab/app.js": "092cf918dd7595ed67bae88baffdbcd935af1e38a73a59002c778a6d20d6bcdb"
   }
 }
