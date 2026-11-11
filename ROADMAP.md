@@ -1,11 +1,18 @@
 # VANILLAJS roadmap
 
-## CI-INVARIANT-001 — verified reuse engine (owner review)
+## ALIEN-MATH-004 — exact D4 symmetry (owner review)
+
+- Eight canonical elements, right-first composition, inverse and determinant; exact origin-centred actions on ALIEN-MATH-003 points and closed AABBs.
+- Bounded exact squared distance, orientation covariance and preserved segment/box relations, including degeneracies.
+- Exhaustive finite group checks and 8,320 independent matrix/Fraction observations. No gameplay, integer backend or proof-boundary changes.
+- [Contract, bounds and reproduction](docs/ALIEN_MATH_004.md).
+
+## CI-INVARIANT-001 — verified reuse engine (merged PR #67)
 
 - Audited dependency closures, immutable source-bound execution artifacts and three distinct main passes; no mathematical oracle result caching.
 - Current main is unprotected: real Chromium execution remains mandatory until owner-authorized approval controls and qualification exist.
 - [Trust audit, reproduction and measured suite decisions](docs/BROWSER_INCREMENTAL_CI.md).
-- ALIEN-MATH-004 D4, 005 graph/spectral work, 006 formal correspondence and the final freeze remain planned only. Each requires explicit authorization after the preceding PR merges.
+- ALIEN-MATH-004 is now authorized above. 005 graph/spectral work, 006 formal correspondence and the final freeze remain planned only; each needs explicit owner authorization after the preceding PR merges.
 
 
 ## ALIEN-MATH-003 — closed intervals and exact XY geometry (experimental PR)

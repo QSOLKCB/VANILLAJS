@@ -132,6 +132,13 @@
     ],
     "modules/qfloat/": [
       "docs/QFLOAT_001.md"
+    ],
+    "modules/exact-d4/": [
+      "docs/ALIEN_MATH_004.md",
+      "scripts/alien_math_004_oracle.py",
+      "tests/exact-d4.test.js",
+      "tests/fixtures/alien-math-004-input.json",
+      "tests/fixtures/alien-math-004-oracle.json"
     ]
   },
   "shared": [

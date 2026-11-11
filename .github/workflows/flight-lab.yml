@@ -59,6 +59,8 @@ jobs:
       - name: Set isolated Playwright browser root
         run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
       - run: node --test tests/*.test.js
+      - name: Reproduce ALIEN-MATH-004 independent matrix and Fraction fixture
+        run: python3 scripts/alien_math_004_oracle.py --check
       - run: node scripts/check.js
       - run: node scripts/build.js
       - run: node scripts/verify-offline.js

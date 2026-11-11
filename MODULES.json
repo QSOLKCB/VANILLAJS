@@ -334,6 +334,17 @@
       "environment": "browser-canvas2d with opt-in WebGPU/WASM",
       "status": "experimental",
       "description": "Bounded retained XYZ/RGB geometry, CPU default, lazy explicit GPU consent and CPU recovery"
+    },
+    "exact-d4": {
+      "entry": "modules/exact-d4/index.js",
+      "depends": [
+        "exact-rational",
+        "exact-interval",
+        "exact-geometry"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded exact D4 origin-centred XY actions, composition/inverses, closed box transforms and reduced exact squared distance; authoring only"
     }
   },
   "recipes": {
