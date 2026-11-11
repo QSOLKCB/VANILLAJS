@@ -1,0 +1,10 @@
+# empire | class | hull | components
+0 | MCS Wayfarer | scout-0 | drive-1,laser-1,shield-1,survey
+0 | MCS New Horizon | ark-0 | drive-1,shield-1,colony
+0 | MCS Resolute | frigate-0 | drive-1,laser-1,laser-1,shield-1,marines
+1 | VAS Whisper | scout-1 | drive-1,laser-1,shield-1,survey
+1 | VAS Seed of Dawn | ark-1 | drive-1,shield-1,colony
+1 | VAS Thornsong | frigate-1 | drive-1,laser-1,laser-1,shield-1,marines
+2 | BHS Night Watch | scout-2 | drive-1,laser-1,shield-1,survey
+2 | BHS Forge Ark | ark-2 | drive-1,shield-1,colony
+2 | BHS Iron Edict | frigate-2 | drive-1,laser-1,laser-1,shield-1,marines

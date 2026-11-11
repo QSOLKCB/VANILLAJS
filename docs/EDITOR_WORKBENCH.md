@@ -4,6 +4,12 @@
 
 **v1.5 follow-up:** [The Component Forge](COMPONENT_FORGE.md) introduces schema-v2 typed components, real axis gizmos, local/world transform modes, snapping and component-driven Play/Trigger behavior. This document retains the original v1 alpha contract for migration and historical evidence.
 
+**4X authoring:** [VOIDWARD workflow](VOIDWARD_WORKFLOW.md) documents the separate
+campaign-pack tools: edit text records, preview a playable campaign, exchange
+star-chart positions with the scene editor, and project mesh families into ship
+silhouettes while retaining their declared attribution. Pack files remain inert
+data. The native scene v1/v2 contracts and existing scene Play/Export stay intact.
+
 
 **QSOL–IMC motto: Make amazing alien tech and put it under an Apache 2.0 license.**
 

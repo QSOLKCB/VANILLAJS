@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090f17">
+  <meta name="description" content="VOIDWARD — a moddable, offline space 4X. Explore, settle, build and command your own civilisation.">
+  <title>VOIDWARD Campaign Lab / VANILLAJS</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to command view</a>
+  <div id="app"><div class="loading"><div class="brand-mark">V</div><h1>VOIDWARD</h1><p>Opening the frontier…</p></div></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="dialog"></dialog>
+  <input type="file" id="save-file" accept=".json,application/json" hidden>
+  <input type="file" id="mod-files" webkitdirectory multiple hidden>
+  <script type="module" src="js/app.js"></script>
+  <noscript><p>VOIDWARD needs JavaScript. All game code and assets are included locally.</p></noscript>
+</body>
+</html>

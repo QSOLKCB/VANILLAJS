@@ -1,0 +1,7 @@
+# id | owner | kind | target | amount | requires | branch | title | description | victory
+foothold | player | colonies | - | 4 |  |  | Keep the freeholds | Maintain four colony worlds to supply the defence. | 0
+defence-doctrine | player | research | weapons | 4 | foothold | endure | The shield of the rim | Choose endurance and develop Directed Energy IV. | 0
+endure | player | survive | - | 90 | defence-doctrine | endure | Unbroken freeholds | Survive until turn 90 with your defence programme complete. | 1
+liberate-pale | player | control | 31 | 1 | foothold | reclaim | Break the pale throne | Choose reconquest and take a world in the Directorate command system. | 0
+liberate-obsidian | player | control | 39 | 1 | liberate-pale | reclaim | Break the obsidian throne | Take a world in the Mandate command system. | 0
+reconquest | player | survive | - | 60 | liberate-obsidian | reclaim | The rim reclaimed | Complete both liberations and reach turn 60. | 1

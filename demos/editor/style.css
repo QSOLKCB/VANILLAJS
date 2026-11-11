@@ -84,4 +84,16 @@ footer{height:44px;display:flex;align-items:center;justify-content:center;paddin
 .exact-authoring output[data-error=true]{color:#ffb6a4}
 input[aria-invalid=true]{border-color:#ffb6a4}.viewport-head>span{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .graphics-tools,.graphics-tools span{min-width:0;flex-wrap:wrap}.graphics-tools label{overflow-wrap:anywhere}
+.fourx-panel{border-top:1px solid var(--line);padding:14px 0;margin-top:10px;min-width:0}
+.fourx-panel summary{cursor:pointer;color:var(--accent);font-weight:600;padding:5px 0}
+.fourx-panel p{font-size:11px;color:var(--muted);overflow-wrap:anywhere;margin:8px 0}
+.fourx-panel details{border-top:1px solid var(--line);margin:12px 0;padding-top:5px}
+.fourx-panel label{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted);margin:9px 0}
+.fourx-panel input,.fourx-panel select,.fourx-panel textarea{width:100%;min-width:0}
+.fourx-panel textarea{resize:vertical;background:#091925;color:#e4f5f3;border:1px solid #38576a;border-radius:4px;font:11px/1.6 ui-monospace,monospace;padding:8px;white-space:pre;overflow:auto}
+.fourx-panel textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.fourx-panel button,.fourx-panel .import{font-size:11px;padding:7px 8px;white-space:normal;max-width:100%}
+.fourx-panel .import{display:block;margin:0}.fourx-panel .import input{position:absolute;inset:0;opacity:0}
+.fourx-actions{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}.fourx-panel canvas{width:100%;max-width:240px;background:#091925;margin-top:9px;border:1px solid var(--line)}
+#fourx-status[data-error=true]{color:#ffb6a4}.fourx-panel :disabled{opacity:.46}
 @media(max-width:750px){.center{grid-row:1}.brand{flex-wrap:wrap;gap:8px}.topbar{padding:10px}.viewport-head{gap:8px}.draft-status{max-width:none}footer{line-height:1.7}}

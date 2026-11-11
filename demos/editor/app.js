@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // VANILLAJS Component Forge v1.5: DOM only adapts owned scene data.
 import {hierarchyRows,eligibleParents,matchesAsset} from './workflows.js';
+import {mount4XPanel} from './4x-panel.js';
 import {parseExactPosition,previewQ16Position,transformExactPositionXY,snapEditorDelta,formatPositionNumber} from './authoring-math.js';
 import {SceneMeshes} from './scene-meshes.js';
 import {OptionalRenderer} from '../../modules/render-optional/index.js';
@@ -21,6 +22,7 @@ import {createAssetLibrary,validateAssetLibrary,addMeshAsset,addTextureAsset,
 
 const $=id=>document.getElementById(id),canvas=$('view');
 let importGeneration=0;
+let campaignPanel=null;
 let history=makeHistory(createForgeScene()),selected='entity-3',draft=null,
   library=createAssetLibrary(),chosenAsset=null,
   camera={yaw:38,pitch:23,distance:18,target:[0,1,0]},api=null,grid=null,mesh=null,
@@ -86,6 +88,7 @@ function syncEditor(){
   }
   for(const id of ['add-child','duplicate','remove'])$(id).disabled=playing||!selected;
   renderHierarchy(scene);
+  campaignPanel?.sync();
   scheduleRecovery();
   syncAssets();
   if(!selected){requestFrame();return;}
@@ -744,6 +747,12 @@ canvas.addEventListener('webglcontextrestored',()=>{
 });
 new ResizeObserver(requestFrame).observe(canvas);
 clock.setPaused(true);
+campaignPanel=mount4XPanel($('fourx-workshop'),{
+  getScene:()=>editScene(),getLibrary:()=>prunePlacements(editScene(),library),
+  getSelection:()=>selected,isPlaying:()=>playing,
+  replaceScene:scene=>{finishGesture(false);applyScene(scene,scene.objects[0]?.id??null);frameSelection(true);}
+});
+Object.defineProperty(window,'__editor4x',{get:()=>campaignPanel.snapshot()});
 try{initGraphics();syncEditor();requestFrame();document.documentElement.dataset.editorReady='ready';}
 catch(error){inform('WebGL unavailable: '+error.message,true);
   document.documentElement.dataset.editorReady='unavailable';syncEditor();}

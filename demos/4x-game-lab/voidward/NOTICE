@@ -1,0 +1,39 @@
+VOIDWARD / 4XGAMES
+Copyright 2026 Trent Slade / QSOL-IMC and contributors.
+Original game code is licensed under Apache-2.0.
+
+VANILLAJS campaign-demo adaptation:
+Imported from QSOLKCB/4XGAMES revision
+030859385ac8929e066702ef8af0518663480653. World, campaign content and
+authoring adapters remain owned by this demo. VANILLAJS imports now use
+the existing native modules and editor; those sources are not duplicated.
+The Workbench bridge additionally preserves mixed-source attribution and
+provides an inert hull-bundle envelope for complete provenance histories.
+Native Workbench project formats and the Ternary Reach replay are unchanged.
+
+Inspired by the genre and play structure of Space Empires IV. This is an
+independent game, not a port, official sequel or affiliated product. No Space
+Empires source, artwork, music, maps or text is included.
+
+Pinned QSOLKCB sources and SHA-256 hashes: vendor/PROVENANCE.json.
+VANILLAJS, ARCADE, OFFLINE-GAMES: Apache-2.0, original notices retained.
+GAMES shared input: MIT with Apache-2.0 VANILLAJS adaptation attribution;
+see vendor/games/LICENSE and vendor/games/shared/NOTICE.md.
+SONIFICATION browser laboratory, GLUBALL core and GALAXY core: MPL-2.0.
+GALAXY's UFF helper/data retain their Apache-2.0 and data notices.
+OPT: source record and repository licence retained under vendor/opt/.
+
+Vendored files are unmodified, file-level licensed, and shipped as source.
+Their licenses do not relicense the other files of this larger work.
+No scientific validation, physical interpretation, or formal proof of VOIDWARD
+is claimed through the use of upstream mathematical and visual modules.
+
+Expansion adapters additionally use unchanged native VANILLAJS Workbench model,
+Component Forge, Asset Foundry and Mod SDK modules (Apache-2.0), with their
+exact sources recorded in vendor/PROVENANCE.json. GAMES SOVEREIGN LATTICE fleet,
+AI and last-seen intelligence patterns are adapted under MIT; its upstream
+notices are retained in vendor/games/SOVEREIGN_LATTICE/NOTICE.md. OFFLINE-GAMES
+campaign/source-mod lifecycle code was inspected as a design reference.
+Original campaign fiction, names, objective tables and geography are independent
+VOIDWARD content. Workbench-imported user assets retain their declared source
+licence and digest in their pack; their metadata does not relicense this code.

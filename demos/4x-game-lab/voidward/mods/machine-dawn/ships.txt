@@ -1,0 +1,10 @@
+# empire | ship name | hull | comma-separated component IDs
+0 | FNU Packet Scout | scout-0 | drive-1,laser-1,shield-1,survey
+0 | FNU Bootstrap | ark-0 | drive-1,shield-1,colony
+0 | FNU Sentinel | frigate-0 | drive-1,laser-1,laser-1,shield-1,marines
+1 | GC Quiet Process | scout-1 | drive-1,laser-1,shield-1,survey
+1 | GC Genesis | ark-1 | drive-1,shield-1,colony
+1 | GC Firewall | frigate-1 | drive-1,laser-1,laser-1,shield-1,marines
+2 | RC Parser | scout-2 | drive-1,laser-1,shield-1,survey
+2 | RC Constructor | ark-2 | drive-1,shield-1,colony
+2 | RC Assertion | frigate-2 | drive-1,laser-1,laser-1,shield-1,marines

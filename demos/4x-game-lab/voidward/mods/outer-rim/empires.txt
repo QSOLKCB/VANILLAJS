@@ -1,0 +1,4 @@
+# id | short | primary | accent | home | ethos
+0 | FREEHOLDS | #72dbc4 | #d2f6e8 | 0 | A future worth sharing.
+1 | PALE | #ce9fff | #f0dbff | 31 | Every promise leaves a trace.
+2 | OBSIDIAN | #f28b71 | #ffe0ab | 39 | What we build will outlast us.

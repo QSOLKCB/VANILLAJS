@@ -1,0 +1,9 @@
+# id | owner | kind | target | amount | requires | branch | title | description | victory
+first-chart | * | survey | * | 12 |  |  | A shared chart | Survey twelve stars to establish the frontier survey service. | 0
+settled-reach | * | colonies | - | 6 | first-chart |  | Six lights in the dark | Develop six colony worlds before choosing your political future. | 0
+concord | * | trade | * | 1 | settled-reach | concord | The concord charter | Choose a diplomatic future and maintain at least one trade pact. | 0
+concord-labs | * | research | industry | 6 | concord | concord | A durable prosperity | Reach Industrial Systems VI to support the new commonwealth. | 0
+long-concord | * | survive | - | 100 | concord-labs | concord | The Long Concord | Hold your commonwealth together until turn 100. | 1
+dominion | * | colonies | - | 18 | settled-reach | dominion | The dominion charter | Choose territorial ascendancy and hold eighteen colony worlds. | 0
+dominion-arms | * | research | weapons | 6 | dominion | dominion | An enduring deterrent | Reach Directed Energy VI to protect the dominion. | 0
+long-dominion | * | survive | - | 100 | dominion-arms | dominion | A hundred-year mandate | Keep the dominion intact until turn 100. | 1

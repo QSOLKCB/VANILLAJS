@@ -325,7 +325,8 @@ async function verifyEditorQoL(browser,base){
     // Browser text undo owns focused fields; it must not undo scene commands.
     await page.locator('#hierarchy button[data-id="entity-5"]').click();
     const name=page.locator('#object-name'),beforeName=await name.inputValue();
-    await name.focus();await page.keyboard.press('End');await page.keyboard.type(' draft');
+    // One insertion makes the browser undo transaction independent of key-event cadence.
+    await name.focus();await page.keyboard.press('End');await page.keyboard.insertText(' draft');
     await page.keyboard.press('Control+z');
     assert.equal(await name.inputValue(),beforeName);
     assert.equal(await page.locator('#count').textContent(),'5');
