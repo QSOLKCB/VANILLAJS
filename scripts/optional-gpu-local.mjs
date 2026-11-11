@@ -27,9 +27,11 @@ try{
     assert.equal(await page.evaluate(()=>window.deviceRequests),0,'detection must not create devices');
     for(let i=0;i<2;i++){
       await page.getByRole('button',{name:'Enable WebGPU + WASM',exact:true}).click();await page.waitForFunction(()=>window.lab.renderer.mode==='webgpu-wasm');
+      assert.equal(await page.evaluate(()=>document.activeElement.id),'view','GPU action returns focus to the view');
       await page.getByRole('button',{name:'Use CPU',exact:true}).click();await page.waitForFunction(()=>window.lab.renderer.mode==='cpu');
     }
     await page.getByRole('button',{name:'Enable WebGPU + WASM',exact:true}).click();await page.waitForFunction(()=>window.lab.renderer.mode==='webgpu-wasm');
+      assert.equal(await page.evaluate(()=>document.activeElement.id),'view','GPU action returns focus to the view');
     const result=await page.evaluate(async()=>{
       const r=window.lab.renderer,b=r.gpu,device=b.device,w=b.canvas.width,h=b.canvas.height,pitch=Math.ceil(w*4/256)*256;
       b.context.configure({device,format:b.format,alphaMode:'opaque',usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_SRC});
@@ -51,6 +53,7 @@ try{
     await mkdir('browser-artifacts',{recursive:true});await page.screenshot({path:'browser-artifacts/'+lab+'-hardware.png'});
     await page.evaluate(()=>window.lab.renderer.gpu.device.destroy());await page.waitForFunction(()=>window.lab.renderer.mode==='cpu');
     await page.getByRole('button',{name:'Enable WebGPU + WASM',exact:true}).click();await page.waitForFunction(()=>window.lab.renderer.mode==='webgpu-wasm');
+      assert.equal(await page.evaluate(()=>document.activeElement.id),'view','GPU action returns focus to the view');
     await page.evaluate(async()=>{
       const r=window.lab.renderer;r.useCPU();const instantiate=WebAssembly.instantiate;WebAssembly.instantiate=async()=>{throw Error('injected WASM failure');};
       try{await r.enableGPU();throw Error('expected failure');}catch(e){if(e.message!=='injected WASM failure')throw e;}finally{WebAssembly.instantiate=instantiate;}

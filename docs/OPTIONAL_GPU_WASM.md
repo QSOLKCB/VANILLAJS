@@ -148,3 +148,16 @@ This opens headed Chromium, rejects fallback adapters through the production
 path, reads actual submitted GPU pixels, cycles modes, injects device loss and
 WASM failure, retries and resizes. It never dispatches PR code on a personal
 GitHub runner. Other GPUs and browsers remain unverified until tested there.
+
+## Large scenes and keyboard focus
+
+The editor preview and exported player share whole-triangle batching: at most
+65,535 vertices per scene mesh (the largest multiple of three below the renderer
+limit). The existing 2 MiB scene budget remains supported; 66,048 vertices use
+two retained meshes of 65,535 and 513 vertices. Updates reuse existing handles
+and release surplus batches when geometry shrinks.
+
+Resume restores focus to the playable canvas. CPU/GPU buttons also return focus
+to the view when clicked, including during asynchronous GPU activation. They do
+not automatically resume a paused simulation. Editable fields still suppress
+gameplay keys, and held keys still require release/repress after pause.

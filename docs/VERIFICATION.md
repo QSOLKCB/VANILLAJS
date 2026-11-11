@@ -389,3 +389,19 @@ See [setup, API, export and test instructions](OPTIONAL_GPU_WASM.md) and
 - The local GPU test is separate from hosted CPU browser witnesses. GPU evidence
   is never manufactured by cache reuse. Other browsers/devices, completed-GPU
   timing and a universal performance improvement are not claimed.
+
+### PR #66 review regressions
+
+- 569 Node tests pass. New closure tests mutate editor viewport/player/batching
+  and GPU controls independently of the worker hash and invalidate both consumers.
+- The reported 43-object, 512-triangle-per-object project builds 66,048 vertices.
+  Tests preserve the complete stream across 65,535/513-vertex batches, retain
+  handles during updates, and release batches on shrink/empty/dispose.
+- Packaged donor/editor Chromium suites pass, including running that large
+  CPU-only exported project and real W input after Resume in the exported player
+  and Space Lab without clicking the canvas. CPU-button focus and Space avoiding
+  accidental pause activation are also checked.
+- NVIDIA Blackwell hardware tests pass with explicit focus assertions after GPU
+  button activation, actual rendered pixels, CPU/GPU cycling, loss/retry, WASM
+  failure recovery, resize and zero unchanged-input uploads.
+- Source checks and offline package validation pass (121 packaged files).

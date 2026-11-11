@@ -12,7 +12,7 @@ const keys=new Set(),clock=new FixedClock({step:1/60,maxFrame:.12,maxSteps:8});
 const stars=renderer.createMesh(galaxy(),'points'),planet=renderer.createMesh(sphere([-18,0,-15],7)),base=renderer.createMesh(station()),actor=renderer.createMesh(ship(world)),target=renderer.createMesh(sphere([12,0,8],2,12));
 function reset(){world=createWorld($('mechanic')?.value??'flight');keys.clear();clock.reset();last=null;}
 $('reset').onclick=reset;if(space)$('mechanic').onchange=reset;
-function pause(value){paused=value;keys.clear();clock.setPaused(value);last=null;$('pause').textContent=value?'Resume':'Pause';}
+function pause(value){paused=value;keys.clear();clock.setPaused(value);last=null;$('pause').textContent=value?'Resume':'Pause';if(!value)canvas.focus({preventScroll:true});}
 $('pause').onclick=()=>pause(!paused);
 window.addEventListener('blur',()=>pause(true));document.addEventListener('visibilitychange',()=>{if(document.hidden)pause(true);});
 window.addEventListener('keydown',e=>{if(e.target.matches('input,select,button'))return;if(e.code==='Space')e.preventDefault();if(!paused&&!e.repeat)keys.add(e.code);});

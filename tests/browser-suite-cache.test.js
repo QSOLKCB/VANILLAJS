@@ -38,12 +38,12 @@ test('all seven groups are explicit; no runtime fixture is silently unowned',()=
     assert.equal(p.global.some(x=>x.path===scoped[group]),false);
   }
 });
-test('editor-only code invalidates editor witness but not unrelated suites',()=>{
+test('editor code invalidates both consuming suites but not unrelated suites',()=>{
   const original=inventory(),next=structuredClone(original);
   next.find(x=>x.path===scoped.editor).sha256=sha('f');
   const before=compute(original),after=compute(next);
   for(const group of SUITES)
-    assert.equal(after[group]===before[group],group!=='editor',
+    assert.equal(after[group]===before[group],!['editor','donor'].includes(group),
       group+' must have the correct cache dependency boundary');
 });
 test('shared renderer/physics module change invalidates all suite witnesses',()=>{
@@ -137,4 +137,12 @@ test('environment, verifier changes and unknown browser tools invalidate identit
   const scopedScripts=scripts();scopedScripts.donor=[{path:'scripts/browser-optional-labs.js',sha256:sha('a')}];
   const after=digestClosures(original,[],scopedScripts,env());
   for(const group of SUITES)assert.equal(after[group]===first[group],group!=='donor');
+});
+
+test('cross-suite imports invalidate both consumers without a worker hash change',()=>{
+  for(const path of ['demos/editor/viewport.js','demos/editor/game-player.js','demos/editor/scene-meshes.js','demos/gpu-lab/controls.js']){
+    const files=[...inventory(),{path,sha256:sha('a')}],before=compute(files);
+    files[files.length-1].sha256=sha('b');const after=compute(files);
+    for(const group of SUITES)assert.equal(before[group]===after[group],!['donor','editor'].includes(group),path+' '+group);
+  }
 });

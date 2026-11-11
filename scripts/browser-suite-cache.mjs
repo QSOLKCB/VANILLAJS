@@ -75,7 +75,11 @@ export function digestClosures(files,sharedCode,suiteCode,environment){
   const {global,own}=partitionPackage(files);
   const results={};
   for(const group of SUITES){
-    const runtime=[...global,...own[group]].map(f=>({path:f.path,sha256:f.sha256}));
+    // The donor verifier opens the editor/player, and editor controls import
+    // GPU-lab code. Include both complete directory closures, independently
+    // of generated service-worker hashes. Keep exclusive ownership for validation.
+    const consumers=(group==='donor'||group==='editor')?['donor','editor']:[group];
+    const runtime=[...new Map([...global,...consumers.flatMap(g=>own[g])].map(f=>[f.path,f])).values()].map(f=>({path:f.path,sha256:f.sha256}));
     runtime.sort(sortByPath);
     const identity={protocol:PROFILE,group,env:environment,runtime,
       sharedCode:[...sharedCode].sort(sortByPath),

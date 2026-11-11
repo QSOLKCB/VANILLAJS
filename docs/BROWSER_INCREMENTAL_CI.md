@@ -116,3 +116,13 @@ checked; this does not remove the normal unit/package/archive checks.
 No three redundant executions are launched inside a single job merely to fill
 the cache. Qualification accumulates across normal main runs; cache eviction or
 runner-image updates may require requalification.
+
+## Cross-suite runtime dependencies
+
+Donor and editor fingerprints each include the complete donor **and** editor
+runtime inventories. The GPU lab imports the editor viewport, the donor verifier
+opens the editor and exported player, and the editor imports GPU controls.
+Exclusive directory ownership is retained for inventory validation, but it is
+not mistaken for an independent consumption closure. Regression tests change
+viewport, player, batching and controls bytes without changing the worker hash
+and require both consuming fingerprints to change.

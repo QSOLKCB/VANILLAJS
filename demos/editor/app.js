@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // VANILLAJS Component Forge v1.5: DOM only adapts owned scene data.
+import {SceneMeshes} from './scene-meshes.js';
 import {OptionalRenderer} from '../../modules/render-optional/index.js';
 import {graphicsControls} from '../gpu-lab/controls.js';
 import {exportGame} from './game-export.js';
@@ -374,10 +375,10 @@ function initGraphics(){
   if(!api){
     optionalCanvas=document.createElement('canvas');optionalCanvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none';canvas.after(optionalCanvas);
     api=new OptionalRenderer(optionalCanvas,{onMode:requestFrame});
-    if($('optional-gpu').checked)removeGraphics=graphicsControls(api,$('graphics-controls'),requestFrame);
+    if($('optional-gpu').checked)removeGraphics=graphicsControls(api,$('graphics-controls'),requestFrame,()=>canvas.focus({preventScroll:true}));
   }
   grid=api.createMesh(createGridVertices(),'lines');
-  mesh=api.createMesh([], 'triangles');
+  mesh=new SceneMeshes(api);
   gizmoMesh=api.createMesh([], 'lines');
   geometryDirty=true;
 }
@@ -406,14 +407,14 @@ function frame(now){
       if(geometryDirty){
         const world=displayWorld(history.present===editScene()?history.present:editScene(),
           playing?simulation:null);
-        api.updateMesh(mesh,createSceneVertices(world,playing?null:selected,library));
+        mesh.update(createSceneVertices(world,playing?null:selected,library));
         api.updateMesh(gizmoMesh,!playing&&selected?
           gizmoLines(sceneWorld(editScene()),selected,gizmoSpace,gizmoTool):new Float32Array());
         geometryDirty=false;
       }
       if(optionalCanvas){optionalCanvas.width=width;optionalCanvas.height=height;}
       api.beginFrame({vp:cameraMatrix(camera,width,height),fog:.008});
-      api.draw(grid);api.draw(mesh);if(!playing)api.draw(gizmoMesh);api.endFrame();
+      api.draw(grid);mesh.draw();if(!playing)api.draw(gizmoMesh);api.endFrame();
       rendered++;
       const metrics=api.stats();
       $('stats').textContent=rendered+' frames · '+metrics.uploadedBytes+
