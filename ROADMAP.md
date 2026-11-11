@@ -1,19 +1,20 @@
 # VANILLAJS roadmap
 
-## MOD-SDK-001 — bounded local data-only registry (this PR)
+## MOD-SDK-001 — bounded local data-only registry (merged PR #75)
 
 - Strict versioned manifest admission, copied and frozen inert data, 32 KiB input limit
 - Exact-version dependency resolution, rejected cycles, atomic activation and explicit register/deactivate/remove lifecycle
 - No arbitrary plugin scripts, new ALIEN MATH module, changed simulation backend or gameplay hooks
 - [Full contract and independent reference](docs/MOD_SDK_001.md)
 
-## MOD-SDK-002 — reusable ALIEN MATH game-authoring and Mod SDK foundations (next PR)
+## MOD-SDK-002 — exact cardinal circuit and typed course authoring (this PR)
 
-- Compose the reviewed exact-course / rational-Q16 / D4 authoring APIs with the MOD-SDK-001 registry through typed data adapters
-- Create a reference moddable lab and editor authoring/export path with explicit numerical provenance
-- Verify source-pinned conformance against DRONE-RACER v0.2.0 and an independent Fraction oracle
-- Preserve untrusted data vs trusted JavaScript, CPU-first operation and original Float64 flight semantics
-- **Next owner-reviewed PR**; the full Mod SDK, game creation kit and trusted plugin lifecycle are later phases
+- [x] Independently implement bounded v2 cardinal X/Z course admission, BigInt sweep fractions, strict chronological lap progression and immutable progress
+- [x] Keep the v1 decreasing−Z course bridge unchanged; support both v1/v2 as typed inert MOD-SDK-001 entries
+- [x] Add an offline [ALIEN Circuit Foundry](demos/circuit-mod-lab/index.html), JSON export and 1024-case independent Fraction oracle
+- [x] Attribute source-pinned DRONE-RACER v2 behavioral evidence without copying game-layer collision/audio/renderer code
+- [ ] D4 X/Z transforms, full Visual Editor course export, arbitrary 3D hoops, physics/race replay and trusted JavaScript plugins remain separate future work
+- [MOD-SDK-002 verification scope](docs/MOD_SDK_002.md)
 
 
 ## ALIEN COURSE BRIDGE / DRONE-RACER — post-v1.6.0 (experimental)

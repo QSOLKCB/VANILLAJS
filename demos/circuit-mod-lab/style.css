@@ -1,0 +1,23 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+:root{color-scheme:dark;font:16px/1.5 system-ui,sans-serif;background:#080e1c;color:#e8f6ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0%,#18365c,transparent 55%),#080e1c}
+a{color:#7af8e0}a:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid #65ffe1;outline-offset:3px}
+header{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;padding:15px clamp(12px,4vw,52px);font:700 12px monospace;border-bottom:1px solid #315168}
+header>*{max-width:100%;overflow-wrap:anywhere}header span,.eyebrow{color:#67ebcf}
+main{max-width:1360px;margin:auto;padding:18px clamp(12px,4vw,52px)}
+h1{font-size:clamp(2.2rem,5vw,4.2rem);line-height:1.06;letter-spacing:-.05em}
+h1 em{color:#7af8e0;font-style:normal}.lede{max-width:900px;color:#abc3d1}
+.layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.pane{min-width:0;padding:20px;border:1px solid #345a78;border-radius:10px;background:#0d1c2d}
+h2{font-size:1.15rem;margin:0 0 16px}label,.hint{font:12px/1.6 monospace;color:#a9c5d6}
+textarea,pre{display:block;width:100%;max-width:100%;min-width:0;border:1px solid #2a4f67;background:#070f20;color:#c4f9e9;border-radius:5px}
+textarea{padding:12px;resize:vertical;font:12px/1.5 monospace}
+pre{min-height:75px;max-height:230px;overflow:auto;padding:12px;font:12px/1.5 monospace;white-space:pre}
+#map{width:100%;height:auto;border:1px solid #345c70;background:#081521}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+button{cursor:pointer;max-width:100%;padding:11px 13px;background:#13364a;border:1px solid #58b9a5;color:#e1fff9;font:700 12px monospace;border-radius:5px;white-space:normal}
+#status{font:700 12px/1.7 monospace;color:#8cf9e0;overflow-wrap:anywhere}
+#sweep-status{font:12px/1.7 monospace;color:#c3b3f8;overflow-wrap:anywhere}
+footer{margin:30px 0 12px;font:700 12px monospace}footer p{color:#ffe2a8}
+@media(max-width:780px){.layout{grid-template-columns:minmax(0,1fr)}.pane{padding:14px}}
+@media(max-width:360px){h1{font-size:2rem}.actions button{flex:1 1 125px}}

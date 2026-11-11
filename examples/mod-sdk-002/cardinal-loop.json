@@ -1,0 +1,83 @@
+{
+  "kind": "qsol.vanillajs.mod-pack.v1",
+  "id": "alien-circuit-demo",
+  "version": "1.0.0",
+  "requires": [],
+  "entries": [
+    {
+      "id": "cardinal-loop",
+      "kind": "data",
+      "data": {
+        "kind": "qsol.vanillajs.course-source.v1",
+        "course": {
+          "id": "cardinal-loop",
+          "version": 2,
+          "laps": 2,
+          "spawn": [
+            "0",
+            "8",
+            "0"
+          ],
+          "gates": [
+            {
+              "id": "east",
+              "x": "10",
+              "y": "8",
+              "z": "0",
+              "width": "20",
+              "height": "14",
+              "axis": "x",
+              "direction": 1
+            },
+            {
+              "id": "north",
+              "x": "30",
+              "y": "8",
+              "z": "-20",
+              "width": "20",
+              "height": "14",
+              "axis": "z",
+              "direction": -1
+            },
+            {
+              "id": "west",
+              "x": "-10",
+              "y": "8",
+              "z": "-40",
+              "width": "20",
+              "height": "14",
+              "axis": "x",
+              "direction": -1
+            },
+            {
+              "id": "south",
+              "x": "0",
+              "y": "8",
+              "z": "0",
+              "width": "20",
+              "height": "14",
+              "axis": "z",
+              "direction": 1
+            }
+          ],
+          "obstacles": [
+            {
+              "id": "pillar",
+              "min": [
+                "3",
+                "0",
+                "-18"
+              ],
+              "max": [
+                "6",
+                "10",
+                "-15"
+              ],
+              "color": "#ff9955"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
