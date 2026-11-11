@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Graph & Spectral Lab · VANILLAJS</title><link rel="stylesheet" href="style.css"></head>
+<body><header><p class="eyebrow">ALIEN MATH / 005</p><h1>Graph & Spectral Lab</h1>
+<p>Explore finite structure. Follow a traversal. Compare exact invariants.</p><a href="../../index.html">← Engine labs</a></header>
+<main><section class="controls" aria-label="Experiment controls">
+<label>Graph<select id="preset"><option value="grid">3 × 3 grid · D4 symmetry</option><option value="path">Path · 8 vertices</option><option value="complete">Complete · 6 vertices</option><option value="star">Star K₁,₄ · cospectral pair</option><option value="cycle">Cycle C₄ + isolated vertex</option><option value="empty">Empty graph</option></select></label>
+<label>Traversal<select id="mode"><option value="bfs">Breadth first</option><option value="dfs">Depth first</option></select></label>
+<label>Start vertex<select id="start"></select></label>
+<label>D4 drawing transform<select id="symmetry"><option>e</option><option>r</option><option>r2</option><option>r3</option><option>s</option><option>rs</option><option>r2s</option><option>r3s</option></select></label>
+<button id="step">Next vertex</button><button id="reset">Reset traversal</button><button id="relabel">Reverse vertex labels</button>
+</section><div class="layout"><section class="drawing"><canvas id="graph" width="720" height="600" aria-label="Graph vertices and edges; traversal order is also available below"></canvas><p id="drawing-status"></p><p id="status" role="status" aria-live="polite"></p><p>Visit order <output id="order"></output></p><p>Tree depths <output id="depth"></output></p></section>
+<section class="results"><h2>Exact adjacency spectrum</h2><p>Characteristic polynomial det(λI − A), coefficients from highest degree to constant:</p><output id="polynomial"></output>
+<dl><dt>Vertices / edges</dt><dd id="size"></dd><dt>Sorted degrees</dt><dd id="degrees"></dd><dt>Connected components</dt><dd id="components"></dd><dt>Triangles</dt><dd id="triangles"></dd><dt>Exact edge density</dt><dd id="density"></dd><dt>Closed walks · lengths 0–8</dt><dd id="walks"></dd></dl>
+<details><summary>Canonical edge list</summary><output id="edges"></output></details><p class="note">Exact integers and rationals, not approximate eigenvalues. The star K₁,₄ and C₄ plus an isolated vertex share a polynomial but are not isomorphic. A spectrum is not a unique graph identifier.</p></section></div>
+<section class="notes"><h2>What this experiment establishes</h2><p>Simple undirected graphs, at most 16 vertices. BFS uses ascending neighbor IDs; DFS uses ascending-neighbor preorder. DFS depth is tree depth, not shortest distance. Relabeling preserves the polynomial; tie-broken visit order can change.</p><p>D4 transforms rational drawing coordinates exactly before conversion to canvas pixels. Drawing transforms do not change edges or vertex IDs. The grid’s D4-induced label permutations are independently tested as graph automorphisms.</p><p>No eigensolver, physical material spectrum, sound measurement or formal source-refinement proof is implied. Rendering is an illustration. Calculations run only when controls change; there is no animation loop.</p></section></main>
+<script type="module" src="app.js"></script></body></html>

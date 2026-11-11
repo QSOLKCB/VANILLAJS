@@ -18,6 +18,8 @@
 
 **ALIEN-MATH-002 (experimental):** [Explicit rational-to-Q16.16 conversion](docs/ALIEN_MATH_002.md) adds six deliberately selected rounding modes (including exact-only and ties-to-even) and explicit overflow rejection or opt-in saturation. A source-independent Python Fraction oracle checks 25,020 ordered outcomes; signed-int32 round-trip and error-bound regressions protect the conversion boundary. No gameplay kernel, QFLOAT, proof, RTX, workflow or release changes.
 
+**ALIEN-MATH-005 (experimental):** [Graph & Spectral Lab](demos/graph-lab/index.html) explores bounded simple graphs, deterministic traversal, exact adjacency characteristic polynomials and rational density. [Contract and independent determinant oracle](docs/ALIEN_MATH_005.md). Exact invariants do not establish graph isomorphism or physical spectra.
+
 **ALIEN-MATH-004 (experimental):** [Exact D4 symmetry](docs/ALIEN_MATH_004.md) adds origin-centred rational XY point/box actions, explicit composition and inverses, and bounded exact squared distance. Exhaustive finite group checks and an independent matrix/Fraction oracle; authoring only.
 
 **ALIEN-MATH-003 (experimental):** [Exact closed intervals and XY geometry predicates](docs/ALIEN_MATH_003.md) add positive-area rectangle classification, directed orientation and closed segment relations over authenticated BigInt rationals. Reproducible independent Python Fraction oracle: 2,066 cases; 4,000 seeded metamorphic geometry checks. No renderer, Q16 kernel, QFLOAT, proofs, personal RTX runner, archived evidence or release changes.
