@@ -57,6 +57,25 @@ page.on('pageerror',e=>errors.push(e.message));
 try{
   if(needs('home')){
     await page.goto(base);
+  // DRONE-RACER was formerly pushed beyond the right viewport edge by the
+  // single-row nav, introducing page-wide horizontal scrolling.
+  for(const width of [1024,1440,1655]){
+    await page.setViewportSize({width,height:1000});
+    const dimensions=await page.evaluate(()=>{
+      const nav=[...document.querySelectorAll('.masthead nav a')];
+      const drone=nav.find(link=>link.textContent.includes('DRONE-RACER'));
+      const rect=drone?.getBoundingClientRect();
+      return {viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,
+        droneVisible:!!rect&&rect.width>0&&rect.height>0,
+        droneLeft:rect?.left,droneRight:rect?.right};
+    });
+    assert.ok(dimensions.droneVisible,'desktop navigation must show DRONE-RACER');
+    assert.ok(dimensions.droneLeft>=0&&dimensions.droneRight<=dimensions.viewport,
+      'DRONE-RACER must fit in the viewport at '+width+'px');
+    assert.ok(dimensions.scrollWidth<=dimensions.viewport,
+      'masthead must not cause horizontal page overflow at '+width+'px');
+  }
+  await page.setViewportSize({width:1440,height:1000});
   await page.waitForFunction(()=>document.querySelector('#status').textContent==='READY');
   assert.equal(await page.locator('#error').isVisible(),false);
   const pixels=await page.locator('#flight').evaluate(canvas=>new Promise(resolve=>requestAnimationFrame(()=>{
