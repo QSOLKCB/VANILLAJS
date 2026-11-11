@@ -14,6 +14,9 @@ export async function verifyMachine(browser, baseURL) {
   const restore=async data=>page.locator('#replay-file').setInputFiles({name:'replay.json',mimeType:'application/json',buffer:Buffer.from(typeof data==='string'?data:JSON.stringify(data))});
   const load=async seed=>{await page.locator('#seed').fill(seed);await page.locator('#load').click();};
   await page.goto(baseURL);await page.locator('.machine-link').click();assert.match(page.url(),/\/VANILLAJS\/demos\/ancient-machine\/index.html$/);
+  // Link clicks can return after navigation commits but before module execution.
+  // The word/counter are static HTML; only load waits for the module-built SVG.
+  await page.waitForLoadState('load');
   assert.equal(await word(),'0x1234');assert.equal(await detents(),'000000');assert.equal(await page.locator('.drum-digit').count(),64);
   assert.equal(await page.locator('.bit-strip i').count(),96);assert.equal(await page.locator('#machine').isVisible(),true);
   assert.equal(await page.locator('#back').isDisabled(),true);

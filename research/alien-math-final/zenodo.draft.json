@@ -1,0 +1,13 @@
+{
+  "status": "DRAFT_NOT_SUBMITTED",
+  "ownerReviewRequired": ["release version", "publication date", "creators and affiliations", "publication authorization"],
+  "metadata": {
+    "upload_type": "software",
+    "title": "VANILLAJS ALIEN MATH: bounded exact authoring and source-pinned formal correspondence",
+    "description": "Research source capsule for ALIEN-MATH-001 through 006, including deterministic fixtures, independent CPython oracles, Lean model theorems and finite JavaScript correspondence checks. Universal ECMAScript refinement and physical/hardware claims are not established. Draft prepared for owner review; no deposit or release has been published.",
+    "creators": [{"name": "Slade, Trent", "affiliation": "QSOL-IMC"}],
+    "license": "Apache-2.0",
+    "keywords": ["exact rational arithmetic", "D4 symmetry", "graph invariants", "Lean", "reproducibility", "JavaScript"],
+    "related_identifiers": [{"identifier": "https://github.com/QSOLKCB/VANILLAJS", "relation": "isSupplementTo", "scheme": "url"}]
+  }
+}
