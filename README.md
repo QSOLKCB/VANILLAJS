@@ -8,58 +8,128 @@
 
 **VANILLAJS Mod SDK — Build games. Extend the engine. Own your creations.**
 
-**Roadmap status:** The full, stable Mod SDK is planned, not yet shipped. Experimental ALIEN MATH, browser labs, source-owned game creation and Visual Workbench are available now.
+**Latest release: [v1.7.0 — Reply to Your Own Tweets Edition](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.7.0)** · 11 November 2026.
 
-**MOD-SDK-001 (experimental):** [Versioned data-only manifest registry](docs/MOD_SDK_001.md) with bounded inert entries and transactional lifecycle. **MOD-SDK-002 (this PR):** [Exact cardinal X/Z circuit math and typed Mod SDK course adapter](docs/MOD_SDK_002.md), including [ALIEN Circuit Foundry](demos/circuit-mod-lab/index.html). The full game kit and executable plugin APIs remain future work.
+Reusable JavaScript game modules, exact authoring tools and playable browser labs
+built directly on web standards. The current [catalogue](MODULES.json) contains
+**50 experimental modules, 22 registered recipes and two research experiments**.
+The full, stable Mod SDK remains planned; local data-only packs and the
+experimental Visual Workbench are available now.
 
 **This is not a product. This is INDEPENDENCE. 👽**
 
 **QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
 
-**QGAME-MATH-001:** [Play Ternary Constellation](demos/quantum-game-lab/index.html) · [Exact GF(3), symbolic score and classical spatial contract](docs/QGAME_MATH_001.md). Edit and reimport local data-only Mod SDK experiment packs. Quantum-inspired means classical finite mechanics, not quantum simulation.
+[Run the labs](#run-the-labs) · [Build a game](BUILD_A_GAME.md) ·
+[API contracts](docs/API.md) · [Architecture](docs/ARCHITECTURE.md) ·
+[Verification](docs/VERIFICATION.md) · [Roadmap](ROADMAP.md) ·
+[All releases](https://github.com/QSOLKCB/VANILLAJS/releases)
 
-**PLAY / AUTHOR:** [ALIEN Circuit Foundry](demos/circuit-mod-lab/index.html) · [Source-owned DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/) · [MOD-SDK-002 contract](docs/MOD_SDK_002.md).
+## What's available in v1.7.0
 
-**ALIEN Course Foundry:** [Try exact drone-course authoring](demos/alien-course-lab/index.html) · [Read the Q16.16 gate contract](docs/ALIEN_COURSE_BRIDGE.md) · [Play DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/). [DRONE-RACER v0.2.0](https://github.com/QSOLKCB/DRONE-RACER/releases/tag/v0.2.0) now consumes this exact Q16.16 gate bridge, while its source-pinned Float64 flight remains independent. No bit-exact floating-point replay is implied.
+| Play or author | What it demonstrates |
+| --- | --- |
+| [Ternary Constellation](demos/quantum-game-lab/index.html) | Exact GF(3) puzzles, directed state graphs, deterministic symbolic scores, reference WAV export and classical constellation motion |
+| [ALIEN Circuit Foundry](demos/circuit-mod-lab/index.html) | Exact cardinal X/Z checkpoints, ordered laps and local data-only course packs |
+| [ALIEN Course Foundry](demos/alien-course-lab/index.html) | Decimal-string authoring, explicit Q16.16 conversion and exact swept gate crossings |
+| [Visual Workbench](demos/editor/index.html) | Typed components, transform tools, local assets/prefabs, exact position tools, project recovery and playable HTML export |
+| [The Kinetic Foundry](demos/gpu-lab/index.html) | Animated procedural geometry, bounded sculpture presets and JS/WASM projection parity |
+| [Orbital Proving Ground](demos/space-lab/index.html) | Navigation gates, docking, visible broadsides and classical Newtonian orbit trails |
+| [Graph & Spectral Lab](demos/graph-lab/index.html) | Bounded simple graphs, deterministic traversal and exact adjacency characteristic polynomials |
 
-**Released:** [VANILLAJS v1.6.0 — Operation ALIEN MATH 👽](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.6.0). The original ALIEN MATH 001–FINAL programme is already published as experimental math and research evidence.
+**QGAME-MATH-001:** Ternary Constellation separates exact finite algebra,
+declared musical/spatial mappings, Float64 orbital motion and browser presentation.
+Edit, validate, export and reimport local experiment packs; export event logs,
+run receipts and up to eight seconds of reference PCM audio.
+[Contract](docs/QGAME_MATH_001.md) ·
+[Executed evidence](evidence/QGAME-MATH-001/README.md).
+Quantum-inspired means classical finite mechanics, not quantum simulation.
+Exact algebra does not imply bit-exact floating-point physics, rendered pixels
+or speaker output.
 
-**QFLOAT-001 (development):** [Native exact-integer QFloat facade and ARCADE QFloat Lab RTX browser witness](docs/QFLOAT_001.md) · [QFLOAT-001 executed evidence freeze](evidence/QFLOAT-001/README.md). Readable decimal authoring is explicitly quantized into checked Q16.16; the pre-existing VANILLAJS self-hosted runner can source-pin and test ARCADE's published browser lab by owner-only manual dispatch. No production float replacement.
+**Mod SDK foundations (experimental):**
+[MOD-SDK-001](docs/MOD_SDK_001.md) provides a versioned, bounded data-only
+manifest registry with exact-version dependencies and transactional lifecycle.
+[MOD-SDK-002](docs/MOD_SDK_002.md) adds typed course adapters and cardinal
+circuit math; QGAME adds typed experiment packs. These are shipped foundations,
+while a full game kit and executable plugin APIs remain future work.
 
-**ALIEN-MATH-001 (experimental):** [Zero-dependency exact rational authoring](docs/ALIEN_MATH_001.md) retains decimal values as bounded BigInt fractions before any deliberately specified Q16.16 quantization. Independent Node and Python Fraction oracles; no simulation-kernel, QFLOAT-001, runner, proof or release changes.
+**Exact course authoring:** The original decreasing-Z
+[course bridge](docs/ALIEN_COURSE_BRIDGE.md) and newer cardinal circuit format
+coexist. The documented [DRONE-RACER v0.2.0 integration](https://github.com/QSOLKCB/DRONE-RACER/releases/tag/v0.2.0)
+consumes the Q16.16 gate bridge while retaining independent Float64 flight.
+[Play source-owned DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/).
 
-**ALIEN-MATH-002 (experimental):** [Explicit rational-to-Q16.16 conversion](docs/ALIEN_MATH_002.md) adds six deliberately selected rounding modes (including exact-only and ties-to-even) and explicit overflow rejection or opt-in saturation. A source-independent Python Fraction oracle checks 25,020 ordered outcomes; signed-int32 round-trip and error-bound regressions protect the conversion boundary. No gameplay kernel, QFLOAT, proof, RTX, workflow or release changes.
+**Visual Workbench:** The released [Component Forge](docs/COMPONENT_FORGE.md)
+provides schema-v2 components, XYZ movement/scale handles, Y-yaw rotation,
+snapping and component-driven Play mode. Existing v1 scenes migrate explicitly.
+[Local OBJ/PNG assets and prefabs](docs/ASSET_FOUNDRY.md),
+[search, keyboard navigation, framing and recovery](docs/EDITOR_QOL.md), and
+[exact decimal/Q16 position tools](docs/EDITOR_ALIEN_AUTHORING.md) extend that
+foundation. Playable HTML exports use locally served engine directories;
+they are not self-contained engine bundles.
 
-**Distinct optional-rendering labs:** [The Kinetic Foundry](demos/gpu-lab/index.html) explores animated procedural geometry and JS/WASM parity. [Orbital Proving Ground](demos/space-lab/index.html) tests flight courses, docking, visible broadsides and orbit trails. Both start on CPU; compatible GPU acceleration requires explicit opt-in. [Controls and budgets](docs/OPTIONAL_GPU_WASM.md).
+**Optional rendering:** Kinetic Foundry and Orbital Proving Ground start on CPU.
+Compatible WebGPU/WASM acceleration requires explicit opt-in; simulation ticks
+remain independent of the renderer. The editor can include this choice in
+exported games. [Controls, export instructions and budgets](docs/OPTIONAL_GPU_WASM.md).
 
-**ALIEN-MATH-FINAL (review candidate):** [Research audit and reproducible source capsule](docs/ALIEN_MATH_FINAL.md), with draft release/Zenodo metadata and explicit OPEN proof obligations. Includes the PR70 Machine Lab initialization-race regression. No release, tag or deposit is published.
+## Published milestones
 
-**ALIEN-MATH-006 (research):** [Source-pinned formal correspondence](docs/ALIEN_MATH_006.md) separates 21 Lean model theorems, an audited axiom boundary, 856 three-way finite observations and explicitly OPEN JavaScript refinement obligations. Historical Q16/SPARK proofs and runtime mathematics are unchanged.
+| Release | Main additions |
+| --- | --- |
+| [v1.7.0 — Reply to Your Own Tweets Edition](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.7.0) | Ternary Constellation, data-only Mod SDK foundations, exact course/circuit authoring, editor QoL and distinct GPU/space labs |
+| [v1.6.0 — Operation ALIEN MATH](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.6.0) | Exact rational mathematics, explicit Q16.16 conversion, geometry, D4 symmetry, graph invariants and formal correspondence |
+| [v1.5.0 — The Component Forge](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.5.0) | Typed scene components, transform handles, snapping and component-driven preview |
+| [v1.4.0 — The Proof of Speed](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.4.0) | Source-bound CPU/RTX evidence, complete-output parity and offline-cache negative controls |
+| [v1.3.0 — The Invariant Machine](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.3.0) | Bullet Time and ARCADE labs, independent time domains and packaged offline delivery |
+| [v1.2.0 — You Didn't Invent Doom Edition](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.2.0) | Independent Q16.16 scalar arithmetic, radix optimization and formal-verification evidence |
 
-**ALIEN-MATH-005 (experimental):** [Graph & Spectral Lab](demos/graph-lab/index.html) explores bounded simple graphs, deterministic traversal, exact adjacency characteristic polynomials and rational density. [Contract and independent determinant oracle](docs/ALIEN_MATH_005.md). Exact invariants do not establish graph isomorphism or physical spectra.
+The earlier [v1.1.1](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.1.1)
+added exact vectors, terrain/ballistics and the explicit WebGL API;
+[v1.1.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.1.0)
+introduced the integer engine and replayable Integer Foundry.
+[The Clockwork Vault](demos/clockwork-vault/index.html) remains the
+v1.0.0 showcase: six OMI seals in one expedition.
 
-**ALIEN-MATH-004 (experimental):** [Exact D4 symmetry](docs/ALIEN_MATH_004.md) adds origin-centred rational XY point/box actions, explicit composition and inverses, and bounded exact squared distance. Exhaustive finite group checks and an independent matrix/Fraction oracle; authoring only.
+Release names above follow the published GitHub tags.
+`package.json` and `MODULES.json` still carry `1.0.0` metadata;
+those fields do not identify the latest published milestone. API maturity
+remains experimental across these releases.
 
-**ALIEN-MATH-003 (experimental):** [Exact closed intervals and XY geometry predicates](docs/ALIEN_MATH_003.md) add positive-area rectangle classification, directed orientation and closed segment relations over authenticated BigInt rationals. Reproducible independent Python Fraction oracle: 2,066 cases; 4,000 seeded metamorphic geometry checks. No renderer, Q16 kernel, QFLOAT, proofs, personal RTX runner, archived evidence or release changes.
+## ALIEN MATH and research boundaries
 
-**CI-INVARIANT-001 (merged PR #67):** [Auditable browser reuse](docs/BROWSER_INCREMENTAL_CI.md) binds dependencies and verifier inputs to three authenticated main executions. Main currently lacks required approval protection, so reuse fails closed to Chromium execution. Unreachable math can preserve the worlds witness once authoritative qualification is available.
+The ALIEN-MATH-001–FINAL programme shipped in v1.6.0 and remains available:
 
-**Editor authoring improvements:** [QoL and ALIEN MATH guide](docs/EDITOR_QOL.md): searchable hierarchy/assets, keyboard navigation, selection framing, local recovery, explicit exact/Q16 position tools and measured shared-texture preparation. The Mod SDK remains experimental.
+| Contract | Scope and evidence |
+| --- | --- |
+| [001 — Exact rationals](docs/ALIEN_MATH_001.md) | Bounded BigInt fractions and decimal-string authoring, checked with independent Node/Python oracles |
+| [002 — Rational/Q16 conversion](docs/ALIEN_MATH_002.md) | Six explicit rounding policies, rejection or opt-in saturation, and 25,020 independent Python outcomes |
+| [003 — Intervals and XY geometry](docs/ALIEN_MATH_003.md) | Closed intervals, orientation, segment relations and rectangle classification; 2,066 oracle cases and 4,000 metamorphic checks |
+| [004 — D4 symmetry](docs/ALIEN_MATH_004.md) | Exact origin-centred rational XY point/box actions, composition, inverses and squared distance |
+| [005 — Graph invariants](docs/ALIEN_MATH_005.md) | Exact characteristic polynomials and rational density; no graph-isomorphism or physical-spectrum claim |
+| [006 — Formal correspondence](docs/ALIEN_MATH_006.md) | 21 Lean model theorems, audited assumptions and 856 three-way finite observations |
+| [FINAL — Audit and source capsule](docs/ALIEN_MATH_FINAL.md) | Reproducible source packaging, draft publication metadata and explicit OPEN refinement obligations |
 
-**Next-generation editor (development):** [v1.5.0 — The Component Forge](docs/COMPONENT_FORGE.md) extends the visual workbench with strict schema-v2 components, real XYZ transform handles, snap-aware editing and component-driven Play mode. Existing v1 scene files migrate explicitly; the v1.4.0 benchmark release remains unchanged.
+The model proofs and finite checks do not establish universal JavaScript or
+ECMAScript refinement. Historical Q16/SPARK proof boundaries remain separate.
 
-Reusable JavaScript game modules built directly on web standards. The latest published milestone is **[v1.6.0 — Operation ALIEN MATH](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.6.0)**, building on **[v1.4.0 — The Proof of Speed](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.4.0)**,
-with source-bound CPU and physical RTX optimization evidence, complete-output
-parity and fail-closed offline cache tests. Bullet Time and ARCADE labs arrived
-in v1.3.0; the exact Q16.16 and formal-verification foundation remains intact.
+**QFLOAT-001 (experimental):** The [native QFloat facade](docs/QFLOAT_001.md)
+quantizes decimal authoring into checked Q16.16. Its executed ARCADE browser
+witness is preserved in the [evidence record](evidence/QFLOAT-001/README.md)
+and the published [QFLOAT research prerelease](https://github.com/QSOLKCB/VANILLAJS/releases/tag/qfloat-001-research.1).
+It is not a general floating-point replacement.
 
-The v1.0.0 showcase was The Clockwork Vault: six OMI seals in one expedition.
-The engine has 32 experimental game modules and sixteen recipes including
-Integer Foundry, alongside the registered OMI and optional E8 research labs.
+**CI-INVARIANT-001:** [Auditable browser reuse](docs/BROWSER_INCREMENTAL_CI.md)
+requires matching source, dependencies, verifier inputs and three authenticated
+reviewed-main executions. Missing approval protection or other qualification
+evidence fails closed to real Chromium execution. Node, package and archival
+checks still run.
 
-[v1.4.0 Proof of Speed (in development)](docs/PROOF_OF_SPEED.md) · [Visual Editor (alpha)](demos/editor/index.html) · [Editor contracts](docs/EDITOR_WORKBENCH.md) · [Bullet Time Lab](demos/bullet-time-lab/index.html) · [ARCADE Lab](demos/arcade-lab/index.html) · [Offline build & OPT contracts](docs/DONOR_LABS_OFFLINE.md) · [Donor upgrade: pacing, lead solver & RTX](docs/DONOR_UPGRADE_2026_11.md) · [UFF orbital physics & NEXUS contracts](docs/BLOAT_NEXUS_UFF.md) · [Frame invalidation](docs/FRAME_GATE.md) · [Pooled A*](docs/NAVIGATION_POOL.md) · [Appearance composition](docs/APPEARANCE.md) · [Adaptive donor kernels](docs/ADAPTIVE_DONOR_EXTRACTION.md) · [Terrain & ballistics](docs/TERRAIN_BALLISTICS.md) · [Integer engine](docs/INTEGER_ENGINE.md) · [Build a game](BUILD_A_GAME.md) · [API contracts](docs/API.md) ·
-[Architecture](docs/ARCHITECTURE.md) · [Verification](docs/VERIFICATION.md) ·
-[Roadmap](ROADMAP.md) · [Module catalogue](MODULES.json) · [Geometry layer 2](docs/GEOMETRY_LAYER2.md)
+[Proof of Speed contract](docs/PROOF_OF_SPEED.md) ·
+[Offline build & OPT contracts](docs/DONOR_LABS_OFFLINE.md) ·
+[Integer engine](docs/INTEGER_ENGINE.md) ·
+[Geometry layer 2](docs/GEOMETRY_LAYER2.md) · [Module catalogue](MODULES.json)
 
 ## You Didn't Invent Doom Edition — exact Q16.16 and formal verification
 
@@ -177,7 +247,7 @@ The independent [FreeDM/Terra FPS research lab](experiments/freedm-terra/README.
 introduces an **owner-dispatched, opt-in four-player Doom-engine deathmatch**
 using the FreeDM WAD, four real local ViZDoom peers and four separate
 GPT-6.1 Terra vision agents. It is *not* a browser runtime dependency,
-packaged game, automatically running workflow or a validated completed match.
+packaged game or automatically running workflow.
 An offline four-player smoke must pass before any API call. The per-dispatch
 authorization is US$5 per agent (US$20 total), with nonrefundable conservative
 pre-request reservations and no automatic retries. Source-bound screenshots,
@@ -193,6 +263,16 @@ Download or clone the repository, then serve its root with any static HTTP serve
 ```sh
 python3 -m http.server 8000
 # Open http://localhost:8000
+# Visual Workbench: http://localhost:8000/demos/editor/index.html
+# Ternary Constellation: http://localhost:8000/demos/quantum-game-lab/index.html
+# Circuit Foundry: http://localhost:8000/demos/circuit-mod-lab/index.html
+# Course Foundry: http://localhost:8000/demos/alien-course-lab/index.html
+# Kinetic Foundry: http://localhost:8000/demos/gpu-lab/index.html
+# Orbital Proving Ground: http://localhost:8000/demos/space-lab/index.html
+# Graph & Spectral Lab: http://localhost:8000/demos/graph-lab/index.html
+# Bullet Time Lab: http://localhost:8000/demos/bullet-time-lab/index.html
+# ARCADE Lab: http://localhost:8000/demos/arcade-lab/index.html
+# 2D Foundry: http://localhost:8000/demos/2d-lab/index.html
 # Integer Foundry: http://localhost:8000/demos/integer-foundry/index.html
 # Interaction Lab: http://localhost:8000/demos/interaction-lab/index.html
 # FPS Lab: http://localhost:8000/demos/fps-lab/index.html
@@ -202,19 +282,32 @@ python3 -m http.server 8000
 # Clockwork Vault: http://localhost:8000/demos/clockwork-vault/index.html
 ```
 
-There is no runtime installation, build step, npm dependency, CDN, account,
-telemetry, external asset download or backend. All geometry is procedural.
-The three 3D labs and The Clockwork Vault require WebGL 1; RTS Lab uses Canvas 2D. OMI Lab uses SVG and
-Canvas 2D, retaining numerical controls if its atlas is unavailable. The Brass
-Engine uses native SVG and DOM controls. A visible
-message explains unsupported graphics. Serve over
-HTTP(S): opening `file://index.html` is not supported by the ES-module entrypoint.
-The local server works without internet access. Hosted offline reload via a
-service worker is a future feature, not included in this milestone.
+Running the browser labs from source needs no build, npm runtime dependency,
+CDN, account or backend. Bundled scenes use procedural geometry; the Workbench
+also supports explicitly imported local assets. Flight, Interaction, FPS,
+Integer Foundry and Clockwork Vault use WebGL 1. The optional-rendering labs
+start on Canvas 2D; other labs use Canvas, SVG and DOM controls. Unsupported
+graphics are reported visibly, with numerical fallbacks where supported.
+Serve over HTTP(S): opening `file://index.html` is not supported by the
+ES-module entrypoints. The local server works without internet access.
+
+For a packaged build with offline reload, use Node.js 22+ once before serving:
+
+```sh
+node scripts/build.js
+node scripts/verify-offline.js
+python3 -m http.server 8080 --directory dist
+# Open http://localhost:8080
+```
+
+Only the built `dist/` includes the generated service worker and hash manifest.
+On HTTPS or localhost, a successful initial install verifies and caches the
+packaged assets for subsequent offline navigation. An unbuilt source checkout
+does not install this worker. See [offline delivery and limits](docs/DONOR_LABS_OFFLINE.md).
 
 ## 2D Foundry — gameplay movement, sound and ternary memory
 
-New experimental <a href="demos/2d-lab/index.html">2D Foundry</a> combines
+The experimental <a href="demos/2d-lab/index.html">2D Foundry</a> combines
 four integer-tick movement styles (RTS, shooter, platformer, top-down driving),
 existing A* pathfinding and flow-field architecture, pure local PCM16 sound
 effects, and a bounded 27-column ternary data store for UTF-8 `.txt` and
@@ -254,9 +347,11 @@ samples a bounded number of actual animation frames, retaining the existing
 visible-pixel threshold rather than accepting a blank canvas.
 
 See the [source-pinned donor review, APIs and test limitations](docs/DONOR_UPGRADE_2026_11.md).
-Physical RTX measurements require a separate **owner-dispatched, reviewed-main**
-workflow after merge. Any evidence produced will be new; RTX001–004 remain
-immutable, and CPU numerical timings are not GPU-compute or game FPS claims.
+The completed owner-dispatched validation is preserved as
+[RTX5060TI-005](evidence/RTX5060TI-005/README.md), with separate native WebGL
+and CPU pacing/interception receipts. Further hardware runs require an explicit
+**owner dispatch on reviewed main**. CPU numerical timings are not GPU-compute
+or game FPS claims; RTX001–005 remain immutable historical evidence.
 
 ## BLOAT-OPS, NEXUS and UFF experimental research kernels
 
@@ -273,11 +368,11 @@ Read the [source-pinned mathematical/physics contract](docs/BLOAT_NEXUS_UFF.md)
 and use the new opt-in modules deliberately; no GPU or FPS improvement
 is claimed from them until independently measured.
 
-The owner-only [RTX 5060 Ti numerical and three-baseline validation](docs/BLOAT_NEXUS_UFF.md)
-can be dispatched from reviewed `main` after this PR is merged. It verifies the
-three historical source receipts while separately measuring new CPU numerical
-kernels. It has no PR/push trigger; hardware use and artifact upload are
-individually opt-in.
+The completed [RTX5060TI-004 validation](evidence/RTX5060TI-004/README.md)
+preserves three same-protocol native WebGL comparisons and a separate CPU-only
+numerical report. The numerical kernels were not accelerated on RTX.
+Further owner-only runs require reviewed `main`; the workflow has no PR/push
+trigger, and hardware use and artifact upload are individually opt-in.
 
 ## QwakeTF-style reusable broadphase scratch
 
@@ -324,10 +419,11 @@ Both are informed by pinned GAMES and CorpoWars3d donor experiments and
 retain independent parity and failure tests. Existing renderers and games
 are unchanged. See [scope and source provenance](docs/ADAPTIVE_DONOR_EXTRACTION.md).
 
-An optional [owner-run RTX 5060 Ti validation](docs/RTX5060TI_ADAPTIVE_VALIDATION.md)
-will recheck the frozen RTX5060TI-001 evidence and run **new, separately
-identified** adaptive/retained workloads after a reviewed merge to `main`.
-The new hardware measurements have **not been executed** by this PR.
+The completed adaptive/retained workload measurements are preserved in
+[RTX5060TI-002](evidence/RTX5060TI-002/README.md), separately from RTX5060TI-001.
+The [owner-run validation protocol](docs/RTX5060TI_ADAPTIVE_VALIDATION.md)
+remains available for explicitly dispatched checks on reviewed `main`.
+These source-pinned observations do not establish a universal GPU or FPS gain.
 
 ## Optional terrain and ballistic kernels
 
@@ -336,13 +432,13 @@ adds triangulated terrain sampling/sweeps and closed-form gravity stepping.
 See [API boundaries and pinned donor provenance](docs/TERRAIN_BALLISTICS.md).
 Neither kernel replaces the existing character solver, Integer Foundry or renderer.
 
-## Integer engine — new development track
+## Integer engine — checked Q16.16 simulation
 
-The new core runs authoritative game state on checked signed 32-bit fixed-point
+The integer core runs authoritative game state on checked signed 32-bit fixed-point
 values: **65,536 subunits per metre**, integer ticks and exact
 16-bit-limb scalar arithmetic with an optimized radix-65,536 quotient path.
-Exact raw
-vector operations continue returning BigInt where required by the API. It provides atomic kinematic world updates,
+Exact raw vector operations continue returning BigInt where required by the API.
+The core provides atomic kinematic world updates,
 static box collision, seeded integer randomness, canonical snapshots and bounded
 input replay. Browser presentation converts positions to metres at the renderer.
 No hardware oscillator, server, third-party engine or runtime package is needed.
@@ -494,24 +590,33 @@ followed by 512 samples. These are search-operation counts, not measured FPS.
 
 ## Modules
 
-| Import directory | Responsibility |
-| --- | --- |
-| `modules/navigation/` | Immutable grids, bounded A*, group destinations and incremental flow fields |
-| `modules/math/` | Vectors, quaternions, camera matrices, seeded random numbers |
-| `modules/time/` | Fixed ticks, interpolation fraction, pause, time scaling and catch-up limits |
-| `modules/collision/` | Static/kinematic body sliding, finite static shots and translating-target segment queries |
-| `modules/character/` | Upright movement, safe crouching, static stairs, platform riding and first-person view |
-| `modules/weapons/` | Simulation-time fire cadence, magazines and finite-reserve reloading |
-| `modules/flight/` | Force/torque integration; assisted and inertial control |
-| `modules/input/` | Pure action state, keyboard/mouse adapters and standard gamepad sampling |
-| `modules/render-webgl/` | Minimal WebGL 1 triangle, line and point rendering |
-| `modules/projectiles/` | Bounded constant-velocity projectiles, swept impacts and lifetimes |
-| `modules/interactions/` | Ordered conditions → effects with explicit outcome reasons |
+The catalogue contains **50 experimental modules**. Import each through
+`modules/<name>/index.js`; [MODULES.json](MODULES.json) records the exact
+dependency closure and environment for every entry.
 
-API maturity remains **experimental**, including in 1.0.0. Use a tagged release or exact commit,
-preserve the directory structure and record what your game imports. The
-machine-readable catalogue lists each module's dependency closure and environment.
-Core modules neither own an animation loop nor read the DOM or ambient time.
+| Module names under `modules/` | Responsibility |
+| --- | --- |
+| `math` | Vectors, quaternions, camera matrices and seeded random numbers |
+| `time`, `time-domains` | Fixed ticks, interpolation, independent clock domains, pause and catch-up limits |
+| `integer-math`, `integer-vector`, `integer-time`, `integer-physics`, `integer-engine`, `integer-replay` | Checked Q16.16 simulation, exact vector intermediates, canonical snapshots and bounded replay |
+| `flight`, `character`, `collision` | Assisted/inertial flight, upright movement and static/translating AABB collision |
+| `projectiles`, `weapons`, `interactions`, `lead-solver` | Swept shots, weapon timing, conditional effects and constant-velocity interception |
+| `input` | Pure action state, keyboard/mouse adapters and standard gamepad sampling |
+| `navigation`, `navigation-pool` | Grid A*, shared flow fields, formations and reusable search workspaces |
+| `geometry`, `terrain`, `ballistics`, `adaptive-circles`, `range2d` | Geometry batching/indexing, terrain queries, gravity stepping and bounded query kernels |
+| `render-webgl`, `cuboid-stream`, `appearance`, `frame-gate`, `render-optional` | WebGL rendering, retained streams, appearance composition, idle reuse and CPU-first optional acceleration |
+| `motion2d`, `audio2d`, `ternary-store2d` | Integer movement, procedural PCM/WAV and bounded ternary document encoding |
+| `orbital-physics`, `nexus-lattice`, `logical-sampling`, `gf3-lattice` | Classical orbits and separate bounded numerical/lattice research kernels |
+| `qfloat` | Decimal-authoring facade over checked Q16.16 |
+| `exact-rational`, `rational-q16`, `exact-interval`, `exact-geometry`, `exact-d4`, `exact-graph` | Exact authoring, explicit quantization, geometry, symmetry and graph invariants |
+| `exact-course`, `exact-circuit` | Exact checkpoint compilation, swept crossings and cardinal circuit progression |
+| `mod-sdk`, `mod-course`, `mod-experiment` | Transactional data-only registry and typed course/experiment packs |
+| `gf3`, `symbolic-events` | Exact finite-field operations, symbolic scores and reference audio events |
+
+API maturity remains **experimental in v1.7.0**. Use a tagged release or exact
+commit, preserve the directory structure and record what your game imports.
+Pure simulation/math modules do not read the DOM or ambient time; rendering
+and input adapters have the browser requirements declared in the catalogue.
 
 ## OMI Lab — research experiment
 
@@ -582,6 +687,8 @@ Node.js 22+ is development tooling only. There is no `npm install` for these che
 node --test tests/*.test.js
 node scripts/check.js
 node scripts/build.js
+node scripts/verify-offline.js
+node scripts/proof-speed.mjs --check
 node scripts/navigation-workload.js --check
 node scripts/verify-omi.js --check
 node scripts/verify-machine.js --check
@@ -595,11 +702,20 @@ node scripts/q16-formal-bridge.mjs
 ```
 
 The build stages an allowlisted `dist/` and generates `manifest.json` with sizes
-and SHA-256 hashes. The manifest identifies packaged bytes; it is not a signature.
+and SHA-256 hashes, plus the content-versioned offline service worker. The
+manifest identifies packaged bytes; it is not a signature.
 `npm test`, `npm run check`, and `npm run build` are optional aliases.
 
-CI also installs pinned Playwright outside the checkout and exercises the
-packaged `/VANILLAJS/` path in Chromium with software WebGL. Its screenshots and
+The [ALIEN MATH audit](docs/ALIEN_MATH_FINAL.md) and
+[QGAME reproduction guide](docs/QGAME_MATH_001.md) list the independent Python
+oracles and source-pinned proof/evidence checks. Python uses its standard library;
+Lean is required only for the formal-verification gates.
+
+CI uses pinned Playwright 1.64.0 outside the checkout and verifies seven
+packaged Chromium suites under `/VANILLAJS/`, with software WebGL where required.
+[Browser reuse](docs/BROWSER_INCREMENTAL_CI.md) is allowed only for independently
+qualified reviewed-main witnesses; missing qualification executes the real suite.
+Node, package integrity and archived evidence checks always run. Screenshots and
 manifest are retained as the `flight-lab-evidence` artifact. See the verification
 document for executed checks and remaining coverage limits.
 
@@ -634,12 +750,18 @@ as an independent adjudication. Specific checkable source comparisons remain wel
 
 ## Scope and licence
 
-This is a compact foundation, not a general rigid-body contact solver. Colliders
-use fixed-orientation cubes or rectangular bodies. Body movement uses static
-axis-aligned boxes or translating kinematic surfaces; shot queries also track
-translating boxes. There are no reciprocal dynamic body contacts, oriented-box contacts, friction, bounce, atmospheric
-flight, orbital gravity, audio engine, map editor or network synchronisation yet.
-Numerical tolerances and runtime limits are documented in [API.md](docs/API.md).
+This remains an experimental engine and authoring foundation. Body movement uses
+static axis-aligned boxes or translating kinematic surfaces; shot queries also
+track translating boxes. General reciprocal rigid-body contacts, oriented-box
+contacts, friction, atmospheric flight and network synchronisation remain outside
+the core contract. Individual labs can implement their own bounded responses,
+such as ARCADE puck reflections.
+
+Classical orbital gravity, procedural PCM audio, the Visual Workbench, local asset
+imports and playable HTML export are available within their documented limits.
+They do not establish a general N-body solver, full audio workstation, complete
+game kit or executable-plugin sandbox. Numerical tolerances and runtime limits
+are documented in [API.md](docs/API.md) and the feature contracts above.
 
 The repository's existing [Apache-2.0 licence](LICENSE) is preserved. See
 [NOTICE](NOTICE) for authorship and reference provenance. No ripped assets or
