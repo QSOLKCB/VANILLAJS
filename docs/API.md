@@ -747,3 +747,12 @@ Existing WebGL APIs remain supported.
 Composition applies the right operand first. Actions use existing genuine rational
 XY points/boxes; reduced squared-distance overflow rejects rather than quantizes.
 See [ALIEN-MATH-004](ALIEN_MATH_004.md) for the complete bounded contract and example.
+
+## Exact graph authoring (experimental)
+
+`modules/exact-graph/index.js`: `ExactGraph`, `MAX_VERTICES`, `breadthFirst`,
+`depthFirst`, `connectedComponents`, `relabelGraph`, `graphInvariants`,
+`characteristicPolynomial`, `closedWalkCounts`. Simple undirected graphs with
+0–16 vertices; no loops or duplicate edges. Exact BigInt polynomial coefficients
+are in descending powers. See [ALIEN-MATH-005](ALIEN_MATH_005.md) for bounds,
+traversal tie rules, input admission, invariance limits and the standalone lab.

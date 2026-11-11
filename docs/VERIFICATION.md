@@ -1,5 +1,42 @@
 # Verification — VANILLAJS 1.0.0
 
+## ALIEN-MATH-005 — executed local evidence, owner review pending
+
+Base: `e2176b0e5f04060ef4bec6acd8a11398e4b86746` (PR #68 merge).
+
+- 587 Node tests passed with zero final failures. Coverage includes bounded graph
+  admission, deterministic BFS/DFS, exact invariants/polynomials, 1,536 exhaustive
+  four-vertex relabelings, D4 grid automorphisms, maximal-size Cayley-Hamilton
+  checks, and a cospectral non-isomorphism counterexample.
+- Independent Python subset-determinant/Fraction oracle reproduced 211 graph
+  cases: seven fixed, all 76 labelled graphs on 0..4 vertices, and 128 seeded.
+  ALIEN-MATH-001–004 and CI invariant oracle reproductions also passed unchanged.
+- Tests failed as expected before implementation. Fault injection initially found
+  that an identity/no-op relabeling escaped invariant-only comparisons. Explicit
+  asymmetric expected-edge checks closed that test gap. Reruns rejected all four
+  disposable faults: polynomial sign, BFS depth, ignored permutation and triangle
+  double counting. The production implementation did not need a change.
+- Source check passed: 225 JavaScript files, 43 module contracts, two experiments.
+  Build and independent offline verification passed: 127 packaged files.
+- Pinned Playwright 1.64.0 / Chromium 156.0.8078.4 headless SwiftShader preflight
+  and all seven packaged suites passed. Graph Lab also passed a targeted browser
+  check; desktop and 320px screenshots were visually inspected. Covered exact
+  displayed polynomial, cospectral distinction, traversal/relabel/D4 controls,
+  empty/disconnected states, Canvas failure and responsive layout.
+- Browser decisions: seven executed / zero reused; local authenticated authority
+  unavailable. Read-only GitHub audit separately confirmed main is unprotected.
+  No trusted receipt was issued. New browser source/harness/contract identities
+  are explicitly included in the reviewed dependency policy.
+- Existing 11 archival/offline blocks and 14 CPU reference workload steps passed.
+  No physical GPU, owner-only workflow or self-hosted runner was used.
+
+See [ALIEN-MATH-005](ALIEN_MATH_005.md) for reproduction, resource bounds and
+input/fixture SHA-256. Original Apache-2.0 implementation; no historical receipt,
+release artifact, existing mathematics, Q16/QFLOAT backend or Lean/SPARK proof
+changed. No eigensolver/physical-spectrum claim or formal source refinement.
+Phase 006 and the final freeze remain unauthorized pending review and merge.
+
+
 ## ALIEN-MATH-004 — executed local evidence, owner review pending
 
 Base: `0d2aaf4dd0d9e6fa889d6bb273164247e640d5a8` (PR #67 merge).

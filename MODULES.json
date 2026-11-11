@@ -345,6 +345,16 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Bounded exact D4 origin-centred XY actions, composition/inverses, closed box transforms and reduced exact squared distance; authoring only"
+    },
+    "exact-graph": {
+      "entry": "modules/exact-graph/index.js",
+      "depends": [
+        "exact-rational"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/graph-lab/index.html",
+      "description": "Bounded simple undirected graphs, deterministic BFS/DFS, exact rational/integer invariants and BigInt adjacency characteristic polynomials; authoring only"
     }
   },
   "recipes": {

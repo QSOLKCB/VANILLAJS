@@ -66,11 +66,13 @@
     "research": {
       "roots": [
         "demos/omi-lab/",
-        "demos/ancient-machine/"
+        "demos/ancient-machine/",
+        "demos/graph-lab/"
       ],
       "scripts": [
         "scripts/browser-omi.js",
-        "scripts/browser-machine.js"
+        "scripts/browser-machine.js",
+        "scripts/browser-graph.js"
       ],
       "serviceWorker": true,
       "consumes": [
@@ -139,6 +141,13 @@
       "tests/exact-d4.test.js",
       "tests/fixtures/alien-math-004-input.json",
       "tests/fixtures/alien-math-004-oracle.json"
+    ],
+    "modules/exact-graph/": [
+      "docs/ALIEN_MATH_005.md",
+      "scripts/alien_math_005_oracle.py",
+      "tests/exact-graph.test.js",
+      "tests/fixtures/alien-math-005-input.json",
+      "tests/fixtures/alien-math-005-oracle.json"
     ]
   },
   "shared": [
@@ -232,10 +241,11 @@
     "scripts/browser-donor-labs.js": "f2d09b5be5082df40beefb18ca03ba88c83d28afdb35fcb7909cd05602145665",
     "scripts/browser-optional-labs.js": "9f433cb891e5f22d4bff8022538d498467322af1fce43f9c0d6be453d21d03e3",
     "scripts/browser-editor.js": "73376a3e60a3643ab3043468970cfff07f20b3dda01d35327444254526001679",
-    "scripts/browser-check.js": "2f09e6e2f414c7da8b75a1eb1204d8db19e562f19556754bae485696d7b2122b",
+    "scripts/browser-check.js": "7a4b3b957d7848d03fe33c8118eb603cf04f8fb737e4aef2b76b1ebbed21a390",
     "scripts/omi-oracle.js": "c18dbd54d18295d03ec4681885d6e165feee4b8ef8136b935e4c425cbce1928c",
     "scripts/opt-render-reference.js": "7bfca288f555317228606b7f698105306f6635ef847a41af3d6143fc666395a3",
-    "scripts/integer-fixture.js": "b36beb739f134fbbd6a49f238429d071f5603f5b6b3d09dcd9b381fe6144d793"
+    "scripts/integer-fixture.js": "b36beb739f134fbbd6a49f238429d071f5603f5b6b3d09dcd9b381fe6144d793",
+    "scripts/browser-graph.js": "4d20b826a35c8e38e348938b661080a11bf55d28da9d401ce937932675a94be8"
   },
   "auditedRuntime": {
     "modules/adaptive-circles/index.js": "47333bd2221ca928a594d5f66e01e4482d23c69c4c722243a782078f3dd99f03",
@@ -325,6 +335,10 @@
     "api/webgl/index.js": "0f791aa8e118ad82a7d2aced4bf22633fbd4f94bcf9c54e695b571a3ae28d342",
     "offline/register.js": "9d17c57a7c03a5b05c36556b712c8f5b2990a6cae4e358d217e378405eb24db9",
     "experiments/arch-omi/index.js": "1b49eb986c72b108a7a5ca90480a2a70f65a9ee430937ee80af3e17a2f14dbf6",
-    "experiments/e8-geometry/index.js": "96658e21495a8582c44e0d48579e58180300f376918f2ab64809229705f17b03"
+    "experiments/e8-geometry/index.js": "96658e21495a8582c44e0d48579e58180300f376918f2ab64809229705f17b03",
+    "modules/exact-graph/index.js": "cdfb0e74a330e62ea1312ff042b570856707bfac2c491e3e3125647b2867aa10",
+    "modules/exact-d4/index.js": "b28a4567bf068a4b7beca70a45b527c620b537f5a7ba334e0f86a7c6e7364f78",
+    "demos/graph-lab/app.js": "4daf2ca8fff4e307ef2d1565c9a11f1266c79a365f999f29f7cd70707bc2abc3",
+    "demos/graph-lab/presets.js": "9e6175b70d0b289b61c6aa997e181d073d4dabc09e89295196c6557890af3ba0"
   }
 }
