@@ -1,5 +1,31 @@
 # Verification — VANILLAJS 1.0.0
 
+## CI-INVARIANT-001 — local executed evidence, owner review pending
+
+- 573 Node tests passed, including the A–M cache regression matrix; zero failures
+  in the final run. Source check: 218 JavaScript files, 41 module contracts,
+  two experiments. Build and offline verification: 121 packaged files passed.
+- Real isolated Playwright 1.64.0 / Chromium 156.0.8078.4 headless SwiftShader
+  preflight and all seven packaged browser suites passed on 2026-11-11.
+  This was the cold path: seven executed, zero reused, no trusted receipt issued.
+  No physical GPU, owner RTX workflow or self-hosted runner was used.
+- The existing 11 archival check blocks and 14 CPU reference workload steps
+  passed. ALIEN-MATH-001–003 independent Python reproductions passed unchanged.
+  The new finite graph/qualification oracle reproduced its frozen expected bytes.
+- Final verification followed exploratory dependency-recognizer corrections and
+  additional negative controls. No failing final gate was waived. Browser runtime
+  and harness bytes were unchanged by the subsequent receipt-verifier checks.
+- Against the executed source-pinned baseline, adding an unreachable packaged
+  math module reduces the qualified-fixture selection from seven executed to
+  six executed / one reused. This is a suite-count observation, not a timing claim
+  or live GitHub cache hit. Current unprotected main remains seven / zero.
+
+See [the CI contract](BROWSER_INCREMENTAL_CI.md) for fixture SHA-256 values,
+reproduction commands, authority limitations and outstanding owner-controlled
+protection/qualification prerequisites. No arithmetic contract, archived receipt,
+proof boundary, release or hardware claim changes in this phase.
+
+
 ## OPT rendering reuse: current change
 
 Nine additional Node checks compare every vertex/colour/order with a frozen

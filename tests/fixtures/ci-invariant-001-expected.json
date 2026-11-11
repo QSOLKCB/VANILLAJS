@@ -1,0 +1,168 @@
+{
+  "affected": {
+    "documentation": [],
+    "donor": [
+      "home",
+      "render",
+      "play",
+      "research",
+      "donor",
+      "editor"
+    ],
+    "editor": [
+      "home",
+      "render",
+      "play",
+      "research",
+      "donor",
+      "editor"
+    ],
+    "math": [
+      "home",
+      "render",
+      "play",
+      "research",
+      "donor",
+      "editor"
+    ],
+    "navigation": [
+      "home",
+      "render",
+      "play",
+      "worlds",
+      "research",
+      "donor",
+      "editor"
+    ],
+    "physics": [
+      "home",
+      "render",
+      "play",
+      "research",
+      "donor",
+      "editor"
+    ],
+    "renderer": [
+      "home",
+      "render",
+      "play",
+      "research",
+      "donor",
+      "editor"
+    ],
+    "standalone": [
+      "home",
+      "render",
+      "play",
+      "research",
+      "donor",
+      "editor"
+    ]
+  },
+  "closures": {
+    "donor": [
+      "donor",
+      "editor",
+      "exact",
+      "home",
+      "math",
+      "navigation",
+      "physics",
+      "play",
+      "render",
+      "renderer",
+      "research",
+      "standalone",
+      "worlds"
+    ],
+    "editor": [
+      "donor",
+      "editor",
+      "exact",
+      "home",
+      "math",
+      "navigation",
+      "physics",
+      "play",
+      "render",
+      "renderer",
+      "research",
+      "standalone",
+      "worlds"
+    ],
+    "home": [
+      "donor",
+      "editor",
+      "exact",
+      "home",
+      "math",
+      "navigation",
+      "physics",
+      "play",
+      "render",
+      "renderer",
+      "research",
+      "standalone",
+      "worlds"
+    ],
+    "play": [
+      "donor",
+      "editor",
+      "exact",
+      "home",
+      "math",
+      "navigation",
+      "physics",
+      "play",
+      "render",
+      "renderer",
+      "research",
+      "standalone",
+      "worlds"
+    ],
+    "render": [
+      "donor",
+      "editor",
+      "exact",
+      "home",
+      "math",
+      "navigation",
+      "physics",
+      "play",
+      "render",
+      "renderer",
+      "research",
+      "standalone",
+      "worlds"
+    ],
+    "research": [
+      "donor",
+      "editor",
+      "exact",
+      "home",
+      "math",
+      "navigation",
+      "physics",
+      "play",
+      "render",
+      "renderer",
+      "research",
+      "standalone",
+      "worlds"
+    ],
+    "worlds": [
+      "navigation",
+      "worlds"
+    ]
+  },
+  "inputSHA256": "2598eaacbc4caf37af28afa8a183fadec31c473f15a48e2a78aa44c118718dab",
+  "qualifies": [
+    false,
+    false,
+    false,
+    false,
+    true,
+    true
+  ],
+  "schema": 1
+}

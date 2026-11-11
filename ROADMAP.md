@@ -1,5 +1,13 @@
 # VANILLAJS roadmap
 
+## CI-INVARIANT-001 — verified reuse engine (owner review)
+
+- Audited dependency closures, immutable source-bound execution artifacts and three distinct main passes; no mathematical oracle result caching.
+- Current main is unprotected: real Chromium execution remains mandatory until owner-authorized approval controls and qualification exist.
+- [Trust audit, reproduction and measured suite decisions](docs/BROWSER_INCREMENTAL_CI.md).
+- ALIEN-MATH-004 D4, 005 graph/spectral work, 006 formal correspondence and the final freeze remain planned only. Each requires explicit authorization after the preceding PR merges.
+
+
 ## ALIEN-MATH-003 — closed intervals and exact XY geometry (experimental PR)
 
 - Two opt-in native ES modules for exact closed intervals, immutable rational XY points and axis-aligned boxes, directed orientation, inclusive point-on-segment and explicit segment/rectangle intersection classes.

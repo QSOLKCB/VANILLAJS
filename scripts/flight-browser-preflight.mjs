@@ -4,8 +4,9 @@
 // and only for identical closures from reviewed main. This preflight always
 // launches real Chromium; all stale or unknown suites always execute.
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
-import {readFileSync,realpathSync} from 'node:fs';
+import {readFileSync,realpathSync,writeFileSync} from 'node:fs';
 import {resolve,join,relative,sep,isAbsolute} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -48,6 +49,12 @@ async function main(){
     args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
   try{
     const binaryVersion=await browser.version();
+    const browserManifest=readFileSync(join(process.env.RUNNER_TEMP,'flight-browser/node_modules/playwright-core/browsers.json'));
+    const environment={node:process.version,platform:process.platform,arch:process.arch,
+      imageVersion:process.env.ImageVersion??'local-untrusted',playwright:version,chromium:binaryVersion,
+      browserManifestSHA256:createHash('sha256').update(browserManifest).digest('hex'),
+      renderer:'headless-swiftshader',locale:'default',timezone:process.env.TZ??'system'};
+    writeFileSync(join(process.env.RUNNER_TEMP,'flight-browser-environment.json'),JSON.stringify(environment)+'\n');
     console.log('PASS: pinned Playwright '+version+' headless Chromium '+binaryVersion+
       ' launches from cached/isolated tooling; full browser suite still required.');
   }finally{await browser.close();}

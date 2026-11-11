@@ -20,7 +20,7 @@
 
 **ALIEN-MATH-003 (experimental):** [Exact closed intervals and XY geometry predicates](docs/ALIEN_MATH_003.md) add positive-area rectangle classification, directed orientation and closed segment relations over authenticated BigInt rationals. Reproducible independent Python Fraction oracle: 2,066 cases; 4,000 seeded metamorphic geometry checks. No renderer, Q16 kernel, QFLOAT, proofs, personal RTX runner, archived evidence or release changes.
 
-**Faster, fail-closed CI:** [Incremental Chromium verification](docs/BROWSER_INCREMENTAL_CI.md) reuses only exact source-bound, main-branch PASS evidence after three distinct real executions of unchanged inputs. Shared/new source changes invalidate affected browser suites; all unit and package integrity checks still run.
+**CI-INVARIANT-001 (review):** [Auditable browser reuse](docs/BROWSER_INCREMENTAL_CI.md) binds dependencies and verifier inputs to three authenticated main executions. Main currently lacks required approval protection, so reuse fails closed to Chromium execution. Unreachable math can preserve the worlds witness once authoritative qualification is available.
 
 **Next-generation editor (development):** [v1.5.0 — The Component Forge](docs/COMPONENT_FORGE.md) extends the visual workbench with strict schema-v2 components, real XYZ transform handles, snap-aware editing and component-driven Play mode. Existing v1 scene files migrate explicitly; the v1.4.0 benchmark release remains unchanged.
 

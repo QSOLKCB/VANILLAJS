@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "groups": ["home", "render", "play", "worlds", "research", "donor", "editor"],
+  "workerConsumers": ["home", "render", "play", "research", "donor", "editor"],
+  "graph": {
+    "home": ["physics"], "render": ["renderer"], "play": ["physics"],
+    "worlds": ["navigation"], "research": ["exact"], "donor": ["editor"],
+    "editor": ["donor", "renderer"], "physics": ["math"], "renderer": ["math"],
+    "navigation": [], "exact": [], "math": [], "standalone": []
+  },
+  "changes": ["documentation", "standalone", "navigation", "physics", "renderer", "math", "editor", "donor"],
+  "qualificationCases": [[], ["1"], ["1", "2"], ["1", "1", "1"], ["1", "2", "3"], ["1", "2", "3", "3"]]
+}
