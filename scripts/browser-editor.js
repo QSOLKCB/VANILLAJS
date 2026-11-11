@@ -2,7 +2,10 @@
 // Browser integration witness for the packaged visual editor and standalone
 // WebGL1 context. No external Playwright runtime dependency in game bundles.
 import assert from 'node:assert/strict';
+import {mkdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 export async function verifyEditor(browser,base){
+  await mkdir('browser-artifacts',{recursive:true});
   const page=await browser.newPage({viewport:{width:1380,height:900}}),
     errors=[];
   page.on('pageerror',err=>errors.push(err.message));
@@ -159,6 +162,21 @@ export async function verifyEditor(browser,base){
     await page.locator('#asset-attach').click();
     assert.match(await page.locator('#status').textContent(),/Attached mesh/);
 
+    // Placement history follows scene undo/redo, including reused entity IDs.
+    await page.locator('#duplicate').click();
+    assert.ok((await downloadProject(page)).library.placements.some(p=>p.entityId==='entity-7'));
+    await page.locator('#undo').click();
+    assert.equal((await downloadProject(page)).library.placements.some(p=>p.entityId==='entity-7'),false);
+    await page.locator('#redo').click();
+    assert.ok((await downloadProject(page)).library.placements.some(p=>p.entityId==='entity-7'));
+    await page.locator('#undo').click();await page.locator('#add').click();
+    const divergent=await downloadProject(page);
+    assert.ok(divergent.scene.objects.some(object=>object.id==='entity-7'));
+    assert.equal(divergent.library.placements.some(p=>p.entityId==='entity-7'),false,
+      'a newly authored cube must not inherit the undone duplicate attachment');
+    await page.locator('#undo').click();
+    await page.locator('#hierarchy button[data-id="entity-4"]').click();
+
     // Browser-generated PNG proves actual image decoding and canonical RGBA
     // import without depending on an externally hosted image or test fixture.
     const png64=await page.evaluate(()=>{
@@ -212,7 +230,344 @@ export async function verifyEditor(browser,base){
     assert.equal(await page.locator('#asset-count').textContent(),'4 assets');
     assert.equal(await page.locator('#count').textContent(),'6');
 
+    await verifyEditorQoL(browser,base);
+    await verifyEditorFallback(browser,base);
+    await verifyConcurrentAssetImports(browser,base);
+    await verifyDistantFraming(browser,base);
     assert.deepEqual(errors,[]);
-    console.log('Visual Editor: real WebGL, hierarchy, inspector, undo/redo, duplicate, export/import, play/pause/stop, invalid import, 390px responsive layout passed.');
+    console.log('Visual Editor: real WebGL, hierarchy/search/keyboard navigation, native text undo, scene history/shortcuts, exact decimal/Q16/D4 authoring and rejection, gesture cancellation, project migration/assets/exports, recovery and quota failure, CPU fallback, distant-camera visibility, play controls, and 320px/390px layouts passed.');
+  }finally{await page.close();}
+}
+
+async function downloadProject(page){
+  const pending=page.waitForEvent('download');await page.locator('#asset-save-project').click();
+  const file=await pending,stream=await file.createReadStream(),chunks=[];
+  for await(const chunk of stream)chunks.push(chunk);
+  return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+}
+
+async function verifyEditorQoL(browser,base){
+  const page=await browser.newPage({viewport:{width:1380,height:900}}),errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  try{
+    await page.goto(base+'demos/editor/index.html');
+    await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready');
+    const positionX=page.locator('[data-axis="position"][data-i="0"]');
+    await page.locator('#hierarchy button[data-id="entity-4"]').click();
+    const drag=await page.locator('#view').evaluate(async canvas=>{
+      const {projectPoint}=await import('/VANILLAJS/demos/editor/gizmos.js');
+      const rect=canvas.getBoundingClientRect(),camera={yaw:38,pitch:23,distance:18,target:[0,1,0]};
+      const a=projectPoint(camera,[3,1,-3],rect.width,rect.height),
+        b=projectPoint(camera,[5.15,1,-3],rect.width,rect.height);
+      return {start:[rect.x+a.x+(b.x-a.x)*.55,rect.y+a.y+(b.y-a.y)*.55],
+        end:[rect.x+a.x+(b.x-a.x)*1.05,rect.y+a.y+(b.y-a.y)*1.05]};
+    });
+    for(const cancel of ['escape','blur']){
+      await page.mouse.move(...drag.start);await page.mouse.down();
+      await page.mouse.move(...drag.end,{steps:5});
+      if(cancel==='escape')await page.keyboard.press('Escape');
+      else await page.evaluate(()=>window.dispatchEvent(new Event('blur')));
+      await page.mouse.up();
+      assert.equal(await positionX.inputValue(),'3',cancel+' must discard draft transform');
+      assert.equal(await page.locator('#undo').isDisabled(),true,'cancel must not add history');
+    }
+    await page.locator('#object-yaw').fill('45');
+    await page.locator('#object-yaw').dispatchEvent('change');
+    await page.mouse.move(...drag.start);await page.mouse.down();
+    await page.mouse.move(...drag.end,{steps:5});
+    await page.keyboard.press('Control+z');
+    await page.mouse.move(drag.end[0]+20,drag.end[1],{steps:3});await page.mouse.up();
+    assert.equal(await positionX.inputValue(),'3','pointer movement cannot revive an undone gesture');
+    assert.equal(await page.locator('#object-yaw').inputValue(),'0');
+    assert.equal(await page.locator('#undo').isDisabled(),true);
+    await page.mouse.move(...drag.start);await page.mouse.down();
+    await page.mouse.move(...drag.end,{steps:5});await page.keyboard.press('Control+d');
+    await page.mouse.move(drag.end[0]+20,drag.end[1],{steps:3});await page.mouse.up();
+    assert.equal(await page.locator('#count').textContent(),'5','drag cannot revert a duplicate command');
+    assert.equal(await positionX.inputValue(),'3','duplicate uses the committed transform');
+    await page.locator('#undo').click();
+    await page.locator('#hierarchy button[data-id="entity-4"]').click();
+
+    await page.locator('#hierarchy-search').fill('beacon');
+    assert.equal(await page.locator('#hierarchy button').count(),1);
+    assert.match(await page.locator('#hierarchy').textContent(),/Beacon/);
+    await page.locator('#hierarchy-search').fill('no-such-object');
+    assert.equal(await page.locator('#hierarchy button').count(),0);
+    await page.locator('#hierarchy-search').fill('');
+    await page.locator('#add-child').click();
+    await page.locator('#object-name').fill('Orbit child');
+    await page.locator('#object-name').dispatchEvent('change');
+    await page.locator('#hierarchy-search').fill('Orbit child');
+    assert.equal(await page.locator('#hierarchy button').count(),2,'matching child retains its ancestor');
+    await page.locator('#hierarchy button[data-id="entity-4"]').click();
+    assert.equal(await page.locator('#object-parent option[value="entity-5"]').count(),0,
+      'parent choices exclude descendants that would create a cycle');
+    await page.locator('#undo').click();await page.locator('#undo').click();
+    await page.locator('#hierarchy-search').fill('');
+    await page.locator('#hierarchy button[data-id="entity-3"]').click();
+    assert.equal(await page.locator('#object-parent').isDisabled(),true,'physics bodies stay at the scene root');
+    await page.locator('#hierarchy button').first().focus();
+    await page.keyboard.press('End');
+    assert.equal(await page.locator('#hierarchy button[aria-selected="true"]').getAttribute('data-id'),'entity-4');
+    await page.keyboard.press('Home');
+    assert.equal(await page.locator('#hierarchy button[aria-selected="true"]').getAttribute('data-id'),'entity-1');
+    await page.keyboard.press('ArrowDown');
+    assert.equal(await page.locator('#hierarchy button[aria-selected="true"]').getAttribute('data-id'),'entity-2');
+    await page.keyboard.press('ArrowUp');
+    assert.equal(await page.locator('#hierarchy button[aria-selected="true"]').getAttribute('data-id'),'entity-1');
+
+    await page.locator('#view').focus();await page.keyboard.press('Control+d');
+    assert.equal(await page.locator('#count').textContent(),'5');
+    await page.keyboard.press('Control+z');
+    assert.equal(await page.locator('#count').textContent(),'4');
+    await page.keyboard.press('Control+Shift+z');
+    assert.equal(await page.locator('#count').textContent(),'5');
+    // Browser text undo owns focused fields; it must not undo scene commands.
+    await page.locator('#hierarchy button[data-id="entity-5"]').click();
+    const name=page.locator('#object-name'),beforeName=await name.inputValue();
+    await name.focus();await page.keyboard.press('End');await page.keyboard.type(' draft');
+    await page.keyboard.press('Control+z');
+    assert.equal(await name.inputValue(),beforeName);
+    assert.equal(await page.locator('#count').textContent(),'5');
+    await page.locator('#view').focus();
+    const save=page.waitForEvent('download');await page.keyboard.press('Control+s');
+    const download=await save,stream=await download.createReadStream(),chunks=[];
+    for await(const chunk of stream)chunks.push(chunk);
+    assert.equal(JSON.parse(Buffer.concat(chunks).toString()).objects.length,5);
+
+    // Empty numeric input is an invalid edit, never an implicit zero.
+    await page.locator('#hierarchy button[data-id="entity-4"]').click();
+    await positionX.fill('');await positionX.dispatchEvent('change');
+    assert.equal(await positionX.getAttribute('aria-invalid'),'true');
+    assert.match(await page.locator('#status').textContent(),/invalid|rejected|required/i);
+    await positionX.fill('1001');await positionX.dispatchEvent('change');
+    assert.equal(await positionX.getAttribute('aria-invalid'),'true');
+    const validSave=page.waitForEvent('download');await page.locator('#save').click();
+    const validDownload=await validSave,validStream=await validDownload.createReadStream(),validChunks=[];
+    for await(const chunk of validStream)validChunks.push(chunk);
+    const validScene=JSON.parse(Buffer.concat(validChunks).toString());
+    assert.equal(validScene.objects.find(object=>object.id==='entity-4').position[0],3,
+      'invalid inspector text never reaches the scene');
+    await positionX.fill('3');await positionX.dispatchEvent('change');
+
+    // Enter submits no native form/navigation and leaves authoring state intact.
+    await name.focus();await page.keyboard.press('Enter');
+    assert.equal(await page.locator('#count').textContent(),'5');
+    assert.equal(new URL(page.url()).search,'');
+    await page.locator('#view').focus();await page.keyboard.press('f');
+    assert.match(await page.locator('#status').textContent(),/fram/i);
+    assert.equal(await page.locator('#selection-name').textContent(),'Beacon');
+    await page.keyboard.press('Shift+f');
+    assert.match(await page.locator('#status').textContent(),/fram/i);
+
+    await page.locator('#exact-authoring summary').click();
+    const decimalInputs=['exact-x','exact-y','exact-z'].map(id=>page.locator('#'+id));
+    for(const [index,value]of ['0.1','0.2','3'].entries())await decimalInputs[index].fill(value);
+    await page.locator('#exact-preview').click();
+    assert.match(await page.locator('#exact-result').textContent(),/6554/);
+    assert.match(await page.locator('#exact-result').textContent(),/13107/);
+    assert.equal(await positionX.inputValue(),'3','preview must not mutate the scene');
+    await page.locator('#exact-result').scrollIntoViewIfNeeded();
+    await page.screenshot({path:'browser-artifacts/editor-alien-authoring.png',fullPage:true});
+    await page.locator('#exact-apply').click();
+    assert.equal(await positionX.inputValue(),'0.1');
+    await page.locator('#undo').click();assert.equal(await positionX.inputValue(),'3');
+    await page.locator('#redo').click();assert.equal(await positionX.inputValue(),'0.1');
+
+    // D4 transforms the decimal draft only; orientation and Z are preserved.
+    for(const [index,value]of ['0.1','0.2','3'].entries())await decimalInputs[index].fill(value);
+    const yaw=await page.locator('#object-yaw').inputValue();
+    await page.locator('#exact-symmetry').selectOption('r');
+    await page.locator('#exact-transform').click();
+    assert.equal(await decimalInputs[0].inputValue(),'-0.2');
+    assert.equal(await decimalInputs[1].inputValue(),'0.1');
+    assert.equal(await decimalInputs[2].inputValue(),'3');
+    assert.equal(await positionX.inputValue(),'0.1');
+    assert.equal(await page.locator('#object-yaw').inputValue(),yaw);
+
+    await decimalInputs[0].fill('1e3');await page.locator('#exact-apply').click();
+    assert.equal(await positionX.inputValue(),'0.1','exponent syntax is rejected');
+    assert.match(await page.locator('#exact-result').textContent(),/invalid|reject|decimal/i);
+    await decimalInputs[0].fill('0.1');
+    await page.locator('#exact-rounding').selectOption('exact');
+    await page.locator('#exact-quantize').click();
+    assert.equal(await positionX.inputValue(),'0.1','inexact Q16 conversion must not apply');
+    assert.match(await page.locator('#exact-result').textContent(),/exact|reject/i);
+    await page.locator('#exact-rounding').selectOption('nearest-even');
+    await page.locator('#exact-quantize').click();
+    assert.equal(Number(await positionX.inputValue()),6554/65536);
+    await decimalInputs[0].fill('40000');
+    await page.locator('#exact-preview').click();
+    assert.match(await page.locator('#exact-result').textContent(),/overflow|range|reject/i);
+    await page.locator('#exact-overflow').selectOption('saturate');
+    await page.locator('#exact-preview').click();
+    assert.match(await page.locator('#exact-result').textContent(),/2147483647/);
+    await page.locator('#exact-quantize').click();
+    assert.equal(Number(await positionX.inputValue()),6554/65536,
+      'explicit saturation cannot bypass the scene coordinate limit');
+    await page.locator('#exact-authoring summary').click();
+
+    await page.locator('#asset-make-material').click();
+    await page.locator('#asset-search').fill('no-such-asset');
+    assert.equal(await page.locator('#asset-list option').count(),0);
+    assert.equal(await page.locator('#asset-attach').isDisabled(),true);
+    await page.locator('#asset-search').fill('material');
+    assert.equal(await page.locator('#asset-list option').count(),1);
+    await page.locator('#asset-search').fill('');
+
+    await page.setViewportSize({width:320,height:780});
+    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),
+      'all editor controls fit a 320px viewport');
+    await page.screenshot({path:'browser-artifacts/editor-qol-320.png',fullPage:true});
+
+    await page.locator('#scene-name').fill('Recovery orbit');
+    await page.locator('#scene-name').dispatchEvent('change');
+    await page.waitForFunction(()=>{
+      const saved=JSON.parse(localStorage.getItem('vanillajs.editor.recovery.v1'));
+      return saved?.scene?.name==='Recovery orbit'&&saved.library.assets.length===1;
+    });
+    await page.reload();
+    await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready');
+    assert.equal(await page.locator('#count').textContent(),'4','recovery is explicit, not auto-loaded');
+    page.once('dialog',dialog=>dialog.accept());
+    await page.locator('#restore-draft').click();
+    assert.equal(await page.locator('#scene-name').inputValue(),'Recovery orbit');
+    assert.equal(await page.locator('#count').textContent(),'5');
+    assert.equal(await page.locator('#asset-count').textContent(),'1 assets');
+    await page.locator('#hierarchy button[data-id="entity-4"]').click();
+    assert.equal(Number(await positionX.inputValue()),6554/65536);
+    // Malformed browser storage is rejected without destroying current work.
+    await page.evaluate(()=>localStorage.setItem('vanillajs.editor.recovery.v1','{"format":"invalid"}'));
+    page.once('dialog',dialog=>dialog.accept());await page.locator('#restore-draft').click();
+    assert.match(await page.locator('#status').textContent(),/Recovery rejected/);
+    assert.equal(await page.locator('#count').textContent(),'5');
+    assert.deepEqual(errors,[]);
+  }finally{await page.close();}
+}
+
+async function verifyEditorFallback(browser,base){
+  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  await page.addInitScript(()=>{
+    const original=HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext=function(type,...args){
+      return type==='webgl'||type==='webgl2'||type==='experimental-webgl'?null:original.call(this,type,...args);
+    };
+    Object.defineProperty(navigator,'gpu',{value:undefined,configurable:true});
+    Storage.prototype.setItem=function(){throw new DOMException('Storage is full','QuotaExceededError');};
+  });
+  try{
+    await page.goto(base+'demos/editor/index.html');
+    await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready');
+    await page.waitForFunction(()=>{
+      const canvas=document.querySelector('#view').nextElementSibling;
+      if(!(canvas instanceof HTMLCanvasElement))return false;
+      const pixels=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
+      let bright=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]+pixels[i+1]+pixels[i+2]>100)bright++;
+      return bright>100;
+    });
+    assert.equal(await page.locator('#optional-gpu').isChecked(),false);
+    await page.locator('#optional-gpu').check();
+    await page.getByRole('button',{name:'CPU · no compatible GPU'}).waitFor();
+    assert.equal(await page.getByRole('button',{name:'CPU · no compatible GPU'}).isDisabled(),true);
+    await page.locator('#add').click();
+    assert.equal(await page.locator('#count').textContent(),'5');
+    await page.waitForFunction(()=>document.querySelector('#draft-status').textContent==='Recovery unavailable');
+    // Isolate input cancellation from floor-contact/gravity settling behavior.
+    await page.locator('#hierarchy button[data-id="entity-3"]').click();
+    await page.locator('[data-component="rigidbody"][data-field="gravityScale"]').fill('0');
+    await page.locator('[data-component="rigidbody"][data-field="gravityScale"]').dispatchEvent('change');
+    await page.locator('#frame').click();
+    await page.locator('#view').focus();await page.keyboard.press('Shift+f');
+    await page.locator('#play').click();
+    await page.waitForTimeout(100);
+    await page.locator('#view').focus();await page.keyboard.down('d');await page.waitForTimeout(120);
+    await page.evaluate(()=>window.dispatchEvent(new Event('blur')));
+    assert.equal(await page.locator('#mode').textContent(),'PAUSED');
+    const cpuPixels=async()=>createHash('sha256').update(await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>{
+      resolve(document.querySelector('#view').nextElementSibling.toDataURL());
+    })))).digest('hex');
+    const stoppedPixels=await cpuPixels();
+    await page.locator('#pause').click();await page.locator('#view').focus();
+    await page.keyboard.down('d'); // repeat=true: still physically held across blur/resume.
+    await page.waitForTimeout(180);await page.locator('#pause').click();
+    assert.equal(await cpuPixels(),stoppedPixels,'held-key repeat cannot restart movement after blur');
+    await page.keyboard.up('d');await page.locator('#pause').click();await page.locator('#view').focus();
+    await page.keyboard.down('d');await page.waitForTimeout(180);await page.locator('#pause').click();
+    assert.notEqual(await cpuPixels(),stoppedPixels,'a fresh press resumes actual movement');
+    await page.keyboard.up('d');await page.locator('#stop').click();
+    assert.equal(await page.locator('#mode').textContent(),'EDIT');
+    assert.deepEqual(errors,[]);
+  }finally{await page.close();}
+}
+
+async function verifyConcurrentAssetImports(browser,base){
+  const page=await browser.newPage(),errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  try{
+    await page.goto(base+'demos/editor/index.html');
+    await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready');
+    await page.evaluate(()=>{
+      const digest=crypto.subtle.digest.bind(crypto.subtle);
+      window.pendingAssetDigests=[];
+      crypto.subtle.digest=(...args)=>new Promise((resolve,reject)=>{
+        window.pendingAssetDigests.push(()=>digest(...args).then(resolve,reject));
+      });
+    });
+    const obj={name:'overlap.obj',mimeType:'text/plain',
+      buffer:Buffer.from('v 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n')};
+    await page.locator('#asset-obj').setInputFiles(obj);
+    await page.waitForFunction(()=>window.pendingAssetDigests.length===1);
+    const png=await page.evaluate(()=>{
+      const c=document.createElement('canvas');c.width=2;c.height=2;
+      const ctx=c.getContext('2d');ctx.fillStyle='#ff0000';ctx.fillRect(0,0,2,2);
+      return c.toDataURL('image/png').split(',')[1];
+    });
+    await page.locator('#asset-png').setInputFiles({name:'overlap.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});
+    await page.waitForFunction(()=>window.pendingAssetDigests.length===2);
+    await page.evaluate(()=>window.pendingAssetDigests[1]());
+    await page.waitForFunction(()=>document.querySelector('#asset-count').textContent==='1 assets');
+    await page.evaluate(()=>window.pendingAssetDigests[0]());
+    await page.waitForFunction(()=>document.querySelector('#asset-count').textContent==='2 assets');
+    assert.deepEqual((await downloadProject(page)).library.assets.map(asset=>asset.kind).sort(),['mesh','texture']);
+    // A replacement document does invalidate its outstanding asset imports.
+    await page.locator('#asset-obj').setInputFiles(obj);
+    await page.waitForFunction(()=>window.pendingAssetDigests.length===3);
+    page.once('dialog',dialog=>dialog.accept());await page.locator('#new-scene').click();
+    await page.evaluate(()=>window.pendingAssetDigests[2]());
+    assert.equal(await page.locator('#asset-count').textContent(),'0 assets');
+    assert.deepEqual(errors,[]);
+  }finally{await page.close();}
+}
+
+export async function verifyDistantFraming(browser,base){
+  const page=await browser.newPage({viewport:{width:1380,height:900}}),errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  try{
+    await page.goto(base+'demos/editor/index.html');
+    await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready');
+    await page.locator('#hierarchy button[data-id="entity-4"]').click();
+    for(const [axis,values]of [['position',[1000,1,-1000]],['scale',[100,100,100]]]){
+      for(const [index,value]of values.entries()){
+        const input=page.locator(`[data-axis="${axis}"][data-i="${index}"]`);
+        await input.fill(String(value));await input.dispatchEvent('change');
+      }
+    }
+    await page.locator('#view').focus();await page.keyboard.press('Shift+f');
+    // Inspect the WebGL backbuffer in the render callback. Camera-space fitting
+    // alone cannot establish visibility when distance-based fog hides the mesh.
+    const bright=await page.locator('#view').evaluate(canvas=>new Promise(resolve=>{
+      canvas.dispatchEvent(new WheelEvent('wheel',{deltaY:0,bubbles:true,cancelable:true}));
+      requestAnimationFrame(()=>{
+        const gl=canvas.getContext('webgl'),pixels=new Uint8Array(canvas.width*canvas.height*4);
+        gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+        let count=0;for(let i=0;i<pixels.length;i+=4)
+          if(pixels[i]>65||pixels[i+1]>65||pixels[i+2]>65)count++;
+        resolve(count);
+      });
+    }));
+    assert.ok(bright>100,`framed distant scene must remain visible, observed ${bright} bright pixels`);
+    assert.deepEqual(errors,[]);
+    return bright;
   }finally{await page.close();}
 }

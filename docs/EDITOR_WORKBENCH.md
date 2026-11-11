@@ -1,5 +1,7 @@
 # VANILLAJS Workbench — visual scene editor alpha
 
+**Current authoring improvements:** [Visual Editor QoL and ALIEN MATH](EDITOR_QOL.md) documents search, keyboard workflows, exact position drafts, recovery and measured geometry preparation.
+
 **v1.5 follow-up:** [The Component Forge](COMPONENT_FORGE.md) introduces schema-v2 typed components, real axis gizmos, local/world transform modes, snapping and component-driven Play/Trigger behavior. This document retains the original v1 alpha contract for migration and historical evidence.
 
 

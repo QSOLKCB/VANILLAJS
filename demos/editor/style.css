@@ -69,3 +69,19 @@ footer{height:44px;display:flex;align-items:center;justify-content:center;paddin
 @media(max-width:750px){.asset-foundry{max-width:480px}.hierarchy{max-height:150px}}
 
 .graphics-tools{display:flex;flex-wrap:wrap;gap:8px;padding:8px;font-size:12px}.graphics-tools span{display:flex;gap:6px;align-items:center}
+
+/* Authoring workflow: readable feedback, search, and compact exact controls. */
+#hierarchy-search{width:100%;margin-bottom:8px}.search-empty{color:var(--muted);font-size:12px}
+.hierarchy button>span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hierarchy .type{flex-shrink:0}.import:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.draft-status{color:var(--muted);font-size:11px;max-width:150px}
+.exact-authoring{border:1px solid #46695e;border-radius:5px;padding:10px;margin:0 0 14px;background:#102b2b}
+.exact-authoring summary{cursor:pointer;color:var(--accent);font-weight:600}
+.exact-authoring p{font-size:11px;color:#b5ccce;line-height:1.5}
+.exact-authoring .exact-actions{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}
+.exact-authoring button{font-size:11px;padding:6px 8px;white-space:normal}
+.exact-authoring output{display:block;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.6 ui-monospace,monospace;margin:10px 0}
+.exact-authoring output[data-error=true]{color:#ffb6a4}
+input[aria-invalid=true]{border-color:#ffb6a4}.viewport-head>span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.graphics-tools,.graphics-tools span{min-width:0;flex-wrap:wrap}.graphics-tools label{overflow-wrap:anywhere}
+@media(max-width:750px){.center{grid-row:1}.brand{flex-wrap:wrap;gap:8px}.topbar{padding:10px}.viewport-head{gap:8px}.draft-status{max-width:none}footer{line-height:1.7}}

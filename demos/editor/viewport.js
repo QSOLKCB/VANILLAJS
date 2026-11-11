@@ -25,7 +25,51 @@ export function cameraMatrix(camera,width,height){
     right[2],up[2],back[2],0,
     -dot(right,eye),-dot(up,eye),-dot(back,eye),1
   ]);
-  return multiplyMatrices(perspective(FOV,width/height,.1,300),view);
+  // Framing can legitimately move beyond the old 300 m far plane. Scale the
+  // clipping range with orbit distance while keeping small selections usable.
+  const near=Math.max(.001,camera.distance/1000),
+    far=Math.max(300,camera.distance*4);
+  return multiplyMatrices(perspective(FOV,width/height,near,far),view);
+}
+// Presentation-only framing, using world transforms and actual imported mesh
+// extents. Null selection frames visible objects; a selection includes its
+// visible descendants. A hidden selection can still be located by its bounds.
+export function frameCamera(camera,world,selected=null,width=1,height=1,library=null){
+  if(!Array.isArray(world))throw new TypeError('world entities must be an array');
+  if(!(Number.isFinite(width)&&width>0&&Number.isFinite(height)&&height>0))
+    throw new RangeError('invalid viewport dimensions');
+  const ids=new Set(selected===null?world.map(e=>e.id):[selected]);
+  if(selected!==null){
+    let changed=true;
+    while(changed){changed=false;for(const e of world)if(ids.has(e.parent)&&!ids.has(e.id)){
+      ids.add(e.id);changed=true;
+    }}
+  }
+  const targets=world.filter(e=>ids.has(e.id)&&(e.visible||e.id===selected))
+    .map(e=>e.visible?e:{...e,visible:true});
+  if(!targets.length)return {...camera,target:[...camera.target]};
+  const {boxes,models}=prepare(targets,library,false),
+    lo=[Infinity,Infinity,Infinity],hi=[-Infinity,-Infinity,-Infinity];
+  const include=(e,x,y,z,c,s)=>{
+    const dx=x*e.scale[0],dz=z*e.scale[2],
+      point=[e.position[0]+c*dx+s*dz,e.position[1]+y*e.scale[1],
+        e.position[2]-s*dx+c*dz];
+    for(let i=0;i<3;i++){lo[i]=Math.min(lo[i],point[i]);hi[i]=Math.max(hi[i],point[i]);}
+  };
+  for(const e of boxes){
+    const angle=e.rotationY*Math.PI/180,c=Math.cos(angle),s=Math.sin(angle);
+    for(const x of [-.5,.5])for(const y of [-.5,.5])for(const z of [-.5,.5])include(e,x,y,z,c,s);
+  }
+  for(const {e,mesh} of models){
+    const angle=e.rotationY*Math.PI/180,c=Math.cos(angle),s=Math.sin(angle);
+    for(let i=0;i<mesh.vertices.length;i+=5)
+      include(e,mesh.vertices[i],mesh.vertices[i+1],mesh.vertices[i+2],c,s);
+  }
+  const target=lo.map((x,i)=>(x+hi[i])/2),
+    radius=Math.max(.025,Math.hypot(...hi.map((x,i)=>(x-lo[i])/2))),
+    halfAngle=Math.min(FOV/2,Math.atan(Math.tan(FOV/2)*width/height)),
+    distance=radius/Math.sin(halfAngle)*1.15;
+  return {...camera,target,distance};
 }
 export function cameraRay(camera,px,py,width,height){
   if(!Number.isFinite(px)||!Number.isFinite(py)||
@@ -108,18 +152,22 @@ const tint=(color,texture,u,v)=>{
     y=Math.min(texture.height-1,Math.max(0,Math.round((1-v)*(texture.height-1))));
   return color.map((value,i)=>value*texture.pixels[(y*texture.width+x)*4+i]/255);
 };
-function prepare(world,library){
+function prepare(world,library,decodeTextures=true){
   const assets=library?validateAssetLibrary(library):null,
     map=new Map(assets?.assets.map(a=>[a.id,a])??[]),
     placement=new Map(assets?.placements.map(p=>[p.entityId,p])??[]);
-  const boxes=[],models=[];
+  // Cache only within this preparation: callers may mutate/re-import a library
+  // between frames, so no stale pixels or cross-project retained cache exists.
+  const boxes=[],models=[],textures=decodeTextures&&library?new Map():null;
   for(const e of world)if(e.visible){
     const p=placement.get(e.id),mesh=p?.meshId?map.get(p.meshId):null;
     if(mesh&&mesh.kind==='mesh'){
       const mat=p.materialId?map.get(p.materialId):null,
         tex=mat?.textureId?map.get(mat.textureId):null;
-      const texture=tex?{width:tex.width,height:tex.height,
-        pixels:Uint8Array.from(atob(tex.rgba),x=>x.charCodeAt(0))}:null;
+      if(tex&&decodeTextures&&!textures.has(tex.id))textures.set(tex.id,
+        {width:tex.width,height:tex.height,
+          pixels:Uint8Array.from(atob(tex.rgba),x=>x.charCodeAt(0))});
+      const texture=tex&&decodeTextures?textures.get(tex.id):null;
       models.push({e,mesh,material:mat,texture});
     }else{
       const material=p?.materialId?map.get(p.materialId):null;
@@ -139,7 +187,7 @@ function budgetPrepared({boxes,models},hasLibrary){
 }
 export function sceneResourceBudget(world,library=null){
   if(!Array.isArray(world))throw new TypeError('world entities must be an array');
-  return budgetPrepared(prepare(world,library),Boolean(library));
+  return budgetPrepared(prepare(world,library,false),Boolean(library));
 }
 export function createSceneVertices(world,selected=null,library=null){
   if(!Array.isArray(world))throw new TypeError('world entities must be an array');

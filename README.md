@@ -38,6 +38,8 @@
 
 **CI-INVARIANT-001 (merged PR #67):** [Auditable browser reuse](docs/BROWSER_INCREMENTAL_CI.md) binds dependencies and verifier inputs to three authenticated main executions. Main currently lacks required approval protection, so reuse fails closed to Chromium execution. Unreachable math can preserve the worlds witness once authoritative qualification is available.
 
+**Editor authoring improvements:** [QoL and ALIEN MATH guide](docs/EDITOR_QOL.md): searchable hierarchy/assets, keyboard navigation, selection framing, local recovery, explicit exact/Q16 position tools and measured shared-texture preparation. The Mod SDK remains experimental.
+
 **Next-generation editor (development):** [v1.5.0 — The Component Forge](docs/COMPONENT_FORGE.md) extends the visual workbench with strict schema-v2 components, real XYZ transform handles, snap-aware editing and component-driven Play mode. Existing v1 scene files migrate explicitly; the v1.4.0 benchmark release remains unchanged.
 
 Reusable JavaScript game modules built directly on web standards. The latest published milestone is **[v1.6.0 — Operation ALIEN MATH](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.6.0)**, building on **[v1.4.0 — The Proof of Speed](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.4.0)**,
