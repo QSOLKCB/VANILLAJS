@@ -54,7 +54,7 @@ test('fail closed on accessors, forgery, malformed IDs and unsafe raw points',()
   assert.throws(()=>crossesGateQ16({...c.gates[0]},[0,0,0],[0,0,-1]),TypeError);
   assert.throws(()=>advanceCourseQ16({...c},0,[0,0,0],[0,0,-1]),TypeError);
   assert.throws(()=>advanceCourseQ16(c,-1,[0,0,0],[0,0,-1]),RangeError);
-  assert.throws(()=>advanceCourseQ16(c,0,[NaN,0,0],[0,0,-1]),TypeError);
+  assert.throws(()=>advanceCourseQ16(c,0,[NaN,0,0],[0,0,-1]),RangeError);
 });
 test('independent Python Fraction calculation agrees with compiled gates',()=>{
   const run=spawnSync('python3',['scripts/alien_course_oracle.py'],{encoding:'utf8'});
