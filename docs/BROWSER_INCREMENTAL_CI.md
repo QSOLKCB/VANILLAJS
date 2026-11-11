@@ -1,128 +1,204 @@
-# VANILLAJS — incremental packaged-browser CI
+# CI-INVARIANT-001 — verified browser reuse
 
-**Goal:** reuse byte-identical Chromium test work across PRs and merges,
-without ever skipping verification of changed or unknown source.
+Only the seven packaged Chromium suites can reuse execution evidence. Every
+applicable run still executes all Node tests, source checks, the build, independent
+offline package verification, archival audits, CPU reference workloads, invariant
+negative controls, independent fixture reproduction and real pinned Chromium
+preflight. No mathematical oracle execution is cached by this system.
 
-This is not a blind "the tests passed last week" shortcut.
+## Current trust gate
 
-## Checks that always run
+Read-only GitHub audit on 2026-11-11, base
+`b9e9b1951c71ba53a132b061de09888ef712f2f8`:
 
-Every Flight Lab PR or push still executes its frozen RTX receipt audits,
-Python and Node regression suites, source validation, CPU reference-parity
-workloads, a fresh dist build, independent package membership and SHA-256
-verification, and a real pinned Chromium launch preflight.
+- `GET /repos/QSOLKCB/VANILLAJS/branches/main`: `protected: false`.
+- `GET /repos/QSOLKCB/VANILLAJS/branches/main/protection`: 404, branch not protected.
+- `GET /repos/QSOLKCB/VANILLAJS/rules/branches/main`: empty list.
+- Repository/inherited ruleset listing: only active tag ruleset 26862681,
+  `Protect qfloat-001-research.1`, targeting that immutable release tag.
 
-Only source-identical, previously successful, **reviewed-main browser-scope
-PASS witnesses** are reusable. Browser tooling is cached separately.
+**Current main cannot supply reusable trusted receipts.** This implementation
+runs Chromium and does not publish qualifying execution artifacts when it cannot
+establish main protection with at least one required approving PR review. A 401,
+403, missing token, unavailable controls API, missing artifacts or corrupt archive
+is an ordinary fail-closed execution path. No branch settings were changed.
+Owner-authorized protection configuration and three qualifying future main runs
+are outstanding operational prerequisites, not evidence this PR claims to have.
 
-## Seven browser suites
+The old `protected-main-only` string did not establish protection. Old v2 cache
+receipts are deliberately not accepted or migrated.
 
-| Name | Checks |
+## Auditable dependency model
+
+`scripts/browser-reuse-policy.json` declares suite directories, cross-consumers,
+known runtime/test entrypoints, mathematical contracts, shared verifier files and
+audited source hashes. `browser-dependencies.mjs` computes the closure and a
+canonical SHA-256 identity. The packaged manifest's membership, byte sizes and
+hashes are checked against actual files before planning.
+
+| Suite | Runtime scope |
 | --- | --- |
-| home | Flight Lab controls, geometry pixels, mobile, no-WebGL refusal |
-| render | Integer Foundry, optimized renderer, WebGL API, FrameGate, Vault |
-| play | Interaction Lab, FPS, motion, platforms |
-| worlds | RTS, flow fields, 2D Foundry |
-| research | OMI Lab, Ancient Machine |
-| donor | Bullet Time, ARCADE, GPU/WASM Lab, Space Lab and offline navigation |
-| editor | Visual Editor, scene import/export, components and gizmo drag |
+| home | Flight Lab + homepage + full worker package |
+| render | Integer Foundry/Vault and explicit API test roots + homepage + full worker package |
+| play | Interaction/FPS + homepage/flight navigation + full worker package |
+| worlds | RTS/2D directory roots and transitive runtime imports (16 members at this base) |
+| research | OMI/Ancient Machine + homepage + full worker package |
+| donor | Bullet Time/ARCADE/shared/GPU/Space **and editor** + full worker package |
+| editor | Editor **and donor** directories + full worker package |
 
-The original full run remains the default:
+The audit found that render, play and research also visit the homepage, which
+registers a service worker. They now conservatively bind its entire generated
+precache inventory. Existing home/donor/editor worker policies remain in force.
+A newly packaged standalone math module therefore invalidates these six suites,
+but not the genuinely independent worlds closure. No worker behaviour or browser
+test is disabled to manufacture a cache hit.
 
-    node scripts/browser-check.js
+Directory ownership is not consumption independence. Donor tests open the editor
+and generated player; GPU Lab imports its viewport; editor imports GPU controls.
+Both sides are included even if the worker hash does not change.
 
-Developers can opt into a single group for local debugging:
+Literal ES imports, re-exports and literal dynamic imports are traversed through
+modules, APIs and experiments. HTML script/link/image resources and CSS URL/import
+resources are resolved relative to their owners. Opaque browser test imports and
+the generated player HTML have explicit, SHA-256-pinned roots; changed opaque
+code cannot reuse its old analysis. The offline registrar and generated worker
+are bound to the complete package plus the audited worker template.
 
-    node scripts/browser-check.js --suites=editor
+The recognizer is intentionally **not a general ECMAScript parser or proof**.
+Computed imports, escapes in specifiers, unknown modules, external specifiers,
+unsupported HTML execution, dynamic code/resource constructors, unclassified
+package/browser files, missing files and analysis limits force execution. Known
+reachable executable and harness bytes must match the reviewed closure audit
+hashes before they can qualify. This extra gate prevents unsupported language
+features from silently qualifying after three tests. Updating those audit entries
+requires source/dependency review; tests never automatically bless them. New,
+unreachable authoring modules need no runtime audit entry until consumed.
 
-No Playwright dependency is added to the shipped game runtime.
+Every identity binds:
 
-## Content-based closure
+- Exact reachable runtime bytes and paths; full inventory for worker consumers.
+- Relevant MODULES descriptors, package version, identity/schema version and
+  the closure policy. New unrelated catalogue entries do not affect worlds.
+- Shared dispatcher, workflow, build/package verifier, preflight, receipt verifier,
+  analyzer and invariant fixture/oracle implementation.
+- Suite browser scripts and their static helper/reference imports, including OMI
+  and renderer references previously absent from the old suite-script list.
+- Reachable ALIEN MATH/QFLOAT contract documentation and applicable independent
+  oracle code plus frozen fixture/domain identity. These are not blanket-excluded
+  as “authoring”; the Space Lab currently consumes exact mathematics.
+- Actual preflight Playwright/Chromium versions, browser manifest SHA-256, Node,
+  OS/architecture, runner image, rendering mode, timezone and configuration.
 
-A suite fingerprint uses SHA-256 of the independently verified built-package
-inventory, its own browser witness scripts and common source dependencies.
-The shared closure includes runtime modules, APIs, offline registrar,
-packaging logic, test dispatcher and verified worker inputs, as relevant.
+## Qualification and authoritative provenance
 
-The fingerprint is also bound to Node version, OS and architecture, hosted
-runner image version and pinned Playwright tooling identity, plus this
-workflow source. Changes to shared or unknown runtime paths invalidate
-the affected suites, typically all seven when a shared dependency changes.
+Three **distinct successful main run IDs**, each actually executing the same
+suite identity, are required. A retried attempt is not a fourth run; a reused
+result never becomes a new execution. Publication includes only suites really
+executed successfully with no unresolved analysis issues. PR/local runs cannot
+publish qualifying receipts. The selected Chromium run must finish successfully
+before the local receipt is atomically written.
 
-A new editor source may require the editor, homepage and offline donor
-suites because the generated service worker binds the entire published
-asset inventory. This is intentional conservative invalidation.
-Other unrelated suites may reuse exact evidence.
+The immutable v4 artifact is named `ci-invariant-main-RUN_ID-ATTEMPT` and contains
+one `execution.json`. It is produced on main only after successful required gates.
+The consumer independently checks:
 
-## Trust boundary
+1. Current main protection and required PR-review rules via GitHub APIs.
+2. Successful completed push/manual main runs of the exact repository/workflow.
+3. Artifact identity and workflow-run binding from GitHub, not from restored JSON.
+4. API-provided SHA-256 of the downloaded ZIP, bounded size, exactly one expected
+   archive member and valid JSON. Extraction uses Python stdlib in memory; it
+   never writes archive paths to the filesystem.
+5. Receipt/run/attempt/commit/event/repository/workflow agreement and unchanged
+   observed approval-controls digest.
+6. Canonical SHA-256 of the full suite identity and Git blob bindings against the
+   independently fetched GitHub commit tree for runtime, tests, requirements and
+   verifier source. Generated worker/.nojekyll outputs are instead bound by the
+   verified build/worker producer and full input inventory.
+7. Three unique matching execution IDs, never self-asserted qualification counts.
 
-GitHub Actions restores a cache only with the exact source fingerprint.
-The v2 cache must contain a bounded regular PASS receipt with matching
-suite, fingerprint and protected-main provenance. A cache miss, corrupt
-receipt or changed fingerprint forces a fresh Chromium execution.
+Only the latest 30 successful main workflow runs are searched; artifacts retain
+for 30 days. Missing/expired evidence, truncated source trees, API errors and
+unsupported archives trigger real execution. These limits bound lookup cost;
+they can cause later requalification. A miss never reduces the threshold.
 
-Only successful push or manual-dispatch runs on reviewed main publish receipts.
-Each partial receipt contains one, two or three distinct numeric GitHub run IDs.
-Reused runs never add a pass. PR and local executions do not contribute maturity.
-A partial receipt forces real execution; only three passes authorize reuse.
-Three passes are a policy threshold, not a proof against future browser defects.
+No `actions/cache/restore` or `actions/cache/save` is used for browser witnesses.
+A PR may have a cache entry with the same key in its merge-ref scope; therefore a
+restored filename or cache-hit flag cannot prove main provenance. Reading main
+execution artifacts directly removes that shadowing path. The separate pinned
+Playwright tooling cache remains, with its real launch preflight always required.
 
-Actions caches are immutable: each publication key ends in the run ID, while
-restore uses only the exact fingerprint prefix. No broad fallback prefix is
-permitted. The newest valid receipt carries prior executions forward; a missing,
-evicted, malformed, duplicate-run or old-v1 receipt starts fresh. The save steps
-run only for suites actually executed successfully on main, so reuse does not
-continually publish duplicate cache generations. Mature receipts stay at three.
-The receipt is parsed into an owned snapshot and atomically replaced after the
-complete selected browser run succeeds. A failed run publishes no new passes.
-Trust comes from the reviewed workflow and GitHub branch-scoped cache isolation,
-not the self-described provenance string. PR caches cannot promote main evidence.
-CI uses its isolated checkout/package snapshot with no concurrent source writers;
-this mechanism does not claim mutation-safe reuse in an actively edited local tree.
-Pull requests may **read** main evidence but never publish their own
-trusted cache witnesses.
+GitHub is the authoritative identity/metadata service, not a mathematical oracle.
+Repository administrators, protection bypass actors, GitHub infrastructure and
+the hosted execution environment remain trust principals. The API audit observes
+current rules; it is not a cryptographic history of human review. Source bindings
+and the exact producer workflow constrain what an old artifact can claim, but do
+not constitute formal JavaScript refinement, hardware attestation or an assurance
+against a malicious GitHub administrator. An isolated CI checkout/build with no
+concurrent source writers is required; an actively edited local tree is not a
+trusted receipt producer.
 
-On first use, no keys exist: initial PR and first merged main run will
-execute all suites to seed green main evidence. Later unchanged scopes
-can be reused only after three distinct successful main executions of that exact fingerprint. A retry of the same GitHub run does not add a pass.
+References: [GitHub cache scope](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching),
+[artifact metadata and digest API](https://docs.github.com/en/rest/actions/artifacts),
+[artifact digest validation](https://github.blog/changelog/2025-03-18-github-actions-now-supports-a-digest-for-validating-your-artifacts-at-runtime/).
 
-Every job summary distinguishes **executed** suites from **reused**
-suites. Neither is presented as new GPU evidence. Cache entries are
-not suitable for source-altered projects or other browsers.
+## Diagnostics and reproduction
 
-## Manual full audit
+Each suite prints EXECUTE/REUSE, the exact gate reason, qualification IDs and
+changed identity fields/paths where prior authenticated inputs exist. The
+`flight-lab-evidence` artifact includes `plan.json`, profiles, dependency edges,
+analysis issues, rejected-artifact diagnostics and package membership. There is
+no implied GPU evidence in a reuse decision.
 
-The Flight Lab workflow_dispatch input named full_browser ignores all
-previous browser witnesses and executes all seven suites. This is
-recommended before critical releases and periodically as an independent
-browser-environment audit.
+Run from the repository root:
 
-No source working trees, build outputs, binary evidence, credentials or
-GPU results are ever cached by this new source-witness mechanism. The
-package integrity verifier and all unit tests still execute on every run.
+```sh
+node --test tests/*.test.js
+node scripts/check.js
+node scripts/build.js
+node scripts/verify-offline.js
+uv run --no-project python scripts/ci_invariant_oracle.py --check
+node scripts/ci-invariant-workload.mjs
+```
 
-**QSOL-IMC — Make amazing alien tech and put it under an Apache 2.0 license.**
+For real browser checks, use the workflow's isolated Playwright 1.64.0 tooling,
+set RUNNER_TEMP/NODE_PATH/PLAYWRIGHT_BROWSERS_PATH as the workflow does, run
+`node scripts/flight-browser-preflight.mjs`, then
+`node scripts/browser-suite-cache.mjs execute`. Without verified authority this
+is the normal cold path and executes all seven suites.
 
-## How to inspect or invalidate reuse
+Manual workflow_dispatch `full_browser=true` always executes all seven, including
+qualified suites. A test/oracle/contract/source change must establish a new
+identity; matching expected numerical output alone never admits reuse.
 
-Read the job summary: `Executed on current source` is fresh verification;
-`Reused three protected-main executions` is inherited evidence. Download the
-`flight-lab-evidence` artifact to inspect suite fingerprints and the three run
-IDs. New source, test, dependency, workflow, Node/browser or runner-image inputs
-create a new identity and restart qualification. Shared or unknown inputs still
-fail closed. To force every suite now, use workflow_dispatch with `full_browser`
-checked; this does not remove the normal unit/package/archive checks.
+## Measured decision counts and independent fixture
 
-No three redundant executions are launched inside a single job merely to fill
-the cache. Qualification accumulates across normal main runs; cache eviction or
-runner-image updates may require requalification.
+The workload script runs the source-pinned `b9e9b19` baseline fingerprint functions
+and the new planner against the actual packaged input set. Qualified registry
+entries in this experiment are **test fixtures**, not authenticated GitHub runs.
 
-## Cross-suite runtime dependencies
+| Scenario | Baseline executed/reused | New executed/reused |
+| --- | --- | --- |
+| Identical qualified inputs | 0 / 7 | 0 / 7 |
+| Unrelated unshipped documentation | 0 / 7 | 0 / 7 |
+| New genuinely unreachable math module | 7 / 0 | 6 / 1 |
+| Reachable navigation change | 7 / 0 | 7 / 0 |
+| Worlds browser requirement change | 1 / 6 | 1 / 6 |
+| Independent ALIEN oracle/domain change | 0 / 7 (old identity omission) | 6 / 1 |
 
-Donor and editor fingerprints each include the complete donor **and** editor
-runtime inventories. The GPU lab imports the editor viewport, the donor verifier
-opens the editor and exported player, and the editor imports GPU controls.
-Exclusive directory ownership is retained for inventory validation, but it is
-not mistaken for an independent consumption closure. Regression tests change
-viewport, player, batching and controls bytes without changing the worker hash
-and require both consuming fingerprints to change.
+The oracle row repairs a safety gap; the old reuse count was not an optimization
+benefit. No elapsed-time savings are claimed. On the current unprotected main,
+production-authority decisions remain **7 executed / 0 reused**. The local real
+cold run also executed all seven successfully, with no GitHub token or trusted
+receipt publication. Six scopes bind 121 packaged files; worlds binds 16.
+
+The independent Python stdlib fixture computes finite graph closures and unique
+run qualification from frozen input, independently of the JS traversal algorithm.
+It is not an independent general JS parser or a proof of GitHub provenance.
+
+- Input SHA-256: `2598eaacbc4caf37af28afa8a183fadec31c473f15a48e2a78aa44c118718dab`
+- Expected fixture SHA-256: `285e8aee6e447c0c4be5da298b83856735bf4d7334444f6b2fb37ffd0c320ddf`
+
+Tests cover matrix A–M: qualified identical reuse, docs/unreachable source,
+reachable code, oracle/contract/domain changes, unknown dependencies, harness
+changes, environments, corruption/missing artifacts/forgeries, PR rejection,
+duplicate runs, full override, and cross-suite/worker dependencies.

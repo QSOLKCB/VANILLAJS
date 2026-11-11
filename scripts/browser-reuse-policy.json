@@ -1,0 +1,323 @@
+{
+  "schema": 1,
+  "repository": "QSOLKCB/VANILLAJS",
+  "workflow": ".github/workflows/flight-lab.yml",
+  "qualification": 3,
+  "suites": {
+    "home": {
+      "roots": [
+        "demos/flight-lab/"
+      ],
+      "scripts": [],
+      "serviceWorker": true,
+      "consumes": [
+        "home"
+      ]
+    },
+    "render": {
+      "roots": [
+        "demos/integer-foundry/",
+        "demos/clockwork-vault/"
+      ],
+      "scripts": [
+        "scripts/browser-integer.js",
+        "scripts/browser-opt-render.js",
+        "scripts/browser-webgl-api.js",
+        "scripts/browser-frame-gate.js",
+        "scripts/browser-vault.js"
+      ],
+      "serviceWorker": true,
+      "consumes": [
+        "render"
+      ]
+    },
+    "play": {
+      "roots": [
+        "demos/interaction-lab/",
+        "demos/fps-lab/"
+      ],
+      "scripts": [
+        "scripts/browser-interactions.js",
+        "scripts/browser-mouse.js",
+        "scripts/browser-fps.js",
+        "scripts/browser-fps-motion.js",
+        "scripts/browser-platforms.js"
+      ],
+      "serviceWorker": true,
+      "consumes": [
+        "play"
+      ]
+    },
+    "worlds": {
+      "roots": [
+        "demos/rts-lab/",
+        "demos/2d-lab/"
+      ],
+      "scripts": [
+        "scripts/browser-rts.js",
+        "scripts/browser-flow.js",
+        "scripts/browser-2d.js"
+      ],
+      "serviceWorker": false,
+      "consumes": [
+        "worlds"
+      ]
+    },
+    "research": {
+      "roots": [
+        "demos/omi-lab/",
+        "demos/ancient-machine/"
+      ],
+      "scripts": [
+        "scripts/browser-omi.js",
+        "scripts/browser-machine.js"
+      ],
+      "serviceWorker": true,
+      "consumes": [
+        "research"
+      ]
+    },
+    "donor": {
+      "roots": [
+        "demos/bullet-time-lab/",
+        "demos/arcade-lab/",
+        "demos/shared-lab/",
+        "demos/gpu-lab/",
+        "demos/space-lab/"
+      ],
+      "scripts": [
+        "scripts/browser-donor-labs.js",
+        "scripts/browser-optional-labs.js"
+      ],
+      "serviceWorker": true,
+      "consumes": [
+        "donor",
+        "editor"
+      ]
+    },
+    "editor": {
+      "roots": [
+        "demos/editor/"
+      ],
+      "scripts": [
+        "scripts/browser-editor.js"
+      ],
+      "serviceWorker": true,
+      "consumes": [
+        "donor",
+        "editor"
+      ]
+    }
+  },
+  "contracts": {
+    "modules/exact-rational/": [
+      "docs/ALIEN_MATH_001.md",
+      "scripts/alien_math_001_oracle.py",
+      "tests/fixtures/alien-math-001-vectors.json"
+    ],
+    "modules/rational-q16/": [
+      "docs/ALIEN_MATH_002.md",
+      "scripts/alien_math_002_oracle.py",
+      "tests/fixtures/alien-math-002-oracle.json"
+    ],
+    "modules/exact-interval/": [
+      "docs/ALIEN_MATH_003.md",
+      "scripts/alien_math_003_oracle.py",
+      "tests/fixtures/alien-math-003-oracle.json"
+    ],
+    "modules/exact-geometry/": [
+      "docs/ALIEN_MATH_003.md",
+      "scripts/alien_math_003_oracle.py",
+      "tests/fixtures/alien-math-003-oracle.json"
+    ],
+    "modules/qfloat/": [
+      "docs/QFLOAT_001.md"
+    ]
+  },
+  "shared": [
+    "scripts/browser-check.js",
+    "scripts/browser-suite-cache.mjs",
+    "scripts/browser-dependencies.mjs",
+    "scripts/browser-receipt-authority.mjs",
+    "scripts/browser-reuse-policy.json",
+    "scripts/flight-browser-preflight.mjs",
+    "scripts/build.js",
+    "scripts/verify-offline.js",
+    "scripts/service-worker.template.js",
+    "package.json",
+    ".github/workflows/flight-lab.yml",
+    "docs/API.md",
+    "scripts/ci-invariant-workload.mjs",
+    "scripts/ci_invariant_oracle.py",
+    "tests/fixtures/ci-invariant-001-input.json",
+    "tests/fixtures/ci-invariant-001-expected.json",
+    "tests/fixtures/ci-invariant-001-baseline.mjs"
+  ],
+  "opaqueRuntime": {
+    "demos/editor/game-export.js": {
+      "sha256": "8b61360ad2574b1a80174dd93edc46309a46b62ee2a70f700d17558473dfc601",
+      "roots": [
+        "demos/editor/game-player.js"
+      ],
+      "reason": "Audited generated player HTML"
+    },
+    "offline/register.js": {
+      "sha256": "9d17c57a7c03a5b05c36556b712c8f5b2990a6cae4e358d217e378405eb24db9",
+      "roots": [
+        "service-worker.js"
+      ],
+      "reason": "Audited same-origin offline manifest registration; full package required"
+    }
+  },
+  "workerTemplateSHA256": "a38bf38d637825d8cb4a50d87529569b74a2ad04bb2f333cc58a23455f516fc7",
+  "opaqueHarness": {
+    "scripts/browser-integer.js": {
+      "sha256": "f579a24481e641f9b1eea623eba0d680c5ebc13c309734ee1b5f56653e264a1d",
+      "roots": [
+        "demos/integer-foundry/world.js"
+      ]
+    },
+    "scripts/browser-frame-gate.js": {
+      "sha256": "ef1fa60864133b3af354c6820aff65757d5cede4ca5bc8783eb81b358532fd35",
+      "roots": [
+        "modules/frame-gate/index.js",
+        "api/webgl/index.js"
+      ]
+    },
+    "scripts/browser-editor.js": {
+      "sha256": "73376a3e60a3643ab3043468970cfff07f20b3dda01d35327444254526001679",
+      "roots": [
+        "demos/editor/gizmos.js"
+      ]
+    },
+    "scripts/browser-webgl-api.js": {
+      "sha256": "521821512d19f6bda0139f8bd50c73b862f55209418914afbb0739b8841863ad",
+      "roots": [
+        "api/webgl/index.js"
+      ]
+    },
+    "scripts/browser-opt-render.js": {
+      "sha256": "68fe56fc8bcc735c07c7e6315b5d5d1cd2f276d8dd6d5aa9e629fd886474fcda",
+      "roots": [
+        "modules/render-webgl/index.js",
+        "demos/clockwork-vault/world.js",
+        "demos/clockwork-vault/puzzles.js",
+        "demos/clockwork-vault/view.js"
+      ]
+    }
+  },
+  "auditedHarnesses": {
+    "scripts/browser-integer.js": "f579a24481e641f9b1eea623eba0d680c5ebc13c309734ee1b5f56653e264a1d",
+    "scripts/browser-opt-render.js": "68fe56fc8bcc735c07c7e6315b5d5d1cd2f276d8dd6d5aa9e629fd886474fcda",
+    "scripts/browser-webgl-api.js": "521821512d19f6bda0139f8bd50c73b862f55209418914afbb0739b8841863ad",
+    "scripts/browser-frame-gate.js": "ef1fa60864133b3af354c6820aff65757d5cede4ca5bc8783eb81b358532fd35",
+    "scripts/browser-vault.js": "58d746e1a14038b8d54c33d5313aa9aff2219fb7ac65616ca7d5f41a8701d040",
+    "scripts/browser-interactions.js": "cc87f7bdf679aa5db81036d1a2912d49721b587d73ad6f68d568767045ff2de1",
+    "scripts/browser-mouse.js": "a7906c8b718c179c9cfb3c67eb4e88edacdc08752adf44243e3d992003c1d8d2",
+    "scripts/browser-fps.js": "09ed719c371647a4e3f2d795c6c77e8a0c2fcf4b83d3ca39b1e96f52907a878f",
+    "scripts/browser-fps-motion.js": "0783c1f5decc8407c6252c2fc028d79311af65bba67ebc327ad4e33a75d0eaa9",
+    "scripts/browser-platforms.js": "4fd0b2246cd41f4e09fe2458824a12b6722b07d03a44a26432da4da83b219276",
+    "scripts/browser-rts.js": "0ab8fe155e4345ef9d9d106654f6f3ac6933135ca5c0d4abd5f0a1f803a6b101",
+    "scripts/browser-flow.js": "e23164c7b72502b0f5d6d1753a9e1baa351211ad7191a1757139e94babeddc93",
+    "scripts/browser-2d.js": "e63c4e84fc8f360fff5af349daceed6b44946d0fa697d6122aed69937eca423b",
+    "scripts/browser-omi.js": "cf2042c1eea7b273908cf19c37783b630d58d1483f3d5b5343534d9ab23ec9fd",
+    "scripts/browser-machine.js": "5c7e430c956d8e81ed2e8f11e1feb9ff86613a4a57c30b16d1b3bf22facdff30",
+    "scripts/browser-donor-labs.js": "f2d09b5be5082df40beefb18ca03ba88c83d28afdb35fcb7909cd05602145665",
+    "scripts/browser-optional-labs.js": "9f433cb891e5f22d4bff8022538d498467322af1fce43f9c0d6be453d21d03e3",
+    "scripts/browser-editor.js": "73376a3e60a3643ab3043468970cfff07f20b3dda01d35327444254526001679",
+    "scripts/browser-check.js": "2f09e6e2f414c7da8b75a1eb1204d8db19e562f19556754bae485696d7b2122b",
+    "scripts/omi-oracle.js": "c18dbd54d18295d03ec4681885d6e165feee4b8ef8136b935e4c425cbce1928c",
+    "scripts/opt-render-reference.js": "7bfca288f555317228606b7f698105306f6635ef847a41af3d6143fc666395a3",
+    "scripts/integer-fixture.js": "b36beb739f134fbbd6a49f238429d071f5603f5b6b3d09dcd9b381fe6144d793"
+  },
+  "auditedRuntime": {
+    "modules/adaptive-circles/index.js": "47333bd2221ca928a594d5f66e01e4482d23c69c4c722243a782078f3dd99f03",
+    "modules/appearance/index.js": "d81180d3420b4acd506cbc139363bfaf5ed3e30aafd3b76436417b166944b11a",
+    "modules/audio2d/index.js": "07e19391b84034acba56ef840a4d622b70e815f5376de123b6a07a9ccebf3098",
+    "modules/ballistics/index.js": "556b4bbdf871c83b1ad149e3f8e3942cab04b48ae116f0d7cd871ed8ca116fd0",
+    "modules/character/index.js": "19cd1846a626d306f291aa3aaffa6ec6fbc2159e3cb4386f68ad2dc814aa1fc8",
+    "modules/collision/index.js": "99c0f4bc106d4162fc5bea057a7108d7cf52526279b2a8ad4e4f27c1f0e6f5c1",
+    "modules/cuboid-stream/index.js": "e07640163f09883701532a952c8c4014c137a28d22b908698b94dae0ac9bb005",
+    "modules/exact-geometry/index.js": "c5895c1fc6faa93c4761b327dd689fcd28d383c22cec0e229dee5275d1f7eb5b",
+    "modules/exact-interval/index.js": "d171e150119d45d2cb951f2e517ef05f8cabb8977ce7d9424e1d6bb958ea0de8",
+    "modules/exact-rational/index.js": "dbc7e08ee27e824c874b339074804a0d103906fb91b2f2c3b3ad806cf05e0f48",
+    "modules/flight/index.js": "da9d416b5148a61bdad9ec46e499a62428eb96a091be4ff40248f3bb3cb9dcc6",
+    "modules/frame-gate/index.js": "a64422e3f5a887effcbcf67581836e58c590dcb5737d2522939d1e3ff8aaa5ed",
+    "modules/geometry/index.js": "186c7e4a930deece17a7b6f739f796ab75b0e0381631364ce6f7928a0544c8e2",
+    "modules/gf3-lattice/index.js": "b7436a5bbad8d6309c611b9b738385bcd568dd11370fbc47848138bd7f251baf",
+    "modules/input/index.js": "e157c0eaee89ea240fa0abe43ca24d02620c917f3188f75dcc4d765392eca025",
+    "modules/integer-engine/index.js": "a9ad903146a18e234f03f564364bee17e90cd95f63872f3c63b7169ed3b5d78f",
+    "modules/integer-math/index.js": "4c0bb66780bf9e810efb1963c0238d9356814abf79c959dcd1734164de57905f",
+    "modules/integer-physics/index.js": "039c7994f48148f1baa33a3b7e16fd5f911fc2e3e7624b4a4044d3c62fd12623",
+    "modules/integer-replay/index.js": "3ecdc82603efe64476f795a8ec8b9b1c74269cfbf09c2e4c7ba8f72c517c622f",
+    "modules/integer-time/index.js": "3bbf921b017a7066d3714bb17610070e017c66359d03b9f3f0949c161feb7133",
+    "modules/integer-vector/index.js": "e47b8380b0b8c387c9da31a2af854684c4a6ea1abab761dec5f507fbdbf88cf2",
+    "modules/interactions/index.js": "ac7e3fa91c6b89c7a34da84b869c02d12bbdd62805cd9dd252abfbf5274ed13b",
+    "modules/lead-solver/index.js": "e0ed0b67ebbf972f4e1bcf900f24cf56048252bc853073ed0f89cc7328bb06c1",
+    "modules/logical-sampling/index.js": "b7fe7930e81e98cda5e1aaf5b4f0bc7686e388db65a65c85c862ad93ace51d91",
+    "modules/math/index.js": "4f4ebf0786b97342c11004b8830a535890b16693458a0436edb1fc581a411da7",
+    "modules/motion2d/index.js": "3a10377e5832408983697d9b01f56d7d94a64bcad6d50b0778ec201b1692b222",
+    "modules/navigation/index.js": "d565333fcc9ffa024ba261697f520fd34ef95ecb7e31d9d614b4dd9ec3f4a5ed",
+    "modules/navigation-pool/index.js": "4acb3e6e19a81079dda22f3184602b1fd1d98dad73b2a6ed6027c38d9f38c20e",
+    "modules/nexus-lattice/index.js": "1dc251e2ce33eebe2063464a7040bf8b1a4cffb128e1fb649be05018b7df0f8b",
+    "modules/orbital-physics/index.js": "04001b0d8aca2e6c7b1300ccdeb2c2aa9293a0e6a5bbb254c75613ca209bc134",
+    "modules/projectiles/index.js": "9d1c045345593b9babebeb89999d99205a148361166c744d9f17c46ef2f0a0c1",
+    "modules/qfloat/index.js": "6cfe462f9a930f428e43f45b352de26407d22811275898654af5a1bb6a273e4b",
+    "modules/range2d/index.js": "a57f4c97337f124c5783bb8070845513ebab60ae479a46e875ad10adf07d3475",
+    "modules/rational-q16/index.js": "8383681b2f8fd1404261d73b4c7447217a54af72b1a400ed01f9a993d432bcc7",
+    "modules/render-optional/index.js": "3119543e88252c4b5c4a14fe0dde15fc3a444e5860f9ebeafb7f14629de2e711",
+    "modules/render-optional/wasm-bytes.js": "8750b9d17cb82fee910762c6c2bc0e787b0203120fe4e1331bf67bc5be3c1595",
+    "modules/render-optional/webgpu.js": "fdaa1656f74984db0a48cca01b56b02be63a6b0c555195e99fd5809294cacd63",
+    "modules/render-webgl/index.js": "af088cc5c4456ee07908d1561327c37c11d5c168b7d1b2c366149883f070e87c",
+    "modules/ternary-store2d/index.js": "ffea44569e1306853df65a97b86f18e1f328e20dda7e1b43b7eac93723f5847b",
+    "modules/terrain/index.js": "500756acf093f44e2e6c7e993a4b8f3f6f720abaf32db99fe0189d9b65fdc186",
+    "modules/time/index.js": "de94c0bc04e6a269504c5742455ce114f824c2c0d9d59a2fd94555df5d9bb4a2",
+    "modules/time-domains/index.js": "68be8e6d180f815343445af6ef8c055598ae378ada57101e02de06c94ac9205a",
+    "modules/weapons/index.js": "f8fd92fbf0fc3bc3a174e12f5e61df2e1484ff0a070ec5165106f61b3340cf83",
+    "demos/2d-lab/app.js": "04c01772b5eb0b46bf4a7b178fe92a18c2b28ef2fab21156687a87a491fb7c0b",
+    "demos/2d-lab/world.js": "cf182147f950767f4964bb333d0e03ce8ca80d4389784326e7d5d62ebe45fcab",
+    "demos/ancient-machine/app.js": "b39b8e419c70d8985ac9699225421ba7e45a238f10e1e7334ae115ad1a09b33b",
+    "demos/ancient-machine/machine.js": "b3016aee35d810961778902fa286b87d632adb609aa9f212a0371c7dfd7a8c9b",
+    "demos/arcade-lab/app.js": "62779f9cc6e174e8d0505a0661ae96e39a4cd996120202ebe1fba658214a6777",
+    "demos/arcade-lab/world.js": "99535969b842d892510eed8b9864bc4cb960c665e6a5919c449c23b147a1bbfb",
+    "demos/bullet-time-lab/app.js": "634aa6b3e3f1aa3af6191e0db625a71b5e9da28f129a1a82e43e1e9efab6d8c8",
+    "demos/bullet-time-lab/world.js": "3ddaa67d1a3a9ccd8a4cde8f7cbbef4de30de54ea3df4821b9af2968bb301756",
+    "demos/clockwork-vault/app.js": "f22d7de37b7d6d3d2f5e973ef5eb7221810c373143d322328f5e9313acb1e4a1",
+    "demos/clockwork-vault/puzzles.js": "a5e075968f6c43c2693ce5a3b93492d18a738530ce8cd08eef5792fe16c67b57",
+    "demos/clockwork-vault/view.js": "b45ea243e72eb21132880872ae54d37efe204a89bc50ce9fe5826d5cfe486587",
+    "demos/clockwork-vault/world.js": "d40ce3382ec62ca87a7fa34bcc51ca0bad6c0850a3c7e0b15ac175a821d24940",
+    "demos/editor/app.js": "6cbfecba8d6930acdd0672c137ec85c36070fc65fc4c8c1a1eab1d5965acf5b6",
+    "demos/editor/asset-foundry.js": "0e027213bfcc67574e29b9d1845eaedaaa287f98dbbb58dc6bd8e9d8d92e7293",
+    "demos/editor/components.js": "06909dee76b29c0fd64cbb894306ebacf2dbe18c871acde8cad84448c5e8f6f1",
+    "demos/editor/forge-preview.js": "047c4c376ad0cb3021cf7bbded5938d41a19e557a20c530ff3df80e553d8d53b",
+    "demos/editor/game-export.js": "8b61360ad2574b1a80174dd93edc46309a46b62ee2a70f700d17558473dfc601",
+    "demos/editor/game-player.js": "c4bf388afe89638d1dd5a553c8115448fb82f5ac91fa479f66a68e60093f3fcd",
+    "demos/editor/gizmos.js": "dc41ac1af70a32d94cdb93eee6a27d28e7c3b6f7d71138f3c253727ff05b2c81",
+    "demos/editor/model.js": "0684530070b112627fecad974d1a8df035fcf9a94d22a4b144c2a286c3330c70",
+    "demos/editor/preview.js": "686f77d906a225689fdc71bae3ca3cfa0b28f016f30c89d054f446d810c94c06",
+    "demos/editor/scene-meshes.js": "8851b61deb40f322850ad0bf6ca2f4c64647ad6b7ef0e6e034d288e8c2078e1d",
+    "demos/editor/viewport.js": "429d5f9ef66a8d34736322f376be33f02b5aa16749d12c92999eebdf6e2a2e82",
+    "demos/flight-lab/app.js": "c6dd93bff4bef684a9e14005a3fc70a83b4bc0f755ff8e8cc4885eca6209cf40",
+    "demos/flight-lab/worlds.js": "58b3ce05ddb2f7bd50782499a815a093058321d506478cdfa5a62a99e9df5262",
+    "demos/fps-lab/app.js": "b20c8cca0dd297f4be1a27d32f15100f231f4aefba6574f7dda7e3e5ea3843bc",
+    "demos/fps-lab/worlds.js": "3d4f8208792168d9573559fa7e1c671062810c81d6b338b2f6b7b6047d0b4be4",
+    "demos/gpu-lab/app.js": "b9a34d6b778917f64aa679cbc2a13c3a6203edb461d22cda9cc2aef381f330fd",
+    "demos/gpu-lab/controls.js": "89860cedff23993e910670fb031050fe2822ed432a4b0f040f4d8013d6642340",
+    "demos/integer-foundry/app.js": "5535235297241e3fd5a8b43bc41d0ebf9aea9e9c23120845e709cfe51bdac872",
+    "demos/integer-foundry/world.js": "2f5d266fc5b5a79e3bd56c5f6164ee595741f641904d489c40501601a95e4026",
+    "demos/interaction-lab/app.js": "893ee9ccb9d5637efbbb57edb7baab8171545f3734773e6aa20d6dd97ad78851",
+    "demos/interaction-lab/recipes.js": "66f333b047b39f4738502433698fca4c26066bb8a7f3d6483294c15f1e7389e6",
+    "demos/omi-lab/app.js": "c775165717522941c310e9c6e4650c07eb1df3b2ea06cc91cab54b6f8d0b55c4",
+    "demos/omi-lab/experiment.js": "246c15c01ef3ce921318c5a4d95d3254ae5f2303ec4c7860138e6bf96167fecd",
+    "demos/rts-lab/app.js": "768c9f97629b0df69f34b9ed68308afec527ba72bec7097158293d059409038c",
+    "demos/rts-lab/flow-worlds.js": "d5ba9f2181cd8ba1d9236679b3f0b747f9674bedc3386f94c4530e0e910350ef",
+    "demos/rts-lab/traffic.js": "da4c065c1a24e3135f1b802de21182e419b0764798ed48b471c09805ce43bc00",
+    "demos/rts-lab/worlds.js": "57d14fd5d06f40260c5b90ac80dcd3b9fa5f260c50ebce1bd0bba0efbfa75eb0",
+    "demos/space-lab/geometry.js": "44bb2c7b4a3e86881486592d2f48dd55c065574dfebeef40df1ff1a5a996151c",
+    "demos/space-lab/world.js": "8a4a686417228c3b3eae856facc6a167df070d834973a1089907e2345adde54a",
+    "api/webgl/index.js": "0f791aa8e118ad82a7d2aced4bf22633fbd4f94bcf9c54e695b571a3ae28d342",
+    "offline/register.js": "9d17c57a7c03a5b05c36556b712c8f5b2990a6cae4e358d217e378405eb24db9",
+    "experiments/arch-omi/index.js": "1b49eb986c72b108a7a5ca90480a2a70f65a9ee430937ee80af3e17a2f14dbf6",
+    "experiments/e8-geometry/index.js": "96658e21495a8582c44e0d48579e58180300f376918f2ab64809229705f17b03"
+  }
+}
