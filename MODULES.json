@@ -374,6 +374,30 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Bounded data-only manifest registry, exact-version dependencies and transactional local lifecycle; no executable plugin loading"
+    },
+    "exact-circuit": {
+      "entry": "modules/exact-circuit/index.js",
+      "depends": [
+        "exact-rational",
+        "rational-q16",
+        "integer-math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/circuit-mod-lab/index.html",
+      "description": "Exact Q16 cardinal X/Z racing planes and inert obstacle bounds; widened BigInt sweeps, chronological lap transitions and conservative contact suppression"
+    },
+    "mod-course": {
+      "entry": "modules/mod-course/index.js",
+      "depends": [
+        "mod-sdk",
+        "exact-course",
+        "exact-circuit"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/circuit-mod-lab/index.html",
+      "description": "Typed, fail-closed ALIEN MATH v1/v2 data-only course adapters for the existing Mod SDK registry, without executing extensions"
     }
   },
   "recipes": {

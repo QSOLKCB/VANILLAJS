@@ -29,7 +29,7 @@ Inputs are three-element [xRaw,yRaw,zRaw] vectors of signed-int32 Q16 values. A 
 
 advanceCourseQ16 handles multiple eligible gates crossed during the same tick and stops at the first missed gate. It returns nextGate, crossed and finished without changing a player's tick count or movement.
 
-This classifies a quantized discrete path, not continuous flight physics. The existing DRONE-RACER uses a floating-point integration and remains so until its separately reviewed PR #2 establishes an explicit float-to-Q16 boundary. No cross-browser bit-exact replay or universal ECMAScript refinement is claimed.
+This classifies a quantized discrete path, not continuous flight physics. DRONE-RACER has established its separately tested Float64-to-Q16 conversion boundary and still retains floating-point flight. The new MOD-SDK-002 exact-circuit module supports directional cardinal courses independently of the original v1 gate contract. No cross-browser bit-exact replay or universal ECMAScript refinement is claimed.
 
 ## Reproduction
 

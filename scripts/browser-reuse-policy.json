@@ -68,7 +68,8 @@
         "demos/omi-lab/",
         "demos/ancient-machine/",
         "demos/graph-lab/",
-        "demos/alien-course-lab/"
+        "demos/alien-course-lab/",
+        "demos/circuit-mod-lab/"
       ],
       "scripts": [
         "scripts/browser-omi.js",
@@ -245,6 +246,18 @@
       "tests/mod-sdk.test.js",
       "scripts/mod_sdk_001_oracle.py",
       "tests/fixtures/mod-sdk-001-graph.json"
+    ],
+    "modules/exact-circuit/": [
+      "docs/MOD_SDK_002.md",
+      "tests/mod-sdk-002.test.js",
+      "scripts/mod_sdk_002_oracle.py",
+      "examples/mod-sdk-002/cardinal-loop.json"
+    ],
+    "modules/mod-course/": [
+      "docs/MOD_SDK_002.md",
+      "tests/mod-sdk-002.test.js",
+      "scripts/mod_sdk_002_oracle.py",
+      "examples/mod-sdk-002/cardinal-loop.json"
     ]
   },
   "shared": [
@@ -342,7 +355,7 @@
     "scripts/omi-oracle.js": "c18dbd54d18295d03ec4681885d6e165feee4b8ef8136b935e4c425cbce1928c",
     "scripts/opt-render-reference.js": "7bfca288f555317228606b7f698105306f6635ef847a41af3d6143fc666395a3",
     "scripts/integer-fixture.js": "b36beb739f134fbbd6a49f238429d071f5603f5b6b3d09dcd9b381fe6144d793",
-    "scripts/browser-graph.js": "1658e6d4023bf8dec1c3bca6262fa3f7b34f2f153a40e49c8ecfde5eedcb85fc"
+    "scripts/browser-graph.js": "8cecfc3e7e540f196eb6dc8a9f819ff5538b77b8f6edc3ccf72db1b056281da3"
   },
   "auditedRuntime": {
     "modules/adaptive-circles/index.js": "47333bd2221ca928a594d5f66e01e4482d23c69c4c722243a782078f3dd99f03",
@@ -442,6 +455,9 @@
     "demos/alien-course-lab/app.js": "566e99c136a06a78f1045febe87be5c7afc50c3a87573676cecca48373224f5e",
     "demos/alien-course-lab/sample.js": "561db80d7952111be683a19b0791390a368d1490df6d68f6fbf80f8b76feae0b",
     "modules/exact-course/index.js": "1dae7f274c83f233bf9e56fec6ddcf3399ace6c4c4d93713851445f8210e18dd",
-    "modules/mod-sdk/index.js": "1b8e11d442d77365e4ec79ace6736855dcb8b7946edabbf0123168f790f52b64"
+    "modules/mod-sdk/index.js": "1b8e11d442d77365e4ec79ace6736855dcb8b7946edabbf0123168f790f52b64",
+    "modules/exact-circuit/index.js": "37a8dbad99a76125c7c48934446806e65fcc7d926ea5ce82b15bba55742f003a",
+    "modules/mod-course/index.js": "3ad482d577d121cfc8c4b9d3cd11412bc5c0465c072246e50a1fbe773250ba70",
+    "demos/circuit-mod-lab/app.js": "d234efb741020013ebbd752777ed8f781f7f9f92945b9d4070030269e526fb90"
   }
 }

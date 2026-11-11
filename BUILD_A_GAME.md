@@ -373,3 +373,8 @@ not new core APIs. See [the game contract](docs/CLOCKWORK_VAULT.md).
 ## Experimental MOD-SDK-001 data-only registry
 
 The opt-in [MOD-SDK-001 contract](docs/MOD_SDK_001.md) provides a bounded, versioned, local registry for **inert data**, with dependency checks and transactional activation. It does not validate game courses or execute plugins. For exact, reusable ALIEN MATH game-authoring and a reference moddable lab, see the planned **MOD-SDK-002** phase in [ROADMAP.md](ROADMAP.md).
+
+
+## Experimental MOD-SDK-002 cardinal circuits
+
+A [typed data-only course adapter](docs/MOD_SDK_002.md) now composes MOD-SDK-001 with existing exact-course v1 and independently implemented cardinal v2 circuit math. Try the [ALIEN Circuit Foundry](demos/circuit-mod-lab/index.html) to validate a manifest, inspect raw Q16.16 coordinates and download it as inert JSON. The adapter does not supply collision physics, Float64-to-Q16 conversion, arbitrary 3D hoops, audio playback or executable plugins. Pin a reviewed VANILLAJS commit when redistributing the modules.

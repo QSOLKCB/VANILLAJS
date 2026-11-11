@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="VANILLAJS MOD-SDK-002 exact circuit editor and inert data pack lab">
+<title>MOD-SDK-002 — ALIEN Circuit Foundry</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><a href="../../index.html">← VANILLAJS LABS</a><span>MOD-SDK-002 / EXACT GAME AUTHORING</span></header>
+<main>
+<p class="eyebrow">ALIEN MATH / MOD SDK / OFFLINE-FIRST</p>
+<h1>Build the circuit.<br><em>Own the universe.</em></h1>
+<p class="lede">Compile cardinal X/Z checkpoints and data-only local mod packs. Exact decimal source becomes checked Q16.16; independent Float64 flight, collision and rendering remain the consuming game's responsibility.</p>
+<div class="layout">
+<section class="pane"><h2>Inert course manifest · JSON</h2>
+<label for="manifest">Modify the source-owned starter pack</label>
+<textarea id="manifest" rows="21" spellcheck="false"></textarea>
+<div class="actions"><button id="validate" type="button">Validate + activate</button>
+<button id="restore" type="button">Restore starter</button><button id="download" type="button">Download JSON</button></div>
+<p class="hint">Only plain data entries. No code loading, URL fetch or runtime plugin privileges.</p>
+</section>
+<section class="pane">
+<h2>Exact integer checkpoint view</h2>
+<p id="status" role="status" aria-live="polite">Loading source-owned starter…</p>
+<canvas id="map" width="640" height="360" aria-label="Illustrative top-down X/Z course map"></canvas>
+<pre id="result" aria-label="Compiled checkpoint information"></pre>
+<div class="actions"><button id="sweep" type="button">Test first gate sweep</button></div>
+<p id="sweep-status" role="status" aria-live="polite">No sweep tested</p>
+<p class="hint">Map pixels are illustrative, not checkpoint authority. The deterministic BigInt swept classifier decides whether a gate is crossed.</p>
+</section>
+</div>
+<footer><a href="https://github.com/QSOLKCB/VANILLAJS/blob/main/docs/MOD_SDK_002.md">AUTHORING CONTRACT ↗</a>
+ · <a href="https://qsolkcb.github.io/DRONE-RACER/">PLAY DRONE-RACER ↗</a>
+<p>THIS IS NOT A PRODUCT. THIS IS INDEPENDENCE. 👽</p></footer>
+</main><script type="module" src="app.js"></script></body></html>

@@ -33,6 +33,7 @@ export async function verifyGraphLab(browser,base){
       assert.equal(await fallback.locator('#size').textContent(),'9 / 12');await fallback.locator('#step').click();assert.match(await fallback.locator('#status').textContent(),/Visited 1/);
     }finally{await fallback.close();}
     await verifyCourseLab(browser,base);
+    await verifyCircuitModLab(browser,base);
     console.log('Graph Lab: exact polynomial, cospectral distinction, traversal/relabel/D4 controls, empty/disconnected cases, Canvas fallback and 320px layout passed.');
   }finally{await page.close();}
 }
@@ -65,5 +66,45 @@ async function verifyCourseLab(browser,base){
     await page.screenshot({path:'browser-artifacts/alien-course-foundry.png',fullPage:true});
     assert.deepEqual(errors,[]);
     console.log('ALIEN Course Foundry: actual browser module, Q16 output, multi-gate sweep, bad data rejection, rounding and 320px viewport passed.');
+  }finally{await page.close();}
+}
+
+
+/** MOD-SDK-002: exercise the actual packaged typed course lab in Chromium. */
+async function verifyCircuitModLab(browser,base){
+  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  try{
+    await page.goto(base+'demos/circuit-mod-lab/index.html');
+    await page.waitForFunction(()=>document.getElementById('status')?.textContent.startsWith('PASS'));
+    assert.match(await page.locator('#status').textContent(),/4 cardinal gates · 2 laps/);
+    assert.match(await page.locator('#result').textContent(),/"planeRaw": 655360/);
+    await page.locator('#sweep').click();
+    assert.match(await page.locator('#sweep-status').textContent(),/1 gate; next index 1/);
+    const source=JSON.parse(await page.locator('#manifest').inputValue());
+    source.entries[0].data.course.gates[0].axis='y';
+    await page.locator('#manifest').fill(JSON.stringify(source));
+    await page.locator('#validate').click();
+    assert.match(await page.locator('#status').textContent(),/REJECTED/);
+    assert.equal(await page.locator('#download').isDisabled(),true);
+    assert.equal(await page.locator('#sweep').isDisabled(),true);
+    await page.locator('#restore').click();
+    assert.match(await page.locator('#status').textContent(),/PASS/);
+    assert.equal(await page.locator('#download').isDisabled(),false);
+    await page.setViewportSize({width:320,height:700});
+    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),
+      'MOD-SDK-002 Circuit Foundry must fit 320px without clipping');
+    await page.screenshot({path:'browser-artifacts/circuit-mod-lab-mobile.png',fullPage:true});
+    assert.deepEqual(errors,[]);
+    const fallback=await browser.newPage();
+    try{
+      await fallback.addInitScript(()=>{
+        HTMLCanvasElement.prototype.getContext=()=>null;
+      });
+      await fallback.goto(base+'demos/circuit-mod-lab/index.html');
+      await fallback.waitForFunction(()=>document.getElementById('status')?.textContent.startsWith('PASS'));
+      assert.match(await fallback.locator('#result').textContent(),/"planeRaw": 655360/);
+    }finally{await fallback.close();}
+    console.log('MOD-SDK-002 Circuit Foundry: packaged v2 course, exact gate, ordered sweep, reject/restore, 320px and Canvas fallback passed.');
   }finally{await page.close();}
 }
