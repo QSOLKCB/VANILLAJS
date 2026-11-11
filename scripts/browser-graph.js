@@ -32,6 +32,38 @@ export async function verifyGraphLab(browser,base){
       await fallback.goto(base+'demos/graph-lab/index.html');await fallback.waitForFunction(()=>document.getElementById('drawing-status').textContent.includes('Canvas unavailable'));
       assert.equal(await fallback.locator('#size').textContent(),'9 / 12');await fallback.locator('#step').click();assert.match(await fallback.locator('#status').textContent(),/Visited 1/);
     }finally{await fallback.close();}
+    await verifyCourseLab(browser,base);
     console.log('Graph Lab: exact polynomial, cospectral distinction, traversal/relabel/D4 controls, empty/disconnected cases, Canvas fallback and 320px layout passed.');
+  }finally{await page.close();}
+}
+
+async function verifyCourseLab(browser,base){
+  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  try{
+    await page.goto(base+'demos/alien-course-lab/index.html');
+    await page.waitForFunction(()=>document.getElementById('status').textContent.startsWith('PASS'));
+    assert.match(await page.locator('#status').textContent(),/6 exact gates/);
+    assert.match(await page.locator('#result').textContent(),/"leftRaw": -458752/);
+    await page.locator('#sweep-button').click();
+    assert.match(await page.locator('#sweep').textContent(),/credited 2 consecutive gates/);
+    const data=JSON.parse(await page.locator('#course').inputValue());
+    data.gates[0].width='not-a-number';
+    await page.locator('#course').fill(JSON.stringify(data));
+    await page.locator('#compile').click();
+    assert.match(await page.locator('#status').textContent(),/REJECTED/);
+    assert.equal(await page.locator('#download').isDisabled(),true);
+    await page.reload();
+    await page.waitForFunction(()=>document.getElementById('status').textContent.startsWith('PASS'));
+    await page.locator('#rounding').selectOption('nearest-even');
+    await page.locator('#compile').click();
+    assert.match(await page.locator('#status').textContent(),/PASS/);
+    assert.equal(await page.locator('.play').getAttribute('href'),'https://qsolkcb.github.io/DRONE-RACER/');
+    await page.setViewportSize({width:320,height:700});
+    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),
+      'ALIEN Course Foundry must fit a 320px viewport');
+    await page.screenshot({path:'browser-artifacts/alien-course-foundry.png',fullPage:true});
+    assert.deepEqual(errors,[]);
+    console.log('ALIEN Course Foundry: actual browser module, Q16 output, multi-gate sweep, bad data rejection, rounding and 320px viewport passed.');
   }finally{await page.close();}
 }

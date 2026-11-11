@@ -336,7 +336,7 @@
     "scripts/omi-oracle.js": "c18dbd54d18295d03ec4681885d6e165feee4b8ef8136b935e4c425cbce1928c",
     "scripts/opt-render-reference.js": "7bfca288f555317228606b7f698105306f6635ef847a41af3d6143fc666395a3",
     "scripts/integer-fixture.js": "b36beb739f134fbbd6a49f238429d071f5603f5b6b3d09dcd9b381fe6144d793",
-    "scripts/browser-graph.js": "4d20b826a35c8e38e348938b661080a11bf55d28da9d401ce937932675a94be8"
+    "scripts/browser-graph.js": "1658e6d4023bf8dec1c3bca6262fa3f7b34f2f153a40e49c8ecfde5eedcb85fc"
   },
   "auditedRuntime": {
     "modules/adaptive-circles/index.js": "47333bd2221ca928a594d5f66e01e4482d23c69c4c722243a782078f3dd99f03",
