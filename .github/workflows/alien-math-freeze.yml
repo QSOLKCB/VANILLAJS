@@ -45,9 +45,6 @@ jobs:
   browser-race:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    env:
-      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/flight-browser/browsers
-      NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -55,6 +52,11 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
+      - name: Configure isolated browser paths on the runner
+        # runner is unavailable in jobs.<job_id>.env during workflow validation.
+        run: |
+          echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
+          echo "NODE_PATH=$RUNNER_TEMP/flight-browser/node_modules" >> "$GITHUB_ENV"
       - uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         id: playwright-tooling
         with:
