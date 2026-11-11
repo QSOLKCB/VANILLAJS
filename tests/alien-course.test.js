@@ -63,3 +63,10 @@ test('independent Python Fraction calculation agrees with compiled gates',()=>{
   assert.deepEqual(compile().gates,oracle.gates);
   assert.equal(oracle.sweepFirstTwo,2);
 });
+
+test('Pages course lab links to published docs instead of excluded dist/docs',async()=>{
+  const {readFile}=await import('node:fs/promises');
+  const html=await readFile(new URL('../demos/alien-course-lab/index.html',import.meta.url),'utf8');
+  assert.match(html,/https:\/\/github\.com\/QSOLKCB\/VANILLAJS\/blob\/main\/docs\/ALIEN_COURSE_BRIDGE\.md/);
+  assert.doesNotMatch(html,/href="\.\.\/\.\.\/docs\//);
+});
