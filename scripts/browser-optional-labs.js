@@ -74,6 +74,8 @@ export async function verifyOptionalLabs(browser,base){
       }
       await page.setViewportSize({width:320,height:780});
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'lab fits 320px');
+      // Resizing clears Canvas pixels; wait for the dirty frame before capture.
+      await page.waitForFunction(()=>{const c=document.querySelector('#view'),p=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let n=0;for(let i=0;i<p.length;i+=4)if(p[i]+p[i+1]+p[i+2]>80)n++;return n>100;});
       await page.screenshot({path:'browser-artifacts/'+lab+'-320.png',fullPage:true});
       await page.setViewportSize({width:1280,height:900});
     }

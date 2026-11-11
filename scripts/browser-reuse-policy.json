@@ -323,7 +323,7 @@
     "scripts/browser-omi.js": "cf2042c1eea7b273908cf19c37783b630d58d1483f3d5b5343534d9ab23ec9fd",
     "scripts/browser-machine.js": "b5b22e40e92110baf51cc07c50db92f083d4961fd182c600b105c377e00e084a",
     "scripts/browser-donor-labs.js": "f2d09b5be5082df40beefb18ca03ba88c83d28afdb35fcb7909cd05602145665",
-    "scripts/browser-optional-labs.js": "fe53e5fa5be3816e865245efbff1bb5ac62912f6dbc27a967ed5be09e8828daf",
+    "scripts/browser-optional-labs.js": "3b6d95f5050fc116976f16ddc30a58d75ec25021912d21b9359b9840e63a4404",
     "scripts/browser-editor.js": "73376a3e60a3643ab3043468970cfff07f20b3dda01d35327444254526001679",
     "scripts/browser-check.js": "7a4b3b957d7848d03fe33c8118eb603cf04f8fb737e4aef2b76b1ebbed21a390",
     "scripts/omi-oracle.js": "c18dbd54d18295d03ec4681885d6e165feee4b8ef8136b935e4c425cbce1928c",
