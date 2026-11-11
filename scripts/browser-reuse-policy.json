@@ -338,7 +338,7 @@
     "scripts/browser-donor-labs.js": "f2d09b5be5082df40beefb18ca03ba88c83d28afdb35fcb7909cd05602145665",
     "scripts/browser-optional-labs.js": "3b6d95f5050fc116976f16ddc30a58d75ec25021912d21b9359b9840e63a4404",
     "scripts/browser-editor.js": "73376a3e60a3643ab3043468970cfff07f20b3dda01d35327444254526001679",
-    "scripts/browser-check.js": "7a4b3b957d7848d03fe33c8118eb603cf04f8fb737e4aef2b76b1ebbed21a390",
+    "scripts/browser-check.js": "8a254862e41e8647a74eee5bf18c8eb1b279a5ec30c0bf35e95a5cb2fedaa17a",
     "scripts/omi-oracle.js": "c18dbd54d18295d03ec4681885d6e165feee4b8ef8136b935e4c425cbce1928c",
     "scripts/opt-render-reference.js": "7bfca288f555317228606b7f698105306f6635ef847a41af3d6143fc666395a3",
     "scripts/integer-fixture.js": "b36beb739f134fbbd6a49f238429d071f5603f5b6b3d09dcd9b381fe6144d793",
