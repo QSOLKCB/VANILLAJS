@@ -67,3 +67,5 @@ footer{height:44px;display:flex;align-items:center;justify-content:center;paddin
 .asset-foundry .asset-note{font-size:10px;color:var(--muted);line-height:1.5;margin:8px 0}
 .asset-foundry button:disabled,.asset-foundry .import:has(input:disabled){opacity:.4;pointer-events:none}
 @media(max-width:750px){.asset-foundry{max-width:480px}.hierarchy{max-height:150px}}
+
+.graphics-tools{display:flex;flex-wrap:wrap;gap:8px;padding:8px;font-size:12px}.graphics-tools span{display:flex;gap:6px;align-items:center}

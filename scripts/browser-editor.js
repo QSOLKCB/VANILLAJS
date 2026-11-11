@@ -67,16 +67,19 @@ export async function verifyEditor(browser,base){
     assert.ok(project.objects.some(e=>e.name==='Alien Probe'));
     await page.locator('#open').setInputFiles({name:'saved.vscene.json',
       mimeType:'application/json',buffer:Buffer.from(serialized)});
+    await page.waitForFunction(()=>document.querySelector('#status').textContent==='Loaded v2 scene · saved.vscene.json');
     assert.equal(await page.locator('#count').textContent(),'6');
     // A v1 export remains importable, and gets migrated to v2 in memory.
     const oldFile={...project,schemaVersion:1,
       objects:project.objects.map(({components,...legacy})=>legacy)};
     await page.locator('#open').setInputFiles({name:'legacy.vscene.json',
       mimeType:'application/json',buffer:Buffer.from(JSON.stringify(oldFile))});
+    await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Migrated v1'));
     assert.equal(await page.locator('#count').textContent(),'6');
     assert.match(await page.locator('#status').textContent(),/Migrated v1/);
     await page.locator('#open').setInputFiles({name:'saved.vscene.json',
       mimeType:'application/json',buffer:Buffer.from(serialized)});
+    await page.waitForFunction(()=>document.querySelector('#status').textContent==='Loaded v2 scene · saved.vscene.json');
     assert.equal(await page.locator('#count').textContent(),'6');
     // New component controls are actual serialized, validated data.
     await page.locator('#hierarchy button[data-id="entity-3"]').click();
@@ -183,7 +186,8 @@ export async function verifyEditor(browser,base){
       assetChunks=[];
     for await(const chunk of assetStream)assetChunks.push(chunk);
     const complete=Buffer.concat(assetChunks).toString('utf8'),exported=JSON.parse(complete);
-    assert.equal(exported.format,'qsol.vanillajs.asset-project.v1');
+    assert.equal(exported.format,'qsol.vanillajs.asset-project.v2');
+    assert.deepEqual(exported.graphics,{optionalGPU:false});
     assert.equal(exported.scene.schemaVersion,2);
     assert.equal(exported.library.assets.length,4);
     assert.ok(exported.library.assets.some(a=>a.kind==='mesh'&&/^[0-9a-f]{64}$/.test(a.sourceSha256)));

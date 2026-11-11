@@ -98,3 +98,11 @@ No changes to the frozen v1.4 CPU/RTX evidence receipts or published release tag
 Next: quaternion gizmos, real component registry/typed prefab assets, mesh
 imports with byte provenance, physics interaction matrix, and standalone
 HTML game export. Those are **future** projects, not v1.5 features.
+
+## Optional CPU / GPU graphics and space labs
+
+See [the GPU/WASM and Space Game Lab guide](OPTIONAL_GPU_WASM.md) for the experimental
+CPU-first renderer, explicit player opt-in, editor project setting and playable
+HTML export, exact-math preparation, resource limits, and local test commands.
+The project v2 envelope preserves graphics policy; legacy v1 projects still load.
+Existing WebGL APIs remain supported.

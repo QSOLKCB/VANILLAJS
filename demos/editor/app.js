@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // VANILLAJS Component Forge v1.5: DOM only adapts owned scene data.
+import {OptionalRenderer} from '../../modules/render-optional/index.js';
+import {graphicsControls} from '../gpu-lab/controls.js';
+import {exportGame} from './game-export.js';
 import {WebGLAPI} from '../../api/webgl/index.js';
 import {FixedClock} from '../../modules/time/index.js';
 import {createForgeScene,upgradeScene,validateScene,addEntity,updateEntity,removeEntity,
@@ -14,6 +17,7 @@ import {createAssetLibrary,validateAssetLibrary,addMeshAsset,addTextureAsset,
   parseProject,serializeProject,MAX_PROJECT_BYTES} from './asset-foundry.js';
 
 const $=id=>document.getElementById(id),canvas=$('view');
+let importGeneration=0;
 let history=makeHistory(createForgeScene()),selected='entity-3',draft=null,
   library=createAssetLibrary(),chosenAsset=null,
   camera={yaw:38,pitch:23,distance:18,target:[0,1,0]},api=null,grid=null,mesh=null,
@@ -167,6 +171,7 @@ for(const [element,run]of [['asset-obj',importObjFile],['asset-png',importPngFil
   $(element).addEventListener('change',async event=>{
     if(playing)return;
     const file=event.target.files?.[0];event.target.value='';if(!file)return;
+  const generation=++importGeneration;
     try{await run(file);}
     catch(error){inform('Asset rejected: '+error.message,true);}
   });
@@ -232,7 +237,7 @@ $('asset-instance').addEventListener('click',()=>{
 $('asset-save-project').addEventListener('click',()=>{
   if(playing)return;
   try{
-    const scene=editScene(),raw=serializeProject(scene,prunePlacements(scene,library));
+    const scene=editScene(),raw=serializeProject(scene,prunePlacements(scene,library),{optionalGPU:$('optional-gpu').checked});
     download('vanillajs-'+scene.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')+
       '.vproject.json',raw);
     inform('Exported complete local project (scene + assets + provenance)');
@@ -241,9 +246,11 @@ $('asset-save-project').addEventListener('click',()=>{
 $('asset-open-project').addEventListener('change',async event=>{
   if(playing)return;
   const file=event.target.files?.[0];event.target.value='';if(!file)return;
+  const generation=++importGeneration;
   try{
     if(file.size>MAX_PROJECT_BYTES)throw new RangeError('project exceeds 256 KiB');
-    const imported=parseProject(await file.text());
+    const imported=parseProject(await file.text());if(generation!==importGeneration)return;
+    $('optional-gpu').checked=imported.graphics?.optionalGPU??false;initGraphics();
     const scene=upgradeScene(imported.scene);
     library=validateAssetLibrary(imported.library,scene);
     history=makeHistory(scene);selected=scene.objects[0]?.id??null;draft=null;
@@ -303,7 +310,7 @@ $('scene-name').addEventListener('change',()=>{
 });
 $('new-scene').addEventListener('click',()=>{
   if(!confirm('Start a new scene? Save your current JSON project first if needed.'))return;
-  history=makeHistory(createForgeScene());selected='entity-3';draft=null;
+  ++importGeneration;history=makeHistory(createForgeScene());selected='entity-3';draft=null;
   library=createAssetLibrary();chosenAsset=null;
   markGeometry();syncEditor();inform('New scene created');
 });
@@ -319,9 +326,10 @@ $('save').addEventListener('click',()=>{
 $('open').addEventListener('change',async event=>{
   if(playing)return;
   const file=event.target.files?.[0];event.target.value='';if(!file)return;
+  const generation=++importGeneration;
   try{
     if(file.size>128*1024)throw new RangeError('scene exceeds 128 KiB');
-    const raw=parseScene(await file.text()),scene=upgradeScene(raw);
+    const raw=parseScene(await file.text()),scene=upgradeScene(raw);if(generation!==importGeneration)return;
     history=makeHistory(scene);selected=scene.objects[0]?.id??null;draft=null;
     library=createAssetLibrary();chosenAsset=null;
     markGeometry();syncEditor();inform((raw.schemaVersion===1?'Migrated v1 → v2 · ':'Loaded v2 scene · ')+file.name);
@@ -356,8 +364,18 @@ $('properties').addEventListener('change',event=>{
   try{applyScene(updateEntity(editScene(),selected,patch));}
   catch(error){inform('Edit rejected: '+error.message,true);syncEditor();}
 });
+let optionalCanvas=null,removeGraphics=null;
+$('optional-gpu').onchange=()=>{initGraphics();markGeometry();};
+$('export-game').onclick=()=>{try{download('game.html',exportGame(editScene(),prunePlacements(editScene(),library),{optionalGPU:$('optional-gpu').checked}));inform('Place game.html beside packaged modules/ and demos/; serve over HTTP.');}catch(e){inform(e.message,true);}};
 function initGraphics(){
-  api=new WebGLAPI(canvas);
+  api?.dispose();removeGraphics?.();optionalCanvas?.remove();optionalCanvas=null;
+  if(!$('optional-gpu').checked){try{api=new WebGLAPI(canvas);}catch{api=null;}}
+  else api=null;
+  if(!api){
+    optionalCanvas=document.createElement('canvas');optionalCanvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none';canvas.after(optionalCanvas);
+    api=new OptionalRenderer(optionalCanvas,{onMode:requestFrame});
+    if($('optional-gpu').checked)removeGraphics=graphicsControls(api,$('graphics-controls'),requestFrame);
+  }
   grid=api.createMesh(createGridVertices(),'lines');
   mesh=api.createMesh([], 'triangles');
   gizmoMesh=api.createMesh([], 'lines');
@@ -393,6 +411,7 @@ function frame(now){
           gizmoLines(sceneWorld(editScene()),selected,gizmoSpace,gizmoTool):new Float32Array());
         geometryDirty=false;
       }
+      if(optionalCanvas){optionalCanvas.width=width;optionalCanvas.height=height;}
       api.beginFrame({vp:cameraMatrix(camera,width,height),fog:.008});
       api.draw(grid);api.draw(mesh);if(!playing)api.draw(gizmoMesh);api.endFrame();
       rendered++;

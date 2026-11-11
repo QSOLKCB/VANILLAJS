@@ -103,3 +103,11 @@ lifetime rule is repaired. Missing geometry groups, changed colours, changed
 words, reset/restore, cleared meshes, partial turns and allocation growth are
 explicit regression cases. No physics/collision work, puzzle search, test case
 or assertion is skipped to obtain a rendering result.
+
+## Optional CPU / GPU graphics and space labs
+
+See [the GPU/WASM and Space Game Lab guide](OPTIONAL_GPU_WASM.md) for the experimental
+CPU-first renderer, explicit player opt-in, editor project setting and playable
+HTML export, exact-math preparation, resource limits, and local test commands.
+The project v2 envelope preserves graphics policy; legacy v1 projects still load.
+Existing WebGL APIs remain supported.

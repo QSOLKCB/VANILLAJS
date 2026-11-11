@@ -362,3 +362,30 @@ JS runtime; cross-engine bit-identical simulation is not claimed.
   on the PR. Local browser installation was unavailable because the download
   endpoint returned HTML instead of a browser archive.
 - No hardware GPU, Firefox/WebKit, physical touch-device or speedup claim is made.
+
+## Optional GPU/WASM and Space Game Lab — local validation, 2026-11-11
+
+See [setup, API, export and test instructions](OPTIONAL_GPU_WASM.md) and
+[three-execution browser reuse](BROWSER_INCREMENTAL_CI.md).
+
+- 567 Node tests passed, including Float32 JS/WASM projection, clipping,
+  retained owned snapshots, resource rejection, docking, swept broadside hits,
+  orbital radius stability, project policy round-trip and receipt invalidation.
+- Source/module checks and the fresh offline package verifier passed (120 files,
+  approximately 780 KiB). WASM rebuild with wabt 1.0.39 matched all 308 bytes.
+- Packaged Chromium covered all seven suite groups. The first full run exposed
+  an existing async editor import assertion race. The test now waits for the
+  actual import result; the editor also ignores superseded file reads. Targeted
+  editor/donor/home runs and final editor/donor reruns passed, including the new
+  v2 project envelope and executing the downloaded HTML player.
+- Local tooling: Node 22.18.0, Playwright 1.65.0, Linux x64. Hosted CI remains on
+  its pinned Playwright 1.64.0 and independently validates that environment.
+- Explicit headed physical GPU test: NVIDIA, Blackwell, fallback=false. GPU Lab
+  readback contained 4,972 bright pixels; Space Lab 5,963. Each capture verified
+  exactly one submission. Three activations used three devices and four adapter
+  requests including detection. Repeated unchanged frames performed zero vertex
+  buffer uploads. Device destruction, CPU recovery, fresh-adapter reactivation,
+  injected WASM initialization failure/retry and resize passed.
+- The local GPU test is separate from hosted CPU browser witnesses. GPU evidence
+  is never manufactured by cache reuse. Other browsers/devices, completed-GPU
+  timing and a universal performance improvement are not claimed.
