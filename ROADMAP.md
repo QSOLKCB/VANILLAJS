@@ -1,6 +1,15 @@
 # VANILLAJS roadmap
 
-## ALIEN-MATH-002 — explicit rational-to-Q16.16 boundary (experimental PR)
+## ALIEN-MATH-003 — closed intervals and exact XY geometry (experimental PR)
+
+- Two opt-in native ES modules for exact closed intervals, immutable rational XY points and axis-aligned boxes, directed orientation, inclusive point-on-segment and explicit segment/rectangle intersection classes.
+- Source-authenticated ALIEN-MATH-001 rationals; exact wide BigInt determinants (no Q16 narrowing, approximate epsilon, physics or renderer integration).
+- Independent Python fractions.Fraction oracle (18 fixed + 2,048 seeded = 2,066 cases), 4,000 seeded metamorphic geometry trials and explicit forged-prototype regressions.
+- Zero external dependencies; leave ALIEN-MATH-001/002, QFLOAT, integer simulation and proof assets, immutable releases, historical evidence and owner-only RTX workflows unchanged.
+
+Specification: [ALIEN-MATH-003](docs/ALIEN_MATH_003.md).
+
+## ALIEN-MATH-002 — explicit rational-to-Q16.16 boundary (merged PR #64)
 
 - A new native ES module converts ALIEN-MATH-001 rational authoring values into existing checked signed-int32 Q16.16 raw units.
 - Both policies are mandatory: exact/toward-zero/floor/ceil/nearest-even/nearest-away and reject/opt-in saturate; exact+saturate is invalid.

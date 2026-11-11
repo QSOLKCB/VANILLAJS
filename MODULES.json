@@ -299,6 +299,25 @@
       "status": "experimental",
       "description": "Bounded immutable BigInt rationals, strict decimal-string parsing and exact canonical serialization; authoring only"
     },
+    "exact-interval": {
+      "entry": "modules/exact-interval/index.js",
+      "depends": [
+        "exact-rational"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Immutable exact closed rational intervals, inclusive membership, source-admissible three-way separation and exact intersection"
+    },
+    "exact-geometry": {
+      "entry": "modules/exact-geometry/index.js",
+      "depends": [
+        "exact-rational",
+        "exact-interval"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Source-checked XY rational points/boxes, wide-BigInt orientation, closed segment predicates and positive-area AABB classification"
+    },
     "rational-q16": {
       "entry": "modules/rational-q16/index.js",
       "depends": [

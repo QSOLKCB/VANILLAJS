@@ -1,0 +1,25 @@
+{
+  "box_counts": {
+    "disjoint": 911,
+    "overlap": 590,
+    "touch": 565
+  },
+  "fixed_cases": 18,
+  "generated_cases": 2048,
+  "interval_counts": {
+    "a_below_b": 483,
+    "b_below_a": 285,
+    "overlap": 1298
+  },
+  "observations": 2066,
+  "oracle": "CPython fractions.Fraction, independent geometric predicates",
+  "schema": "qsol.alien-math-003.fraction-oracle.v1",
+  "seed": "0x3177653d",
+  "segment_counts": {
+    "cross": 446,
+    "disjoint": 995,
+    "overlap": 208,
+    "touch": 417
+  },
+  "sha256": "76958814ad6be0ccee62cdf5eed21ad55ceb2a853114a66f7463fd81ee038982"
+}
