@@ -1,0 +1,45 @@
+name: ALIEN-MATH-006 Lean models and source correspondence
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  correspondence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0 # the frozen mathematical baseline must exist locally
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Check exact source inventory and unchanged historical baseline
+        run: python3 scripts/verify_alien_math_006.py --pins-only
+      - name: Install existing pinned Lean toolchain
+        run: bash scripts/install-q16-lean.sh
+      - name: Verify admission and forged-audit negative controls
+        run: python3 -m unittest discover -s tests -p 'test_alien_math_006.py' -v
+      - name: Reproduce all independent authoring mathematics fixtures
+        run: |
+          python3 scripts/alien_math_001_oracle.py --check
+          python3 scripts/alien_math_002_oracle.py --check
+          python3 scripts/alien_math_003_oracle.py --check
+          python3 scripts/alien_math_004_oracle.py --check
+          python3 scripts/alien_math_005_oracle.py --check
+          python3 scripts/alien_math_006_oracle.py --check
+      - name: Kernel-check exact statements and axioms, then compare finite source outputs
+        run: python3 scripts/verify_alien_math_006.py --negative-controls --output alien-math-006-report.json
+      - name: Preserve observed verification report and source manifest
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: alien-math-006-correspondence
+          path: |
+            alien-math-006-report.json
+            formal/alien-math-006/manifest.json
+          if-no-files-found: warn
+          retention-days: 30

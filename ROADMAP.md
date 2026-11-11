@@ -1,11 +1,18 @@
 # VANILLAJS roadmap
 
-## ALIEN-MATH-005 — graph traversal and spectral lab (owner review)
+## ALIEN-MATH-006 — source-pinned formal correspondence (owner review)
+
+- 21 Lean model theorems with independent typed statements and transitive axiom auditing.
+- Source/contract/verifier/domain pins, 856 Lean/JavaScript/Python finite observations and six compiled negative controls.
+- [Assertion inventory, proof scope and OPEN refinement obligations](docs/ALIEN_MATH_006.md). No universal ECMAScript refinement or physical/hardware claim.
+- The final research freeze remains planned only, requiring explicit authorization after this PR merges. No release, tag or deposit is authorized.
+
+## ALIEN-MATH-005 — graph traversal and spectral lab (merged PR #69)
 
 - At most 16 vertices; canonical simple undirected graphs, BFS/DFS and exact integer/rational invariants.
 - BigInt characteristic polynomial with independent subset-determinant oracle, relabeling and D4 grid tests.
 - Standalone [Graph & Spectral Lab](demos/graph-lab/index.html); exact results and illustrative pixels are distinct.
-- [Contract and reproduction](docs/ALIEN_MATH_005.md). Phase 006 and the final freeze remain unauthorized until owner review/merge and explicit approval.
+- [Contract and reproduction](docs/ALIEN_MATH_005.md). Phase 006 is now authorized above; the final freeze still requires explicit owner approval.
 
 ## ALIEN-MATH-004 — exact D4 symmetry (merged PR #68)
 
@@ -19,7 +26,7 @@
 - Audited dependency closures, immutable source-bound execution artifacts and three distinct main passes; no mathematical oracle result caching.
 - Current main is unprotected: real Chromium execution remains mandatory until owner-authorized approval controls and qualification exist.
 - [Trust audit, reproduction and measured suite decisions](docs/BROWSER_INCREMENTAL_CI.md).
-- ALIEN-MATH-004 merged in PR #68; phase 005 is authorized above. Phase 006 and the final freeze remain planned only, requiring explicit owner authorization after the preceding PR merges.
+- ALIEN-MATH-004 merged in PR #68; phase 005 is authorized above. Phase 006 is authorized above; the final freeze remains planned only pending explicit owner authorization.
 
 
 ## ALIEN-MATH-003 — closed intervals and exact XY geometry (experimental PR)

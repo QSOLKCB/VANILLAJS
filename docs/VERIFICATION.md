@@ -1,5 +1,45 @@
 # Verification — VANILLAJS 1.0.0
 
+## ALIEN-MATH-006 — executed local evidence, owner review pending
+
+Base: `ce7e38eb3c7412407a3ba2bc472120b589e6eb9e` (PR #69 merge).
+
+- Lean 4.35.0 kernel-checked 21 model theorems; independently pinned exact types
+  and transitive axioms passed. Allowed assumptions are explicitly propext,
+  Classical.choice and Quot.sound, reported per theorem; no axiom-free or full
+  JavaScript-refinement claim is made.
+- Production JavaScript, executable Lean model and independent Python oracle
+  matched all 856 finite observations. All prior ALIEN-MATH-001–005 and CI invariant
+  oracle fixtures reproduced unchanged. Source/contract/verifier/domain/toolchain
+  pins passed against the exact reviewed baseline and current new-phase inputs.
+- All six compiled negative controls were refused: removed theorem, weakened
+  type, unapproved axiom, proof hole, wrong coefficient and a mathematically valid
+  D4 representation with the wrong named-action convention. Forged/missing/damaged
+  metadata, axiom output and finite-stream unit controls also passed.
+- During development the executable Lean bridge initially lacked default instances
+  required by indexed array access; adding them fixed compilation. Final review
+  also fixed elan default-toolchain drift by resolving the absolute compiler in
+  the checkout before temporary builds. The full formal/negative-control gate and
+  Node suite passed again through the normal launcher. No failed gate was waived.
+- 589 Node tests passed; source check: 226 JavaScript files, 43 module contracts,
+  two experiments. Build and offline verifier passed all 127 packaged files.
+  Runtime package bytes are unchanged from phase 005.
+- Pinned Playwright 1.64.0 / Chromium 156.0.8078.4 headless SwiftShader preflight
+  and all seven browser suites passed: seven executed / zero reused, because local
+  authenticated authority was unavailable. Separate read-only GitHub audit still
+  reports main unprotected. No qualifying receipt or physical-GPU claim was issued.
+- Existing 11 archival/offline blocks and 14 CPU workloads passed. Historical
+  Q16 Lean compilation, typed/axiom audit (14 theorems, unchanged allowlist) and
+  exact-source bridge passed: 220,921 accepted, 33,992 rejected arithmetic cases
+  and 200,009 square-root checks. No old proof source or receipt was rewritten.
+
+[ALIEN-MATH-006](ALIEN_MATH_006.md) inventories all formal coverage and OPEN
+obligations, fixture hashes, assumptions and reproduction commands. New evidence
+is source-pinned model proof plus finite conformance, not universal ECMAScript
+refinement, arbitrary graph-size correctness, physical accuracy or hardware
+attestation. No release/tag/deposit or FINAL-phase work is authorized here.
+
+
 ## ALIEN-MATH-005 — executed local evidence, owner review pending
 
 Base: `e2176b0e5f04060ef4bec6acd8a11398e4b86746` (PR #68 merge).
