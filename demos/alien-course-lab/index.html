@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="VANILLAJS ALIEN MATH exact course authoring and Q16.16 gates">
+<title>ALIEN Course Foundry — VANILLAJS</title><link rel="stylesheet" href="style.css"></head>
+<body><header><a href="../../index.html">← VANILLAJS LABS</a><span>ALIEN MATH / AUTHORING BRIDGE</span></header>
+<main><p class="eyebrow">EXPERIMENTAL / EXACT COURSE FOUNDRY</p>
+<h1>Author precisely.<br><em>Fly independently.</em></h1>
+<p class="lead">Validate course gates as exact decimals, quantize explicit Q16.16 boundaries, and test ordered swept crossings. Rendering and float flight remain independent.</p>
+<div class="layout"><section class="panel"><h2>Course source · JSON</h2>
+<label for="course">Bounded local data-only gate definitions</label>
+<textarea id="course" rows="19" spellcheck="false"></textarea>
+<div class="controls"><label for="rounding">Rounding <select id="rounding">
+<option>exact</option><option>toward-zero</option><option>floor</option><option>ceil</option><option>nearest-even</option><option>nearest-away</option>
+</select></label><label for="overflow">Overflow <select id="overflow"><option>reject</option><option>saturate</option></select></label>
+<button id="compile" type="button">Validate &amp; quantize</button></div></section>
+<section class="panel"><h2>Q16.16 aperture output</h2>
+<p id="status" class="meta" role="status" aria-live="polite">Ready</p>
+<div class="output"><pre id="result"></pre></div>
+<div class="controls"><button type="button" id="sweep-button">Test high-speed sweep</button>
+<button type="button" id="download">Export JSON</button></div>
+<p id="sweep" class="meta"></p><p>Compiled JSON is data only. Revalidate and recompile it for trusted runtime use.</p>
+<a class="play" href="https://qsolkcb.github.io/DRONE-RACER/">PLAY DRONE-RACER ↗</a>
+<p class="meta">The live DRONE-RACER uses earlier floating-point flight. This exact gate bridge is intended for separately reviewed DRONE-RACER PR #2.</p>
+</section></div><footer><a href="../../docs/ALIEN_COURSE_BRIDGE.md">THE AUTHORING CONTRACT ↗</a>
+· <a href="https://github.com/QSOLKCB/DRONE-RACER">DRONE-RACER SOURCE ↗</a>
+<p>THIS IS NOT A PRODUCT. THIS IS INDEPENDENCE. 👽</p></footer></main>
+<script type="module" src="app.js"></script></body></html>
