@@ -12,7 +12,7 @@
 
 Reusable JavaScript game modules, exact authoring tools and playable browser labs
 built directly on web standards. The current [catalogue](MODULES.json) contains
-**50 experimental modules, 22 registered recipes and two research experiments**.
+**50 experimental modules, 23 registered recipes and two research experiments**.
 The full, stable Mod SDK remains planned; local data-only packs and the
 experimental Visual Workbench are available now.
 
@@ -24,6 +24,13 @@ experimental Visual Workbench are available now.
 [API contracts](docs/API.md) · [Architecture](docs/ARCHITECTURE.md) ·
 [Verification](docs/VERIFICATION.md) · [Roadmap](ROADMAP.md) ·
 [All releases](https://github.com/QSOLKCB/VANILLAJS/releases)
+
+## New on main
+
+[**4X Game Lab — Ternary Reach**](demos/4x-game-lab/index.html): explore a seeded
+star sector, settle colonies, develop an exact economy and command fleets against
+a deterministic rival. Native controls, offline play and validated command replay.
+[Rules, ALIEN MATH links and verification](docs/4X_GAME_LAB.md). Experimental.
 
 ## What's available in v1.7.0
 
@@ -265,6 +272,7 @@ python3 -m http.server 8000
 # Open http://localhost:8000
 # Visual Workbench: http://localhost:8000/demos/editor/index.html
 # Ternary Constellation: http://localhost:8000/demos/quantum-game-lab/index.html
+# 4X Game Lab: http://localhost:8000/demos/4x-game-lab/index.html
 # Circuit Foundry: http://localhost:8000/demos/circuit-mod-lab/index.html
 # Course Foundry: http://localhost:8000/demos/alien-course-lab/index.html
 # Kinetic Foundry: http://localhost:8000/demos/gpu-lab/index.html

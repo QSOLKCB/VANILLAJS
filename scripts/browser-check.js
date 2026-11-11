@@ -130,6 +130,7 @@ try{
   await runSuite('worlds','./browser-rts.js','verifyRts');
   await runSuite('worlds','./browser-flow.js','verifyFlow');
   await runSuite('worlds','./browser-2d.js','verify2DLab');
+  await runSuite('worlds','./browser-4x.js','verify4XLab');
   await runSuite('research','./browser-omi.js','verifyOmi');
   await runSuite('research','./browser-machine.js','verifyMachine');
   await runSuite('research','./browser-graph.js','verifyGraphLab');
