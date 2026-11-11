@@ -90,6 +90,14 @@ The changed editor/browser closure must execute in hosted CI; the campaign does
 not update witness hashes to manufacture eligibility for reuse. The shared
 manual full-browser override and fail-closed unknown-source policy stay intact.
 
+The invariant workload reports existing dependency-analysis issues instead of
+requiring an already-audited PR closure. Its counterfactual execution sets include
+both changed fingerprints and every already-unreviewed scope, using the same
+decision function as CI. Matching synthetic qualification fixtures cannot reuse
+an issue-bearing profile. The real browser stage still executes those scopes;
+the diagnostic neither updates audit hashes nor authenticates/publishes receipts.
+Focused coverage: `node --test tests/ci-invariant-workload.test.js`.
+
 New tests cover exact bounds/policies/D4/snapping, camera fit and geometry parity,
 hierarchy filtering/parent eligibility, shortcuts/native text undo, cancelled
 drags, invalid numeric fields/imports, recovery, migrated projects, exports,
@@ -100,7 +108,7 @@ or hardware GPU claims; idle rendering was already demand-driven before this PR.
 
 ## Executed campaign checks
 
-Local Node v22.18.0: all 620 tests passed; contract checker passed 239 JavaScript
+Local Node v22.18.0: all 624 tests passed; contract checker passed 240 JavaScript
 files, 44 module contracts and two research experiments. Packaging and offline
 verification passed for 137 files. Independent ALIEN MATH 001–004 oracles passed.
 
