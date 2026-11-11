@@ -6,7 +6,7 @@
   <a href="https://doi.org/10.5281/zenodo.24049474"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24049474.svg" alt="FP-HIST-001 dataset DOI" /></a>
 </p>
 
-**You Didn't Invent Doom Edition — independently specified arithmetic, formally checked mathematics.**
+**VANILLAJS Mod SDK — Build games. Extend the engine. Own your creations.**
 
 **QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
 
