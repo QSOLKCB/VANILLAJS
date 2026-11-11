@@ -1,0 +1,96 @@
+{
+  "source": "Executed owner-authorised packaged tests",
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 4709,
+      "sha256": "1baf05016899fe300362d489a9c1d8b61bbfc640a293c4a0b1956a6f2a5d6c91"
+    },
+    {
+      "file": "baseline-editor.png",
+      "bytes": 227840,
+      "sha256": "728a3e380e28feb1c0a577008e0436a5846bb30df5403923978d3b741228b29d"
+    },
+    {
+      "file": "baseline-ternary.png",
+      "bytes": 653221,
+      "sha256": "43487dbc8227ba12ab2cdc6d557219e6fcd8f57ce8e2d6decab36cf8b32c0d7e"
+    },
+    {
+      "file": "baseline.json",
+      "bytes": 585,
+      "sha256": "a0d1a50d031856f4a96a362eb0f3c685e153c88297359c08b01d61fbdc64c1be"
+    },
+    {
+      "file": "campaign-browser.json",
+      "bytes": 8843,
+      "sha256": "af2fd75561fbef6212607be7423c4de913fd5b76f289638f35a1e1ec2971c269"
+    },
+    {
+      "file": "campaign-mobile.png",
+      "bytes": 261177,
+      "sha256": "59d7e6eecc9eec5c0544ea478939d7aff5b216254f0323cf203b2c8833544982"
+    },
+    {
+      "file": "editor-created-campaign.json",
+      "bytes": 9628,
+      "sha256": "6525f2b97c5c686f98886b81dcd28b0972e728d78a5f65145db64af87d2a39f2"
+    },
+    {
+      "file": "editor-hull-bundle.json",
+      "bytes": 3191,
+      "sha256": "23ae6258e0fd4e98dc28a8c528c0a10eea1bbe366cd2dee07034593ddb847ac3"
+    },
+    {
+      "file": "editor-mobile.png",
+      "bytes": 284365,
+      "sha256": "c80389a6699aad8668960fa84fc5ddf1411a63c878103e023e707648242e4600"
+    },
+    {
+      "file": "editor-viewport.png",
+      "bytes": 176606,
+      "sha256": "9ff9e977fc155d871a38e86195f7738bb744832a54e83ee602b721aa4a0bfe6d"
+    },
+    {
+      "file": "failure-history.json",
+      "bytes": 637,
+      "sha256": "3179f09bd89818bfc56f1b6a46e78deccd0ef49b7712297f32c2dbb0d769a53e"
+    },
+    {
+      "file": "gpu-assessment.json",
+      "bytes": 1586,
+      "sha256": "a3871f704cdd1267c4590c233d60e0749957795176aa37e78a9a8fd3002cd49b"
+    },
+    {
+      "file": "grand-frontier.png",
+      "bytes": 526092,
+      "sha256": "afdf28186f79de9e5f801e317dcba25af3ddbe28b3cd24100cbd80ddce119a74"
+    },
+    {
+      "file": "harness-manifest.json",
+      "bytes": 2767,
+      "sha256": "136b9e728815fe79266c3dcafc3874381212a4ec7aeafadcd52abdfb6667c2e4"
+    },
+    {
+      "file": "node-validation.json",
+      "bytes": 1011,
+      "sha256": "ac9f8fab0f99e699a10c96f790d93adf1935d7bf480f619530223b8d593ff62a"
+    },
+    {
+      "file": "owner-browser.json",
+      "bytes": 12911,
+      "sha256": "23a98068fc340537b94ec705b2d9fe0c478a37eaf1eabe8911d4d5c1b02f00ec"
+    },
+    {
+      "file": "package-manifest.json",
+      "bytes": 51428,
+      "sha256": "11e778c3c83082c37b390a11f3f8ccf096a09457d14e9f6fe95eb44196f8f474"
+    },
+    {
+      "file": "workshop-created-campaign.json",
+      "bytes": 9080,
+      "sha256": "fc70e26f0e8f4826d68a3a1afed677bdc433ae25af710719ed2b771c9336dbbb"
+    }
+  ],
+  "note": "Portable JSON excerpts differ from local raw diagnostics. Screenshots and creator artifacts are byte-identical. No profiles, home paths, exact hardware models or command lines are included. This inventory excludes itself."
+}

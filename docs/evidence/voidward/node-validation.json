@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "nodeTests": {
+    "passed": 743,
+    "failed": 0,
+    "baselineTests": 671,
+    "voidwardTests": 68,
+    "editorCampaignTests": 4
+  },
+  "sourceChecks": {
+    "javascriptFiles": 290,
+    "modules": 50,
+    "experiments": 2,
+    "donorFiles": 27,
+    "nativeDependencies": 9
+  },
+  "archives": {
+    "frozenVerifiers": 5,
+    "checksumInventories": 5,
+    "receiptTests": 54,
+    "phase006Tests": 3,
+    "alien004and005": "PASS",
+    "ciInvariantOracle": "PASS"
+  },
+  "environment": "Node 22; Linux x64",
+  "note": "Initial sandbox subprocess restrictions were resolved by authorised local execution; detailed local logs remain outside this public excerpt.",
+  "finalRerun": {
+    "passed": 743,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 5718.367022
+  },
+  "package": {
+    "kind": "qsol.vanillajs.offline-package.v1",
+    "verified": 295,
+    "bytes": 1605756,
+    "workerSha256": "7407807a855e59ff9e734ee9301727da3509b2b80dc3db8779d4b87f69af8791"
+  }
+}

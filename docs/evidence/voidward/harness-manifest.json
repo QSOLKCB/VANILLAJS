@@ -1,0 +1,81 @@
+{
+  "baseline": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+  "files": [
+    {
+      "path": "scripts/browser-4x.js",
+      "sha256": "267596c99dfa5f7c2f82bff1533848900f923824ec92e42e17ae6e3fefba312a"
+    },
+    {
+      "path": "scripts/browser-editor.js",
+      "sha256": "3040671dfb8bd0618950e00d22c8bcaf68df6e2cb5db364804759436f180e1a9"
+    },
+    {
+      "path": "scripts/browser-editor-4x.js",
+      "sha256": "dfa824828c9fdcced2eac9fe5302e686578951b581cdb498c7b644f88d72ad86"
+    },
+    {
+      "path": "scripts/browser-voidward.js",
+      "sha256": "335c3d5cf7994386c2b7bcc079ac0779cb2b9c1941bdc9a7175c84d8aabbeb92"
+    },
+    {
+      "path": "scripts/voidward-owner-browser.mjs",
+      "sha256": "4747868b748f8d6e5cee728a08cd24323e7f1b6cff47d88209c2f3ee3d142380"
+    },
+    {
+      "path": "scripts/check.js",
+      "sha256": "bad9257d47191db25666b543a57a694fc16923fa52da5878d79860073f80dcbd"
+    },
+    {
+      "path": "scripts/verify-voidward.js",
+      "sha256": "f8d74caa88469305b54166d5b9ac4ec886e01cb779c1e06ffbb10e61939a274c"
+    },
+    {
+      "path": "scripts/build.js",
+      "sha256": "96f0f6dfbe91624360c50f71be25ae2aff1492eae84e9a463247f111eebeedb7"
+    },
+    {
+      "path": "scripts/browser-check.js",
+      "sha256": "545b6202b56450eb71ef8c328215678f9e17a7a7d2b5fe4624d0aa9e9d4ffc1e"
+    },
+    {
+      "path": "scripts/browser-reuse-policy.json",
+      "sha256": "769bfc412d6b5b7c2fd742dd143bec3f3e72a40cb845f92146255aa895f43f05"
+    },
+    {
+      "path": "formal/alien-math-006/manifest.json",
+      "sha256": "7b963919817433d42d39bcf87ca7341227a3d3210cd6442aa7ad6933315534f4"
+    },
+    {
+      "path": "tests/voidward-authoring.test.js",
+      "sha256": "77af0da8a7cfa0a39e91a88ebe1dc501a2513012761e7191fe708150a607d801"
+    },
+    {
+      "path": "tests/voidward-campaigns.test.js",
+      "sha256": "dbca2f0e338cb370293a7a897f43db31a022c282d5f0fcd39c460020de312541"
+    },
+    {
+      "path": "tests/voidward-core.test.js",
+      "sha256": "7987ca08bec7a58d7f200ae645ae82046f13917fc58f1b89ec405500bee928cd"
+    },
+    {
+      "path": "tests/voidward-parity.test.js",
+      "sha256": "2ee5580f32a4f61abe9f4659253675ae8dc28b736177fdee360aaa3b91168e0f"
+    },
+    {
+      "path": "tests/voidward-save-codec.test.js",
+      "sha256": "28e0fd10c10f6ab103ae9effe755abb610b17f775ebcec82a19f3c49f8d6541a"
+    },
+    {
+      "path": "tests/voidward-save-fixtures.js",
+      "sha256": "d79c082ebfe196a5e6d1b73d59f8fec8c44113f57b8005296928d24f7e57b4a7"
+    },
+    {
+      "path": "tests/voidward-strategy.test.js",
+      "sha256": "f4373b39a70f47b41eb2f05374f7be66f4dfab296a7b45b3c347710d02a93283"
+    },
+    {
+      "path": "tests/editor-4x.test.js",
+      "sha256": "98fb74630532bb890f08cc3d9927a1a491ba4cf6ca21f80a6e1501a6ead8e6f1"
+    }
+  ]
+}

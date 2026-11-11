@@ -1,0 +1,35 @@
+{
+  "status": "HARDWARE_PARTICIPATION_OBSERVED",
+  "renderer": "Hardware ANGLE renderer; no software renderer reported",
+  "reportedFeatures": {
+    "canvas2d": "enabled",
+    "compositing": "enabled"
+  },
+  "workload": "Dedicated visible game context; repeated explicit drawMap calls over approximately two seconds for Machine Dawn and Grand Frontier. Other test contexts were closed.",
+  "evidence": [
+    {
+      "file": "gpu-trace-grand-frontier.json",
+      "sha256": "9c9bd69b113b8f28033a2577b186d18ad339c1b3a672f00179c495416c67bf46",
+      "bytes": 7107546,
+      "eventCounts": {
+        "RasterDecoderImpl::DoRasterCHROMIUM": 124,
+        "SkiaOutputSurfaceImpl::FlushGpuTasks": 242,
+        "SkiaOutputSurfaceImplOnGpu::SwapBuffers": 121,
+        "RasterTask": 2
+      }
+    },
+    {
+      "file": "gpu-trace-machine-dawn.json",
+      "sha256": "1163301d7e6e377ce9ea8efa0e4158ac40749be489eb225b1da5f44943a07af4",
+      "bytes": 10117492,
+      "eventCounts": {
+        "RasterDecoderImpl::DoRasterCHROMIUM": 183,
+        "SkiaOutputSurfaceImpl::FlushGpuTasks": 367,
+        "SkiaOutputSurfaceImplOnGpu::SwapBuffers": 121,
+        "RasterTask": 64
+      }
+    }
+  ],
+  "interpretation": "GPU raster decoder work and Skia GPU swaps occurred during the game workload on the hardware renderer. CPU RasterTask events also occurred. This supports hardware participation, not exclusive GPU rendering, per-pixel attribution, or a speedup claim.",
+  "privacy": "Full diagnostic dumps and traces remain local; only event counts, hashes and coarse platform information are published."
+}

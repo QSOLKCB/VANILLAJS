@@ -1,0 +1,11 @@
+{
+  "attempt": 1,
+  "status": "FAIL",
+  "check": "existing-visual-editor/native text undo",
+  "expected": "Ground Copy",
+  "actual": "Ground Copy dr",
+  "cause": "Existing test assumed timed keyboard typing formed exactly one native undo transaction. Chrome grouped the input differently.",
+  "fix": "Use keyboard.insertText for one insertion in the test; preserve the native text-versus-scene undo assertions. No product behaviour changed for this failure.",
+  "verification": "Full rerun passed all four suites; first local receipt retained.",
+  "rawReceiptSha256": "8f462df8ff4ad22d700f3ca920aab21066300d79544501269454a11604486267"
+}

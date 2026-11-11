@@ -1,0 +1,21 @@
+{
+  "kind": "voidward.workbench-hull.v1",
+  "hull": "scout-0",
+  "project": "{\n  \"format\": \"qsol.vanillajs.asset-project.v1\",\n  \"scene\": {\n    \"schemaVersion\": 2,\n    \"name\": \"Kestrel\",\n    \"nextId\": 2,\n    \"objects\": [\n      {\n        \"id\": \"entity-1\",\n        \"name\": \"Kestrel\",\n        \"parent\": null,\n        \"position\": [\n          0,\n          0,\n          0\n        ],\n        \"rotationY\": 0,\n        \"scale\": [\n          1,\n          1,\n          1\n        ],\n        \"color\": [\n          0.4,\n          0.8,\n          0.9\n        ],\n        \"body\": \"static\",\n        \"visible\": true,\n        \"components\": {\n          \"mesh\": {\n            \"enabled\": true\n          },\n          \"collider\": {\n            \"enabled\": true\n          },\n          \"rigidbody\": {\n            \"mode\": \"static\",\n            \"gravityScale\": 1\n          },\n          \"controller\": {\n            \"enabled\": false,\n            \"speed\": 4,\n            \"jumpImpulse\": 6.2\n          },\n          \"trigger\": {\n            \"enabled\": false,\n            \"tag\": \"checkpoint\"\n          },\n          \"camera\": {\n            \"enabled\": false,\n            \"fov\": 70\n          }\n        }\n      }\n    ]\n  },\n  \"library\": {\n    \"schemaVersion\": 1,\n    \"nextId\": 2,\n    \"assets\": [\n      {\n        \"id\": \"asset-1\",\n        \"kind\": \"mesh\",\n        \"name\": \"Kestrel\",\n        \"license\": \"OWNER-LOCAL-ONLY\",\n        \"sourceName\": \"editor-original-wing.obj\",\n        \"sourceSha256\": \"bb351bd3cb4b2ea6cc338d07cb54c0bb1b8a42674c869ed0ffe2b2123a838ff1\",\n        \"vertices\": [\n          -48,\n          0,\n          48,\n          0,\n          0,\n          -24,\n          0,\n          -24,\n          0,\n          0,\n          0,\n          0,\n          -48,\n          0,\n          0,\n          -48,\n          0,\n          48,\n          0,\n          0,\n          0,\n          0,\n          -48,\n          0,\n          0,\n          24,\n          0,\n          -24,\n          0,\n          0,\n          -48,\n          0,\n          48,\n          0,\n          0,\n          24,\n          0,\n          -24,\n          0,\n          0,\n          48,\n          0,\n          48,\n          0,\n          0\n        ]\n      }\n    ],\n    \"placements\": [\n      {\n        \"entityId\": \"entity-1\",\n        \"meshId\": \"asset-1\",\n        \"materialId\": null\n      }\n    ]\n  }\n}\n",
+  "provenance": [
+    {
+      "hull": "scout-0",
+      "source": "editor-original-wing.obj",
+      "sha256": "bb351bd3cb4b2ea6cc338d07cb54c0bb1b8a42674c869ed0ffe2b2123a838ff1",
+      "license": "MIT",
+      "operation": "Workbench entity-1; convex X/Z projection; centred; extent 48; six decimal chart units"
+    },
+    {
+      "hull": "scout-0",
+      "source": "workbench-project.json",
+      "sha256": "c33824d13232bf4187ed02ec8fb8866ddb26818075ea8e25cc20ab44448229e8",
+      "license": "OWNER-LOCAL-ONLY",
+      "operation": "Workbench entity-1; convex X/Z projection; centred; extent 48; six decimal chart units"
+    }
+  ]
+}
