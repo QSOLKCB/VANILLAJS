@@ -165,3 +165,13 @@ Optional renderer WASM projection: adapted from QSOLKCB/OFFLINE-GAMES
 commit ec11d845f6bf284619e2f46e768ebfb326f3be3c, Apache-2.0.
 Space Lab spiral population is independently implemented using VANILLAJS
 logical-sampling; GALAXY is a design reference, not copied runtime code.
+
+QGAME-MATH-001 (2026): independent Apache-2.0 GF(3) matrix/affine mechanics,
+symbolic composition rules, typed data-only experiment adapter and browser lab.
+Research sources: QEC-ADA ec166893f0e5d415cf84b3d192754f61a33da874;
+SONIFICATION 2ca65c6540d7051a77ed571b83f5a9df453094ec;
+GALAXY f219bb427b3a9b0c93900169d903f48f410ae67a.
+No donor source or fixture is copied by this milestone. Existing audio2d and
+orbital-physics implementations and their notices are retained. Exact inspected
+paths, per-file licence observations and scientific boundaries are documented
+in docs/QGAME_MATH_001_PROVENANCE.md and docs/QGAME_MATH_001.md.

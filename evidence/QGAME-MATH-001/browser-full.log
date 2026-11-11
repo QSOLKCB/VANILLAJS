@@ -1,0 +1,24 @@
+Integer Foundry: packaged full-state replay parity, WebGL, movement/jump, pause, fresh-input, blur, reset, touch cancellation, mobile layout and graphics failure passed.
+OPT rendering: native pixel parity, retained buffers, idle/camera/partial-turn reuse, changed glyphs and unchanged HUD checks passed; paired observations recorded.
+WebGL API: 96x96 native WebGL1 pixel parity, exact no-op reuse, changed upload and stale-handle rejection passed.
+Frame gate: packaged WebGL1 pixels, idle skip, mesh change and context epoch passed.
+Interaction Lab: rendering, shields, all reaction outcomes, brief key tap, fresh-fire resume, pause/blur, target focus/reset, touch tap, pointer cancellation, mobile layout, context loss and unsupported WebGL passed.
+Chromium mouse controls: native capture/click/Escape, synthetic relative aim/no-spin/blur, arrows/WASD and real denied-capture drag passed in both labs.
+FPS Lab: render, sprint/stairs/jump, held-input cancellation, capture/no-spin, finite ammo/reload pause, traces/bolts, focus/reset, touch tap, layout and WebGL failures passed.
+FPS motion: low-ceiling entry, crouch/headroom/stand, held-C cancellation, moving plates, pause/blur/reset, delayed moving bolt hit, instant trace, on-screen keyboard control and 390 px touch-emulated layout passed.
+Platforms: lift carry, pause, clearance interlock, crouch recovery, complete deck transfer, shuttle jump/landing, reversal, blur/reset and 390 px touch-emulated layout passed.
+RTS: Canvas rendering, pointer/keyboard orders, blocked cells, gate rerouting, route/squad arrival, drag selection, pause cancellation, blur/reset, graphics failure and 390 px touch-emulated controls passed.
+Flow fields: incremental build/pause, replacement cancellation, blocked orders, gate rebuild, all 24/36 arrivals, exit closure, blur/reset, recipe switching and 390 px touch-emulated controls passed.
+2D Foundry: RTS A*, shmup/platform/car mode resets, pause/blur, exact tick, PCM preview, ternary save/restore/rejection, evidence download and 320px responsive layout passed.
+OMI Lab: exact word vectors, invalid edits, bits, face fault/common-mask limits, all 65,536 states, minimal periods, fixed-point step count, atlas pointer/keyboard, fresh press, pause/blur/hidden/reset, Canvas failure and 390 px touch-emulated layout passed.
+Brass Engine: visible SVG, eight staged detents, exact words, reverse, short periods, fixed point, motor pause, fractional JSON download/restore, malformed replay rejection, keyboard repeat/late pointer cancellation, blur/hidden, counter limit, reduced motion and 390/320 px touch-emulated layouts passed.
+ALIEN Course Foundry: actual browser module, Q16 output, multi-gate sweep, bad data rejection, rounding and 320px viewport passed.
+MOD-SDK-002 Circuit Foundry: packaged v2 course, exact gate, ordered sweep, reject/restore, 320px and Canvas fallback passed.
+Graph Lab: exact polynomial, cospectral distinction, traversal/relabel/D4 controls, empty/disconnected cases, Canvas fallback and 320px layout passed.
+QGAME-MATH-001: packaged desktop/mobile, 320/390px, keyboard, exact events, PCM download, imports, pause, graphics/audio fallbacks and offline replay passed.
+Clockwork Vault: visible chamber, all six locks and physical exit, gate/causeway/lift traversal with zero rescues, staged motor/undo/hints, real partial JSON download/restore, invalid/stale files, fresh keys, cancelled pointer, native mouse capture, pause/blur/hidden, WebGL failure and 390/320 px touch-emulated layouts passed.
+Distinct CPU labs: sculpture presets/budgets/parity/idle, flight gates, docking, shots, orbit trail, fresh inputs, 320px/Canvas failure and editor exports PASS
+Chromium donor labs: real ticks, clock scaling, both modes, mobile layout and verified offline navigation passed.
+Visual Editor: real WebGL, hierarchy/search/keyboard navigation, native text undo, scene history/shortcuts, exact decimal/Q16/D4 authoring and rejection, gesture cancellation, project migration/assets/exports, recovery and quota failure, CPU fallback, distant-camera visibility, play controls, and 320px/390px layouts passed.
+Chromium: rendered geometry, both modes, thrust, braking, rotation, pause, held-key repeat cancellation, blur, reset, project subpath, mobile layout and unsupported WebGL passed.
+Browser verification finished for suites: home,render,play,worlds,research,donor,editor

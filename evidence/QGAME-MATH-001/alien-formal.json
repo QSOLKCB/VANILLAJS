@@ -1,0 +1,100 @@
+{
+  "baseline": "ce7e38eb3c7412407a3ba2bc472120b589e6eb9e",
+  "claims": [
+    "LEAN_MODEL_THEOREMS",
+    "FINITE_SOURCE_CONFORMANCE"
+  ],
+  "gitCommit": "c506cdfcefe2a68928cfa7025528a82ed11d44a9",
+  "javascriptRefinement": "OPEN",
+  "lean": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+  "leanCompilerSHA256": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38",
+  "leanLauncherSHA256": "f7f2abfd94493557451cc5b856b30088dbaa9460f4cdf30fdb8c857ffb335671",
+  "manifestSHA256": "a74c610dca5631b271679ec901f5b2cf67c198e5ce410babadc95a418cedac64",
+  "negativeControls": [
+    "removed theorem",
+    "weakened proposition",
+    "unapproved axiom",
+    "opaque proof hole",
+    "wrong graph coefficient",
+    "valid model, wrong source convention"
+  ],
+  "node": "v22.18.0",
+  "observations": 856,
+  "python": "3.13.14",
+  "schema": "qsol.alien-math-006.observation.v1",
+  "streamSHA256": "964981f119a1e8372a6dd678663d443fe363eac05c1e5886a0003fc1b6070ed9",
+  "theorems": {
+    "d4_action_compose": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "d4_area": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "d4_associative": [],
+    "d4_distance": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "d4_inverse": [
+      "propext"
+    ],
+    "d4_left_identity": [],
+    "d4_right_identity": [],
+    "graph3_determinant": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "graph3_spectral_relabel": [
+      "propext"
+    ],
+    "interval_reflection": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "normalization_certificate": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "q16_exact_magnitude": [
+      "propext"
+    ],
+    "q16_floor_certificate": [
+      "propext"
+    ],
+    "rational_add_assoc": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "rational_add_comm": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "rational_distributive": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "rational_mul_comm": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "relabel_compose": [],
+    "relabel_inverse": [
+      "Quot.sound",
+      "propext"
+    ],
+    "relabel_no_loops": [],
+    "relabel_symmetry": []
+  }
+}

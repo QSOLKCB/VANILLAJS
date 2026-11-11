@@ -1,0 +1,122 @@
+{
+  "kind": "qsol.qgame-evidence.v1",
+  "gitCommit": "c506cdfcefe2a68928cfa7025528a82ed11d44a9",
+  "dirty": true,
+  "sourceHashes": {
+    "modules/gf3/index.js": "4ee8edacadcc6f326b9323a0c5295f4767174dd70de3b509149890c7315ba723",
+    "modules/symbolic-events/index.js": "2f0905fad5c03dda1894a52288875e344fd06abdb732d82a2a6aacbb36c9c778",
+    "modules/mod-experiment/index.js": "5fa485d294bd8503481750eb9cc0e247f3a40834a78a56e62242f72c20aca840",
+    "modules/gf3-lattice/index.js": "b7436a5bbad8d6309c611b9b738385bcd568dd11370fbc47848138bd7f251baf",
+    "modules/mod-sdk/index.js": "1b8e11d442d77365e4ec79ace6736855dcb8b7946edabbf0123168f790f52b64",
+    "modules/orbital-physics/index.js": "04001b0d8aca2e6c7b1300ccdeb2c2aa9293a0e6a5bbb254c75613ca209bc134",
+    "modules/audio2d/index.js": "07e19391b84034acba56ef840a4d622b70e815f5376de123b6a07a9ccebf3098",
+    "modules/integer-time/index.js": "3bbf921b017a7066d3714bb17610070e017c66359d03b9f3f0949c161feb7133",
+    "modules/integer-math/index.js": "4c0bb66780bf9e810efb1963c0238d9356814abf79c959dcd1734164de57905f",
+    "demos/quantum-game-lab/experiment.js": "ef22a4c6390edd9c203647a727ffa40fa92c0853bd08aac668fcec804c507a47",
+    "demos/quantum-game-lab/app.js": "1af630ce0d1ab2aed9b1f54ce63358c89e116328ac3ca9fa3da779948e433714",
+    "demos/quantum-game-lab/index.html": "2b3df1769e335b379f7c29363e5c5659adf18e9a8b2dd7054f5e7033b8876af0",
+    "demos/quantum-game-lab/style.css": "cc3b4b1e677092d15734da5cc064eae4a57551084e26c90bd3c4112dcaa18509",
+    "tests/qgame-math-001.test.js": "6f16dbee4b8074dab0bc696d9ca0e44862896e0035572c6ad28f5e1917d6be31",
+    "tests/fixtures/qgame-math-001.json": "db317e3bf8d9ff137e9ceee692981403dea1a8f980710113928451186c7dcbe3",
+    "scripts/qgame_math_001_oracle.py": "d45ce1c3fe60a22433361b531a84785710670a7b69a2a8b1f5b435e0b086ba26",
+    "scripts/browser-qgame.js": "ab48b9c96102e00d15d971ad9c490434b30853c96545eace07aa8786d1f37e5c",
+    "scripts/qgame-math-evidence.mjs": "55e991f8dc2a7fab874acd21298341bc5d66d1cda6567abbb06219336aaf278b",
+    "docs/QGAME_MATH_001.md": "f93cb7e14d12fa8ccc2619510e57a289c75ad57e9f42b81c1d02b35f584d5f94",
+    "docs/QGAME_MATH_001_PROVENANCE.md": "3c95e875536135cb886a7ffea65ce49cf7ec4442667fdcf516b701facd899b0b",
+    "MODULES.json": "c6bafcdf3cc1f98f0ce41d42b1faf763a918acf62ce470a8bd087eca6cc2bed8",
+    "examples/qgame-math-001/ternary-constellation.json": "176dd7bb56a53ebd93432e31c4085570d7b5c5b894684ca59bab399ed15ac81a",
+    "scripts/browser-check.js": "9d6c21e0e2a896a34784015fce8d65d7120e196cdd8a9616f29ae2322f99729b",
+    "scripts/browser-reuse-policy.json": "f339cb5f6228736c82831c3dfe98ca0338f026a177b52b6d350f8227c6e250e5",
+    "scripts/build.js": "96f0f6dfbe91624360c50f71be25ae2aff1492eae84e9a463247f111eebeedb7",
+    "scripts/verify-offline.js": "48e1220dd99a55652f19a630cfe5f1fc94c0a6fd485f24be2a5d12dc1b70e1a2",
+    ".github/workflows/qgame-math.yml": "caf63eb4985305f772fa313fae51722cc0f243e54ad04543ea2a3761932372ee"
+  },
+  "environment": {
+    "node": "v22.18.0",
+    "platform": "linux",
+    "architecture": "x64",
+    "kernel": "7.0.0-42-generic",
+    "cpu": "AMD Ryzen 9 5950X 16-Core Processor"
+  },
+  "reference": {
+    "finiteMatrices": 81,
+    "invertibleMatrices": 48,
+    "affineStates": 3888,
+    "matrixProducts": 6561,
+    "eventCount": 32,
+    "pcmSHA256": "d0b1437e0e54cc6e96574d45f2afe522c6abd961def7d74d8f79094869a7db7b",
+    "numericalTolerance": {
+      "absolute": 5e-10,
+      "relative": 5e-11
+    },
+    "observedErrors": {
+      "gentle": {
+        "maximumAbsoluteError": 4.263256414560601e-14,
+        "maximumScaledError": 1.8133648154372506e-14
+      },
+      "swift": {
+        "maximumAbsoluteError": 1.1191048088221578e-13,
+        "maximumScaledError": 6.577365363712684e-14
+      }
+    }
+  },
+  "workloads": [
+    {
+      "dimension": 2,
+      "states": 9,
+      "transitions": 32,
+      "substepsPerBody": 256,
+      "pcmFrames": 384000,
+      "repetitions": 15,
+      "warmups": 3,
+      "milliseconds": [
+        32.745649000000014,
+        31.80296899999999,
+        30.94789800000001,
+        34.09979899999996,
+        32.638229000000024,
+        32.695168999999964,
+        30.059369000000004,
+        32.22874900000005,
+        31.947569000000044,
+        29.91128900000001,
+        30.41963899999996,
+        29.68113900000003,
+        31.209267999999952,
+        30.616098999999963,
+        32.43489900000009
+      ],
+      "medianMilliseconds": 31.80296899999999,
+      "outputSHA256": "0cbd5fc7a74166ed2b97c5427ad36da17043bbb73d61145d4fccbc7fb46a365f"
+    },
+    {
+      "dimension": 4,
+      "states": 81,
+      "transitions": 32,
+      "substepsPerBody": 256,
+      "pcmFrames": 384000,
+      "repetitions": 15,
+      "warmups": 3,
+      "milliseconds": [
+        46.549089000000095,
+        39.02990799999998,
+        37.78445899999997,
+        45.71251900000004,
+        37.566517999999974,
+        41.207449,
+        37.40571900000009,
+        36.952878000000055,
+        38.22780899999998,
+        42.59552800000006,
+        37.669918999999936,
+        38.995979000000034,
+        37.364978000000065,
+        38.84760900000015,
+        37.71182900000008
+      ],
+      "medianMilliseconds": 38.22780899999998,
+      "outputSHA256": "de51385600136d9360a7fa06e6d8172c6f104187176482d44b51319112f449a5"
+    }
+  ],
+  "claim": "Local bounded workload observations only; no baseline/candidate speedup, GPU, WASM, cross-runtime Float64 or quantum claim"
+}

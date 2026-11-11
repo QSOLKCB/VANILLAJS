@@ -16,6 +16,8 @@
 
 **QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
 
+**QGAME-MATH-001:** [Play Ternary Constellation](demos/quantum-game-lab/index.html) · [Exact GF(3), symbolic score and classical spatial contract](docs/QGAME_MATH_001.md). Edit and reimport local data-only Mod SDK experiment packs. Quantum-inspired means classical finite mechanics, not quantum simulation.
+
 **PLAY / AUTHOR:** [ALIEN Circuit Foundry](demos/circuit-mod-lab/index.html) · [Source-owned DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/) · [MOD-SDK-002 contract](docs/MOD_SDK_002.md).
 
 **ALIEN Course Foundry:** [Try exact drone-course authoring](demos/alien-course-lab/index.html) · [Read the Q16.16 gate contract](docs/ALIEN_COURSE_BRIDGE.md) · [Play DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/). [DRONE-RACER v0.2.0](https://github.com/QSOLKCB/DRONE-RACER/releases/tag/v0.2.0) now consumes this exact Q16.16 gate bridge, while its source-pinned Float64 flight remains independent. No bit-exact floating-point replay is implied.

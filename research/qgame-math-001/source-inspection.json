@@ -1,0 +1,259 @@
+{
+  "kind": "qgame.source-inspection.v1",
+  "method": "GitHub connector reads of pinned revisions; source inspection only, donor suites not executed",
+  "sources": [
+    {
+      "repo": "QEC-ADA",
+      "commit": "ec166893f0e5d415cf84b3d192754f61a33da874",
+      "files": [
+        {
+          "path": "LICENSE",
+          "gitBlobSHA1": "d0a1fa1482eea82e19510e7920cbe3a03e41f691",
+          "inspection": "source read"
+        },
+        {
+          "path": "NOTICE",
+          "gitBlobSHA1": "f0c6b814ad84839f45564319a8c88296c73f437f",
+          "inspection": "source read"
+        },
+        {
+          "path": "codes/qec_gf3.adb",
+          "gitBlobSHA1": "44ce2271098a548c7fd0e90cd3591c90eda237cd",
+          "inspection": "source read"
+        },
+        {
+          "path": "codes/qec_qutrit.ads",
+          "gitBlobSHA1": "dd5f906d4801cd44ead649aa7dc54844fc571e7e",
+          "inspection": "source read"
+        },
+        {
+          "path": "codes/qec_qutrit.adb",
+          "gitBlobSHA1": "bbb5910a51f16667651a47c6d824ca099b0b4698",
+          "inspection": "source read"
+        },
+        {
+          "path": "codes/qec_configurable.ads",
+          "gitBlobSHA1": "7080f1271c5c7cf5e85746752bcca0574bfa66e3",
+          "inspection": "source read"
+        },
+        {
+          "path": "decode/qec_decode.ads",
+          "gitBlobSHA1": "46aa123d5b4e7de752ba83296b4ea4802ad3de5c",
+          "inspection": "source read"
+        },
+        {
+          "path": "spark/README.md",
+          "gitBlobSHA1": "4dabdde02faa3de4ad69b22445de957c92b1b502",
+          "inspection": "source read"
+        },
+        {
+          "path": "spark/qec_field_proofs.ads",
+          "gitBlobSHA1": "e29ad904f175a3728c371ef9904411b9003890a9",
+          "inspection": "source read"
+        },
+        {
+          "path": "spark/qec_field_proofs.adb",
+          "gitBlobSHA1": "1acd3c67e77265ad71dbc495359cbf5223a06b73",
+          "inspection": "source read"
+        },
+        {
+          "path": "tests/test_qutrit_native.py",
+          "gitBlobSHA1": "b3afe38f0c988f5c3db01242ec661a26cb9483f5",
+          "inspection": "source read"
+        },
+        {
+          "path": "tests/test_phase1i.py",
+          "gitBlobSHA1": "12e4292a590201befd7d2ca2035222731b71d4a1",
+          "inspection": "source read"
+        }
+      ]
+    },
+    {
+      "repo": "SONIFICATION",
+      "commit": "2ca65c6540d7051a77ed571b83f5a9df453094ec",
+      "files": [
+        {
+          "path": "LICENSE",
+          "gitBlobSHA1": "52d135112eeb402d23eeabbcd23513d389553ddd",
+          "inspection": "source read"
+        },
+        {
+          "path": "NOTICE",
+          "gitBlobSHA1": "6c55fa0726d762b7aa8936f884195c0160c9109a",
+          "inspection": "source read"
+        },
+        {
+          "path": "pyproject.toml",
+          "gitBlobSHA1": "00f53a9e05b90f590077f69d875a0e00736dd7d3",
+          "inspection": "source read"
+        },
+        {
+          "path": "sonification/README.md",
+          "gitBlobSHA1": "65a972f6e1947cfbe66b34f7425c4ef6649c803e",
+          "inspection": "source read"
+        },
+        {
+          "path": "sonification/composition.py",
+          "gitBlobSHA1": "a2542ed62bae482fd5e1361192c75d5c7f1c818a",
+          "inspection": "source read"
+        },
+        {
+          "path": "sonification/renderer.py",
+          "gitBlobSHA1": "e26295b822338f9f489c93aaf83c8878c56b5b99",
+          "inspection": "source read"
+        },
+        {
+          "path": "sonification/core/provenance.py",
+          "gitBlobSHA1": "e334a55dc529dc43ff2c90cb9b0b6472b80fab1e",
+          "inspection": "source read"
+        },
+        {
+          "path": "sonification/core/sequencing/events.py",
+          "gitBlobSHA1": "d8226fda7c59e1403183d764894cc84e4ce3c927",
+          "inspection": "source read"
+        },
+        {
+          "path": "src/etq-model.mjs",
+          "gitBlobSHA1": "47a4bbc26012344079380c7037b9ad91d4d4e6ca",
+          "inspection": "source read"
+        },
+        {
+          "path": "src/etq-v3-core.mjs",
+          "gitBlobSHA1": "7ea74655afdf3154e967de1618e82706bf0505ee",
+          "inspection": "source read"
+        },
+        {
+          "path": "src/etq-v3-receivers.mjs",
+          "gitBlobSHA1": "9af8abc3a51b6af0bcbc11d5069e6ec754b3405d",
+          "inspection": "source read"
+        },
+        {
+          "path": "src/d4-triality-algebra-v2-profile.mjs",
+          "gitBlobSHA1": "90ff20f3dcd221024737acdf4e19aef0f29ca9ec",
+          "inspection": "source read"
+        },
+        {
+          "path": "materials/mat_spec.py",
+          "gitBlobSHA1": "803fd7eb5133fd218c28b6c9d9aa58f5bc673b44",
+          "inspection": "source read"
+        },
+        {
+          "path": "formal/sonification/CLAIM_BOUNDARIES.md",
+          "gitBlobSHA1": "713decda42f38573349e4a1d44eb474c8e8b544d",
+          "inspection": "source read"
+        },
+        {
+          "path": "formal/sonification/SOURCE_MANIFEST.json",
+          "gitBlobSHA1": "239f9084557de28b2ca1b5c922b173a9068efb64",
+          "inspection": "source read"
+        },
+        {
+          "path": "tests/test_renderer.py",
+          "gitBlobSHA1": "43d4b4c2af9ab8036e2c2ef657a2ee510bef8504",
+          "inspection": "source read"
+        },
+        {
+          "path": "tests/test_provenance.py",
+          "gitBlobSHA1": "30dcd4742f267b150baa9aec4385b44716edf128",
+          "inspection": "source read"
+        },
+        {
+          "path": "tests/test_audio.py",
+          "gitBlobSHA1": "4ca5f9d73fcf17f294c91cf6e39159a14da39c27",
+          "inspection": "source read"
+        }
+      ]
+    },
+    {
+      "repo": "GALAXY",
+      "commit": "f219bb427b3a9b0c93900169d903f48f410ae67a",
+      "files": [
+        {
+          "path": "LICENSE",
+          "gitBlobSHA1": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+          "inspection": "source read"
+        },
+        {
+          "path": "NOTICE.md",
+          "gitBlobSHA1": "025398b9df686875092bff17d2c9eb173fe04d0c",
+          "inspection": "source read"
+        },
+        {
+          "path": "galaxy-core.js",
+          "gitBlobSHA1": "c09920329a95dc26c947034f0e0508f610c9a4c6",
+          "inspection": "source read"
+        },
+        {
+          "path": "barnes-hut.js",
+          "gitBlobSHA1": "e2daff337177a2312af587bdec9ddd379459a6f5",
+          "inspection": "source read"
+        },
+        {
+          "path": "mutual-gravity.js",
+          "gitBlobSHA1": "ecac9a5072d75cf923d277fcaf9498fd70432c20",
+          "inspection": "source read"
+        },
+        {
+          "path": "nbody-clock.js",
+          "gitBlobSHA1": "e2b52b882ca90e34e10d011a59e10bbd0967cf0a",
+          "inspection": "source read"
+        },
+        {
+          "path": "nbody/README.md",
+          "gitBlobSHA1": "e562cd11115e83da7a94ca88f8b48956d44a73e1",
+          "inspection": "source read"
+        },
+        {
+          "path": "nbody/src/lib.rs",
+          "gitBlobSHA1": "04f08687e181334bee3a2787d02bc6bf136ad92d",
+          "inspection": "source read"
+        },
+        {
+          "path": "rust/Cargo.toml",
+          "gitBlobSHA1": "025c6d31d1f84e5c1dfc1074d18d4f0953445664",
+          "inspection": "source read"
+        },
+        {
+          "path": "rust/src/physics.rs",
+          "gitBlobSHA1": "b8f22721f6792d306b735739b393480e91c92793",
+          "inspection": "source read"
+        },
+        {
+          "path": "cpu-runtime/Cargo.toml",
+          "gitBlobSHA1": "def68972a09f32221f85766a94c508c7745d94fc",
+          "inspection": "source read"
+        },
+        {
+          "path": "docs/BARNES-HUT.md",
+          "gitBlobSHA1": "05494a1c67d637b860edab06f4d049b661d3f422",
+          "inspection": "source read"
+        },
+        {
+          "path": "docs/MUTUAL-GRAVITY.md",
+          "gitBlobSHA1": "cdfa14bad77d866cf2d9a5e4a7eb5e1e9a193abc",
+          "inspection": "source read"
+        },
+        {
+          "path": "docs/CPU-RUNTIME.md",
+          "gitBlobSHA1": "4fe4a6d075835c91603e4e352cc558411b4efee1",
+          "inspection": "source read"
+        },
+        {
+          "path": "tests/barnes-hut.mjs",
+          "gitBlobSHA1": "ba391dcea7153f9d1a4cf32d94abd7da78167a08",
+          "inspection": "source read"
+        },
+        {
+          "path": "tests/physics.mjs",
+          "gitBlobSHA1": "d4dafb4a7cb0fa990d50bb9ca4dc218db2b7b6a9",
+          "inspection": "source read"
+        },
+        {
+          "path": "tests/mutual-gravity-evidence.mjs",
+          "gitBlobSHA1": "3202a5b580975cb63606ff57d389985eb61a51cc",
+          "inspection": "source read"
+        }
+      ]
+    }
+  ]
+}

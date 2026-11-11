@@ -398,6 +398,37 @@
       "status": "experimental",
       "demo": "demos/circuit-mod-lab/index.html",
       "description": "Typed, fail-closed ALIEN MATH v1/v2 data-only course adapters for the existing Mod SDK registry, without executing extensions"
+    },
+    "gf3": {
+      "entry": "modules/gf3/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/quantum-game-lab/index.html",
+      "description": "Bounded exact GF(3) vectors, matrices, reversible affine maps, syndromes and directed finite transition graphs"
+    },
+    "symbolic-events": {
+      "entry": "modules/symbolic-events/index.js",
+      "depends": [
+        "gf3",
+        "audio2d"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/quantum-game-lab/index.html",
+      "description": "Versioned deterministic ternary composition rules, canonical symbolic events and reference PCM through audio2d"
+    },
+    "mod-experiment": {
+      "entry": "modules/mod-experiment/index.js",
+      "depends": [
+        "mod-sdk",
+        "gf3",
+        "symbolic-events"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/quantum-game-lab/index.html",
+      "description": "Typed bounded data-only experiment packs over the existing transactional Mod SDK registry"
     }
   },
   "recipes": {

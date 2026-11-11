@@ -756,3 +756,8 @@ See [ALIEN-MATH-004](ALIEN_MATH_004.md) for the complete bounded contract and ex
 0–16 vertices; no loops or duplicate edges. Exact BigInt polynomial coefficients
 are in descending powers. See [ALIEN-MATH-005](ALIEN_MATH_005.md) for bounds,
 traversal tie rules, input admission, invariance limits and the standalone lab.
+
+
+## QGAME-MATH-001 experimental modules
+
+`gf3` provides bounded exact finite-field vectors, matrices, affine transformations, syndromes and directed state graphs. `symbolic-events` declares deterministic composition rules and adapts canonical events to existing audio2d reference PCM. `mod-experiment` adds typed inert experiment admission over MOD-SDK-001. See [the API, schemas and numerical boundaries](QGAME_MATH_001.md). Existing gf3-lattice, exact math, course and registry APIs are unchanged.

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a1118">
+<meta name="description" content="Exact ternary puzzles, declared musical rules and classical constellations. An offline VANILLAJS Mod SDK laboratory.">
+<title>ALIEN MATH — Quantum-Inspired Game Laboratory</title>
+<link rel="stylesheet" href="style.css"></head>
+<body>
+<header><a class="brand" href="../../index.html">VANILLA<span>JS</span> <small>/ QSOL–IMC</small></a><a href="#pack">EDIT EXPERIMENT ↓</a><span class="badge">QGAME-MATH-001 · EXPERIMENTAL</span></header>
+<main>
+<div class="intro"><div><p class="eyebrow">ALIEN MATH / QUANTUM-INSPIRED GAME LABORATORY</p>
+<h1>Ternary<br><em>Constellation.</em></h1></div>
+<p class="lede">A finite puzzle. A composed score. A classical sky.<br>Change the rules. Inspect every transition. Own the experiment.</p></div>
+<p class="boundary"><strong>Quantum-inspired ≠ quantum simulation.</strong> These are classical GF(3) states, declared musical mappings and numerical orbits. No superposition, entanglement or quantum gravity is simulated.</p>
+<div class="workspace">
+<section class="panel controls" aria-labelledby="control-title"><div class="panel-head"><h2 id="control-title">01 / Exact state</h2><span>GF(3)</span></div>
+<label for="dimension">State dimension</label><select id="dimension"><option>2</option><option>3</option><option>4</option></select>
+<fieldset><legend>Initial values · changing these resets the run</legend><div id="initial" class="trits"></div></fieldset>
+<label for="operation">Allowed transformation</label><select id="operation"></select>
+<pre id="formula" aria-label="Selected affine transformation"></pre>
+<div class="actions"><button id="step" class="primary">Step →</button><button id="play">Play</button><button id="reset">Reset ↺</button></div>
+<p id="status" role="status" aria-live="polite">Loading experiment…</p>
+<div class="readouts"><div><small>STATE</small><strong id="state">—</strong></div><div><small>TICK / BUDGET</small><strong id="tick">0 / 32</strong></div><div><small>SYNDROME Hx</small><strong id="syndrome">—</strong></div></div>
+<p id="objective" class="objective"></p>
+<p class="hint">Reach the target using the allowed maps. Every map is reversible over GF(3). Step is one quarter-second simulation tick. Losing focus pauses.</p>
+<label class="check"><input type="checkbox" id="sound"> Enable sound playback</label><p id="audio-status" class="hint" role="status">Sound off · canonical events still recorded.</p>
+<div class="actions"><button id="wav" disabled>Download reference WAV</button></div>
+</section>
+<section class="panel scene" aria-labelledby="scene-title"><div class="panel-head"><h2 id="scene-title">02 / Classical constellation</h2><span>Float64 · SI</span></div>
+<div class="scene-tools"><label for="renderer">Spatial view</label><select id="renderer"><option value="canvas">Canvas + numerical table</option><option value="table">Numerical table only</option></select></div>
+<canvas id="sky" width="720" height="420" aria-label="Illustrative XY view of noninteracting classical test particles"></canvas>
+<p id="render-status" class="hint"></p>
+<div class="table-scroll"><table><caption>Approximate position (m), speed (m/s) and specific energy (J/kg)</caption><thead><tr><th>Body</th><th>x</th><th>y</th><th>Speed</th><th>Energy</th></tr></thead><tbody id="bodies"></tbody></table></div>
+<p class="hint">Each trit selects that particle's prescribed central mass: M = base × (1 + trit). Eight velocity-Verlet substeps per tick. Switching M changes the potential; energy is not conserved across switches. No particle interactions.</p>
+</section>
+<section class="panel"><div class="panel-head"><h2>03 / Finite transition graph</h2><span>EXACT EDGES</span></div>
+<svg id="graph" viewBox="0 0 480 360" role="img" aria-label="Finite state graph for the selected transformation"></svg>
+<p id="graph-status" class="hint"></p><details><summary>Inspect directed edges</summary><pre id="edges"></pre></details>
+</section>
+<section class="panel"><div class="panel-head"><h2>04 / Transition score</h2><span>DECLARED RULE</span></div>
+<p class="hint">Note index = sum of new trits mod 3. One integer-Hz note per tick; duration = one tick. This is a composition choice, not an algebraic physical frequency.</p>
+<ol id="history" aria-label="Tick-indexed transition and symbolic event history"></ol>
+<div class="actions"><button id="events">Download event log</button><button id="receipt">Download reproducibility data</button></div>
+<p class="hint">Canonical events → reproducible reference PCM → audio device. Device timing, resampling and speaker output are presentation only.</p>
+</section>
+</div>
+<section class="panel pack" id="pack"><div class="panel-head"><h2>05 / Your data-only experiment pack</h2><span>MOD SDK v1</span></div>
+<p>Edit → validate → preview → export → reimport. The active pack supplies dimensions, initial/target states, affine maps, parity rows, score, palette and bounds.</p>
+<label for="manifest">Local JSON · strict fields · maximum 32 KiB</label><textarea id="manifest" spellcheck="false" rows="12"></textarea>
+<div class="actions"><button id="validate" class="primary">Validate + preview</button><button id="export">Export active pack</button><button id="restore">Restore starter</button><label class="file-button">Import pack<input id="import" type="file" accept=".json,application/json"></label></div>
+<p id="pack-status" role="status" aria-live="polite"></p>
+<p class="hint">Only inert local data. The lab supports one self-contained experiment per preview. A rejected draft leaves the last accepted run intact.</p>
+</section>
+<footer><p><strong>VANILLAJS Mod SDK — Build games. Extend the engine. Own your creations.</strong></p>
+<p>This is not a product. This is INDEPENDENCE. 👽</p><a href="https://github.com/QSOLKCB/VANILLAJS/blob/main/docs/QGAME_MATH_001.md">Mathematics, sources & reproduction ↗</a><span>Apache-2.0 · Native web standards · Offline-first</span></footer>
+</main><script type="module" src="app.js"></script><script type="module" src="../../offline/register.js"></script>
+</body></html>

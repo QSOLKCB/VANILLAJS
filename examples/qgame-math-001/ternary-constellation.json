@@ -1,0 +1,117 @@
+{
+  "kind": "qsol.vanillajs.mod-pack.v1",
+  "id": "ternary-constellation",
+  "version": "1.0.0",
+  "requires": [],
+  "entries": [
+    {
+      "id": "experiment",
+      "kind": "data",
+      "data": {
+        "kind": "qsol.ternary-experiment.v1",
+        "dimension": 2,
+        "initial": [
+          0,
+          0
+        ],
+        "target": [
+          1,
+          2
+        ],
+        "transforms": [
+          {
+            "id": "pulse-0",
+            "matrix": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "offset": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "pulse-1",
+            "matrix": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "offset": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": "shear",
+            "matrix": [
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "offset": [
+              0,
+              0
+            ]
+          },
+          {
+            "id": "swap",
+            "matrix": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "offset": [
+              0,
+              0
+            ]
+          }
+        ],
+        "parity": [
+          [
+            1,
+            1
+          ]
+        ],
+        "mapping": {
+          "kind": "qsol.ternary-score.v1",
+          "frequencies": [
+            165,
+            220,
+            330
+          ],
+          "wave": "triangle",
+          "gain": 3500
+        },
+        "spatial": "gentle",
+        "palette": [
+          "#72f6ca",
+          "#bb9aff",
+          "#ffc572"
+        ],
+        "maxTicks": 32
+      }
+    }
+  ]
+}
