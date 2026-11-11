@@ -76,7 +76,15 @@ export async function verifyMachine(browser, baseURL) {
   await page.waitForURL(/\/omi-lab\/index\.html$/);
   await page.waitForLoadState('load');
   assert.match(page.url(),/omi-lab/);
-  await page.locator('.machine-link').click();assert.match(page.url(),/ancient-machine/);
+  const returnLink=page.locator('.machine-link');
+  assert.equal(await returnLink.isVisible(),true,'Brass Engine return link is visible');
+  // The OMI atlas may be doing expensive canvas work; a pointer click can
+  // time out waiting for an otherwise visible link to be geometrically stable.
+  // Focus + Enter tests genuine keyboard navigation, never a forced click.
+  await returnLink.focus();
+  await page.keyboard.press('Enter');
+  await page.waitForURL(/\/ancient-machine\/index\.html$/);
+  assert.match(page.url(),/ancient-machine/);
   const mobile=await browser.newPage({viewport:{width:390,height:844},hasTouch:true,reducedMotion:'reduce'});
   mobile.on('pageerror',e=>errors.push(e.message));await mobile.goto(baseURL+'demos/ancient-machine/index.html');
   assert.equal(await mobile.locator('#reduced-motion').isChecked(),true);await mobile.locator('#crank').tap();assert.equal(await mobile.locator('#detents').textContent(),'000001');

@@ -14,3 +14,19 @@
 
 /* Visual editor navigation is independent of the FPS Lab test selector. */
 @media(max-width:780px){.masthead nav a.editor-link{display:inline;font-size:10px}}
+
+
+/* Flight Lab masthead: keep the growing lab directory inside the viewport.
+   Wrap complete link labels instead of squeezing or clipping the last links. */
+.masthead{height:auto;min-height:88px;gap:12px 18px;padding-block:12px}
+.masthead .brand{flex:0 0 auto;white-space:nowrap}
+.masthead nav{flex:1 1 0;min-width:0;flex-wrap:wrap;justify-content:flex-end;
+  column-gap:clamp(10px,1.3vw,22px);row-gap:8px}
+.masthead nav>a,.masthead nav>.version{flex:0 0 auto;white-space:nowrap}
+@media(max-width:780px){
+  .masthead{min-height:70px}
+  .masthead nav{justify-content:flex-start}
+}
+@media(max-width:480px){
+  .masthead nav{flex:1 1 100%;width:100%;justify-content:flex-start}
+}
