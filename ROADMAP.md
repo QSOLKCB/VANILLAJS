@@ -1,10 +1,26 @@
 # VANILLAJS roadmap
 
+## MOD-SDK-001 — bounded local data-only registry (this PR)
+
+- Strict versioned manifest admission, copied and frozen inert data, 32 KiB input limit
+- Exact-version dependency resolution, rejected cycles, atomic activation and explicit register/deactivate/remove lifecycle
+- No arbitrary plugin scripts, new ALIEN MATH module, changed simulation backend or gameplay hooks
+- [Full contract and independent reference](docs/MOD_SDK_001.md)
+
+## MOD-SDK-002 — reusable ALIEN MATH game-authoring and Mod SDK foundations (next PR)
+
+- Compose the reviewed exact-course / rational-Q16 / D4 authoring APIs with the MOD-SDK-001 registry through typed data adapters
+- Create a reference moddable lab and editor authoring/export path with explicit numerical provenance
+- Verify source-pinned conformance against DRONE-RACER v0.2.0 and an independent Fraction oracle
+- Preserve untrusted data vs trusted JavaScript, CPU-first operation and original Float64 flight semantics
+- **Next owner-reviewed PR**; the full Mod SDK, game creation kit and trusted plugin lifecycle are later phases
+
+
 ## ALIEN COURSE BRIDGE / DRONE-RACER — post-v1.6.0 (experimental)
 
 - Introduce an opt-in exact decimal course-authoring bridge with mandatory Q16.16 conversion policies and widened BigInt swept crossing classification.
 - [ALIEN Course Foundry](demos/alien-course-lab/index.html) provides an interactive lab and a source-bound sample matching the separate DRONE-RACER six-gate prototype.
-- [DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/) remains on its earlier flight engine until a separately reviewed PR #2 integrates the new math boundary. Do not advertise float flight as bit-exact across browsers.
+- [DRONE-RACER v0.2.0](https://github.com/QSOLKCB/DRONE-RACER/releases/tag/v0.2.0) uses the reviewed ALIEN MATH exact-course gate boundary; its original Float64 flight remains independent, with no bit-exact cross-browser physics claim.
 - Experimental editor authoring seams now include pure exact-position/D4 tools, validated data-only project/prefab workflows, and documented course-adapter boundaries; see [Editor QoL](docs/EDITOR_QOL.md). Course export and a plugin lifecycle remain future work.
 - A full VANILLAJS Mod SDK is future work: local manifests, extension lifecycle, data-only content packs, trusted-code policy, moddable labs, editor plugins, game construction guides, tested offline packaging.
 

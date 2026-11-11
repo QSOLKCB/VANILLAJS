@@ -239,6 +239,12 @@
       "scripts/alien_course_oracle.py",
       "tests/alien-course.test.js",
       "demos/alien-course-lab/sample.js"
+    ],
+    "modules/mod-sdk/": [
+      "docs/MOD_SDK_001.md",
+      "tests/mod-sdk.test.js",
+      "scripts/mod_sdk_001_oracle.py",
+      "tests/fixtures/mod-sdk-001-graph.json"
     ]
   },
   "shared": [
@@ -435,6 +441,7 @@
     "demos/space-lab/app.js": "092cf918dd7595ed67bae88baffdbcd935af1e38a73a59002c778a6d20d6bcdb",
     "demos/alien-course-lab/app.js": "566e99c136a06a78f1045febe87be5c7afc50c3a87573676cecca48373224f5e",
     "demos/alien-course-lab/sample.js": "561db80d7952111be683a19b0791390a368d1490df6d68f6fbf80f8b76feae0b",
-    "modules/exact-course/index.js": "1dae7f274c83f233bf9e56fec6ddcf3399ace6c4c4d93713851445f8210e18dd"
+    "modules/exact-course/index.js": "1dae7f274c83f233bf9e56fec6ddcf3399ace6c4c4d93713851445f8210e18dd",
+    "modules/mod-sdk/index.js": "1b8e11d442d77365e4ec79ace6736855dcb8b7946edabbf0123168f790f52b64"
   }
 }

@@ -1,0 +1,45 @@
+{
+  "schema": "qsol.mod-sdk-001.graph-v1",
+  "packs": [
+    {
+      "id": "palette",
+      "version": "1.0.0",
+      "requires": []
+    },
+    {
+      "id": "hud",
+      "version": "1.0.0",
+      "requires": [
+        {
+          "id": "palette",
+          "version": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "flight-tools",
+      "version": "2.1.0",
+      "requires": [
+        {
+          "id": "hud",
+          "version": "1.0.0"
+        },
+        {
+          "id": "palette",
+          "version": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "version": "0.1.0",
+      "requires": [
+        {
+          "id": "palette",
+          "version": "1.0.0"
+        }
+      ]
+    }
+  ],
+  "activate": "flight-tools"
+}

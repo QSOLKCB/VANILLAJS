@@ -10,11 +10,13 @@
 
 **Roadmap status:** The full, stable Mod SDK is planned, not yet shipped. Experimental ALIEN MATH, browser labs, source-owned game creation and Visual Workbench are available now.
 
+**MOD-SDK-001 (experimental):** [Versioned data-only manifest registry](docs/MOD_SDK_001.md) with bounded inert entries, exact-version dependencies and transactional local lifecycle. **MOD-SDK-002** is reserved for reusable ALIEN MATH game-authoring and moddable labs; no general executable plugin system has shipped.
+
 **This is not a product. This is INDEPENDENCE. 👽**
 
 **QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
 
-**NEW — ALIEN Course Foundry:** [Try exact drone-course authoring](demos/alien-course-lab/index.html) · [Read the Q16.16 gate contract](docs/ALIEN_COURSE_BRIDGE.md) · [Play DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/). The live game currently uses earlier VANILLAJS flight modules; adoption of this optional exact course bridge is planned for **DRONE-RACER PR #2**.
+**NEW — ALIEN Course Foundry:** [Try exact drone-course authoring](demos/alien-course-lab/index.html) · [Read the Q16.16 gate contract](docs/ALIEN_COURSE_BRIDGE.md) · [Play DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/). [DRONE-RACER v0.2.0](https://github.com/QSOLKCB/DRONE-RACER/releases/tag/v0.2.0) now consumes this exact Q16.16 gate bridge, while its source-pinned Float64 flight remains independent. No bit-exact floating-point replay is implied.
 
 **Released:** [VANILLAJS v1.6.0 — Operation ALIEN MATH 👽](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.6.0). The original ALIEN MATH 001–FINAL programme is already published as experimental math and research evidence.
 
