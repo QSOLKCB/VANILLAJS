@@ -2,7 +2,7 @@
 :root{color-scheme:dark;font-family:system-ui,sans-serif;background:#070d1b;color:#e7f3ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#19365c 0,transparent 50%),#070d1b}
 a{color:#67f2d9}header{display:flex;justify-content:space-between;gap:2rem;border-bottom:1px solid #244b61;padding:1rem clamp(18px,4vw,70px);font:700 .8rem monospace;letter-spacing:.1em}
-header span,.eyebrow{color:#61eacf}main{max-width:1300px;margin:auto;padding:25px clamp(18px,4vw,60px)}
+header{flex-wrap:wrap}header span,.eyebrow{color:#61eacf}main{max-width:1300px;margin:auto;padding:25px clamp(18px,4vw,60px)}
 h1{font-size:clamp(2.5rem,6vw,5rem);letter-spacing:-.05em;line-height:1.05}h1 em{font-style:normal;color:#62eacf}
 .lead{max-width:850px;color:#b4cadb;font-size:1.1rem}.layout{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:22px}
 .panel{border:1px solid #2d6481;background:#0d1e31;border-radius:12px;padding:20px;min-width:0}
