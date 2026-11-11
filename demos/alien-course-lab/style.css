@@ -16,3 +16,20 @@ select{display:block;max-width:180px;margin-top:6px}.controls button{background:
 pre{font:12px/1.5 monospace;white-space:pre}.meta{font:.8rem/1.5 monospace;color:#91bdcb}
 .play{display:block;padding:16px;border:1px solid #61f2db;color:#8affe7;text-decoration:none;font-weight:900;text-align:center;border-radius:5px}
 footer{margin:24px 0;font:700 .8rem monospace}footer p{color:#ffd17c}
+
+/* Fit content at 320px without concealing overflow on the document root. */
+@media (max-width:480px){
+  header{gap:.65rem;min-width:0}
+  header>a,header>span{min-width:0;max-width:100%;overflow-wrap:anywhere}
+  main{min-width:0;padding-inline:12px}
+  h1{font-size:clamp(1.85rem,8.5vw,2.5rem);overflow-wrap:anywhere}
+  .layout{grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
+  .panel{width:100%;min-width:0;padding:14px}
+  .controls{width:100%;min-width:0;max-width:100%;flex-wrap:wrap}
+  .controls>label{flex:1 1 112px;min-width:0;max-width:100%}
+  .controls>button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+  .controls select{width:100%;max-width:100%;min-width:0}
+  textarea{min-width:0;max-width:100%}
+  .output{min-width:0;max-width:100%}
+  .eyebrow,.meta,footer,footer a{overflow-wrap:anywhere}
+}
