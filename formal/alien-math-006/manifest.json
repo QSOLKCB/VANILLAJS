@@ -41,7 +41,7 @@
     "scripts/alien_math_004_oracle.py": "31a6319929bf78306a6bcf1d626ba5266117d2fd97f0f6188a97fcb1b0cc0a94",
     "scripts/alien_math_005_oracle.py": "35e1f84bb51b4f8dc1fd581819ad94ff7f8f6af205ad2eabbf91bd13c7547483",
     "scripts/alien_math_006_oracle.py": "c6eca3c13d4ab9a18b268e4b1d64631994f2e3e54fd8fc7db491c185f9aab6e5",
-    "scripts/browser-reuse-policy.json": "1212936ff329d7fa765eb15cd7a744057a868aefb865562dd111d3ff5dd347da",
+    "scripts/browser-reuse-policy.json": "57c7225665b1a8982f4bfeb1ca314c6dab411fc4638030639844f9f19a0ab668",
     "scripts/install-q16-lean.sh": "2de579f4c4d8c75d1a11fa4678aa4f815571a7f5f50839ccf78f730fcf98bf21",
     "scripts/pin_alien_math_006.py": "38b8d63dcb6e5186aad7d37d05e06e18264a1a61a4637bb2ad348aa16ab28179",
     "scripts/verify-q16-axioms.py": "1523ce456304737267b8abc380a6592656f2ab6d7e339f8f3b7996bb8936291e",
