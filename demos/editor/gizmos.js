@@ -4,6 +4,7 @@
 // No DOM or persistent GPU resources in this module.
 import {sceneWorld,updateEntity} from './model.js';
 import {cameraMatrix} from './viewport.js';
+import {snapEditorDelta} from './authoring-math.js';
 const AXES=['x','y','z'],COLORS=[[.96,.32,.34],[.35,.95,.54],[.34,.55,1]];
 const basis=[[1,0,0],[0,1,0],[0,0,1]];
 function axisIndex(axis){
@@ -18,8 +19,8 @@ function rotateY(v,deg){
 function checked(scene,id){
   const entity=scene.objects.find(e=>e.id===id);
   if(!entity)throw new TypeError('unknown gizmo entity');
-  const world=sceneWorld(scene).find(e=>e.id===id);
-  const parent=entity.parent===null?null:sceneWorld(scene).find(e=>e.id===entity.parent);
+  const objects=sceneWorld(scene),world=objects.find(e=>e.id===id);
+  const parent=entity.parent===null?null:objects.find(e=>e.id===entity.parent);
   return {entity,world,parent};
 }
 export function axisDirection(world,axis,space='world'){
@@ -85,7 +86,7 @@ export function axisDragAmount(camera,object,axis,start,end,width,height,space='
   if(len<4)return 0;
   return ((end.x-start.x)*dx+(end.y-start.y)*dy)/(len*len)*2.15;
 }
-const snap=(value,step,enabled)=>enabled?Math.round(value/step)*step:value;
+const snap=(value,step,enabled)=>enabled?snapEditorDelta(value,step):value;
 export function applyGizmo(scene,id,tool,axis,amount,{space='world',snapping=false}={}){
   if(!['move','rotate','scale'].includes(tool))throw new TypeError('invalid gizmo tool');
   if(typeof amount!=='number'||!Number.isFinite(amount)||Math.abs(amount)>10000)

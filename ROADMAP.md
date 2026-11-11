@@ -5,6 +5,7 @@
 - Introduce an opt-in exact decimal course-authoring bridge with mandatory Q16.16 conversion policies and widened BigInt swept crossing classification.
 - [ALIEN Course Foundry](demos/alien-course-lab/index.html) provides an interactive lab and a source-bound sample matching the separate DRONE-RACER six-gate prototype.
 - [DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/) remains on its earlier flight engine until a separately reviewed PR #2 integrates the new math boundary. Do not advertise float flight as bit-exact across browsers.
+- Experimental editor authoring seams now include pure exact-position/D4 tools, validated data-only project/prefab workflows, and documented course-adapter boundaries; see [Editor QoL](docs/EDITOR_QOL.md). Course export and a plugin lifecycle remain future work.
 - A full VANILLAJS Mod SDK is future work: local manifests, extension lifecycle, data-only content packs, trusted-code policy, moddable labs, editor plugins, game construction guides, tested offline packaging.
 
 **This is not a product. This is INDEPENDENCE.**
