@@ -367,6 +367,13 @@
       "status": "experimental",
       "demo": "demos/alien-course-lab/index.html",
       "description": "Opt-in exact decimal drone-course authoring, explicit Q16.16 aperture bounds and widened BigInt swept crossing predicates"
+    },
+    "mod-sdk": {
+      "entry": "modules/mod-sdk/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded data-only manifest registry, exact-version dependencies and transactional local lifecycle; no executable plugin loading"
     }
   },
   "recipes": {

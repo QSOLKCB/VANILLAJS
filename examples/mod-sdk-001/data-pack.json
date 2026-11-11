@@ -1,0 +1,20 @@
+{
+  "kind": "qsol.vanillajs.mod-pack.v1",
+  "id": "retro-palette",
+  "version": "1.0.0",
+  "requires": [],
+  "entries": [
+    {
+      "id": "colours",
+      "kind": "data",
+      "data": {
+        "accent": "#62ebd1",
+        "background": "#091425",
+        "labels": [
+          "cyan",
+          "midnight"
+        ]
+      }
+    }
+  ]
+}
