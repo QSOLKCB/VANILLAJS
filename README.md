@@ -11,7 +11,7 @@
 
 **VANILLAJS Mod SDK — Build games. Extend the engine. Own your creations.**
 
-**Latest release: [v1.7.0 — Reply to Your Own Tweets Edition](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.7.0)** · 11 November 2026.
+**Latest release: [v1.8.0 — Five Ways to Defy Physics](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.8.0)** · 12 November 2026.
 
 Reusable JavaScript game modules, exact authoring tools and playable browser labs
 built directly on web standards. The current [catalogue](MODULES.json) contains
@@ -29,6 +29,14 @@ experimental Visual Workbench are available now.
 [All releases](https://github.com/QSOLKCB/VANILLAJS/releases)
 
 ## New on main
+
+[**RACING-002B — Track Foundry**](demos/racing-lab/index.html) provides
+a visual offline editor for original road and circuit tracks. Author four
+continuous road sections, change the environment, drag eight circuit gates,
+preview eight physical touring branches and import/export strictly validated
+16 KiB JSON packs. **Validate & Drive** launches Scenic Tour, an authored
+4.8 km Coastal Sprint or Circuit Race using the same data as the rendered
+track. [Creator contract](docs/RACING_002B.md). Experimental.
 
 [**RACING-002 — Classic Touring Lab**](demos/racing-lab/index.html) adds
 two original, playable styles to the Racing Lab: **Scenic Tour**, a four-stage

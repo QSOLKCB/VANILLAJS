@@ -757,6 +757,11 @@
       "modules": [],
       "description": "Guided game creation, genre choices and offline packaging help"
     },
+    "track-foundry": {
+      "entry": "demos/racing-lab/track.js",
+      "modules": [],
+      "description": "RACING-002B: native offline road/circuit editor with inert JSON pack validation and physical branch geometry"
+    },
     "retro-racing-lab": {
       "entry": "demos/racing-lab/world.js",
       "modules": [

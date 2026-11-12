@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add RACING-002B Track Foundry: native/offline four-section road and eight-gate
+  circuit editor, selectable environment, draggable gate schematic, bounded
+  inert JSON import/export, real left/right touring centreline divergence and
+  authored 4.8 km 3D sprint. Pin no new third-party runtime dependencies.
+  Harden VOIDWARD browser reload waits and verify the authoring workflow in
+  Node and packaged Chromium. — Creator toolkit
+
 - Add RACING-002: original Scenic Tour branching pseudo-3D highway and Coastal Sprint winding WebGL point-to-point road. Seven modes now share demo-owned 60 Hz gameplay; add bounded swept sprint car contacts, retro nitro momentum, cooldown expiry, underside landing rejection, new recipes and browser coverage. Exact Q16.16 driving, wheel suspension and full response remain future work. — Creator toolkit
 
 - Add RACING-001: five original browser racing experiments (pseudo-3D retro highway, WebGL circuit/derby/car-football/stunt), bounded fixed-step vehicle logic, contact and landing damage, input-tick JSON receipts and test coverage. — Creator toolkit

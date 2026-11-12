@@ -93,12 +93,56 @@ try{
     await page.evaluate(()=>window.dispatchEvent(new Event('blur')));
     assert.equal(await page.locator('#status').textContent(),'PAUSED');
   }
+  // RACING-002B: author, export, reject malformed input, restore and drive
+  // an accepted track through the *actual* packaged browser interface.
+  await page.locator('#track-foundry').scrollIntoViewIfNeeded();
+  const previewPixels=await page.locator('#track-preview').evaluate(canvas=>{
+    const data=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
+    return data[3]+data[11]+data[data.length-1];
+  });
+  assert.ok(previewPixels>0,'Track Foundry schematic must draw actual pixels');
+  await page.locator('#track-name').fill('Morning Sprint');
+  await page.locator('#track-environment').selectOption('forest');
+  await page.locator('#track-sections [data-section="0"][data-property="curve"]').fill('0.8');
+  await page.locator('#track-sections [data-section="0"][data-property="curve"]').press('Tab');
+  await page.locator('#track-apply').click();
+  assert.match(await page.locator('#track-message').textContent(),/Applied Morning Sprint/);
+  assert.match(await page.locator('#mode-title').textContent(),/Scenic Tour/);
+  const trackDownload=page.waitForEvent('download');
+  await page.locator('#track-export').click();
+  const exported=JSON.parse(await readFile(await (await trackDownload).path(),'utf8'));
+  assert.equal(exported.format,'qsol.vanillajs.track.v1');
+  assert.equal(exported.name,'Morning Sprint');
+  assert.equal(exported.environment,'forest');
+  assert.equal(exported.sections[0].curve,.8);
+  await page.locator('#track-import').setInputFiles({
+    name:'invalid-track.json',mimeType:'application/json',buffer:Buffer.from('{"bad":true}')
+  });
+  await page.waitForFunction(()=>document.querySelector('#track-message').textContent.includes('Import rejected'));
+  assert.equal(await page.locator('#track-name').inputValue(),'Morning Sprint',
+    'invalid imports preserve the previously accepted authoring draft');
+  await page.locator('#track-new').click();
+  await page.locator('#track-import').setInputFiles({
+    name:'morning-sprint.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(exported))
+  });
+  await page.waitForFunction(()=>document.querySelector('#track-name').value==='Morning Sprint');
+  await page.locator('#track-target').selectOption('sprint');
+  await page.locator('#track-apply').click();
+  assert.match(await page.locator('#mode-title').textContent(),/Coastal Sprint/);
+  assert.equal(await page.locator('#three-view').evaluate(c=>!!c.getContext('webgl')&&c.width>1),true);
+  await page.screenshot({path:'browser-artifacts/racing-track-foundry.png',fullPage:true});
+  await page.locator('#track-target').selectOption('circuit');
+  await page.locator('#track-apply').click();
+  assert.match(await page.locator('#mode-title').textContent(),/Circuit Race/);
+  assert.equal(await page.locator('#track-gates').isVisible(),true);
+  await page.locator('#track-clear').click();
+  assert.match(await page.locator('#track-message').textContent(),/built-in tracks/);
   await page.setViewportSize({width:390,height:844});
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),
     'mobile view must fit 390 CSS pixels without horizontal page overflow');
   await page.screenshot({path:'browser-artifacts/racing-mobile.png',fullPage:true});
   assert.deepEqual(errors,[]);
-  console.log('RACING-001 packaged Chromium PASS: retro raster, 3D canvas, five modes, input, pause/blur, JSON evidence and responsive layout.');
+  console.log('RACING-002B packaged Chromium PASS: seven modes, Track Foundry author/export/reject/re-import/apply/clear, native Canvas/WebGL, pause, evidence and responsive layout.');
 }finally{
   await browser?.close();
   await new Promise(done=>server.close(done));

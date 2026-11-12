@@ -46,7 +46,9 @@ test('RACING-002B rejects malformed packs, exotic prototypes, getters and inject
   bad(p=>Object.defineProperty(p.sections[0],'curve',{get(){throw Error('getter was executed');}}));
   assert.throws(()=>parseTrackJSON('{'),SyntaxError);
   assert.throws(()=>parseTrackJSON('x'.repeat(MAX_TRACK_BYTES+1)),RangeError);
-  assert.throws(()=>parseTrackJSON(JSON.stringify({...starter(),__proto__:{bad:1}})));
+  const hostile=starter();
+  Object.defineProperty(hostile,'__proto__',{value:{bad:1},enumerable:true});
+  assert.throws(()=>parseTrackJSON(JSON.stringify(hostile)));
 });
 test('RACING-002B rejects crossing circuit gates and degenerate layout segments',()=>{
   const p=starter();

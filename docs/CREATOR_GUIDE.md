@@ -66,6 +66,29 @@ Open Circuit builder, enter width/depth (40–400 metres), gate opening (4–30 
 
 **Download JSON** saves a native Mod SDK course manifest. Expand **Advanced: edit course JSON** to author individual gates and obstacles. Course admission uses exact Q16.16 decimals, X/Z planes and explicit directions. The consuming game supplies body clearance, physics, solid gate frames and lap timing. A VANILLAJS course pack is not a complete DRONE-RACER mod pack; see [Mod SDK course contracts](MOD_SDK_002.md) and the donor's mod guide for its envelope.
 
+## Author original racing roads in Track Foundry
+
+Open the [Racing Lab](../demos/racing-lab/index.html) and scroll to **Track
+Foundry**. Choose a name and environment (coast, canyon, forest, night), edit
+four 1,200 m road sections (curve, paved half-width and fork separation), and
+inspect the route geometry in the Canvas preview. The Scenic Tour view previews
+all eight left/right histories; selecting a fork in gameplay changes the actual
+centreline. For **Circuit Race**, select Circuit and drag the eight gate markers
+or enter their X/Z coordinates to change the connected track and checkpoint
+order.
+
+Choose **Validate & Drive** to start a fresh Scenic Tour, Coastal Sprint or
+Circuit Race with the authored data. **Export JSON** produces a portable inert
+`qsol.vanillajs.track.v1` file. **Import JSON** rejects unknown fields, bad
+geometry, non-finite numbers and files larger than 16 KiB; rejected imports
+must not overwrite the current draft. **Built-in tracks** returns to the
+original racing demonstrations.
+
+The editor is an experimental *race-course* authoring interface, not a
+general-purpose Level Editor or an importer of copyrighted game tracks.
+It does not affect saved projects in the Visual Workbench. See
+[Track Foundry's contract](RACING_002B.md).
+
 ## Make a cue and use it in a game
 
 In Soundtrack Lab choose a preset, source, tempo, steps, pitches, waveform and gain. **Generate** previews the notes; **Listen** requires a user gesture. Stop, blur and tab hiding cancel playback. Imports are bounded to 4 KiB; invalid recipes preserve the last accepted cue. Every export compiles the current settings so invalid draft values cannot silently export an older cue.
