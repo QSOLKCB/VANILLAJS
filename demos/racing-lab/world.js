@@ -3,6 +3,7 @@
 // Float64 simulation is repeatable for the same input/tick sequence in one JS runtime;
 // it is NOT a claim of cross-engine bit-exact arithmetic.
 import {clamp} from '../../modules/math/index.js';
+import {validateTrack,trackCenter,trackHalfWidth,trackHeading} from './track.js';
 
 export const STEP=1/60;
 export const MODES=Object.freeze(['retro','tour','circuit','sprint','derby','ball','stunt']);
@@ -62,10 +63,17 @@ export function stuntRoad(s){
   return 2;
 }
 export function retroCurve(s){return Math.sin(s/190)*2.7+Math.sin(s/490)*2;}
-export function createRace(mode='retro'){
+export function createRace(mode='retro',track=null){
   if(!MODES.includes(mode))throw new RangeError('unknown racing mode');
-  const p=mode==='circuit'?driver(0,55,Math.atan2(36,16)):
-    mode==='stunt'||mode==='sprint'?driver(0,0):driver(0,32);
+  if(track!==null&&!['tour','sprint','circuit'].includes(mode))
+    throw new RangeError('authored tracks are supported by tour, sprint and circuit');
+  const course=track===null?null:validateTrack(track);
+  const gates=course?.gates??RACE_GATES;
+  const p=mode==='circuit'?
+    driver(gates[0].x,gates[0].z,course?
+      Math.atan2(gates[1].x-gates[0].x,-(gates[1].z-gates[0].z)):Math.atan2(36,16)):
+    mode==='stunt'||mode==='sprint'?driver(course&&mode==='sprint'?trackCenter(course,0):0,0,
+      course&&mode==='sprint'?trackHeading(course,0):0):driver(0,32);
   if(mode==='stunt')p.y=2;
   const bots=mode==='retro'||mode==='tour'?
     [0,1,2,3,4].map(i=>({id:i,x:[-3.2,2.5,0,-1.8,3][i],
@@ -73,18 +81,19 @@ export function createRace(mode='retro'){
     mode==='stunt'?[]:
     mode==='sprint'?[0,1,2,3].map(i=>{
       const s=120+i*175;
-      return driver(sprintCenter(s)+(i%2?3:-3),-s,sprintHeading(s),i);
+      return driver((course?trackCenter(course,s):sprintCenter(s))+(i%2?3:-3),
+        -s,course?trackHeading(course,s):sprintHeading(s),i);
     }):
     [0,1,2,3].map(i=>{
-      const a=driver(mode==='circuit'?RACE_GATES[i].x:
-        [-24,24,-18,18][i],mode==='circuit'?RACE_GATES[i].z:
+      const a=driver(mode==='circuit'?gates[i].x:
+        [-24,24,-18,18][i],mode==='circuit'?gates[i].z:
         [-25,-21,12,19][i],0,i);
       a.checkpoint=(i+1)%RACE_GATES.length;
       return a;
     });
   return {mode,tick:0,elapsed:0,player:p,bots,finished:false,
     result:'',event:'',score:[0,0],distance:0,contacts:0,
-    ball:{x:0,y:1.3,z:0,vx:0,vz:0,vy:0},retroLap:0,route:[]};
+    ball:{x:0,y:1.3,z:0,vx:0,vz:0,vy:0},retroLap:0,route:[],track:course};
 }
 function vehicle(p,input,dt,maxSpeed=38){
   const throttle=bounded(input.throttle),steer=bounded(input.steer);
@@ -161,8 +170,9 @@ function updateBots(w,dt,playerPrevious=null){
     if(b.cooldown>60&&b.health===0)continue;
     if(b.health===0){b.health=100;b.x=-25+b.color*15;b.z=20;b.speed=0;b.cooldown=30;}
     const before={x:b.x,z:b.z};
-    const target=w.mode==='circuit'?RACE_GATES[b.checkpoint]:
-      w.mode==='sprint'?{x:sprintCenter(-b.z+45)+(b.color%2?3:-3),z:b.z-45}:
+    const target=w.mode==='circuit'?(w.track?.gates??RACE_GATES)[b.checkpoint]:
+      w.mode==='sprint'?{x:(w.track?trackCenter(w.track,-b.z+45):
+        sprintCenter(-b.z+45))+(b.color%2?3:-3),z:b.z-45}:
       w.mode==='ball'?w.ball:w.player;
     const desired=Math.atan2(target.x-b.x,-(target.z-b.z));
     const delta=Math.atan2(Math.sin(desired-b.yaw),Math.cos(desired-b.yaw));
@@ -211,8 +221,11 @@ function stepRetro(w,input,dt){
   if(boosting){p.speed=Math.min(90,p.speed+35*dt);p.boost=Math.max(0,p.boost-20*dt);}
   else p.boost=Math.min(100,p.boost+8*dt);
   p.x+=bounded(input.steer)*(3.5+p.speed*.08)*dt;
-  if(Math.abs(p.x)>5.6){
-    p.x=clamp(p.x,-6.3,6.3);p.speed*=1-1.4*dt;
+  const center=w.track&&w.mode==='tour'?trackCenter(w.track,w.distance,w.route):0;
+  const width=w.track&&w.mode==='tour'?trackHalfWidth(w.track,w.distance):5.6;
+  if(Math.abs(p.x-center)>width){
+    p.x=clamp(p.x,center-width-.7,center+width+.7);
+    p.speed*=1-1.4*dt;
     if(w.tick%50===0){p.health=Math.max(0,p.health-1);w.event='OFF ROAD';}
   }
   const before=w.distance;
@@ -220,7 +233,8 @@ function stepRetro(w,input,dt){
   for(const b of w.bots){
     b.s+=b.speed*dt;
     if(b.s<w.distance-20){b.s=w.distance+240+(b.id*83)%360;b.x=[-3,2.9,0,-1.5,3.1][b.id];}
-    if(before<=b.s+4&&w.distance>=b.s-4&&Math.abs(p.x-b.x)<1.8&&
+    const botX=w.track&&w.mode==='tour'?trackCenter(w.track,b.s,w.route)+b.x:b.x;
+    if(before<=b.s+4&&w.distance>=b.s-4&&Math.abs(p.x-botX)<1.8&&
        !p.cooldown){
       p.speed*=.5;p.health=Math.max(0,p.health-9);
       p.cooldown=48;w.contacts++;w.event='TRAFFIC IMPACT';
@@ -230,7 +244,9 @@ function stepRetro(w,input,dt){
     const stage=Math.min(TOUR_STAGES,Math.floor(w.distance/TOUR_STAGE_LENGTH));
     // Route choices are committed exactly once at the end of each stage.
     while(w.route.length<Math.min(stage,TOUR_STAGES-1)){
-      const choice=p.x<0?'left':'right';
+      const boundary=(w.route.length+1)*TOUR_STAGE_LENGTH;
+      const centerAtFork=w.track?trackCenter(w.track,boundary,w.route):0;
+      const choice=p.x<centerAtFork?'left':'right';
       w.route.push(choice);
       w.event='FORK '+choice.toUpperCase()+' · '+tourPalette(w.route).name.toUpperCase();
     }
@@ -285,9 +301,11 @@ function stepStunt(w,input,dt){
   }
 }
 function stepSprint(w,previous){
-  const p=w.player,s=Math.max(0,-p.z),center=sprintCenter(s);
+  const p=w.player,s=Math.max(0,-p.z);
+  const center=w.track?trackCenter(w.track,s):sprintCenter(s);
+  const width=w.track?trackHalfWidth(w.track,s):12;
   // Roadside mistakes cost speed and, periodically, body health.
-  if(Math.abs(p.x-center)>12){
+  if(Math.abs(p.x-center)>width){
     p.speed*=.965;
     if(w.tick%75===0){p.health=Math.max(0,p.health-2);w.event='SPRINT · OFF ROAD';}
     p.x=clamp(p.x,center-50,center+50);
@@ -301,14 +319,16 @@ function stepSprint(w,previous){
   if(previous.z>=-SPRINT_LENGTH&&p.z<-SPRINT_LENGTH){
     const fraction=(previous.z+SPRINT_LENGTH)/(previous.z-p.z);
     const finishX=previous.x+(p.x-previous.x)*fraction;
-    if(Math.abs(finishX-sprintCenter(SPRINT_LENGTH))<=12){
+    const finishCenter=w.track?trackCenter(w.track,SPRINT_LENGTH):sprintCenter(SPRINT_LENGTH);
+    const finishWidth=w.track?trackHalfWidth(w.track,SPRINT_LENGTH):12;
+    if(Math.abs(finishX-finishCenter)<=finishWidth){
       w.finished=true;w.result='COASTAL SPRINT FINISHED';
     }
   }
 }
 function stepCircuit(w){
-  const p=w.player;
-  if(distance(p,RACE_GATES[p.checkpoint])<12){
+  const p=w.player,gates=w.track?.gates??RACE_GATES;
+  if(distance(p,gates[p.checkpoint])<12){
     if(p.checkpoint===0){p.lap++;w.event='LAP '+p.lap;}
     p.checkpoint=(p.checkpoint+1)%RACE_GATES.length;
     if(p.lap>=3){w.finished=true;w.result='CIRCUIT RACE WON';}
