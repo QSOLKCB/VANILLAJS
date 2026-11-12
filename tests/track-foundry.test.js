@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {MODES,createRace,stepRace} from '../demos/racing-lab/world.js';
 import {sceneGeometry} from '../demos/racing-lab/geometry.js';
+import {setupTrackFoundry} from '../demos/racing-lab/track-editor.js';
 import {TRACK_FORMAT,TRACK_TOTAL_LENGTH,SECTION_LENGTH,MAX_TRACK_BYTES,
   starterTrack,validateTrack,serializeTrack,parseTrackJSON,
   trackCenter,trackHalfWidth,trackHeading,environmentTheme} from '../demos/racing-lab/track.js';
@@ -149,6 +150,7 @@ test('RACING-002B generated geometry stays bounded and finite for authored sprin
   assert.ok(MODES.includes('tour')&&MODES.includes('sprint'));
 });
 test('RACING-002B editor controls and safety boundaries ship in the game',async()=>{
+  assert.equal(typeof setupTrackFoundry,'function','editor module must link in Node without browser globals');
   const [html,app,editor]=await Promise.all([
     readFile(new URL('../demos/racing-lab/index.html',import.meta.url),'utf8'),
     readFile(new URL('../demos/racing-lab/app.js',import.meta.url),'utf8'),

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // RACING-002B — browser-owned editor for validated, inert local track packs.
-import {ENVIRONMENTS,SECTION_LENGTH,SPRINT_LENGTH,environmentTheme,
+import {SECTION_LENGTH,environmentTheme,
   parseTrackJSON,serializeTrack,starterTrack,trackCenter,trackHalfWidth,validateTrack} from './track.js';
 
 const $=id=>document.getElementById(id),distance=SECTION_LENGTH*4;

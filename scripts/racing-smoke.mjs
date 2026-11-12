@@ -28,7 +28,7 @@ try{
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto('http://127.0.0.1:'+server.address().port+'/VANILLAJS/demos/racing-lab/index.html');
   try{
-    await page.waitForFunction(()=>document.documentElement.dataset.racingReady==='ready',{timeout:10000});
+    await page.waitForFunction(()=>document.documentElement.dataset.racingReady==='ready',null,{timeout:10000});
   }catch(error){
     const observed=await page.evaluate(()=>({
       ready:document.documentElement.dataset.racingReady??null,
