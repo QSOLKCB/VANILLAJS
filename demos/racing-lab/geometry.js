@@ -2,7 +2,7 @@
 // Low-poly original art: all geometry produced from native WebGL-compatible XYZ/RGB triangles.
 import {boxVertices} from '../../modules/render-webgl/index.js';
 import {TRACK_LENGTH,RACE_GATES,stuntRoad,SPRINT_LENGTH,sprintCenter,sprintHeading} from './world.js';
-import {trackCenter,trackHeading,trackHalfWidth,environmentTheme} from './track.js';
+import {TRACK_TOTAL_LENGTH,trackCenter,trackHeading,trackHalfWidth,environmentTheme} from './track.js';
 const ASPHALT=[.105,.15,.22],WHITE=[.73,.84,.9],MAGENTA=[.9,.22,.48],CYAN=[.17,.83,.82];
 function box(out,x,y,z,sx,sy,sz,color){boxVertices([x,y,z],[sx,sy,sz],color,out);}
 function oriented(out,x,y,z,sx,sy,sz,color,yaw=0,roll=0){
@@ -41,11 +41,12 @@ export function sceneGeometry(mode,track=null){
     return out;
   }
   if(mode==='sprint'){
+    const total=track?TRACK_TOTAL_LENGTH:SPRINT_LENGTH;
     // An original point-to-point coastal course: broad road, changing scenery,
     // lane markings and landmarks. All positions use the simulation centreline.
     const theme=track?environmentTheme(track.environment):null;
-    box(out,0,-1.4,-SPRINT_LENGTH/2,270,.5,SPRINT_LENGTH+130,theme?.land??[.035,.095,.13]);
-    for(let distance=0;distance<SPRINT_LENGTH;distance+=20){
+    box(out,0,-1.4,-total/2,270,.5,total+130,theme?.land??[.035,.095,.13]);
+    for(let distance=0;distance<total;distance+=20){
       const at=distance+10;
       const x=track?trackCenter(track,at):sprintCenter(at);
       const yaw=track?trackHeading(track,at):sprintHeading(at);
@@ -61,11 +62,11 @@ export function sceneGeometry(mode,track=null){
           box(out,x+Math.cos(yaw)*side*30,3,-at+Math.sin(yaw)*side*30,3.5,6,3.5,scenery);
       }
     }
-    for(let distance=900;distance<=SPRINT_LENGTH;distance+=900){
+    for(let distance=total/4;distance<=total;distance+=total/4){
       const x=track?trackCenter(track,distance):sprintCenter(distance);
       const half=track?trackHalfWidth(track,distance):11;
       box(out,x,.13,-distance,half*2,.22,1,
-        distance===SPRINT_LENGTH?MAGENTA:CYAN);
+        distance===total?MAGENTA:CYAN);
     }
     return out;
   }

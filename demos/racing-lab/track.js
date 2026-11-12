@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // RACING-002B — inert, bounded, data-only track packs; no DOM, network or ambient state.
 export const TRACK_FORMAT='qsol.vanillajs.track.v1';
-export const SECTION_LENGTH=1200;
+export const SECTION_LENGTH=1200,TRACK_TOTAL_LENGTH=SECTION_LENGTH*4;
 export const ENVIRONMENTS=Object.freeze(['coast','canyon','forest','night']);
 export const MAX_TRACK_BYTES=16*1024;
 const BENDS=14;

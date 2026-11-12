@@ -3,7 +3,7 @@
 // Float64 simulation is repeatable for the same input/tick sequence in one JS runtime;
 // it is NOT a claim of cross-engine bit-exact arithmetic.
 import {clamp} from '../../modules/math/index.js';
-import {validateTrack,trackCenter,trackHalfWidth,trackHeading} from './track.js';
+import {validateTrack,TRACK_TOTAL_LENGTH,trackCenter,trackHalfWidth,trackHeading} from './track.js';
 
 export const STEP=1/60;
 export const MODES=Object.freeze(['retro','tour','circuit','sprint','derby','ball','stunt']);
@@ -302,6 +302,7 @@ function stepStunt(w,input,dt){
 }
 function stepSprint(w,previous){
   const p=w.player,s=Math.max(0,-p.z);
+  const finish=w.track?TRACK_TOTAL_LENGTH:SPRINT_LENGTH;
   const center=w.track?trackCenter(w.track,s):sprintCenter(s);
   const width=w.track?trackHalfWidth(w.track,s):12;
   // Roadside mistakes cost speed and, periodically, body health.
@@ -310,17 +311,18 @@ function stepSprint(w,previous){
     if(w.tick%75===0){p.health=Math.max(0,p.health-2);w.event='SPRINT · OFF ROAD';}
     p.x=clamp(p.x,center-50,center+50);
   }
-  const oldStage=Math.floor(w.distance/900),newStage=Math.min(4,Math.floor(s/900));
-  w.distance=Math.max(w.distance,Math.min(s,SPRINT_LENGTH));
+  const segment=finish/4;
+  const oldStage=Math.floor(w.distance/segment),newStage=Math.min(4,Math.floor(s/segment));
+  w.distance=Math.max(w.distance,Math.min(s,finish));
   p.lap=Math.max(p.lap,newStage);
   if(newStage>oldStage&&newStage<4)w.event='SCENIC CHECKPOINT '+newStage;
   // Award the finish only at the forward crossing of the finish plane.
   // Re-entering the corridor beyond the final piece of asphalt is not a finish.
-  if(previous.z>=-SPRINT_LENGTH&&p.z<-SPRINT_LENGTH){
-    const fraction=(previous.z+SPRINT_LENGTH)/(previous.z-p.z);
+  if(previous.z>=-finish&&p.z<-finish){
+    const fraction=(previous.z+finish)/(previous.z-p.z);
     const finishX=previous.x+(p.x-previous.x)*fraction;
-    const finishCenter=w.track?trackCenter(w.track,SPRINT_LENGTH):sprintCenter(SPRINT_LENGTH);
-    const finishWidth=w.track?trackHalfWidth(w.track,SPRINT_LENGTH):12;
+    const finishCenter=w.track?trackCenter(w.track,finish):sprintCenter(finish);
+    const finishWidth=w.track?trackHalfWidth(w.track,finish):12;
     if(Math.abs(finishX-finishCenter)<=finishWidth){
       w.finished=true;w.result='COASTAL SPRINT FINISHED';
     }
