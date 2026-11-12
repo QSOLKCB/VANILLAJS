@@ -192,9 +192,15 @@ function stepStunt(w,input,dt){
       }
       p.y=elevation;p.vy=0;p.grounded=true;p.flip=0;
     }
-    if(p.grounded&&s-p.lastSafe>55)p.lastSafe=Math.floor(s/55)*55;
+    if(p.grounded&&s-p.lastSafe>55){
+      // A checkpoint must never land inside either unsupported bridge span.
+      let safe=Math.floor(s/55)*55;
+      while(safe>0&&stuntRoad(safe)===null)safe-=55;
+      p.lastSafe=safe;
+    }
   }else p.grounded=false;
   if(p.y< -15||Math.abs(p.x)>14||s< -20){recoverStunt(w);return;}
+  if(p.health===0){w.finished=true;w.result='VEHICLE DESTROYED';return;}
   if(s>=TRACK_LENGTH){
     p.z+=TRACK_LENGTH;p.lastSafe=0;p.lap++;
     w.event='STUNT LAP '+p.lap;
@@ -215,7 +221,9 @@ export function stepRace(w,input={},dt=STEP){
   if(w.finished)return w;
   w.event='';w.tick++;w.elapsed+=dt;
   const p=w.player;if(p.cooldown>0)p.cooldown--;
-  if(w.mode==='retro'){stepRetro(w,input,dt);return w;}
+  if(w.mode==='retro'){stepRetro(w,input,dt);
+    if(p.health===0){w.finished=true;w.result='VEHICLE DESTROYED';}
+    return w;}
   if(w.mode==='stunt'){stepStunt(w,input,dt);return w;}
   vehicle(p,input,dt,w.mode==='circuit'?40:37);
   // Flat-world suspension: collision plane is Y=0 (the car origin).
