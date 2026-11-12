@@ -132,6 +132,6 @@ test('homepage gives Racing and FPS distinct links and keeps both visible in nar
   assert.match(home,/<a class="racing-link" href="demos\/racing-lab\/index\.html">/);
   assert.match(home,/<a class="fps-link" href="demos\/fps-lab\/index\.html">/);
   assert.equal((home.match(/class="fps-link"/g)||[]).length,1,'FPS browser selector must match one link');
-  assert.match(css,/@media\(max-width:780px\)\{[^}]*\.masthead nav a\.racing-link\{display:inline;/,
+  assert.match(css,/@media\(max-width:780px\)[^\n]*\.masthead nav a\.racing-link\{display:inline;/,
     'the Racing Lab entry must stay visible in compact navigation');
 });
