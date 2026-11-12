@@ -90,9 +90,15 @@ function contact(a,b,w){
   b.vx-=nx*impulse;b.vz-=nz*impulse;
   a.speed*=.73;b.speed*=.65;
   const damage=Math.max(4,Math.round(impulse*1.2));
-  a.health=Math.max(0,a.health-damage);
-  b.health=Math.max(0,b.health-damage);
-  a.cooldown=18;b.cooldown=18;w.contacts++;w.event='BODY CONTACT · '+damage+' DAMAGE';
+  // Demo-owned derby balancing: a direct player ram should be capable of
+  // eliminating four rivals before the player's own body inevitably fails.
+  // Other modes retain symmetric collision damage.
+  const suffered=w.mode==='derby'?Math.max(1,Math.round(damage*.4)):damage;
+  const inflicted=w.mode==='derby'?damage+20:damage;
+  a.health=Math.max(0,a.health-suffered);
+  b.health=Math.max(0,b.health-inflicted);
+  a.cooldown=18;b.cooldown=18;w.contacts++;
+  w.event='BODY CONTACT · '+suffered+' DAMAGE';
   if(b.health===0){a.knockouts++;b.cooldown=180;w.event='RIVAL DISABLED';}
 }
 function arenaBounds(p){
