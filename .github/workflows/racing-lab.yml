@@ -34,7 +34,8 @@ jobs:
       - name: Pin isolated hosted Chromium tooling
         run: |
           set -euo pipefail
-          echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/racing-browser/browsers" >> "$GITHUB_ENV"
+          export PLAYWRIGHT_BROWSERS_PATH="$RUNNER_TEMP/racing-browser/browsers"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" >> "$GITHUB_ENV"
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install \
             --prefix "$RUNNER_TEMP/racing-browser" \
             --ignore-scripts --no-save --package-lock=false --no-audit --no-fund \
