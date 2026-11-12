@@ -1,0 +1,4 @@
+# id | short | primary | accent | home | ethos
+0 | ASHWAKE | #ff966b | #ffe1bf | 0 | A home is whoever still answers the convoy.
+1 | GLOAM | #9acb91 | #e5f3c5 | 15 | Life is patient. Carry it beyond the fire.
+2 | SUNSPINDLE | #f3d77d | #fff8d8 | 31 | Every departure deserves a place to arrive.

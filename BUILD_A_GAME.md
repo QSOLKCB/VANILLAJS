@@ -1,5 +1,19 @@
 # Build a game with VANILLAJS
 
+New to the engine? Start with the [Creator Hub](demos/creator-hub/index.html) and
+[step-by-step creator guide](docs/CREATOR_GUIDE.md): choose a genre, build a
+playable scene, make a soundtrack, package it and troubleshoot common failures.
+The recipes below are for adding your own game rules in JavaScript.
+
+To package a visual-editor project with its runtime files:
+
+```sh
+node scripts/export-game.js /path/to/game.vproject.json --out /path/to/new-game-folder
+```
+
+The destination must be new. Serve the complete output over HTTP(S); retain
+your editable project separately. [Export details and limits](docs/CREATOR_GUIDE.md#package-an-authored-preview).
+
 For new integer simulations, start with [the integer-engine composition example](docs/INTEGER_ENGINE.md#compose-a-game).
 It covers fixed-point units, atomic ticks, collision and replay. The examples
 below remain the compatible floating-point controller recipes.
@@ -11,7 +25,7 @@ for navigation/physics. Pin the repository commit when trying its API.
 
 Start from an exact release or commit, inspect `MODULES.json` and select only the
 modules needed by the game. Keep all required dependencies and relative paths.
-All 0.8.0 APIs are experimental; record the revision instead of silently tracking
+The APIs remain experimental; record the revision instead of silently tracking
 `main`. Preserve LICENSE and NOTICE when distributing copied modules.
 
 For example, a flight game vendors `math`, `collision`, `flight`, `time` and

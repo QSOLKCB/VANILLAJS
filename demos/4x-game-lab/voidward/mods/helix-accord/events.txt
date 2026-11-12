@@ -1,0 +1,6 @@
+# id | turn | requires | kind | owner | target | value | repeat
+arm-buoy | 4 |  | message | player | Survey ships chart the arms. Your neighbour can become a trading partner long before war is inevitable. | 0 | 0
+charter-grant | 10 | arm-chart | resources | player | minerals | 150 | 0
+exchange-dividend | 18 | open-ledger | resources | player | energy | 90 | 9
+fabricator-grant | 22 | federation-foundries | resources | player | minerals | 180 | 0
+assembly-call | 30 |  | message | player | An objective is a recorded milestone. Keep a surviving empire until the charter is ratified. | 0 | 0

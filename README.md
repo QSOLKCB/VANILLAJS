@@ -1,6 +1,9 @@
 <p align="center">
+
   <img src="assets/vanillajs-hero.svg" width="100%" alt="VANILLAJS Mod SDK — Build games. Extend the engine. Own your creations. This is not a product. This is INDEPENDENCE." />
 </p>
+
+**Start creating:** [Creator Hub](demos/creator-hub/index.html) · [Game-making guide](docs/CREATOR_GUIDE.md) · [Soundtrack Lab](demos/soundtrack-lab/index.html). New editor starters, gameplay pieces and scene checks help you reach a first playable; the game-folder exporter includes its runtime. VOIDWARD now includes eight campaigns.
 
 <p align="center">
   <a href="https://doi.org/10.5281/zenodo.24049474"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24049474.svg" alt="FP-HIST-001 dataset DOI" /></a>
@@ -33,7 +36,7 @@ a deterministic rival. Native controls, offline play and validated command repla
 [Rules, ALIEN MATH links and verification](docs/4X_GAME_LAB.md). Experimental.
 
 [**VOIDWARD Campaign Lab**](demos/4x-game-lab/voidward/index.html) extends the 4X
-Lab with five moddable campaigns, selectable empires, fleet orders, production
+Lab with eight moddable campaigns, selectable empires, fleet orders, production
 queues, ship designs/refits, diplomacy and staged objectives. The
 [**Visual Workbench campaign panel**](demos/editor/index.html#fourx) edits text packs,
 places stars in the real viewport and turns selected geometry into ship hulls.

@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased — Creator toolkit
+
+- Add Creator Hub and an offline step-by-step game-making guide.
+- Make editor authoring easier with three undoable starters, configured pieces,
+  actionable scene checks, Focus basics and scene-specific Play/save reminders.
+- Add Soundtrack Lab: original E8-coordinate and three-state cue recipes,
+  gesture-gated playback, strict import, WAV and reusable audio2d score export.
+- Add form-based cardinal circuit authoring and course-specific sweep preview.
+- Include Helix Accord, Emberwake Exodus and Glass Meridian campaign data from
+  4XGAMES with immutable per-file provenance; VOIDWARD now has eight campaigns.
+- Package editor projects into complete local game folders with runtime closure,
+  licences and verified offline caching; reject invalid projects and overwrites.
+- Add Restart and readable preview errors to exported games. Keep existing
+  component schemas, preview physics and numerical claim boundaries.
+
+
 ## Unreleased — 4X Game Lab
 
 - Add Ternary Reach, a seeded turn-based sector conquest game with exploration,

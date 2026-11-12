@@ -135,9 +135,12 @@ class Objects:
             for name, (mode, child) in tree_entries(self.get(oid, b'tree')).items():
                 path = prefix + name
                 if mode == '40000':
-                    if any(p.startswith(path + '/') or (path + '/').startswith(p) for p in PUBLIC):
+                    # Match build.js's top-level Markdown help allowlist without
+                    # admitting nested drafts or the JSON evidence in docs/.
+                    if path == 'docs' or any(p.startswith(path + '/') or (path + '/').startswith(p) for p in PUBLIC):
                         walk(child, path + '/')
-                elif any(path.startswith(p) for p in PUBLIC):
+                elif (path == 'BUILD_A_GAME.md' or (prefix == 'docs/' and name.endswith('.md'))
+                      or any(path.startswith(p) for p in PUBLIC)):
                     need(mode in ('100644', '100755'), 'nonregular public file')
                     result.append(safe(path))
         walk(self.tree(revision), '')

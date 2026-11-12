@@ -1,0 +1,4 @@
+# field | level | prerequisite | level
+weapons | 4 | industry | 3
+shields | 4 | propulsion | 2
+propulsion | 5 | industry | 3

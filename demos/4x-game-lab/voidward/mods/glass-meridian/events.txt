@@ -1,0 +1,7 @@
+# id | turn | requires | kind | owner | target | value | repeat
+paired-signal | 5 |  | message | player | Two rings carry the same signal. Archive salvage belongs to the first survey-equipped ship to arrive. | 0 | 0
+ring-grant | 15 | ring-chart | resources | player | minerals | 180 | 0
+memory-decoded | 24 | memory-pair | resources | player | science | 240 | 0
+field-resupply | 40 | memory-industry | resources | player | energy | 230 | 0
+chart-resupply | 40 | unwritten-engines | resources | player | minerals | 200 | 0
+quiet-observatory | 52 |  | message | player | The archive is evidence of a lost civilisation. What survives of it is your choice. | 0 | 0

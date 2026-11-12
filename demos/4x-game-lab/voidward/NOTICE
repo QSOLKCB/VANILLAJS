@@ -37,3 +37,12 @@ campaign/source-mod lifecycle code was inspected as a design reference.
 Original campaign fiction, names, objective tables and geography are independent
 VOIDWARD content. Workbench-imported user assets retain their declared source
 licence and digest in their pack; their metadata does not relicense this code.
+
+Additional VOIDWARD campaign data (Helix Accord, Emberwake Exodus and Glass
+Meridian) is copied unchanged from QSOLKCB/4XGAMES at
+382f458998cf3c28e82047f64709722761559034 under Apache-2.0. Copyright 2026
+Trent Slade / QSOL-IMC and contributors. The original five campaign packs and
+engine adaptation remain pinned to their earlier revisions. File identities
+are recorded in demos/4x-game-lab/voidward/mods/HORIZONS_PROVENANCE.json
+(relative to the repository root). This import includes data only; the donor
+command deck and engine optimizations are not transplanted.

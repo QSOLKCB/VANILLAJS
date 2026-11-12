@@ -1,0 +1,4 @@
+# empire | minerals | energy | science | extra colonies
+0 | 450 | 380 | 20 | 1
+1 | 700 | 650 | 0 | 
+2 | 390 | 300 | 75 | 33

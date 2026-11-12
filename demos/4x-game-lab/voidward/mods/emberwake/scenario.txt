@@ -1,0 +1,5 @@
+# Each selected culture has the complete two-route expedition.
+playable = 0,1,2
+victory = objectives
+minVictoryTurn = 48
+defeatAtLimit = 1

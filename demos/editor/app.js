@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // VANILLAJS Component Forge v1.5: DOM only adapts owned scene data.
 import {hierarchyRows,eligibleParents,matchesAsset} from './workflows.js';
+import {STARTER_SCENES,createStarterScene,addGameplayPiece,inspectCreatorScene} from './creator-workflow.js';
 import {mount4XPanel} from './4x-panel.js';
 import {parseExactPosition,previewQ16Position,transformExactPositionXY,snapEditorDelta,formatPositionNumber} from './authoring-math.js';
 import {SceneMeshes} from './scene-meshes.js';
@@ -23,6 +24,7 @@ import {createAssetLibrary,validateAssetLibrary,addMeshAsset,addTextureAsset,
 const $=id=>document.getElementById(id),canvas=$('view');
 let importGeneration=0;
 let campaignPanel=null;
+let checksScene=null,creatorChecks=null,lastPlayedScene=null,lastSavedScene=null,lastSavedLibrary=null,lastSavedGPU=false;
 let history=makeHistory(createForgeScene()),selected='entity-3',draft=null,
   library=createAssetLibrary(),chosenAsset=null,
   camera={yaw:38,pitch:23,distance:18,target:[0,1,0]},api=null,grid=null,mesh=null,
@@ -88,6 +90,7 @@ function syncEditor(){
   }
   for(const id of ['add-child','duplicate','remove'])$(id).disabled=playing||!selected;
   renderHierarchy(scene);
+  syncCreator(scene);
   campaignPanel?.sync();
   scheduleRecovery();
   syncAssets();
@@ -267,6 +270,7 @@ $('asset-save-project').addEventListener('click',()=>{
     const scene=editScene(),raw=serializeProject(scene,prunePlacements(scene,library),{optionalGPU:$('optional-gpu').checked});
     download('vanillajs-'+scene.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')+
       '.vproject.json',raw);
+    lastSavedScene=scene;lastSavedLibrary=library;lastSavedGPU=$('optional-gpu').checked;syncCreator(scene);
     inform('Exported complete local project (scene + assets + provenance)');
   }catch(error){inform('Project export rejected: '+error.message,true);}
 });
@@ -400,6 +404,65 @@ function applyScene(next,selection=selected){
     markGeometry();syncEditor();inform('Scene updated · '+verified.objects.length+' entities');
   }catch(error){inform(error.message,true);syncEditor();}
 }
+function syncCreator(scene){
+  for(const id of ['creator-load','creator-add','creator-starter','creator-piece','creator-save','creator-play'])$(id).disabled=playing;
+  if(checksScene!==scene){
+    checksScene=scene;
+    try{creatorChecks=inspectCreatorScene(scene);}
+    catch(error){creatorChecks={playerId:null,issues:[{code:'invalid-world',message:error.message,entityId:null}]};}
+    const list=$('creator-issues');list.replaceChildren();
+    for(const issue of creatorChecks.issues){
+      const item=document.createElement('li');item.dataset.code=issue.code;
+      if(issue.entityId){const button=document.createElement('button');button.type='button';
+        button.dataset.entityId=issue.entityId;button.textContent=issue.message;item.append(button);
+      }else item.textContent=issue.message;
+      list.append(item);
+    }
+    if(!creatorChecks.issues.length){const item=document.createElement('li');
+      item.textContent='No common setup issues found. Try the scene in Play before sharing.';list.append(item);}
+    $('creator-check-summary').textContent=creatorChecks.issues.length?
+      'Scene checks · '+creatorChecks.issues.length+' things to review':'Scene checks · ready to try';
+  }
+  const steps=[['Player ready',Boolean(creatorChecks.playerId)],['Setup checked',creatorChecks.issues.length===0],
+    ['Tried Play',lastPlayedScene===scene],['Project downloaded',lastSavedScene===scene&&lastSavedLibrary===library&&lastSavedGPU===$('optional-gpu').checked]];
+  $('creator-progress').replaceChildren(...steps.map(([label,done])=>{const span=document.createElement('span');
+    span.dataset.complete=String(done);span.textContent=(done?'✓ ':'○ ')+label;return span;}));
+  for(const button of $('creator-issues').querySelectorAll('button'))button.disabled=playing;
+}
+function describeStarter(){
+  $('creator-starter-note').textContent=STARTER_SCENES.find(s=>s.id===$('creator-starter').value)?.description??'';
+}
+$('creator-starter').addEventListener('change',describeStarter);describeStarter();
+$('creator-load').addEventListener('click',()=>{
+  if(playing)return;
+  try{
+    finishGesture(false);
+    // Fresh IDs prevent an old asset placement from attaching to a new template object.
+    const scene=createStarterScene($('creator-starter').value,{firstId:history.present.nextId});
+    ++importGeneration;
+    applyScene(scene,scene.objects.find(e=>e.body==='player')?.id??null);
+    frameSelection(true);inform(scene.name+' loaded · Undo restores the previous scene and attachments. Asset library retained.');
+  }catch(error){inform('Starter rejected: '+error.message,true);}
+});
+$('creator-add').addEventListener('click',()=>{
+  if(playing)return;
+  try{finishGesture(false);const result=addGameplayPiece(editScene(),$('creator-piece').value);
+    applyScene(result.scene,result.selected);frameSelection();inform('Gameplay piece added. Move it with the coloured arrows; Undo removes it.');
+  }catch(error){inform('Piece rejected: '+error.message,true);}
+});
+$('creator-issues').addEventListener('click',event=>{
+  const button=event.target.closest('[data-entity-id]');if(!button||playing)return;
+  $('hierarchy-search').value='';select(button.dataset.entityId);frameSelection();
+  inform(button.textContent);
+});
+$('creator-play').addEventListener('click',()=>{if(!playing)start();});
+$('creator-save').addEventListener('click',()=>{if(!playing)$('asset-save-project').click();});
+$('creator-focus').addEventListener('click',()=>{
+  const basic=document.body.classList.toggle('focus-basics');
+  $('creator-focus').setAttribute('aria-pressed',String(basic));
+  $('creator-focus').textContent=basic?'Show all tools':'Focus basics';
+  requestFrame();
+});
 function add(parent=null){
   const before=editScene();
   try{applyScene(addEntity(before,{parent}), 'entity-'+before.nextId);}
@@ -501,7 +564,7 @@ $('properties').addEventListener('change',event=>{
   catch(error){inform('Edit rejected: '+error.message,true);syncEditor();}
 });
 let optionalCanvas=null,removeGraphics=null;
-$('optional-gpu').onchange=()=>{initGraphics();markGeometry();scheduleRecovery();};
+$('optional-gpu').onchange=()=>{initGraphics();markGeometry();scheduleRecovery();syncCreator(editScene());};
 $('export-game').onclick=()=>{try{download('game.html',exportGame(editScene(),prunePlacements(editScene(),library),{optionalGPU:$('optional-gpu').checked}));inform('Place game.html beside packaged modules/ and demos/; serve over HTTP.');}catch(e){inform(e.message,true);}};
 function initGraphics(){
   api?.dispose();removeGraphics?.();optionalCanvas?.remove();optionalCanvas=null;
@@ -567,6 +630,7 @@ function start(){
   finishGesture(false);++importGeneration;
   try{
     simulation=createPreview(history.present);playing=true;paused=false;
+    lastPlayedScene=history.present;
     clock.reset();clock.setPaused(false);lastTime=null;resetKeys();
     markGeometry();syncEditor();inform('Playing immutable scene snapshot · WASD to move, Space to jump');
     canvas.focus({preventScroll:true});

@@ -1,0 +1,10 @@
+# empire | class | hull | components
+0 | LCS Facet | scout-0 | drive-1,laser-1,shield-1,survey
+0 | LCS Commonhold | ark-0 | drive-1,shield-1,colony
+0 | LCS Parallax | frigate-0 | drive-1,laser-1,laser-1,laser-1,shield-1,marines
+1 | TES Slipstream | scout-1 | drive-1,shield-1,shield-1,survey
+1 | TES Caravan | ark-1 | drive-1,shield-1,colony
+1 | TES Breakwater | frigate-1 | drive-1,laser-1,laser-1,shield-1,shield-1,marines
+2 | CDS Spark | scout-2 | drive-1,laser-1,shield-1,survey
+2 | CDS Crucible | ark-2 | drive-1,shield-1,shield-1,colony
+2 | CDS Firebrand | frigate-2 | drive-1,laser-1,laser-1,shield-1,marines

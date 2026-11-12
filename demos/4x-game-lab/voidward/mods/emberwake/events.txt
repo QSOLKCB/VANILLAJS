@@ -1,0 +1,7 @@
+# id | turn | requires | kind | owner | target | value | repeat
+beacon | 4 |  | message | player | The old haven has fallen silent. Settle the corridor or prepare the fleet for a longer crossing. | 0 | 0
+supply-train | 12 | lantern-chain | resources | player | minerals | 120 | 12
+garden-seed | 20 | five-hearths | resources | player | science | 160 | 0
+convoy-reserve | 30 | convoy-engines | resources | player | energy | 220 | 0
+haven-crates | 34 | permanent-havens | resources | player | minerals | 260 | 0
+last-light | 43 |  | message | player | Rivals will eventually contest the corridor. Keep your escorts supplied and leave room for replacement arks. | 0 | 0

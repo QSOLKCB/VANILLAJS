@@ -1,0 +1,10 @@
+# empire | class | hull | components
+0 | PCS Refraction | scout-0 | drive-1,laser-1,shield-1,survey
+0 | PCS Atlas | ark-0 | drive-1,shield-1,colony
+0 | PCS Isoline | frigate-0 | drive-1,laser-1,laser-1,laser-1,shield-1,marines
+1 | MCS Echo | scout-1 | drive-1,shield-1,shield-1,survey
+1 | MCS Refrain | ark-1 | drive-1,shield-1,colony
+1 | MCS Counterpoint | frigate-1 | drive-1,laser-1,laser-1,shield-1,shield-1,marines
+2 | NSS Probe | scout-2 | drive-1,laser-1,shield-1,survey
+2 | NSS Witness | ark-2 | drive-1,shield-1,shield-1,colony
+2 | NSS Boundary | frigate-2 | drive-1,laser-1,laser-1,shield-1,marines

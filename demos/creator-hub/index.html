@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Creator Hub · VANILLAJS</title><link rel="stylesheet" href="style.css"></head>
+<body><header><a href="../../index.html">← VANILLAJS</a><span>CREATE · PLAY · KEEP</span></header>
+<main><p class="eyebrow">YOUR FIRST PLAYABLE</p><h1>Make something<br>you can play.</h1>
+<p class="lead">Start with a working scene, build a universe, or make a soundtrack. These tools run locally and keep your work in files you own.</p>
+<a class="primary" href="../editor/index.html">Open the visual editor →</a>
+<section aria-labelledby="first"><h2 id="first">From a blank idea to a playable scene</h2><ol class="steps">
+<li><strong>Choose a starter.</strong> In the editor's Quick start panel, choose Playground, Jumping course or Trigger trail and select Load starter. Loading is one undo step.</li>
+<li><strong>Add a piece.</strong> Choose Platform, Trigger zone or Decoration. Select it and drag the coloured arrows. Press F to frame the selection; Undo reverses an edit.</li>
+<li><strong>Check and play.</strong> Read Scene checks. Select an issue to find its object. Try Play, move with WASD and jump with Space. Stop returns to editing.</li>
+<li><strong>Keep the editable project.</strong> Save project includes the scene and asset library. Open project restores it. Recovery is a local backup; download a file before leaving.</li>
+</ol><p>Focus basics hides advanced tools while you learn. Show all tools restores the full workbench. The editor provides a box-based gameplay preview; a finished game's scoring, objectives and menus still need game code.</p></section>
+<section aria-labelledby="choose"><h2 id="choose">Choose what to build</h2><div class="cards">
+<article><p class="eyebrow">SCENES &amp; PLATFORMING</p><h3><a href="../editor/index.html">Visual Editor</a></h3><p>Templates, gameplay pieces, live scene checks, assets, prefabs and an undoable 3D workspace.</p></article>
+<article><p class="eyebrow">EMPIRES &amp; EXPLORATION</p><h3><a href="../4x-game-lab/voidward/index.html">4X campaigns</a></h3><p>Eight campaigns with editable maps, factions, ship designs and objectives. Use the editor's 4X workshop to create your own.</p></article>
+<article><p class="eyebrow">RACING &amp; FLIGHT</p><h3><a href="../circuit-mod-lab/index.html">Circuit builder</a></h3><p>Choose loop dimensions, opening size and lap count. Validate exact checkpoints, test a crossing and export a course data pack.</p></article>
+<article><p class="eyebrow">MUSIC &amp; SOUND</p><h3><a href="../soundtrack-lab/index.html">Soundtrack Lab</a></h3><p>Turn E8 coordinates or a three-state sequence into short original cues. Edit your musical mapping and export WAV, recipe or score.</p></article>
+<article><p class="eyebrow">SPACE &amp; COMBAT</p><h3><a href="../space-lab/index.html">Space Lab</a></h3><p>Learn docking, broadside combat and orbit mechanics with existing modules. Add your own economy and missions.</p></article>
+<article><p class="eyebrow">SMALL GAME RECIPES</p><h3><a href="../2d-lab/index.html">2D Foundry</a></h3><p>Explore platforming, shooters, driving and strategy. Borrow a small working loop before expanding the game.</p></article>
+</div></section>
+<section aria-labelledby="share"><h2 id="share">Build a folder you can share</h2><p>From a source checkout with Node 22+, download <strong>Save project</strong> in the editor, then run:</p>
+<pre><code>node scripts/export-game.js /path/to/game.vproject.json --out /path/to/new-game-folder</code></pre>
+<p>The output includes the playable preview, required engine files, licences and verified offline caching. Use a new folder; the exporter refuses to overwrite an existing one. Keep your editable project separately.</p>
+<pre><code>cd /path/to/new-game-folder
+python3 -m http.server 8000 --bind 127.0.0.1</code></pre>
+<p>Open <code>http://127.0.0.1:8000/</code>. Serve the complete folder over HTTP(S), including on a static host. Direct file opening cannot load these native ES modules. Offline reload becomes available after the service worker finishes its first install on HTTPS or localhost.</p></section>
+<section><h2>Keep learning</h2><ul><li><a href="../../docs/CREATOR_GUIDE.md">Step-by-step creator guide (text)</a></li><li><a href="../../BUILD_A_GAME.md">Build a game: module recipes (text)</a></li><li><a href="../../docs/CREATOR_DONOR_REVIEW.md">Donor sources and integration boundaries (text)</a></li></ul><p>If Play does nothing, check for a visible Player and ground beneath it. If a rotated platform has no collision, return its Y rotation to 0 or 180. If an import fails, keep your current project and read the error before trying again.</p></section>
+</main><footer>VANILLAJS · Native browser standards · Apache-2.0 · Experimental authoring tools</footer>
+<script type="module" src="../../offline/register.js"></script></body></html>

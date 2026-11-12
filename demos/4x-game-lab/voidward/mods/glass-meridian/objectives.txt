@@ -1,0 +1,9 @@
+# id | owner | kind | target | amount | requires | branch | title | description | victory
+ring-chart | player | survey | * | 12 |  |  | Read the rings | Survey twelve systems in the double transit ring. | 0
+memory-pair | player | archives | * | 2 | ring-chart |  | A pair of memories | Recover two archives with survey-equipped ships. | 0
+memory-industry | player | research | industry | 5 | memory-pair | preserve | Preserve the lattice | Choose preservation and reach Industrial systems V. | 0
+memory-fields | player | research | shields | 4 | memory-industry | preserve | Hold the memory fields | Reach Field harmonics IV to contain the recovered lattice. | 0
+memory-kept | player | survive | - | 65 | memory-fields | preserve | A sky remembered | Complete preservation and survive to turn 65. | 1
+unwritten-engines | player | research | propulsion | 5 | memory-pair | unwritten | The unwritten route | Choose independence and reach Warp dynamics V. | 0
+unwritten-chart | player | survey | * | 34 | unwritten-engines | unwritten | Beyond inherited charts | Survey thirty-four systems to chart a new meridian. | 0
+unwritten-sky | player | survive | - | 58 | unwritten-chart | unwritten | The Unwritten Sky | Complete the independent chart and survive to turn 58. | 1

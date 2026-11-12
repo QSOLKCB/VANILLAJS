@@ -1,0 +1,9 @@
+# id | name | cost | work | minerals | energy | science | production | defence | description
+mine | Mineral extractor | 70 | 40 | 14 | 0 | 0 | 0 | 0 | Extract valuable planetary minerals.
+reactor | Fusion reactor | 65 | 35 | 0 | 16 | 0 | 0 | 0 | Supply the fleet and power diplomatic agreements.
+lab | Research laboratory | 85 | 50 | 0 | 0 | 10 | 0 | 0 | Accelerate your active research project.
+yard | Orbital shipyard | 90 | 50 | 0 | 0 | 0 | 12 | 0 | Construct and repair ships in orbit.
+defence | Defence grid | 75 | 40 | 0 | 0 | 0 | 0 | 14 | Fire on hostile fleets and resist invasion.
+# Horizons facilities | name | cost | work | minerals | energy | science | production | defence | description
+archive-vault | Archive vault | 135 | 85 | 0 | 0 | 24 | 0 | 4 | Protect recovered knowledge and accelerate research.
+phase-station | Phase station | 120 | 75 | 0 | 20 | 5 | 4 | 0 | Supply the double-ring observation network.

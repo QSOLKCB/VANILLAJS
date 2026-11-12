@@ -21,3 +21,5 @@ button{cursor:pointer;max-width:100%;padding:11px 13px;background:#13364a;border
 footer{margin:30px 0 12px;font:700 12px monospace}footer p{color:#ffe2a8}
 @media(max-width:780px){.layout{grid-template-columns:minmax(0,1fr)}.pane{padding:14px}}
 @media(max-width:360px){h1{font-size:2rem}.actions button{flex:1 1 125px}}
+
+.builder-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}.builder-fields input{display:block;width:100%;padding:10px;background:#070f20;color:#e8f6ff;border:1px solid #345a78}summary{cursor:pointer;padding:16px 0}#builder-status{font-size:13px;overflow-wrap:anywhere}input:focus-visible{outline:2px solid #65ffe1;outline-offset:3px}

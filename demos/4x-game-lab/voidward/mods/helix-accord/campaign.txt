@@ -1,0 +1,4 @@
+id = helix-accord
+version = 1.0.0
+title = Helix Accord: The Threefold Charter
+description = Twenty-four stars on three interwoven arms. Choose one of three new factions and build a trading charter or an industrial federation. Two routes; objective victories from turn 36.

@@ -4,14 +4,23 @@
 <title>MOD-SDK-002 — ALIEN Circuit Foundry</title><link rel="stylesheet" href="style.css"></head>
 <body>
 <header><a href="../../index.html">← VANILLAJS LABS</a><span>MOD-SDK-002 / EXACT GAME AUTHORING</span></header>
-<main>
+<main><p><a href="../creator-hub/index.html">Creator Hub &amp; building guide</a></p>
 <p class="eyebrow">ALIEN MATH / MOD SDK / OFFLINE-FIRST</p>
 <h1>Build the circuit.<br><em>Own the universe.</em></h1>
 <p class="lede">Compile cardinal X/Z checkpoints and data-only local mod packs. Exact decimal source becomes checked Q16.16; independent Float64 flight, collision and rendering remain the consuming game's responsibility.</p>
 <div class="layout">
-<section class="pane"><h2>Inert course manifest · JSON</h2>
+<section class="pane"><h2>Make a loop</h2>
+<p>Choose your course dimensions, then replace the draft with a four-gate loop. Positions are in metres; checkpoints face the travel direction.</p>
+<form id="loop-builder"><div class="builder-fields">
+<label>Width (40–400 m)<input id="loop-width" type="number" min="40" max="400" step="1" value="80" required></label>
+<label>Depth (40–400 m)<input id="loop-depth" type="number" min="40" max="400" step="1" value="60" required></label>
+<label>Gate opening (4–30 m)<input id="loop-aperture" type="number" min="4" max="30" step="1" value="16" required></label>
+<label>Laps (1–9)<input id="loop-laps" type="number" min="1" max="9" step="1" value="2" required></label></div>
+<button type="submit">Replace draft with loop</button></form>
+<p id="builder-status" role="status" aria-live="polite">Export your current draft before replacing it.</p>
+<details><summary>Advanced: edit course JSON</summary><h2>Course manifest</h2>
 <label for="manifest">Modify the source-owned starter pack</label>
-<textarea id="manifest" rows="21" spellcheck="false"></textarea>
+<textarea id="manifest" rows="21" spellcheck="false"></textarea></details>
 <div class="actions"><button id="validate" type="button">Validate + activate</button>
 <button id="restore" type="button">Restore starter</button><button id="download" type="button">Download JSON</button></div>
 <p class="hint">Only plain data entries. No code loading, URL fetch or runtime plugin privileges.</p>
