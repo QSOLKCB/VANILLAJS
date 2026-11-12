@@ -27,7 +27,20 @@ try{
   const page=await browser.newPage({viewport:{width:1280,height:850},acceptDownloads:true}),errors=[];
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto('http://127.0.0.1:'+server.address().port+'/VANILLAJS/demos/racing-lab/index.html');
-  await page.waitForFunction(()=>document.documentElement.dataset.racingReady==='ready');
+  try{
+    await page.waitForFunction(()=>document.documentElement.dataset.racingReady==='ready',null,{timeout:10000});
+  }catch(error){
+    const observed=await page.evaluate(()=>({
+      ready:document.documentElement.dataset.racingReady??null,
+      title:document.title,
+      foundry:!!document.querySelector('#track-foundry'),
+      script:document.querySelector('script[src="./app.js"]')?.src??null,
+      errorText:document.querySelector('#error')?.textContent??null,
+      documentState:document.readyState
+    }));
+    console.error('RACING STARTUP DIAGNOSTIC',JSON.stringify({observed,pageErrors:errors}));
+    throw error;
+  }
   assert.equal(await page.locator('#status').textContent(),'READY');
   assert.equal(await page.locator('#error').isVisible(),false);
   const nonBlack=await page.locator('#retro-view').evaluate(canvas=>{
@@ -93,12 +106,124 @@ try{
     await page.evaluate(()=>window.dispatchEvent(new Event('blur')));
     assert.equal(await page.locator('#status').textContent(),'PAUSED');
   }
+  // RACING-002B: author, export, reject malformed input, restore and drive
+  // an accepted track through the *actual* packaged browser interface.
+  await page.locator('#track-foundry').scrollIntoViewIfNeeded();
+  const previewPixels=await page.locator('#track-preview').evaluate(canvas=>{
+    const data=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
+    return data[3]+data[11]+data[data.length-1];
+  });
+  assert.ok(previewPixels>0,'Track Foundry schematic must draw actual pixels');
+  await page.locator('#track-name').fill('Morning Sprint');
+  await page.locator('#track-environment').selectOption('forest');
+  await page.locator('#track-sections [data-section="0"][data-property="curve"]').fill('0.8');
+  await page.locator('#track-sections [data-section="0"][data-property="curve"]').press('Tab');
+  await page.locator('#track-apply').click();
+  assert.match(await page.locator('#track-message').textContent(),/Applied Morning Sprint/);
+  assert.match(await page.locator('#mode-title').textContent(),/Scenic Tour/);
+  await page.locator('#launch').click();
+  await page.locator('#track-name').focus();
+  assert.equal(await page.locator('#status').textContent(),'PAUSED');
+  const idleSpeed=await page.locator('#speed').textContent();
+  await page.keyboard.press('w');await page.keyboard.press('Space');
+  assert.equal(await page.locator('#status').textContent(),'PAUSED');
+  assert.equal(await page.locator('#speed').textContent(),idleSpeed);
+  await page.locator('#track-name').fill('Morning Sprint');
+  const trackDownload=page.waitForEvent('download');
+  await page.locator('#track-export').click();
+  const exported=JSON.parse(await readFile(await (await trackDownload).path(),'utf8'));
+  assert.equal(exported.format,'qsol.vanillajs.track.v1');
+  assert.equal(exported.name,'Morning Sprint');
+  assert.equal(exported.environment,'forest');
+  assert.equal(exported.sections[0].curve,.8);
+  // Delayed imports may not replace a newer draft edit.
+  await page.evaluate(serialized=>{
+    const original=File.prototype.text;
+    File.prototype.text=function(){
+      if(['slow-track.json','slow-numeric.json','slow-gate.json'].includes(this.name))
+        return new Promise(resolve=>{globalThis.__resolveSlowTrack=()=>resolve(serialized);});
+      return original.call(this);
+    };
+  },JSON.stringify({...exported,name:'Slow import'}));
+  await page.locator('#track-import').setInputFiles({
+    name:'slow-track.json',mimeType:'application/json',buffer:Buffer.from('{}')
+  });
+  await page.waitForFunction(()=>typeof globalThis.__resolveSlowTrack==='function');
+  await page.locator('#track-name').fill('Newer edit');
+  await page.evaluate(()=>globalThis.__resolveSlowTrack());
+  await page.waitForTimeout(100);
+  assert.equal(await page.locator('#track-name').inputValue(),'Newer edit',
+    'later user edit must win over a slow import');
+  await page.locator('#track-name').fill('Morning Sprint');
+  // Regression: numeric "input" fires before blur/"change". A pending import
+  // must not overwrite what the player just typed or the draft used by Apply.
+  await page.evaluate(()=>{globalThis.__resolveSlowTrack=undefined;});
+  await page.locator('#track-import').setInputFiles({
+    name:'slow-numeric.json',mimeType:'application/json',buffer:Buffer.from('{}')
+  });
+  await page.waitForFunction(()=>typeof globalThis.__resolveSlowTrack==='function');
+  await page.locator('#track-sections [data-section="0"][data-property="curve"]').evaluate(el=>{
+    el.focus();el.value='0.9';el.dispatchEvent(new Event('input',{bubbles:true}));
+  });
+  assert.equal(await page.locator('#track-sections [data-section="0"][data-property="curve"]').inputValue(),'0.9');
+  assert.equal(await page.locator('#track-sections [data-section="0"][data-property="curve"]').evaluate(el=>document.activeElement===el),true,
+    'the numeric edit must be uncommitted and still focused before import resolves');
+  await page.evaluate(()=>globalThis.__resolveSlowTrack());
+  await page.waitForTimeout(80);
+  assert.equal(await page.locator('#track-sections [data-section="0"][data-property="curve"]').inputValue(),'0.9',
+    'stale import cannot replace a focused section input before blur');
+  const numericDownload=page.waitForEvent('download');
+  await page.locator('#track-export').click();
+  const numericExport=JSON.parse(await readFile(await (await numericDownload).path(),'utf8'));
+  assert.equal(numericExport.sections[0].curve,.9,'the accepted numeric edit must reach the exported draft');
+
+  await page.locator('#track-target').selectOption('circuit');
+  await page.evaluate(()=>{globalThis.__resolveSlowTrack=undefined;});
+  await page.locator('#track-import').setInputFiles({
+    name:'slow-gate.json',mimeType:'application/json',buffer:Buffer.from('{}')
+  });
+  await page.waitForFunction(()=>typeof globalThis.__resolveSlowTrack==='function');
+  await page.locator('#track-gates [data-gate="2"][data-property="x"]').evaluate(el=>{
+    el.focus();el.value='52';el.dispatchEvent(new Event('input',{bubbles:true}));
+  });
+  assert.equal(await page.locator('#track-gates [data-gate="2"][data-property="x"]').evaluate(el=>document.activeElement===el),true);
+  await page.evaluate(()=>globalThis.__resolveSlowTrack());
+  await page.waitForTimeout(80);
+  assert.equal(await page.locator('#track-gates [data-gate="2"][data-property="x"]').inputValue(),'52',
+    'stale import cannot replace a focused gate coordinate before blur');
+  const gateDownload=page.waitForEvent('download');
+  await page.locator('#track-export').click();
+  const gateExport=JSON.parse(await readFile(await (await gateDownload).path(),'utf8'));
+  assert.equal(gateExport.gates[2].x,52,'the gate edit must reach the exported draft');
+  await page.locator('#track-target').selectOption('tour');
+  await page.locator('#track-import').setInputFiles({
+    name:'invalid-track.json',mimeType:'application/json',buffer:Buffer.from('{"bad":true}')
+  });
+  await page.waitForFunction(()=>document.querySelector('#track-message').textContent.includes('Import rejected'));
+  assert.equal(await page.locator('#track-name').inputValue(),'Morning Sprint',
+    'invalid imports preserve the previously accepted authoring draft');
+  await page.locator('#track-new').click();
+  await page.locator('#track-import').setInputFiles({
+    name:'morning-sprint.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(exported))
+  });
+  await page.waitForFunction(()=>document.querySelector('#track-name').value==='Morning Sprint');
+  await page.locator('#track-target').selectOption('sprint');
+  await page.locator('#track-apply').click();
+  assert.match(await page.locator('#mode-title').textContent(),/Coastal Sprint/);
+  assert.equal(await page.locator('#three-view').evaluate(c=>!!c.getContext('webgl')&&c.width>1),true);
+  await page.screenshot({path:'browser-artifacts/racing-track-foundry.png',fullPage:true});
+  await page.locator('#track-target').selectOption('circuit');
+  await page.locator('#track-apply').click();
+  assert.match(await page.locator('#mode-title').textContent(),/Circuit Race/);
+  assert.equal(await page.locator('#track-gates').isVisible(),true);
+  await page.locator('#track-clear').click();
+  assert.match(await page.locator('#track-message').textContent(),/built-in tracks/);
   await page.setViewportSize({width:390,height:844});
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),
     'mobile view must fit 390 CSS pixels without horizontal page overflow');
   await page.screenshot({path:'browser-artifacts/racing-mobile.png',fullPage:true});
   assert.deepEqual(errors,[]);
-  console.log('RACING-001 packaged Chromium PASS: retro raster, 3D canvas, five modes, input, pause/blur, JSON evidence and responsive layout.');
+  console.log('RACING-002B packaged Chromium PASS: seven modes, Track Foundry author/export/reject/re-import/apply/clear, native Canvas/WebGL, pause, evidence and responsive layout.');
 }finally{
   await browser?.close();
   await new Promise(done=>server.close(done));

@@ -35,3 +35,32 @@ kbd{font:11px monospace;background:#233946;padding:2px 5px;border-radius:2px}.to
 footer{padding:22px 5vw;color:#91b2bf;border-top:1px solid var(--line);font:10px monospace}
 @media(max-width:1050px){.modes{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:800px){.modes{grid-template-columns:repeat(2,1fr)}.modes button{padding:12px}.modes button:last-child{grid-column:1/-1}.intro{display:block}.signal{display:inline-block;margin-top:12px}.hud strong{font-size:16px}.hud>div{padding:10px}.hud span{font-size:8px}.lower{grid-template-columns:1fr}.viewport{height:420px}}
 @media(max-width:500px){main{padding:20px 12px}header{padding:18px 12px;display:block}nav{margin-top:14px;gap:12px}.modes b{font-size:10px}.modes small{font-size:8px}.hud strong{font-size:13px}.hud strong small{font-size:8px}.hud>div{padding:8px 6px}.viewport{height:380px}.in-game{font-size:10px}.curtain h2{font-size:31px}}
+
+/* RACING-002B: independent creator UI, no extra runtime dependencies. */
+.foundry{margin-top:30px;padding:25px;border:1px solid var(--line);background:#0e1e2b}
+.foundry h2{margin:10px 0;font-size:clamp(26px,4vw,44px);letter-spacing:-1.5px}
+.foundry h2 span{color:var(--cyan)}.foundry h3{font:700 13px monospace;letter-spacing:1px}
+.foundry p{color:#a5c4ce;line-height:1.65;font-size:13px}
+.foundry-heading{display:flex;align-items:center;justify-content:space-between;gap:25px;flex-wrap:wrap}
+.foundry-actions{display:flex;flex-wrap:wrap;gap:8px;max-width:570px}
+.foundry-actions button,.track-import{font:700 10px monospace;padding:13px}
+.foundry-primary{background:var(--cyan);color:#081b22}
+.track-import{border:1px solid var(--line);background:#183345;cursor:pointer}
+.track-import input{display:none}.foundry-setup{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0}
+.foundry-setup label,.track-row label{display:grid;gap:7px;font:11px monospace;color:#a9cfce}
+.foundry input,.foundry select{min-width:0;background:#0a1924;border:1px solid #355366;color:#e1f0ef;padding:9px}
+.foundry-workspace{display:grid;grid-template-columns:minmax(320px,1fr) minmax(0,1.2fr);gap:24px}
+.foundry-help{font:11px/1.7 monospace!important;color:#8daab6!important}
+.track-row{display:grid;grid-template-columns:70px repeat(3,minmax(0,1fr));align-items:end;gap:9px;margin:9px 0}
+.track-row strong{font:11px monospace;align-self:center}
+.track-row input{width:100%}
+.track-gates{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.gate-row{display:flex;align-items:center;gap:4px;font:11px monospace}
+.gate-row input{width:42%;padding:6px}
+#track-preview{display:block;width:100%;height:auto;border:1px solid #355366;background:#081827;touch-action:none}
+#track-message{font:12px monospace;color:#60e1ce;min-height:20px}
+#track-message[data-invalid=true]{color:#ff9d9d}
+@media(max-width:1000px){.foundry-workspace{grid-template-columns:1fr}}
+@media(max-width:700px){.foundry-setup{grid-template-columns:1fr}.foundry{padding:14px}
+.track-row{grid-template-columns:60px repeat(3,minmax(0,1fr));gap:5px}
+.track-row label{font-size:9px}.track-row input{padding:6px}.track-gates{grid-template-columns:repeat(2,1fr)}}

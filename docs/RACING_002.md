@@ -60,12 +60,23 @@ from local execution, physical GPU tests and human visual evaluations.
 The simulation is still Float64 arcade physics, **not** the exact Q16.16 engine,
 and same-runtime replay does not establish cross-engine bit-exactness.
 
+## RACING-002B delivered in a follow-on milestone
+
+The original RACING-002A milestone did not include physically distinct track
+branches. **RACING-002B** adds a validated four-section road schema, continuous
+lane-dependent centreline divergence, a circuit gate editor and inert JSON
+import/export. The default RACING-002A 3.6 km sprint remains unchanged; applying
+an authored four-section pack creates a 4.8 km sprint with corresponding geometry
+and a correctly placed finish.
+
+[Track Foundry technical contract](RACING_002B.md).
+
 ## Next bounded increments
 
-1. **RACING-002B: Authored road sections.** Declarative lane widths, terrain,
-   forks and weather profiles; validate finite continuity, no impassable geometry
-   and bounded geometry budgets. Branches must change route topology, not merely
-   colour, before they can be called different physical routes.
+1. **RACING-002B completed:** Authored section widths, curated environments,
+   finite continuous centrelines, physically diverging forks and editable
+   circuit gates. Separate authoring for weather, obstacles and arbitrary
+   section lengths remains future work.
 2. **RACING-002C: Handling profiles.** Data-only car masses, final drives,
    acceleration curves, traction and steering assist, with paired reference
    races and explicit performance/skill contracts.
