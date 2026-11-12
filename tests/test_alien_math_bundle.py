@@ -31,12 +31,41 @@ class CapsuleTests(unittest.TestCase):
         (cls.root / 'modules/kernel/index.js').write_text('export const n=1;\n')
         git('add', '.'); git('commit', '-qm', 'fixture baseline')
         cls.base = git('rev-parse', 'HEAD')
+        # Exercise the real static build from an extracted capsule, including
+        # guides admitted by the builder rather than only formal documents.
+        fixture = {
+            'BUILD_A_GAME.md': '# Build a fixture game\n',
+            'docs/CREATOR_GUIDE.md': '# Creator help\n',
+            'docs/API.md': '# Fixture API\n',
+            'docs/private.json': '{"not":"packaged"}\n',
+            'docs/drafts/nested.md': '# Not a top-level guide\n',
+            'demos/example/index.html': '<!doctype html><title>Fixture</title>',
+            'api/index.js': 'export const fixture=true;\n',
+            'offline/register.js': '// fixture registration\n',
+            'index.html': '<!doctype html><title>Fixture</title>',
+            'NOTICE': 'test-only notice fixture\n',
+            'MODULES.json': '{}\n',
+            'package.json': '{"type":"module","version":"fixture"}\n',
+            'experiments/arch-omi/index.js': 'export const fixture=true;\n',
+            'experiments/e8-geometry/index.js': 'export const fixture=true;\n',
+        }
+        build_sources = ['scripts/build.js', 'scripts/service-worker.template.js',
+                         'scripts/verify-offline.js']
+        for name in build_sources:
+            fixture[name] = (bundle.ROOT / name).read_text()
+        for name, text in fixture.items():
+            target = cls.root / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(text)
         (cls.root / Path(bundle.FORMAL).parent).mkdir(parents=True)
         formal = {'baseline': cls.base, 'files': {'modules/kernel/index.js': bundle.sha((cls.root / 'modules/kernel/index.js').read_bytes())}}
         (cls.root / bundle.FORMAL).write_bytes(bundle.canonical(formal))
         git('add', '.'); git('commit', '-qm', 'fixture source')
         cls.revision = git('rev-parse', 'HEAD')
-        cls.settings = patch.multiple(bundle, BASE=cls.base, EXTRA=('LICENSE',))
+        cls.settings = patch.multiple(bundle, BASE=cls.base, EXTRA=(
+            'LICENSE', 'NOTICE', 'MODULES.json', 'package.json', 'index.html',
+            'experiments/arch-omi/index.js', 'experiments/e8-geometry/index.js',
+            *build_sources))
         cls.settings.start()
         cls.payload = bundle.payload_for(cls.root, cls.revision)
 
@@ -58,6 +87,21 @@ class CapsuleTests(unittest.TestCase):
         bundle.write_archive(self.payload, self.revision, other)
         self.assertEqual(self.path.read_bytes(), other.read_bytes())
         self.assertEqual(bundle.check(self.path, self.revision), self.payload)
+
+    def test_extracted_capsule_builds_the_same_offline_package_with_guides(self):
+        self.write()
+        extracted = bundle.extract(self.path, self.revision, Path(self.work.name) / 'extracted')
+        for root in (self.root, extracted):
+            for script in ('scripts/build.js', 'scripts/verify-offline.js'):
+                result = subprocess.run(['node', script], cwd=root, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual((self.root / 'dist/manifest.json').read_bytes(),
+                         (extracted / 'dist/manifest.json').read_bytes())
+        for name in ('BUILD_A_GAME.md', 'docs/CREATOR_GUIDE.md', 'docs/API.md'):
+            self.assertEqual((extracted / 'dist' / name).read_bytes(), (self.root / name).read_bytes())
+        for name in ('docs/private.json', 'docs/drafts/nested.md'):
+            self.assertNotIn('source/' + name, self.payload)
+            self.assertFalse((extracted / 'dist' / name).exists())
 
     def test_changed_source_with_rehashed_inventory_cannot_impersonate_git(self):
         changed = dict(self.payload)

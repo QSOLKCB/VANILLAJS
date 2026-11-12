@@ -14,6 +14,37 @@ async function relativeLook(page,x,y){
     document.pointerLockElement.dispatchEvent(new MouseEvent('mousemove',{bubbles:true,movementX:x,movementY:y}));
   },{x,y});
 }
+async function verifyReleasedFire(page,{held=false}={}){
+  const before=Number(await page.locator('#shots').textContent());
+  // Shots are presented on an 80 ms HUD cadence. The value already displayed
+  // when mouseup returns can still describe a tick while the button was held.
+  // Arm before the input and capture the first HUD update AFTER native release.
+  await page.evaluate(()=>{
+    const shots=document.querySelector('#shots');
+    delete shots.dataset.releasedShots;delete shots.dataset.releasedTime;
+    document.addEventListener('mouseup',()=>{
+      const observer=new MutationObserver(()=>{
+        observer.disconnect();
+        shots.dataset.releasedShots=shots.textContent;
+        shots.dataset.releasedTime=String(parseFloat(document.querySelector('#elapsed').textContent));
+      });
+      observer.observe(shots,{childList:true});
+    },{once:true});
+  });
+  await page.mouse.down();
+  if(held)await page.waitForFunction(n=>Number(document.querySelector('#shots').textContent)>=n+2,before);
+  await page.mouse.up();
+  await page.waitForFunction(()=>document.querySelector('#shots').dataset.releasedShots!==undefined);
+  const released=await page.locator('#shots').evaluate(node=>({
+    shots:Number(node.dataset.releasedShots),time:Number(node.dataset.releasedTime)
+  }));
+  assert.ok(released.shots>=before+(held?2:1),'captured tap/hold must actually fire');
+  // More than one complete 0.25 s weapon cooldown in simulation time, even on
+  // a slow renderer. Stuck primary input or a stale edge must still fail.
+  await page.waitForFunction(time=>parseFloat(document.querySelector('#elapsed').textContent)>=time+.35,released.time);
+  assert.equal(Number(await page.locator('#shots').textContent()),released.shots,
+    `${held?'held':'tapped'} fire must stop after mouse release`);
+}
 export async function verifyMouseLook(browser,baseURL){
   for(const lab of ['flight','interaction']){
     const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
@@ -32,8 +63,8 @@ export async function verifyMouseLook(browser,baseURL){
     await page.waitForTimeout(350);assert.equal(await picture(page,selector),aimed,`${lab}: view must stop when mouse stops`);
     if(lab==='flight')assert.equal(parseFloat(await page.locator('#spin').textContent()),0);
     if(lab==='interaction'){
-      await page.mouse.down();await page.mouse.up();await page.waitForFunction(()=>Number(document.querySelector('#shots').textContent)>0);
-      const shots=await page.locator('#shots').textContent();await page.waitForTimeout(350);assert.equal(await page.locator('#shots').textContent(),shots);
+      await verifyReleasedFire(page);
+      await verifyReleasedFire(page,{held:true});
     }
     // Existing arrow-key flight still turns; a subsequent mouse sample takes over.
     await page.keyboard.down('ArrowLeft');await page.waitForTimeout(200);await page.keyboard.up('ArrowLeft');
