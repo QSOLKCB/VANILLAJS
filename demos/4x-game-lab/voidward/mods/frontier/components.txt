@@ -1,0 +1,19 @@
+# id | name | role | slots | cost | hp | attack | speed | research | level | description
+drive-1 | Warp drive 1 | engine | 1 | 12 | 0 | 0 | 1 | propulsion | 1 | Movement engine. Multiple drives do not stack speed.
+laser-1 | Lance array 1 | weapon | 1 | 18 | 0 | 10 | 0 | weapons | 1 | Directed energy weapon; attack stacks.
+shield-1 | Deflector 1 | shield | 1 | 14 | 18 | 0 | 0 | shields | 1 | Adds hull protection; protection stacks.
+drive-2 | Warp drive 2 | engine | 1 | 24 | 0 | 0 | 1 | propulsion | 2 | Movement engine. Multiple drives do not stack speed.
+laser-2 | Lance array 2 | weapon | 1 | 36 | 0 | 20 | 0 | weapons | 2 | Directed energy weapon; attack stacks.
+shield-2 | Deflector 2 | shield | 1 | 28 | 36 | 0 | 0 | shields | 2 | Adds hull protection; protection stacks.
+drive-3 | Warp drive 3 | engine | 2 | 36 | 0 | 0 | 2 | propulsion | 3 | Movement engine. Multiple drives do not stack speed.
+laser-3 | Lance array 3 | weapon | 2 | 54 | 0 | 30 | 0 | weapons | 3 | Directed energy weapon; attack stacks.
+shield-3 | Deflector 3 | shield | 2 | 42 | 54 | 0 | 0 | shields | 3 | Adds hull protection; protection stacks.
+drive-4 | Warp drive 4 | engine | 2 | 48 | 0 | 0 | 2 | propulsion | 4 | Movement engine. Multiple drives do not stack speed.
+laser-4 | Lance array 4 | weapon | 2 | 72 | 0 | 40 | 0 | weapons | 4 | Directed energy weapon; attack stacks.
+shield-4 | Deflector 4 | shield | 2 | 56 | 72 | 0 | 0 | shields | 4 | Adds hull protection; protection stacks.
+drive-5 | Warp drive 5 | engine | 2 | 60 | 0 | 0 | 3 | propulsion | 5 | Movement engine. Multiple drives do not stack speed.
+laser-5 | Lance array 5 | weapon | 2 | 90 | 0 | 50 | 0 | weapons | 5 | Directed energy weapon; attack stacks.
+shield-5 | Deflector 5 | shield | 2 | 70 | 90 | 0 | 0 | shields | 5 | Adds hull protection; protection stacks.
+survey | Survey array | survey | 1 | 12 | 0 | 0 | 0 | industry | 1 | Recover ancient archives for resources and research.
+colony | Colony habitat | colony | 3 | 40 | 0 | 0 | 0 | industry | 1 | Ship becomes a colony when deployed.
+marines | Marine bay | assault | 2 | 12 | 0 | 0 | 0 | industry | 1 | Capture enemy planets after eliminating their defending fleets.

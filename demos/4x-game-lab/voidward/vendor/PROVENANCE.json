@@ -1,0 +1,347 @@
+{
+  "schema": "vanillajs-voidward-vendor-v1",
+  "files": [
+    {
+      "repository": "QSOLKCB/SONIFICATION",
+      "commit": "2ca65c6540d7051a77ed571b83f5a9df453094ec",
+      "source": "APP/js/namespace.js",
+      "local": "vendor/sonification/APP/js/namespace.js",
+      "sha256": "803dabfe27d3feec1e99dd2eb5972b60d246a580c8c6d626acca9c07ab714ddb"
+    },
+    {
+      "repository": "QSOLKCB/SONIFICATION",
+      "commit": "2ca65c6540d7051a77ed571b83f5a9df453094ec",
+      "source": "APP/js/math64.js",
+      "local": "vendor/sonification/APP/js/math64.js",
+      "sha256": "f99f0b943394f14fc865b327173ed5f448db85cd851f8cd3f1a3da007134dc40"
+    },
+    {
+      "repository": "QSOLKCB/SONIFICATION",
+      "commit": "2ca65c6540d7051a77ed571b83f5a9df453094ec",
+      "source": "APP/js/synthesis.js",
+      "local": "vendor/sonification/APP/js/synthesis.js",
+      "sha256": "5d008ffa3f18717c46cd2317060589a49fc96e9cd19d7a7e8919831178950f13"
+    },
+    {
+      "repository": "QSOLKCB/SONIFICATION",
+      "commit": "2ca65c6540d7051a77ed571b83f5a9df453094ec",
+      "source": "LICENSE",
+      "local": "vendor/sonification/LICENSE",
+      "sha256": "32ee9dbf6196874fc9d406c54a888a6c4cbb9aa4a7f35b46befeaff43a78fe85"
+    },
+    {
+      "repository": "QSOLKCB/SONIFICATION",
+      "commit": "2ca65c6540d7051a77ed571b83f5a9df453094ec",
+      "source": "NOTICE",
+      "local": "vendor/sonification/NOTICE",
+      "sha256": "a0868be95f49e17c4538022a95c3331eb42ef89cf493005b66159d1b182e7bcc"
+    },
+    {
+      "repository": "QSOLKCB/ARCADE",
+      "commit": "f29b780734a50171d55ae2f770930db8a487b31c",
+      "source": "js/audio.js",
+      "local": "vendor/arcade/js/audio.js",
+      "sha256": "2cc4dbf8d8358eff4d64ba2d283c4c3bd3d8e03a1d0738ec69bc1629b82da1d5"
+    },
+    {
+      "repository": "QSOLKCB/ARCADE",
+      "commit": "f29b780734a50171d55ae2f770930db8a487b31c",
+      "source": "LICENSE",
+      "local": "vendor/arcade/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "repository": "QSOLKCB/ARCADE",
+      "commit": "f29b780734a50171d55ae2f770930db8a487b31c",
+      "source": "NOTICE",
+      "local": "vendor/arcade/NOTICE",
+      "sha256": "f6c326ee5c1f790099fefbc730f771bf571c7f56f755498aeb67915900027400"
+    },
+    {
+      "repository": "QSOLKCB/GAMES",
+      "commit": "7e0a9019d07b491cffc9b698fa51acdb843c49cc",
+      "source": "shared/qsol-input.js",
+      "local": "vendor/games/shared/qsol-input.js",
+      "sha256": "aafd16b43dec818da8aa5e848a742e08cc94e0a82d0f4829eb42438864129cbb"
+    },
+    {
+      "repository": "QSOLKCB/GAMES",
+      "commit": "7e0a9019d07b491cffc9b698fa51acdb843c49cc",
+      "source": "shared/NOTICE.md",
+      "local": "vendor/games/shared/NOTICE.md",
+      "sha256": "36ceb2c7e605248b2550f4201dcdccd2cf550f88de9bd2f0790331e9d475ba91"
+    },
+    {
+      "repository": "QSOLKCB/GAMES",
+      "commit": "7e0a9019d07b491cffc9b698fa51acdb843c49cc",
+      "source": "LICENSE",
+      "local": "vendor/games/LICENSE",
+      "sha256": "848bce75fc595f347fc64d1c59c25c18e64b15e12743edbddf9dcbd3b5dc077c"
+    },
+    {
+      "repository": "QSOLKCB/OFFLINE-GAMES",
+      "commit": "2ccc87108316327ff19b622d62952114d555aee7",
+      "source": "shared/surface-detail.js",
+      "local": "vendor/offline-games/shared/surface-detail.js",
+      "sha256": "9d35906b7a4b78bae21ccbb5d1d3d52eb18ac5ac81a3e44221ef26d41e8a8a70"
+    },
+    {
+      "repository": "QSOLKCB/OFFLINE-GAMES",
+      "commit": "2ccc87108316327ff19b622d62952114d555aee7",
+      "source": "LICENSE",
+      "local": "vendor/offline-games/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "repository": "QSOLKCB/OFFLINE-GAMES",
+      "commit": "2ccc87108316327ff19b622d62952114d555aee7",
+      "source": "NOTICE",
+      "local": "vendor/offline-games/NOTICE",
+      "sha256": "7f250e9ec867345f08c68dd47bf7f997bd1d49e09e1d1701297f9dfbe75b1de8"
+    },
+    {
+      "repository": "QSOLKCB/GALAXY",
+      "commit": "f219bb427b3a9b0c93900169d903f48f410ae67a",
+      "source": "galaxy-core.js",
+      "local": "vendor/galaxy/galaxy-core.js",
+      "sha256": "217739552ff631710481cfa7270df91108c3b41413ca5be66e7e7223d070649e"
+    },
+    {
+      "repository": "QSOLKCB/GALAXY",
+      "commit": "f219bb427b3a9b0c93900169d903f48f410ae67a",
+      "source": "uff-physics.js",
+      "local": "vendor/galaxy/uff-physics.js",
+      "sha256": "ef4490f65fc3a0822ba6f68a720916de2ec13ccabc3e815c5dfe8e6ad7d4565a"
+    },
+    {
+      "repository": "QSOLKCB/GALAXY",
+      "commit": "f219bb427b3a9b0c93900169d903f48f410ae67a",
+      "source": "data/uff-demo.js",
+      "local": "vendor/galaxy/data/uff-demo.js",
+      "sha256": "3635e6574ab5f7f175109220f7f1b04cd77f2518f4bbbb6ad9a9c57b16b63f6d"
+    },
+    {
+      "repository": "QSOLKCB/GALAXY",
+      "commit": "f219bb427b3a9b0c93900169d903f48f410ae67a",
+      "source": "data/uff/NOTICE",
+      "local": "vendor/galaxy/data/uff/NOTICE",
+      "sha256": "7b6d4173f0739742dbb61b4dd274e631491dedc4a8d4bc18acea2b875992a440"
+    },
+    {
+      "repository": "QSOLKCB/GALAXY",
+      "commit": "f219bb427b3a9b0c93900169d903f48f410ae67a",
+      "source": "data/uff/provenance.json",
+      "local": "vendor/galaxy/data/uff/provenance.json",
+      "sha256": "6e0512806d578c655a6665e91494fb3d8903cfd9288ee3e595056df0f40c39bc"
+    },
+    {
+      "repository": "QSOLKCB/GALAXY",
+      "commit": "f219bb427b3a9b0c93900169d903f48f410ae67a",
+      "source": "LICENSE",
+      "local": "vendor/galaxy/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "repository": "QSOLKCB/GALAXY",
+      "commit": "f219bb427b3a9b0c93900169d903f48f410ae67a",
+      "source": "LICENSES/MPL-2.0.txt",
+      "local": "vendor/galaxy/LICENSES/MPL-2.0.txt",
+      "sha256": "3f3d9e0024b1921b067d6f7f88deb4a60cbe7a78e76c64e3f1d7fc3b779b9d04"
+    },
+    {
+      "repository": "QSOLKCB/GALAXY",
+      "commit": "f219bb427b3a9b0c93900169d903f48f410ae67a",
+      "source": "NOTICE.md",
+      "local": "vendor/galaxy/NOTICE.md",
+      "sha256": "bbaa05d2856a6e8d1bb8083330aa3b60ece514a1221e947b5e72d97f7191c4c9"
+    },
+    {
+      "repository": "QSOLKCB/GLUBALL",
+      "commit": "d25da2a1ade877e2fe048fd4dabf019728cb25e7",
+      "source": "gluball-core.js",
+      "local": "vendor/gluball/gluball-core.js",
+      "sha256": "74c296f7847da97f88c922a44d3a5ceab403fe0bdfcf05eeb76df77b2a8258a9"
+    },
+    {
+      "repository": "QSOLKCB/GLUBALL",
+      "commit": "d25da2a1ade877e2fe048fd4dabf019728cb25e7",
+      "source": "LICENSE",
+      "local": "vendor/gluball/LICENSE",
+      "sha256": "3f3d9e0024b1921b067d6f7f88deb4a60cbe7a78e76c64e3f1d7fc3b779b9d04"
+    },
+    {
+      "repository": "QSOLKCB/OPT",
+      "commit": "7556dd36acd53ed3ed538fd03b1db44e5c1ec869",
+      "source": "optimizations/OPT-INV-001-invariant-driven-reuse.md",
+      "local": "vendor/opt/optimizations/OPT-INV-001-invariant-driven-reuse.md",
+      "sha256": "34ca6dc977e0f15e31f534a9183a33597782cde7a4008bf9012a8667e8ec7efc"
+    },
+    {
+      "repository": "QSOLKCB/OPT",
+      "commit": "7556dd36acd53ed3ed538fd03b1db44e5c1ec869",
+      "source": "LICENSE",
+      "local": "vendor/opt/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "repository": "QSOLKCB/GAMES",
+      "commit": "7e0a9019d07b491cffc9b698fa51acdb843c49cc",
+      "source": "SOVEREIGN_LATTICE/NOTICE.md",
+      "local": "vendor/games/SOVEREIGN_LATTICE/NOTICE.md",
+      "sha256": "f7955eb159410505c40c2ab25ca11e14d21392531dbf73b970ac9dc7fda781d2"
+    }
+  ],
+  "integrations": [
+    {
+      "repository": "QSOLKCB/VANILLAJS",
+      "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+      "sources": [
+        "demos/editor/model.js",
+        "demos/editor/components.js",
+        "demos/editor/asset-foundry.js",
+        "modules/mod-sdk/index.js",
+        "demos/4x-game-lab/world.js"
+      ],
+      "adapter": "js/workbench-bridge.js; js/workshop.js; js/core.js",
+      "contribution": "Actual strict Workbench project/Component Forge validation, convex hull and fixed-scale map exchange, bounded data-only SDK manifests. Ternary Reach command/fog design remains a reference; its 16-vertex exact-graph limit is unchanged."
+    },
+    {
+      "repository": "QSOLKCB/GAMES",
+      "commit": "7e0a9019d07b491cffc9b698fa51acdb843c49cc",
+      "sources": [
+        "SOVEREIGN_LATTICE/core.js",
+        "shared/qsol-input.js"
+      ],
+      "adapter": "js/core.js; js/app.js",
+      "contribution": "Fleet grouping/slowest-member travel, last-seen intelligence and target-reservation patterns adapted to VOIDWARD legal commands and strict state validation. Existing standard-gamepad reader retained."
+    },
+    {
+      "repository": "QSOLKCB/OFFLINE-GAMES",
+      "commit": "2ccc87108316327ff19b622d62952114d555aee7",
+      "sources": [
+        "shared/surface-detail.js",
+        "IRONWAKE/js/sim/campaign.js",
+        "VAGRANT_STARS/js/mod-api.js",
+        "VAGRANT_STARS/js/modding.js"
+      ],
+      "adapter": "js/render.js; js/core.js; js/workshop.js",
+      "contribution": "Local procedural planet textures retained; inspected chapter/progress and isolated source-mod workflows informed once-only event ledgers and text/source separation. No uploaded JavaScript execution."
+    },
+    {
+      "repository": "QSOLKCB/ARCADE",
+      "commit": "f29b780734a50171d55ae2f770930db8a487b31c",
+      "sources": [
+        "js/audio.js"
+      ],
+      "adapter": "js/audio.js",
+      "contribution": "Real independent music/fx buses and setLevels now used; bounded event voices and procedural effects retained."
+    },
+    {
+      "repository": "QSOLKCB/SONIFICATION",
+      "commit": "2ca65c6540d7051a77ed571b83f5a9df453094ec",
+      "sources": [
+        "APP/js/synthesis.js",
+        "APP/js/math64.js"
+      ],
+      "adapter": "js/audio.js",
+      "contribution": "Seeded browser-lab FM samples; full note/rate identity and a 16 MiB cache. Root ETQ path not used; no cross-runtime audio-byte claim."
+    },
+    {
+      "repository": "QSOLKCB/OPT",
+      "commit": "7556dd36acd53ed3ed538fd03b1db44e5c1ec869",
+      "sources": [
+        "optimizations/OPT-INV-001-invariant-driven-reuse.md",
+        "optimizations/OPT-CACHE-001-working-set-aware-cache-capacity.md"
+      ],
+      "adapter": "js/render.js; js/audio.js; scripts/benchmark.mjs",
+      "contribution": "Declared bounded workload/budget/stopping conditions; rejected the proposed raster backdrop cache after owner-browser RGBA parity failure. Direct rendering, bounded planet/star reuse and bounded audio memory remain. Performance evidence is environment-specific."
+    },
+    {
+      "repository": "QSOLKCB/GALAXY",
+      "commit": "f219bb427b3a9b0c93900169d903f48f410ae67a",
+      "sources": [
+        "galaxy-core.js"
+      ],
+      "adapter": "js/render.js",
+      "contribution": "Seeded 1024-sample backdrop retained with at most two seed entries. The rejected raster cache does not alter the donor sample contract."
+    },
+    {
+      "repository": "QSOLKCB/GLUBALL",
+      "commit": "d25da2a1ade877e2fe048fd4dabf019728cb25e7",
+      "sources": [
+        "gluball-core.js"
+      ],
+      "adapter": "js/render.js",
+      "contribution": "Bounded centerline projection for archive/gate motifs; original donor geometry unchanged, cosmetic only."
+    }
+  ],
+  "sourceRepository": "QSOLKCB/4XGAMES",
+  "sourceCommit": "030859385ac8929e066702ef8af0518663480653",
+  "pathBase": "demos/4x-game-lab/voidward",
+  "nativeDependencies": [
+    {
+      "repository": "QSOLKCB/VANILLAJS",
+      "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+      "source": "modules/integer-math/index.js",
+      "local": "modules/integer-math/index.js",
+      "sha256": "4c0bb66780bf9e810efb1963c0238d9356814abf79c959dcd1734164de57905f"
+    },
+    {
+      "repository": "QSOLKCB/VANILLAJS",
+      "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+      "source": "modules/math/index.js",
+      "local": "modules/math/index.js",
+      "sha256": "4f4ebf0786b97342c11004b8830a535890b16693458a0436edb1fc581a411da7"
+    },
+    {
+      "repository": "QSOLKCB/VANILLAJS",
+      "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+      "source": "modules/audio2d/index.js",
+      "local": "modules/audio2d/index.js",
+      "sha256": "07e19391b84034acba56ef840a4d622b70e815f5376de123b6a07a9ccebf3098"
+    },
+    {
+      "repository": "QSOLKCB/VANILLAJS",
+      "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+      "source": "modules/exact-rational/index.js",
+      "local": "modules/exact-rational/index.js",
+      "sha256": "dbc7e08ee27e824c874b339074804a0d103906fb91b2f2c3b3ad806cf05e0f48"
+    },
+    {
+      "repository": "QSOLKCB/VANILLAJS",
+      "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+      "source": "modules/exact-graph/index.js",
+      "local": "modules/exact-graph/index.js",
+      "sha256": "cdfb0e74a330e62ea1312ff042b570856707bfac2c491e3e3125647b2867aa10"
+    },
+    {
+      "repository": "QSOLKCB/VANILLAJS",
+      "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+      "source": "demos/editor/model.js",
+      "local": "demos/editor/model.js",
+      "sha256": "0684530070b112627fecad974d1a8df035fcf9a94d22a4b144c2a286c3330c70"
+    },
+    {
+      "repository": "QSOLKCB/VANILLAJS",
+      "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+      "source": "demos/editor/components.js",
+      "local": "demos/editor/components.js",
+      "sha256": "06909dee76b29c0fd64cbb894306ebacf2dbe18c871acde8cad84448c5e8f6f1"
+    },
+    {
+      "repository": "QSOLKCB/VANILLAJS",
+      "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+      "source": "demos/editor/asset-foundry.js",
+      "local": "demos/editor/asset-foundry.js",
+      "sha256": "0e027213bfcc67574e29b9d1845eaedaaa287f98dbbb58dc6bd8e9d8d92e7293"
+    },
+    {
+      "repository": "QSOLKCB/VANILLAJS",
+      "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+      "source": "modules/mod-sdk/index.js",
+      "local": "modules/mod-sdk/index.js",
+      "sha256": "1b8e11d442d77365e4ec79ace6736855dcb8b7946edabbf0123168f790f52b64"
+    }
+  ],
+  "adaptation": "World, campaign data and authoring adapters remain demo-owned. Imports use the existing byte-identical native modules/editor instead of duplicating vendor/vanillajs."
+}

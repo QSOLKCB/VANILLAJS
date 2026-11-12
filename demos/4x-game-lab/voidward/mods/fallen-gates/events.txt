@@ -1,0 +1,5 @@
+# id | earliest turn | requires | kind | owner | target | value | repeat interval
+signal | 6 |  | message | player | The gate signal repeats in pairs. Survey arrays can recover the keys; another empire can claim them first. | 0 | 0
+key-supply | 12 | first-signal | resources | player | minerals | 180 | 0
+archive-decoded | 20 | archive-key | resources | player | science | 250 | 0
+gate-echo | 45 |  | message | player | Restoration needs industry and field harmonics. The independent route needs charts and fast drives. | 0 | 0

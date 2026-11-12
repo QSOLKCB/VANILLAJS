@@ -1,0 +1,5 @@
+# id | display name | effect description
+industry | Industrial systems | More minerals and construction per colony; capital hulls at level III.
+propulsion | Warp dynamics | Unlock engines that cross more warp lanes per turn.
+weapons | Directed energy | Unlock stronger weapons for newly built ships.
+shields | Field harmonics | Unlock shield modules and strengthen planetary defences.

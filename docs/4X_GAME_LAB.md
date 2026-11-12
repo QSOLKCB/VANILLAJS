@@ -6,6 +6,15 @@
 sector, settle colonies, develop production and command fleets against the
 Umbra Compact. The game runs locally, including from the packaged offline site.
 
+For larger campaigns and editable universes, open the separate
+[VOIDWARD campaign mode](../demos/4x-game-lab/voidward/index.html). It brings five
+campaigns, selectable empires, ship design, research dependencies, production
+queues, diplomacy, objectives and a data-pack workshop from the pinned
+4XGAMES implementation. The [VOIDWARD workflow](VOIDWARD_WORKFLOW.md) explains
+playing it and moving campaigns, star charts and ship silhouettes through the
+Visual Editor. Ternary Reach's rules and replay format below remain unchanged;
+the two modes use separate game state and formats.
+
 ## First foothold
 
 1. Start with sector seed `731`. Aster, system `0`, is your capital.
@@ -116,8 +125,9 @@ signed achievement record. The demo API is not a stable engine API.
 - VANILLAJS: [RTS Lab](RTS_LAB.md), [2D foundations](2D_FOUNDATION.md) and
   [incremental Chromium policy](BROWSER_INCREMENTAL_CI.md).
 
-These are design references. The lab's game and UI code are new; no MIT GAMES
-source or ARCADE assets were copied into this Apache-2.0 repository.
+These are design references for Ternary Reach. That mode's game and UI code
+were authored here. The separate VOIDWARD mode includes attributed donor
+source and its original file-level licences; see [its source boundary](VOIDWARD_WORKFLOW.md#source-and-package-boundary).
 
 ## Reproduce
 
@@ -138,7 +148,7 @@ New runtime and test sources are registered without promoting them to reviewed
 cache witnesses. CI must execute the real checks under the existing fail-closed
 policy. No owner-only GPU workflow is dispatched for this feature.
 
-Local validation for this change: Node 22.18.0 ran all 671 Node tests, including
+Historical Ternary Reach validation: Node 22.18.0 ran all 671 Node tests, including
 ten 4X regressions. Syntax/catalogue checks passed, and the 154-file offline
 package verified. The packaged Chromium `home,worlds` suites passed; the 4X
 regression passed again against the final package after the route-display fix.

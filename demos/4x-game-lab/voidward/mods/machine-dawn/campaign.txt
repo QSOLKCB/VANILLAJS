@@ -1,0 +1,4 @@
+id = machine-dawn
+version = 1.0.0
+title = Machine Dawn
+description = An original machine civilisation campaign. Recolonise a silent network: establish six colonies before your rivals. All names, ships and rules are editable text.

@@ -1,0 +1,4 @@
+# id | short | primary | accent | home system | ethos
+0 | ASSEMBLY | #72dbc4 | #d2f6e8 | 12 | Build a future beyond the frontier.
+1 | VEYR | #ce9fff | #f0dbff | 5 | Every star belongs to the whole.
+2 | ASHEN | #f28b71 | #ffe0ab | 29 | Order is forged in the void.

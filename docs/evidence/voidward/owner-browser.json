@@ -1,0 +1,409 @@
+{
+  "kind": "qsol.vanillajs.voidward-owner.v1",
+  "status": "PASS",
+  "baseline": false,
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "Node 22",
+    "browser": "Chrome 156"
+  },
+  "input": "Playwright controls only its dedicated browser; no OS keyboard/mouse injection",
+  "checks": [
+    {
+      "name": "ternary-reach",
+      "status": "PASS",
+      "elapsedMs": 2156.932355
+    },
+    {
+      "name": "existing-visual-editor",
+      "status": "PASS",
+      "elapsedMs": 7677.989486
+    },
+    {
+      "name": "voidward-campaigns",
+      "status": "PASS",
+      "elapsedMs": 20529.949211,
+      "result": {
+        "status": "PASS",
+        "checks": {
+          "all-campaign-empires": {
+            "status": "PASS",
+            "elapsedMs": 5622
+          },
+          "editor-handoff-transaction": {
+            "status": "PASS",
+            "elapsedMs": 479
+          },
+          "player-orders": {
+            "status": "PASS",
+            "elapsedMs": 384
+          },
+          "group-orders": {
+            "status": "PASS",
+            "elapsedMs": 539
+          },
+          "ship-refit-construction": {
+            "status": "PASS",
+            "elapsedMs": 672
+          },
+          "diplomacy-combat": {
+            "status": "PASS",
+            "elapsedMs": 721
+          },
+          "creator-roundtrip": {
+            "status": "PASS",
+            "elapsedMs": 1181
+          },
+          "legacy-save-migration": {
+            "status": "PASS",
+            "elapsedMs": 336
+          },
+          "large-save-roundtrip": {
+            "status": "PASS",
+            "elapsedMs": 1278
+          },
+          "campaign-progress": {
+            "status": "PASS",
+            "elapsedMs": 241
+          },
+          "large-list-filtering": {
+            "status": "PASS",
+            "elapsedMs": 854
+          },
+          "audio-preferences": {
+            "status": "PASS",
+            "elapsedMs": 502
+          },
+          "keyboard-responsive-touch": {
+            "status": "PASS",
+            "elapsedMs": 1219
+          },
+          "offline": {
+            "status": "PASS",
+            "elapsedMs": 168
+          },
+          "render-parity-performance": {
+            "status": "PASS",
+            "elapsedMs": 5958
+          }
+        },
+        "environment": {
+          "node": "v22.18.0",
+          "browser": "156.0.8078.79"
+        },
+        "coverage": {
+          "touch": "emulated",
+          "manualGameplay": "scripted UI actions",
+          "listening": "not assessed",
+          "hardwareAcceleration": "reported by owner runner separately"
+        },
+        "campaigns": [
+          {
+            "campaign": "frontier",
+            "player": 0,
+            "turn": 2
+          },
+          {
+            "campaign": "machine-dawn",
+            "player": 0,
+            "turn": 2
+          },
+          {
+            "campaign": "grand-frontier",
+            "player": 0,
+            "turn": 2
+          },
+          {
+            "campaign": "grand-frontier",
+            "player": 1,
+            "turn": 2
+          },
+          {
+            "campaign": "grand-frontier",
+            "player": 2,
+            "turn": 2
+          },
+          {
+            "campaign": "fallen-gates",
+            "player": 0,
+            "turn": 2
+          },
+          {
+            "campaign": "fallen-gates",
+            "player": 1,
+            "turn": 2
+          },
+          {
+            "campaign": "fallen-gates",
+            "player": 2,
+            "turn": 2
+          },
+          {
+            "campaign": "outer-rim",
+            "player": 0,
+            "turn": 2
+          }
+        ],
+        "largeSave": {
+          "status": "PASS",
+          "fixtureBytes": 2429209,
+          "workload": "Generated validated synthetic boundary fixture with populated report history; not a played campaign; no turns simulated in browser",
+          "timingMeaning": "Single Node monotonic wall-time sample per UI transfer, including Playwright protocol, import completion or download/read; not pure simulation time",
+          "fixtureImportMs": 322.87228099999993,
+          "uiExportDownloadMs": 66.07273499999792,
+          "exportedBytes": 2429209,
+          "exportedFile": "large-save-export.json",
+          "uiExportReimportMs": 293.8668199999993,
+          "stateParity": "Every authoritative state field and every pack file compared after import, UI export and reimport from a different active campaign"
+        },
+        "chartLabels": {
+          "buttons": 32,
+          "visible": 17,
+          "crowded": 15,
+          "overlaps": [],
+          "accessibleNamesComplete": true
+        },
+        "audioSignal": {
+          "meters": 1,
+          "peak": 0.02844964526593685,
+          "meaning": "Nonzero signal on nodes connected to the real audio destination; no human listening claim."
+        },
+        "performance": [
+          {
+            "campaign": "machine-dawn",
+            "render": [
+              {
+                "width": 600,
+                "height": 420,
+                "referenceMs": [
+                  0.19999999552965164,
+                  0.20000000298023224,
+                  0.20000000298023224,
+                  0.20000000298023224,
+                  0.09999999403953552
+                ],
+                "productionMs": [
+                  0.20000000298023224,
+                  0.19999999552965164,
+                  0.19999999552965164,
+                  0.20000000298023224,
+                  0.30000000447034836
+                ],
+                "strategy": "reference",
+                "cache": {
+                  "entries": 0,
+                  "bytes": 0,
+                  "mode": "reference"
+                }
+              },
+              {
+                "width": 900,
+                "height": 620,
+                "referenceMs": [
+                  0.30000000447034836,
+                  0.10000000149011612,
+                  0.19999999552965164,
+                  0.19999999552965164,
+                  0.20000000298023224
+                ],
+                "productionMs": [
+                  0.19999999552965164,
+                  0.20000000298023224,
+                  0.20000000298023224,
+                  0.10000000149011612,
+                  0.29999999701976776
+                ],
+                "strategy": "reference",
+                "cache": {
+                  "entries": 0,
+                  "bytes": 0,
+                  "mode": "reference"
+                }
+              }
+            ],
+            "failures": [],
+            "parity": {
+              "status": "PASS",
+              "comparison": "all RGBA bytes; three planet palettes; two map sizes; zero tolerance"
+            },
+            "approximateHeap": {
+              "usedJSHeapSize": 70621173,
+              "totalJSHeapSize": 108535653
+            },
+            "saveBytes": 11009,
+            "domNodes": 253,
+            "canvasCount": 6,
+            "dpr": 1.0000000149011612,
+            "gpuTrace": {
+              "campaign": "machine-dawn",
+              "categories": [
+                "gpu",
+                "viz",
+                "cc"
+              ],
+              "durationTargetMs": 2000,
+              "status": "CAPTURED",
+              "attribution": "Dedicated browser; explicit repeated game drawMap calls. Trace events require interpretation; no hardware conclusion is inferred.",
+              "workload": {
+                "frames": 121,
+                "elapsedMs": 2000.1000000014901,
+                "canvasWidth": 853,
+                "canvasHeight": 550
+              },
+              "file": "gpu-trace-machine-dawn.json",
+              "bytes": 10117492,
+              "truncated": false
+            },
+            "commandToTwoAnimationFramesMs": [
+              31.600000001490116,
+              32,
+              31.899999998509884,
+              31.799999997019768,
+              31.700000002980232
+            ],
+            "latencyMeaning": "DOM click capture to second animation frame; includes simulation, persistence and rendering, not input device latency"
+          },
+          {
+            "campaign": "grand-frontier",
+            "render": [
+              {
+                "width": 600,
+                "height": 420,
+                "referenceMs": [
+                  0.19999999552965164,
+                  0.19999999552965164,
+                  0.19999999552965164,
+                  0.10000000149011612,
+                  0.20000000298023224
+                ],
+                "productionMs": [
+                  0.30000000447034836,
+                  0.30000000447034836,
+                  0.20000000298023224,
+                  0.19999999552965164,
+                  0.19999999552965164
+                ],
+                "strategy": "reference",
+                "cache": {
+                  "entries": 0,
+                  "bytes": 0,
+                  "mode": "reference"
+                }
+              },
+              {
+                "width": 900,
+                "height": 620,
+                "referenceMs": [
+                  0.20000000298023224,
+                  0.30000000447034836,
+                  0.29999999701976776,
+                  0.20000000298023224,
+                  0.10000000149011612
+                ],
+                "productionMs": [
+                  0.09999999403953552,
+                  0.10000000149011612,
+                  0,
+                  0.29999999701976776,
+                  0.19999999552965164
+                ],
+                "strategy": "reference",
+                "cache": {
+                  "entries": 0,
+                  "bytes": 0,
+                  "mode": "reference"
+                }
+              }
+            ],
+            "failures": [],
+            "parity": {
+              "status": "PASS",
+              "comparison": "all RGBA bytes; three planet palettes; two map sizes; zero tolerance"
+            },
+            "approximateHeap": {
+              "usedJSHeapSize": 44128071,
+              "totalJSHeapSize": 105184139
+            },
+            "saveBytes": 34849,
+            "domNodes": 261,
+            "canvasCount": 6,
+            "dpr": 1.0000000149011612,
+            "gpuTrace": {
+              "campaign": "grand-frontier",
+              "categories": [
+                "gpu",
+                "viz",
+                "cc"
+              ],
+              "durationTargetMs": 2000,
+              "status": "CAPTURED",
+              "attribution": "Dedicated browser; explicit repeated game drawMap calls. Trace events require interpretation; no hardware conclusion is inferred.",
+              "workload": {
+                "frames": 122,
+                "elapsedMs": 2010.5,
+                "canvasWidth": 853,
+                "canvasHeight": 550
+              },
+              "file": "gpu-trace-grand-frontier.json",
+              "bytes": 7107546,
+              "truncated": false
+            },
+            "commandToTwoAnimationFramesMs": [
+              31,
+              31.80000000447035,
+              31.600000001490116,
+              31.399999998509884,
+              31.399999998509884
+            ],
+            "latencyMeaning": "DOM click capture to second animation frame; includes simulation, persistence and rendering, not input device latency"
+          }
+        ],
+        "pageErrors": [],
+        "httpFailures": [],
+        "externalRequests": [],
+        "finished": "2026-11-11T23:26:32.277Z"
+      }
+    },
+    {
+      "name": "editor-campaign-bridge",
+      "status": "PASS",
+      "elapsedMs": 2741.7462940000005,
+      "result": {
+        "status": "PASS",
+        "checks": [
+          "native-template-import",
+          "scene-play-isolation",
+          "text-edit-campaign-undo-redo",
+          "native-viewport-positions-scene-undo-lanes-homes",
+          "primitive-mesh-projection-all-source-provenance",
+          "native-sdk-roundtrip-invalid-admission",
+          "separate-campaign-recovery",
+          "play-exported-draft-and-return-to-editor",
+          "invalid-handoff-preserves-recovery-and-payload",
+          "320px-keyboard-authoring"
+        ],
+        "screenshots": [
+          "editor-4x-viewport.png",
+          "editor-4x-mobile.png"
+        ],
+        "artifacts": [
+          "editor-4x-campaign.json",
+          "editor-4x-hull.json"
+        ],
+        "limits": "Native project and Mod SDK budgets unchanged; campaign history separately bounded"
+      }
+    }
+  ],
+  "hardware": {
+    "status": "HARDWARE_RENDERER_AVAILABLE",
+    "canvas2d": "enabled",
+    "compositing": "enabled",
+    "note": "Availability does not prove workload participation; inspect the dedicated game GPU trace separately."
+  },
+  "limitations": [
+    "Touch is emulated; no physical phone was used.",
+    "Audio signal and controls are checked; human listening is not assessed."
+  ],
+  "automationStopped": true
+}

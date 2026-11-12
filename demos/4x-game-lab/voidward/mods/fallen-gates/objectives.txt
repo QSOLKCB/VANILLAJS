@@ -1,0 +1,9 @@
+# id | owner | kind | target | amount | requires | branch | title | description | victory
+first-signal | * | survey | * | 8 |  |  | Read the silence | Survey eight stars to locate the broken transit paths. | 0
+archive-key | * | archives | * | 2 | first-signal |  | The two keys | Recover two unclaimed archives with survey-equipped ships. | 0
+restoration | * | research | industry | 5 | archive-key | restore | Restore the old gates | Choose restoration and develop Industrial Systems V. | 0
+restoration-field | * | research | shields | 5 | restoration | restore | Bind the gate fields | Reach Field Harmonics V to stabilise the old network. | 0
+restored-meridian | * | survive | - | 70 | restoration-field | restore | The Quiet Meridian | Complete restoration and endure until turn 70. | 1
+new-path | * | survey | * | 30 | archive-key | path | Cut a new path | Choose independent routes and chart thirty stars. | 0
+path-engines | * | research | propulsion | 6 | new-path | path | Beyond the gates | Reach Warp Dynamics VI to make the network unnecessary. | 0
+open-meridian | * | survive | - | 70 | path-engines | path | An open meridian | Keep the new path open until turn 70. | 1

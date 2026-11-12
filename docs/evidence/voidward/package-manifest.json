@@ -1,0 +1,1480 @@
+{
+  "version": "1.0.0",
+  "files": [
+    {
+      "path": ".nojekyll",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "api/README.md",
+      "bytes": 7314,
+      "sha256": "9ec530bec4831051e9f9aef16f6643a68489b3d36a75e3e5aed3ead3446a91f5"
+    },
+    {
+      "path": "api/webgl/index.js",
+      "bytes": 12430,
+      "sha256": "0f791aa8e118ad82a7d2aced4bf22633fbd4f94bcf9c54e695b571a3ae28d342"
+    },
+    {
+      "path": "demos/2d-lab/app.js",
+      "bytes": 8152,
+      "sha256": "04c01772b5eb0b46bf4a7b178fe92a18c2b28ef2fab21156687a87a491fb7c0b"
+    },
+    {
+      "path": "demos/2d-lab/index.html",
+      "bytes": 3548,
+      "sha256": "2106f43bb5263fac2e6f02f12452f83482335cf2414ca6a27e2cd170f8ead4eb"
+    },
+    {
+      "path": "demos/2d-lab/style.css",
+      "bytes": 2395,
+      "sha256": "50dad12f9f0d40c1336b7a721289796afc12efaf74bfabae7fb0faf494e3d7aa"
+    },
+    {
+      "path": "demos/2d-lab/world.js",
+      "bytes": 3863,
+      "sha256": "cf182147f950767f4964bb333d0e03ce8ca80d4389784326e7d5d62ebe45fcab"
+    },
+    {
+      "path": "demos/4x-game-lab/app.js",
+      "bytes": 13332,
+      "sha256": "3c5ebb300ad2f980f9c5b4c091afbb363ff0d072ce5774b1d5b13a50cebf8cbe"
+    },
+    {
+      "path": "demos/4x-game-lab/index.html",
+      "bytes": 8927,
+      "sha256": "32bed9dceb38b02fe0d51f09cc7ffc7d17dcf3f9a20fc9f6f5d860800689a4f9"
+    },
+    {
+      "path": "demos/4x-game-lab/style.css",
+      "bytes": 13636,
+      "sha256": "6edb4b7f89857492e94d21cffa9c91d37275a308e5b3a6ec4c0aec165aff3017"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/docs/CAMPAIGNS.md",
+      "bytes": 5624,
+      "sha256": "5cd30a4c912d29dd7d61b8f9ea0034e7c2a55fda4667665deb7cf851d3cd73c9"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/docs/PLAYER_GUIDE.md",
+      "bytes": 6231,
+      "sha256": "e1e0bc365b0e6df1ec0dbbd4c36c106261b035a3055af898a0b453ab6291432f"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/docs/SAVE_LIMITS.md",
+      "bytes": 3776,
+      "sha256": "7ebcdd9982b08e09f8d22e9d152ea156fbd846837a5e8a18d32eb9fe6f5a2f00"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/guide.html",
+      "bytes": 6811,
+      "sha256": "ff70d76bee76c30a34077280374378b0ff751b0a33916dc4778f0a76caa1b66a"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/icon.svg",
+      "bytes": 224,
+      "sha256": "3b6765168e225bbddc1b5c263c14e01356f4cb2619f4e4b5d18cc6222dca74fb"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/index.html",
+      "bytes": 1090,
+      "sha256": "50d61db1e7d120f5ad18c9beb1c8b5a6b86bd733417f833793f8e1ea697af7c2"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/js/app.js",
+      "bytes": 92884,
+      "sha256": "e61bec7be0d9f88970a0c0a80be4e9e09e5f1d450c6e10955fa4c9b66dbe2a6f"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/js/audio.js",
+      "bytes": 3818,
+      "sha256": "b78120bacd30648f68be4a7159de9f5f3d6bb85d2860487f1a6a64515ca60b0b"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/js/content.js",
+      "bytes": 24193,
+      "sha256": "6f12b9ac080b22b45360143e56b2c77bdbd3c4d5bb3294becc0eae282bef0f39"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/js/core.js",
+      "bytes": 64792,
+      "sha256": "0342faf197a515bc67f7be00391f9d5afd1c31764825a4e083de9362fdbd446a"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/js/render.js",
+      "bytes": 9178,
+      "sha256": "2f5aa18b5dd8f4a40702b094a9d60c8d6106ab83871e489e7be85d6e8b89e255"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/js/save-codec.js",
+      "bytes": 2175,
+      "sha256": "4adc27e902e2105e014132ad340aad23a25ddc8d91b4dd024fc9ab0d99c67aed"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/js/workbench-bridge.js",
+      "bytes": 10111,
+      "sha256": "9ea452d235687810d1807f02d3714fa3ba1de688ad97c1ef64f39cdc0fd8fc15"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/js/workshop.js",
+      "bytes": 9257,
+      "sha256": "9a9911397d049ddeedb96ef1c788ce1bf85fdcb0354d1f0b1a77d03d46651805"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/MOD_GUIDE.md",
+      "bytes": 21484,
+      "sha256": "b33a25320052148ff3c63687383311fbf98aa84128f5938bb451533e412a1fa4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/ai.txt",
+      "bytes": 73,
+      "sha256": "9cbb7e9212521883d4dc76afbeb089995386f2b7b18f474ab1762f8d2d257104"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/buildings.txt",
+      "bytes": 802,
+      "sha256": "62bb953895c16766bab1b2e0bda006b13486ef0050d4b789459e39f1aa7de369"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/campaign.txt",
+      "bytes": 281,
+      "sha256": "18632b7db0e2c92f32355f59d196b474ecf94f30c0afdea6f9425897afc22ca7"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/components.txt",
+      "bytes": 2516,
+      "sha256": "3beb5810ecc4684f5d50c5c0de6130c57558e8bf7e6b41ffb535971f72ba567e"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/dependencies.txt",
+      "bytes": 151,
+      "sha256": "573badfd17153596f369d282eedcbdae137e00563e0e294d063924c34069ba59"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/empire_names.txt",
+      "bytes": 58,
+      "sha256": "f743937e2e102baa7d354a6495ae1779c6118402a557292a7391695ee4dbcdad"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/empires.txt",
+      "bytes": 250,
+      "sha256": "3813bbf467d75c987382a0fca607213cbbfdd1ffa38001f11c83462efea4b9fb"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/events.txt",
+      "bytes": 528,
+      "sha256": "b6afb21a56bd80918a35ad7211f65ecd15976ffd249ca80fdd13a6662716a129"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/hulls.txt",
+      "bytes": 1702,
+      "sha256": "604823c9467f1400708f75384e528c44b09cb72b5ba2aa11a6e2482b131dcd27"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/layout.txt",
+      "bytes": 534,
+      "sha256": "7dabdd65adf863f14b7ad54777a649ae140db78d139d9cdda942ba2a62d79e6b"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/map.txt",
+      "bytes": 587,
+      "sha256": "bdea862eeb979693bc97d206dfdcd5419468690995210054a925af36aecf3fa6"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/music.txt",
+      "bytes": 87,
+      "sha256": "d37805c2c5f579201aeda25ad21eac0f863550905428d04dabdc5f4c0b41b1b4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/objectives.txt",
+      "bytes": 1182,
+      "sha256": "ee706ede9f37a691db51957a7e552ac14ea707b6bc75143ff4b0c7be2e6a5120"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/planet_names.txt",
+      "bytes": 1402,
+      "sha256": "c2cf0ed8ec70004fb4108928cb26384250b67f1adf8173f536875d8e80ee9cf7"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/planet_types.txt",
+      "bytes": 150,
+      "sha256": "1a372aaf1533ec45a14034b7e145bde4e30783ec5322606891ac9441f372b63a"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/research.txt",
+      "bytes": 385,
+      "sha256": "a55d85d1d71275794d5f8c762971fe9e1f3536c18bb1504085859bcb714b7596"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/rules.txt",
+      "bytes": 527,
+      "sha256": "447d839cab825fb9b1e79bbcfb17801213b17a82160b6ec8b8f2adaacdd32833"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/scenario.txt",
+      "bytes": 141,
+      "sha256": "36ae0ac264ba303888e4ac590812f44aab6cea223af15a6d69ac6f6c1e7878c9"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/ships.txt",
+      "bytes": 602,
+      "sha256": "b83867e7d4253ad378a67b7751859ceced0ddc8d18b59ec8e8c75e39881a58b4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/starts.txt",
+      "bytes": 119,
+      "sha256": "5491745fd96c86d23f197f8e3c1d432a5fa2056eb5c7c853aee0ce1c4f632c18"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/fallen-gates/system_names.txt",
+      "bytes": 431,
+      "sha256": "37667bad84281f0bf015385b8a4a4a6a7cfef40215b7510b06af82b9bc3d1592"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/buildings.txt",
+      "bytes": 590,
+      "sha256": "930b874d75743472d5941b8e4c128ddf495bfd1c305a66d5dacab976dfbece1c"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/campaign.txt",
+      "bytes": 208,
+      "sha256": "e97c2871791efcd254be66d8a3afd15f8b7bd94c8ace906bfa100020eaf390b1"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/components.txt",
+      "bytes": 2182,
+      "sha256": "e9ffb24657f254d8f99f735da5e506481da604dea93426a5b24a8d04cb8d8b96"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/empire_names.txt",
+      "bytes": 50,
+      "sha256": "40c266148ec7f3da9df6898f2ac2df27947a628abdd2c6fc7779792d7e60db86"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/empires.txt",
+      "bytes": 264,
+      "sha256": "e3ddd049453a89c91712bebe9a4b7a89c5d79911f94232c4ef2cb2acb3267a85"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/hulls.txt",
+      "bytes": 1619,
+      "sha256": "aa4d8724141c7bdc2a839d3bdc36eb6ad787b03086b130cf2aefbb1eb1846468"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/map.txt",
+      "bytes": 589,
+      "sha256": "36107ada5f99af71c969545d88056fdde68711d509b3cdb4dc17487116b5def9"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/music.txt",
+      "bytes": 87,
+      "sha256": "d37805c2c5f579201aeda25ad21eac0f863550905428d04dabdc5f4c0b41b1b4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/planet_names.txt",
+      "bytes": 646,
+      "sha256": "8f5146f02304984b46f6faf227c7cd33688383234c80bc61e227f787a117aca8"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/planet_types.txt",
+      "bytes": 150,
+      "sha256": "1a372aaf1533ec45a14034b7e145bde4e30783ec5322606891ac9441f372b63a"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/research.txt",
+      "bytes": 385,
+      "sha256": "a55d85d1d71275794d5f8c762971fe9e1f3536c18bb1504085859bcb714b7596"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/rules.txt",
+      "bytes": 524,
+      "sha256": "7bd2b002fd29a249b7b79b440933da18bebd46493d293ec25f185dc27489ed0c"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/ships.txt",
+      "bytes": 619,
+      "sha256": "12cce7f423d80a4d205a5ac7a0ba1a3e8709f142d2100bbedd88c337fc16a671"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/frontier/system_names.txt",
+      "bytes": 188,
+      "sha256": "708b974d76a19ff703a9f670a14e5667a9c96e3240c874bc4caed8b484840298"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/ai.txt",
+      "bytes": 73,
+      "sha256": "a6ba9cb54c255c39401ba8c0ca44f2349ce83b9f23ba605de766ef2b3fa3af1a"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/buildings.txt",
+      "bytes": 802,
+      "sha256": "62bb953895c16766bab1b2e0bda006b13486ef0050d4b789459e39f1aa7de369"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/campaign.txt",
+      "bytes": 271,
+      "sha256": "27d984e9075c91f0cc465e06b1ac6762009fe6888e1bc914ada87595dc8120f2"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/components.txt",
+      "bytes": 2516,
+      "sha256": "3beb5810ecc4684f5d50c5c0de6130c57558e8bf7e6b41ffb535971f72ba567e"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/dependencies.txt",
+      "bytes": 151,
+      "sha256": "573badfd17153596f369d282eedcbdae137e00563e0e294d063924c34069ba59"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/empire_names.txt",
+      "bytes": 58,
+      "sha256": "ff9fb19c37abe07d42b212a771103cedbf1bb6132db0462341b0b7af915f6a45"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/empires.txt",
+      "bytes": 249,
+      "sha256": "0528d3984dfca79543bbee54324ff0ed3930d713dfdc8e54d90f4b3bb89f5aab"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/events.txt",
+      "bytes": 416,
+      "sha256": "4f631856e20d63612d3ce2bd61450ffb8b616c6492dde7d2f54ccb02253b43c6"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/hulls.txt",
+      "bytes": 1698,
+      "sha256": "36f6d93bb5967108df40e24cd7d128dc50ac7c4a6eafb570d8dd25eeee36e25a"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/layout.txt",
+      "bytes": 979,
+      "sha256": "b00252923107d28f57a1411cccb3ba230ae8f36c5695cbd0d5874345bbd57043"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/map.txt",
+      "bytes": 1247,
+      "sha256": "32f90312ca3b9eec9087db0933809d0e2af8130b01d2f79a75550aa57a050ff2"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/music.txt",
+      "bytes": 87,
+      "sha256": "d37805c2c5f579201aeda25ad21eac0f863550905428d04dabdc5f4c0b41b1b4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/objectives.txt",
+      "bytes": 1234,
+      "sha256": "8843389fb880bc99dc518acb9c4efde2c261deda6a82f8585fe1023dd9a13e9b"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/planet_names.txt",
+      "bytes": 2472,
+      "sha256": "00d3ef5aa5c8c1bb16a15020c4b2e9121e3af3c9f53c8517bb591bad668b8649"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/planet_types.txt",
+      "bytes": 150,
+      "sha256": "1a372aaf1533ec45a14034b7e145bde4e30783ec5322606891ac9441f372b63a"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/research.txt",
+      "bytes": 385,
+      "sha256": "a55d85d1d71275794d5f8c762971fe9e1f3536c18bb1504085859bcb714b7596"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/rules.txt",
+      "bytes": 527,
+      "sha256": "c577da44705c0b47443c66bc31b5f3ebaa41dcfde3cd653b29211f0566bf8aeb"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/scenario.txt",
+      "bytes": 142,
+      "sha256": "d0dd165c19b1a6e3ca09b404b3fc81a41b22216281ac5572f8187af8cd144ae3"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/ships.txt",
+      "bytes": 602,
+      "sha256": "7c25ee7a7f49c284f0403b21c1d6d7bb1bdd43106362a06e214fb1b03de74437"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/starts.txt",
+      "bytes": 119,
+      "sha256": "22b56cfc6e01c670a49f97c5286c4c1644ec043c4b08077a7cf114b3238515ff"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/grand-frontier/system_names.txt",
+      "bytes": 756,
+      "sha256": "e306d09a7b2b92f1a90e529f544afc1f8d667fb0a0993839184ae88df6c60ed9"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/buildings.txt",
+      "bytes": 590,
+      "sha256": "930b874d75743472d5941b8e4c128ddf495bfd1c305a66d5dacab976dfbece1c"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/campaign.txt",
+      "bytes": 230,
+      "sha256": "4437a1174d436b289b37d9284d5c6a439285343e4cb993630998ef9141361591"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/components.txt",
+      "bytes": 2182,
+      "sha256": "e9ffb24657f254d8f99f735da5e506481da604dea93426a5b24a8d04cb8d8b96"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/empire_names.txt",
+      "bytes": 49,
+      "sha256": "a1f3b76f7c7248531eaa57b670f98112143102fb50aa2a128d6b022de53b8cc8"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/empires.txt",
+      "bytes": 218,
+      "sha256": "21e3941ccac0172e192969a34089e1cdf6a0db00fcc42c41aacf6a56250409ae"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/hooks.js",
+      "bytes": 761,
+      "sha256": "10ef17e407a80c06e33c41661ace58df6b7ed3ffa739613424c59d569a089173"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/hulls.txt",
+      "bytes": 1619,
+      "sha256": "aa4d8724141c7bdc2a839d3bdc36eb6ad787b03086b130cf2aefbb1eb1846468"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/map.txt",
+      "bytes": 275,
+      "sha256": "ca5d39d7e9fa718f8da20e26d9b144b0523864e96597120df897fbab0550073e"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/music.txt",
+      "bytes": 87,
+      "sha256": "d37805c2c5f579201aeda25ad21eac0f863550905428d04dabdc5f4c0b41b1b4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/planet_names.txt",
+      "bytes": 720,
+      "sha256": "4f6b57980c84c88ba59e1a834578d266c167eb5aa81f38108a5c8c23f5086ada"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/planet_types.txt",
+      "bytes": 150,
+      "sha256": "1a372aaf1533ec45a14034b7e145bde4e30783ec5322606891ac9441f372b63a"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/research.txt",
+      "bytes": 385,
+      "sha256": "a55d85d1d71275794d5f8c762971fe9e1f3536c18bb1504085859bcb714b7596"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/rules.txt",
+      "bytes": 523,
+      "sha256": "f7457e359c88e212028c6405cb526ff7a0ca7aa5783864642eeafaffc8437b09"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/ships.txt",
+      "bytes": 617,
+      "sha256": "a30e9de650d9d012c0aa9ad9e6b5f4b691183347fdce5992f9a9b7f499baccce"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/machine-dawn/system_names.txt",
+      "bytes": 240,
+      "sha256": "699b0cd328d725e40306a43cbfe998f19e11b3a6d8a8050b89dc06a20430e0f9"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/ai.txt",
+      "bytes": 73,
+      "sha256": "8c9d123ee1b344e4486ab5e9e8165f0b3528d77da29c86a9ccf007b5261e0a33"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/buildings.txt",
+      "bytes": 802,
+      "sha256": "62bb953895c16766bab1b2e0bda006b13486ef0050d4b789459e39f1aa7de369"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/campaign.txt",
+      "bytes": 267,
+      "sha256": "bd0a302e03b6fe337a19a865ce33b43ea1cc6edc82f8b270c5bc255b451ce9a3"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/components.txt",
+      "bytes": 2516,
+      "sha256": "3beb5810ecc4684f5d50c5c0de6130c57558e8bf7e6b41ffb535971f72ba567e"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/dependencies.txt",
+      "bytes": 151,
+      "sha256": "573badfd17153596f369d282eedcbdae137e00563e0e294d063924c34069ba59"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/empire_names.txt",
+      "bytes": 56,
+      "sha256": "74b5bb6959056d0ea44ebf38c657833424e554d78195553f5e42d44cd90d64f8"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/empires.txt",
+      "bytes": 248,
+      "sha256": "c9933b932a1602c667a9b4b3bfab25790e2729e90be4294d9ff3344e57792070"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/events.txt",
+      "bytes": 527,
+      "sha256": "df3e77b1df4817f42028315c7c672b4be97737c31eb08e02c3617db7622de7cf"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/hulls.txt",
+      "bytes": 1694,
+      "sha256": "229b2d5ccdc379ec3e0265762af03732e65a0002ebb9bc1123c8525888c29acd"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/layout.txt",
+      "bytes": 600,
+      "sha256": "72ce3ca483e1987648f87f09e21fd7bd66d196b408b87a28ad65c0561b68433b"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/map.txt",
+      "bytes": 625,
+      "sha256": "7adebb4407baaf4b37ecbdf4979d4dbd18d2613ac54fafd400ee3b8c237a35a3"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/music.txt",
+      "bytes": 87,
+      "sha256": "d37805c2c5f579201aeda25ad21eac0f863550905428d04dabdc5f4c0b41b1b4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/objectives.txt",
+      "bytes": 964,
+      "sha256": "9b66b7fca53108913fef36345635f373db2f1d16eb36aeb22d545a2816dde51c"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/planet_names.txt",
+      "bytes": 1558,
+      "sha256": "006f6012af5e611481a00d34019f252bec0b0e3fc3b91b7b7b0a717f9dbde844"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/planet_types.txt",
+      "bytes": 150,
+      "sha256": "1a372aaf1533ec45a14034b7e145bde4e30783ec5322606891ac9441f372b63a"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/research.txt",
+      "bytes": 385,
+      "sha256": "a55d85d1d71275794d5f8c762971fe9e1f3536c18bb1504085859bcb714b7596"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/rules.txt",
+      "bytes": 525,
+      "sha256": "8e935c785d6871d96d0f5e87227c25593c1398338657eed465e50a3c1095108f"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/scenario.txt",
+      "bytes": 137,
+      "sha256": "1e87be79b4407e857e37d2a90807e3013abb631c8322fe83062cf17868e700af"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/ships.txt",
+      "bytes": 602,
+      "sha256": "6d91f2ea4740f77df96f5f6324a06f18df57406c9930858cbef4a2e7ea4b9ea7"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/starts.txt",
+      "bytes": 144,
+      "sha256": "7f8d06ec727a0b58ddc1ec45613cff74e2f0df8c432dd01ef8fde843de9b435c"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/outer-rim/system_names.txt",
+      "bytes": 479,
+      "sha256": "09a91edc194287bf060b4955c19f9a28f5a0dbecaac60338e2721cea79a92922"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/mods/registry.js",
+      "bytes": 1368,
+      "sha256": "da4302d5710836a0b1ad462f45c4e0739dd246c4e7c3edf90b76f803865f4168"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/NOTICE",
+      "bytes": 2333,
+      "sha256": "113fb64c5cceee0f02633043c8a52cecbeb23dbb4df55c9e3447b3339ed078ac"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/style.css",
+      "bytes": 28141,
+      "sha256": "7588f2b673706e073bc078154057eb5cb424ae92f3a128cda10bc61efdc24103"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/arcade/js/audio.js",
+      "bytes": 9726,
+      "sha256": "2cc4dbf8d8358eff4d64ba2d283c4c3bd3d8e03a1d0738ec69bc1629b82da1d5"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/arcade/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/arcade/NOTICE",
+      "bytes": 2523,
+      "sha256": "f6c326ee5c1f790099fefbc730f771bf571c7f56f755498aeb67915900027400"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/galaxy/data/uff-demo.js",
+      "bytes": 696,
+      "sha256": "3635e6574ab5f7f175109220f7f1b04cd77f2518f4bbbb6ad9a9c57b16b63f6d"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/galaxy/data/uff/NOTICE",
+      "bytes": 308,
+      "sha256": "7b6d4173f0739742dbb61b4dd274e631491dedc4a8d4bc18acea2b875992a440"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/galaxy/data/uff/provenance.json",
+      "bytes": 954,
+      "sha256": "6e0512806d578c655a6665e91494fb3d8903cfd9288ee3e595056df0f40c39bc"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/galaxy/galaxy-core.js",
+      "bytes": 9317,
+      "sha256": "217739552ff631710481cfa7270df91108c3b41413ca5be66e7e7223d070649e"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/galaxy/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/galaxy/LICENSES/MPL-2.0.txt",
+      "bytes": 16726,
+      "sha256": "3f3d9e0024b1921b067d6f7f88deb4a60cbe7a78e76c64e3f1d7fc3b779b9d04"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/galaxy/NOTICE.md",
+      "bytes": 2918,
+      "sha256": "bbaa05d2856a6e8d1bb8083330aa3b60ece514a1221e947b5e72d97f7191c4c9"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/galaxy/uff-physics.js",
+      "bytes": 5863,
+      "sha256": "ef4490f65fc3a0822ba6f68a720916de2ec13ccabc3e815c5dfe8e6ad7d4565a"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/games/LICENSE",
+      "bytes": 1126,
+      "sha256": "848bce75fc595f347fc64d1c59c25c18e64b15e12743edbddf9dcbd3b5dc077c"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/games/shared/NOTICE.md",
+      "bytes": 863,
+      "sha256": "36ceb2c7e605248b2550f4201dcdccd2cf550f88de9bd2f0790331e9d475ba91"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/games/shared/qsol-input.js",
+      "bytes": 7142,
+      "sha256": "aafd16b43dec818da8aa5e848a742e08cc94e0a82d0f4829eb42438864129cbb"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/games/SOVEREIGN_LATTICE/NOTICE.md",
+      "bytes": 1535,
+      "sha256": "f7955eb159410505c40c2ab25ca11e14d21392531dbf73b970ac9dc7fda781d2"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/gluball/gluball-core.js",
+      "bytes": 6419,
+      "sha256": "74c296f7847da97f88c922a44d3a5ceab403fe0bdfcf05eeb76df77b2a8258a9"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/gluball/LICENSE",
+      "bytes": 16726,
+      "sha256": "3f3d9e0024b1921b067d6f7f88deb4a60cbe7a78e76c64e3f1d7fc3b779b9d04"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/offline-games/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/offline-games/NOTICE",
+      "bytes": 620,
+      "sha256": "7f250e9ec867345f08c68dd47bf7f997bd1d49e09e1d1701297f9dfbe75b1de8"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/offline-games/shared/surface-detail.js",
+      "bytes": 3746,
+      "sha256": "9d35906b7a4b78bae21ccbb5d1d3d52eb18ac5ac81a3e44221ef26d41e8a8a70"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/opt/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/opt/optimizations/OPT-INV-001-invariant-driven-reuse.md",
+      "bytes": 3573,
+      "sha256": "34ca6dc977e0f15e31f534a9183a33597782cde7a4008bf9012a8667e8ec7efc"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/PROVENANCE.json",
+      "bytes": 14333,
+      "sha256": "1078b17b08ca4a4bd68a1d86fde9e819ef6a0c3db5f746f409518d83c85ff7b4"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/sonification/APP/js/math64.js",
+      "bytes": 5100,
+      "sha256": "f99f0b943394f14fc865b327173ed5f448db85cd851f8cd3f1a3da007134dc40"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/sonification/APP/js/namespace.js",
+      "bytes": 2456,
+      "sha256": "803dabfe27d3feec1e99dd2eb5972b60d246a580c8c6d626acca9c07ab714ddb"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/sonification/APP/js/synthesis.js",
+      "bytes": 10703,
+      "sha256": "5d008ffa3f18717c46cd2317060589a49fc96e9cd19d7a7e8919831178950f13"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/sonification/LICENSE",
+      "bytes": 16727,
+      "sha256": "32ee9dbf6196874fc9d406c54a888a6c4cbb9aa4a7f35b46befeaff43a78fe85"
+    },
+    {
+      "path": "demos/4x-game-lab/voidward/vendor/sonification/NOTICE",
+      "bytes": 906,
+      "sha256": "a0868be95f49e17c4538022a95c3331eb42ef89cf493005b66159d1b182e7bcc"
+    },
+    {
+      "path": "demos/4x-game-lab/world.js",
+      "bytes": 15194,
+      "sha256": "f5de59f3bb71023e34abe47328dc7416bcd1531383f5a93c4c6646226c1b827c"
+    },
+    {
+      "path": "demos/alien-course-lab/app.js",
+      "bytes": 1774,
+      "sha256": "566e99c136a06a78f1045febe87be5c7afc50c3a87573676cecca48373224f5e"
+    },
+    {
+      "path": "demos/alien-course-lab/index.html",
+      "bytes": 2436,
+      "sha256": "211225981e1c958041b134ee3c9ab4d4019be55a8fe81ef1930841c6934abcd8"
+    },
+    {
+      "path": "demos/alien-course-lab/sample.js",
+      "bytes": 571,
+      "sha256": "561db80d7952111be683a19b0791390a368d1490df6d68f6fbf80f8b76feae0b"
+    },
+    {
+      "path": "demos/alien-course-lab/style.css",
+      "bytes": 2837,
+      "sha256": "46b22cc02fcce5f8717340d7e2607510fd3d87a25506c1a97dc11f0f8ed49554"
+    },
+    {
+      "path": "demos/ancient-machine/app.js",
+      "bytes": 13351,
+      "sha256": "b39b8e419c70d8985ac9699225421ba7e45a238f10e1e7334ae115ad1a09b33b"
+    },
+    {
+      "path": "demos/ancient-machine/index.html",
+      "bytes": 9313,
+      "sha256": "0456b35b2b02f27994ae4dc1b4ea5e30be39267e35125150bb2c45a5b045476b"
+    },
+    {
+      "path": "demos/ancient-machine/machine.js",
+      "bytes": 4880,
+      "sha256": "b3016aee35d810961778902fa286b87d632adb609aa9f212a0371c7dfd7a8c9b"
+    },
+    {
+      "path": "demos/ancient-machine/style.css",
+      "bytes": 12602,
+      "sha256": "7a62f62d05b7d9bc0c88f78ac35e68c288eb08a4a1f502eeb54bfd678054cc8e"
+    },
+    {
+      "path": "demos/arcade-lab/app.js",
+      "bytes": 5139,
+      "sha256": "62779f9cc6e174e8d0505a0661ae96e39a4cd996120202ebe1fba658214a6777"
+    },
+    {
+      "path": "demos/arcade-lab/index.html",
+      "bytes": 3583,
+      "sha256": "764d10f8423e88216dfc425cd0384f8552f9f91c9f7df0ad92f811b50be14aba"
+    },
+    {
+      "path": "demos/arcade-lab/world.js",
+      "bytes": 4485,
+      "sha256": "99535969b842d892510eed8b9864bc4cb960c665e6a5919c449c23b147a1bbfb"
+    },
+    {
+      "path": "demos/bullet-time-lab/app.js",
+      "bytes": 5348,
+      "sha256": "634aa6b3e3f1aa3af6191e0db625a71b5e9da28f129a1a82e43e1e9efab6d8c8"
+    },
+    {
+      "path": "demos/bullet-time-lab/index.html",
+      "bytes": 3751,
+      "sha256": "f31333c12f0aa735e4f93d94c49fe1257a6eabd30092d447fc6fb06b217d1ea6"
+    },
+    {
+      "path": "demos/bullet-time-lab/world.js",
+      "bytes": 4647,
+      "sha256": "3ddaa67d1a3a9ccd8a4cde8f7cbbef4de30de54ea3df4821b9af2968bb301756"
+    },
+    {
+      "path": "demos/circuit-mod-lab/app.js",
+      "bytes": 4667,
+      "sha256": "d234efb741020013ebbd752777ed8f781f7f9f92945b9d4070030269e526fb90"
+    },
+    {
+      "path": "demos/circuit-mod-lab/index.html",
+      "bytes": 2313,
+      "sha256": "8b15e0ffa94fa7ff7c71d656bac568a9da9dd774ec43a73806782c29a3c5be5f"
+    },
+    {
+      "path": "demos/circuit-mod-lab/style.css",
+      "bytes": 2111,
+      "sha256": "9d615a99aa35a8f39d2f1c91fc8add96ace0df20b59d9419d5181047049a0fbc"
+    },
+    {
+      "path": "demos/clockwork-vault/app.js",
+      "bytes": 24016,
+      "sha256": "f22d7de37b7d6d3d2f5e973ef5eb7221810c373143d322328f5e9313acb1e4a1"
+    },
+    {
+      "path": "demos/clockwork-vault/index.html",
+      "bytes": 9011,
+      "sha256": "8dbb9df90d843ddfed9b1ecbeb87d76252c7093807eeff8ec750e878ee9832a9"
+    },
+    {
+      "path": "demos/clockwork-vault/puzzles.js",
+      "bytes": 7436,
+      "sha256": "a5e075968f6c43c2693ce5a3b93492d18a738530ce8cd08eef5792fe16c67b57"
+    },
+    {
+      "path": "demos/clockwork-vault/style.css",
+      "bytes": 14813,
+      "sha256": "d1bc91bcf8cbdf9a5184f829f94a3fd77ff65e5adb9f44f4ead56184c5a77756"
+    },
+    {
+      "path": "demos/clockwork-vault/view.js",
+      "bytes": 3271,
+      "sha256": "b45ea243e72eb21132880872ae54d37efe204a89bc50ce9fe5826d5cfe486587"
+    },
+    {
+      "path": "demos/clockwork-vault/world.js",
+      "bytes": 13380,
+      "sha256": "d40ce3382ec62ca87a7fa34bcc51ca0bad6c0850a3c7e0b15ac175a821d24940"
+    },
+    {
+      "path": "demos/editor/4x-panel.js",
+      "bytes": 13988,
+      "sha256": "cadbd340fcf8937488ee437575a67f82ff2874261ee77b4dfe6f2f7ecd0c285d"
+    },
+    {
+      "path": "demos/editor/4x-workflow.js",
+      "bytes": 4457,
+      "sha256": "2b18178cd2f5edd36cc807ea67aaabf2ebeb9cf313f6c1f69aad7a24bed9aea7"
+    },
+    {
+      "path": "demos/editor/app.js",
+      "bytes": 40022,
+      "sha256": "155abc96bff6887f3d3cfdb10308e9ec5704af2d4944626a79d131ecd13984ce"
+    },
+    {
+      "path": "demos/editor/asset-foundry.js",
+      "bytes": 15500,
+      "sha256": "0e027213bfcc67574e29b9d1845eaedaaa287f98dbbb58dc6bd8e9d8d92e7293"
+    },
+    {
+      "path": "demos/editor/authoring-math.js",
+      "bytes": 4705,
+      "sha256": "391556f69e812482268ab47fdbe6011252e5241f8bc18f6ba1537d2dc8c03483"
+    },
+    {
+      "path": "demos/editor/components.js",
+      "bytes": 3986,
+      "sha256": "06909dee76b29c0fd64cbb894306ebacf2dbe18c871acde8cad84448c5e8f6f1"
+    },
+    {
+      "path": "demos/editor/forge-preview.js",
+      "bytes": 3828,
+      "sha256": "047c4c376ad0cb3021cf7bbded5938d41a19e557a20c530ff3df80e553d8d53b"
+    },
+    {
+      "path": "demos/editor/game-export.js",
+      "bytes": 1117,
+      "sha256": "8b61360ad2574b1a80174dd93edc46309a46b62ee2a70f700d17558473dfc601"
+    },
+    {
+      "path": "demos/editor/game-player.js",
+      "bytes": 2270,
+      "sha256": "c4bf388afe89638d1dd5a553c8115448fb82f5ac91fa479f66a68e60093f3fcd"
+    },
+    {
+      "path": "demos/editor/gizmos.js",
+      "bytes": 5403,
+      "sha256": "ca1abedd8cf509ce60e0ecca1c9181fa357da38486856e15ebb9325b760dc68f"
+    },
+    {
+      "path": "demos/editor/index.html",
+      "bytes": 13332,
+      "sha256": "390a70108b38896504783b2dfa1cf4aa4e53fa6404eb32cb0479c4335fe50bcc"
+    },
+    {
+      "path": "demos/editor/model.js",
+      "bytes": 10192,
+      "sha256": "0684530070b112627fecad974d1a8df035fcf9a94d22a4b144c2a286c3330c70"
+    },
+    {
+      "path": "demos/editor/preview.js",
+      "bytes": 2790,
+      "sha256": "686f77d906a225689fdc71bae3ca3cfa0b28f016f30c89d054f446d810c94c06"
+    },
+    {
+      "path": "demos/editor/scene-meshes.js",
+      "bytes": 1206,
+      "sha256": "8851b61deb40f322850ad0bf6ca2f4c64647ad6b7ef0e6e034d288e8c2078e1d"
+    },
+    {
+      "path": "demos/editor/style.css",
+      "bytes": 11483,
+      "sha256": "2481346fca4c1b4bde939af4a12bec9bfeac942111743876747fdba8b566ec49"
+    },
+    {
+      "path": "demos/editor/viewport.js",
+      "bytes": 10535,
+      "sha256": "e488d26e6b02ae3cf985fe0f9f6cb10ebee9591b1fe21d6c41e88cb220051729"
+    },
+    {
+      "path": "demos/editor/workflows.js",
+      "bytes": 1528,
+      "sha256": "c9b63926af8faedc0d117c7c1ac052b8e01aacdc00cb2b4e84151acd1bbfcc29"
+    },
+    {
+      "path": "demos/flight-lab/app.js",
+      "bytes": 10404,
+      "sha256": "c6dd93bff4bef684a9e14005a3fc70a83b4bc0f755ff8e8cc4885eca6209cf40"
+    },
+    {
+      "path": "demos/flight-lab/style.css",
+      "bytes": 12389,
+      "sha256": "4e229a48f70ae7fc95087a56d9d7fb51796bb9b1a1eff92e2fb57f5ea765d377"
+    },
+    {
+      "path": "demos/flight-lab/worlds.js",
+      "bytes": 4190,
+      "sha256": "58b3ce05ddb2f7bd50782499a815a093058321d506478cdfa5a62a99e9df5262"
+    },
+    {
+      "path": "demos/fps-lab/app.js",
+      "bytes": 16765,
+      "sha256": "b20c8cca0dd297f4be1a27d32f15100f231f4aefba6574f7dda7e3e5ea3843bc"
+    },
+    {
+      "path": "demos/fps-lab/index.html",
+      "bytes": 8363,
+      "sha256": "309b7ec123a52a8a22d98056a38f7c8f160c83825b0ede9e5e701ff3e5788022"
+    },
+    {
+      "path": "demos/fps-lab/style.css",
+      "bytes": 10414,
+      "sha256": "ec763aeaa7ab0c65a7235431adfb61a7e022d2aadcad13a90d737d5961c64aaf"
+    },
+    {
+      "path": "demos/fps-lab/worlds.js",
+      "bytes": 12932,
+      "sha256": "3d4f8208792168d9573559fa7e1c671062810c81d6b338b2f6b7b6047d0b4be4"
+    },
+    {
+      "path": "demos/gpu-lab/app.js",
+      "bytes": 4901,
+      "sha256": "55b1ddedf9cc328472632ddbe334e5ed76c88f8dba19884fa8c9f8a87ba387a5"
+    },
+    {
+      "path": "demos/gpu-lab/controls.js",
+      "bytes": 1023,
+      "sha256": "89860cedff23993e910670fb031050fe2822ed432a4b0f040f4d8013d6642340"
+    },
+    {
+      "path": "demos/gpu-lab/index.html",
+      "bytes": 3433,
+      "sha256": "d192bfb6f9468bdb47b7182f88c4389f924b1122433d3a75d7d552515aff61b2"
+    },
+    {
+      "path": "demos/gpu-lab/scene.js",
+      "bytes": 2338,
+      "sha256": "d290458963f87970fb7c0a4077589fb78948dadffff026ccfd085383d4455c51"
+    },
+    {
+      "path": "demos/gpu-lab/style.css",
+      "bytes": 5158,
+      "sha256": "f9ce132c535959e92297de1b5e82c365e433e933aadf1216b446de029d0175e9"
+    },
+    {
+      "path": "demos/graph-lab/app.js",
+      "bytes": 3799,
+      "sha256": "4daf2ca8fff4e307ef2d1565c9a11f1266c79a365f999f29f7cd70707bc2abc3"
+    },
+    {
+      "path": "demos/graph-lab/index.html",
+      "bytes": 3439,
+      "sha256": "1711f0c327d9a525d6b58571eb59827a5bcb93904193c1f0d95605161cd02638"
+    },
+    {
+      "path": "demos/graph-lab/presets.js",
+      "bytes": 982,
+      "sha256": "9e6175b70d0b289b61c6aa997e181d073d4dabc09e89295196c6557890af3ba0"
+    },
+    {
+      "path": "demos/graph-lab/style.css",
+      "bytes": 1616,
+      "sha256": "4aed984449769e2b120ccab6782793c4b8e8c63c85733d04def0ea5e98151834"
+    },
+    {
+      "path": "demos/integer-foundry/app.js",
+      "bytes": 6704,
+      "sha256": "5535235297241e3fd5a8b43bc41d0ebf9aea9e9c23120845e709cfe51bdac872"
+    },
+    {
+      "path": "demos/integer-foundry/index.html",
+      "bytes": 2812,
+      "sha256": "8f176f504f59bb74b6205dea4f6c576f0c10aa30eae0adf9fa87851b847df14c"
+    },
+    {
+      "path": "demos/integer-foundry/style.css",
+      "bytes": 4287,
+      "sha256": "85cb377e2702d1fa335db005f30b79db5bcbbd345c245e95930d331f552c8d4b"
+    },
+    {
+      "path": "demos/integer-foundry/world.js",
+      "bytes": 2149,
+      "sha256": "2f5d266fc5b5a79e3bd56c5f6164ee595741f641904d489c40501601a95e4026"
+    },
+    {
+      "path": "demos/interaction-lab/app.js",
+      "bytes": 13312,
+      "sha256": "893ee9ccb9d5637efbbb57edb7baab8171545f3734773e6aa20d6dd97ad78851"
+    },
+    {
+      "path": "demos/interaction-lab/index.html",
+      "bytes": 8008,
+      "sha256": "3ca906742b80d121881356537c6f4887651b7ad2ae0f44a5f8a352977de631ec"
+    },
+    {
+      "path": "demos/interaction-lab/recipes.js",
+      "bytes": 6939,
+      "sha256": "66f333b047b39f4738502433698fca4c26066bb8a7f3d6483294c15f1e7389e6"
+    },
+    {
+      "path": "demos/interaction-lab/style.css",
+      "bytes": 10866,
+      "sha256": "18be86d90c8a931384fb505f70ceb3970f37cfd1d3024ef0790a0ecba1e431fc"
+    },
+    {
+      "path": "demos/omi-lab/app.js",
+      "bytes": 11435,
+      "sha256": "c775165717522941c310e9c6e4650c07eb1df3b2ea06cc91cab54b6f8d0b55c4"
+    },
+    {
+      "path": "demos/omi-lab/experiment.js",
+      "bytes": 3359,
+      "sha256": "246c15c01ef3ce921318c5a4d95d3254ae5f2303ec4c7860138e6bf96167fecd"
+    },
+    {
+      "path": "demos/omi-lab/index.html",
+      "bytes": 7104,
+      "sha256": "3212110bef20fbe30801a67c19794378232af355a2b287ffa9ff20059af4a3cc"
+    },
+    {
+      "path": "demos/omi-lab/style.css",
+      "bytes": 10396,
+      "sha256": "d32a86d7605f40a89489b789a7dcb89388c7a454a886b3f5ec20169a604dbe11"
+    },
+    {
+      "path": "demos/quantum-game-lab/app.js",
+      "bytes": 12244,
+      "sha256": "1af630ce0d1ab2aed9b1f54ce63358c89e116328ac3ca9fa3da779948e433714"
+    },
+    {
+      "path": "demos/quantum-game-lab/experiment.js",
+      "bytes": 5281,
+      "sha256": "ef22a4c6390edd9c203647a727ffa40fa92c0853bd08aac668fcec804c507a47"
+    },
+    {
+      "path": "demos/quantum-game-lab/index.html",
+      "bytes": 6263,
+      "sha256": "2b3df1769e335b379f7c29363e5c5659adf18e9a8b2dd7054f5e7033b8876af0"
+    },
+    {
+      "path": "demos/quantum-game-lab/style.css",
+      "bytes": 5268,
+      "sha256": "cc3b4b1e677092d15734da5cc064eae4a57551084e26c90bd3c4112dcaa18509"
+    },
+    {
+      "path": "demos/rts-lab/app.js",
+      "bytes": 14811,
+      "sha256": "768c9f97629b0df69f34b9ed68308afec527ba72bec7097158293d059409038c"
+    },
+    {
+      "path": "demos/rts-lab/flow-worlds.js",
+      "bytes": 4257,
+      "sha256": "d5ba9f2181cd8ba1d9236679b3f0b747f9674bedc3386f94c4530e0e910350ef"
+    },
+    {
+      "path": "demos/rts-lab/index.html",
+      "bytes": 7097,
+      "sha256": "2596c82f8244a72798f9c7d53188599b759362fe20b6398ad7faf31201894f47"
+    },
+    {
+      "path": "demos/rts-lab/style.css",
+      "bytes": 7656,
+      "sha256": "0215be129451f81d3827019aa2dfa32a99624fdee28315075eb6e3e77697c662"
+    },
+    {
+      "path": "demos/rts-lab/traffic.js",
+      "bytes": 1002,
+      "sha256": "da4c065c1a24e3135f1b802de21182e419b0764798ed48b471c09805ce43bc00"
+    },
+    {
+      "path": "demos/rts-lab/worlds.js",
+      "bytes": 4958,
+      "sha256": "57d14fd5d06f40260c5b90ac80dcd3b9fa5f260c50ebce1bd0bba0efbfa75eb0"
+    },
+    {
+      "path": "demos/shared-lab/style.css",
+      "bytes": 3034,
+      "sha256": "31f0dc96cf8144ccb098853bf8cfa9fc6abc71d8d73b7c523e40546ca160cd18"
+    },
+    {
+      "path": "demos/space-lab/app.js",
+      "bytes": 10493,
+      "sha256": "092cf918dd7595ed67bae88baffdbcd935af1e38a73a59002c778a6d20d6bcdb"
+    },
+    {
+      "path": "demos/space-lab/geometry.js",
+      "bytes": 4154,
+      "sha256": "bf0030541cd78ef8a3f3d101692b64257e670411ff5927bd5d7e9e535447347d"
+    },
+    {
+      "path": "demos/space-lab/index.html",
+      "bytes": 4663,
+      "sha256": "0c5bdc72593717931a69861afe1c9801152fe757fd3f3a91eb7a68708090387c"
+    },
+    {
+      "path": "demos/space-lab/style.css",
+      "bytes": 2106,
+      "sha256": "fa9ab065ab4dc26c1a518e672904ec75696d11a2f4764e2b01e3f875c357da67"
+    },
+    {
+      "path": "demos/space-lab/world.js",
+      "bytes": 4265,
+      "sha256": "21d5556679eec5dc5ed36a2c251e3bd84c911c649ffb732576dc0e2d255e55cd"
+    },
+    {
+      "path": "experiments/arch-omi/index.js",
+      "bytes": 2675,
+      "sha256": "1b49eb986c72b108a7a5ca90480a2a70f65a9ee430937ee80af3e17a2f14dbf6"
+    },
+    {
+      "path": "experiments/e8-geometry/index.js",
+      "bytes": 1647,
+      "sha256": "96658e21495a8582c44e0d48579e58180300f376918f2ab64809229705f17b03"
+    },
+    {
+      "path": "index.html",
+      "bytes": 10022,
+      "sha256": "ef43506ac701b9821c322307d836b649510b02d91096082f8ac45fcedc97c3a5"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "MODULES.json",
+      "bytes": 23831,
+      "sha256": "0c3294ca81fcdaf13e6b0559e9dc37e88524bc114922c3f55980a266ee53469e"
+    },
+    {
+      "path": "modules/adaptive-circles/index.js",
+      "bytes": 6288,
+      "sha256": "47333bd2221ca928a594d5f66e01e4482d23c69c4c722243a782078f3dd99f03"
+    },
+    {
+      "path": "modules/appearance/index.js",
+      "bytes": 9132,
+      "sha256": "d81180d3420b4acd506cbc139363bfaf5ed3e30aafd3b76436417b166944b11a"
+    },
+    {
+      "path": "modules/audio2d/index.js",
+      "bytes": 4310,
+      "sha256": "07e19391b84034acba56ef840a4d622b70e815f5376de123b6a07a9ccebf3098"
+    },
+    {
+      "path": "modules/ballistics/index.js",
+      "bytes": 1495,
+      "sha256": "556b4bbdf871c83b1ad149e3f8e3942cab04b48ae116f0d7cd871ed8ca116fd0"
+    },
+    {
+      "path": "modules/character/index.js",
+      "bytes": 11390,
+      "sha256": "19cd1846a626d306f291aa3aaffa6ec6fbc2159e3cb4386f68ad2dc814aa1fc8"
+    },
+    {
+      "path": "modules/collision/index.js",
+      "bytes": 12454,
+      "sha256": "99c0f4bc106d4162fc5bea057a7108d7cf52526279b2a8ad4e4f27c1f0e6f5c1"
+    },
+    {
+      "path": "modules/cuboid-stream/index.js",
+      "bytes": 4660,
+      "sha256": "e07640163f09883701532a952c8c4014c137a28d22b908698b94dae0ac9bb005"
+    },
+    {
+      "path": "modules/exact-circuit/index.js",
+      "bytes": 8073,
+      "sha256": "37a8dbad99a76125c7c48934446806e65fcc7d926ea5ce82b15bba55742f003a"
+    },
+    {
+      "path": "modules/exact-course/index.js",
+      "bytes": 4815,
+      "sha256": "1dae7f274c83f233bf9e56fec6ddcf3399ace6c4c4d93713851445f8210e18dd"
+    },
+    {
+      "path": "modules/exact-d4/index.js",
+      "bytes": 3167,
+      "sha256": "b28a4567bf068a4b7beca70a45b527c620b537f5a7ba334e0f86a7c6e7364f78"
+    },
+    {
+      "path": "modules/exact-geometry/index.js",
+      "bytes": 7728,
+      "sha256": "c5895c1fc6faa93c4761b327dd689fcd28d383c22cec0e229dee5275d1f7eb5b"
+    },
+    {
+      "path": "modules/exact-graph/index.js",
+      "bytes": 5513,
+      "sha256": "cdfb0e74a330e62ea1312ff042b570856707bfac2c491e3e3125647b2867aa10"
+    },
+    {
+      "path": "modules/exact-interval/index.js",
+      "bytes": 3075,
+      "sha256": "d171e150119d45d2cb951f2e517ef05f8cabb8977ce7d9424e1d6bb958ea0de8"
+    },
+    {
+      "path": "modules/exact-rational/index.js",
+      "bytes": 6693,
+      "sha256": "dbc7e08ee27e824c874b339074804a0d103906fb91b2f2c3b3ad806cf05e0f48"
+    },
+    {
+      "path": "modules/flight/index.js",
+      "bytes": 4951,
+      "sha256": "da9d416b5148a61bdad9ec46e499a62428eb96a091be4ff40248f3bb3cb9dcc6"
+    },
+    {
+      "path": "modules/frame-gate/index.js",
+      "bytes": 2723,
+      "sha256": "a64422e3f5a887effcbcf67581836e58c590dcb5737d2522939d1e3ff8aaa5ed"
+    },
+    {
+      "path": "modules/geometry/index.js",
+      "bytes": 10753,
+      "sha256": "186c7e4a930deece17a7b6f739f796ab75b0e0381631364ce6f7928a0544c8e2"
+    },
+    {
+      "path": "modules/gf3-lattice/index.js",
+      "bytes": 4669,
+      "sha256": "b7436a5bbad8d6309c611b9b738385bcd568dd11370fbc47848138bd7f251baf"
+    },
+    {
+      "path": "modules/gf3/index.js",
+      "bytes": 4737,
+      "sha256": "4ee8edacadcc6f326b9323a0c5295f4767174dd70de3b509149890c7315ba723"
+    },
+    {
+      "path": "modules/input/index.js",
+      "bytes": 8154,
+      "sha256": "e157c0eaee89ea240fa0abe43ca24d02620c917f3188f75dcc4d765392eca025"
+    },
+    {
+      "path": "modules/integer-engine/index.js",
+      "bytes": 5037,
+      "sha256": "a9ad903146a18e234f03f564364bee17e90cd95f63872f3c63b7169ed3b5d78f"
+    },
+    {
+      "path": "modules/integer-math/index.js",
+      "bytes": 5075,
+      "sha256": "4c0bb66780bf9e810efb1963c0238d9356814abf79c959dcd1734164de57905f"
+    },
+    {
+      "path": "modules/integer-physics/index.js",
+      "bytes": 3419,
+      "sha256": "039c7994f48148f1baa33a3b7e16fd5f911fc2e3e7624b4a4044d3c62fd12623"
+    },
+    {
+      "path": "modules/integer-replay/index.js",
+      "bytes": 4993,
+      "sha256": "3ecdc82603efe64476f795a8ec8b9b1c74269cfbf09c2e4c7ba8f72c517c622f"
+    },
+    {
+      "path": "modules/integer-time/index.js",
+      "bytes": 2264,
+      "sha256": "3bbf921b017a7066d3714bb17610070e017c66359d03b9f3f0949c161feb7133"
+    },
+    {
+      "path": "modules/integer-vector/index.js",
+      "bytes": 3274,
+      "sha256": "e47b8380b0b8c387c9da31a2af854684c4a6ea1abab761dec5f507fbdbf88cf2"
+    },
+    {
+      "path": "modules/interactions/index.js",
+      "bytes": 3494,
+      "sha256": "ac7e3fa91c6b89c7a34da84b869c02d12bbdd62805cd9dd252abfbf5274ed13b"
+    },
+    {
+      "path": "modules/lead-solver/index.js",
+      "bytes": 3087,
+      "sha256": "e0ed0b67ebbf972f4e1bcf900f24cf56048252bc853073ed0f89cc7328bb06c1"
+    },
+    {
+      "path": "modules/logical-sampling/index.js",
+      "bytes": 2505,
+      "sha256": "b7fe7930e81e98cda5e1aaf5b4f0bc7686e388db65a65c85c862ad93ace51d91"
+    },
+    {
+      "path": "modules/math/index.js",
+      "bytes": 3042,
+      "sha256": "4f4ebf0786b97342c11004b8830a535890b16693458a0436edb1fc581a411da7"
+    },
+    {
+      "path": "modules/mod-course/index.js",
+      "bytes": 3132,
+      "sha256": "3ad482d577d121cfc8c4b9d3cd11412bc5c0465c072246e50a1fbe773250ba70"
+    },
+    {
+      "path": "modules/mod-experiment/index.js",
+      "bytes": 3162,
+      "sha256": "5fa485d294bd8503481750eb9cc0e247f3a40834a78a56e62242f72c20aca840"
+    },
+    {
+      "path": "modules/mod-sdk/index.js",
+      "bytes": 8308,
+      "sha256": "1b8e11d442d77365e4ec79ace6736855dcb8b7946edabbf0123168f790f52b64"
+    },
+    {
+      "path": "modules/motion2d/index.js",
+      "bytes": 4462,
+      "sha256": "3a10377e5832408983697d9b01f56d7d94a64bcad6d50b0778ec201b1692b222"
+    },
+    {
+      "path": "modules/navigation-pool/index.js",
+      "bytes": 6800,
+      "sha256": "4acb3e6e19a81079dda22f3184602b1fd1d98dad73b2a6ed6027c38d9f38c20e"
+    },
+    {
+      "path": "modules/navigation/index.js",
+      "bytes": 10165,
+      "sha256": "d565333fcc9ffa024ba261697f520fd34ef95ecb7e31d9d614b4dd9ec3f4a5ed"
+    },
+    {
+      "path": "modules/nexus-lattice/index.js",
+      "bytes": 7414,
+      "sha256": "1dc251e2ce33eebe2063464a7040bf8b1a4cffb128e1fb649be05018b7df0f8b"
+    },
+    {
+      "path": "modules/orbital-physics/index.js",
+      "bytes": 6695,
+      "sha256": "04001b0d8aca2e6c7b1300ccdeb2c2aa9293a0e6a5bbb254c75613ca209bc134"
+    },
+    {
+      "path": "modules/projectiles/index.js",
+      "bytes": 3308,
+      "sha256": "9d1c045345593b9babebeb89999d99205a148361166c744d9f17c46ef2f0a0c1"
+    },
+    {
+      "path": "modules/qfloat/index.js",
+      "bytes": 3380,
+      "sha256": "6cfe462f9a930f428e43f45b352de26407d22811275898654af5a1bb6a273e4b"
+    },
+    {
+      "path": "modules/range2d/index.js",
+      "bytes": 1841,
+      "sha256": "a57f4c97337f124c5783bb8070845513ebab60ae479a46e875ad10adf07d3475"
+    },
+    {
+      "path": "modules/rational-q16/index.js",
+      "bytes": 4222,
+      "sha256": "8383681b2f8fd1404261d73b4c7447217a54af72b1a400ed01f9a993d432bcc7"
+    },
+    {
+      "path": "modules/render-optional/index.js",
+      "bytes": 7013,
+      "sha256": "3119543e88252c4b5c4a14fe0dde15fc3a444e5860f9ebeafb7f14629de2e711"
+    },
+    {
+      "path": "modules/render-optional/project.wat",
+      "bytes": 2074,
+      "sha256": "298bf50eabe623a617e68ad1c69a100c2f2595abee71c9a44043951d42dc09f1"
+    },
+    {
+      "path": "modules/render-optional/wasm-bytes.js",
+      "bytes": 952,
+      "sha256": "8750b9d17cb82fee910762c6c2bc0e787b0203120fe4e1331bf67bc5be3c1595"
+    },
+    {
+      "path": "modules/render-optional/webgpu.js",
+      "bytes": 4680,
+      "sha256": "fdaa1656f74984db0a48cca01b56b02be63a6b0c555195e99fd5809294cacd63"
+    },
+    {
+      "path": "modules/render-webgl/index.js",
+      "bytes": 7432,
+      "sha256": "af088cc5c4456ee07908d1561327c37c11d5c168b7d1b2c366149883f070e87c"
+    },
+    {
+      "path": "modules/symbolic-events/index.js",
+      "bytes": 3808,
+      "sha256": "2f0905fad5c03dda1894a52288875e344fd06abdb732d82a2a6aacbb36c9c778"
+    },
+    {
+      "path": "modules/ternary-store2d/index.js",
+      "bytes": 9850,
+      "sha256": "ffea44569e1306853df65a97b86f18e1f328e20dda7e1b43b7eac93723f5847b"
+    },
+    {
+      "path": "modules/terrain/index.js",
+      "bytes": 5985,
+      "sha256": "500756acf093f44e2e6c7e993a4b8f3f6f720abaf32db99fe0189d9b65fdc186"
+    },
+    {
+      "path": "modules/time-domains/index.js",
+      "bytes": 2071,
+      "sha256": "68be8e6d180f815343445af6ef8c055598ae378ada57101e02de06c94ac9205a"
+    },
+    {
+      "path": "modules/time/index.js",
+      "bytes": 2752,
+      "sha256": "de94c0bc04e6a269504c5742455ce114f824c2c0d9d59a2fd94555df5d9bb4a2"
+    },
+    {
+      "path": "modules/weapons/index.js",
+      "bytes": 2506,
+      "sha256": "f8fd92fbf0fc3bc3a174e12f5e61df2e1484ff0a070ec5165106f61b3340cf83"
+    },
+    {
+      "path": "NOTICE",
+      "bytes": 11626,
+      "sha256": "9dc4454d8760ca708804b585cbff7ff33e170ea3d3ba354e34fed5db920922a4"
+    },
+    {
+      "path": "offline/register.js",
+      "bytes": 1029,
+      "sha256": "9d17c57a7c03a5b05c36556b712c8f5b2990a6cae4e358d217e378405eb24db9"
+    },
+    {
+      "path": "service-worker.js",
+      "bytes": 44590,
+      "sha256": "7407807a855e59ff9e734ee9301727da3509b2b80dc3db8779d4b87f69af8791"
+    }
+  ]
+}

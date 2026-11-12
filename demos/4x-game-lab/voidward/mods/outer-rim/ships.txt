@@ -1,0 +1,10 @@
+# empire | class | hull | components
+0 | RFS Wayfarer | scout-0 | drive-1,laser-1,shield-1,survey
+0 | RFS New Horizon | ark-0 | drive-1,shield-1,colony
+0 | RFS Resolute | frigate-0 | drive-1,laser-1,laser-1,shield-1,marines
+1 | PDS Whisper | scout-1 | drive-1,laser-1,shield-1,survey
+1 | PDS Seed of Dawn | ark-1 | drive-1,shield-1,colony
+1 | PDS Thornsong | frigate-1 | drive-1,laser-1,laser-1,shield-1,marines
+2 | OMS Night Watch | scout-2 | drive-1,laser-1,shield-1,survey
+2 | OMS Forge Ark | ark-2 | drive-1,shield-1,colony
+2 | OMS Iron Edict | frigate-2 | drive-1,laser-1,laser-1,shield-1,marines

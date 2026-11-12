@@ -1,0 +1,4 @@
+id = grand-frontier
+version = 1.0.0
+title = Grand Frontier: The Long Concord
+description = Sixty-four stars and three rival visions. Build a lasting commonwealth through trade and science, or bind a wide dominion. Staged goals keep the frontier open for 100–220 turns.

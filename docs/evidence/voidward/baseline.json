@@ -1,0 +1,28 @@
+{
+  "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
+  "nodeTests": {
+    "passed": 671,
+    "failed": 0
+  },
+  "sourceChecks": {
+    "javascriptFiles": 257,
+    "modules": 50,
+    "experiments": 2
+  },
+  "package": {
+    "files": 154,
+    "bytes": 1013132
+  },
+  "browser": {
+    "status": "PASS",
+    "workloads": [
+      "Ternary Reach gameplay, replay, invalid input, keyboard, emulated touch, 320/390px and offline reload",
+      "Existing editor screenshot"
+    ]
+  },
+  "environment": {
+    "node": "Node 22",
+    "browser": "Chrome 156",
+    "platform": "Linux x64"
+  }
+}

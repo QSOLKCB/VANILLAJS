@@ -718,6 +718,29 @@
       ],
       "preset": "seeded-sector",
       "description": "Experimental turn-based 4X: seeded starlanes, fog of war, colonies, exact economy, rival fleets and command replay"
+    },
+    "voidward-4x": {
+      "entry": "demos/4x-game-lab/voidward/js/core.js",
+      "modules": [
+        "integer-math",
+        "exact-rational",
+        "exact-graph",
+        "audio2d",
+        "mod-sdk"
+      ],
+      "preset": "voidward-campaigns",
+      "description": "Experimental demo-owned VOIDWARD campaign engine, declarative packs and ship/campaign workshop; source adapted from QSOLKCB/4XGAMES PR #2, not a generic engine module"
+    },
+    "editor-voidward-pack": {
+      "entry": "demos/editor/4x-workflow.js",
+      "modules": [
+        "math",
+        "geometry",
+        "integer-math",
+        "mod-sdk"
+      ],
+      "preset": "voidward-text-pack",
+      "description": "Experimental demo-owned 4X campaign sidecar, bounded undo/recovery, native pack exchange, 2:1 chart placement and attributed convex hull projection"
     }
   },
   "experiments": {

@@ -1,0 +1,4 @@
+# id | name | population cap | base minerals | palette
+terran | Terran | 100 | 5 | ocean
+desert | Arid | 65 | 12 | gas
+ice | Cryogenic | 50 | 8 | ice

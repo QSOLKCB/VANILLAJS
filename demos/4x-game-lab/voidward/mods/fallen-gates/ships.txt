@@ -1,0 +1,10 @@
+# empire | class | hull | components
+0 | LCS Wayfarer | scout-0 | drive-1,laser-1,shield-1,survey
+0 | LCS New Horizon | ark-0 | drive-1,shield-1,colony
+0 | LCS Resolute | frigate-0 | drive-1,laser-1,laser-1,shield-1,marines
+1 | CGS Whisper | scout-1 | drive-1,laser-1,shield-1,survey
+1 | CGS Seed of Dawn | ark-1 | drive-1,shield-1,colony
+1 | CGS Thornsong | frigate-1 | drive-1,laser-1,laser-1,shield-1,marines
+2 | HUS Night Watch | scout-2 | drive-1,laser-1,shield-1,survey
+2 | HUS Forge Ark | ark-2 | drive-1,shield-1,colony
+2 | HUS Iron Edict | frigate-2 | drive-1,laser-1,laser-1,shield-1,marines

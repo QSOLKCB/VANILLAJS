@@ -58,11 +58,13 @@
         "scripts/browser-rts.js",
         "scripts/browser-flow.js",
         "scripts/browser-2d.js",
-        "scripts/browser-4x.js"
+        "scripts/browser-4x.js",
+        "scripts/browser-voidward.js"
       ],
       "serviceWorker": true,
       "consumes": [
-        "worlds"
+        "worlds",
+        "editor"
       ]
     },
     "research": {
@@ -106,12 +108,14 @@
         "demos/editor/"
       ],
       "scripts": [
-        "scripts/browser-editor.js"
+        "scripts/browser-editor.js",
+        "scripts/browser-editor-4x.js"
       ],
       "serviceWorker": true,
       "consumes": [
         "donor",
-        "editor"
+        "editor",
+        "worlds"
       ]
     }
   },
@@ -260,6 +264,11 @@
       "tests/mod-sdk-002.test.js",
       "scripts/mod_sdk_002_oracle.py",
       "examples/mod-sdk-002/cardinal-loop.json"
+    ],
+    "demos/4x-game-lab/voidward/": [
+      "tests/voidward-save-fixtures.js",
+      "tests/fixtures/voidward-v1-frontier.json",
+      "tests/fixtures/voidward-v1-machine-dawn.json"
     ]
   },
   "shared": [

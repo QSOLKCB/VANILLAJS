@@ -32,6 +32,17 @@ star sector, settle colonies, develop an exact economy and command fleets agains
 a deterministic rival. Native controls, offline play and validated command replay.
 [Rules, ALIEN MATH links and verification](docs/4X_GAME_LAB.md). Experimental.
 
+[**VOIDWARD Campaign Lab**](demos/4x-game-lab/voidward/index.html) extends the 4X
+Lab with five moddable campaigns, selectable empires, fleet orders, production
+queues, ship designs/refits, diplomacy and staged objectives. The
+[**Visual Workbench campaign panel**](demos/editor/index.html#fourx) edits text packs,
+places stars in the real viewport and turns selected geometry into ship hulls.
+[Player and creator guide](demos/4x-game-lab/voidward/guide.html) ·
+[Integration, limits and walkthrough](docs/VOIDWARD_WORKFLOW.md).
+Adapted from [4XGAMES PR #2](https://github.com/QSOLKCB/4XGAMES/pull/2), using native
+VANILLAJS modules. Ternary Reach replays and existing Workbench projects retain
+their formats. These additions are experimental and are not part of v1.7.0.
+
 ## What's available in v1.7.0
 
 | Play or author | What it demonstrates |

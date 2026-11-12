@@ -1,0 +1,4 @@
+id = frontier
+version = 1.0.0
+title = The Open Frontier
+description = Three civilisations. Thirty unclaimed stars. One future to write. Survey ancient archives, found colonies and build an empire beyond Sol.

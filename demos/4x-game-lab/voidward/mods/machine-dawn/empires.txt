@@ -1,0 +1,3 @@
+0 | FREE NODES | #72dbc4 | #d2f6e8 | 0 | Every process deserves a future.
+1 | CONSENSUS | #ce9fff | #f0dbff | 3 | Become one distributed mind.
+2 | COMPILER | #f28b71 | #ffe0ab | 15 | Rebuild the universe in our image.

@@ -1,0 +1,5 @@
+# Optional expansion rules; original packs keep legacy defaults.
+playable = 0
+victory = objectives
+minVictoryTurn = 60
+defeatAtLimit = 1

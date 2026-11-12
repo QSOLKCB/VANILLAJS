@@ -1,0 +1,10 @@
+# empire | ship name | hull | comma-separated component IDs
+0 | TAS Wayfarer | scout-0 | drive-1,laser-1,shield-1,survey
+0 | TAS New Horizon | ark-0 | drive-1,shield-1,colony
+0 | TAS Resolute | frigate-0 | drive-1,laser-1,laser-1,shield-1,marines
+1 | VC Whisper | scout-1 | drive-1,laser-1,shield-1,survey
+1 | VC Seed of Dawn | ark-1 | drive-1,shield-1,colony
+1 | VC Thornsong | frigate-1 | drive-1,laser-1,laser-1,shield-1,marines
+2 | AD Night Watch | scout-2 | drive-1,laser-1,shield-1,survey
+2 | AD Forge Ark | ark-2 | drive-1,shield-1,colony
+2 | AD Iron Edict | frigate-2 | drive-1,laser-1,laser-1,shield-1,marines

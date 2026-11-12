@@ -1,0 +1,4 @@
+id = fallen-gates
+version = 1.0.0
+title = Fallen Gates: The Quiet Meridian
+description = Thirty-six stars linked by broken transit corridors. Recover gate archives, then choose restoration or a new path through the silent network. Progress survives saves; plan for 70–180 turns.

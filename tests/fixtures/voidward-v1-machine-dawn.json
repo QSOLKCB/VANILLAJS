@@ -1,0 +1,1192 @@
+{
+  "kind": "voidward.save.v1",
+  "extension": "machine-dawn",
+  "pack": {
+    "campaign.txt": "id = machine-dawn\nversion = 1.0.0\ntitle = Machine Dawn\ndescription = An original machine civilisation campaign. Recolonise a silent network: establish six colonies before your rivals. All names, ships and rules are editable text.\n",
+    "rules.txt": "# key = integer. See MOD_GUIDE.md for bounds.\ncolumns = 4\nrows = 4\nplanetsPerSystem = 2\nturnLimit = 160\ncolonyTarget = 6\nmaxTech = 5\nstartMinerals = 500\nstartEnergy = 200\ncolonizeMinerals = 50\ncolonizeEnergy = 25\nbaseProduction = 12\nindustryProduction = 3\nindustryMinerals = 4\nbaseEnergy = 8\nbaseScience = 4\nbaseDefence = 12\nshieldDefence = 4\nresearchBase = 55\nresearchStep = 35\ntradeIncome = 12\ntradeCost = 60\npeaceCost = 120\nwarGrace = 20\nrelicScience = 60\nrelicMinerals = 60\nrepair = 8\nfacilityLimit = 3\nfleetLimit = 60\n",
+    "empire_names.txt": "Free Node Union\nGlass Consensus\nThe Red Compiler\n",
+    "empires.txt": "0 | FREE NODES | #72dbc4 | #d2f6e8 | 0 | Every process deserves a future.\n1 | CONSENSUS | #ce9fff | #f0dbff | 3 | Become one distributed mind.\n2 | COMPILER | #f28b71 | #ffe0ab | 15 | Rebuild the universe in our image.\n",
+    "system_names.txt": "Node 01\nNode 02\nNode 03\nNode 04\nNode 05\nNode 06\nNode 07\nNode 08\nNode 09\nNode 10\nNode 11\nNode 12\nNode 13\nNode 14\nNode 15\nNode 16\nNode 17\nNode 18\nNode 19\nNode 20\nNode 21\nNode 22\nNode 23\nNode 24\nNode 25\nNode 26\nNode 27\nNode 28\nNode 29\nNode 30\n",
+    "planet_names.txt": "Archive 001\nArchive 002\nArchive 003\nArchive 004\nArchive 005\nArchive 006\nArchive 007\nArchive 008\nArchive 009\nArchive 010\nArchive 011\nArchive 012\nArchive 013\nArchive 014\nArchive 015\nArchive 016\nArchive 017\nArchive 018\nArchive 019\nArchive 020\nArchive 021\nArchive 022\nArchive 023\nArchive 024\nArchive 025\nArchive 026\nArchive 027\nArchive 028\nArchive 029\nArchive 030\nArchive 031\nArchive 032\nArchive 033\nArchive 034\nArchive 035\nArchive 036\nArchive 037\nArchive 038\nArchive 039\nArchive 040\nArchive 041\nArchive 042\nArchive 043\nArchive 044\nArchive 045\nArchive 046\nArchive 047\nArchive 048\nArchive 049\nArchive 050\nArchive 051\nArchive 052\nArchive 053\nArchive 054\nArchive 055\nArchive 056\nArchive 057\nArchive 058\nArchive 059\nArchive 060\n",
+    "planet_types.txt": "# id | name | population cap | base minerals | palette\nterran | Terran | 100 | 5 | ocean\ndesert | Arid | 65 | 12 | gas\nice | Cryogenic | 50 | 8 | ice\n",
+    "hulls.txt": "# id | name | empire (* shared) | slots | hp | cost | work | tech | level | silhouette x,y;...\nscout-0 | Kestrel | 0 | 5 | 24 | 30 | 40 | industry | 1 | 0,-50;14,-16;38,28;16,20;10,44;-10,44;-16,20;-38,28;-14,-16\nark-0 | Pilgrim | 0 | 8 | 36 | 55 | 65 | industry | 1 | 0,-46;22,-20;28,30;16,40;-16,40;-28,30;-22,-20\nfrigate-0 | Halberd | 0 | 8 | 50 | 60 | 70 | industry | 1 | 0,-50;12,-32;14,0;38,22;38,40;12,30;0,44;-12,30;-38,40;-38,22;-14,0;-12,-32\ncruiser-0 | Sovereign | 0 | 14 | 110 | 120 | 140 | industry | 3 | 0,-55;20,-20;22,8;48,24;42,46;16,36;0,48;-16,36;-42,46;-48,24;-22,8;-20,-20\nscout-1 | Wisp | 1 | 5 | 24 | 30 | 40 | industry | 1 | 0,-50;30,-25;40,0;16,-8;22,34;0,48;-22,34;-16,-8;-40,0;-30,-25\nark-1 | Bloom | 1 | 8 | 36 | 55 | 65 | industry | 1 | 0,-48;32,-28;38,0;28,34;0,48;-28,34;-38,0;-32,-28\nfrigate-1 | Thorn | 1 | 8 | 50 | 60 | 70 | industry | 1 | 0,-52;18,-24;45,-8;36,32;18,12;0,46;-18,12;-36,32;-45,-8;-18,-24\ncruiser-1 | Chrysalis | 1 | 14 | 110 | 120 | 140 | industry | 3 | 0,-54;24,-35;48,-12;36,18;44,38;0,48;-44,38;-36,18;-48,-12;-24,-35\nscout-2 | Needle | 2 | 5 | 24 | 30 | 40 | industry | 1 | -10,-50;10,-50;10,-16;34,-16;34,34;14,34;14,44;-14,44;-14,34;-34,34;-34,-16;-10,-16\nark-2 | Foundry | 2 | 8 | 36 | 55 | 65 | industry | 1 | -24,-40;24,-40;30,-16;30,34;18,42;-18,42;-30,34;-30,-16\nfrigate-2 | Anvil | 2 | 8 | 50 | 60 | 70 | industry | 1 | -12,-50;12,-50;12,-24;34,-24;40,38;16,38;16,48;-16,48;-16,38;-40,38;-34,-24;-12,-24\ncruiser-2 | Dreadnought | 2 | 14 | 110 | 120 | 140 | industry | 3 | -16,-54;16,-54;16,-30;42,-30;48,42;24,42;24,52;-24,52;-24,42;-48,42;-42,-30;-16,-30\n",
+    "components.txt": "# id | name | role | slots | cost | hp | attack | speed | research | level | description\ndrive-1 | Warp drive 1 | engine | 1 | 12 | 0 | 0 | 1 | propulsion | 1 | Movement engine. Multiple drives do not stack speed.\nlaser-1 | Lance array 1 | weapon | 1 | 18 | 0 | 10 | 0 | weapons | 1 | Directed energy weapon; attack stacks.\nshield-1 | Deflector 1 | shield | 1 | 14 | 18 | 0 | 0 | shields | 1 | Adds hull protection; protection stacks.\ndrive-2 | Warp drive 2 | engine | 1 | 24 | 0 | 0 | 1 | propulsion | 2 | Movement engine. Multiple drives do not stack speed.\nlaser-2 | Lance array 2 | weapon | 1 | 36 | 0 | 20 | 0 | weapons | 2 | Directed energy weapon; attack stacks.\nshield-2 | Deflector 2 | shield | 1 | 28 | 36 | 0 | 0 | shields | 2 | Adds hull protection; protection stacks.\ndrive-3 | Warp drive 3 | engine | 2 | 36 | 0 | 0 | 2 | propulsion | 3 | Movement engine. Multiple drives do not stack speed.\nlaser-3 | Lance array 3 | weapon | 2 | 54 | 0 | 30 | 0 | weapons | 3 | Directed energy weapon; attack stacks.\nshield-3 | Deflector 3 | shield | 2 | 42 | 54 | 0 | 0 | shields | 3 | Adds hull protection; protection stacks.\ndrive-4 | Warp drive 4 | engine | 2 | 48 | 0 | 0 | 2 | propulsion | 4 | Movement engine. Multiple drives do not stack speed.\nlaser-4 | Lance array 4 | weapon | 2 | 72 | 0 | 40 | 0 | weapons | 4 | Directed energy weapon; attack stacks.\nshield-4 | Deflector 4 | shield | 2 | 56 | 72 | 0 | 0 | shields | 4 | Adds hull protection; protection stacks.\ndrive-5 | Warp drive 5 | engine | 2 | 60 | 0 | 0 | 3 | propulsion | 5 | Movement engine. Multiple drives do not stack speed.\nlaser-5 | Lance array 5 | weapon | 2 | 90 | 0 | 50 | 0 | weapons | 5 | Directed energy weapon; attack stacks.\nshield-5 | Deflector 5 | shield | 2 | 70 | 90 | 0 | 0 | shields | 5 | Adds hull protection; protection stacks.\nsurvey | Survey array | survey | 1 | 12 | 0 | 0 | 0 | industry | 1 | Recover ancient archives for resources and research.\ncolony | Colony habitat | colony | 3 | 40 | 0 | 0 | 0 | industry | 1 | Ship becomes a colony when deployed.\nmarines | Marine bay | assault | 2 | 12 | 0 | 0 | 0 | industry | 1 | Capture enemy planets after eliminating their defending fleets.\n",
+    "ships.txt": "# empire | ship name | hull | comma-separated component IDs\n0 | FNU Packet Scout | scout-0 | drive-1,laser-1,shield-1,survey\n0 | FNU Bootstrap | ark-0 | drive-1,shield-1,colony\n0 | FNU Sentinel | frigate-0 | drive-1,laser-1,laser-1,shield-1,marines\n1 | GC Quiet Process | scout-1 | drive-1,laser-1,shield-1,survey\n1 | GC Genesis | ark-1 | drive-1,shield-1,colony\n1 | GC Firewall | frigate-1 | drive-1,laser-1,laser-1,shield-1,marines\n2 | RC Parser | scout-2 | drive-1,laser-1,shield-1,survey\n2 | RC Constructor | ark-2 | drive-1,shield-1,colony\n2 | RC Assertion | frigate-2 | drive-1,laser-1,laser-1,shield-1,marines\n",
+    "buildings.txt": "# id | name | cost | work | minerals | energy | science | production | defence | description\nmine | Mineral extractor | 70 | 40 | 14 | 0 | 0 | 0 | 0 | Extract valuable planetary minerals.\nreactor | Fusion reactor | 65 | 35 | 0 | 16 | 0 | 0 | 0 | Supply the fleet and power diplomatic agreements.\nlab | Research laboratory | 85 | 50 | 0 | 0 | 10 | 0 | 0 | Accelerate your active research project.\nyard | Orbital shipyard | 90 | 50 | 0 | 0 | 0 | 12 | 0 | Construct and repair ships in orbit.\ndefence | Defence grid | 75 | 40 | 0 | 0 | 0 | 0 | 14 | Fire on hostile fleets and resist invasion.\n",
+    "research.txt": "# id | display name | effect description\nindustry | Industrial systems | More minerals and construction per colony; capital hulls at level III.\npropulsion | Warp dynamics | Unlock engines that cross more warp lanes per turn.\nweapons | Directed energy | Unlock stronger weapons for newly built ships.\nshields | Field harmonics | Unlock shield modules and strengthen planetary defences.\n",
+    "map.txt": "# id | neighbours | archive\n0 | 1,4 | 0\n1 | 0,2,5 | 0\n2 | 1,3,6 | 0\n3 | 2,7 | 0\n4 | 0,5,8 | 0\n5 | 1,4,6,9 | 0\n6 | 2,5,7,10 | 1\n7 | 3,6,11 | 0\n8 | 4,9,12 | 0\n9 | 5,8,10,13 | 1\n10 | 6,9,11,14 | 0\n11 | 7,10,15 | 0\n12 | 8,13 | 0\n13 | 9,12,14 | 0\n14 | 10,13,15 | 0\n15 | 11,14 | 0\n",
+    "music.txt": "# MIDI note | duration seconds\n48 | 3\n55 | 3\n62 | 3\n58 | 3\n53 | 3\n60 | 3\n65 | 3\n55 | 3\n"
+  },
+  "state": {
+    "version": 1,
+    "seed": 2401,
+    "rng": 3894199345,
+    "difficulty": "standard",
+    "turn": 5,
+    "nextId": 12,
+    "systems": [
+      {
+        "id": 0,
+        "name": "Node 01",
+        "x": 97,
+        "y": 92,
+        "links": [
+          1,
+          4
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 1,
+        "name": "Node 02",
+        "x": 281,
+        "y": 129,
+        "links": [
+          0,
+          2,
+          5
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 2,
+        "name": "Node 03",
+        "x": 463,
+        "y": 113,
+        "links": [
+          1,
+          3,
+          6
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 3,
+        "name": "Node 04",
+        "x": 590,
+        "y": 98,
+        "links": [
+          2,
+          7
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 4,
+        "name": "Node 05",
+        "x": 109,
+        "y": 282,
+        "links": [
+          0,
+          5,
+          8
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 5,
+        "name": "Node 06",
+        "x": 293,
+        "y": 286,
+        "links": [
+          1,
+          4,
+          6,
+          9
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 6,
+        "name": "Node 07",
+        "x": 461,
+        "y": 248,
+        "links": [
+          2,
+          5,
+          7,
+          10
+        ],
+        "relic": true,
+        "claimed": true
+      },
+      {
+        "id": 7,
+        "name": "Node 08",
+        "x": 628,
+        "y": 259,
+        "links": [
+          3,
+          6,
+          11
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 8,
+        "name": "Node 09",
+        "x": 102,
+        "y": 416,
+        "links": [
+          4,
+          9,
+          12
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 9,
+        "name": "Node 10",
+        "x": 266,
+        "y": 437,
+        "links": [
+          5,
+          8,
+          10,
+          13
+        ],
+        "relic": true,
+        "claimed": false
+      },
+      {
+        "id": 10,
+        "name": "Node 11",
+        "x": 465,
+        "y": 405,
+        "links": [
+          6,
+          9,
+          11,
+          14
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 11,
+        "name": "Node 12",
+        "x": 593,
+        "y": 403,
+        "links": [
+          7,
+          10,
+          15
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 12,
+        "name": "Node 13",
+        "x": 111,
+        "y": 588,
+        "links": [
+          8,
+          13
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 13,
+        "name": "Node 14",
+        "x": 256,
+        "y": 565,
+        "links": [
+          9,
+          12,
+          14
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 14,
+        "name": "Node 15",
+        "x": 457,
+        "y": 599,
+        "links": [
+          10,
+          13,
+          15
+        ],
+        "relic": false,
+        "claimed": false
+      },
+      {
+        "id": 15,
+        "name": "Node 16",
+        "x": 615,
+        "y": 570,
+        "links": [
+          11,
+          14
+        ],
+        "relic": false,
+        "claimed": false
+      }
+    ],
+    "planets": [
+      {
+        "id": 0,
+        "system": 0,
+        "name": "Archive 001",
+        "type": "terran",
+        "owner": 0,
+        "pop": 72,
+        "buildings": {
+          "mine": 1,
+          "reactor": 1,
+          "lab": 1,
+          "yard": 1,
+          "defence": 1
+        },
+        "queue": []
+      },
+      {
+        "id": 1,
+        "system": 0,
+        "name": "Archive 002",
+        "type": "desert",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 2,
+        "system": 1,
+        "name": "Archive 003",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 3,
+        "system": 1,
+        "name": "Archive 004",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 4,
+        "system": 2,
+        "name": "Archive 005",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 5,
+        "system": 2,
+        "name": "Archive 006",
+        "type": "ice",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 6,
+        "system": 3,
+        "name": "Archive 007",
+        "type": "terran",
+        "owner": 1,
+        "pop": 72,
+        "buildings": {
+          "mine": 1,
+          "reactor": 1,
+          "lab": 1,
+          "yard": 1,
+          "defence": 1
+        },
+        "queue": [
+          {
+            "kind": "ship",
+            "design": {
+              "id": 1,
+              "name": "GC Genesis",
+              "hull": "ark-1",
+              "parts": [
+                "drive-1",
+                "shield-1",
+                "colony"
+              ]
+            },
+            "name": "GC Genesis",
+            "cost": 121,
+            "work": 65,
+            "done": 30
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "system": 3,
+        "name": "Archive 008",
+        "type": "desert",
+        "owner": 1,
+        "pop": 24,
+        "buildings": {
+          "mine": 1,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": [
+          {
+            "kind": "yard",
+            "name": "Orbital shipyard",
+            "cost": 90,
+            "work": 50,
+            "done": 48
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "system": 4,
+        "name": "Archive 009",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 9,
+        "system": 4,
+        "name": "Archive 010",
+        "type": "ice",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 10,
+        "system": 5,
+        "name": "Archive 011",
+        "type": "desert",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 11,
+        "system": 5,
+        "name": "Archive 012",
+        "type": "desert",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 12,
+        "system": 6,
+        "name": "Archive 013",
+        "type": "ice",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 13,
+        "system": 6,
+        "name": "Archive 014",
+        "type": "desert",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 14,
+        "system": 7,
+        "name": "Archive 015",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 15,
+        "system": 7,
+        "name": "Archive 016",
+        "type": "desert",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 16,
+        "system": 8,
+        "name": "Archive 017",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 17,
+        "system": 8,
+        "name": "Archive 018",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 18,
+        "system": 9,
+        "name": "Archive 019",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 19,
+        "system": 9,
+        "name": "Archive 020",
+        "type": "desert",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 20,
+        "system": 10,
+        "name": "Archive 021",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 21,
+        "system": 10,
+        "name": "Archive 022",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 22,
+        "system": 11,
+        "name": "Archive 023",
+        "type": "terran",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 23,
+        "system": 11,
+        "name": "Archive 024",
+        "type": "ice",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 24,
+        "system": 12,
+        "name": "Archive 025",
+        "type": "ice",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 25,
+        "system": 12,
+        "name": "Archive 026",
+        "type": "desert",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 26,
+        "system": 13,
+        "name": "Archive 027",
+        "type": "desert",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 27,
+        "system": 13,
+        "name": "Archive 028",
+        "type": "ice",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 28,
+        "system": 14,
+        "name": "Archive 029",
+        "type": "desert",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 29,
+        "system": 14,
+        "name": "Archive 030",
+        "type": "desert",
+        "owner": -1,
+        "pop": 0,
+        "buildings": {
+          "mine": 0,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": []
+      },
+      {
+        "id": 30,
+        "system": 15,
+        "name": "Archive 031",
+        "type": "terran",
+        "owner": 2,
+        "pop": 72,
+        "buildings": {
+          "mine": 1,
+          "reactor": 1,
+          "lab": 1,
+          "yard": 1,
+          "defence": 1
+        },
+        "queue": [
+          {
+            "kind": "ship",
+            "design": {
+              "id": 1,
+              "name": "RC Constructor",
+              "hull": "ark-2",
+              "parts": [
+                "drive-1",
+                "shield-1",
+                "colony"
+              ]
+            },
+            "name": "RC Constructor",
+            "cost": 121,
+            "work": 65,
+            "done": 27
+          }
+        ]
+      },
+      {
+        "id": 31,
+        "system": 15,
+        "name": "Archive 032",
+        "type": "desert",
+        "owner": 2,
+        "pop": 24,
+        "buildings": {
+          "mine": 1,
+          "reactor": 0,
+          "lab": 0,
+          "yard": 0,
+          "defence": 0
+        },
+        "queue": [
+          {
+            "kind": "yard",
+            "name": "Orbital shipyard",
+            "cost": 90,
+            "work": 50,
+            "done": 45
+          }
+        ]
+      }
+    ],
+    "fleets": [
+      {
+        "id": 1,
+        "owner": 0,
+        "system": 0,
+        "name": "FNU Packet Scout",
+        "design": {
+          "id": 0,
+          "name": "FNU Packet Scout",
+          "hull": "scout-0",
+          "parts": [
+            "drive-1",
+            "laser-1",
+            "shield-1",
+            "survey"
+          ]
+        },
+        "hp": 42,
+        "path": []
+      },
+      {
+        "id": 2,
+        "owner": 0,
+        "system": 0,
+        "name": "FNU Bootstrap",
+        "design": {
+          "id": 1,
+          "name": "FNU Bootstrap",
+          "hull": "ark-0",
+          "parts": [
+            "drive-1",
+            "shield-1",
+            "colony"
+          ]
+        },
+        "hp": 54,
+        "path": []
+      },
+      {
+        "id": 3,
+        "owner": 0,
+        "system": 0,
+        "name": "FNU Sentinel",
+        "design": {
+          "id": 2,
+          "name": "FNU Sentinel",
+          "hull": "frigate-0",
+          "parts": [
+            "drive-1",
+            "laser-1",
+            "laser-1",
+            "shield-1",
+            "marines"
+          ]
+        },
+        "hp": 68,
+        "path": []
+      },
+      {
+        "id": 4,
+        "owner": 1,
+        "system": 6,
+        "name": "GC Quiet Process",
+        "design": {
+          "id": 0,
+          "name": "GC Quiet Process",
+          "hull": "scout-1",
+          "parts": [
+            "drive-1",
+            "laser-1",
+            "shield-1",
+            "survey"
+          ]
+        },
+        "hp": 42,
+        "path": []
+      },
+      {
+        "id": 6,
+        "owner": 1,
+        "system": 1,
+        "name": "GC Firewall",
+        "design": {
+          "id": 2,
+          "name": "GC Firewall",
+          "hull": "frigate-1",
+          "parts": [
+            "drive-1",
+            "laser-1",
+            "laser-1",
+            "shield-1",
+            "marines"
+          ]
+        },
+        "hp": 68,
+        "path": []
+      },
+      {
+        "id": 7,
+        "owner": 2,
+        "system": 10,
+        "name": "RC Parser",
+        "design": {
+          "id": 0,
+          "name": "RC Parser",
+          "hull": "scout-2",
+          "parts": [
+            "drive-1",
+            "laser-1",
+            "shield-1",
+            "survey"
+          ]
+        },
+        "hp": 42,
+        "path": [
+          6
+        ]
+      },
+      {
+        "id": 9,
+        "owner": 2,
+        "system": 10,
+        "name": "RC Assertion",
+        "design": {
+          "id": 2,
+          "name": "RC Assertion",
+          "hull": "frigate-2",
+          "parts": [
+            "drive-1",
+            "laser-1",
+            "laser-1",
+            "shield-1",
+            "marines"
+          ]
+        },
+        "hp": 68,
+        "path": [
+          9
+        ]
+      },
+      {
+        "id": 10,
+        "owner": 1,
+        "system": 2,
+        "name": "GC Genesis",
+        "design": {
+          "id": 1,
+          "name": "GC Genesis",
+          "hull": "ark-1",
+          "parts": [
+            "drive-1",
+            "shield-1",
+            "colony"
+          ]
+        },
+        "hp": 54,
+        "path": []
+      },
+      {
+        "id": 11,
+        "owner": 2,
+        "system": 11,
+        "name": "RC Constructor",
+        "design": {
+          "id": 1,
+          "name": "RC Constructor",
+          "hull": "ark-2",
+          "parts": [
+            "drive-1",
+            "shield-1",
+            "colony"
+          ]
+        },
+        "hp": 54,
+        "path": [
+          10
+        ]
+      }
+    ],
+    "empires": [
+      {
+        "id": 0,
+        "minerals": 592,
+        "energy": 296,
+        "science": 68,
+        "tech": {
+          "industry": 1,
+          "propulsion": 1,
+          "weapons": 1,
+          "shields": 1
+        },
+        "research": "industry",
+        "known": [
+          0
+        ],
+        "contacts": [],
+        "designs": [
+          {
+            "id": 0,
+            "name": "FNU Packet Scout",
+            "hull": "scout-0",
+            "parts": [
+              "drive-1",
+              "laser-1",
+              "shield-1",
+              "survey"
+            ]
+          },
+          {
+            "id": 1,
+            "name": "FNU Bootstrap",
+            "hull": "ark-0",
+            "parts": [
+              "drive-1",
+              "shield-1",
+              "colony"
+            ]
+          },
+          {
+            "id": 2,
+            "name": "FNU Sentinel",
+            "hull": "frigate-0",
+            "parts": [
+              "drive-1",
+              "laser-1",
+              "laser-1",
+              "shield-1",
+              "marines"
+            ]
+          }
+        ],
+        "defeated": false
+      },
+      {
+        "id": 1,
+        "minerals": 390,
+        "energy": 317,
+        "science": 58,
+        "tech": {
+          "industry": 2,
+          "propulsion": 1,
+          "weapons": 1,
+          "shields": 1
+        },
+        "research": "industry",
+        "known": [
+          1,
+          2,
+          3,
+          6,
+          7,
+          10,
+          11
+        ],
+        "contacts": [
+          2
+        ],
+        "designs": [
+          {
+            "id": 0,
+            "name": "GC Quiet Process",
+            "hull": "scout-1",
+            "parts": [
+              "drive-1",
+              "laser-1",
+              "shield-1",
+              "survey"
+            ]
+          },
+          {
+            "id": 1,
+            "name": "GC Genesis",
+            "hull": "ark-1",
+            "parts": [
+              "drive-1",
+              "shield-1",
+              "colony"
+            ]
+          },
+          {
+            "id": 2,
+            "name": "GC Firewall",
+            "hull": "frigate-1",
+            "parts": [
+              "drive-1",
+              "laser-1",
+              "laser-1",
+              "shield-1",
+              "marines"
+            ]
+          }
+        ],
+        "defeated": false
+      },
+      {
+        "id": 2,
+        "minerals": 330,
+        "energy": 317,
+        "science": 88,
+        "tech": {
+          "industry": 1,
+          "propulsion": 1,
+          "weapons": 1,
+          "shields": 1
+        },
+        "research": "industry",
+        "known": [
+          10,
+          11,
+          14,
+          15
+        ],
+        "contacts": [
+          1
+        ],
+        "designs": [
+          {
+            "id": 0,
+            "name": "RC Parser",
+            "hull": "scout-2",
+            "parts": [
+              "drive-1",
+              "laser-1",
+              "shield-1",
+              "survey"
+            ]
+          },
+          {
+            "id": 1,
+            "name": "RC Constructor",
+            "hull": "ark-2",
+            "parts": [
+              "drive-1",
+              "shield-1",
+              "colony"
+            ]
+          },
+          {
+            "id": 2,
+            "name": "RC Assertion",
+            "hull": "frigate-2",
+            "parts": [
+              "drive-1",
+              "laser-1",
+              "laser-1",
+              "shield-1",
+              "marines"
+            ]
+          }
+        ],
+        "defeated": false
+      }
+    ],
+    "relations": [
+      [
+        "self",
+        "neutral",
+        "neutral"
+      ],
+      [
+        "neutral",
+        "self",
+        "neutral"
+      ],
+      [
+        "neutral",
+        "neutral",
+        "self"
+      ]
+    ],
+    "log": [
+      {
+        "turn": 1,
+        "text": "Network reboot complete. Establish six archives to secure the Free Nodes.",
+        "kind": "info"
+      },
+      {
+        "turn": 1,
+        "text": "The frontier is yours. Survey a neighbouring star, then send your colony ark to settle a new world.",
+        "kind": "survey"
+      }
+    ],
+    "battles": [],
+    "winner": null,
+    "victory": "",
+    "modState": {
+      "supplyDelivered": false
+    }
+  }
+}

@@ -1,0 +1,8 @@
+# id | earliest turn | requires | kind | owner | target | value | repeat interval
+ultimatum | 3 |  | message | player | The interior powers demand surrender. Build defence grids and keep your energy reserves above zero. | 0 | 0
+pale-war | 10 |  | war | 1 | 0 | 0 | 0
+mandate-war | 18 |  | war | 2 | 0 | 0 | 0
+relief | 14 |  | resources | player | minerals | 160 | 14
+first-incursion | 25 |  | spawn | 1 | 2 | 9 | 10
+second-incursion | 45 |  | spawn | 2 | 2 | 18 | 8
+last-reserve | 65 |  | resources | player | energy | 250 | 0

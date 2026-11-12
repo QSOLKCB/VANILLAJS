@@ -1,0 +1,38 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VOIDWARD player & creator guide / VANILLAJS</title>
+<style>body{margin:auto;max-width:860px;padding:24px;background:#09131d;color:#d7e3eb;font:17px/1.65 system-ui}a{color:#85e6d1}h1,h2{color:#fff;line-height:1.25}h2{margin-top:2em}code,pre{background:#172a39;border-radius:4px}pre{padding:18px;overflow:auto}nav{display:flex;flex-wrap:wrap;gap:20px}.note{border-left:3px solid #85e6d1;padding:8px 18px}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #324652;text-align:left;padding:10px}button:focus,a:focus{outline:3px solid #f8c876}</style></head>
+<body><nav><a href="index.html">Play VOIDWARD</a><a href="../index.html">Ternary Reach</a><a href="../../editor/index.html#fourx">Visual Workbench</a></nav>
+<h1>Command a civilisation.<br>Build your own universe.</h1>
+<p>VOIDWARD is the campaign mode of VANILLAJS’s experimental 4X Lab. Nothing advances until you end the turn. Your game and content stay on your device.</p>
+<h2>First expedition</h2><ol>
+<li>Open <strong>Campaign workshop</strong>, choose a campaign, then select an available empire, seed and difficulty.</li>
+<li>Inspect your home system. Use a colony ship to settle a suitable unowned world; colonies produce resources and research.</li>
+<li>In <strong>Colonies</strong>, manage a construction queue. A mine supports growth; a lab advances research; a shipyard constructs and repairs ships.</li>
+<li>In <strong>Fleets</strong>, issue explore, patrol, return or hold orders. Ships at the same star can form a task force, travelling at the slowest member’s speed.</li>
+<li>Choose a research field. Read its dependencies and component unlocks, then use <strong>Ship designer</strong> to make a class. Same-hull refits require an owned, uncontested shipyard and consume resources and work.</li>
+<li>Review diplomacy, reports and <strong>Campaign operations</strong>. Branch choices persist; conquest, economic progress and survival can open different victory routes.</li>
+</ol><p>The numbered keys select command views. <kbd>E</kbd> ends a turn when no text input or dialog is active. Sound starts only after you enable it; music, effects and reduced motion have separate settings.</p>
+<h2>Choose your campaign</h2><table><thead><tr><th>Campaign</th><th>Character</th></tr></thead><tbody>
+<tr><td>The Open Frontier</td><td>30 stars; a flexible introduction to exploration, colonisation and conquest.</td></tr>
+<tr><td>Machine Dawn</td><td>16 stars; a compact machine civilisation with a registered local turn event.</td></tr>
+<tr><td>Grand Frontier</td><td>64 stars; three playable empires, sustained economic and diplomatic progression, objectives from turn 100 and a turn-220 council.</td></tr>
+<tr><td>Fallen Gates</td><td>36 stars; staged discoveries and branching routes, objectives from turn 70 and a turn-180 deadline.</td></tr>
+<tr><td>Siege of the Outer Rim</td><td>40 stars; asymmetric defence and escalating incursions. Endure to turn 90 or pursue reconquest from turn 60, before the turn-160 deadline.</td></tr>
+</tbody></table><p>See the shipped <a href="docs/CAMPAIGNS.md">campaign manual</a> for exact objectives, defeat conditions and completion routes.</p>
+<h2>Create a campaign in the Visual Workbench</h2><ol>
+<li>Open the editor’s <strong>4X campaign</strong> panel. Load a shipped template or a native campaign pack. Its draft has separate undo and recovery from the scene.</li>
+<li>Edit supported text files and apply them. Validation reports the file, physical line and field. A rejected change keeps the last valid draft.</li>
+<li>Send the map to the viewport. Move <code>star-N</code> entities with the existing transform tools, then apply viewport positions. One Workbench X/Z unit equals two campaign X/Y units. Lanes and empire homes have explicit controls; moving a star never guesses a connection.</li>
+<li>Select scene geometry and preview its ship silhouette. Apply it to a hull only after checking the projection and source declarations.</li>
+<li>Export the native pack, reimport it and choose <strong>Play 4X draft</strong>. The game opens with that validated draft. In its workshop, <strong>Open in Visual Editor</strong> sends a draft back.</li>
+</ol><p class="note">Hull conversion takes the convex X/Z outline. Height, concave notches, materials and physics are not ship mechanics. Full attribution survives in the optional hull bundle; native scene projects keep their existing strict format.</p>
+<h2>Text remains the source of truth</h2>
+<p>Names, empires, planets, hulls, components, technology, buildings, maps, rules, starting fleets, objectives, AI preferences and supported events are editable data. Begin with <a href="mods/grand-frontier/scenario.txt">Grand Frontier’s scenario</a>, <a href="mods/grand-frontier/objectives.txt">objectives</a> and <a href="mods/grand-frontier/events.txt">events</a>. The <a href="MOD_GUIDE.md">complete text reference</a> lists supported fields and copyable examples.</p>
+<p>Native packs support 500 KB of text across known files. Mod SDK exchange remains limited to 32 KiB with 8192-character strings; use native export for larger campaigns. Workbench projects retain their 256 KiB, 128-object and 32-asset limits. Campaigns support up to 64 stars, 256 worlds and six empires.</p>
+<p>New mechanics require reviewed JavaScript source changes and explicit local registration. Uploaded packs never execute code. The Machine Dawn source hook is installed code, not an import capability.</p>
+<h2>Save, share and work offline</h2>
+<p>Use the save dialog to export a campaign with its state. Existing VOIDWARD v1 saves migrate when imported; save envelopes remain compatible. VANILLAJS autosave keys are separate from the standalone game. Back up exported saves before clearing site storage.</p>
+<p>Native campaign JSON contains the text files and can be shared without a server. Import it into either workshop, validate, then start a game. Keep the pack ID stable when updating a universe and raise its version. Source-extension saves require the matching installed source version.</p>
+<p>The packaged GitHub Pages build caches local assets under the site subpath. Open it online once before relying on offline reload. Browser storage can be disabled or full; exported files remain the fallback. <a href="docs/SAVE_LIMITS.md">Save limits</a> and the <a href="docs/PLAYER_GUIDE.md">player manual</a> cover recovery and controls.</p>
+<footer><p>Adapted from QSOLKCB/4XGAMES PR #2. Native modules and data-only authoring, with original fiction. <a href="vendor/PROVENANCE.json">Donor provenance</a> · <a href="LICENSE">Apache-2.0</a></p></footer></body></html>

@@ -2,6 +2,16 @@ VANILLAJS — Flight Lab, Interaction Lab, FPS Lab, RTS Lab, OMI Lab, The Brass 
 Copyright 2026 QSOL–IMC / Trent Slade and contributors.
 Distributed under the repository's existing Apache License 2.0.
 
+The separate VOIDWARD campaign mode under demos/4x-game-lab/voidward adapts
+QSOLKCB/4XGAMES PR #2 at 030859385ac8929e066702ef8af0518663480653.
+Its campaign rules, fiction and authoring workflow remain demo-owned. Native
+VANILLAJS math, audio, Mod SDK and editor APIs are reused directly. Original
+VOIDWARD LICENSE/NOTICE and the Apache-2.0, MIT and MPL-2.0 donor source notices
+are retained beside that demo; vendor/PROVENANCE.json there pins each copied
+file and records the native dependencies. The earlier milestone descriptions
+below apply to their named implementations, not to this later source import.
+No Space Empires IV source, artwork, music, maps or text is included.
+
 The Flight Lab code, environments, UI and procedural geometry were authored for
 this repository. No game assets, audio recordings or third-party runtime code
 are included. QUICKSCOPER and CorpoWars were consulted as QSOL architectural

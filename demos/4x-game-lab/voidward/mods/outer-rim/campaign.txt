@@ -1,0 +1,4 @@
+id = outer-rim
+version = 1.0.0
+title = Siege of the Outer Rim
+description = Forty stars across a narrow rim. Two occupying powers hold the interior. Survive escalating incursions and rebuild, or liberate the two command worlds. One playable defender; 90–160 turns.

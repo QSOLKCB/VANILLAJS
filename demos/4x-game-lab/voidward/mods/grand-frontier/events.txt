@@ -1,0 +1,5 @@
+# id | earliest turn | requires | kind | owner | target | value | repeat interval
+survey-grant | 12 |  | resources | player | minerals | 120 | 0
+outer-charter | 35 | settled-reach | resources | player | science | 150 | 0
+council-call | 65 |  | message | player | The century council approaches. Complete your chosen charter before the final reckoning. | 0 | 0
+renewal | 90 |  | resources | player | energy | 200 | 0
