@@ -64,6 +64,24 @@ try{
   assert.equal(receipt.step,1/60);
   assert.ok(receipt.inputs.length>0);
   await page.screenshot({path:'browser-artifacts/racing-circuit.png',fullPage:true});
+  for(const mode of ['tour','sprint']){
+    await page.locator('[data-mode="'+mode+'"]').click();
+    assert.equal(await page.locator('#status').textContent(),'READY');
+    await page.locator('#launch').click();
+    await page.keyboard.down('w');
+    await page.waitForFunction(()=>parseFloat(document.querySelector('#speed').textContent)>10);
+    await page.keyboard.up('w');
+    if(mode==='tour'){
+      assert.ok(await page.locator('#retro-view').evaluate(c=>c.getContext('2d').getImageData(0,0,1,1).data[3])>0,
+        'scenic touring must render Canvas pixels');
+    }else{
+      assert.equal(await page.locator('#three-view').evaluate(c=>!!c.getContext('webgl')&&c.width>1),true,
+        'coastal sprint must initialise native WebGL');
+    }
+    await page.screenshot({path:'browser-artifacts/racing-'+mode+'.png',fullPage:true});
+    await page.evaluate(()=>window.dispatchEvent(new Event('blur')));
+    assert.equal(await page.locator('#status').textContent(),'PAUSED');
+  }
   for(const mode of ['derby','ball','stunt']){
     await page.locator('[data-mode="'+mode+'"]').click();
     assert.equal(await page.locator('#error').isVisible(),false);

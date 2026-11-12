@@ -12,7 +12,7 @@ main{max-width:1500px;margin:auto;padding:34px max(24px,5vw)}.eyebrow{font:10px 
 h1{margin:0;font-size:clamp(40px,6vw,78px);font-weight:950;letter-spacing:-3px;line-height:1.1}h1 span{color:var(--cyan)}
 .intro p{color:#94b6c6;font-size:15px}.signal{font:10px monospace;color:var(--pink);border:1px solid var(--line);padding:12px}
 .frame{background:var(--panel);border:1px solid var(--line);box-shadow:0 30px 70px #0005}
-.modes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.modes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
 .modes button{border:0;border-radius:0;text-align:left;padding:18px 14px;background:#101e2a;border-right:1px solid var(--line)}
 .modes button:last-child{border-right:0}.modes button[aria-pressed=true]{background:#1c3e4a;box-shadow:inset 0 -3px var(--cyan);color:#fff}
 .modes b{display:block;font:700 12px monospace}.modes small{display:block;font:9px monospace;color:#8ba9b6;margin-top:8px;line-height:1.5}
@@ -33,5 +33,5 @@ h1{margin:0;font-size:clamp(40px,6vw,78px);font-weight:950;letter-spacing:-3px;l
 .controls{font-size:12px;padding:25px 0;color:#9fc0ca}.controls summary{cursor:pointer;color:#dbeef3}.controls p{line-height:1.85;max-width:1000px}
 kbd{font:11px monospace;background:#233946;padding:2px 5px;border-radius:2px}.touch-controls{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.touch-controls button{touch-action:none;user-select:none;min-height:48px}
 footer{padding:22px 5vw;color:#91b2bf;border-top:1px solid var(--line);font:10px monospace}
-@media(max-width:800px){.modes{grid-template-columns:repeat(2,1fr)}.modes button{padding:12px}.modes button:last-child{grid-column:1/-1}.intro{display:block}.signal{display:inline-block;margin-top:12px}.hud strong{font-size:16px}.hud>div{padding:10px}.hud span{font-size:8px}.lower{grid-template-columns:1fr}.viewport{height:420px}}
+@media(max-width:1050px){.modes{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:800px){.modes{grid-template-columns:repeat(2,1fr)}.modes button{padding:12px}.modes button:last-child{grid-column:1/-1}.intro{display:block}.signal{display:inline-block;margin-top:12px}.hud strong{font-size:16px}.hud>div{padding:10px}.hud span{font-size:8px}.lower{grid-template-columns:1fr}.viewport{height:420px}}
 @media(max-width:500px){main{padding:20px 12px}header{padding:18px 12px;display:block}nav{margin-top:14px;gap:12px}.modes b{font-size:10px}.modes small{font-size:8px}.hud strong{font-size:13px}.hud strong small{font-size:8px}.hud>div{padding:8px 6px}.viewport{height:380px}.in-game{font-size:10px}.curtain h2{font-size:31px}}

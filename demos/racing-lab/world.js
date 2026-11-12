@@ -1,11 +1,34 @@
 // SPDX-License-Identifier: Apache-2.0
-// RACING-001: deterministic, demo-owned vehicle game rules. SI units, +Y up, -Z forward.
+// RACING-002: deterministic, demo-owned classic touring and vehicle rules. SI units, +Y up, -Z forward.
 // Float64 simulation is repeatable for the same input/tick sequence in one JS runtime;
 // it is NOT a claim of cross-engine bit-exact arithmetic.
 import {clamp} from '../../modules/math/index.js';
 
 export const STEP=1/60;
-export const MODES=Object.freeze(['retro','circuit','derby','ball','stunt']);
+export const MODES=Object.freeze(['retro','tour','circuit','sprint','derby','ball','stunt']);
+// Original course data: stage-fork touring and a winding 3D point-to-point road.
+export const TOUR_STAGE_LENGTH=1200,TOUR_STAGES=4,SPRINT_LENGTH=3600;
+export function sprintCenter(s){
+  if(!Number.isFinite(s))throw new TypeError('sprint distance must be finite');
+  const v=clamp(s,0,SPRINT_LENGTH);
+  return 18*Math.sin(v/185)+9*Math.sin(v/75);
+}
+export function sprintHeading(s){
+  const ahead=sprintCenter(s+2),behind=sprintCenter(s-2);
+  return Math.atan2(ahead-behind,4);
+}
+export function tourPalette(route=[]){
+  // Only explicit completed fork decisions affect the scenery; no random choice.
+  // Advance from the *previous* palette, with distinct steps for each fork.
+  // Neither choice can repeat the preceding stage's biome.
+  const index=route.reduce((previous,choice)=>(previous+(choice==='right'?2:1))%4,0);
+  return Object.freeze([
+    {sky:'#17264a',sunset:'#ffd18c',mountain:'#6f5571',verge:'#225854',road:'#303945',name:'Sunset Esplanade'},
+    {sky:'#112f50',sunset:'#9ed9dc',mountain:'#476780',verge:'#2c7262',road:'#303e53',name:'Sapphire Coast'},
+    {sky:'#51304e',sunset:'#f4b280',mountain:'#90505d',verge:'#5e5334',road:'#403b45',name:'Cinder Canyon'},
+    {sky:'#192d45',sunset:'#e3b2d9',mountain:'#635b80',verge:'#335e63',road:'#32384a',name:'Orchid Ridge'}
+  ][index]);
+}
 export const TRACK_LENGTH=900;
 export const RACE_GATES=Object.freeze([
   {x:0,z:55},{x:36,z:39},{x:50,z:0},{x:36,z:-39},
@@ -42,12 +65,16 @@ export function retroCurve(s){return Math.sin(s/190)*2.7+Math.sin(s/490)*2;}
 export function createRace(mode='retro'){
   if(!MODES.includes(mode))throw new RangeError('unknown racing mode');
   const p=mode==='circuit'?driver(0,55,Math.atan2(36,16)):
-    mode==='stunt'?driver(0,0):driver(0,32);
+    mode==='stunt'||mode==='sprint'?driver(0,0):driver(0,32);
   if(mode==='stunt')p.y=2;
-  const bots=mode==='retro'?
+  const bots=mode==='retro'||mode==='tour'?
     [0,1,2,3,4].map(i=>({id:i,x:[-3.2,2.5,0,-1.8,3][i],
       s:105+i*145,speed:24+i*4,color:i%3})):
     mode==='stunt'?[]:
+    mode==='sprint'?[0,1,2,3].map(i=>{
+      const s=120+i*175;
+      return driver(sprintCenter(s)+(i%2?3:-3),-s,sprintHeading(s),i);
+    }):
     [0,1,2,3].map(i=>{
       const a=driver(mode==='circuit'?RACE_GATES[i].x:
         [-24,24,-18,18][i],mode==='circuit'?RACE_GATES[i].z:
@@ -57,7 +84,7 @@ export function createRace(mode='retro'){
     });
   return {mode,tick:0,elapsed:0,player:p,bots,finished:false,
     result:'',event:'',score:[0,0],distance:0,contacts:0,
-    ball:{x:0,y:1.3,z:0,vx:0,vz:0,vy:0},retroLap:0};
+    ball:{x:0,y:1.3,z:0,vx:0,vz:0,vy:0},retroLap:0,route:[]};
 }
 function vehicle(p,input,dt,maxSpeed=38){
   const throttle=bounded(input.throttle),steer=bounded(input.steer);
@@ -81,10 +108,32 @@ function vehicle(p,input,dt,maxSpeed=38){
   }
   p.y+=p.vy*dt;
 }
-function contact(a,b,w){
-  if(a.cooldown||b.cooldown||distance(a,b)>3.5||Math.abs(a.y-b.y)>2.5)return;
+// Return the earliest circle-on-circle encounter during an explicit tick.
+// This detects high-speed passes that finish with non-overlapping vehicle poses.
+export function sweepVehicleContact(startA,endA,startB,endB,radius=3.5){
+  const values=[startA?.x,startA?.z,endA?.x,endA?.z,
+    startB?.x,startB?.z,endB?.x,endB?.z,radius];
+  if(!values.every(Number.isFinite)||radius<=0)throw new RangeError('invalid swept vehicle segment');
+  const rx=startA.x-startB.x,rz=startA.z-startB.z;
+  const dx=(endA.x-startA.x)-(endB.x-startB.x);
+  const dz=(endA.z-startA.z)-(endB.z-startB.z);
+  const c=rx*rx+rz*rz-radius*radius;
+  let t=0;
+  if(c>0){
+    const a=dx*dx+dz*dz,b=2*(rx*dx+rz*dz);
+    const discriminant=b*b-4*a*c;
+    if(a===0||discriminant<0)return null;
+    t=(-b-Math.sqrt(discriminant))/(2*a);
+    if(t<0||t>1)return null;
+  }
+  const nx=rx+dx*t,nz=rz+dz*t,len=Math.hypot(nx,nz);
+  return {time:t,nx:len>1e-9?nx/len:0,nz:len>1e-9?nz/len:1};
+}
+function contact(a,b,w,sweep=null){
+  if(a.cooldown||b.cooldown||(!sweep&&distance(a,b)>3.5)||Math.abs(a.y-b.y)>2.5)return;
   const dx=a.x-b.x,dz=a.z-b.z,d=Math.max(.001,Math.hypot(dx,dz));
-  const nx=dx/d,nz=dz/d,relative=(a.vx-b.vx)*nx+(a.vz-b.vz)*nz;
+  const nx=sweep?sweep.nx:dx/d,nz=sweep?sweep.nz:dz/d;
+  const relative=(a.vx-b.vx)*nx+(a.vz-b.vz)*nz;
   const impulse=Math.max(4,Math.abs(relative)*.55);
   a.vx+=nx*impulse;a.vz+=nz*impulse;
   b.vx-=nx*impulse;b.vz-=nz*impulse;
@@ -105,23 +154,29 @@ function arenaBounds(p){
   if(Math.abs(p.x)>63){p.x=clamp(p.x,-63,63);p.vx*=-.55;p.speed*=.75;}
   if(Math.abs(p.z)>63){p.z=clamp(p.z,-63,63);p.vz*=-.55;p.speed*=.75;}
 }
-function updateBots(w,dt){
+function updateBots(w,dt,playerPrevious=null){
   for(const b of w.bots){
-    if(b.cooldown>60&&b.health===0){b.cooldown--;continue;}
+    // All rival cooldowns must expire, not just knocked-out rivals.
+    if(b.cooldown>0)b.cooldown--;
+    if(b.cooldown>60&&b.health===0)continue;
     if(b.health===0){b.health=100;b.x=-25+b.color*15;b.z=20;b.speed=0;b.cooldown=30;}
+    const before={x:b.x,z:b.z};
     const target=w.mode==='circuit'?RACE_GATES[b.checkpoint]:
+      w.mode==='sprint'?{x:sprintCenter(-b.z+45)+(b.color%2?3:-3),z:b.z-45}:
       w.mode==='ball'?w.ball:w.player;
     const desired=Math.atan2(target.x-b.x,-(target.z-b.z));
     const delta=Math.atan2(Math.sin(desired-b.yaw),Math.cos(desired-b.yaw));
     vehicle(b,{throttle:1,steer:clamp(delta*2,-1,1),
-      boost:w.mode==='derby'&&w.tick%240<55},dt,w.mode==='circuit'?31:30);
+      boost:w.mode==='derby'&&w.tick%240<55},dt,w.mode==='circuit'?31:w.mode==='sprint'?33:30);
     b.y=0;b.vy=0;b.grounded=true;
     if(w.mode==='circuit'&&distance(b,target)<12){
       if(b.checkpoint===0)b.lap++;
       b.checkpoint=(b.checkpoint+1)%RACE_GATES.length;
     }
-    arenaBounds(b);
-    contact(w.player,b,w);
+    if(w.mode!=='sprint')arenaBounds(b);
+    const sweep=w.mode==='sprint'&&playerPrevious?
+      sweepVehicleContact(playerPrevious,w.player,before,b):null;
+    contact(w.player,b,w,sweep);
   }
 }
 function updateBall(w,dt){
@@ -148,10 +203,12 @@ function updateBall(w,dt){
   }
 }
 function stepRetro(w,input,dt){
-  const p=w.player;
+  const p=w.player,boosting=Boolean(input.boost)&&p.boost>0;
+  // Accumulated nitro speed survives the next tick; it decays after release.
+  const speedLimit=boosting?90:Math.max(75,p.speed-45*dt);
   p.speed=clamp(p.speed+bounded(input.throttle)*25*dt-
-    (Math.abs(bounded(input.throttle))<.01?p.speed*.35*dt:0),0,75);
-  if(input.boost&&p.boost>0){p.speed=Math.min(90,p.speed+35*dt);p.boost=Math.max(0,p.boost-20*dt);}
+    (Math.abs(bounded(input.throttle))<.01?p.speed*.35*dt:0),0,speedLimit);
+  if(boosting){p.speed=Math.min(90,p.speed+35*dt);p.boost=Math.max(0,p.boost-20*dt);}
   else p.boost=Math.min(100,p.boost+8*dt);
   p.x+=bounded(input.steer)*(3.5+p.speed*.08)*dt;
   if(Math.abs(p.x)>5.6){
@@ -169,8 +226,20 @@ function stepRetro(w,input,dt){
       p.cooldown=48;w.contacts++;w.event='TRAFFIC IMPACT';
     }
   }
-  p.lap=Math.min(3,Math.floor(w.distance/1200));
-  if(w.distance>=3600){w.finished=true;w.result='RETRO TOUR COMPLETED';}
+  if(w.mode==='tour'){
+    const stage=Math.min(TOUR_STAGES,Math.floor(w.distance/TOUR_STAGE_LENGTH));
+    // Route choices are committed exactly once at the end of each stage.
+    while(w.route.length<Math.min(stage,TOUR_STAGES-1)){
+      const choice=p.x<0?'left':'right';
+      w.route.push(choice);
+      w.event='FORK '+choice.toUpperCase()+' · '+tourPalette(w.route).name.toUpperCase();
+    }
+    p.lap=stage;
+    if(w.distance>=TOUR_STAGES*TOUR_STAGE_LENGTH){w.finished=true;w.result='TOURING ROUTE CLEARED';}
+  }else{
+    p.lap=Math.min(3,Math.floor(w.distance/1200));
+    if(w.distance>=3600){w.finished=true;w.result='RETRO TOUR COMPLETED';}
+  }
 }
 function recoverStunt(w){
   const p=w.player;
@@ -180,7 +249,7 @@ function recoverStunt(w){
   w.event='TRACK FALL · RESPAWN -18 HP';
 }
 function stepStunt(w,input,dt){
-  const p=w.player;
+  const p=w.player,previousY=p.y;
   // Stunt lanes use heading-relative steering but retain a narrow, suspended course.
   vehicle(p,input,dt,47);
   const s=-p.z;
@@ -190,7 +259,9 @@ function stepStunt(w,input,dt){
     // When grounded, suspension follows downhill grade; an actual gap
     // removes support and gravity then takes over on the next fixed tick.
     if(p.grounded){p.y=elevation;p.vy=0;}
-    if(p.y<=elevation+.05&&p.vy<=0){
+    // Airborne contact must cross the road surface from above; no underside teleport.
+    if(p.y<=elevation+.05&&p.vy<=0&&
+       (p.grounded||previousY>=elevation-1.2)){
       const impact=-p.vy;
       if(!p.grounded&&impact>12){
         const damage=Math.round((impact-12)*2.5);
@@ -213,6 +284,28 @@ function stepStunt(w,input,dt){
     if(p.lap>=2){w.finished=true;w.result='ELEVATED CIRCUIT CLEARED';}
   }
 }
+function stepSprint(w,previous){
+  const p=w.player,s=Math.max(0,-p.z),center=sprintCenter(s);
+  // Roadside mistakes cost speed and, periodically, body health.
+  if(Math.abs(p.x-center)>12){
+    p.speed*=.965;
+    if(w.tick%75===0){p.health=Math.max(0,p.health-2);w.event='SPRINT · OFF ROAD';}
+    p.x=clamp(p.x,center-50,center+50);
+  }
+  const oldStage=Math.floor(w.distance/900),newStage=Math.min(4,Math.floor(s/900));
+  w.distance=Math.max(w.distance,Math.min(s,SPRINT_LENGTH));
+  p.lap=Math.max(p.lap,newStage);
+  if(newStage>oldStage&&newStage<4)w.event='SCENIC CHECKPOINT '+newStage;
+  // Award the finish only at the forward crossing of the finish plane.
+  // Re-entering the corridor beyond the final piece of asphalt is not a finish.
+  if(previous.z>=-SPRINT_LENGTH&&p.z<-SPRINT_LENGTH){
+    const fraction=(previous.z+SPRINT_LENGTH)/(previous.z-p.z);
+    const finishX=previous.x+(p.x-previous.x)*fraction;
+    if(Math.abs(finishX-sprintCenter(SPRINT_LENGTH))<=12){
+      w.finished=true;w.result='COASTAL SPRINT FINISHED';
+    }
+  }
+}
 function stepCircuit(w){
   const p=w.player;
   if(distance(p,RACE_GATES[p.checkpoint])<12){
@@ -227,16 +320,19 @@ export function stepRace(w,input={},dt=STEP){
   if(w.finished)return w;
   w.event='';w.tick++;w.elapsed+=dt;
   const p=w.player;if(p.cooldown>0)p.cooldown--;
-  if(w.mode==='retro'){stepRetro(w,input,dt);
+  if(w.mode==='retro'||w.mode==='tour'){stepRetro(w,input,dt);
     if(p.health===0){w.finished=true;w.result='VEHICLE DESTROYED';}
     return w;}
   if(w.mode==='stunt'){stepStunt(w,input,dt);return w;}
-  vehicle(p,input,dt,w.mode==='circuit'?40:37);
+  const before={x:p.x,z:p.z};
+  vehicle(p,input,dt,w.mode==='circuit'?40:w.mode==='sprint'?48:37);
   // Flat-world suspension: collision plane is Y=0 (the car origin).
   if(p.y<=0){if(!p.grounded&&p.vy< -14){
     p.health=Math.max(0,p.health-Math.round((-p.vy-14)*2));w.event='HARD LANDING';
   }p.y=0;p.vy=0;p.grounded=true;p.flip=0;}
-  arenaBounds(p);updateBots(w,dt);
+  if(w.mode!=='sprint')arenaBounds(p);
+  updateBots(w,dt,before);
+  if(w.mode==='sprint')stepSprint(w,before);
   if(w.mode==='circuit')stepCircuit(w);
   if(w.mode==='ball')updateBall(w,dt);
   if(w.mode==='derby'&&p.knockouts>=4){w.finished=true;w.result='DERBY CHAMPION';}

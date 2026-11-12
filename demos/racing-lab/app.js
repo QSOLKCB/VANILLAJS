@@ -2,16 +2,19 @@
 import {FixedClock} from '../../modules/time/index.js';
 import {Renderer} from '../../modules/render-webgl/index.js';
 import {quatMultiply} from '../../modules/math/index.js';
-import {createRace,stepRace,retroCurve,STEP} from './world.js';
+import {createRace,stepRace,retroCurve,tourPalette,TOUR_STAGES,SPRINT_LENGTH,STEP} from './world.js';
 import {sceneGeometry,dynamicGeometry} from './geometry.js';
 const $=id=>document.getElementById(id);
 const retro=$('retro-view'),three=$('three-view');
 const ctx=retro.getContext('2d'),keys=new Set(),clock=new FixedClock({step:STEP,maxSteps:8});
 const names={retro:['Retro Tour / Horizon Drift','Three highway stages. Dodge AI traffic, bank through the curves and ration the nitro.'],
+  tour:['Scenic Tour / Sunset Junction','Four original highway stages with three fork choices. Choose the left or right route by lane position at each junction.'],
   circuit:['Circuit Race / Vector Ring','Three laps through eight ordered gates. Trade racing lines with four AI opponents.'],
+  sprint:['Coastal Sprint / Sapphire Run','Race a 3.6 km winding 3D road through original seaside, canyon and highland scenery. Survive traffic and road shoulders.'],
   derby:['Demolition / Impact Arena','Disable four rival cars by ramming them before your vehicle runs out of structural health.'],
   ball:['Car Football / Boost Arena','First to five goals. Jump, drift, boost and slam the ball between the cyan goalposts.'],
   stunt:['Skyline Stunt / Suspended Circuit','Two laps on a narrow elevated course. Launch over broken bridges, survive drops and protect the suspension.']};
+const rasterMode=mode=>mode==='retro'||mode==='tour';
 let world=createRace(),renderer=null,groundMesh=null,movingMesh=null,raf=0,last=null,running=false;
 let replay=[],audioContext=null,lastHud=0;
 function clearInput(){keys.clear();document.querySelectorAll('[data-drive]').forEach(b=>b.classList.remove('pressed'));}
@@ -23,7 +26,7 @@ function controls(){
     jump:has('Space'),flip:has('KeyF')};
 }
 function fail(error){$('error').textContent=String(error?.message??error);$('error').hidden=false;}
-function safeFocus(){(world.mode==='retro'?retro:three).focus({preventScroll:true});}
+function safeFocus(){(rasterMode(world.mode)?retro:three).focus({preventScroll:true});}
 function audio(event){
   if(!$('sound').checked||!event||!window.AudioContext)return;
   try{
@@ -43,13 +46,16 @@ function updateHud(){
   const p=world.player;
   $('speed').innerHTML=Math.round(Math.abs(p.speed)*3.6)+' <small>km/h</small>';
   $('lap').textContent=world.mode==='retro'?p.lap+' / 3':
+    world.mode==='tour'?p.lap+' / '+TOUR_STAGES:
+    world.mode==='sprint'?p.lap+' / 4':
     world.mode==='stunt'?p.lap+' / 2':
     world.mode==='circuit'?p.lap+' / 3':(world.elapsed|0)+'s';
   $('health').textContent=Math.round(p.health)+'%';
   $('boost').textContent=Math.round(p.boost)+'%';
   $('score').textContent=world.mode==='ball'?world.score.join(' : '):
     world.mode==='derby'?p.knockouts+' KOs':
-    world.mode==='retro'?Math.floor(world.distance)+' m':
+    rasterMode(world.mode)?Math.floor(world.distance)+' m':
+    world.mode==='sprint'?Math.floor(world.distance)+' / '+SPRINT_LENGTH+' m':
     world.mode==='stunt'?Math.floor(-p.z)+' m':
     world.mode==='circuit'?'GATE '+(p.checkpoint+1):world.contacts;
   $('status').textContent=world.finished?'FINISHED':running?'RACING':world.tick?'PAUSED':'READY';
@@ -70,14 +76,16 @@ function select(mode){
   $('error').hidden=true;
   for(const b of document.querySelectorAll('[data-mode]'))
     b.setAttribute('aria-pressed',String(b.dataset.mode===mode));
-  retro.hidden=mode!=='retro';three.hidden=mode==='retro';
+  retro.hidden=!rasterMode(mode);three.hidden=rasterMode(mode);
   $('mode-title').textContent=names[mode][0];$('mode-note').textContent=names[mode][1];
   $('hint').textContent=mode==='stunt'?'Keep your speed across gaps: W accelerate, A/D steer, Space jump, Shift boost.':
     mode==='ball'?'WASD drive, Shift boost, Space jump, X drift, F flip. Hit the ball towards the far goal.':
+    mode==='tour'?'W accelerate, A/D steer, Shift boost. Move LEFT or RIGHT before each stage end to choose the next route.':
+    mode==='sprint'?'W accelerate, A/D steer, Shift boost. Follow the coastal road, pass rivals and avoid the verge.':
     mode==='retro'?'W accelerate, A/D steer, Shift boost. Pass traffic without contact.':
     'WASD or arrows to drive, Shift to boost, X to drift, Space to jump, F to flip.';
   showOverlay(names[mode][0].toUpperCase(),names[mode][1],'START ENGINE ↗');
-  if(mode!=='retro'){
+  if(!rasterMode(mode)){
     try{
       renderer??=new Renderer(three);
       renderer.clearMeshes();
@@ -90,7 +98,7 @@ function select(mode){
 }
 function launch(){
   if(world.finished){select(world.mode);}
-  if(world.mode!=='retro'&&!renderer)return;
+  if(!rasterMode(world.mode)&&!renderer)return;
   clearInput();running=true;last=null;clock.setPaused(false);
   $('curtain').hidden=true;$('pause').textContent='PAUSE';
   safeFocus();if(!raf)raf=requestAnimationFrame(frame);updateHud();
@@ -126,15 +134,16 @@ function retroRender(){
   if(retro.width!==width||retro.height!==height){retro.width=width;retro.height=height;}
   ctx.setTransform(dpr,0,0,dpr,0,0);
   const w=width/dpr,h=height/dpr,horizon=h*.43;
+  const palette=tourPalette(world.mode==='tour'?world.route:[]);
   const sky=ctx.createLinearGradient(0,0,0,horizon);
-  sky.addColorStop(0,'#17264a');sky.addColorStop(.66,'#d65e8f');sky.addColorStop(1,'#ffd18c');
+  sky.addColorStop(0,palette.sky);sky.addColorStop(.66,'#d65e8f');sky.addColorStop(1,palette.sunset);
   ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
-  ctx.fillStyle='#ffe3b0';ctx.beginPath();ctx.arc(w*.78,h*.25,Math.max(20,w*.04),0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=palette.sunset;ctx.beginPath();ctx.arc(w*.78,h*.25,Math.max(20,w*.04),0,Math.PI*2);ctx.fill();
   for(let j=0;j<2;j++){
     const points=[[0,horizon]];
     for(let i=0;i<=16;i++)points.push([w*i/16,horizon-(j?34:67)-Math.sin(i*1.7+j)*23]);
     points.push([w,horizon]);
-    polygon(ctx,j?'#46506a':'#6f5571',points);
+    polygon(ctx,j?'#46506a':palette.mountain,points);
   }
   const road=(t)=>{
     const d=26/(t+.075),curve=retroCurve(world.distance+d)-retroCurve(world.distance);
@@ -144,10 +153,10 @@ function retroRender(){
   };
   for(let i=0;i<90;i++){
     const a=road(i/90),b=road((i+1)/90),stripe=(Math.floor((world.distance+i*9)/35)%2)===0;
-    ctx.fillStyle=stripe?'#1e5b55':'#225854';ctx.fillRect(0,a.y,w,b.y-a.y+2);
+    ctx.fillStyle=stripe?'#1e5b55':palette.verge;ctx.fillRect(0,a.y,w,b.y-a.y+2);
     polygon(ctx,stripe?'#e4d19f':'#e8e2cb',[[a.mid-a.half*1.16,a.y],[a.mid+a.half*1.16,a.y],
       [b.mid+b.half*1.16,b.y],[b.mid-b.half*1.16,b.y]]);
-    polygon(ctx,stripe?'#343945':'#303945',[[a.mid-a.half,a.y],[a.mid+a.half,a.y],
+    polygon(ctx,stripe?'#343945':palette.road,[[a.mid-a.half,a.y],[a.mid+a.half,a.y],
       [b.mid+b.half,b.y],[b.mid-b.half,b.y]]);
     if(stripe){
       for(const line of [-.36,.36])polygon(ctx,'#dce8d0',
@@ -163,7 +172,15 @@ function retroRender(){
   }
   drawCar(ctx,w/2,h*.88,2.25,'#50ecda');
   ctx.fillStyle='#fef9dd';ctx.font='bold 12px monospace';
-  ctx.fillText('HORIZON // STAGE '+(world.player.lap+1),20,h-24);
+  if(world.mode==='tour'){
+    const next=(world.player.lap+1)*1200-world.distance;
+    ctx.fillText('SCENIC TOUR // '+palette.name.toUpperCase(),20,h-24);
+    if(world.player.lap<TOUR_STAGES-1&&next<310){
+      ctx.fillStyle='#06151cdd';ctx.fillRect(12,24,Math.min(360,w-24),66);
+      ctx.fillStyle='#fff3cf';ctx.fillText('FORK AHEAD · '+Math.ceil(Math.max(0,next))+' m',23,48);
+      ctx.fillText('LEFT ◀ '+(world.player.x<0?'SELECTED':'')+'    RIGHT ▶ '+(world.player.x>=0?'SELECTED':''),23,72);
+    }
+  }else ctx.fillText('HORIZON // STAGE '+(world.player.lap+1),20,h-24);
 }
 function threeRender(){
   if(!renderer||!groundMesh||!movingMesh)return;
@@ -172,11 +189,11 @@ function threeRender(){
   const camera=[p.x-s*13,p.y+8,p.z+c*13];
   const qYaw=[0,-Math.sin(p.yaw/2),0,Math.cos(p.yaw/2)];
   const qPitch=[Math.sin(-.27),0,0,Math.cos(-.27)];
-  renderer.begin(camera,quatMultiply(qYaw,qPitch),{fog:world.mode==='stunt'?.0016:.003,
+  renderer.begin(camera,quatMultiply(qYaw,qPitch),{fog:world.mode==='stunt'?.0016:world.mode==='sprint'?.0019:.003,
     resolution:$('eco').checked?.66:1});
   renderer.draw(groundMesh);renderer.draw(movingMesh);
 }
-function render(){try{if(world.mode==='retro')retroRender();else threeRender();}catch(error){pause();fail(error);}}
+function render(){try{if(rasterMode(world.mode))retroRender();else threeRender();}catch(error){pause();fail(error);}}
 function frame(now){
   raf=0;if(!running)return;
   const elapsed=last===null?0:Math.max(0,(now-last)/1000);last=now;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Low-poly original art: all geometry produced from native WebGL-compatible XYZ/RGB triangles.
 import {boxVertices} from '../../modules/render-webgl/index.js';
-import {TRACK_LENGTH,RACE_GATES,stuntRoad} from './world.js';
+import {TRACK_LENGTH,RACE_GATES,stuntRoad,SPRINT_LENGTH,sprintCenter,sprintHeading} from './world.js';
 const ASPHALT=[.105,.15,.22],WHITE=[.73,.84,.9],MAGENTA=[.9,.22,.48],CYAN=[.17,.83,.82];
 function box(out,x,y,z,sx,sy,sz,color){boxVertices([x,y,z],[sx,sy,sz],color,out);}
 function oriented(out,x,y,z,sx,sy,sz,color,yaw=0,roll=0){
@@ -26,6 +26,30 @@ function car(out,p,color){
 }
 export function sceneGeometry(mode){
   const out=[];
+  if(mode==='sprint'){
+    // An original point-to-point coastal course: broad road, changing scenery,
+    // lane markings and landmarks. All positions use the simulation centreline.
+    box(out,0,-1.4,-SPRINT_LENGTH/2,180,.5,SPRINT_LENGTH+130,[.035,.095,.13]);
+    for(let s=0;s<SPRINT_LENGTH;s+=20){
+      const at=s+10,cx=sprintCenter(at),yaw=sprintHeading(at);
+      const landscape=s<1200?[.17,.45,.43]:s<2400?[.48,.29,.25]:[.23,.31,.49];
+      oriented(out,cx,-.13,-at,26,.25,20.8,ASPHALT,yaw);
+      oriented(out,cx,.012,-at,.26,.03,8,WHITE,yaw);
+      for(const side of [-1,1]){
+        const offset=side*12.4,dx=Math.cos(yaw)*offset,dz=Math.sin(yaw)*offset;
+        oriented(out,cx+dx,.025,-at+dz,.45,.06,20.4,side<0?CYAN:MAGENTA,yaw);
+        if(s%80===0){
+          box(out,cx+Math.cos(yaw)*side*30,3.0,-at+Math.sin(yaw)*side*30,
+            3.5,6,3.5,landscape);
+        }
+      }
+    }
+    for(let s=900;s<=SPRINT_LENGTH;s+=900){
+      const cx=sprintCenter(s);
+      box(out,cx,.13,-s,22,.22,1,s===SPRINT_LENGTH?MAGENTA:CYAN);
+    }
+    return out;
+  }
   if(mode==='stunt'){
     box(out,0,-20,-TRACK_LENGTH/2,420,1,TRACK_LENGTH+120,[.04,.095,.12]);
     for(let s=0;s<TRACK_LENGTH;s+=6){
