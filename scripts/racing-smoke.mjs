@@ -27,7 +27,20 @@ try{
   const page=await browser.newPage({viewport:{width:1280,height:850},acceptDownloads:true}),errors=[];
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto('http://127.0.0.1:'+server.address().port+'/VANILLAJS/demos/racing-lab/index.html');
-  await page.waitForFunction(()=>document.documentElement.dataset.racingReady==='ready');
+  try{
+    await page.waitForFunction(()=>document.documentElement.dataset.racingReady==='ready',{timeout:10000});
+  }catch(error){
+    const observed=await page.evaluate(()=>({
+      ready:document.documentElement.dataset.racingReady??null,
+      title:document.title,
+      foundry:!!document.querySelector('#track-foundry'),
+      script:document.querySelector('script[src="./app.js"]')?.src??null,
+      errorText:document.querySelector('#error')?.textContent??null,
+      documentState:document.readyState
+    }));
+    console.error('RACING STARTUP DIAGNOSTIC',JSON.stringify({observed,pageErrors:errors}));
+    throw error;
+  }
   assert.equal(await page.locator('#status').textContent(),'READY');
   assert.equal(await page.locator('#error').isVisible(),false);
   const nonBlack=await page.locator('#retro-view').evaluate(canvas=>{
