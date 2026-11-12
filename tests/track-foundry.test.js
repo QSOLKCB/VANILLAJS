@@ -7,7 +7,7 @@ import {sceneGeometry} from '../demos/racing-lab/geometry.js';
 import {setupTrackFoundry} from '../demos/racing-lab/track-editor.js';
 import {TRACK_FORMAT,TRACK_TOTAL_LENGTH,SECTION_LENGTH,MAX_TRACK_BYTES,
   starterTrack,validateTrack,serializeTrack,parseTrackJSON,
-  trackCenter,trackHalfWidth,trackHeading,environmentTheme} from '../demos/racing-lab/track.js';
+  trackCenter,trackHalfWidth,trackHeading,environmentTheme,chooseTourFork} from '../demos/racing-lab/track.js';
 
 const copy=source=>JSON.parse(JSON.stringify(source));
 const starter=()=>copy(starterTrack());
@@ -54,14 +54,42 @@ test('RACING-002B rejects malformed packs, exotic prototypes, getters and inject
 test('RACING-002B rejects crossing circuit gates and degenerate layout segments',()=>{
   const p=starter();
   p.gates[1]=copy(p.gates[0]);
-  assert.throws(()=>validateTrack(p),/at least 12/);
+  assert.throws(()=>validateTrack(p),/at least 24/);
   const crossed=starter();
   // A bow-tie of distant nonadjacent edges should fail closed.
   crossed.gates=[
-    {x:-45,z:-45},{x:45,z:45},{x:45,z:-45},{x:-45,z:45},
-    {x:-45,z:58},{x:0,z:68},{x:45,z:58},{x:0,z:-68}
+    {x:-60,z:-60},{x:60,z:60},{x:60,z:-60},{x:-60,z:60},
+    {x:-60,z:0},{x:-30,z:68},{x:30,z:68},{x:0,z:-68}
   ];
   assert.throws(()=>validateTrack(crossed),/cross/);
+});
+test('RACING-002B rejects hostile dense-array counterfeits without executing getters',()=>{
+  const empty=starter();empty.sections=new Array(4);
+  assert.throws(()=>validateTrack(empty),/array|indices|hole/);
+  const sparse=starter();delete sparse.gates[2];
+  assert.throws(()=>validateTrack(sparse),/indices|hole/);
+  const prototype=starter();
+  Object.setPrototypeOf(prototype.sections,Object.create(Array.prototype));
+  assert.throws(()=>validateTrack(prototype),/ordinary array/);
+  const altered=starter();altered.gates.map=()=>[];
+  assert.throws(()=>validateTrack(altered),/indices/);
+  let called=0;const accessor=starter();
+  Object.defineProperty(accessor.sections,'0',{
+    get(){called++;throw Error('executed hostile getter');},enumerable:true
+  });
+  assert.throws(()=>validateTrack(accessor),/accessor/);
+  assert.equal(called,0,'no hostile array accessors may execute');
+});
+test('RACING-002B rejects repeated and collinearly overlapping gate edges',()=>{
+  const repeat=starter();
+  for(let i=0;i<8;i++)repeat.gates[i]={x:i%2===0?-8:8,z:0};
+  assert.throws(()=>validateTrack(repeat),/24|cross|overlap/);
+  const overlap=starter();
+  overlap.gates=[
+    {x:-60,z:-60},{x:60,z:-60},{x:20,z:-60},{x:-20,z:-60},
+    {x:-55,z:35},{x:-25,z:65},{x:25,z:65},{x:55,z:35}
+  ];
+  assert.throws(()=>validateTrack(overlap),/24|cross|overlap/);
 });
 test('RACING-002B authored forks change physical road position but remain continuous',()=>{
   const p=starterTrack();
@@ -104,6 +132,9 @@ test('RACING-002B authored tour selects forks relative to the real roadway',()=>
   w.player.x=trackCenter(w.track,SECTION_LENGTH,[])-3;
   stepRace(w,{throttle:1});
   assert.deepEqual(w.route,['left']);
+  assert.equal(chooseTourFork(w.track,[],4),'left',
+    'the choice must use the authored centreline, not world X=0');
+  assert.equal(chooseTourFork(null,[],4),'right');
   const left=trackCenter(w.track,SECTION_LENGTH+300,w.route);
   const right=trackCenter(w.track,SECTION_LENGTH+300,['right']);
   assert.notEqual(left,right);
@@ -142,6 +173,18 @@ test('RACING-002B circuit points drive both the checkpoints and the road geometr
   assert.notDeepEqual(scene,other,'edited gates must change the visible racing track');
   assert.ok(scene.every(Number.isFinite));
 });
+test('RACING-002B enlarged circuit arena preserves admitted outer gates',()=>{
+  const pack=starter();
+  pack.gates[0]={x:70,z:70};
+  pack.gates[1]={x:70,z:30};
+  pack.gates[7]={x:30,z:70};
+  const w=createRace('circuit',pack);
+  assert.ok(w.arenaLimit>=70);
+  assert.equal(w.player.x,70);assert.equal(w.player.z,70);
+  stepRace(w,{});
+  assert.equal(w.player.x,70,'valid X gate must not hit invisible wall');
+  assert.equal(w.player.z,70,'valid Z gate must not hit invisible wall');
+});
 test('RACING-002B generated geometry stays bounded and finite for authored sprint',()=>{
   const p=starter();
   const scene=sceneGeometry('sprint',p);
@@ -161,6 +204,8 @@ test('RACING-002B editor controls and safety boundaries ship in the game',async(
     'track-new','track-import','track-export','track-message'])
     assert.match(html,new RegExp('id="'+id+'"'));
   assert.match(app,/setupTrackFoundry/);
+  assert.match(app,/chooseTourFork\(world.track,world.route,world.player.x\)/);
+  assert.match(app,/editingTarget\(e.target\)/);
   assert.match(editor,/parseTrackJSON/);
   assert.match(editor,/generation/,'late imports cannot replace newer drafts');
   assert.doesNotMatch(editor,/\b(?:eval|Function)\s*\(/);

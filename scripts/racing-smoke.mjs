@@ -121,6 +121,14 @@ try{
   await page.locator('#track-apply').click();
   assert.match(await page.locator('#track-message').textContent(),/Applied Morning Sprint/);
   assert.match(await page.locator('#mode-title').textContent(),/Scenic Tour/);
+  await page.locator('#launch').click();
+  await page.locator('#track-name').focus();
+  assert.equal(await page.locator('#status').textContent(),'PAUSED');
+  const idleSpeed=await page.locator('#speed').textContent();
+  await page.keyboard.press('w');await page.keyboard.press('Space');
+  assert.equal(await page.locator('#status').textContent(),'PAUSED');
+  assert.equal(await page.locator('#speed').textContent(),idleSpeed);
+  await page.locator('#track-name').fill('Morning Sprint');
   const trackDownload=page.waitForEvent('download');
   await page.locator('#track-export').click();
   const exported=JSON.parse(await readFile(await (await trackDownload).path(),'utf8'));
@@ -128,6 +136,25 @@ try{
   assert.equal(exported.name,'Morning Sprint');
   assert.equal(exported.environment,'forest');
   assert.equal(exported.sections[0].curve,.8);
+  // Delayed imports may not replace a newer draft edit.
+  await page.evaluate(serialized=>{
+    const original=File.prototype.text;
+    File.prototype.text=function(){
+      if(this.name==='slow-track.json')
+        return new Promise(resolve=>{globalThis.__resolveSlowTrack=()=>resolve(serialized);});
+      return original.call(this);
+    };
+  },JSON.stringify({...exported,name:'Slow import'}));
+  await page.locator('#track-import').setInputFiles({
+    name:'slow-track.json',mimeType:'application/json',buffer:Buffer.from('{}')
+  });
+  await page.waitForFunction(()=>typeof globalThis.__resolveSlowTrack==='function');
+  await page.locator('#track-name').fill('Newer edit');
+  await page.evaluate(()=>globalThis.__resolveSlowTrack());
+  await page.waitForTimeout(100);
+  assert.equal(await page.locator('#track-name').inputValue(),'Newer edit',
+    'later user edit must win over a slow import');
+  await page.locator('#track-name').fill('Morning Sprint');
   await page.locator('#track-import').setInputFiles({
     name:'invalid-track.json',mimeType:'application/json',buffer:Buffer.from('{"bad":true}')
   });
