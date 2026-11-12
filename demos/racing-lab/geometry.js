@@ -2,6 +2,7 @@
 // Low-poly original art: all geometry produced from native WebGL-compatible XYZ/RGB triangles.
 import {boxVertices} from '../../modules/render-webgl/index.js';
 import {TRACK_LENGTH,RACE_GATES,stuntRoad,SPRINT_LENGTH,sprintCenter,sprintHeading} from './world.js';
+import {trackCenter,trackHeading,trackHalfWidth,environmentTheme} from './track.js';
 const ASPHALT=[.105,.15,.22],WHITE=[.73,.84,.9],MAGENTA=[.9,.22,.48],CYAN=[.17,.83,.82];
 function box(out,x,y,z,sx,sy,sz,color){boxVertices([x,y,z],[sx,sy,sz],color,out);}
 function oriented(out,x,y,z,sx,sy,sz,color,yaw=0,roll=0){
@@ -24,29 +25,47 @@ function car(out,p,color){
     oriented(out,p.x,p.y+.35,p.z,x===-1.04?.5:.5,.7,.65,[.035,.05,.07],p.yaw,roll);
   oriented(out,p.x,p.y+.7,p.z-1.78,1.45,.15,.07,[1,.91,.56],p.yaw,roll);
 }
-export function sceneGeometry(mode){
+export function sceneGeometry(mode,track=null){
   const out=[];
+  if(mode==='circuit'&&track){
+    // Build the playable road from the same authored gates used for lap checks.
+    const gates=track.gates,width=track.sections[0].width*2;
+    box(out,0,-.35,0,190,.5,190,environmentTheme(track.environment).land);
+    for(let i=0;i<gates.length;i++){
+      const a=gates[i],b=gates[(i+1)%gates.length];
+      const dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz);
+      const yaw=Math.atan2(-dx,dz);
+      oriented(out,(a.x+b.x)/2,.012,(a.z+b.z)/2,width,.18,len+.5,ASPHALT,yaw);
+      box(out,a.x,.25,a.z,1.3,.45,1.3,i===0?MAGENTA:CYAN);
+    }
+    return out;
+  }
   if(mode==='sprint'){
     // An original point-to-point coastal course: broad road, changing scenery,
     // lane markings and landmarks. All positions use the simulation centreline.
-    box(out,0,-1.4,-SPRINT_LENGTH/2,180,.5,SPRINT_LENGTH+130,[.035,.095,.13]);
-    for(let s=0;s<SPRINT_LENGTH;s+=20){
-      const at=s+10,cx=sprintCenter(at),yaw=sprintHeading(at);
-      const landscape=s<1200?[.17,.45,.43]:s<2400?[.48,.29,.25]:[.23,.31,.49];
-      oriented(out,cx,-.13,-at,26,.25,20.8,ASPHALT,yaw);
-      oriented(out,cx,.012,-at,.26,.03,8,WHITE,yaw);
+    const theme=track?environmentTheme(track.environment):null;
+    box(out,0,-1.4,-SPRINT_LENGTH/2,270,.5,SPRINT_LENGTH+130,theme?.land??[.035,.095,.13]);
+    for(let distance=0;distance<SPRINT_LENGTH;distance+=20){
+      const at=distance+10;
+      const x=track?trackCenter(track,at):sprintCenter(at);
+      const yaw=track?trackHeading(track,at):sprintHeading(at);
+      const half=track?trackHalfWidth(track,at):13;
+      const scenery=theme?.land??
+        (distance<1200?[.17,.45,.43]:distance<2400?[.48,.29,.25]:[.23,.31,.49]);
+      oriented(out,x,-.13,-at,half*2,.25,20.8,ASPHALT,yaw);
+      oriented(out,x,.012,-at,.26,.03,8,WHITE,yaw);
       for(const side of [-1,1]){
-        const offset=side*12.4,dx=Math.cos(yaw)*offset,dz=Math.sin(yaw)*offset;
-        oriented(out,cx+dx,.025,-at+dz,.45,.06,20.4,side<0?CYAN:MAGENTA,yaw);
-        if(s%80===0){
-          box(out,cx+Math.cos(yaw)*side*30,3.0,-at+Math.sin(yaw)*side*30,
-            3.5,6,3.5,landscape);
-        }
+        const offset=side*(half-.6),dx=Math.cos(yaw)*offset,dz=Math.sin(yaw)*offset;
+        oriented(out,x+dx,.025,-at+dz,.45,.06,20.4,side<0?CYAN:MAGENTA,yaw);
+        if(distance%80===0)
+          box(out,x+Math.cos(yaw)*side*30,3,-at+Math.sin(yaw)*side*30,3.5,6,3.5,scenery);
       }
     }
-    for(let s=900;s<=SPRINT_LENGTH;s+=900){
-      const cx=sprintCenter(s);
-      box(out,cx,.13,-s,22,.22,1,s===SPRINT_LENGTH?MAGENTA:CYAN);
+    for(let distance=900;distance<=SPRINT_LENGTH;distance+=900){
+      const x=track?trackCenter(track,distance):sprintCenter(distance);
+      const half=track?trackHalfWidth(track,distance):11;
+      box(out,x,.13,-distance,half*2,.22,1,
+        distance===SPRINT_LENGTH?MAGENTA:CYAN);
     }
     return out;
   }
