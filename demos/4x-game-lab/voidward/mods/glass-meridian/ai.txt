@@ -1,0 +1,4 @@
+reserveMinerals = 110
+colonyShips = 2
+militaryLimit = 18
+aggression = 35

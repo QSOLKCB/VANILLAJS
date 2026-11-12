@@ -1,0 +1,10 @@
+# empire | class | hull | components
+0 | AFS Cinderwing | scout-0 | drive-1,laser-1,shield-1,survey
+0 | AFS Hearthship | ark-0 | drive-1,shield-1,colony
+0 | AFS Outrider | frigate-0 | drive-1,laser-1,laser-1,laser-1,shield-1,marines
+1 | GGS Sporewake | scout-1 | drive-1,shield-1,shield-1,survey
+1 | GGS Orchard | ark-1 | drive-1,shield-1,colony
+1 | GGS Briarhook | frigate-1 | drive-1,laser-1,laser-1,shield-1,shield-1,marines
+2 | SUS Daybreak | scout-2 | drive-1,laser-1,shield-1,survey
+2 | SUS Longhouse | ark-2 | drive-1,shield-1,shield-1,colony
+2 | SUS Sunlance | frigate-2 | drive-1,laser-1,laser-1,shield-1,marines

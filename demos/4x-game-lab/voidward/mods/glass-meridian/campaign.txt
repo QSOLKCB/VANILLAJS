@@ -1,0 +1,4 @@
+id = glass-meridian
+version = 1.0.0
+title = Glass Meridian: The Unwritten Sky
+description = Forty-eight stars on two concentric transit rings. Three new research cultures contest buried archives. Preserve the memory lattice or make the old network unnecessary. Two routes; objectives from turn 58.

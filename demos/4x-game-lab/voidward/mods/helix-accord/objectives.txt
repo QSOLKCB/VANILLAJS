@@ -1,0 +1,9 @@
+# id | owner | kind | target | amount | requires | branch | title | description | victory
+arm-chart | player | survey | * | 8 |  |  | Trace the three arms | Survey eight systems to publish the first common chart. | 0
+first-charter | player | colonies | - | 4 | arm-chart |  | The first charter | Hold four colony worlds before choosing your charter. | 0
+open-ledger | player | trade | * | 1 | first-charter | exchange | The open ledger | Sign a trade pact with either neighbour. | 0
+reliable-fabrication | player | research | industry | 3 | open-ledger | exchange | Reliable fabrication | Reach Industrial systems III to supply the charter. | 0
+exchange-charter | player | survive | - | 36 | reliable-fabrication | exchange | The Threefold Charter | Keep the trading charter alive until turn 36. | 1
+federation-foundries | player | research | industry | 4 | first-charter | federation | A federation of foundries | Choose industrial federation and reach Industrial systems IV. | 0
+eight-workshops | player | colonies | - | 8 | federation-foundries | federation | Eight lights of industry | Hold eight colony worlds in the new federation. | 0
+federation-charter | player | survive | - | 44 | eight-workshops | federation | A charter made tangible | Complete the federation and endure until turn 44. | 1

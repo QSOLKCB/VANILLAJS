@@ -3,6 +3,7 @@
 import {DataModRegistry,MOD_PACK_KIND} from '../../modules/mod-sdk/index.js';
 import {registerCourseMod,activeCompiledCourses,COURSE_ENTRY_KIND} from '../../modules/mod-course/index.js';
 import {newCircuitProgress,advanceCircuitQ16} from '../../modules/exact-circuit/index.js';
+import {buildLoopPack,firstGateSweep} from './builder.js';
 import {SCALE} from '../../modules/integer-math/index.js';
 
 const $=id=>document.getElementById(id);
@@ -81,8 +82,9 @@ $('restore').addEventListener('click',()=>{
 $('sweep').addEventListener('click',()=>{
   if(!compiled)return;
   const before=newCircuitProgress(compiled);
-  const after=advanceCircuitQ16(compiled,before,[0,8*SCALE,0],[15*SCALE,8*SCALE,0]);
-  $('sweep-status').textContent='Exact sweep (0,8,0) → (15,8,0): '+after.crossed+
+  const {from,to}=firstGateSweep(compiled);
+  const after=advanceCircuitQ16(compiled,before,from,to);
+  $('sweep-status').textContent='Exact sweep across first gate: '+after.crossed+
     ' gate; next index '+after.nextGate+'; '+after.completedLaps+' laps complete.';
 });
 $('download').addEventListener('click',()=>{
@@ -93,3 +95,11 @@ $('download').addEventListener('click',()=>{
   a.click();URL.revokeObjectURL(url);
 });
 validate();
+
+$('loop-builder').addEventListener('submit',event=>{
+  event.preventDefault();
+  try{const pack=buildLoopPack({width:Number($('loop-width').value),depth:Number($('loop-depth').value),aperture:Number($('loop-aperture').value),laps:Number($('loop-laps').value)});
+    $('manifest').value=JSON.stringify(pack,null,2);validate();
+    $('builder-status').textContent='Loop ready. Test the first gate, then Download JSON. This is course data; a game must supply flight and collision.';
+  }catch(error){$('builder-status').textContent='Draft unchanged: '+error.message;}
+});

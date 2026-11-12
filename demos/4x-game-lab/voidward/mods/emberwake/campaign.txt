@@ -1,0 +1,4 @@
+id = emberwake
+version = 1.0.0
+title = Emberwake Exodus: The Last Convoy
+description = Thirty-two stars along a fractured migration corridor. Three refugee cultures seek a future: build permanent havens or chart a mobile convoy network. Two routes; objectives from turn 48.

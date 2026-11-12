@@ -82,7 +82,8 @@
       ],
       "serviceWorker": true,
       "consumes": [
-        "research"
+        "research",
+        "editor"
       ]
     },
     "donor": {
@@ -91,11 +92,13 @@
         "demos/arcade-lab/",
         "demos/shared-lab/",
         "demos/gpu-lab/",
-        "demos/space-lab/"
+        "demos/space-lab/",
+        "demos/soundtrack-lab/"
       ],
       "scripts": [
         "scripts/browser-donor-labs.js",
-        "scripts/browser-optional-labs.js"
+        "scripts/browser-optional-labs.js",
+        "scripts/browser-soundtrack.js"
       ],
       "serviceWorker": true,
       "consumes": [
@@ -105,11 +108,13 @@
     },
     "editor": {
       "roots": [
-        "demos/editor/"
+        "demos/editor/",
+        "demos/creator-hub/"
       ],
       "scripts": [
         "scripts/browser-editor.js",
-        "scripts/browser-editor-4x.js"
+        "scripts/browser-editor-4x.js",
+        "scripts/browser-creator.js"
       ],
       "serviceWorker": true,
       "consumes": [

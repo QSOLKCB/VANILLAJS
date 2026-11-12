@@ -1,0 +1,4 @@
+# id | short | primary | accent | home | ethos
+0 | LATTICE | #7de3e0 | #e2ffff | 0 | A promise is strongest when every part can be inspected.
+1 | TIDEBOUND | #e8bc77 | #fff0d1 | 8 | No frontier is distant when the passage remains open.
+2 | CINDER | #b7a0ff | #f0e7ff | 16 | Industry is a public trust; prosperity must survive us.

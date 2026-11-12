@@ -1,0 +1,4 @@
+# id | short | primary | accent | home | ethos
+0 | PRISM | #80b5ff | #d9ecff | 0 | A map is a promise to the next traveller.
+1 | MNEMONIC | #e898c6 | #ffe2f3 | 16 | We remember the stars that forgot their names.
+2 | NULL SURVEY | #bfc8d9 | #f1f5ff | 32 | An unanswered question is a place to begin.

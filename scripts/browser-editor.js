@@ -234,8 +234,85 @@ export async function verifyEditor(browser,base){
     await verifyEditorFallback(browser,base);
     await verifyConcurrentAssetImports(browser,base);
     await verifyDistantFraming(browser,base);
+    await verifyCreatorWorkflow(browser,base);
     assert.deepEqual(errors,[]);
     console.log('Visual Editor: real WebGL, hierarchy/search/keyboard navigation, native text undo, scene history/shortcuts, exact decimal/Q16/D4 authoring and rejection, gesture cancellation, project migration/assets/exports, recovery and quota failure, CPU fallback, distant-camera visibility, play controls, and 320px/390px layouts passed.');
+  }finally{await page.close();}
+}
+
+export async function verifyCreatorWorkflow(browser,base){
+  const page=await browser.newPage({viewport:{width:1380,height:900}}),errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  try{
+    await page.goto(base+'demos/editor/index.html');
+    await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready');
+    assert.equal(await page.locator('#creator-guide').getAttribute('open'),'');
+    for(const expanded of [true,false,true]){
+      await page.locator('#creator-guide').evaluate((el,open)=>{el.open=open;},expanded);
+      const layout=await page.evaluate(()=>({footer:document.querySelector('footer').getBoundingClientRect().top,
+        tools:document.querySelector('.tips').getBoundingClientRect().bottom}));
+      assert.ok(layout.footer>=layout.tools-1,'footer must follow the authoring controls with the guide open or closed');
+    }
+
+    assert.match(await page.locator('#creator-check-summary').textContent(),/ready to try/);
+    // A replacement starter is one reversible scene transaction, including attachments.
+    await page.locator('#asset-make-material').click();await page.locator('#asset-attach').click();
+    const original=await downloadProject(page);
+    assert.equal(original.library.placements.length,1);
+    await page.locator('#creator-starter').selectOption('trigger-trail');
+    await page.locator('#creator-load').click();
+    assert.equal(await page.locator('#scene-name').inputValue(),'Trigger trail');
+    let project=await downloadProject(page);
+    assert.equal(project.scene.objects.length,6);
+    assert.equal(project.library.assets.length,1);
+    assert.equal(project.library.placements.length,0,'fresh template IDs must not inherit old attachments');
+    await page.locator('#undo').click();
+    const restored=await downloadProject(page);
+    assert.deepEqual(restored.scene,original.scene);assert.deepEqual(restored.library,original.library);
+    await page.locator('#redo').click();
+    assert.equal(await page.locator('#scene-name').inputValue(),'Trigger trail');
+
+    await page.locator('#creator-piece').selectOption('player');await page.locator('#creator-add').click();
+    assert.match(await page.locator('#status').textContent(),/player already exists/);
+    assert.equal(await page.locator('#count').textContent(),'6');
+    await page.locator('#creator-piece').selectOption('trigger');await page.locator('#creator-add').click();
+    assert.equal(await page.locator('#count').textContent(),'7');
+    assert.equal(await page.locator('[data-component="trigger"][data-field="enabled"]').isChecked(),true);
+    assert.equal(await page.locator('[data-component="collider"][data-field="enabled"]').isChecked(),false);
+    await page.locator('#object-yaw').fill('45');await page.locator('#object-yaw').dispatchEvent('change');
+    await page.locator('#creator-check-summary').click();
+    const issue=page.locator('#creator-issues [data-code="rotated-trigger"] button');
+    await page.locator('#hierarchy-search').fill('no match');
+    await issue.click();
+    assert.equal(await page.locator('#hierarchy-search').inputValue(),'');
+    assert.equal(await page.locator('#object-name').inputValue(),'Trigger zone');
+    await page.locator('#object-yaw').fill('0');await page.locator('#object-yaw').dispatchEvent('change');
+    assert.match(await page.locator('#creator-check-summary').textContent(),/ready to try/);
+
+    await page.locator('#creator-focus').click();
+    assert.equal(await page.locator('#asset-foundry-controls').isVisible(),false);
+    assert.equal(await page.locator('#components').isVisible(),false);
+    assert.equal(await page.locator('#creator-focus').getAttribute('aria-pressed'),'true');
+    const pending=page.waitForEvent('download');await page.locator('#creator-save').click();
+    assert.match((await pending).suggestedFilename(),/\.vproject\.json$/);
+    assert.match(await page.locator('#creator-progress').textContent(),/✓ Project downloaded/);
+    await page.locator('#creator-play').click();
+    assert.equal(await page.locator('#mode').textContent(),'PLAY');
+    assert.equal(await page.locator('#creator-load').isDisabled(),true);
+    assert.equal(await page.locator('#creator-add').isDisabled(),true);
+    await page.locator('#stop').click();
+    assert.match(await page.locator('#creator-progress').textContent(),/✓ Tried Play/);
+    await page.locator('#scene-name').fill('My checkpoint course');
+    await page.locator('#scene-name').dispatchEvent('change');
+    assert.match(await page.locator('#creator-progress').textContent(),/○ Tried Play/);
+    assert.match(await page.locator('#creator-progress').textContent(),/○ Project downloaded/);
+    await page.locator('#creator-focus').click();
+    assert.equal(await page.locator('#components').isVisible(),true);
+    await page.setViewportSize({width:320,height:800});
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,
+      'quick-start controls must fit a 320px viewport');
+    assert.deepEqual(errors,[]);
+    console.log('Editor creator workflow: templates, attachment-safe undo, gameplay pieces, duplicate rejection, actionable checks, basic view, project download, Play, stale progress and mobile fit passed.');
   }finally{await page.close();}
 }
 

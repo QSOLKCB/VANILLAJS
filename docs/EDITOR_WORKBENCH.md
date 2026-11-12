@@ -1,136 +1,77 @@
-# VANILLAJS Workbench — visual scene editor alpha
+# VANILLAJS visual editor
 
-**Current authoring improvements:** [Visual Editor QoL and ALIEN MATH](EDITOR_QOL.md) documents search, keyboard workflows, exact position drafts, recovery and measured geometry preparation.
+Start with the [Creator Hub](../demos/creator-hub/index.html) and
+[step-by-step creator guide](CREATOR_GUIDE.md). The workbench is an experimental
+native browser editor for small 3D scenes, assets and game data.
 
-**v1.5 follow-up:** [The Component Forge](COMPONENT_FORGE.md) introduces schema-v2 typed components, real axis gizmos, local/world transform modes, snapping and component-driven Play/Trigger behavior. This document retains the original v1 alpha contract for migration and historical evidence.
+## Open and learn
 
-**4X authoring:** [VOIDWARD workflow](VOIDWARD_WORKFLOW.md) documents the separate
-campaign-pack tools: edit text records, preview a playable campaign, exchange
-star-chart positions with the scene editor, and project mesh families into ship
-silhouettes while retaining their declared attribution. Pack files remain inert
-data. The native scene v1/v2 contracts and existing scene Play/Export stay intact.
+From the repository root run `python3 -m http.server 8000 --bind 127.0.0.1` and
+open `http://127.0.0.1:8000/demos/editor/index.html`. Use HTTP(S), not direct
+file opening. The packaged site also works offline after its first verified
+service-worker installation.
 
+Quick start offers Playground, Jumping course and Trigger trail templates.
+Loading a template is one undoable scene transaction with fresh entity IDs;
+existing asset attachments restore with Undo. Add piece creates configured
+platforms, players, walk-through triggers and decorations. Scene checks explain
+unsupported configurations and select the relevant object. Focus basics hides
+advanced panels without changing the project. Play and project-download marks
+apply to the current scene and reset after edits; they are reminders, not test
+certificates or proof that a download was retained.
 
-**QSOL–IMC motto: Make amazing alien tech and put it under an Apache 2.0 license.**
+## Current capabilities
 
-This is the first **usable visual-authoring slice** of a Unity/Unreal-style
-development environment. It is NOT a feature-complete replacement for
-Unity or Unreal, nor a claim that all authored scenes export as games.
+- Native WebGL viewport with hierarchy search, rotated-box picking, orbit/zoom,
+  frame selection/scene, X/Y/Z move and scale, Y rotation, local/world modes,
+  snapping and undoable pointer gestures.
+- Schema-v2 component inspectors for meshes, colliders, rigidbody gravity,
+  player movement/jump, trigger tags and camera metadata. Legacy v1 scenes
+  migrate on import.
+- Local OBJ, opaque PNG up to 64×64, materials, prefabs and explicit asset
+  provenance. Projects preserve scene and library; scene-only files do not.
+- Fixed 60 Hz Play/Pause/Stop preview with bounded catch-up, input cancellation,
+  continuous AABB collision against supported static platforms, and trigger
+  entry events. Stop restores the authored scene.
+- Exact decimal/Q16 position authoring and explanatory conversion preview.
+- Independent 4X campaign draft editing, text diagnostics, star-map layout,
+  lane/home editing and hull silhouette projection. See the
+  [VOIDWARD workflow](VOIDWARD_WORKFLOW.md).
+- Playable HTML export and a complete runtime-folder exporter:
+  `node scripts/export-game.js project.vproject.json --out NEW_FOLDER`.
 
-The application deliberately uses VANILLAJS's own native modules and
-browser APIs, without an external renderer, imported framework, CDNs,
-cloud services, telemetry or runtime package dependencies.
+## Formats, units and limits
 
-## Run the editor
+World coordinates use metres, +Y up, -Z forward and right-handed yaw. Scene
+source is bounded to 128 KiB, 128 objects and hierarchy depth 16; project source
+is bounded to 256 KiB. Validation rejects unknown fields, nonfinite transforms,
+cycles, dangling parents and multiple enabled players. Imported JSON is data,
+never evaluated as code.
 
-From the repository root:
+Only visible static colliders with world yaw divisible by 180 act as
+axis-aligned solid platforms. Rotated triggers are also ignored. Dynamic bodies
+do not collide with each other. Camera components are authored metadata; the
+preview camera remains fixed by the player/editor implementation. Imported
+meshes change rendering, while collision continues to use supported boxes.
+Triggers report events; custom scripts, quests, scoring and victory logic are
+the consuming game's responsibility. No full rigid-body solver, arbitrary-angle
+collision engine or scripting VM is claimed.
 
-    python3 -m http.server 8000
+Undo retains at most 64 scene snapshots. Asset placement state follows scene
+history; asset definitions themselves are library operations. Recovery is
+explicit and browser-local. Download projects to keep portable backups.
 
-Open http://localhost:8000/demos/editor/index.html.
+## Further contracts
 
-For a deployed site, use the **Visual Editor** link on the main VANILLAJS
-page. Modules require HTTP(S); direct file-open cannot load native module
-imports. Only packaged HTTPS or loopback builds may install the optional
-versioned offline service worker.
+- [Component Forge](COMPONENT_FORGE.md): components, gizmos and preview semantics.
+- [Asset Foundry](ASSET_FOUNDRY.md): imports, bounds, provenance and export formats.
+- [Editor QoL](EDITOR_QOL.md) and [viewport QoL](EDITOR_VIEWPORT_QOL.md).
+- [Exact authoring](EDITOR_ALIEN_AUTHORING.md).
+- [Optional rendering](OPTIONAL_GPU_WASM.md): CPU baseline and explicit GPU consent.
+- [Creator guide](CREATOR_GUIDE.md): recipes, packaging, troubleshooting and checks.
 
-## Present functionality
-
-- Real WebGL1 3D viewport using the existing WebGLAPI and
-  geometry.boxMeshBatch, retained mesh buffers and persistent grids.
-- Scene hierarchy, selection from hierarchy or **rotated ray–box picking**.
-- Object inspector: name, parent, visibility, body type, local XYZ position,
-  yaw in degrees, size and RGB color.
-- Add root/child cubes, recursively duplicate/delete object subtrees,
-  orbit camera with zoom, and move root cubes in the X/Z plane
-  with Shift + pointer drag.
-- Undo/redo of complete validated scene transactions, including transforms;
-  bounded 64-snapshot undo history.
-- Local JSON project save/load; **fail-closed schema validation**, a 128 KiB
-  source budget and 128-object scene limit. No account, server database or
-  remote persistence.
-- Play, pause and stop of **one fixed-step preview**. The editor scene
-  remains immutable while playing; stopping restores the authored scene.
-- WebGL context restoration explicitly reconstructs all GPU resources from
-  the owned scene snapshot. Rendering is performed separately from physics.
-- Desktop-sized multi-pane workbench with a responsive mobile inspector and
-  hierarchy. The browser remains the UI runtime on all operating systems.
-
-### Coordinate and contract notes
-
-The world is right-handed: +Y up and -Z forward. Parent translation, yaw
-rotation and scale are applied in a local hierarchy. The box-only renderer
-uses rotation around the global/local Y axis; no quaternion editor yet.
-
-Only visible static boxes with yaw divisible by 180 degrees act as
-axis-aligned platforms for the experimental Play preview. Other boxes may
-appear rotated but do **not** provide a rotated physics collider.
-The Play preview uses a simple 60 Hz kinematic player and vertical gravity;
-it is not a rigid-body solver, full navmesh, multi-scene game runner,
-scripting VM, serialized ECS, asset pipeline or game build system.
-
-Input is cancelled on blur, visibility loss and Play/Stop transitions.
-The preview uses a bounded FixedClock and cannot mutate the saved scene.
-
-### Scene format
-
-- schemaVersion: exactly 1.
-- name: bounded printable string.
-- nextId: monotonic ID counter (never reuse a deleted ID).
-- objects: at most 128 scene entities, depth at most 16.
-- Entity keys: id, name, parent, position, rotationY, scale, color,
-  body (static, dynamic or a single player), visible.
-- Recursive parent cycles, dangling parents, nonfinite transforms,
-  unknown fields, duplicate IDs and multiple players are rejected.
-- Physics bodies must be root entities in this editor version.
-
-No code from the imported JSON is evaluated. Inputs are treated as
-untrusted data, not scripts, HTML or remote resources.
-
-## Checks and evidence
-
-Run:
-
-    node --test tests/editor-*.test.js
-    node --test tests/*.test.js
-    node scripts/check.js
-    node scripts/build.js
-    node scripts/verify-offline.js
-
-The existing scripts/browser-check.js integration visits the packaged
-editor under /VANILLAJS/ and checks rendered WebGL, hierarchy edits,
-undo/redo, genuine JSON export/import, Play/Stop, invalid input rejection
-and mobile layout. Browser validation uses the repository's pinned
-isolated Playwright tooling in GitHub Actions and does not introduce
-runtime dependencies.
-
-The geometry mesh is rebuilt **only** after an authored-scene change,
-selection highlight or simulation update; moving the editor camera
-does not rebuild/upload scene geometry. Do not extrapolate the v1.4.0
-Proof of Speed benchmark to this editor without instrumenting an actual
-scene-workload test.
-
-## Next phases (not implemented)
-
-1. Independent world-space translation/rotation/scale gizmos and snapping.
-2. Real entity/component architecture and typed component inspectors.
-3. Material/texture import with strict provenance and asset constraints.
-4. Proper dynamic AABB/rotated collision, optional Q16.16 playback and
-   deterministic event/replay recording.
-5. Authored gameplay scripting with explicit trust boundaries, versioned
-   project files and plugin capability controls.
-6. Scene packaging, first-party asset validation and standalone-game export.
-7. Expanded GPU profiler, editor timeline and large-scene streaming.
-
-Before promoting the editor beyond alpha, test its actual end-to-end
-authoring workflows and independent browser/OS environments.
-
-**QSOL–IMC — Make amazing alien tech and put it under an Apache 2.0 license.**
-
-## Optional CPU / GPU graphics and space labs
-
-See [the GPU/WASM and Space Game Lab guide](OPTIONAL_GPU_WASM.md) for the experimental
-CPU-first renderer, explicit player opt-in, editor project setting and playable
-HTML export, exact-math preparation, resource limits, and local test commands.
-The project v2 envelope preserves graphics policy; legacy v1 projects still load.
-Existing WebGL APIs remain supported.
+Run `node --test tests/*.test.js`, `node scripts/check.js`,
+`node scripts/build.js` and `node scripts/verify-offline.js`. The existing
+packaged Chromium suite exercises authoring, valid/invalid imports, undo,
+recovery, Play and mobile layout. Emulated screens and software WebGL do not
+establish physical mobile, controller or hardware GPU coverage.

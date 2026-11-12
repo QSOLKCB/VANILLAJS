@@ -741,6 +741,21 @@
       ],
       "preset": "voidward-text-pack",
       "description": "Experimental demo-owned 4X campaign sidecar, bounded undo/recovery, native pack exchange, 2:1 chart placement and attributed convex hull projection"
+    },
+    "soundtrack-lab": {
+      "entry": "demos/soundtrack-lab/index.html",
+      "modules": [
+        "audio2d"
+      ],
+      "research": [
+        "e8-geometry"
+      ],
+      "description": "Original bounded cue authoring, explicit source/mapping and WAV/recipe/score export"
+    },
+    "creator-hub": {
+      "entry": "demos/creator-hub/index.html",
+      "modules": [],
+      "description": "Guided game creation, genre choices and offline packaging help"
     }
   },
   "experiments": {

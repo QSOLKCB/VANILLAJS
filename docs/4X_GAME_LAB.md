@@ -7,7 +7,7 @@ sector, settle colonies, develop production and command fleets against the
 Umbra Compact. The game runs locally, including from the packaged offline site.
 
 For larger campaigns and editable universes, open the separate
-[VOIDWARD campaign mode](../demos/4x-game-lab/voidward/index.html). It brings five
+[VOIDWARD campaign mode](../demos/4x-game-lab/voidward/index.html). It brings eight
 campaigns, selectable empires, ship design, research dependencies, production
 queues, diplomacy, objectives and a data-pack workshop from the pinned
 4XGAMES implementation. The [VOIDWARD workflow](VOIDWARD_WORKFLOW.md) explains

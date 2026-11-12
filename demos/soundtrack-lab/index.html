@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101824"><meta name="description" content="Create a short original game soundtrack, audition it locally and export WAV or a reproducible recipe.">
+<title>Soundtrack Lab · VANILLAJS</title><link rel="stylesheet" href="./style.css"></head>
+<body><header><a class="brand" href="../../index.html">VANILLA<span>JS</span></a><nav aria-label="Site"><a href="../editor/index.html">Visual Editor</a><a href="../4x-game-lab/index.html">4X games</a><a href="../creator-hub/index.html">Creator guide</a></nav></header>
+<main><div class="intro"><p class="eyebrow">MAKE SOMETHING YOU CAN HEAR</p><h1>Soundtrack Lab</h1><p>Turn a small mathematical pattern into a game cue. Pick a starting sound, shape it, then take the WAV into your game.</p></div>
+<section class="workspace" aria-label="Soundtrack authoring">
+<form id="recipe-form" class="panel"><h2>1. Shape your sound</h2>
+<label>Starting sound<select id="preset"><option value="chart">Star chart · melodic</option><option value="race">Race pulse · rhythmic</option><option value="outpost">Quiet outpost · low register</option></select></label>
+<div class="pair"><label>Tempo · beats/min<input id="tempo" type="number" min="60" max="240" step="1" required></label><label>Eighth-note steps<input id="steps" type="number" min="4" max="16" step="1" required></label></div>
+<div class="pair"><label>Waveform<select id="wave"><option value="triangle">Triangle · soft</option><option value="square">Square · arcade</option><option value="saw">Saw · bright</option></select></label><label>Level<input id="gain" type="range" min="0" max="6000" step="100"><output id="gain-value" for="gain"></output></label></div>
+<fieldset><legend>Pitch palette · integer Hz</legend><p>The pattern chooses a position in this five-note palette.</p><div class="pitches">
+<label>1<input id="pitch-0" type="number" min="30" max="2000" step="1" required></label><label>2<input id="pitch-1" type="number" min="30" max="2000" step="1" required></label><label>3<input id="pitch-2" type="number" min="30" max="2000" step="1" required></label><label>4<input id="pitch-3" type="number" min="30" max="2000" step="1" required></label><label>5<input id="pitch-4" type="number" min="30" max="2000" step="1" required></label></div></fieldset>
+<details><summary>Pattern source</summary>
+<label>Pattern<select id="source-kind"><option value="e8-coordinate">E8 root coordinates</option><option value="three-state">Three-state cycle</option></select></label>
+<div class="pair"><label id="start-label">Starting root<input id="source-start" type="number" min="0" max="239" step="1" required></label><label id="stride-label">Root stride<input id="source-stride" type="number" min="1" max="239" step="1" required></label></div>
+<label id="axis-label">Coordinate · 0–7<input id="source-axis" type="number" min="0" max="7" step="1" required></label>
+<p>E8 mode reads one coordinate of each visited root and maps −1, −½, 0, ½, 1 to palette positions 1–5. Three-state mode cycles through positions 1–3.</p></details>
+<button class="primary" type="submit" id="generate">Update cue</button><p id="dirty" class="hint" hidden>Settings changed. Update the cue to hear or export them.</p></form>
+<section class="panel preview"><h2>2. Listen and export</h2><p id="summary"></p>
+<div id="notes" class="notes" role="img" aria-label="Generated pitch sequence"></div>
+<div class="buttons"><button class="primary" id="listen" type="button">▶ Listen</button><button id="stop" type="button" disabled>■ Stop</button></div>
+<p id="status" role="status" aria-live="polite">Preparing cue…</p>
+<div class="export-options"><button id="export-wav" type="button">Download WAV</button><button id="export-recipe" type="button">Save recipe</button><button id="export-events" type="button">Export game score</button><label class="file-button">Open recipe<input id="open-recipe" type="file" accept=".json,application/json"></label></div>
+<p class="hint">WAV works in audio players and game tools. A recipe restores all settings here. A game score contains the frames and events accepted by <code>createSound2D</code>.</p>
+<details><summary>Source and note events</summary><div class="table-scroll"><table><thead><tr><th>Step</th><th>Source</th><th>Pitch</th><th>Sample</th></tr></thead><tbody id="event-rows"></tbody></table></div></details>
+<aside class="boundary"><h3>Your mapping, your music</h3><p>This is a creative instrument inspired by E8_MUSIC and SONIFICATION. The pitches, tempo and timbre are authored choices. It uses VANILLAJS's existing 240-root generator and integer audio renderer; it does not reproduce ETQ-101/303, import donor audio or claim a natural E8 sound.</p><p>Exports are 48 kHz mono PCM16, at most 8 seconds. Playback stops when this page loses focus; click Listen to restart. Device playback may resample the exported audio.</p></aside>
+</section></section>
+<section class="next"><h2>3. Put it in a game</h2><p>Use the WAV as a short menu, victory or checkpoint cue. To render a game score in code, pass its <code>frames</code> and <code>events</code> to <code>createSound2D</code>. Keep playback behind a player action and stop it on pause.</p><p><a href="../creator-hub/index.html">Follow the game-building guide →</a></p></section>
+</main><footer>Original native JavaScript · Local rendering · Apache-2.0 · QSOL–IMC</footer>
+<script type="module" src="./app.js"></script><script type="module" src="../../offline/register.js"></script></body></html>

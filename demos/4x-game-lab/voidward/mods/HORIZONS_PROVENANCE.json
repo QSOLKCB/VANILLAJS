@@ -1,0 +1,323 @@
+{
+  "schema": "vanillajs-voidward-campaigns-v1",
+  "repository": "QSOLKCB/4XGAMES",
+  "commit": "382f458998cf3c28e82047f64709722761559034",
+  "license": "Apache-2.0",
+  "files": [
+    {
+      "path": "helix-accord/ai.txt",
+      "source": "mods/helix-accord/ai.txt",
+      "sha256": "2e62d6761ddee5618814d57ff2ac7dc0b6395cc4a9fe35dc43cb4a18e559d185"
+    },
+    {
+      "path": "helix-accord/buildings.txt",
+      "source": "mods/helix-accord/buildings.txt",
+      "sha256": "19a74ef08da1cea7411f6160b8c115995e6c21ccf5758d7767725a064db99afd"
+    },
+    {
+      "path": "helix-accord/campaign.txt",
+      "source": "mods/helix-accord/campaign.txt",
+      "sha256": "b87e1eae635fce0a9979bf654e2bf0022a9a77cc757b3f1e59e1592e6842a9f4"
+    },
+    {
+      "path": "helix-accord/components.txt",
+      "source": "mods/helix-accord/components.txt",
+      "sha256": "a209128d66e049410ed53d8d2d20ecfe6acadc25c60ae754491ccca5149e5a8a"
+    },
+    {
+      "path": "helix-accord/dependencies.txt",
+      "source": "mods/helix-accord/dependencies.txt",
+      "sha256": "3aab0e27353903d202e363068c4745307139aa9ea479e9feb40091ab9dde4729"
+    },
+    {
+      "path": "helix-accord/empire_names.txt",
+      "source": "mods/helix-accord/empire_names.txt",
+      "sha256": "fb73aa2b886fccbe714760b8b04142aabb88f3a0659d206d9f0293006a4daf0c"
+    },
+    {
+      "path": "helix-accord/empires.txt",
+      "source": "mods/helix-accord/empires.txt",
+      "sha256": "ad3d603216ce9fa0a866515b35a98591894d07f9605c56393c5c134f759dce5e"
+    },
+    {
+      "path": "helix-accord/events.txt",
+      "source": "mods/helix-accord/events.txt",
+      "sha256": "ba93fc7feb450b41fe73e61e3469590e18862bc49181250a753151788830d3cf"
+    },
+    {
+      "path": "helix-accord/hulls.txt",
+      "source": "mods/helix-accord/hulls.txt",
+      "sha256": "c5f91dd9f25a16f37a601baee2f4ea7a19ab1a27edf3fe00df2aabfb21d73dcf"
+    },
+    {
+      "path": "helix-accord/layout.txt",
+      "source": "mods/helix-accord/layout.txt",
+      "sha256": "11513ea83a575981494a621f44c87e481331ddb00f267aa3f9392a88e4726ef8"
+    },
+    {
+      "path": "helix-accord/map.txt",
+      "source": "mods/helix-accord/map.txt",
+      "sha256": "aa90d50c398dd74fea93bf91063a76d9e4e0bf7820dc495ea5ed26b9ed6366b1"
+    },
+    {
+      "path": "helix-accord/music.txt",
+      "source": "mods/helix-accord/music.txt",
+      "sha256": "4b3071a05736334c85c386b5134947b2cd7750e78d8dd86b4dfb6ffcb671ac6a"
+    },
+    {
+      "path": "helix-accord/objectives.txt",
+      "source": "mods/helix-accord/objectives.txt",
+      "sha256": "85bd9306c949b887db8f0f1d30b56be01100032f504f8d1ce0951a3b0b177474"
+    },
+    {
+      "path": "helix-accord/planet_names.txt",
+      "source": "mods/helix-accord/planet_names.txt",
+      "sha256": "5f8afbf07de687170de3e9496e1feb73c63a348fdee9a139c104e1a7421c9e03"
+    },
+    {
+      "path": "helix-accord/planet_types.txt",
+      "source": "mods/helix-accord/planet_types.txt",
+      "sha256": "1a372aaf1533ec45a14034b7e145bde4e30783ec5322606891ac9441f372b63a"
+    },
+    {
+      "path": "helix-accord/research.txt",
+      "source": "mods/helix-accord/research.txt",
+      "sha256": "a55d85d1d71275794d5f8c762971fe9e1f3536c18bb1504085859bcb714b7596"
+    },
+    {
+      "path": "helix-accord/rules.txt",
+      "source": "mods/helix-accord/rules.txt",
+      "sha256": "cb0623978602113a12c8096f343fb02ebeed88b04656cb4d3cc25b1554df7683"
+    },
+    {
+      "path": "helix-accord/scenario.txt",
+      "source": "mods/helix-accord/scenario.txt",
+      "sha256": "12b2ff908183dda59117445a786ae906f52634673de7551953f81d66bf606d9d"
+    },
+    {
+      "path": "helix-accord/ships.txt",
+      "source": "mods/helix-accord/ships.txt",
+      "sha256": "e737cfc76f37cd9d6316bfc674d0887a86a8c969eb429cd84316edce9c95c9c2"
+    },
+    {
+      "path": "helix-accord/starts.txt",
+      "source": "mods/helix-accord/starts.txt",
+      "sha256": "dc46d6674892d6dff72c1fa15d4ca909358a185d3500c19bc5d1d30c8743cb2a"
+    },
+    {
+      "path": "helix-accord/system_names.txt",
+      "source": "mods/helix-accord/system_names.txt",
+      "sha256": "9cec32cb9d81388ce02156e3b2b69d11f140e28a55a9483deff75e8d6315225a"
+    },
+    {
+      "path": "emberwake/ai.txt",
+      "source": "mods/emberwake/ai.txt",
+      "sha256": "71b668daf8ad5d089fdbd5283911bb8e145605def8b5c0297a1fdb1b335855cb"
+    },
+    {
+      "path": "emberwake/buildings.txt",
+      "source": "mods/emberwake/buildings.txt",
+      "sha256": "df55f3f94f8c7564d67a8d09bc3b7c53f75b735956ab7f231d822fdc6d63ae1d"
+    },
+    {
+      "path": "emberwake/campaign.txt",
+      "source": "mods/emberwake/campaign.txt",
+      "sha256": "26f4b02c7c20c73f1584866eb83552b3895eac03fe28fda33197d0280bab5268"
+    },
+    {
+      "path": "emberwake/components.txt",
+      "source": "mods/emberwake/components.txt",
+      "sha256": "a209128d66e049410ed53d8d2d20ecfe6acadc25c60ae754491ccca5149e5a8a"
+    },
+    {
+      "path": "emberwake/dependencies.txt",
+      "source": "mods/emberwake/dependencies.txt",
+      "sha256": "3aab0e27353903d202e363068c4745307139aa9ea479e9feb40091ab9dde4729"
+    },
+    {
+      "path": "emberwake/empire_names.txt",
+      "source": "mods/emberwake/empire_names.txt",
+      "sha256": "9b52580b8e92fa796c161babfa7a65e94cb3879ce09aa4c050934793f53302d7"
+    },
+    {
+      "path": "emberwake/empires.txt",
+      "source": "mods/emberwake/empires.txt",
+      "sha256": "26a7fd623e1bccc75d8436318b82fc86f3db4ce2ab41649ac0865f82de31ba68"
+    },
+    {
+      "path": "emberwake/events.txt",
+      "source": "mods/emberwake/events.txt",
+      "sha256": "5338ba4aa678c0b560af9482d5750ca782b37570d8a6639e7b91e7168cc0f5dc"
+    },
+    {
+      "path": "emberwake/hulls.txt",
+      "source": "mods/emberwake/hulls.txt",
+      "sha256": "bcf136f1546d91f828527f3f5c642a0c6517ac622b8966ceed5e45f2bf420075"
+    },
+    {
+      "path": "emberwake/layout.txt",
+      "source": "mods/emberwake/layout.txt",
+      "sha256": "fefc4d3c67229fab3d2609595d3f5ff296eaf9a3d51f37c5a7e8c497f8bc686e"
+    },
+    {
+      "path": "emberwake/map.txt",
+      "source": "mods/emberwake/map.txt",
+      "sha256": "beae3391bf3040538661312ad5bc3efb99052f6ac119c6eb0c683425d57583ac"
+    },
+    {
+      "path": "emberwake/music.txt",
+      "source": "mods/emberwake/music.txt",
+      "sha256": "6d88b8d52b4ee419018603fe75f8b3e981f38d931a8acd5ed6ac17a90f1f1402"
+    },
+    {
+      "path": "emberwake/objectives.txt",
+      "source": "mods/emberwake/objectives.txt",
+      "sha256": "27b199068ea7346a9482741cd2a560cff2989c93d49e16155ae8f006e6496197"
+    },
+    {
+      "path": "emberwake/planet_names.txt",
+      "source": "mods/emberwake/planet_names.txt",
+      "sha256": "00535179a97e87eed066be0f70a572815a80b64bc1dc36768d919ccb46761063"
+    },
+    {
+      "path": "emberwake/planet_types.txt",
+      "source": "mods/emberwake/planet_types.txt",
+      "sha256": "1a372aaf1533ec45a14034b7e145bde4e30783ec5322606891ac9441f372b63a"
+    },
+    {
+      "path": "emberwake/research.txt",
+      "source": "mods/emberwake/research.txt",
+      "sha256": "a55d85d1d71275794d5f8c762971fe9e1f3536c18bb1504085859bcb714b7596"
+    },
+    {
+      "path": "emberwake/rules.txt",
+      "source": "mods/emberwake/rules.txt",
+      "sha256": "b83c494784a1fea50f89c931c2f3c0f7fdeb9bac23990d854a3e4252cb9afeaf"
+    },
+    {
+      "path": "emberwake/scenario.txt",
+      "source": "mods/emberwake/scenario.txt",
+      "sha256": "25ca388680e40e92e735b8e6d3cab7e29988291e1733ef2ca4ef3c5159dbeb68"
+    },
+    {
+      "path": "emberwake/ships.txt",
+      "source": "mods/emberwake/ships.txt",
+      "sha256": "3ddb5de9ea9a81f1a8063548a260dddc7b32faf9247452a421b2f50f8ddd2381"
+    },
+    {
+      "path": "emberwake/starts.txt",
+      "source": "mods/emberwake/starts.txt",
+      "sha256": "b93e7a88fe2b9e1612a0a7979848bdc402910f2e5b204239c84d0ecd02c78e1e"
+    },
+    {
+      "path": "emberwake/system_names.txt",
+      "source": "mods/emberwake/system_names.txt",
+      "sha256": "46dd4745c34667cab560376c38ac63a1f6c2ed8d5f16e812692431be27b8813f"
+    },
+    {
+      "path": "glass-meridian/ai.txt",
+      "source": "mods/glass-meridian/ai.txt",
+      "sha256": "5b03dc09f532433b2d3f35742c126ac4280ce047b2198c696760f0884cac0fe6"
+    },
+    {
+      "path": "glass-meridian/buildings.txt",
+      "source": "mods/glass-meridian/buildings.txt",
+      "sha256": "8efafadd552e0dd33f2e467538ac584336d5ee7c05880f6ef2582a9966b50ccf"
+    },
+    {
+      "path": "glass-meridian/campaign.txt",
+      "source": "mods/glass-meridian/campaign.txt",
+      "sha256": "91b6b6750c7ca46bfd685fffeb058ea0e14f5a1218dc719cb5e69682f17d78bf"
+    },
+    {
+      "path": "glass-meridian/components.txt",
+      "source": "mods/glass-meridian/components.txt",
+      "sha256": "a209128d66e049410ed53d8d2d20ecfe6acadc25c60ae754491ccca5149e5a8a"
+    },
+    {
+      "path": "glass-meridian/dependencies.txt",
+      "source": "mods/glass-meridian/dependencies.txt",
+      "sha256": "3aab0e27353903d202e363068c4745307139aa9ea479e9feb40091ab9dde4729"
+    },
+    {
+      "path": "glass-meridian/empire_names.txt",
+      "source": "mods/glass-meridian/empire_names.txt",
+      "sha256": "2c2c92cf51e6b7d7a232c8c440bc483f09b084c6bb2f9ffb80725b16829e682a"
+    },
+    {
+      "path": "glass-meridian/empires.txt",
+      "source": "mods/glass-meridian/empires.txt",
+      "sha256": "75c9c0e773569192f7429dc3dd8dad18f77730672785396a93587aed76fa16b4"
+    },
+    {
+      "path": "glass-meridian/events.txt",
+      "source": "mods/glass-meridian/events.txt",
+      "sha256": "3f04241a9342316691d2df7ac4d758b98547b05a813494b7a7394f8c8ad15873"
+    },
+    {
+      "path": "glass-meridian/hulls.txt",
+      "source": "mods/glass-meridian/hulls.txt",
+      "sha256": "316682c4a687b52812a96aea4b92c7095eae84b57aeb8b830138929df0e477d3"
+    },
+    {
+      "path": "glass-meridian/layout.txt",
+      "source": "mods/glass-meridian/layout.txt",
+      "sha256": "2b01fb793259ce54071b34b6907a628f56b7256209f859665b51079c79d78410"
+    },
+    {
+      "path": "glass-meridian/map.txt",
+      "source": "mods/glass-meridian/map.txt",
+      "sha256": "655cb6839060fdd67a9b47125dff5fb127b3507f67a520a8904f8c1e66cc961c"
+    },
+    {
+      "path": "glass-meridian/music.txt",
+      "source": "mods/glass-meridian/music.txt",
+      "sha256": "ee9857bd5bedb0cddf4ed837afca31d518e04aaa706b7d0a7813ed0db6e4a692"
+    },
+    {
+      "path": "glass-meridian/objectives.txt",
+      "source": "mods/glass-meridian/objectives.txt",
+      "sha256": "fd8a894a96968a22b48aec2387569dd7b5031f2b5439990bd360e26000ad3da9"
+    },
+    {
+      "path": "glass-meridian/planet_names.txt",
+      "source": "mods/glass-meridian/planet_names.txt",
+      "sha256": "427069a72cc0762b693e24dcb631af4f61f9c39f95826d2a108ce55c1c4853b8"
+    },
+    {
+      "path": "glass-meridian/planet_types.txt",
+      "source": "mods/glass-meridian/planet_types.txt",
+      "sha256": "1a372aaf1533ec45a14034b7e145bde4e30783ec5322606891ac9441f372b63a"
+    },
+    {
+      "path": "glass-meridian/research.txt",
+      "source": "mods/glass-meridian/research.txt",
+      "sha256": "a55d85d1d71275794d5f8c762971fe9e1f3536c18bb1504085859bcb714b7596"
+    },
+    {
+      "path": "glass-meridian/rules.txt",
+      "source": "mods/glass-meridian/rules.txt",
+      "sha256": "6da50edfde1a948f53b098141737645fb0f04e2b44c3fa914394872c94234294"
+    },
+    {
+      "path": "glass-meridian/scenario.txt",
+      "source": "mods/glass-meridian/scenario.txt",
+      "sha256": "38e9d64df68f86ae0f4978c7c216728a715ebb924425026b1760fa1ac6294164"
+    },
+    {
+      "path": "glass-meridian/ships.txt",
+      "source": "mods/glass-meridian/ships.txt",
+      "sha256": "5b0d5cbcec63ea9d931cc3ad8f48b12a1f221d35bd6da51ab81d77ea7f1574dc"
+    },
+    {
+      "path": "glass-meridian/starts.txt",
+      "source": "mods/glass-meridian/starts.txt",
+      "sha256": "9b2ec5979aa4ea0dee3c6c6efc1330e9ff73f24d1e9ec9c3158adfc990524338"
+    },
+    {
+      "path": "glass-meridian/system_names.txt",
+      "source": "mods/glass-meridian/system_names.txt",
+      "sha256": "55a1abfdd5d4b1f9ca96c13951276dc51892ece24396e3a1de1aa002677183d9"
+    }
+  ]
+}

@@ -16,6 +16,16 @@
 <span class="separator"></span>
 <button id="play" class="primary">▶ Play</button><button id="pause" disabled>Pause</button><button id="stop" disabled>■ Stop</button>
 </div></header>
+<section class="creator-guide" aria-label="Game creation assistant">
+<details id="creator-guide" open><summary>Quick start · build, test and save a scene</summary>
+<div class="creator-grid">
+<div><label for="creator-starter">1. Choose a starting scene</label><div class="creator-row"><select id="creator-starter"><option value="playground">Playground</option><option value="jumping-course">Jumping course</option><option value="trigger-trail">Trigger trail</option></select><button id="creator-load" type="button">Load starter</button></div><p id="creator-starter-note"></p></div>
+<div><label for="creator-piece">2. Add a gameplay piece</label><div class="creator-row"><select id="creator-piece"><option value="platform">Platform</option><option value="player">Player</option><option value="trigger">Trigger zone</option><option value="decoration">Decoration</option></select><button id="creator-add" type="button">Add piece</button></div><p>Select a piece, drag its coloured arrows, then press Play. Each edit supports Undo.</p></div>
+<div><strong>3. Test and keep your work</strong><div class="creator-row"><button id="creator-play" type="button">Try Play</button><button id="creator-save" type="button">Save project</button><button id="creator-focus" type="button" aria-pressed="false">Focus basics</button></div><p>Save project includes assets. Play uses WASD + Space. <a href="../creator-hub/index.html">Step-by-step guide ↗</a></p></div>
+</div></details>
+<div id="creator-progress" class="creator-progress" aria-label="Current scene progress"></div>
+<details id="creator-checks"><summary id="creator-check-summary">Scene checks</summary><p>Advisory checks for the current box preview. Select an issue to find its object. Triggers report events; add game rules separately.</p><ul id="creator-issues"></ul></details>
+</section>
 <main class="workbench">
 <aside class="sidebar tree"><div class="panel-head"><div><small>PROJECT</small><h2>Hierarchy</h2></div><span id="count">0</span></div>
 <label class="sr-only" for="scene-name">Scene name</label>

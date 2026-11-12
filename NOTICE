@@ -185,3 +185,12 @@ No donor source or fixture is copied by this milestone. Existing audio2d and
 orbital-physics implementations and their notices are retained. Exact inspected
 paths, per-file licence observations and scientific boundaries are documented
 in docs/QGAME_MATH_001_PROVENANCE.md and docs/QGAME_MATH_001.md.
+
+Additional VOIDWARD campaign data (Helix Accord, Emberwake Exodus and Glass
+Meridian) is copied unchanged from QSOLKCB/4XGAMES at
+382f458998cf3c28e82047f64709722761559034 under Apache-2.0. Copyright 2026
+Trent Slade / QSOL-IMC and contributors. The original five campaign packs and
+engine adaptation remain pinned to their earlier revisions. File identities
+are recorded in demos/4x-game-lab/voidward/mods/HORIZONS_PROVENANCE.json
+(relative to the repository root). This import includes data only; the donor
+command deck and engine optimizations are not transplanted.

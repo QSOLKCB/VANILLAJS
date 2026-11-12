@@ -83,6 +83,7 @@ async function verifyCircuitModLab(browser,base){
     assert.match(await page.locator('#sweep-status').textContent(),/1 gate; next index 1/);
     const source=JSON.parse(await page.locator('#manifest').inputValue());
     source.entries[0].data.course.gates[0].axis='y';
+    await page.locator('summary').filter({hasText:'Advanced: edit course JSON'}).click();
     await page.locator('#manifest').fill(JSON.stringify(source));
     await page.locator('#validate').click();
     assert.match(await page.locator('#status').textContent(),/REJECTED/);

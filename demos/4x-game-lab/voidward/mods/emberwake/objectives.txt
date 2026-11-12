@@ -1,0 +1,10 @@
+# id | owner | kind | target | amount | requires | branch | title | description | victory
+lantern-chain | player | survey | * | 10 |  |  | A chain of lanterns | Survey ten systems to map safe migration routes. | 0
+five-hearths | player | colonies | - | 5 | lantern-chain |  | Five hearths | Establish five colony worlds for the displaced fleets. | 0
+permanent-havens | player | colonies | - | 9 | five-hearths | havens | Permanent havens | Choose settlement and hold nine colony worlds. | 0
+haven-industry | player | research | industry | 4 | permanent-havens | havens | Rebuild what was lost | Reach Industrial systems IV for the settled network. | 0
+settled-exodus | player | survive | - | 55 | haven-industry | havens | The long arrival | Complete the havens and survive to turn 55. | 1
+convoy-engines | player | research | propulsion | 4 | five-hearths | convoy | The unbroken convoy | Choose mobility and reach Warp dynamics IV. | 0
+convoy-chart | player | survey | * | 24 | convoy-engines | convoy | A route for every vessel | Survey twenty-four systems to establish the convoy network. | 0
+convoy-fields | player | research | shields | 3 | convoy-chart | convoy | Shelter between stars | Reach Field harmonics III for the crossing. | 0
+last-convoy | player | survive | - | 48 | convoy-fields | convoy | The Last Convoy | Keep the convoy network alive until turn 48. | 1

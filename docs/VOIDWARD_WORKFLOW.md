@@ -8,6 +8,8 @@ adapted from [4XGAMES PR #2](https://github.com/QSOLKCB/4XGAMES/pull/2), pinned 
 [Ternary Reach](4X_GAME_LAB.md) remains available with its existing rules and
 `qsol.4x-replay.v1` format.
 
+Three additional campaign packs come from `4XGAMES@382f458998cf3c28e82047f64709722761559034`: Helix Accord (24 stars), Emberwake Exodus (32 stars), and Glass Meridian (48 stars). Each adds three playable cultures and two objective branches. The existing core remains at its original pin; [creator provenance](CREATOR_DONOR_REVIEW.md) records this data-only update.
+
 ## Play a campaign
 
 Choose a campaign, one of its permitted empires, difficulty and seed in New
@@ -25,6 +27,9 @@ Nothing advances on a wall clock.
 | Grand Frontier: The Long Concord | 64 | Three playable empires, sustained economy and alternative diplomatic or military progression |
 | Fallen Gates: The Quiet Meridian | 36 | Three playable empires, archive discoveries and restoration or independent-route branches |
 | Siege of the Outer Rim | 40 | One playable defender, escalating incursions, endurance or reconquest |
+| Helix Accord | 24 | Trading charter or industrial federation |
+| Emberwake Exodus | 32 | Permanent havens or a mobile convoy |
+| Glass Meridian | 48 | Preserve the archive lattice or chart an independent sky |
 
 The three longer campaigns define their stages, events, starting resources and
 AI parameters in text. Their minimum victory turns are deliberate: reaching an
