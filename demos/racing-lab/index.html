@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080f1d"><title>RACING LAB · VANILLAJS</title>
+<link rel="stylesheet" href="./style.css"></head>
+<body>
+<header><a class="brand" href="../../index.html">VANILLA<span>JS</span> <small>QSOL-IMC</small></a>
+<nav><a href="../creator-hub/index.html">Creator Hub</a><a href="../circuit-mod-lab/index.html">Circuit Builder</a><a href="../../index.html">Flight Lab</a></nav></header>
+<main>
+<div class="eyebrow">EXPERIMENT / RACING-001 · ORIGINAL VEHICLE SIMULATORS</div>
+<div class="intro"><div><h1>RACING <span>LAB</span></h1><p>From pixel highways to anti-gravity ambitions. Five modes. One source-owned laboratory.</p></div><div class="signal">NO CDN / NO ENGINE / NATIVE BROWSER</div></div>
+<section class="frame">
+<div class="modes" role="group" aria-label="Racing game modes">
+<button data-mode="retro" aria-pressed="true"><b>01 / RETRO TOUR</b><small>PSEUDO-3D · TRAFFIC · ARCADE</small></button>
+<button data-mode="circuit" aria-pressed="false"><b>02 / CIRCUIT RACE</b><small>3D · LAPS · OPPONENTS</small></button>
+<button data-mode="derby" aria-pressed="false"><b>03 / DEMOLITION</b><small>3D · RAM · ELIMINATE</small></button>
+<button data-mode="ball" aria-pressed="false"><b>04 / CAR FOOTBALL</b><small>3D · BOOST · JUMP · SCORE</small></button>
+<button data-mode="stunt" aria-pressed="false"><b>05 / SKYLINE STUNT</b><small>3D · SUSPENSION · GAPS</small></button>
+</div>
+<div class="viewport">
+  <canvas id="retro-view" aria-label="Pseudo-3D arcade highway race" tabindex="0"></canvas>
+  <canvas id="three-view" aria-label="3D vehicle racing and stunt simulator" tabindex="0" hidden></canvas>
+  <div class="in-game"><span id="status">READY</span><span id="live-event" aria-live="polite">CHOOSE A MODE</span></div>
+  <div class="curtain" id="curtain"><div class="curtain-inner"><span class="eyebrow">QSOL-IMC // VEHICLE PHYSICS</span>
+  <h2 id="overlay-title">RETRO TOUR</h2><p id="overlay-copy">Chase the horizon, overtake five rivals and survive three stages of arcade traffic.</p>
+  <button class="primary" id="launch">START ENGINE ↗</button><small>WASD / ARROWS drive · SHIFT boost · SPACE jump in 3D · X drift · F flip</small></div></div>
+  <div id="error" role="alert" hidden></div>
+</div>
+<div class="hud">
+<div><span>SPEED</span><strong id="speed">0 <small>km/h</small></strong></div>
+<div><span>PROGRESS</span><strong id="lap">0 / 3</strong></div>
+<div><span>BODY</span><strong id="health">100%</strong></div>
+<div><span>BOOST</span><strong id="boost">100%</strong></div>
+<div><span>RESULT</span><strong id="score">0</strong></div>
+</div>
+<div class="toolbar"><div><button id="pause">PAUSE</button><button id="reset">RESET ↺</button><button id="export">DOWNLOAD RUN JSON ↓</button></div>
+<label><input id="eco" type="checkbox"> ECO RENDER</label><label><input id="sound" type="checkbox"> SOUND FX</label></div>
+</section>
+<section class="lower">
+<article><span class="eyebrow">RACE DIRECTOR</span><h2 id="mode-title">Retro Tour / Horizon Drift</h2><p id="mode-note">A classic-style raster highway with curvature, passing traffic, road shoulders and arcade boost.</p><p class="small" id="hint">Hold W or ↑ to accelerate, A/D to steer, Shift to boost. Race distance is measured in simulated metres.</p></article>
+<article><span class="eyebrow">PHYSICS DESK</span><h2>Make the car misbehave.</h2><p>Native 2D Canvas and original low-poly WebGL. 60 Hz fixed simulation with bounded catch-up, deterministic input-tick capture, traction loss, impact damage, nitro, airborne flips and respawns. No external assets.</p><p class="small">Float64 demo logic is not a proof of cross-browser bit-for-bit replay. Exact Q16.16 circuits remain in the separate Circuit Builder.</p></article>
+</section>
+<details class="controls"><summary>Controls / touch / operating notes</summary>
+<p><kbd>W</kbd>/<kbd>↑</kbd> accelerator · <kbd>S</kbd>/<kbd>↓</kbd> reverse / brake · <kbd>A D</kbd>/<kbd>← →</kbd> steering · <kbd>Shift</kbd> boost · <kbd>X</kbd> handbrake / drift · <kbd>Space</kbd> jump · <kbd>F</kbd> aerial barrel roll · <kbd>Esc</kbd> pause. Landing hard causes damage. Skyline Stunt has two laps, checkpoint respawns and real gaps. Demolition is won by disabling four rivals. Car Football is first to five goals. Controls cancel on blur, page hide or pause.</p>
+<div class="touch-controls" aria-label="Touch controls">
+<button data-drive="ArrowLeft">◀ LEFT</button><button data-drive="ArrowUp">▲ THROTTLE</button><button data-drive="ArrowDown">▼ BRAKE</button><button data-drive="ArrowRight">RIGHT ▶</button>
+<button data-drive="ShiftLeft">BOOST</button><button data-drive="Space">JUMP</button><button data-drive="KeyX">DRIFT</button><button data-drive="KeyF">FLIP</button></div>
+</details>
+</main><footer>VANILLAJS / QSOL-IMC · Apache-2.0 · Original vehicles and tracks · <a href="../../BUILD_A_GAME.md">BUILD A GAME</a></footer>
+<script type="module" src="./app.js"></script><script type="module" src="../../offline/register.js"></script>
+</body></html>
