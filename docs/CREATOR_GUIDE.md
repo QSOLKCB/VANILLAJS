@@ -8,7 +8,7 @@ Start at the [Creator Hub](../demos/creator-hub/index.html) for a browser-readab
 | --- | --- | --- |
 | A small 3D platform or trigger scene | [Visual Editor](../demos/editor/index.html) | Scene and asset project |
 | A strategy campaign | [VOIDWARD](../demos/4x-game-lab/voidward/index.html) and [campaign workflow](VOIDWARD_WORKFLOW.md) | Campaign text pack; separate save for progress |
-| A drone race | [Circuit builder](../demos/circuit-mod-lab/index.html) | Exact course data; add flight, collision and race rules in game code |
+| A drone race | [Circuit builder](../demos/circuit-mod-lab/index.html) | Exact course data; add flight, collision and race rules in game code |\n| Retro driving, car combat, football or stunt racing | [Racing Lab](../demos/racing-lab/index.html) | Five playable demo-owned vehicle recipes and input-tick JSON receipts |
 | Space flight or combat | [Space Lab](../demos/space-lab/index.html) | Docking/broadside/orbit recipe; add economy and missions |
 | A 2D game | [2D Foundry](../demos/2d-lab/index.html) | Platform, car, shooter or RTS example |
 | Original short music cues | [Soundtrack Lab](../demos/soundtrack-lab/index.html) | WAV, editable recipe and audio2d score |
