@@ -64,6 +64,18 @@ test('derby impacts can disable rivals without unbounded negative health',()=>{
   assert.equal(b.health,0);assert.equal(w.player.knockouts,1);
   assert.ok(w.player.health>=0);assert.ok(w.contacts>0);
 });
+test('derby ram advantage permits the four-knockout objective without symmetric self-destruction',()=>{
+  const w=createRace('derby'),b=w.bots[0],p=w.player;
+  w.bots=[b];
+  for(let i=0;i<4;i++){
+    p.cooldown=0;p.x=0;p.z=0;p.vx=0;p.vz=0;p.speed=20;
+    b.x=.5;b.z=0;b.vx=0;b.vz=0;b.speed=0;b.health=20;b.cooldown=0;
+    stepRace(w,{throttle:1});
+  }
+  assert.equal(p.knockouts,4);
+  assert.ok(p.health>0,'four knocks must be achievable with health remaining');
+  assert.equal(w.result,'DERBY CHAMPION');
+});
 test('car football awards a goal only inside the mouth',()=>{
   const w=createRace('ball');w.bots=[];
   w.ball.x=20;w.ball.z=-59;stepRace(w,{});
