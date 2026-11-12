@@ -26,6 +26,22 @@ function exactRecord(value,keys,label){
   if(keys.some(k=>!Object.hasOwn(descriptors,k)||!Object.hasOwn(descriptors[k],'value')))
     throw new TypeError(label+' contains accessor fields');
 }
+// Unlike Array.prototype.map, descriptor-based admission rejects holes and
+// never executes caller-defined array getters, overrides or custom prototypes.
+function exactArray(value,length,label){
+  if(!Array.isArray(value)||Object.getPrototypeOf(value)!==Array.prototype||
+    value.length!==length)
+    throw new TypeError(label+' must be a dense, ordinary array of length '+length);
+  const desc=Object.getOwnPropertyDescriptors(value),keys=Reflect.ownKeys(desc);
+  if(keys.length!==length+1||!Object.hasOwn(desc,'length'))
+    throw new TypeError(label+' has missing, extra or forbidden indices');
+  return Array.from({length},(_,i)=>{
+    const field=desc[String(i)];
+    if(!field||!Object.hasOwn(field,'value'))
+      throw new TypeError(label+' contains a hole or accessor element');
+    return field.value;
+  });
+}
 function boundedNumber(value,low,high,label){
   if(typeof value!=='number'||!Number.isFinite(value)||value<low||value>high)
     throw new RangeError(label+' outside supported range');
@@ -50,9 +66,16 @@ export function starterTrack(){
 function orientation(a,b,c){
   return (b.x-a.x)*(c.z-a.z)-(b.z-a.z)*(c.x-a.x);
 }
+function onSegment(a,b,p){
+  if(Math.abs(orientation(a,b,p))>1e-9)return false;
+  return p.x>=Math.min(a.x,b.x)-1e-9&&p.x<=Math.max(a.x,b.x)+1e-9&&
+    p.z>=Math.min(a.z,b.z)-1e-9&&p.z<=Math.max(a.z,b.z)+1e-9;
+}
 function intersect(a,b,c,d){
-  const u=orientation(a,b,c),v=orientation(a,b,d),w=orientation(c,d,a),x=orientation(c,d,b);
-  return u*v<0&&w*x<0;
+  const u=orientation(a,b,c),v=orientation(a,b,d),
+    w=orientation(c,d,a),x=orientation(c,d,b);
+  return (u*v<0&&w*x<0)||
+    onSegment(a,b,c)||onSegment(a,b,d)||onSegment(c,d,a)||onSegment(c,d,b);
 }
 export function validateTrack(source){
   exactRecord(source,['format','version','name','environment','sections','gates'],'track');
@@ -61,9 +84,7 @@ export function validateTrack(source){
     !/^[A-Za-z0-9][A-Za-z0-9 ._-]{0,47}$/.test(source.name))
     throw new TypeError('track name must be 1–48 safe characters');
   if(!ENVIRONMENTS.includes(source.environment))throw new RangeError('invalid track environment');
-  if(!Array.isArray(source.sections)||source.sections.length!==4)
-    throw new RangeError('track requires exactly four 1200 m sections');
-  const sections=source.sections.map((section,i)=>{
+  const sections=exactArray(source.sections,4,'track sections').map((section,i)=>{
     exactRecord(section,['curve','width','fork'],'section '+i);
     return Object.freeze({
       curve:boundedNumber(section.curve,-1,1,'section curve'),
@@ -71,23 +92,25 @@ export function validateTrack(source){
       fork:boundedNumber(section.fork,6,14,'branch separation')
     });
   });
-  if(!Array.isArray(source.gates)||source.gates.length!==8)
-    throw new RangeError('circuit requires eight ordered gates');
-  const gates=source.gates.map((g,i)=>{
+  const gates=exactArray(source.gates,8,'circuit gates').map((g,i)=>{
     exactRecord(g,['x','z'],'gate '+i);
     return Object.freeze({
       x:boundedNumber(g.x,-70,70,'gate x'),
       z:boundedNumber(g.z,-70,70,'gate z')
     });
   });
+  // Every checkpoint capture radius is 12 m. Two gates closer than 24 m
+  // admit stationary multi-gate progression and aren't useful track topology.
   for(let i=0;i<gates.length;i++){
+    for(let j=i+1;j<gates.length;j++){
+      if(Math.hypot(gates[i].x-gates[j].x,gates[i].z-gates[j].z)<24)
+        throw new RangeError('circuit gate centres must be at least 24 m apart');
+    }
     const a=gates[i],b=gates[(i+1)%8];
-    if(Math.hypot(a.x-b.x,a.z-b.z)<12)
-      throw new RangeError('adjacent circuit gates must be at least 12 m apart');
     for(let j=i+2;j<gates.length;j++){
-      if(i===0&&j===7)continue; // Adjacent closing edges share gate 0.
+      if(i===0&&j===7)continue; // Only closing neighbours share endpoint 0.
       if(intersect(a,b,gates[j],gates[(j+1)%8]))
-        throw new RangeError('circuit edges cannot cross');
+        throw new RangeError('circuit edges cannot cross, touch or overlap');
     }
   }
   const validated=Object.freeze({
@@ -108,7 +131,9 @@ export function serializeTrack(track){
   return JSON.stringify(validateTrack(track),null,2)+'\n';
 }
 function routeCheck(route){
-  if(!Array.isArray(route)||route.length>3||route.some(c=>c!=='left'&&c!=='right'))
+  if(!Array.isArray(route)||Object.getPrototypeOf(route)!==Array.prototype||
+    route.length>3||Array.from({length:route.length},(_,i)=>
+      !Object.hasOwn(route,i)||!['left','right'].includes(route[i])).some(Boolean))
     throw new TypeError('route must contain at most three explicit left/right choices');
 }
 function sample(track,s){
@@ -144,4 +169,13 @@ export function trackHalfWidth(track,s){
 }
 export function trackHeading(track,s,route=[]){
   return Math.atan2(trackCenter(track,s+2,route)-trackCenter(track,s-2,route),4);
+}
+
+/** Use the same upcoming stage centreline for UI guidance and committed route. */
+export function chooseTourFork(track,route,playerX){
+  routeCheck(route);
+  if(!Number.isFinite(playerX))throw new RangeError('fork lane must be finite');
+  const boundary=(route.length+1)*SECTION_LENGTH;
+  const center=track?trackCenter(track,boundary,route):0;
+  return playerX<center?'left':'right';
 }
