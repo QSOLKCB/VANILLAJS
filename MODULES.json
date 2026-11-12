@@ -756,6 +756,56 @@
       "entry": "demos/creator-hub/index.html",
       "modules": [],
       "description": "Guided game creation, genre choices and offline packaging help"
+    },
+    "retro-racing-lab": {
+      "entry": "demos/racing-lab/world.js",
+      "modules": [
+        "math",
+        "time",
+        "render-webgl"
+      ],
+      "preset": "retro",
+      "description": "Experimental pseudo-3D arcade traffic overtaking and stage progression"
+    },
+    "circuit-racing-lab": {
+      "entry": "demos/racing-lab/world.js",
+      "modules": [
+        "math",
+        "time",
+        "render-webgl"
+      ],
+      "preset": "circuit",
+      "description": "Experimental WebGL circuit racing with bots and lap gates"
+    },
+    "derby-racing-lab": {
+      "entry": "demos/racing-lab/world.js",
+      "modules": [
+        "math",
+        "time",
+        "render-webgl"
+      ],
+      "preset": "derby",
+      "description": "Experimental contact-driven vehicle demolition and damage"
+    },
+    "ball-racing-lab": {
+      "entry": "demos/racing-lab/world.js",
+      "modules": [
+        "math",
+        "time",
+        "render-webgl"
+      ],
+      "preset": "ball",
+      "description": "Experimental boost-and-jump vehicular ball arena"
+    },
+    "stunt-racing-lab": {
+      "entry": "demos/racing-lab/world.js",
+      "modules": [
+        "math",
+        "time",
+        "render-webgl"
+      ],
+      "preset": "stunt",
+      "description": "Experimental elevated stunt circuit with ramps, gaps, landings and checkpoint recovery"
     }
   },
   "experiments": {
@@ -780,4 +830,4 @@
       "description": "Independent 240-root E8 inventory and authored non-isometric 3D point projection; not a collision model"
     }
   }
-}
+}\n
