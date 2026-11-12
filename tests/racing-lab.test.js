@@ -128,6 +128,30 @@ test('RACING-002 scenic tour commits explicit left/right forks and preserves rou
   assert.equal(w.finished,true);assert.equal(w.result,'TOURING ROUTE CLEARED');
   assert.equal(w.route.length,3,'the finish is not an extra fork');
 });
+test('RACING-002 palette always advances for all eight three-fork histories',()=>{
+  const choices=['left','right'];
+  for(let bits=0;bits<8;bits++){
+    const sequence=[0,1,2].map(i=>choices[(bits>>i)&1]);
+    const w=createRace('tour');w.bots=[];
+    let previous=tourPalette([]).name;
+    for(let stage=1;stage<=3;stage++){
+      w.distance=stage*TOUR_STAGE_LENGTH-.5;
+      w.player.speed=70;
+      w.player.x=sequence[stage-1]==='left'?-3:3;
+      stepRace(w,{throttle:1});
+      const palette=tourPalette(w.route).name;
+      assert.notEqual(palette,previous,
+        'fork '+stage+' must change biome for route '+sequence.join('/'));
+      assert.deepEqual(w.route,sequence.slice(0,stage));
+      assert.equal(tourPalette(w.route).name,palette,'palette must be stable');
+      previous=palette;
+    }
+    for(const prefix of [[],sequence.slice(0,1),sequence.slice(0,2)]){
+      assert.notEqual(tourPalette([...prefix,'left']).name,
+        tourPalette([...prefix,'right']).name,'both fork options stay distinct');
+    }
+  }
+});
 test('RACING-002 nitro retains accumulated speed and bleeds off when released',()=>{
   const w=createRace('retro');w.bots=[];w.player.speed=75;
   for(let i=0;i<24;i++)stepRace(w,{throttle:1,boost:true});
@@ -148,6 +172,35 @@ test('RACING-002 coastal sprint has finite winding centreline and a reachable fi
   stepRace(w,{throttle:1});
   assert.equal(w.finished,true);assert.equal(w.result,'COASTAL SPRINT FINISHED');
   assert.equal(w.player.lap,4);
+});
+test('RACING-002 sprint finish requires a forward on-road crossing, not later re-entry',()=>{
+  const center=sprintCenter(SPRINT_LENGTH);
+  const off=createRace('sprint');off.bots=[];
+  Object.assign(off.player,{
+    x:center+20,z:-SPRINT_LENGTH+1,yaw:-.5,speed:30,
+    vx:Math.sin(-.5)*30,vz:-Math.cos(-.5)*30
+  });
+  let crossed=false,enteredLater=false;
+  for(let tick=0;tick<90;tick++){
+    const startZ=off.player.z;
+    stepRace(off,{throttle:1});
+    if(startZ>=-SPRINT_LENGTH&&off.player.z<-SPRINT_LENGTH){
+      crossed=true;
+      assert.ok(!off.finished,'crossing outside the paved width must not win');
+    }
+    if(crossed&&Math.abs(off.player.x-center)<=12){
+      enteredLater=true;
+      assert.equal(off.finished,false,'late lateral re-entry beyond finish is not victory');
+      break;
+    }
+  }
+  assert.ok(crossed,'reproduction must cross the finish plane');
+  assert.ok(enteredLater,'reproduction must actually re-enter the lateral corridor');
+  const on=createRace('sprint');on.bots=[];
+  Object.assign(on.player,{x:center,z:-SPRINT_LENGTH+.25,speed:35,vz:-35});
+  stepRace(on,{throttle:1});
+  assert.equal(on.finished,true,'forward crossing inside the width still wins');
+  assert.equal(on.result,'COASTAL SPRINT FINISHED');
 });
 test('RACING-002 swept sprint contacts detect fast passes with separated end positions',()=>{
   const hit=sweepVehicleContact({x:0,z:12},{x:0,z:-12},{x:0,z:0},{x:0,z:0});

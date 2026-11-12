@@ -24,13 +24,15 @@ historical game. All vehicle and track art in VANILLAJS remains original.
 - Scenic Tour stores immutable-by-history left/right choices in `world.route`.
   At each 1,200 m boundary, negative player lateral position chooses left;
   zero/positive chooses right. Exactly three choices are recorded before the
-  four-stage finish. Each fork advances the scenery palette and left/right
-  choices differ. Branch choices affect scenery palette, not road
+  four-stage finish. Each fork advances relative to the preceding scenery
+  palette, so no one of the eight three-fork histories repeats a biome at a
+  fork. Left/right choices also differ. Branch choices affect scenery, not road
   topology: no claim of independently authored branch geometry.
 - `sprintCenter(s)` and `sprintHeading(s)` define a finite analytic road
   in metres. Geometry and off-road checks use the same centreline.
   The stage HUD reports four 900 m milestones; completing the 3,600 m road
-  requires being within the paved finishing corridor.
+  requires a forward finish-plane crossing within the paved corridor; moving
+  laterally into that corridor after crossing off-road does not grant a finish.
 - `sweepVehicleContact` detects first circle overlap over a tick using
   relative motion. This prevents pass-through *detection* in Coastal Sprint
   without claiming a swept shape or full rigid-body solver. Collision impulses

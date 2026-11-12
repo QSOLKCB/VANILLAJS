@@ -19,8 +19,9 @@ export function sprintHeading(s){
 }
 export function tourPalette(route=[]){
   // Only explicit completed fork decisions affect the scenery; no random choice.
-  // Every fork advances the biome; the choice selects one of two variants.
-  const index=(route.length+route.reduce((n,choice)=>(n*2+(choice==='right'?1:0))%4,0))%4;
+  // Advance from the *previous* palette, with distinct steps for each fork.
+  // Neither choice can repeat the preceding stage's biome.
+  const index=route.reduce((previous,choice)=>(previous+(choice==='right'?2:1))%4,0);
   return Object.freeze([
     {sky:'#17264a',sunset:'#ffd18c',mountain:'#6f5571',verge:'#225854',road:'#303945',name:'Sunset Esplanade'},
     {sky:'#112f50',sunset:'#9ed9dc',mountain:'#476780',verge:'#2c7262',road:'#303e53',name:'Sapphire Coast'},
@@ -283,7 +284,7 @@ function stepStunt(w,input,dt){
     if(p.lap>=2){w.finished=true;w.result='ELEVATED CIRCUIT CLEARED';}
   }
 }
-function stepSprint(w){
+function stepSprint(w,previous){
   const p=w.player,s=Math.max(0,-p.z),center=sprintCenter(s);
   // Roadside mistakes cost speed and, periodically, body health.
   if(Math.abs(p.x-center)>12){
@@ -295,8 +296,14 @@ function stepSprint(w){
   w.distance=Math.max(w.distance,Math.min(s,SPRINT_LENGTH));
   p.lap=Math.max(p.lap,newStage);
   if(newStage>oldStage&&newStage<4)w.event='SCENIC CHECKPOINT '+newStage;
-  if(s>=SPRINT_LENGTH&&Math.abs(p.x-sprintCenter(SPRINT_LENGTH))<=12){
-    w.finished=true;w.result='COASTAL SPRINT FINISHED';
+  // Award the finish only at the forward crossing of the finish plane.
+  // Re-entering the corridor beyond the final piece of asphalt is not a finish.
+  if(previous.z>=-SPRINT_LENGTH&&p.z<-SPRINT_LENGTH){
+    const fraction=(previous.z+SPRINT_LENGTH)/(previous.z-p.z);
+    const finishX=previous.x+(p.x-previous.x)*fraction;
+    if(Math.abs(finishX-sprintCenter(SPRINT_LENGTH))<=12){
+      w.finished=true;w.result='COASTAL SPRINT FINISHED';
+    }
   }
 }
 function stepCircuit(w){
@@ -325,7 +332,7 @@ export function stepRace(w,input={},dt=STEP){
   }p.y=0;p.vy=0;p.grounded=true;p.flip=0;}
   if(w.mode!=='sprint')arenaBounds(p);
   updateBots(w,dt,before);
-  if(w.mode==='sprint')stepSprint(w);
+  if(w.mode==='sprint')stepSprint(w,before);
   if(w.mode==='circuit')stepCircuit(w);
   if(w.mode==='ball')updateBall(w,dt);
   if(w.mode==='derby'&&p.knockouts>=4){w.finished=true;w.result='DERBY CHAMPION';}
