@@ -172,6 +172,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BROWSER_FORCE_FULL: ${{ github.event_name == 'workflow_dispatch' && inputs.full_browser == true }}
         run: node scripts/browser-suite-cache.mjs execute
+      - name: Verify RACING-001 packaged Chromium modes and input receipts
+        env:
+          NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
+        run: node scripts/racing-smoke.mjs
       - name: Publish immutable real executions on verified main only
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.BROWSER_PUBLISH_EXECUTION == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
