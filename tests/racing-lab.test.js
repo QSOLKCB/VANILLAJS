@@ -2,11 +2,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {MODES,STEP,TRACK_LENGTH,RACE_GATES,stuntRoad,createRace,stepRace} from '../demos/racing-lab/world.js';
+import {MODES,STEP,TRACK_LENGTH,RACE_GATES,SPRINT_LENGTH,TOUR_STAGE_LENGTH,stuntRoad,sprintCenter,sweepVehicleContact,tourPalette,createRace,stepRace} from '../demos/racing-lab/world.js';
 import {sceneGeometry,dynamicGeometry} from '../demos/racing-lab/geometry.js';
 const drive={throttle:1,steer:.28,boost:true,handbrake:false,jump:false,flip:false};
 test('all five racing presets initialize and reject invalid state and timestep',()=>{
-  assert.deepEqual(MODES,['retro','circuit','derby','ball','stunt']);
+  assert.deepEqual(MODES,['retro','tour','circuit','sprint','derby','ball','stunt']);
   assert.throws(()=>createRace('none'),RangeError);
   for(const mode of MODES){
     const w=createRace(mode);
@@ -106,6 +106,68 @@ test('stunt circuit has elevated ramps, two real gaps, controlled descent and re
   stepRace(w,{throttle:1});
   assert.equal(w.player.lap,1);assert.ok(w.player.z>-10);
 });
+test('RACING-002 scenic tour commits explicit left/right forks and preserves route identity',()=>{
+  const w=createRace('tour');w.bots=[];
+  assert.deepEqual(w.route,[]);
+  const original=tourPalette(w.route);
+  assert.equal(TOUR_STAGE_LENGTH,1200);
+  for(const [stage,lane,choice] of [[1,-3,'left'],[2,3,'right'],[3,-4,'left']]){
+    w.distance=stage*TOUR_STAGE_LENGTH-.5;
+    w.player.x=lane;w.player.speed=70;
+    stepRace(w,{throttle:1});
+    assert.equal(w.route[stage-1],choice);
+    assert.equal(w.route.length,stage,'one fork is selected per stage');
+    assert.equal(w.player.lap,stage);
+  }
+  assert.notEqual(tourPalette(w.route).name,original.name,'forks influence the scenery palette');
+  w.distance=4*TOUR_STAGE_LENGTH-.5;w.player.speed=70;
+  stepRace(w,{throttle:1});
+  assert.equal(w.finished,true);assert.equal(w.result,'TOURING ROUTE CLEARED');
+  assert.equal(w.route.length,3,'the finish is not an extra fork');
+});
+test('RACING-002 nitro retains accumulated speed and bleeds off when released',()=>{
+  const w=createRace('retro');w.bots=[];w.player.speed=75;
+  for(let i=0;i<24;i++)stepRace(w,{throttle:1,boost:true});
+  assert.ok(w.player.speed>80,'sustained boost exceeds the ordinary speed cap');
+  const boosted=w.player.speed;
+  stepRace(w,{throttle:0,boost:false});
+  assert.ok(w.player.speed<boosted&&w.player.speed>75,'nitro does not vanish instantaneously');
+});
+test('RACING-002 coastal sprint has finite winding centreline and a reachable finish',()=>{
+  assert.equal(SPRINT_LENGTH,3600);
+  assert.equal(sprintCenter(0),0);
+  assert.notEqual(sprintCenter(100),sprintCenter(500));
+  assert.throws(()=>sprintCenter(Infinity),TypeError);
+  const w=createRace('sprint');w.bots=[];
+  w.player.z=-SPRINT_LENGTH+.25;
+  w.player.x=sprintCenter(SPRINT_LENGTH);
+  w.player.speed=35;w.player.vz=-35;
+  stepRace(w,{throttle:1});
+  assert.equal(w.finished,true);assert.equal(w.result,'COASTAL SPRINT FINISHED');
+  assert.equal(w.player.lap,4);
+});
+test('RACING-002 swept sprint contacts detect fast passes with separated end positions',()=>{
+  const hit=sweepVehicleContact({x:0,z:12},{x:0,z:-12},{x:0,z:0},{x:0,z:0});
+  assert.ok(hit&&hit.time>0&&hit.time<1);
+  assert.equal(sweepVehicleContact({x:10,z:12},{x:10,z:-12},{x:0,z:0},{x:0,z:0}),null);
+  assert.throws(()=>sweepVehicleContact({x:0,z:0},{x:NaN,z:0},{x:0,z:0},{x:0,z:0}),RangeError);
+  const w=createRace('sprint'),b=w.bots[0];w.bots=[b];
+  w.player.z=-99;w.player.x=0;w.player.vz=-1800;w.player.speed=45;
+  b.x=0;b.z=-112;b.vz=0;b.speed=0;b.cooldown=0;
+  stepRace(w,{throttle:1});
+  assert.ok(w.contacts>0,'one tick must detect an impact even if the cars cross completely');
+});
+test('RACING-002 rival contact cooldown expires and under-deck cars cannot land upward',()=>{
+  const w=createRace('derby'),b=w.bots[0];w.bots=[b];b.cooldown=12;
+  for(let i=0;i<12;i++)stepRace(w,{});
+  assert.equal(b.cooldown,0,'living rival immunity must expire');
+  const stunt=createRace('stunt');
+  Object.assign(stunt.player,{z:-241,y:-5,vy:-10,speed:20,grounded:false});
+  stepRace(stunt,{});
+  assert.ok(stunt.player.y<0,'a car beneath the far platform must not snap to the deck');
+  assert.equal(stunt.player.grounded,false);
+});
+
 test('low-poly geometry remains finite, non-empty and bounded for each mode',()=>{
   for(const mode of MODES.filter(v=>v!=='retro')){
     const w=createRace(mode),scene=sceneGeometry(mode),cars=dynamicGeometry(w);
