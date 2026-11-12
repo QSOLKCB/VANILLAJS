@@ -3,7 +3,7 @@
 // Float64 simulation is repeatable for the same input/tick sequence in one JS runtime;
 // it is NOT a claim of cross-engine bit-exact arithmetic.
 import {clamp} from '../../modules/math/index.js';
-import {validateTrack,TRACK_TOTAL_LENGTH,trackCenter,trackHalfWidth,trackHeading} from './track.js';
+import {validateTrack,TRACK_TOTAL_LENGTH,trackCenter,trackHalfWidth,trackHeading,chooseTourFork} from './track.js';
 
 export const STEP=1/60;
 export const MODES=Object.freeze(['retro','tour','circuit','sprint','derby','ball','stunt']);
@@ -91,9 +91,15 @@ export function createRace(mode='retro',track=null){
       a.checkpoint=(i+1)%RACE_GATES.length;
       return a;
     });
+  // The authored track's paved shoulder may extend beyond the original 63 m
+  // arena. Keep collision bounds outside all admitted gate/road geometry.
+  const arenaLimit=mode==='circuit'&&course?
+    Math.max(63,...course.gates.map(g=>
+      Math.max(Math.abs(g.x),Math.abs(g.z))+course.sections[0].width+4)):63;
   return {mode,tick:0,elapsed:0,player:p,bots,finished:false,
     result:'',event:'',score:[0,0],distance:0,contacts:0,
-    ball:{x:0,y:1.3,z:0,vx:0,vz:0,vy:0},retroLap:0,route:[],track:course};
+    ball:{x:0,y:1.3,z:0,vx:0,vz:0,vy:0},retroLap:0,route:[],track:course,
+    arenaLimit};
 }
 function vehicle(p,input,dt,maxSpeed=38){
   const throttle=bounded(input.throttle),steer=bounded(input.steer);
@@ -159,9 +165,9 @@ function contact(a,b,w,sweep=null){
   w.event='BODY CONTACT · '+suffered+' DAMAGE';
   if(b.health===0){a.knockouts++;b.cooldown=180;w.event='RIVAL DISABLED';}
 }
-function arenaBounds(p){
-  if(Math.abs(p.x)>63){p.x=clamp(p.x,-63,63);p.vx*=-.55;p.speed*=.75;}
-  if(Math.abs(p.z)>63){p.z=clamp(p.z,-63,63);p.vz*=-.55;p.speed*=.75;}
+function arenaBounds(p,limit=63){
+  if(Math.abs(p.x)>limit){p.x=clamp(p.x,-limit,limit);p.vx*=-.55;p.speed*=.75;}
+  if(Math.abs(p.z)>limit){p.z=clamp(p.z,-limit,limit);p.vz*=-.55;p.speed*=.75;}
 }
 function updateBots(w,dt,playerPrevious=null){
   for(const b of w.bots){
@@ -183,7 +189,7 @@ function updateBots(w,dt,playerPrevious=null){
       if(b.checkpoint===0)b.lap++;
       b.checkpoint=(b.checkpoint+1)%RACE_GATES.length;
     }
-    if(w.mode!=='sprint')arenaBounds(b);
+    if(w.mode!=='sprint')arenaBounds(b,w.arenaLimit);
     const sweep=w.mode==='sprint'&&playerPrevious?
       sweepVehicleContact(playerPrevious,w.player,before,b):null;
     contact(w.player,b,w,sweep);
@@ -244,9 +250,7 @@ function stepRetro(w,input,dt){
     const stage=Math.min(TOUR_STAGES,Math.floor(w.distance/TOUR_STAGE_LENGTH));
     // Route choices are committed exactly once at the end of each stage.
     while(w.route.length<Math.min(stage,TOUR_STAGES-1)){
-      const boundary=(w.route.length+1)*TOUR_STAGE_LENGTH;
-      const centerAtFork=w.track?trackCenter(w.track,boundary,w.route):0;
-      const choice=p.x<centerAtFork?'left':'right';
+      const choice=chooseTourFork(w.track,w.route,p.x);
       w.route.push(choice);
       w.event='FORK '+choice.toUpperCase()+' · '+tourPalette(w.route).name.toUpperCase();
     }
@@ -352,7 +356,7 @@ export function stepRace(w,input={},dt=STEP){
   if(p.y<=0){if(!p.grounded&&p.vy< -14){
     p.health=Math.max(0,p.health-Math.round((-p.vy-14)*2));w.event='HARD LANDING';
   }p.y=0;p.vy=0;p.grounded=true;p.flip=0;}
-  if(w.mode!=='sprint')arenaBounds(p);
+  if(w.mode!=='sprint')arenaBounds(p,w.arenaLimit);
   updateBots(w,dt,before);
   if(w.mode==='sprint')stepSprint(w,before);
   if(w.mode==='circuit')stepCircuit(w);

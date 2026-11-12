@@ -4,7 +4,7 @@ import {Renderer} from '../../modules/render-webgl/index.js';
 import {quatMultiply} from '../../modules/math/index.js';
 import {createRace,stepRace,retroCurve,tourPalette,TOUR_STAGES,SPRINT_LENGTH,STEP} from './world.js';
 import {sceneGeometry,dynamicGeometry} from './geometry.js';
-import {starterTrack,trackCenter,trackHalfWidth,environmentTheme,TRACK_TOTAL_LENGTH} from './track.js';
+import {trackCenter,trackHalfWidth,environmentTheme,TRACK_TOTAL_LENGTH,chooseTourFork} from './track.js';
 import {setupTrackFoundry} from './track-editor.js';
 const $=id=>document.getElementById(id);
 const retro=$('retro-view'),three=$('three-view');
@@ -190,7 +190,9 @@ function retroRender(){
     if(world.player.lap<TOUR_STAGES-1&&next<310){
       ctx.fillStyle='#06151cdd';ctx.fillRect(12,24,Math.min(360,w-24),66);
       ctx.fillStyle='#fff3cf';ctx.fillText('FORK AHEAD · '+Math.ceil(Math.max(0,next))+' m',23,48);
-      ctx.fillText('LEFT ◀ '+(world.player.x<0?'SELECTED':'')+'    RIGHT ▶ '+(world.player.x>=0?'SELECTED':''),23,72);
+      const choice=chooseTourFork(world.track,world.route,world.player.x);
+      ctx.fillText('LEFT ◀ '+(choice==='left'?'SELECTED':'')+
+        '    RIGHT ▶ '+(choice==='right'?'SELECTED':''),23,72);
     }
   }else ctx.fillText('HORIZON // STAGE '+(world.player.lap+1),20,h-24);
 }
@@ -232,7 +234,19 @@ $('pause').addEventListener('click',()=>running?pause('Your car, rivals and the 
 $('reset').addEventListener('click',()=>select(world.mode));
 $('export').addEventListener('click',download);
 $('eco').addEventListener('change',render);
+const editingTarget=target=>!!target?.closest?.('input,select,textarea,[contenteditable]');
+$('track-foundry').addEventListener('focusin',event=>{
+  if(editingTarget(event.target)){
+    if(running)pause('Track Foundry editing. Driving inputs released.');
+    else clearInput();
+  }
+});
 window.addEventListener('keydown',e=>{
+  if(editingTarget(e.target)){
+    if(running)pause('Track Foundry editing. Driving inputs released.');
+    else clearInput();
+    return; // Never capture arrows, spaces or throttle keys from editor fields.
+  }
   if(e.code==='Escape'){if(running)pause('Escape pressed. Press Resume to drive again.');return;}
   if(!running)return;
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();

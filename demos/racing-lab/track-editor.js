@@ -59,6 +59,7 @@ export function setupTrackFoundry({apply,clear}){
     draw();
   }
   function mutate(change){
+    generation++; // A newer user edit invalidates any in-flight file read.
     change();
     const accepted=validOrMessage();
     if(accepted){draft=JSON.parse(JSON.stringify(accepted));note('Draft valid · '+draft.name);}
@@ -167,6 +168,7 @@ export function setupTrackFoundry({apply,clear}){
     const pos=position(event);
     const i=draft.gates.findIndex(g=>Math.hypot(pos.x-gateX(g.x),pos.y-gateY(g.z))<15);
     if(i<0)return;
+    generation++; // Dragging a gate supersedes pending asynchronous imports.
     dragGate=i;canvas.setPointerCapture(event.pointerId);draw();
   });
   canvas.addEventListener('pointermove',event=>{
