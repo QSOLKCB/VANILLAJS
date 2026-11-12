@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased\n\n- Add RACING-001: five original browser racing experiments (pseudo-3D retro highway, WebGL circuit/derby/car-football/stunt), bounded fixed-step vehicle logic, contact and landing damage, input-tick JSON receipts and test coverage. — Creator toolkit
+## Unreleased
+
+- Add RACING-001: five original browser racing experiments (pseudo-3D retro highway, WebGL circuit/derby/car-football/stunt), bounded fixed-step vehicle logic, contact and landing damage, input-tick JSON receipts and test coverage. — Creator toolkit
 
 - Add Creator Hub and an offline step-by-step game-making guide.
 - Make editor authoring easier with three undoable starters, configured pieces,
