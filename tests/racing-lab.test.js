@@ -122,7 +122,7 @@ test('RACING-002 scenic tour commits explicit left/right forks and preserves rou
     assert.equal(w.route.length,stage,'one fork is selected per stage');
     assert.equal(w.player.lap,stage);
   }
-  assert.notEqual(tourPalette(w.route).name,original.name,'forks influence the scenery palette');
+  assert.deepEqual(w.route,['left','right','left'],'the full fork sequence is retained');
   w.distance=4*TOUR_STAGE_LENGTH-.5;w.player.speed=70;
   stepRace(w,{throttle:1});
   assert.equal(w.finished,true);assert.equal(w.result,'TOURING ROUTE CLEARED');
