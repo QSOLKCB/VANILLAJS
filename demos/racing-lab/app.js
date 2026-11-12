@@ -85,6 +85,7 @@ function select(mode){
       movingMesh=renderer.mesh(dynamicGeometry(world));
     }catch(error){renderer=null;fail(error);}
   }
+  $('pause').textContent='START';
   $('live-event').textContent='READY TO RACE';updateHud();render();
 }
 function launch(){
