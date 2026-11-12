@@ -17,7 +17,7 @@ const names={retro:['Retro Tour / Horizon Drift','Three highway stages. Dodge AI
   ball:['Car Football / Boost Arena','First to five goals. Jump, drift, boost and slam the ball between the cyan goalposts.'],
   stunt:['Skyline Stunt / Suspended Circuit','Two laps on a narrow elevated course. Launch over broken bridges, survive drops and protect the suspension.']};
 const rasterMode=mode=>mode==='retro'||mode==='tour';
-let world=createRace(),renderer=null,groundMesh=null,movingMesh=null,raf=0,last=null,running=false;
+let world=createRace(),renderer=null,groundMesh=null,movingMesh=null,raf=0,last=null,running=false,paused=false;
 let authoredTrack=null;
 const supportsTrack=mode=>mode==='tour'||mode==='sprint'||mode==='circuit';
 let replay=[],audioContext=null,lastHud=0;
@@ -62,7 +62,7 @@ function updateHud(){
     world.mode==='sprint'?Math.floor(world.distance)+' / '+(world.track?TRACK_TOTAL_LENGTH:SPRINT_LENGTH)+' m':
     world.mode==='stunt'?Math.floor(-p.z)+' m':
     world.mode==='circuit'?'GATE '+(p.checkpoint+1):world.contacts;
-  $('status').textContent=world.finished?'FINISHED':running?'RACING':world.tick?'PAUSED':'READY';
+  $('status').textContent=world.finished?'FINISHED':running?'RACING':paused||world.tick?'PAUSED':'READY';
   if(world.event)$('live-event').textContent=world.event;
 }
 function showOverlay(title,copy,button){
@@ -70,13 +70,14 @@ function showOverlay(title,copy,button){
   $('launch').textContent=button;$('curtain').hidden=false;
 }
 function pause(reason){
+  if(reason)paused=true;
   running=false;clock.setPaused(true);last=null;clearInput();
   cancelAnimationFrame(raf);raf=0;
   if(reason)showOverlay('RACE PAUSED',reason,'RESUME RACE ↗');
   $('pause').textContent='RESUME';updateHud();
 }
 function select(mode){
-  pause();world=createRace(mode,authoredTrack&&supportsTrack(mode)?authoredTrack:null);
+  pause();paused=false;world=createRace(mode,authoredTrack&&supportsTrack(mode)?authoredTrack:null);
   replay=[];clock.reset();clock.setPaused(true);
   $('error').hidden=true;
   for(const b of document.querySelectorAll('[data-mode]'))
@@ -104,7 +105,7 @@ function select(mode){
 function launch(){
   if(world.finished){select(world.mode);}
   if(!rasterMode(world.mode)&&!renderer)return;
-  clearInput();running=true;last=null;clock.setPaused(false);
+  clearInput();running=true;paused=false;last=null;clock.setPaused(false);
   $('curtain').hidden=true;$('pause').textContent='PAUSE';
   safeFocus();if(!raf)raf=requestAnimationFrame(frame);updateHud();
 }
