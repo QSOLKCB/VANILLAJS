@@ -24,7 +24,8 @@ historical game. All vehicle and track art in VANILLAJS remains original.
 - Scenic Tour stores immutable-by-history left/right choices in `world.route`.
   At each 1,200 m boundary, negative player lateral position chooses left;
   zero/positive chooses right. Exactly three choices are recorded before the
-  four-stage finish. Current branch choices affect scenery palette, not road
+  four-stage finish. Each fork advances the scenery palette and left/right
+  choices differ. Branch choices affect scenery palette, not road
   topology: no claim of independently authored branch geometry.
 - `sprintCenter(s)` and `sprintHeading(s)` define a finite analytic road
   in metres. Geometry and off-road checks use the same centreline.

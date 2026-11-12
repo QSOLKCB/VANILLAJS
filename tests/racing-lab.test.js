@@ -110,6 +110,9 @@ test('RACING-002 scenic tour commits explicit left/right forks and preserves rou
   const w=createRace('tour');w.bots=[];
   assert.deepEqual(w.route,[]);
   const original=tourPalette(w.route);
+  assert.notEqual(tourPalette(['left']).name,original.name);
+  assert.notEqual(tourPalette(['right']).name,original.name);
+  assert.notEqual(tourPalette(['left']).name,tourPalette(['right']).name);
   assert.equal(TOUR_STAGE_LENGTH,1200);
   for(const [stage,lane,choice] of [[1,-3,'left'],[2,3,'right'],[3,-4,'left']]){
     w.distance=stage*TOUR_STAGE_LENGTH-.5;

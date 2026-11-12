@@ -19,7 +19,8 @@ export function sprintHeading(s){
 }
 export function tourPalette(route=[]){
   // Only explicit completed fork decisions affect the scenery; no random choice.
-  const index=route.reduce((n,choice)=>(n*2+(choice==='right'?1:0))%4,0);
+  // Every fork advances the biome; the choice selects one of two variants.
+  const index=(route.length+route.reduce((n,choice)=>(n*2+(choice==='right'?1:0))%4,0))%4;
   return Object.freeze([
     {sky:'#17264a',sunset:'#ffd18c',mountain:'#6f5571',verge:'#225854',road:'#303945',name:'Sunset Esplanade'},
     {sky:'#112f50',sunset:'#9ed9dc',mountain:'#476780',verge:'#2c7262',road:'#303e53',name:'Sapphire Coast'},
