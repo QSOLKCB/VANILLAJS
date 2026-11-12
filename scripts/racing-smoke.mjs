@@ -140,7 +140,7 @@ try{
   await page.evaluate(serialized=>{
     const original=File.prototype.text;
     File.prototype.text=function(){
-      if(this.name==='slow-track.json')
+      if(['slow-track.json','slow-numeric.json','slow-gate.json'].includes(this.name))
         return new Promise(resolve=>{globalThis.__resolveSlowTrack=()=>resolve(serialized);});
       return original.call(this);
     };
@@ -155,6 +155,47 @@ try{
   assert.equal(await page.locator('#track-name').inputValue(),'Newer edit',
     'later user edit must win over a slow import');
   await page.locator('#track-name').fill('Morning Sprint');
+  // Regression: numeric "input" fires before blur/"change". A pending import
+  // must not overwrite what the player just typed or the draft used by Apply.
+  await page.evaluate(()=>{globalThis.__resolveSlowTrack=undefined;});
+  await page.locator('#track-import').setInputFiles({
+    name:'slow-numeric.json',mimeType:'application/json',buffer:Buffer.from('{}')
+  });
+  await page.waitForFunction(()=>typeof globalThis.__resolveSlowTrack==='function');
+  await page.locator('#track-sections [data-section="0"][data-property="curve"]').evaluate(el=>{
+    el.focus();el.value='0.9';el.dispatchEvent(new Event('input',{bubbles:true}));
+  });
+  assert.equal(await page.locator('#track-sections [data-section="0"][data-property="curve"]').inputValue(),'0.9');
+  assert.equal(await page.locator('#track-sections [data-section="0"][data-property="curve"]').evaluate(el=>document.activeElement===el),true,
+    'the numeric edit must be uncommitted and still focused before import resolves');
+  await page.evaluate(()=>globalThis.__resolveSlowTrack());
+  await page.waitForTimeout(80);
+  assert.equal(await page.locator('#track-sections [data-section="0"][data-property="curve"]').inputValue(),'0.9',
+    'stale import cannot replace a focused section input before blur');
+  const numericDownload=page.waitForEvent('download');
+  await page.locator('#track-export').click();
+  const numericExport=JSON.parse(await readFile(await (await numericDownload).path(),'utf8'));
+  assert.equal(numericExport.sections[0].curve,.9,'the accepted numeric edit must reach the exported draft');
+
+  await page.locator('#track-target').selectOption('circuit');
+  await page.evaluate(()=>{globalThis.__resolveSlowTrack=undefined;});
+  await page.locator('#track-import').setInputFiles({
+    name:'slow-gate.json',mimeType:'application/json',buffer:Buffer.from('{}')
+  });
+  await page.waitForFunction(()=>typeof globalThis.__resolveSlowTrack==='function');
+  await page.locator('#track-gates [data-gate="2"][data-property="x"]').evaluate(el=>{
+    el.focus();el.value='52';el.dispatchEvent(new Event('input',{bubbles:true}));
+  });
+  assert.equal(await page.locator('#track-gates [data-gate="2"][data-property="x"]').evaluate(el=>document.activeElement===el),true);
+  await page.evaluate(()=>globalThis.__resolveSlowTrack());
+  await page.waitForTimeout(80);
+  assert.equal(await page.locator('#track-gates [data-gate="2"][data-property="x"]').inputValue(),'52',
+    'stale import cannot replace a focused gate coordinate before blur');
+  const gateDownload=page.waitForEvent('download');
+  await page.locator('#track-export').click();
+  const gateExport=JSON.parse(await readFile(await (await gateDownload).path(),'utf8'));
+  assert.equal(gateExport.gates[2].x,52,'the gate edit must reach the exported draft');
+  await page.locator('#track-target').selectOption('tour');
   await page.locator('#track-import').setInputFiles({
     name:'invalid-track.json',mimeType:'application/json',buffer:Buffer.from('{"bad":true}')
   });

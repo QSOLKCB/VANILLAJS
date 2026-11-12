@@ -144,20 +144,27 @@ export function setupTrackFoundry({apply,clear}){
   title.addEventListener('input',()=>mutate(()=>{draft.name=title.value;}));
   environment.addEventListener('change',()=>mutate(()=>{draft.environment=environment.value;}));
   target.addEventListener('change',draw);
-  sections.addEventListener('change',event=>{
+  // Numeric typing emits "input" before it emits "change" on blur. Update the
+  // authoring draft *and* invalidate pending imports on that first input event,
+  // otherwise a late file read can silently replace the focused field.
+  function editSection(event){
     const input=event.target;
     if(!(input instanceof HTMLInputElement))return;
     const i=Number(input.dataset.section),key=input.dataset.property;
     if(!['curve','width','fork'].includes(key)||!Number.isInteger(i)||i<0||i>=4)return;
     mutate(()=>{draft.sections[i][key]=input.valueAsNumber;});
-  });
-  gates.addEventListener('change',event=>{
+  }
+  function editGate(event){
     const input=event.target;
     if(!(input instanceof HTMLInputElement))return;
     const i=Number(input.dataset.gate),key=input.dataset.property;
     if(!['x','z'].includes(key)||!Number.isInteger(i)||i<0||i>=8)return;
     mutate(()=>{draft.gates[i][key]=input.valueAsNumber;});
-  });
+  }
+  for(const type of ['input','change']){
+    sections.addEventListener(type,editSection);
+    gates.addEventListener(type,editGate);
+  }
   const position=event=>{
     const b=canvas.getBoundingClientRect();
     return {x:(event.clientX-b.left)*canvas.width/b.width,

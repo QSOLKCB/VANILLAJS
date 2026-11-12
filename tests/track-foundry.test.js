@@ -208,5 +208,7 @@ test('RACING-002B editor controls and safety boundaries ship in the game',async(
   assert.match(app,/editingTarget\(e.target\)/);
   assert.match(editor,/parseTrackJSON/);
   assert.match(editor,/generation/,'late imports cannot replace newer drafts');
+  assert.match(editor,/for\(const type of \['input','change'\]\)/,
+    'section and gate numeric edits must be admitted immediately, not only on blur');
   assert.doesNotMatch(editor,/\b(?:eval|Function)\s*\(/);
 });
