@@ -767,6 +767,16 @@
       "preset": "retro",
       "description": "Experimental pseudo-3D arcade traffic overtaking and stage progression"
     },
+    "touring-racing-lab": {
+      "entry": "demos/racing-lab/world.js",
+      "modules": [
+        "math",
+        "time",
+        "render-webgl"
+      ],
+      "preset": "tour",
+      "description": "RACING-002 original pseudo-3D scenic highway with lane-selected stage forks"
+    },
     "circuit-racing-lab": {
       "entry": "demos/racing-lab/world.js",
       "modules": [
@@ -776,6 +786,16 @@
       ],
       "preset": "circuit",
       "description": "Experimental WebGL circuit racing with bots and lap gates"
+    },
+    "sprint-racing-lab": {
+      "entry": "demos/racing-lab/world.js",
+      "modules": [
+        "math",
+        "time",
+        "render-webgl"
+      ],
+      "preset": "sprint",
+      "description": "RACING-002 original winding WebGL 3D point-to-point sprint with traffic"
     },
     "derby-racing-lab": {
       "entry": "demos/racing-lab/world.js",

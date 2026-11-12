@@ -30,6 +30,14 @@ experimental Visual Workbench are available now.
 
 ## New on main
 
+[**RACING-002 — Classic Touring Lab**](demos/racing-lab/index.html) adds
+two original, playable styles to the Racing Lab: **Scenic Tour**, a four-stage
+pseudo-3D highway with player-selected left/right forks and distinct scenery
+palettes, and **Coastal Sprint**, a 3.6 km winding 3D road with traffic,
+road-edge penalties and fast-pass vehicle contact detection. The five
+RACING-001 modes remain available. [Scope and numerical limits](docs/RACING_002.md).
+Experimental; not a stable public engine API.
+
 [**4X Game Lab — Ternary Reach**](demos/4x-game-lab/index.html): explore a seeded
 star sector, settle colonies, develop an exact economy and command fleets against
 a deterministic rival. Native controls, offline play and validated command replay.
