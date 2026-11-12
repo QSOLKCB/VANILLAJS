@@ -125,3 +125,13 @@ test('browser entrypoint and CSS expose each mode and core safety controls',asyn
   for(const control of ['pause','reset','launch','export'])assert.match(html,new RegExp('id="'+control+'"'));
   for(const event of ['visibilitychange','pagehide','blur','webglcontextlost'])assert.ok(app.includes(event));
 });
+
+test('homepage gives Racing and FPS distinct links and keeps both visible in narrow navigation',async()=>{
+  const home=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  const css=await readFile(new URL('../demos/flight-lab/style.css',import.meta.url),'utf8');
+  assert.match(home,/<a class="racing-link" href="demos\/racing-lab\/index\.html">/);
+  assert.match(home,/<a class="fps-link" href="demos\/fps-lab\/index\.html">/);
+  assert.equal((home.match(/class="fps-link"/g)||[]).length,1,'FPS browser selector must match one link');
+  assert.match(css,/@media\(max-width:780px\)\{[^}]*\.masthead nav a\.racing-link\{display:inline;/,
+    'the Racing Lab entry must stay visible in compact navigation');
+});
