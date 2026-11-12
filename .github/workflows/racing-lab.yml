@@ -1,0 +1,56 @@
+name: RACING-001 packaged Chromium
+on:
+  pull_request:
+    paths:
+      - 'demos/racing-lab/**'
+      - 'scripts/racing-smoke.mjs'
+      - 'tests/racing-lab.test.js'
+      - '.github/workflows/racing-lab.yml'
+      - 'MODULES.json'
+  push:
+    branches: [main]
+    paths:
+      - 'demos/racing-lab/**'
+      - 'scripts/racing-smoke.mjs'
+      - 'tests/racing-lab.test.js'
+      - '.github/workflows/racing-lab.yml'
+      - 'MODULES.json'
+permissions:
+  contents: read
+jobs:
+  racing-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Unit contracts, catalogue and offline package
+        run: |
+          node --test tests/racing-lab.test.js
+          node scripts/check.js
+          node scripts/build.js
+      - name: Pin isolated hosted Chromium tooling
+        run: |
+          set -euo pipefail
+          echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/racing-browser/browsers" >> "$GITHUB_ENV"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install \
+            --prefix "$RUNNER_TEMP/racing-browser" \
+            --ignore-scripts --no-save --package-lock=false --no-audit --no-fund \
+            playwright@1.64.0
+          node "$RUNNER_TEMP/racing-browser/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Exercise all five packaged racing modes in Chromium
+        env:
+          NODE_PATH: ${{ runner.temp }}/racing-browser/node_modules
+        run: node scripts/racing-smoke.mjs
+      - name: Retain observed screenshots and package manifest
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: racing-001-chromium
+          path: |
+            browser-artifacts/racing-*.png
+            dist/manifest.json
+          if-no-files-found: warn
+          retention-days: 14
