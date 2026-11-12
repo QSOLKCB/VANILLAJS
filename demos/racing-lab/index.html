@@ -6,7 +6,7 @@
 <header><a class="brand" href="../../index.html">VANILLA<span>JS</span> <small>QSOL-IMC</small></a>
 <nav><a href="../creator-hub/index.html">Creator Hub</a><a href="../circuit-mod-lab/index.html">Circuit Builder</a><a href="../../index.html">Flight Lab</a></nav></header>
 <main>
-<div class="eyebrow">EXPERIMENT / RACING-002 · CLASSIC TOURING + VEHICLE LAB</div>
+<div class="eyebrow">EXPERIMENT / RACING-002B · TRACK FOUNDRY</div>
 <div class="intro"><div><h1>RACING <span>LAB</span></h1><p>From original pseudo-3D road forks to winding 3D coastal sprints. Seven modes. One source-owned laboratory.</p></div><div class="signal">NO CDN / NO ENGINE / NATIVE BROWSER</div></div>
 <section class="frame">
 <div class="modes" role="group" aria-label="Racing game modes">
@@ -47,6 +47,33 @@
 <button data-drive="ArrowLeft">◀ LEFT</button><button data-drive="ArrowUp">▲ THROTTLE</button><button data-drive="ArrowDown">▼ BRAKE</button><button data-drive="ArrowRight">RIGHT ▶</button>
 <button data-drive="ShiftLeft">BOOST</button><button data-drive="Space">JUMP</button><button data-drive="KeyX">DRIFT</button><button data-drive="KeyF">FLIP</button></div>
 </details>
+<section class="foundry" id="track-foundry" aria-label="Track Foundry editor">
+<div class="foundry-heading"><div><span class="eyebrow">RACING-002B · LOCAL CREATOR TOOLS</span>
+<h2>TRACK <span>FOUNDRY</span></h2>
+<p>Design an original racing road or circuit. Every pack is inert data, schema-validated, portable and offline-ready.</p></div>
+<div class="foundry-actions"><button id="track-new">NEW TRACK</button>
+<button id="track-apply" class="foundry-primary">VALIDATE &amp; DRIVE ↗</button>
+<button id="track-clear">BUILT-IN TRACKS</button>
+<button id="track-export">EXPORT JSON ↓</button>
+<label class="track-import">IMPORT JSON <input id="track-import" type="file" accept=".json,application/json"></label></div></div>
+<div class="foundry-setup">
+<label>TRACK NAME <input id="track-name" maxlength="48" value="The Long Way Home"></label>
+<label>ENVIRONMENT <select id="track-environment"><option value="coast">Sapphire Coast</option>
+<option value="canyon">Cinder Canyon</option><option value="forest">Verdant Forest</option>
+<option value="night">Nocturne Run</option></select></label>
+<label>LIVE GAME MODE <select id="track-target"><option value="tour">Scenic Tour / branch roads</option>
+<option value="sprint">Coastal Sprint / 3D road</option>
+<option value="circuit">Circuit Race / eight gates</option></select></label>
+</div>
+<div class="foundry-workspace"><div><h3>ROAD GEOMETRY</h3>
+<p class="foundry-help">Four authored 1,200 m sections. Curve controls the centreline, width sets the paved half-width, and fork separates the physical left/right routes.</p>
+<div id="track-sections" class="track-sections"></div>
+<h3>GATE POSITIONS</h3><p class="foundry-help">In circuit mode, drag the eight markers on the preview or enter coordinates. The polygon must not self-intersect.</p>
+<div id="track-gates" class="track-gates" hidden></div>
+</div><div><h3>TRACK PREVIEW · ORIGINAL GEOMETRY</h3><canvas id="track-preview" width="760" height="300" aria-label="Editable track schematic; drag circuit gates" tabindex="0"></canvas>
+<p class="foundry-help">Scenic Touring previews eight possible route histories. Applied choices alter the simulated centreline. Circuit gates can be dragged; the same positions are used for rendering and checkpoint logic.</p>
+<p id="track-message" role="status" aria-live="polite"></p></div></div>
+</section>
 </main><footer>VANILLAJS / QSOL-IMC · Apache-2.0 · Original vehicles and tracks · <a href="../../BUILD_A_GAME.md">BUILD A GAME</a></footer>
 <script type="module" src="./app.js"></script><script type="module" src="../../offline/register.js"></script>
 </body></html>
