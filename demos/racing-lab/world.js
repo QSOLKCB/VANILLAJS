@@ -181,6 +181,9 @@ function stepStunt(w,input,dt){
   const track=s>=0?stuntRoad(s):null;
   if(track!==null&&Math.abs(p.x)<8){
     const elevation=track;
+    // When grounded, suspension follows downhill grade; an actual gap
+    // removes support and gravity then takes over on the next fixed tick.
+    if(p.grounded){p.y=elevation;p.vy=0;}
     if(p.y<=elevation+.05&&p.vy<=0){
       const impact=-p.vy;
       if(!p.grounded&&impact>12){
