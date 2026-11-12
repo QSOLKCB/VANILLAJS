@@ -206,7 +206,9 @@ window.addEventListener('keydown',e=>{
   if(e.code==='Escape'){if(running)pause('Escape pressed. Press Resume to drive again.');return;}
   if(!running)return;
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
-  keys.add(e.code);
+  // Ignoring OS key-repeat prevents a held accelerator from restarting after
+  // pause/focus cancellation until the user actually releases and presses it.
+  if(!e.repeat)keys.add(e.code);
 });
 window.addEventListener('keyup',e=>keys.delete(e.code));
 window.addEventListener('blur',()=>{if(running)pause('Window focus lost. Inputs released.');});
