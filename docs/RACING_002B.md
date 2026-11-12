@@ -14,7 +14,9 @@ browser-native Canvas/WebGL geometry, no server and no runtime dependencies.
 4. **Validate & Drive** creates a fresh game world with an independently owned
    validated snapshot. Rejected inputs do not replace the active game.
 5. **Export JSON** / **Import JSON** exchange the inert track data. The
-   imported file is reviewed in the editor before use. **Built-in tracks**
+   imported file is reviewed in the editor before use. New field edits and
+   gate drags invalidate pending asynchronous file reads. Focusing an editor
+   field pauses the race and releases held driving input. **Built-in tracks**
    restores the previous RACING-001/002 behaviour.
 
 There is no user-supplied JavaScript execution, cloud API, CDN, npm runtime
@@ -32,11 +34,13 @@ Its version is exactly 1.
   `curve [-1,1]`, `width [8,16]` metres (half-width) and
   `fork [6,14]` metres of lateral branch separation.
 - Eight circuit gates, each with exactly finite `x,z` in [-70,70]
-  metres. Adjacent gate positions must be ≥12 m apart; non-adjacent
-  edges must not properly cross.
+  metres. Every pair of gate centres must be ≥24 m apart, preventing
+  stationary capture of two 12 m-radius checkpoints. Non-adjacent edges
+  must not intersect, touch or collinearly overlap.
 - Maximum UTF-8 import: **16 KiB**. Unknown keys, version/format errors,
-  accessor-backed records, non-finite values, invalid geometry, unsupported
-  enums and unexpected object prototypes are rejected.
+  accessor-backed records or arrays, sparse/overridden arrays, non-finite
+  values, invalid geometry, unsupported enums and unexpected prototypes
+  are rejected without evaluating hostile getters.
 
 The engine creates new, frozen records/arrays after validation. Pack objects
 are not retained by reference from callers.
@@ -56,7 +60,10 @@ are not retained by reference from callers.
   follow the authored distance. A forward finish crossing outside the
   paved corridor is not a victory.
 - Circuit racing uses the authored polygon for both the asphalt and the
-  authoritative eight ordered gate targets.
+  authoritative eight ordered gate targets. The collision boundary expands
+  to surround any admitted geometry beyond the default ±63 m arena.
+- The editor's fork indicator and the simulation both call the same
+  `chooseTourFork` helper against the upcoming section centreline.
 - Four scenery palettes alter presentation only. They do not alter vehicle
   acceleration or save schemas. Existing five RACING-001 modes and
   unmodified RACING-002A default tracks keep their original contracts.
