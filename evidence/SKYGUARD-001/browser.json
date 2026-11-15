@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "browser": "141.0.7390.37",
+  "checks": [
+    "briefing, ship manual, default Cadet and keyboard deployment",
+    "absolute pointer, keyboard aiming, toolbar Space, reload and heat",
+    "focus, repeated held keys and history restore require explicit resume",
+    "native fullscreen, denied fullscreen, windowed mode and four fitted sizes",
+    "cannon: clear an air raid through actual aim/fire handlers and select a persistent refit",
+    "flak: clear an air raid through actual aim/fire handlers and select a persistent refit",
+    "missile: clear an air raid through actual aim/fire handlers and select a persistent refit",
+    "charged rail cancellation and independent touch pointers never discharge on cancel",
+    "rail: clear an air raid through actual aim/fire handlers and select a persistent refit",
+    "controller neutral interlock, disconnect, loss and restart",
+    "all four complete naval WAV exports match pure synthesis",
+    "offline reload uses the complete lab and its shared native module graph",
+    "audio device failure preserves combat and saved music preference",
+    "previous offline API and failed import recover without a dead launch button"
+  ],
+  "errors": []
+}

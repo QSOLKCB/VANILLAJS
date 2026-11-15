@@ -1,5 +1,13 @@
 # VANILLAJS roadmap
 
+## SKYGUARD-001 — Naval Air Defence Lab
+
+- [x] Spooky v0.1.0 station/refit loop re-authored as a destroyer defence game.
+- [x] Four distinct weapons: moving tracer hits, proximity airbursts, guided interceptors and a charged piercing beam.
+- [x] Procedural sea, warship and aircraft visuals, radar and deterministic naval soundtrack.
+- [x] Native shared modules, fullscreen/touch controls, source provenance and offline packaging.
+- [Integration and verification](docs/SKYGUARD_INTEGRATION.md).
+
 ## QGAME-MATH-001 — Quantum-Inspired Game-Math Laboratory (this PR)
 
 - [x] Bounded exact GF(3) vectors/matrices, invertible affine maps and syndromes

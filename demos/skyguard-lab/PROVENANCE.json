@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "repository": "QSOLKCB/Spooky",
+  "release": "v0.1.0",
+  "commit": "0c13684a03e301e59ba5dd04c67167874ab04766",
+  "sourceTree": "56597baf5affbbab9c09d44bb2fbdf2e471afe1d",
+  "license": "Apache-2.0",
+  "sources": [
+    {
+      "path": "LICENSE",
+      "gitBlob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "NOTICE",
+      "gitBlob": "bfbe221311b88470230a601e817ebef60b1a1770",
+      "sha256": "6678738c293b5f3f6b9ab2cefbe5cd309f95854c9e86f5d381ebf2a73343d7b6"
+    },
+    {
+      "path": "index.html",
+      "gitBlob": "92ca0da6caaabcbea2001d63d99a9f788ec3700f",
+      "sha256": "fc19c0499c80267daf2ef8da65196ec8301f8d261f880fbc1d4100aea033c49c"
+    },
+    {
+      "path": "style.css",
+      "gitBlob": "2d665b6b5f2c7c16f1d8c1a3de5896186b1bd4f0",
+      "sha256": "7a498c712084609b63d9e1d454c155524c254c21e729af6ae985ebd170ca8903"
+    },
+    {
+      "path": "js/app.js",
+      "gitBlob": "4f7b787b09a90ec8e201c238658404d70c09d657",
+      "sha256": "4cf096bc6b4d57a79e6f2fca3e79e92e99b6035c661dd25d3e335ae18bea38f8"
+    },
+    {
+      "path": "js/audio.js",
+      "gitBlob": "46e9e0143ceb2b17263c3736778c5b3da614ef0f",
+      "sha256": "0460094990d6677913f5b3c76461bf0ca5b663bdd0221f80b803aeb0de30ead9"
+    },
+    {
+      "path": "js/content.js",
+      "gitBlob": "632770e723848c156e5d7a7c333d6fc54c8371e2",
+      "sha256": "575abcddff15436fe409bd1634e75524e5a458d123487480aeb55ff32caa9f03"
+    },
+    {
+      "path": "js/sim.js",
+      "gitBlob": "102c2ee359bbdda08a959027c46ca8c135d2c1a6",
+      "sha256": "7bf5cfec8af50a0c573d69f538bbb9b6e90eff0d5621bb5c6b9b20e8a4cea199"
+    }
+  ],
+  "targets": [
+    {
+      "path": "demos/skyguard-lab/LICENSE",
+      "status": "retained",
+      "sources": [
+        "LICENSE"
+      ],
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "demos/skyguard-lab/SPOOKY-NOTICE.txt",
+      "status": "retained",
+      "sources": [
+        "NOTICE"
+      ],
+      "sha256": "6678738c293b5f3f6b9ab2cefbe5cd309f95854c9e86f5d381ebf2a73343d7b6"
+    },
+    {
+      "path": "demos/skyguard-lab/index.html",
+      "status": "adapted",
+      "sources": [
+        "index.html"
+      ],
+      "sha256": "9216c4429f100ef24dc3d511efa241e36744790ff68646c3845ce76432ac6576"
+    },
+    {
+      "path": "demos/skyguard-lab/js/app.js",
+      "status": "adapted",
+      "sources": [
+        "js/app.js"
+      ],
+      "sha256": "495836da809d5a44657f6b93a0893485158540a6fe722b59bc6d78a5916d87e1"
+    },
+    {
+      "path": "demos/skyguard-lab/js/audio.js",
+      "status": "adapted",
+      "sources": [
+        "js/audio.js"
+      ],
+      "sha256": "84128a543d9c30fc762042d3a0ef48981563b730e06fe396af4b6c24af5b94d8"
+    },
+    {
+      "path": "demos/skyguard-lab/js/content.js",
+      "status": "adapted",
+      "sources": [
+        "js/content.js"
+      ],
+      "sha256": "d0e240defa760c1de2e26480806f3cce319cc4ca4509963c799157d4f3a2d2d0"
+    },
+    {
+      "path": "demos/skyguard-lab/js/render.js",
+      "status": "original",
+      "sources": [],
+      "sha256": "036faddc71c1bce0b52c76a8cb29632aaa9f0209e150b86b14514903b270b8a6"
+    },
+    {
+      "path": "demos/skyguard-lab/js/sim.js",
+      "status": "adapted",
+      "sources": [
+        "js/sim.js"
+      ],
+      "sha256": "88a31bb33a30019c028b2e077e9ec599ad42dd48166679bebc072a255e4edcfe"
+    },
+    {
+      "path": "demos/skyguard-lab/js/start.js",
+      "status": "original",
+      "sources": [],
+      "sha256": "e7774f780bc52721581a03fe9341a7deb56026ec018c802ab4a2c95df3d829e7"
+    },
+    {
+      "path": "demos/skyguard-lab/style.css",
+      "status": "adapted",
+      "sources": [
+        "style.css"
+      ],
+      "sha256": "cf38fce36f5472505c397ba954b078d1494d66a5904944dcc2a31037e24d9326"
+    }
+  ],
+  "nativeDependencies": [
+    "modules/math/index.js",
+    "modules/collision/index.js",
+    "modules/time/index.js",
+    "modules/audio2d/index.js",
+    "modules/soundtrack/index.js",
+    "api/audio/index.js",
+    "api/display/index.js"
+  ]
+}

@@ -1,0 +1,32 @@
+SPOOKY: Last Light
+Copyright 2026 Trent Slade / QSOL-IMC and contributors.
+Licensed under the Apache License, Version 2.0.
+
+This game incorporates unmodified VANILLAJS source from QSOLKCB/VANILLAJS,
+commit 3c35784636288bafe4923537463f853b6bcf0cb4 (Apache-2.0).
+Source file identities are recorded in vendor/PROVENANCE.json.
+The upstream LICENSE and full NOTICE are retained under vendor/vanillajs/.
+
+Original game code, procedural pixel artwork, instrument interface,
+sound effects and the Last Light soundtrack were made for this project.
+No Call of Duty artwork, maps, code, dialogue or music is included.
+Weapon names provide fictional arcade context, not real firing data.
+
+The display controller js/display.js is unmodified source from QSOLKCB/Outruin,
+commit 94ae4abdcd3e29721d5d4f5d2415246a9551f8b9, introduced in pull request #4.
+OUTRUIN — Copyright 2026 QSOL-IMC / Trent Slade and contributors.
+Original code and creative content are offered under Apache-2.0.
+Its file identity is recorded in vendor/OUTRUIN.json.
+
+Last Light March is an original composition and deterministic procedural arrangement.
+The AC-47 tribute README banner is newly generated concept artwork for this project;
+its prompt and provenance are recorded in docs/BANNER.md. No historical photograph,
+commercial game art or existing military-march recording is incorporated.
+
+The fourth station adapts QUICKSCOPER scope/trigger timing and wall-blocked
+ray/box collateral tracing from QSOLKCB/QUICKSCOPER, commit
+8da5569b1ee7565d9ae5fb0588847d262c896648 (Apache-2.0).
+QUICKSCOPER — QSOL-IMC / Trent Slade and contributors.
+Modified code is in js/sniper.js, js/sim.js and js/render.js; original source
+identities and adaptation notes are recorded in vendor/QUICKSCOPER.json.
+The upstream licence is retained in vendor/quickscoper/LICENSE.

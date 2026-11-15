@@ -227,3 +227,15 @@ PROVENANCE.json. See docs/OUTRUIN_INTEGRATION.md for API boundaries.
 The independent Chase H.Q.-style demo uses original art, cases and music; it
 contains no Taito ROMs, source code, sprites, samples or recordings. Chase H.Q.
 is referenced as gameplay inspiration only; no affiliation is implied.
+
+Spooky integration (SKYGUARD / Naval Air Defence Lab)
+-------------------------------------------------
+The station/refit loop, controller lifecycle, HUD patterns and deterministic
+score construction are adapted from QSOLKCB/Spooky v0.1.0, commit
+0c13684a03e301e59ba5dd04c67167874ab04766, under Apache-2.0.
+Copyright 2026 Trent Slade / QSOL-IMC and contributors. The original licence
+and source notice are retained in demos/skyguard-lab/LICENSE and
+SPOOKY-NOTICE.txt; PROVENANCE.json records original and adapted file hashes.
+Naval aircraft, weapon rules, ship scenery and the sea-defence scenario are
+new demo-owned content. Shared VANILLAJS APIs are reused directly. No third-party
+game assets, samples or runtime packages are included. See docs/SKYGUARD_INTEGRATION.md.

@@ -1,0 +1,292 @@
+{
+  "kind": "qsol.skyguard.local-evidence.v1",
+  "baseCommit": "2d5caddc93154874e9bdb582de6a830356b360aa",
+  "sourceRelease": {
+    "repository": "QSOLKCB/Spooky",
+    "tag": "v0.1.0",
+    "commit": "0c13684a03e301e59ba5dd04c67167874ab04766"
+  },
+  "browser": "141.0.7390.37",
+  "scope": "local execution; not a reviewed-main browser-reuse witness",
+  "changedSources": [
+    {
+      "path": "MODULES.json",
+      "sha256": "7eb39c485768390ba8a622fbf0b3acd9018f2cb89d35edd4bdf9ba0ce19c9fc7"
+    },
+    {
+      "path": "NOTICE",
+      "sha256": "138145a6ab126682ffabf556a150be33f98eb03b98cfe2ed61239ff56e0ca720"
+    },
+    {
+      "path": "README.md",
+      "sha256": "8d3667e0964b1a8af7a7e2d4ac2ffcc13ecaabbd24ed18bbf0cd67ae30334685"
+    },
+    {
+      "path": "ROADMAP.md",
+      "sha256": "04586294bf0a1c0c2d9458484a64500640b5c418b2908910e4d9d1fa51be8214"
+    },
+    {
+      "path": "demos/skyguard-lab/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "demos/skyguard-lab/PROVENANCE.json",
+      "sha256": "85c2eed0fe4eba768aa686907752f8aaac4e3912f24d5fb172f9212864046cbd"
+    },
+    {
+      "path": "demos/skyguard-lab/SPOOKY-NOTICE.txt",
+      "sha256": "6678738c293b5f3f6b9ab2cefbe5cd309f95854c9e86f5d381ebf2a73343d7b6"
+    },
+    {
+      "path": "demos/skyguard-lab/index.html",
+      "sha256": "9216c4429f100ef24dc3d511efa241e36744790ff68646c3845ce76432ac6576"
+    },
+    {
+      "path": "demos/skyguard-lab/js/app.js",
+      "sha256": "495836da809d5a44657f6b93a0893485158540a6fe722b59bc6d78a5916d87e1"
+    },
+    {
+      "path": "demos/skyguard-lab/js/audio.js",
+      "sha256": "84128a543d9c30fc762042d3a0ef48981563b730e06fe396af4b6c24af5b94d8"
+    },
+    {
+      "path": "demos/skyguard-lab/js/content.js",
+      "sha256": "d0e240defa760c1de2e26480806f3cce319cc4ca4509963c799157d4f3a2d2d0"
+    },
+    {
+      "path": "demos/skyguard-lab/js/render.js",
+      "sha256": "036faddc71c1bce0b52c76a8cb29632aaa9f0209e150b86b14514903b270b8a6"
+    },
+    {
+      "path": "demos/skyguard-lab/js/sim.js",
+      "sha256": "88a31bb33a30019c028b2e077e9ec599ad42dd48166679bebc072a255e4edcfe"
+    },
+    {
+      "path": "demos/skyguard-lab/js/start.js",
+      "sha256": "e7774f780bc52721581a03fe9341a7deb56026ec018c802ab4a2c95df3d829e7"
+    },
+    {
+      "path": "demos/skyguard-lab/style.css",
+      "sha256": "cf38fce36f5472505c397ba954b078d1494d66a5904944dcc2a31037e24d9326"
+    },
+    {
+      "path": "docs/SKYGUARD_INTEGRATION.md",
+      "sha256": "065436f4ebd57452cc8134dce2289e7ec5b4cfddb7750f3787987972994cf2d2"
+    },
+    {
+      "path": "formal/alien-math-006/manifest.json",
+      "sha256": "299baac51ceccb9096cbe2a406ba86045e2b0d3f2448d06841ba2fdd40bb6c30"
+    },
+    {
+      "path": "index.html",
+      "sha256": "76aad895463b207f04a434857fd55870e378932f1b0afe74bd862b31d28acd5d"
+    },
+    {
+      "path": "scripts/browser-check.js",
+      "sha256": "06355abc77f0db3e6606ddfe6d33a55a757608c4c599266c1defda74a741dd8a"
+    },
+    {
+      "path": "scripts/browser-reuse-policy.json",
+      "sha256": "bbe475409e15aff5ea43d4d38f97a40d990a284c576782e80e070f3ec3ed85c4"
+    },
+    {
+      "path": "scripts/browser-skyguard.js",
+      "sha256": "f653c764a637a2207108345bfac0389374f7f512217be04f5a344a1a25bb9ff9"
+    },
+    {
+      "path": "scripts/build.js",
+      "sha256": "67adafa6aca038bfb6837d9777e35a8557e81f25a03c6e56cf9090bda9f60bc8"
+    },
+    {
+      "path": "scripts/check.js",
+      "sha256": "de1a9eb63fe778a097f8aab034fdec27fb4ad0f8312ddbf6c2d20e51072669ca"
+    },
+    {
+      "path": "scripts/pursuit-package.mjs",
+      "sha256": "b3bdab0e58d69365a1c5feed6dbd0d3fa112deebeff48113c028fa7fd0774b6d"
+    },
+    {
+      "path": "scripts/skyguard-upgrade-check.mjs",
+      "sha256": "763102aac9aaace62a80a43c40dafeb23f9d548f054f621b274befcc73e09584"
+    },
+    {
+      "path": "scripts/verify-skyguard.js",
+      "sha256": "fcc3a808fecb0705f0861c9044d174c70a6ec67aade1f20008e18e1f7d64bc91"
+    },
+    {
+      "path": "tests/pursuit-package.test.js",
+      "sha256": "995371c564ad2c327f8db4fa742d597c7918a7c4586f3ae5ae40272951b5f2aa"
+    },
+    {
+      "path": "tests/skyguard.test.js",
+      "sha256": "01463480fd65f510dda26345584f91f520e7ecdeec541912df69896f5e70a637"
+    },
+    {
+      "path": "tests/test_alien_math_bundle.py",
+      "sha256": "890cd4410333491abdce157a95d78ec3a33b5a35336afff3648a6312199c14b8"
+    }
+  ],
+  "packagedRuntime": {
+    "prefix": "demos/skyguard-lab/runtime-89cbd5be7c4eb751d55b0210352d4878c56356fb966c51f61813def092be657e",
+    "files": [
+      {
+        "path": "api/audio/effects.js",
+        "bytes": 3108,
+        "sha256": "fc026d3cb208e3a915ad06c6bffae73f267c1ce7d5748ef5a6205b4df594fc5b"
+      },
+      {
+        "path": "api/audio/index.js",
+        "bytes": 2865,
+        "sha256": "66c37457ca606c41451cfcf1ae744d7fbc636e1c7523812c94ebedbcc920a2a8"
+      },
+      {
+        "path": "api/display/index.js",
+        "bytes": 2262,
+        "sha256": "e062f02ff45ff4402138f90124eb1454e878f1b6ec300278ce75ab0516368f6d"
+      },
+      {
+        "path": "demos/skyguard-lab/js/app.js",
+        "bytes": 14827,
+        "sha256": "495836da809d5a44657f6b93a0893485158540a6fe722b59bc6d78a5916d87e1"
+      },
+      {
+        "path": "demos/skyguard-lab/js/audio.js",
+        "bytes": 6874,
+        "sha256": "84128a543d9c30fc762042d3a0ef48981563b730e06fe396af4b6c24af5b94d8"
+      },
+      {
+        "path": "demos/skyguard-lab/js/content.js",
+        "bytes": 3274,
+        "sha256": "d0e240defa760c1de2e26480806f3cce319cc4ca4509963c799157d4f3a2d2d0"
+      },
+      {
+        "path": "demos/skyguard-lab/js/render.js",
+        "bytes": 12058,
+        "sha256": "036faddc71c1bce0b52c76a8cb29632aaa9f0209e150b86b14514903b270b8a6"
+      },
+      {
+        "path": "demos/skyguard-lab/js/sim.js",
+        "bytes": 10543,
+        "sha256": "88a31bb33a30019c028b2e077e9ec599ad42dd48166679bebc072a255e4edcfe"
+      },
+      {
+        "path": "demos/skyguard-lab/js/start.js",
+        "bytes": 531,
+        "sha256": "e7774f780bc52721581a03fe9341a7deb56026ec018c802ab4a2c95df3d829e7"
+      },
+      {
+        "path": "modules/audio2d/index.js",
+        "bytes": 4440,
+        "sha256": "838c90cc71d2ffb89a205eb47d280721bd36e3bfd8b3f7467f31668359d50034"
+      },
+      {
+        "path": "modules/collision/index.js",
+        "bytes": 12454,
+        "sha256": "99c0f4bc106d4162fc5bea057a7108d7cf52526279b2a8ad4e4f27c1f0e6f5c1"
+      },
+      {
+        "path": "modules/math/index.js",
+        "bytes": 3042,
+        "sha256": "4f4ebf0786b97342c11004b8830a535890b16693458a0436edb1fc581a411da7"
+      },
+      {
+        "path": "modules/soundtrack/index.js",
+        "bytes": 3285,
+        "sha256": "dd0760175923e4c55d85c19fb441b31890bc1bf6c138965f301cfbbb1eddaaee"
+      },
+      {
+        "path": "modules/time/index.js",
+        "bytes": 2752,
+        "sha256": "de94c0bc04e6a269504c5742455ce114f824c2c0d9d59a2fd94555df5d9bb4a2"
+      }
+    ]
+  },
+  "package": {
+    "files": 527,
+    "bytes": 3124183,
+    "manifestSha256": "1c7d58c526628dd5aa09d372b6dd8e64a229a60917bcae8d3bef1f7e36a1f09e",
+    "workerSha256": "4ad4c0e63a53f6865b7ec12d17e9852617e3cb3116781a3c11be09157f7588fe"
+  },
+  "evidenceFiles": [
+    {
+      "path": "README.md",
+      "sha256": "459810e883f67c73997196e7087d6e14fff2f12f65df06ae2fd353ab3c58bbe8"
+    },
+    {
+      "path": "attempts/skyguard-all-unit-initial.txt.gz",
+      "sha256": "6b6edb2c3daf06309d5aee8b1f8a3167263e863f0708309df9099eb396dba892"
+    },
+    {
+      "path": "attempts/skyguard-browser-failure-1.json",
+      "sha256": "0c875158f076a9b46e0e3a558f30b9b3fb833058075d9991e45c074c3fde16d3"
+    },
+    {
+      "path": "attempts/skyguard-browser-failure-2.json",
+      "sha256": "b20765b5c3cc2934b50817ca4e7bbab9bb259d5856b872867c52f01887a5a0a4"
+    },
+    {
+      "path": "attempts/skyguard-browser-failure-3.json",
+      "sha256": "8f13baea8744da4c94bd7549a510f21488c9f27fa8d8e6b27ab79d9d471fbae6"
+    },
+    {
+      "path": "attempts/skyguard-browser-failure-4.json",
+      "sha256": "271e10c07f20705b2902e19105d8eafded5437a4d1fe8e18e8584f0d3b765628"
+    },
+    {
+      "path": "attempts/skyguard-browser-initial.txt",
+      "sha256": "1fc225c518319c0db657e67aa1f8932d565790759d5c185438c3c1cfd62a6930"
+    },
+    {
+      "path": "attempts/skyguard-browser-touch-debug-2.txt",
+      "sha256": "2394b5fa8ca525f1384b2d12ff25bdddc4bf2743e793fa029208d19c85a16f77"
+    },
+    {
+      "path": "attempts/skyguard-browser-touch-debug.txt",
+      "sha256": "f05316edc9c502cbb3a360d09cb78bb21d273d3896992a953d352099297eee31"
+    },
+    {
+      "path": "attempts/skyguard-donor-browser.txt",
+      "sha256": "4d36913ad0e21b8e3c932a66f7d34113a3321562a6a737f1aa740da78fc27857"
+    },
+    {
+      "path": "attempts/skyguard-initial-build-failure.txt",
+      "sha256": "4ed4e390faec70db02cee0b6ed8b9f31e7149fe6aa8c83b6a3061ec43350679f"
+    },
+    {
+      "path": "attempts/skyguard-unit-initial.txt.gz",
+      "sha256": "78911c15efe249c1a695f1d0b67d50a3d2808376c211aea7a86e10b3ab8b49db"
+    },
+    {
+      "path": "browser-donor-final.log",
+      "sha256": "a12c113cf65b7c4c8b0c8b35911f1f5674e80ede0046f45b549761c6570392b9"
+    },
+    {
+      "path": "browser-home-final.log",
+      "sha256": "4275419afcd6b6cb6a145167b447db2b9b353f19230a8d6dbb13241de9fa5cd6"
+    },
+    {
+      "path": "browser.json",
+      "sha256": "12d042341f5661c88841ba5c1362aabf349338b7922c751b21c1ed84e411b334"
+    },
+    {
+      "path": "build-final.log",
+      "sha256": "34b3c338fd255746e2788566e01b9da3c5e3235253ffb5ac9a719223c078c945"
+    },
+    {
+      "path": "combat-desktop.png",
+      "sha256": "ed262c9483ca9ad4d4c76d889d87122c73353976abcd1dc38a439553a124d433"
+    },
+    {
+      "path": "mobile-390x844.png",
+      "sha256": "e86050dc9c81d5dc3acb8fc2b4e8344ecc55e0de06a35902003552aa88afe520"
+    },
+    {
+      "path": "source-check-final.log",
+      "sha256": "35e28dce96a46f16a2e89e1fa0a4ead6c550a78490cb16eae33391881dd29adf"
+    },
+    {
+      "path": "unit-final.log",
+      "sha256": "c11b60f9e6f3026ad6765b0b2e6e7a958e7289b92223b7ac97f91eea391c79a9"
+    }
+  ]
+}

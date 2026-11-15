@@ -5,6 +5,8 @@
 
 **Start creating:** [Creator Hub](demos/creator-hub/index.html) · [Game-making guide](docs/CREATOR_GUIDE.md) · [Soundtrack Lab](demos/soundtrack-lab/index.html). New editor starters, gameplay pieces and scene checks help you reach a first playable; the game-folder exporter includes its runtime. VOIDWARD now includes eight campaigns.
 
+**Spooky v0.1.0 → Skyguard Lab:** [Take the watch aboard DDG Resolute](demos/skyguard-lab/index.html). A new naval air-defence game: twin autocannon, proximity flak, guided VLS interceptors and a charged piercing railgun. Aircraft, drones and sea-skimmers replace the ground horde; station refits, gentle Cadet raids and deterministic music carry the Spooky loop to sea. [Integration, controls and provenance](docs/SKYGUARD_INTEGRATION.md).
+
 **Outruin → Pursuit Lab:** [Play Highway Intercept](demos/pursuit-lab/index.html), an original Chase H.Q.–style demo with five timed pursuits, traffic, bumper contacts, three turbos per case, fitted/fullscreen display, replay export and a deterministic 32-second soundtrack. Reusable [road handling, display lifecycle and bounded PCM effects](docs/OUTRUIN_INTEGRATION.md) bring Outruin's improvements upstream. Native JavaScript; no ROMs, external assets or runtime packages.
 
 **SubHunt release integration:** [Play SubHunt Lab](demos/subhunt-lab/index.html)—Fleet Hunt, living-toy Pond Panic, three difficulties and four power-ups. Reuse its new native [raw gamepad mapping and multi-phrase soundtrack APIs](docs/SUBHUNT_INTEGRATION.md), including tick-driven playback and complete-loop WAV export. Source-pinned to SubHunt v0.1.0/v0.2.0 with v0.3.0 recovery fixes; game content stays demo-owned.
@@ -20,7 +22,7 @@
 
 Reusable JavaScript game modules, exact authoring tools and playable browser labs
 built directly on web standards. The current [catalogue](MODULES.json) contains
-**55 experimental modules, 38 registered recipes and two research experiments**.
+**55 experimental modules, 39 registered recipes and two research experiments**.
 The full, stable Mod SDK remains planned; local data-only packs and the
 experimental Visual Workbench are available now.
 
