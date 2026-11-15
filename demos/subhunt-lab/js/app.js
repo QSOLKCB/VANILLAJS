@@ -16,7 +16,8 @@ import '../../../offline/register.js';
   let difficulty = 'standard', mode = 'campaign';
   let role = 'boat', state = create(role,undefined,difficulty,mode), screen = 'menu', paused = false;
   let last = 0, accumulator = 0, visualTime = 0, toastTime = 0;
-  let music = true, musicPlayer = null;
+  // Playback may fail for this session; only an explicit MUSIC choice changes intent.
+  let music = true, musicPreference = true, musicPlayer = null;
   const sounding = new Set();
   let sound = false, effects = !motionPreference.matches, effectsOverride = false, audio = null, highScore = 0;
   let queuedFire = false, queuedSonar = false, lastWarnSecond = -1;
@@ -38,11 +39,11 @@ import '../../../offline/register.js';
     if (Number.isSafeInteger(best) && best > 0) highScore = best;
     const saved = JSON.parse(localStorage.getItem('vanillajs-subhunt-preferences-v1'));
     if (typeof saved?.sound === 'boolean') sound = saved.sound;
-    if (typeof saved?.music === 'boolean') music = saved.music;
+    if (typeof saved?.music === 'boolean') music = musicPreference = saved.music;
     if (typeof saved?.effects === 'boolean') { effects = saved.effects; effectsOverride = true; }
   } catch { /* Storage is optional, including in file mode. */ }
   function savePreferences() {
-    try { localStorage.setItem('vanillajs-subhunt-preferences-v1', JSON.stringify({sound, music, ...(effectsOverride ? {effects} : {})})); } catch {}
+    try { localStorage.setItem('vanillajs-subhunt-preferences-v1', JSON.stringify({sound, music:musicPreference, ...(effectsOverride ? {effects} : {})})); } catch {}
   }
   function bestKey() { return mode==='pond'?'vanillajs-subhunt-best-pond-'+difficulty+'-v1':difficulty==='standard'?'vanillajs-subhunt-best-v1':'vanillajs-subhunt-best-'+difficulty+'-v1'; }
   function stopAudio() {
@@ -381,7 +382,7 @@ import '../../../offline/register.js';
   $('change-role').addEventListener('click', menu); $('pause-menu').addEventListener('click', menu);
   $('pause').addEventListener('click', () => pause()); $('resume').addEventListener('click', () => pause(false));
   $('sound').addEventListener('click', () => { sound = !sound; if(!sound)stopAudio(); updateSound(); savePreferences(); unlockAudio(); tone(500); });
-  $('music').addEventListener('click',()=>{music=!music;if(!music)musicPlayer?.stop();updateMusic();savePreferences();unlockAudio();});
+  $('music').addEventListener('click',()=>{music=!music;musicPreference=music;if(!music)musicPlayer?.stop();updateMusic();savePreferences();unlockAudio();});
   $('download-track').addEventListener('click',()=>{
     let wav;
     try { wav=SubHuntMusic.wav(state.mission); }

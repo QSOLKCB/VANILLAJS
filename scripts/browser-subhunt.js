@@ -133,5 +133,48 @@ export async function checkSubHunt(browser,base){
       assert.deepEqual(errors,[]);
     }finally{await context.close();}
   }
-  console.log('SubHunt: native modules, both roles, Pond race, difficulty, raw controller calibration/reconnect, PCM hash, pause/mute, mobile, offline and eight playback/export failure-and-retry cases passed.');
+  await checkSubHuntPreferences(browser,base);
+  console.log('SubHunt: native modules, both roles, Pond race, difficulty, raw controller calibration/reconnect, PCM hash, pause/mute, mobile, offline, eight recovery cases and preference persistence passed.');
+}
+
+export async function checkSubHuntPreferences(browser,base){
+  for(const [failure,preferred] of [['wav',true],['playback',true],['wav',false]]){
+    const context=await browser.newContext(),page=await context.newPage(),errors=[];
+    page.on('pageerror',e=>errors.push(e.message));
+    try{
+      await page.addInitScript(({failure,preferred})=>{
+        const key='vanillajs-subhunt-preferences-v1';
+        if(localStorage.getItem(key)===null)localStorage.setItem(key,JSON.stringify({sound:true,music:preferred}));
+        const broken=sessionStorage.getItem('music-recovered')!=='true';
+        const create=AudioContext.prototype.createBuffer,write=DataView.prototype.setInt16;
+        AudioContext.prototype.createBuffer=function(...args){if(broken&&failure==='playback')throw Error('injected playback failure');return create.apply(this,args);};
+        DataView.prototype.setInt16=function(...args){if(broken&&failure==='wav')throw Error('injected export failure');return write.apply(this,args);};
+      },{failure,preferred});
+      await page.goto(base+'demos/subhunt-lab/index.html');await page.locator('#launch').click();
+      if(failure==='wav')await page.locator('#download-track').click();
+      await page.waitForFunction(()=>!subhunt.snapshot().music);
+      assert.match(await page.locator('#toast').textContent(),/Soundtrack unavailable/);
+      const saved=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('vanillajs-subhunt-preferences-v1')).music);
+      await page.locator('#effects').click();
+      assert.equal(await saved(),preferred,`${failure}: FX must preserve saved music intent`);
+      for(let i=0;i<2;i++){
+        await page.locator('#sound').click();
+        assert.equal(await saved(),preferred,`${failure}: SOUND must preserve saved music intent`);
+      }
+      await page.evaluate(()=>sessionStorage.setItem('music-recovered','true'));
+      await page.reload();assert.equal(await page.locator('#music').getAttribute('aria-pressed'),String(preferred));
+      await page.locator('#launch').click();
+      if(preferred)await page.waitForFunction(()=>subhunt.snapshot().soundtrack?.active);
+      else {
+        await page.waitForFunction(()=>subhunt.snapshot().state.tick>3);
+        assert.equal(await page.evaluate(()=>!!subhunt.snapshot().soundtrack?.active),false);
+        await page.locator('#music').click();await page.waitForFunction(()=>subhunt.snapshot().soundtrack?.active);
+      }
+      // An explicit MUSIC-off choice still persists, including after recovery.
+      await page.locator('#music').click();assert.equal(await saved(),false);
+      await page.locator('#effects').click();await page.reload();
+      assert.equal(await page.locator('#music').getAttribute('aria-pressed'),'false');
+      assert.deepEqual(errors,[]);
+    }finally{await context.close();}
+  }
 }

@@ -45,7 +45,7 @@
       "gitBlob": "9adba4b2986d97637c04cbf2e4d1e2f1a832e96d",
       "target": "demos/subhunt-lab/js/app.js",
       "status": "adapted",
-      "adaptedSHA256": "c500b11bbd50aa2a21e459b48a3ffdc30d25b8302313dfab64c2d14809a87e90"
+      "adaptedSHA256": "18952d0fae1eb4e26368ea035fb2b12fcfb6930832258e9551ad484d1a1e825d"
     },
     {
       "source": "js/render.js",

@@ -133,7 +133,10 @@ advances a game's clock. The caller owns gesture promises and must check its
 current enabled state after an asynchronous resume. SubHunt Lab reads that state
 every frame. A soundtrack playback/export failure disables music for the current
 session, retains sound effects and saved preferences, reports the failure, and
-allows MUSIC to retry without restarting combat. Determinism covers
+allows MUSIC to retry without restarting combat. Persisted music intent changes
+only when MUSIC is explicitly toggled. FX/SOUND saves after a failure retain
+that intent, and reloading retries an enabled preference; an explicit MUSIC-off
+choice remains off after reload. Determinism covers
 scores and generated PCM; device latency/resampling and oscillator effects are
 outside that contract.
 
