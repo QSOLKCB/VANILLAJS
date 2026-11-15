@@ -80,3 +80,30 @@ checks, package/offline verification and the packaged Pursuit browser check
 passed. All four viewport captures passed with 6× CPU throttling; desktop and
 320px evidence were inspected. This regression demonstrates idle rendering and
 capture preconditions; hosted CI must still validate its pinned browser.
+
+## Existing offline visitor regression
+
+After the successful post-merge run, the owner reported inert launch controls.
+A fresh visit to the deployed URL launched and advanced, so fresh-install CI
+was insufficient. A local browser installed the complete package from
+`3c35784636288bafe4923537463f853b6bcf0cb4`, then navigated to the current Pursuit
+page after switching the server to the new build. The old worker served its
+cached audio API while the new lab arrived from the network. Module linking
+failed with `does not provide an export named 'createEffectPlayer'`; the menu
+remained visible and no game instance existed.
+
+The content-addressed native module package started with that same old worker
+still controlling the page and no page errors. The fixture in
+`tests/fixtures/pursuit-pre89-audio.txt` preserves the exact old audio API; the
+hosted browser regression installs a cache-first worker serving those bytes,
+then checks launch, driving and music while the older cached API remains intact.
+A separate failed-module request checks visible reload recovery. Fresh-install
+offline coverage remains in the normal Pursuit suite.
+
+Executed locally: all 886 Node tests, the legacy-cache launch/driving/music
+regression, visible failed-module reload recovery, source/provenance checks,
+package/offline verification and the 14 research-capsule tests passed. The
+package adds 16 byte-identical native modules (about 60 KiB), without runtime
+dependencies. An early fixture incorrectly polled an async predicate; a Promise
+was truthy before worker activation. The final test explicitly awaits the real
+worker's readiness with a timeout before changing the server's asset version.

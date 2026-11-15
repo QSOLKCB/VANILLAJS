@@ -82,13 +82,13 @@
       "path": "demos/pursuit-lab/index.html",
       "status": "original",
       "sources": [],
-      "sha256": "036e1755b671c0ee87baac9edef295ce02d7ce3d4b574e5cb1c2d6c0e1b1f851"
+      "sha256": "9f50b5f2ae364f1c10f31cb64f6aafba50f1b3713d9e6eee75af8dc216192b77"
     },
     {
       "path": "demos/pursuit-lab/js/app.js",
       "status": "original",
       "sources": [],
-      "sha256": "9d0e72b9fd4a14ee82ec13c57abda5f3cf7f6dc902c76d2562b306c4b2e210a9"
+      "sha256": "83173fa06f6db11b111f8ab3d0de94da3a1d27d76c584b2b764b6ed407a08f34"
     },
     {
       "path": "demos/pursuit-lab/js/audio.js",
@@ -144,6 +144,12 @@
         "js/sim.js"
       ],
       "sha256": "d887ab6edec499057c75529e0a850a3edc7438fd7c0fdb302d57deca398e24fa"
+    },
+    {
+      "path": "demos/pursuit-lab/js/start.js",
+      "status": "original",
+      "sources": [],
+      "sha256": "b1b135478d1335068cd3e421210ace643ac80dadc07d8dc53ce1094be08bafc4"
     }
   ]
 }

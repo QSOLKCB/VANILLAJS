@@ -306,6 +306,7 @@
     "scripts/browser-reuse-policy.json",
     "scripts/flight-browser-preflight.mjs",
     "scripts/build.js",
+    "scripts/pursuit-package.mjs",
     "scripts/verify-offline.js",
     "scripts/service-worker.template.js",
     "package.json",
