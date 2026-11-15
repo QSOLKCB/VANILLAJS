@@ -1,6 +1,19 @@
 # DEMO//SYNTH — deterministic audio, tracker music and demoscene visuals
 
-**Status: implementation proposal, not an implemented API.**  
+**Status: original research proposal, partially realised by DEMOSCENE-001 for proposed v2.4.0.**
+
+The [Demoscene Foundry implementation](DEMOSCENE_001.md) now supplies the original
+60-second five-act production, sample-indexed timeline, four-voice integer score,
+full PCM/WAV export, native procedural geometry/glyphs, Workbench Visual FX
+sidecar, portable generator, identity receipts, offline startup and byte reporting.
+The current implementation reuses Soundtrack/audio2d rather than introducing a
+second synth or tracker engine. Its tested contracts are in DEMOSCENE_001.md.
+
+**Still future:** ProTracker MOD encoding/verification, a tracker workstation,
+AudioWorklet streaming, 4K/64K executable entries, physical lattice acoustics,
+phonon/QEC/GF(3) extensions and the remaining addendum research. The staged work
+orders below are historical design material, not claims that those APIs exist.
+No archived GPU/RTX or formal proof evidence is changed.
 Planning base: VANILLAJS `90b2fe1f3428710eade90cc328c9e6bf7e18f457` (the reviewed post-PR #35 main).
 No runtime, GPU workflow or archived RTX001–004 evidence is modified by this proposal.
 

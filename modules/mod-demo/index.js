@@ -46,7 +46,7 @@ export function validateDemo(source){
   record(settings.text,['title','subtitle','scroller']);for(const t of Object.values(settings.text))label(t);provenance(settings.provenance);if(settings.text.title.length>24||settings.text.subtitle.length>32||textVoxels(settings.text.title).length+textVoxels(settings.text.subtitle).length>1000)throw new RangeError('3D title geometry budget');
   record(timeline,['scenes','camera','cueChannel']);num(timeline.cueChannel,0,3,true);
   if(list(timeline.scenes,5).length!==5)throw new TypeError('five acts required');
-  timeline.scenes.forEach((s,i)=>{record(s,['id','name','start','end','effect']);id(s.id);label(s.name);if(s.start!==i*576000||s.end!==(i+1)*576000||!DEMO_EFFECTS.includes(s.effect))throw new TypeError('invalid act/effect');});unique(timeline.scenes);
+  timeline.scenes.forEach((s,i)=>{record(s,['id','name','start','end','effect']);id(s.id);label(s.name);if(s.start!==i*576000||s.end!==(i+1)*576000||s.effect!==['rotate','lattice','tunnel','radial','dissolve'][i])throw new TypeError('invalid act/effect');});unique(timeline.scenes);
   keys(timeline.camera,['position','target','fov']);
   const phrases=Array.from({length:8},(_,i)=>{const p=byId.get('phrase-'+i);record(p,['notes','gains','gates','waves']);
     if(list(p.notes,4).length!==4||list(p.gains,4).length!==4||list(p.gates,4).length!==4||list(p.waves,4).length!==4)throw new TypeError('four voice lanes required');

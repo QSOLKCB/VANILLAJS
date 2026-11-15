@@ -7,7 +7,7 @@ import {jsDependencies,resolveLocal} from './browser-dependencies.mjs';
 export const demoHash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const root=resolve(import.meta.dirname,'..');
 export async function demoRuntime(){
-  const files=new Map(),pending=['demos/demoscene-lab/start.js'];
+  const files=new Map(),pending=['demos/demoscene-lab/start.js','demos/demoscene-lab/intro-example.js'];
   while(pending.length){const path=pending.pop();if(files.has(path))continue;if(!/^(?:modules|api|demos\/demoscene-lab)\/[a-zA-Z0-9_./-]+\.js$/.test(path)||path.split('/').includes('..'))throw Error('nonlocal runtime dependency');
     const bytes=await readFile(resolve(root,path)),deps=jsDependencies(bytes.toString());if(deps.issues.length)throw Error('unresolved runtime in '+path+': '+deps.issues.join(', '));files.set(path,bytes);for(const spec of deps.imports)pending.push(resolveLocal(path,spec));
   }return files;
@@ -23,8 +23,10 @@ export function byteReport(files,projectBytes){
 export async function portableDemo(project){
   const files=await demoRuntime(),htmlPath='demos/demoscene-lab/index.html';
   let html=await readFile(resolve(root,htmlPath),'utf8');html=html.replace('<script type="module" src="../../offline/register.js"></script>','');
+  html=html.replaceAll('href="../../index.html"','href="./index.html"').replaceAll('href="../editor/index.html#visual-fx"','href="https://qsolkcb.github.io/VANILLAJS/demos/editor/index.html#visual-fx"');
   html=html.replace('<script type="module" src="./start.js"></script>','<script type="application/json" id="generated-project">'+project.bytes.replaceAll('<','\\u003c')+'</script><script type="module" src="./start.js"></script>');
   files.set(htmlPath,Buffer.from(html));files.set('demos/demoscene-lab/style.css',await readFile(resolve(root,'demos/demoscene-lab/style.css')));
+  for(const path of ['demos/demoscene-lab/intro.html','docs/DEMOSCENE_001.md','docs/MAKE_YOUR_FIRST_DEMOSCENE_INTRO.md','docs/DEMOSCENE_DONOR_REVIEW.md'])files.set(path,await readFile(resolve(root,path)));
   files.set('index.html',Buffer.from('<!doctype html><html lang="en"><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=./demos/demoscene-lab/index.html"><title>Demoscene production</title><a href="./demos/demoscene-lab/index.html">Open the production</a></html>'));
   for(const path of ['LICENSE','NOTICE'])files.set(path,await readFile(resolve(root,path)));
   files.set('project.demoscene.json',Buffer.from(project.bytes));

@@ -23,6 +23,7 @@ await import('./verify-subhunt.js');
 await import('./verify-football.js');
 await import('./verify-pursuit.js');
 await import('./verify-skyguard.js');
+await import('./verify-demoscene.mjs');
 for(const [name,recipe] of Object.entries(catalogue.recipes)){
   await readFile(resolve(root,recipe.entry));
   for(const module of recipe.modules)assert.ok(catalogue.modules[module],`${name}: unknown module ${module}`);

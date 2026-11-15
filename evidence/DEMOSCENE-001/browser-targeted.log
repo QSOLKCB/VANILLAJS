@@ -1,0 +1,3 @@
+Demoscene: six visual states, full WAV hash, sample seek, audio cancellation, fullscreen, mobile, real Workbench roundtrip and offline playback PASS
+Demoscene upgrade: real older worker retained; playback and failed-import reload recovery PASS
+Demoscene portable generator: embedded validated seed, complete native runtime, playback and intro example PASS

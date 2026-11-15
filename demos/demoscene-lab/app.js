@@ -26,7 +26,8 @@ for(const b of document.querySelectorAll('[data-act]'))b.onclick=action(()=>play
 $('mute').onclick=()=>{player.transport.mute(!player.transport.muted);$('mute').setAttribute('aria-pressed',String(player.transport.muted));$('mute').textContent=player.transport.muted?'MUTED':'SOUND ON';};
 $('quality').onchange=()=>{player.quality=$('quality').value;status('Visual detail changed · score and timeline unchanged');};
 $('fullscreen').onclick=action(async()=>{if(document.fullscreenElement)await document.exitFullscreen();else await $('stage').requestFullscreen();});
-document.addEventListener('fullscreenchange',()=>{$('fullscreen').textContent=document.fullscreenElement?'EXIT FULLSCREEN':'⛶ FULLSCREEN';player.gate.invalidate();});
+$('exit-fullscreen').onclick=action(()=>document.exitFullscreen());
+document.addEventListener('fullscreenchange',()=>{$('exit-fullscreen').hidden=!document.fullscreenElement;$('fullscreen').textContent=document.fullscreenElement?'EXIT FULLSCREEN':'⛶ FULLSCREEN';player.gate.invalidate();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){player.transport.pause();status('Paused while the page is hidden');}});
 $('screen').addEventListener('webglcontextlost',event=>{event.preventDefault();cancelAnimationFrame(frameId);player.transport.pause();status('Graphics context lost · playback paused');});
 $('screen').addEventListener('webglcontextrestored',action(()=>{player.restore();render();status('Graphics restored · press play to continue');}));

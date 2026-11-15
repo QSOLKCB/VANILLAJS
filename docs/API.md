@@ -808,3 +808,12 @@ See [complete APIs, hit ordering, schemas and bounds](FPS_FOUNDATION_001.md).
 magazine/cooldown/reload state. `Renderer.begin` accepts optional vertical `fov`
 (0.2–2.5 radians), with the previous default unchanged.
 [Public-module example](../api/fps/example.js) has no demo-directory dependency.
+
+## Demoscene production (experimental)
+
+`api/demoscene/index.js` composes `demo-timeline`, `demo-scene`, `mod-demo` and
+the opt-in browser `SampleAudioTransport`. The pure APIs evaluate absolute integer
+sample positions, bounded effects and strict inert compositions; the browser
+adapter owns Web Audio nodes and device timing. See [DEMOSCENE_001.md](DEMOSCENE_001.md)
+for the 48 kHz / 60 second profile, schemas, frame endpoints, borrowed geometry
+buffers, rejection behaviour and reproducibility scope.

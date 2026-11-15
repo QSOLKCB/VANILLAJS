@@ -239,3 +239,11 @@ SPOOKY-NOTICE.txt; PROVENANCE.json records original and adapted file hashes.
 Naval aircraft, weapon rules, ship scenery and the sea-defence scenario are
 new demo-owned content. Shared VANILLAJS APIs are reused directly. No third-party
 game assets, samples or runtime packages are included. See docs/SKYGUARD_INTEGRATION.md.
+
+DEMOSCENE-001 — The Demoscene Foundry
+Original production geometry, block glyphs, score and new engine/creator code
+are Apache-2.0. Design-only research from SPECTRAL, SONIFICATION, PSYCLE-LINUX,
+E8, E8_MUSIC, OPT, ARCADE and CorpoWars3d is pinned in
+docs/DEMOSCENE_DONOR_REVIEW.md. No donor implementation or assets are copied.
+Existing local Soundtrack, audio2d, FrameGate and renderer attribution remains.
+Imported user assets retain their declared licences and source provenance.

@@ -74,6 +74,7 @@ test('audio pause/seek/restart/mute and pending resume cancellation own every no
   await transport.seek(576000);await transport.play();assert.equal(nodes.at(-1).args[1],12);await transport.seek(1152000);assert.equal(nodes.at(-1).args[1],24);transport.mute(true);assert.equal(transport.gain.gain.value,0);await transport.restart();assert.equal(nodes.at(-1).args[1],0);
   const before=transport.sample;assert.throws(()=>transport.seek(-1));assert.equal(transport.sample,before);await transport.dispose();assert.ok(nodes.every(n=>n.stopped));
   let resume;ctx.resume=()=>new Promise(r=>resume=r);const pending=new SampleAudioTransport(project.audio,{contextFactory:()=>ctx}),promise=pending.play();pending.pause();resume();await promise;assert.equal(pending.playing,false);assert.equal(pending.starts,0);
+  const failed=contextMock();const make=failed.ctx.createBufferSource;failed.ctx.createBufferSource=()=>{const node=make.call(failed.ctx);node.start=()=>{throw Error('device start failed');};return node;};const retry=new SampleAudioTransport(project.audio,{contextFactory:()=>failed.ctx});await assert.rejects(retry.play(),/device start/);assert.equal(retry.playing,false);assert.equal(retry.source,null);failed.ctx.createBufferSource=make;await retry.play();assert.equal(retry.starts,1);await retry.dispose();
 });
 test('portable generator produces repeatable complete runtime, receipts and no overwrite',async()=>{
   const root=await mkdtemp(join(tmpdir(),'demoscene-test-'));try{

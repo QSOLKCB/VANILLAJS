@@ -4,6 +4,8 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {machineRemembers} from '../demos/demoscene-lab/preset.js';
 import {checkDemosceneUpgrade} from './demoscene-upgrade-check.mjs';
+import {createServer} from 'node:http';
+import {portableDemo} from './demoscene-package.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 export async function verifyDemoscene(browser,base){
   const context=await browser.newContext({viewport:{width:1440,height:1100}}),page=await context.newPage(),errors=[],external=[];
@@ -26,7 +28,7 @@ export async function verifyDemoscene(browser,base){
     await page.locator('#toggle').click();const starts=await page.evaluate(()=>__demoscene.snapshot().starts),bytes=await page.evaluate(()=>__demoscene.snapshot().project);
     await page.locator('#project-import').setInputFiles({name:'bad.json',mimeType:'application/json',buffer:Buffer.from('{}')});await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Retry'));assert.equal(await page.evaluate(()=>__demoscene.snapshot().project),bytes);assert.equal(await page.evaluate(()=>__demoscene.snapshot().playing),true);assert.equal(await page.evaluate(()=>__demoscene.snapshot().starts),starts);
     await page.locator('#restart').click();await page.waitForFunction(s=>__demoscene.snapshot().starts>s,starts);assert.ok(await page.evaluate(()=>__demoscene.snapshot().stops>0));await page.locator('#mute').click();assert.equal(await page.locator('#mute').getAttribute('aria-pressed'),'true');
-    await page.locator('#fullscreen').click();await page.waitForFunction(()=>!!document.fullscreenElement);await page.evaluate(()=>document.exitFullscreen());await page.waitForFunction(()=>!document.fullscreenElement);
+    await page.locator('#fullscreen').click();await page.waitForFunction(()=>!!document.fullscreenElement);await page.locator('#exit-fullscreen').click();await page.waitForFunction(()=>!document.fullscreenElement);
     await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));delete document.hidden;});assert.equal(await page.evaluate(()=>__demoscene.snapshot().playing),false);
     await page.locator('#project-import').setInputFiles({name:'roundtrip.json',mimeType:'application/json',buffer:project});await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Validated project'));assert.equal(await page.evaluate(()=>__demoscene.snapshot().project),bytes);
     await page.setViewportSize({width:375,height:850});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile horizontal overflow');await page.screenshot({path:'browser-artifacts/demoscene-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1100});
@@ -35,8 +37,17 @@ export async function verifyDemoscene(browser,base){
     await page.locator('#fx-effect').selectOption('radial');await page.locator('#fx-copies').fill('8');await page.locator('#fx-effect-apply').click();await page.locator('#fx-time').fill('18');await page.locator('#fx-key').click();await page.locator('#fx-preview-seek').click();assert.ok(!(await page.locator('#fx-status').textContent()).startsWith('Rejected'));await page.screenshot({path:'browser-artifacts/demoscene-workbench.png',fullPage:true});
     const fx=await download('fx-export');await page.locator('#fx-undo').click();await page.locator('#fx-redo').click();assert.equal(await page.evaluate(()=>__editorDemoscene),fx.toString());await page.locator('#fx-import').setInputFiles({name:'fx.json',mimeType:'application/json',buffer:fx});assert.notEqual(fx.toString(),captured);
     await page.goto(base+'demos/demoscene-lab/index.html');await wait();await page.locator('#project-import').setInputFiles({name:'fx.json',mimeType:'application/json',buffer:fx});await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Validated project'));assert.equal(await page.evaluate(()=>__demoscene.snapshot().project),fx.toString());
+    await page.goto(base+'demos/demoscene-lab/intro.html');await page.locator('#enabled').uncheck();await page.locator('#launch').click();await page.locator('#menu').waitFor({state:'visible'});await page.reload();await page.locator('#launch').click();await page.locator('#skip').click();await page.locator('#menu').waitFor({state:'visible'});
+    await page.goto(base+'demos/demoscene-lab/index.html');await wait();
     await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload();await page.waitForFunction(()=>!!navigator.serviceWorker.controller);await context.setOffline(true);await page.reload();await wait();await page.locator('#start').click();await page.waitForFunction(()=>__demoscene.snapshot().sample>4800);assert.deepEqual(errors,[]);assert.deepEqual(external,[]);
     console.log('Demoscene: six visual states, full WAV hash, sample seek, audio cancellation, fullscreen, mobile, real Workbench roundtrip and offline playback PASS');
   }catch(error){await page.screenshot({path:'browser-artifacts/demoscene-failed.png',fullPage:true}).catch(()=>{});console.error('Demoscene browser failure',errors,await page.locator('#status').textContent().catch(()=>''));throw error;}finally{await context.close();}
   await checkDemosceneUpgrade(browser,base);
+  await checkPortableDemo(browser);
+}
+async function checkPortableDemo(browser){
+  const {files}=await portableDemo(machineRemembers(1984)),server=createServer((req,res)=>{const path=decodeURIComponent(new URL(req.url,'http://localhost').pathname).slice(1)||'index.html',bytes=files.get(path);if(!bytes){res.writeHead(404);res.end();return;}res.setHeader('Content-Type',path.endsWith('.js')?'text/javascript':path.endsWith('.css')?'text/css':path.endsWith('.html')?'text/html':'application/json');res.end(bytes);});
+  await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}/`,context=await browser.newContext(),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+  try{await page.goto(base);await page.waitForFunction(()=>document.documentElement.dataset.labReady==='demoscene');assert.equal(await page.evaluate(()=>__demoscene.player.project.settings.seed),1984);await page.locator('#start').click();await page.waitForFunction(()=>__demoscene.snapshot().sample>4800);await page.locator('#toggle').click();await page.goto(base+'demos/demoscene-lab/intro.html');await page.locator('#enabled').uncheck();await page.locator('#launch').click();await page.locator('#menu').waitFor({state:'visible'});assert.deepEqual(errors,[]);}finally{await context.close();await new Promise(r=>server.close(r));}
+  console.log('Demoscene portable generator: embedded validated seed, complete native runtime, playback and intro example PASS');
 }

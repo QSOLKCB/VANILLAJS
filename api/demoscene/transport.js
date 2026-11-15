@@ -19,7 +19,8 @@ export class SampleAudioTransport {
     if(!this.buffer){const pcm=this.audio.renderRange(0,DEMO_SAMPLES);this.buffer=this.context.createBuffer(1,DEMO_SAMPLES,DEMO_RATE);const channel=this.buffer.getChannelData(0);for(let i=0;i<pcm.length;i++)channel[i]=pcm[i]/32768;}
     if(this.offset===DEMO_SAMPLES)this.offset=0;
     this.stopNode();const source=this.context.createBufferSource();source.buffer=this.buffer;source.connect(this.gain);this.source=source;this.anchor=this.context.currentTime;this.playing=true;source.onended=()=>{if(this.source!==source)return;this.offset=DEMO_SAMPLES;this.playing=false;this.source=null;source.disconnect();};
-    source.start(0,this.offset/DEMO_RATE);this.starts++;
+    try{source.start(0,this.offset/DEMO_RATE);this.starts++;}
+    catch(error){this.playing=false;this.source=null;source.onended=null;source.disconnect();throw error;}
   }
   async restart(){this.pause();this.offset=0;await this.play();}
   mute(value){this.muted=Boolean(value);if(this.gain)this.gain.gain.value=this.muted?0:.7;}
