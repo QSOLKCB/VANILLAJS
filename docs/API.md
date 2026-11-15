@@ -794,3 +794,7 @@ pixel/+Y-down compatibility frame. Career progression and UI belong to the
 See [full units, limits, lifecycle and examples](OUTRUIN_INTEGRATION.md) and
 [play the Pursuit Lab](../demos/pursuit-lab/index.html). These APIs do not add
 missions, world data, layouts or a new synthesizer to the core.
+
+## Experimental arcade combat and packs
+
+See [ARCADE-FOUNDATION-001](ARCADE_FOUNDATION_001.md) for `combat2d` immutable worlds, atomic ticks, bounded integer hit resolution, attack windows, and `mod-arcade` typed data-pack admission over DataModRegistry. Both playable modes in Arcade Combat Foundry use these contracts. Game progression/replay sessions remain game-owned; this is not a stable general game framework.

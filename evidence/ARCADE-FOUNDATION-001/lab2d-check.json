@@ -1,0 +1,121 @@
+{
+  "strict": {
+    "schemaVersion": 1,
+    "kind": "qsol.vanillajs.lab2d.evidence.v1",
+    "model": "strict fixed tick + 48kHz integer PCM + 6-trit UTF8",
+    "sourceBaseline": "34040c330a4943d4b55104c78935a25b3ab94973",
+    "sourceSHA256": {
+      "modules/motion2d/index.js": "fb50d25a6c502e294a10c5daf9b227988d4465363c38cb428415383653e7e789",
+      "modules/audio2d/index.js": "838c90cc71d2ffb89a205eb47d280721bd36e3bfd8b3f7467f31668359d50034",
+      "modules/ternary-store2d/index.js": "ffea44569e1306853df65a97b86f18e1f328e20dda7e1b43b7eac93723f5847b",
+      "demos/2d-lab/world.js": "cf182147f950767f4964bb333d0e03ce8ca80d4389784326e7d5d62ebe45fcab"
+    },
+    "scenes": [
+      {
+        "kind": "rts",
+        "sha256": "0e9de3e1a90136dbddd713e6f8c287d18f89b05874579488c470babc1775e76d",
+        "tick": 240,
+        "final": {
+          "x": 6144,
+          "y": 512,
+          "vx": 0,
+          "vy": 0,
+          "heading": 0
+        },
+        "shotCount": 0
+      },
+      {
+        "kind": "shmup",
+        "sha256": "92e434b68cc3946916a5de6c0e406790bff1cc8be21303526938e12d91210a3e",
+        "tick": 240,
+        "final": {
+          "x": 3328,
+          "y": 1536,
+          "vx": 16,
+          "vy": 0,
+          "heading": 0
+        },
+        "shotCount": 0
+      },
+      {
+        "kind": "platform",
+        "sha256": "8204405d79eee1d1b4da4a898b8faa4df08ceaa13ee1addfe43922dad33829e9",
+        "tick": 240,
+        "final": {
+          "x": 1144,
+          "y": 0,
+          "vx": 8,
+          "vy": 0,
+          "heading": 0
+        },
+        "shotCount": 0
+      },
+      {
+        "kind": "car",
+        "sha256": "1e47a6ab0af46effe334428d1b5ee93976ee32f75066c086e0150ee4c256e5b6",
+        "tick": 240,
+        "final": {
+          "x": 6400,
+          "y": 1648,
+          "vx": 0,
+          "vy": 98,
+          "heading": 3
+        },
+        "shotCount": 0
+      }
+    ],
+    "rtsRouteLength": 36,
+    "audio": {
+      "sampleRate": 48000,
+      "frames": 48000,
+      "eventCount": 4,
+      "wavSHA256": "e2c8688c128cc43d749894f08f8d309a931e5f19d7eb393ba9223fbd2f4ce364",
+      "pcmSHA256": "be7646dffa8b2231049bf6e0c58cd4fbcc7ef6499fc34be2345e1700e0c67130",
+      "chunkIdentical": true
+    },
+    "ternary": {
+      "columns": 27,
+      "byteLength": 80,
+      "rowCount": 18,
+      "sha256": "6fe6fa1f11644517988e6c8b63b52ac642c0037e01407ab7e4c69ad282bf6cdf",
+      "cacheBuilds": 1,
+      "cacheHits": 30,
+      "unchangedWrites": 1
+    }
+  },
+  "strictSHA256": "7b8844cde591ae52325bf854613907f29aa8503507f8ac8ffb6c020dfc12325b",
+  "observations": {
+    "device": "hosted-or-owner CPU",
+    "hardwareGPU": "not measured",
+    "unit": "milliseconds",
+    "profile": "serial Node; 2 warmups; 7 trials; no time gate",
+    "cacheComparison": {
+      "repeatedCache": {
+        "label": "30 cached snapshot copies",
+        "samplesMs": [
+          0.28294400000000053,
+          0.03488199999999608,
+          0.03813700000000608,
+          0.06704000000000576,
+          0.034782000000006974,
+          0.058458000000001675,
+          0.017446000000006734
+        ],
+        "medianMs": 0.03813700000000608
+      },
+      "freshBuild": {
+        "label": "30 new stores + snapshots",
+        "samplesMs": [
+          0.6734899999999868,
+          1.2200799999999958,
+          0.8665699999999958,
+          0.8176459999999963,
+          0.8009109999999993,
+          0.5428139999999928,
+          0.5553120000000007
+        ],
+        "medianMs": 0.8009109999999993
+      }
+    }
+  }
+}

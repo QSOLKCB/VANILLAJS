@@ -119,3 +119,7 @@ rounding/overflow and independent validation. The existing VANILLAJS
 exact-course and improved Visual Editor are starting points, not code to
 reimplement. Trusted executable JavaScript extensions and a general-purpose
 game kit remain later milestones. Every PR stops for owner review.
+
+## Experimental arcade consumer
+
+`mod-arcade` adds domain validation for four typed `qsol.vanillajs.arcade-action.v1` data entries while retaining this registry/lifecycle. [Arcade pack contract](ARCADE_FOUNDATION_001.md) describes bounds and atomic game-session replacement. It does not extend the registry with executable hooks.

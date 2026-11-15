@@ -141,3 +141,7 @@ account until an actual authorized call and confirmed provider usage.
   observations, not assumed universal speedups.
 - Owner-run physical RTX browser and bounded Sol agent review are
   separate follow-ups. Never reissue or rewrite RTX001–005 archives.
+
+## Additive arcade motor controls (ARCADE-FOUNDATION-001)
+
+`stepBody2D` now accepts optional bounded integer `motor` tuning for platform/shmup and `controls.impulseX/impulseY` through the existing endpoint collision path. Omitted options preserve the original profiles. The separate `combat2d` module supplies attack/hurtbox and swept projectile contacts without changing the 256-subunit representation. [Arcade contracts and limitations](ARCADE_FOUNDATION_001.md).

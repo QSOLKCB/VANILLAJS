@@ -1,0 +1,76 @@
+{
+  "kind": "qsol.vanillajs.pursuit-replay-test-evidence.v1",
+  "dateLocal": "2026-11-16",
+  "timezone": "Australia/Adelaide",
+  "previousCommit": "d523856a654eeef55f1ed492ad364de35f016e77",
+  "failedWorkflow": "https://github.com/QSOLKCB/VANILLAJS/actions/runs/43752024668/job/132927946796",
+  "cause": "An exact Node-versus-Chromium replay comparison exceeded the documented same-runtime floating-point replay contract. Math.sin results differ by one ULP at tick 109.",
+  "reproduced": {
+    "tick": 109,
+    "nodeOffset": 3.81425599872205,
+    "chromiumOffset": 3.8142559987220497,
+    "difference": 4.440892098500626e-16
+  },
+  "fix": "Import the live page startup module sibling sim.js in Chromium and replay the supplied journal there; deepStrictEqual still compares every snapshot field. No epsilon, rounding, runtime calculation change, policy change or receipt bypass.",
+  "regression": "A real 109-tick control run fails the old comparison and passes the corrected one. Altering one journal input changes the result; replay leaves the paused live run unchanged.",
+  "environment": {
+    "node": "v24.22.1",
+    "playwright": "1.57.0 (preinstalled)",
+    "chromium": "156.0.8078.79 (system executable)",
+    "browserEnv": {
+      "NODE_PATH": "/opt/codex/cua_node/lib/node_modules",
+      "PLAYWRIGHT_CHROMIUM_EXECUTABLE": "/usr/bin/chromium"
+    }
+  },
+  "commands": [
+    {
+      "command": "node /workspace/work/check-pursuit.mjs",
+      "scope": "Registered checkPursuit against packaged dist at /VANILLAJS/ before correction, with tick-109 regression added",
+      "result": "EXPECTED FAIL: exact CI offset mismatch",
+      "log": "regression-before.log.gz"
+    },
+    {
+      "command": "node /workspace/work/check-pursuit.mjs",
+      "scope": "Same packaged checkPursuit after correction, including cache-upgrade and offline checks",
+      "result": "PASS",
+      "log": "pursuit-browser-after.log"
+    },
+    {
+      "command": "node --test tests/*.test.js",
+      "result": "PASS: 927 tests, zero failures",
+      "log": "node-final.log.gz"
+    },
+    {
+      "command": "node scripts/check.js",
+      "result": "PASS: 372 JavaScript files, 57 module contracts, two research experiments",
+      "log": "source-check.log"
+    },
+    {
+      "command": "node scripts/build.js",
+      "result": "PASS: 539 files",
+      "log": "build.log"
+    },
+    {
+      "command": "node scripts/verify-offline.js",
+      "result": "PASS: 539 files",
+      "log": "offline.json"
+    }
+  ],
+  "scope": "Browser replay code matches final source. Only documentation changed in the package; the final build and offline verification followed. Existing Node exact campaign replays and runtime source are unchanged. Hosted CI is tracked on the PR.",
+  "sourceSHA256": {
+    "scripts/browser-pursuit.js": "59ba490ce9166bfae96576956d20e7bcbcb71002ddabc26eec598bbe5260db5e",
+    "docs/OUTRUIN_INTEGRATION.md": "80fad8fdb1537b3bc6061319cb95a902696ae51b661c7cf3b81e305bea03e5de",
+    "demos/pursuit-lab/js/sim.js": "931e5ab4488c19ae0ff9b5e85864621cdcaa73bc062d1a321da2308287e80dcf",
+    "tests/pursuit.test.js": "f907765c96fc65d78aa3c3e8880f4a35be5e9e1334061e1ce8689813abd130ba"
+  },
+  "artifactSHA256": {
+    "regression-before.log.gz": "fd3dde854be08c5f8f7db4265d4227698ba0b9037609773ddec825b11a6faa00",
+    "pursuit-browser-after.log": "1c0e761726e487ebc89fdfb6848d468df36ed5277e387b4504b59eaeb5f2a899",
+    "node-final.log.gz": "d262c01ea0f392d54794b47f25e31412b02ca3dd8aa1bbe498540cd1cebab042",
+    "source-check.log": "4a19a592e1ab9cd01a47d0d94b791ff49c085a5139d09e636848332e835a5c4d",
+    "build.log": "8a9f94cc6b5dcc49506355ef2bf9c561e80a1d0650de233b6458f51499f1ad2d",
+    "offline.json": "ed26462e7104e5ceb27eeb4675e3d73c32d4d030eead072e9e57cf82d251c8e9",
+    "ci-failure-excerpt.log.gz": "11b2b2e28a2e8b0ccb3b63b487f59c94735b53435eeea20d5da1ee0efd2f51ab"
+  },
+  "notAReuseWitness": true
+}

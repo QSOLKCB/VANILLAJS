@@ -3,12 +3,20 @@ import assert from 'node:assert/strict';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {composeTrack} from '../demos/pursuit-lab/js/score.js';
-import {replay,snapshot} from '../demos/pursuit-lab/js/sim.js';
 import {checkPursuitUpgrade} from './pursuit-upgrade-check.mjs';
 export async function checkPursuit(browser,base){
   await mkdir('browser-artifacts',{recursive:true});
   const context=await browser.newContext({viewport:{width:1440,height:900}}),page=await context.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
+  // Replay in the live game's Chromium runtime and exact packaged module graph.
+  // Math.sin may differ by an ULP between Node and Chromium; Pursuit guarantees
+  // replay identity within a runtime, not bit identity across JS engines.
+  const replaySnapshot=record=>page.evaluate(async record=>{
+    const entry=document.querySelector('script[type="module"][src$="/js/start.js"]');
+    if(!entry)throw new Error('Pursuit startup module not found');
+    const {replay,snapshot}=await import(new URL('./sim.js',entry.src).href);
+    return snapshot(replay(record));
+  },record);
   const fitted=async()=>page.waitForFunction(()=>{const c=document.querySelector('canvas').getBoundingClientRect(),h=document.querySelector('.telemetry').getBoundingClientRect();return c.width>100&&c.height>40&&c.top>=h.bottom-1&&c.bottom<=innerHeight&&c.right<=innerWidth&&c.left>=0&&document.documentElement.scrollWidth<=innerWidth;});
   const captureIdle=async path=>{
     // Allow the pause/resize frame to paint before taking evidence. Continuous
@@ -48,7 +56,18 @@ export async function checkPursuit(browser,base){
     // Permission failure recovers to a fitted game and leaves the run paused.
     await page.evaluate(()=>{document.querySelector('#app').requestFullscreen=()=>Promise.reject(new Error('blocked test'));});await page.locator('#display').selectOption('fullscreen');await page.waitForFunction(()=>pursuit.snapshot().display.message.includes('unavailable'));await fitted();
     const wavDownload=page.waitForEvent('download');await page.locator('#track-export').click();const wav=await readFile(await (await wavDownload).path());const hash=b=>createHash('sha256').update(b).digest('hex');assert.equal(hash(wav),hash(composeTrack().wav()));await writeFile('browser-artifacts/pursuit-night-shift.wav',wav);
-    const recordDownload=page.waitForEvent('download');await page.locator('#replay-export').click();const record=JSON.parse(await readFile(await (await recordDownload).path(),'utf8'));assert.deepEqual(snapshot(replay(record)),await page.evaluate(()=>pursuit.snapshot().state));
+    const recordDownload=page.waitForEvent('download');await page.locator('#replay-export').click();const record=JSON.parse(await readFile(await (await recordDownload).path(),'utf8'));assert.deepEqual(await replaySnapshot(record),await page.evaluate(()=>pursuit.snapshot().state));
+    // Tick 109 exposes the Node/Chromium Math.sin rounding difference found in CI.
+    // Use actual controls/steps, without editing authoritative simulation state.
+    const precisionRun=await page.evaluate(()=>{
+      document.querySelector('#restart').click();pursuit.advance(Array(109).fill(4));document.querySelector('#pause').click();
+      return {record:pursuit.record(),state:pursuit.snapshot().state};
+    });
+    assert.equal(precisionRun.state.tick,109);
+    assert.deepEqual(await replaySnapshot(precisionRun.record),precisionRun.state,'Tick-109 replay must preserve every snapshot field exactly');
+    const changed=structuredClone(precisionRun.record);changed.inputs[0]=0;
+    assert.notDeepEqual(await replaySnapshot(changed),precisionRun.state,'Replay must consume the supplied journal');
+    assert.deepEqual(await page.evaluate(()=>pursuit.snapshot().state),precisionRun.state,'Replaying a journal must not mutate the paused live game');
     // Full real rule loop under controlled input; no state, timer or health edits.
     await page.locator('#restart').click();
     const terminal=await page.evaluate(()=>{pursuit.advance(Array(4200).fill(0));return pursuit.snapshot().audio;});

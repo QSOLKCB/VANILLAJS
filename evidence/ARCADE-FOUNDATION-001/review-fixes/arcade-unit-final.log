@@ -1,0 +1,35 @@
+Arcade broad phase work: { full: 25416, candidates: 3237 }
+✔ closed hurtbox boundary, corner and one-subunit separation (5.978479ms)
+✔ facing rotates reach and attack facing is latched through windup (1.494129ms)
+✔ swept thin targets, grazing edges, start-inside and finite segment bounds (0.563097ms)
+✔ integer slab sweep agrees with existing independent 3D segment oracle on 2000 bounded queries (29.184829ms)
+✔ projectiles choose earliest contact, ID ties and solid ties regardless of source order (1.271404ms)
+✔ multiple attackers, simultaneous trades and invulnerability have stable event order (0.568255ms)
+✔ per-attack victims deduplicate across ticks; later attacks hit again (0.308264ms)
+✔ stun, knockback decay, recovery and armour timings are reproducible (0.397789ms)
+✔ knockout and projectile completion are singular; allies never take damage (0.39907ms)
+✔ actor, projectile, event and invalid-command failures are atomic (1.46836ms)
+✔ bounded broad phase equals full reference for 1200 evolving combat ticks (188.558428ms)
+✔ motion motor tuning and impulses reuse point collision; legacy defaults remain exact (0.626202ms)
+✔ starter packs round-trip exact accepted version and bytes through existing registry (7.203182ms)
+✔ packs reject malformed, unknown, unsafe, oversized and incompatible content atomically (5.246877ms)
+✔ both archetypes complete staged encounters using shared damage; defeat is reachable (20.929794ms)
+✔ run encounter waits for its trigger without falsely clearing absent enemies (18.877074ms)
+✔ unmodified original starter stages are completable through accepted commands (94.218718ms)
+✔ jump reaches actual ledges, pickups heal, and physical obstacles block endpoints (2.777861ms)
+✔ run completion respects an authored elevated extraction gate (8.598253ms)
+✔ ledge support uses the actual endpoint after released input and knockback (2.296346ms)
+✔ minimum admitted projectile speed supports every diagonal and exact replay (10.841418ms)
+✔ replay and snapshot reproduce exact state and preserve accepted pack versions (89.154636ms)
+✔ every accepted command word fits the worst-case bounded 36000-tick journal (932.781888ms)
+✔ render partitioning does not change journal-driven simulation state (18.201437ms)
+✔ retained source-identical scenery matches forced reconstruction and invalidates every pack change (17.535274ms)
+✔ original music/effects use bounded audio2d and deterministic PCM (70.72136ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1639.820941
