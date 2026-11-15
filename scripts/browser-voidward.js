@@ -16,6 +16,7 @@ const root=path.resolve(import.meta.dirname,'..');
 const stage=path.join(root,'dist/demos/4x-game-lab/voidward');
 const out=path.resolve(options.out||'browser-artifacts/voidward');
 const url=base+'demos/4x-game-lab/voidward/index.html';
+const SAVE_RESTORE_TIMEOUT_MS=30_000;
 await fs.mkdir(out,{recursive:true});
 const planned=['all-campaign-empires','editor-handoff-transaction','player-orders','group-orders','ship-refit-construction','diplomacy-combat','creator-roundtrip','legacy-save-migration','large-save-roundtrip','campaign-progress','large-list-filtering','audio-preferences','keyboard-responsive-touch','offline','render-parity-performance'];
 const checks=Object.fromEntries(planned.map(name=>[name,{status:'NOT_RUN'}]));
@@ -160,7 +161,7 @@ try {
     await page.screenshot({path:path.join(out,'created-universe.png'),fullPage:true});
   });
   await check('legacy-save-migration',async()=>{
-    for(const id of ['frontier','machine-dawn']){const fixture=await fs.readFile(path.join(root,'tests/fixtures',`voidward-v1-${id}.json`),'utf8'),old=JSON.parse(fixture);await close();await upload('#save-file',fixture);await page.waitForFunction(({id,turn})=>globalThis.__voidward?.pack.meta.id===id&&globalThis.__voidward.state.version===2&&globalThis.__voidward.state.turn===turn,{id,turn:old.state.turn});assert.equal((await snapshot()).state.turn,old.state.turn);const migrated=(await snapshot()).state;await page.reload();await page.waitForFunction(()=>globalThis.__voidward?.state.version===2);assert.deepEqual((await snapshot()).state,migrated);}
+    for(const id of ['frontier','machine-dawn']){const fixture=await fs.readFile(path.join(root,'tests/fixtures',`voidward-v1-${id}.json`),'utf8'),old=JSON.parse(fixture);await close();await upload('#save-file',fixture);await page.waitForFunction(({id,turn})=>globalThis.__voidward?.pack.meta.id===id&&globalThis.__voidward.state.version===2&&globalThis.__voidward.state.turn===turn,{id,turn:old.state.turn});assert.equal((await snapshot()).state.turn,old.state.turn);const migrated=(await snapshot()).state;await page.reload();await page.waitForFunction(({id,turn})=>globalThis.__voidward?.pack.meta.id===id&&globalThis.__voidward.state.version===2&&globalThis.__voidward.state.turn===turn,{id,turn:old.state.turn},{timeout:SAVE_RESTORE_TIMEOUT_MS});assert.deepEqual((await snapshot()).state,migrated);}
     const before=JSON.stringify((await snapshot()).state);await upload('#save-file','{"kind":"wrong"}');await page.waitForFunction(()=>document.querySelector('#toast').classList.contains('error'));assert.equal(JSON.stringify((await snapshot()).state),before);
   });
   await check('large-save-roundtrip',async()=>{
