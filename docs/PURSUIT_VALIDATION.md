@@ -56,3 +56,27 @@ This demonstrates the tested arcade rules and browser paths, not faithful
 emulation of Chase H.Q., universal replay equivalence, measured performance,
 mobile Safari fullscreen support, hardware-controller feel or audible device
 quality. Those claims were not established by these checks.
+
+## Post-merge capture recovery
+
+Hosted run `43727146207`, job `132851461888`, at merge commit
+`9c57d16a9a6bd4d0e9da271cd351c1b1fb813f01` timed out after 30 seconds
+capturing the live 1836×888 viewport. Diagnostics showed tick 430, a fitted
+canvas, and no page errors. This is separate from the earlier Vault locator
+failure. The exact capture timeout did not reproduce locally with 6× CDP CPU
+throttling; its Chromium 156 compositor cause is not established by that run.
+
+The new idle-paint regression failed on the merge source: two observed frames
+both repainted the unchanged briefing. The app now paints idle scenes only
+after a menu or size change, while continuing input/audio lifecycle polling.
+The browser check performs its driving and pointer assertions, pauses through
+the real control, waits for settled frames, and checks frozen state and zero
+idle paints before capturing the complete page. The pause overlay remains
+visible in evidence. Failure diagnostics are logged before a separately bounded
+five-second best-effort capture; the original error still fails the suite.
+
+Executed locally with the toolchain above: 883 Node tests, source/provenance
+checks, package/offline verification and the packaged Pursuit browser check
+passed. All four viewport captures passed with 6× CPU throttling; desktop and
+320px evidence were inspected. This regression demonstrates idle rendering and
+capture preconditions; hosted CI must still validate its pinned browser.
