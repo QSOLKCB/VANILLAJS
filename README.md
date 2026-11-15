@@ -326,7 +326,7 @@ node scripts/fps-workload.mjs
 ```
 
 The FPS implementation's [development evidence](evidence/FPS-FOUNDATION-001/README.md)
-records **953 passing Node tests**, source checks, packaged play/authoring/input
+records **954 passing Node tests**, source checks, packaged play/authoring/input
 checks, complete replay verification, an actual older-cache upgrade and failed
 startup recovery. Local software Chromium and emulated touch/controllers are
 identified explicitly. PR checks record the hosted execution separately.

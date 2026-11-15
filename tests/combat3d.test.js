@@ -33,6 +33,11 @@ test('stone occlusion, wood budget, actor penetration, friendly blocking and fal
 test('wall wins equal-distance hitscan ties regardless of source order',()=>{
   const g=game({solids:[{id:'cover',box:{min:[-2,0,.1],max:[2,3,.35]},material:'stone'}]});g.step([command()]);assert.equal(g.actor('target').health,100);
 });
+test('zero-damage range-edge impacts cannot contribute assists',()=>{
+  const g=new Combat3D({actors:[actor('alpha',[-3,0,5],0),actor('bravo',[3,0,5],0),actor('target',[0,0,0])],weapons:[weapon({range:2,falloff:0}),weapon({id:'lethal',damage:200})]});
+  const edge=command({actor:'alpha',origin:[0,1,2.35]});const events=g.step([edge]);assert.ok(events.some(e=>e.type==='impact'));assert.equal(events.some(e=>e.type==='damage'),false);assert.deepEqual(g.actor('target').contributions,{});
+  g.step([{...edge,actor:'bravo',weapon:'lethal'}]);assert.equal(g.actor('target').health,0);assert.equal(g.actor('bravo').kills,1);assert.equal(g.actor('alpha').assists,0);
+});
 test('simultaneous eligible shots trade in stable actor order and attribute assists',()=>{
   const actors=[actor('alpha',[-3,0,5],0),actor('bravo',[3,0,5],0),actor('target',[0,0,0])],weapons=[weapon({damage:60})];
   const commands=[command({actor:'bravo'}),command({actor:'alpha'})];const g=new Combat3D({actors,weapons}),h=new Combat3D({actors:[...actors].reverse(),weapons});

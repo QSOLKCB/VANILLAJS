@@ -80,7 +80,7 @@ export class Combat3D {
   #emit(e){this.#events.push({tick:this.#tick,...e});}
   #damage(source,target,w,amount,part,shot,point,kind){
     const a=this.#actors.get(target),owner=this.#actors.get(source);
-    if(!a||a.health<=0||(source===target?!this.#rules.selfDamage:!this.#rules.friendlyFire&&a.team===owner.team))return;
+    if(!a||a.health<=0||amount<=0||(source===target?!this.#rules.selfDamage:!this.#rules.friendlyFire&&a.team===owner.team))return;
     const shield=Math.min(a.armour,amount*.6),damage=Math.min(a.health,amount-shield);a.armour-=shield;a.health-=damage;
     a.contributions[source]={tick:this.#tick};this.#emit({type:'damage',source,target,weapon:w.id,shot,part,amount:damage,armour:shield,point,kind});
     if(a.health===0){a.deadAt=this.#tick;a.deaths++;this.#emit({type:'death',source,target,weapon:w.id,shot});
