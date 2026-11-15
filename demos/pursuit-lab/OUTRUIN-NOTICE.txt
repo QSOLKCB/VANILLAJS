@@ -1,0 +1,27 @@
+OUTRUIN — Copyright 2026 QSOL-IMC / Trent Slade and contributors.
+Original code and creative content are offered under Apache-2.0.
+
+VANILLAJS modules/math, modules/time, modules/audio2d are unmodified Apache-2.0
+sources from QSOLKCB/VANILLAJS, pinned to ac69cde61dcc5feb40ff138e69830c80b903a8e6.
+Their license and exact byte identities are retained under vendor/.
+
+VANILLAJS modules/soundtrack and api/audio are unmodified Apache-2.0 sources
+from 987c8d9be0af418307ea7cda05cbf56b5f130c71. Their upstream implementation
+generalises QSOLKCB/SubHunt (Copyright 2026 Trent Slade / QSOL-IMC and contributors),
+including its v0.2.0 release at 1603d51e8dd40bed06dd229dea0263a0988718d2.
+Outruin's four-phrase compositions and device-failure adapter are original.
+
+The simulation/render-frame lifecycle pattern is adapted from
+QSOLKCB/STREET-RACER, shared/racer/frame.js, pinned to
+03c038c401b3dada8646aa0c5791617d09683b00 (Apache-2.0).
+The perspective renderer was informed by shared/racer/renderer.js at that revision;
+Outruin's geometry, worlds, entities, game logic and artwork are newly authored.
+
+OPT-INV-001 from QSOLKCB/OPT at 7556dd36acd53ed3ed538fd03b1db44e5c1ec869
+informs bounded, identity-bound background and score reuse. OPT is a methodology
+source here, not a runtime dependency or inherited proof of this game.
+
+Overlander (Atari ST) and Outlander (Mega Drive / SNES) are design inspirations.
+No original game code, ROM, graphics, music, logos, or branded vehicles are included.
+Outruin is an independent project and is not affiliated with their rightsholders.
+The README banner is newly generated concept art; gameplay visuals are procedural.

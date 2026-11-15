@@ -465,6 +465,16 @@
       "status": "experimental",
       "description": "SOCCERWEB-derived fixed-step spectator football, management performance, live commands and versioned replay verification.",
       "demo": "demos/football-manager/index.html"
+    },
+    "road-arcade": {
+      "entry": "modules/road-arcade/index.js",
+      "depends": [
+        "math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/pursuit-lab/index.html",
+      "description": "Outruin-derived road-local SI arcade handling and owned continuous curvature; stateless fixed-step vehicle response."
     }
   },
   "recipes": {
@@ -885,6 +895,17 @@
         "mod-sdk"
       ],
       "description": "Touchline: eight SOCCERWEB clubs, squad and financial management, a full league, live matches and a JSON mod workshop."
+    },
+    "pursuit-lab": {
+      "entry": "demos/pursuit-lab/index.html",
+      "modules": [
+        "road-arcade",
+        "math",
+        "time",
+        "audio2d",
+        "soundtrack"
+      ],
+      "description": "Original Chase H.Q.-style five-case highway pursuit, traffic, turbo, replay, fitted/fullscreen display and deterministic PCM soundtrack."
     }
   },
   "experiments": {

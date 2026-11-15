@@ -51,10 +51,11 @@ async function runSuite(group,file,exported){
   if(typeof fn!=='function')throw new TypeError('browser suite function not found: '+exported);
   await fn(browser,base);
 }
-const browser=await chromium.launch({args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const browser=await chromium.launch({...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{}),args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 try{
+  await runSuite('donor','./browser-pursuit.js','checkPursuit');
   await runSuite('donor','./browser-football.js','checkFootball');
   if(needs('home')){
     await page.goto(base);

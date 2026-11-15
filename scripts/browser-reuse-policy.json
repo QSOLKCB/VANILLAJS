@@ -95,14 +95,16 @@
         "demos/space-lab/",
         "demos/soundtrack-lab/",
         "demos/subhunt-lab/",
-        "demos/football-manager/"
+        "demos/football-manager/",
+        "demos/pursuit-lab/"
       ],
       "scripts": [
         "scripts/browser-donor-labs.js",
         "scripts/browser-optional-labs.js",
         "scripts/browser-soundtrack.js",
         "scripts/browser-subhunt.js",
-        "scripts/browser-football.js"
+        "scripts/browser-football.js",
+        "scripts/browser-pursuit.js"
       ],
       "serviceWorker": true,
       "consumes": [
@@ -290,6 +292,10 @@
     "api/audio/": [
       "docs/SUBHUNT_INTEGRATION.md",
       "tests/audio-player.test.js"
+    ],
+    "modules/road-arcade/": [
+      "docs/OUTRUIN_INTEGRATION.md",
+      "tests/road-arcade.test.js"
     ]
   },
   "shared": [
@@ -309,7 +315,8 @@
     "scripts/ci_invariant_oracle.py",
     "tests/fixtures/ci-invariant-001-input.json",
     "tests/fixtures/ci-invariant-001-expected.json",
-    "tests/fixtures/ci-invariant-001-baseline.mjs"
+    "tests/fixtures/ci-invariant-001-baseline.mjs",
+    "scripts/verify-pursuit.js"
   ],
   "opaqueRuntime": {
     "demos/editor/game-export.js": {

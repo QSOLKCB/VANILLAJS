@@ -19,6 +19,7 @@ assert.equal(catalogue.release,pkg.version,'catalogue and package versions diffe
 await import('./verify-voidward.js');
 await import('./verify-subhunt.js');
 await import('./verify-football.js');
+await import('./verify-pursuit.js');
 for(const [name,recipe] of Object.entries(catalogue.recipes)){
   await readFile(resolve(root,recipe.entry));
   for(const module of recipe.modules)assert.ok(catalogue.modules[module],`${name}: unknown module ${module}`);

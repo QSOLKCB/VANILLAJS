@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Explicit Web Audio presentation; the caller owns gesture, pause and focus policy.
 import {isSoundtrack} from '../../modules/soundtrack/index.js';
+export {createEffectPlayer} from './effects.js';
 export function createSoundtrackPlayer(context,track){
   if(!isSoundtrack(track))throw new TypeError('createSoundtrack result required');
   for(let i=0;i<track.phraseCount;i++)if(track.phraseFrames(i)<track.sampleRate/4)throw new RangeError('playback phrases must be at least 250 ms');

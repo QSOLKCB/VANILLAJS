@@ -4,6 +4,8 @@
 // Strict demo profile: 48 kHz mono PCM16LE, <= 8 seconds and 4 nonoverlapping lanes.
 export const AUDIO2D_RATE=48000;
 const LIMIT=8*AUDIO2D_RATE,MAX_EVENTS=128;
+const sounds=new WeakSet();
+export function isSound2D(value){return sounds.has(value);}
 const number=(x,name,min,max)=>{
   if(!Number.isSafeInteger(x)||x<min||x>max)throw new RangeError(name+' out of range');
   return x;
@@ -61,7 +63,7 @@ function eventList(events,frames){
 export function createSound2D({frames=AUDIO2D_RATE,events=[]}={}){
   number(frames,'frames',1,LIMIT);
   const score=eventList(events,frames);
-  return Object.freeze({
+  const result=Object.freeze({
     frames,sampleRate:AUDIO2D_RATE,eventCount:score.length,
     eventSummary:()=>score.map(e=>({...e})),
     renderRange(start,count){
@@ -93,4 +95,5 @@ export function createSound2D({frames=AUDIO2D_RATE,events=[]}={}){
       return new Uint8Array(buf);
     }
   });
+  sounds.add(result);return result;
 }
