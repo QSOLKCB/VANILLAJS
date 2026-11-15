@@ -186,7 +186,7 @@ export function aiIntent(s,p) {
     }
   }else{
     p.intent='mark';
-    if(p.number<=(s.config.indoor?3:5)){
+    if(p.positionRole ? p.positionRole==='DF' : p.number<=(s.config.indoor?3:5)){
       let threat=null,best=Infinity;
       for(const foe of s.players)if(foe.team!==p.team&&!foe.keeper){const d=distance(foe,{x:tx,y:ty});if(d<best){best=d;threat=foe;}}
       if(threat&&best<210*Q){tx+=Math.trunc((threat.x-tx)*(difficulty+1)/6);ty+=Math.trunc((threat.y-dir*27*Q-ty)*(difficulty+1)/6);}
@@ -425,7 +425,7 @@ function refreshTeam(s,team) {
     const active=Math.max(0,s.elapsed-managed.entered[slot]);
     const fatigue=active/(s.config.seconds*60)*s.management.setup.rules.fatigue*(.5+t.press/100+t.tempo/200)*(1.3-person.stamina/200);
     p.ability=playerPerformance(person,t,managed.cohesion,anchor[2],fatigue,team===0?s.management.setup.rules.homeAdvantage:0);
-    p.rosterId=person.id;
+    p.rosterId=person.id;p.positionRole=anchor[2];
   }
 }
 export function createFootballMatch(input) {

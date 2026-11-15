@@ -83,6 +83,8 @@ and restores four condition before facilities. It also gives reserves a seeded
 6% injury chance. Recovery costs nothing, restores 18 condition, and loses three
 sharpness. Injured players cannot start or come on. Exhausted participants below
 55 condition have a seeded 18% chance of a two-week knock after the match.
+Injuries and reserve sales preserve at least one fit keeper and ten fit outfield
+players: this compact demo has no emergency loan market.
 
 These are deliberately compact demo rules, not a real-world scouting or
 sports-science model. There are no licensed real clubs or footballers.

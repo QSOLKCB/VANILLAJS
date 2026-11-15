@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {loadFootballBundle,validateFootballMod,validateMatchSetup,copyFootballData} from '../modules/mod-football/index.js';
-import {createFootballMatch,stepFootball,commandFootball,exportFootballReplay,verifyFootballReplay,footballHash,playerPerformance,ballPhysics,Q} from '../modules/football/index.js';
+import {createFootballMatch,stepFootball,commandFootball,exportFootballReplay,verifyFootballReplay,footballHash,playerPerformance,ballPhysics,aiIntent,Q} from '../modules/football/index.js';
 import {createCareer,trainRound,matchSetup,fixtureList,standings,finishRound,playOtherFixtures,selectPlayer,autoLineup,signPlayer,sellPlayer,improveFacilities,nextSeason,exportCareer,importCareer,ownClub} from '../demos/football-manager/career.js';
 const starter=JSON.parse(await readFile(new URL('../demos/football-manager/starter.json',import.meta.url)));
 const career=()=>createCareer(starter,'sol',1988);
@@ -89,4 +89,27 @@ test('custom squad IDs do not collide with generated recruitment candidates',()=
 });
 test('career copy budget accommodates large custom leagues without widening pack budgets',()=>{
  const large={text:'x'.repeat(8192),rows:Array.from({length:40},()=> 'y'.repeat(8192))};assert.throws(()=>copyFootballData(large),/byte budget/);assert.deepEqual(copyFootballData(large,{maxBytes:1048576,maxNodes:100000}),large);assert.throws(()=>copyFootballData(large,{maxBytes:1048577}),/budget/);
+});
+
+test('injuries and reserve sales preserve a legal fit eleven',()=>{
+ const c=trainRound(career()),club=ownClub(c);c.injuries[club.players[11].id]=2;
+ // Leave exactly ten fit outfield players. Their remaining keeper must stay fit.
+ for(const p of club.players.slice(12))c.injuries[p.id]=2;
+ const pair=fixtureList(c)[0].find(p=>p.includes(c.clubId)),team=pair[0]===c.clubId?0:1;
+ const s=createFootballMatch(matchSetup(c,...pair));s.phase='fulltime';for(const p of s.players)p.ability.condition=20;
+ const results=fixtureList(c)[0].map(([home,away])=>({round:0,home,away,score:[0,0]}));
+ // Repeat the post-match lottery across seeds; it must never remove the last fit XI.
+ for(let seed=1;seed<=100;seed++){const candidate=structuredClone(c);candidate.seed=seed;const done=finishRound(candidate,results,s);assert.equal(ownClub(done).players.filter(p=>!done.injuries[p.id]).length,11);assert.doesNotThrow(()=>autoLineup(done));}
+ // A fit reserve cannot be sold if its role is needed to field a legal eleven.
+ c.lineup[1]=club.players[12].id;assert.throws(()=>sellPlayer(c,club.players[1].id),/fit/);
+ assert.equal(s.management.teams[team].players[0].role,'GK');
+});
+
+test('custom formation defender roles drive marking, including the fifth defender',()=>{
+ const initial=setup();initial.teams[0].tactics.formation='five-three-two';const s=createFootballMatch(initial),p=s.players[5];assert.equal(p.positionRole,'DF');
+ s.ball.owner=11;s.ball.x=s.w/2;s.ball.y=s.h/2;
+ for(const foe of s.players.filter(q=>q.team===1)){foe.x=10*Q;foe.y=10*Q;}
+ s.players[12].x=p.x+80*Q;s.players[12].y=p.y+20*Q;
+ const midfield=structuredClone(s);midfield.players[5].positionRole='MF';
+ aiIntent(s,p);aiIntent(midfield,midfield.players[5]);assert.ok(p.tx>midfield.players[5].tx,'the additional defender closes the nearby threat');
 });
