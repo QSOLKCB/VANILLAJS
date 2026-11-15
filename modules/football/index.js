@@ -413,7 +413,17 @@ export function playerPerformance(player, tactics, cohesion, role, fatigue=0, ho
     tackle:clamp(88-Math.floor(defending/3)-Math.floor(tactics.press/4),24,88),
     power:clamp(82+Math.floor(finishing*.28),82,110)};
 }
+// Integral workload preserves past effort exactly across tactical intervals.
+// Divide by match ticks * 40,000 only when deriving condition for performance.
+function accrueFatigue(s,team) {
+  const managed=s.management.teams[team],active=s.elapsed-managed.fatigueAt;
+  if(active<=0)return;
+  const intensity=100+2*managed.tactics.press+managed.tactics.tempo;
+  for(let slot=0;slot<11;slot++)managed.fatigueLoad[slot]+=active*s.management.setup.rules.fatigue*intensity*(260-managed.players[slot].stamina);
+  managed.fatigueAt=s.elapsed;
+}
 function refreshTeam(s,team) {
+  accrueFatigue(s,team);
   const managed=s.management.teams[team],t=managed.tactics;
   const f=s.management.setup.formations.find(f=>f.id===t.formation);
   const base=s.management.setup.teams[team].club;
@@ -422,8 +432,7 @@ function refreshTeam(s,team) {
     const p=s.players[team*11+slot],person=managed.players[slot],anchor=f.slots[slot];
     p.hx=Math.round(clamp(50+(anchor[0]-50)*(.65+t.width*.007),8,92)*Q/100);
     p.hy=Math.round(clamp(anchor[1]+(slot?(t.mentality-50)*.08:0),2,48)*Q/100);
-    const active=Math.max(0,s.elapsed-managed.entered[slot]);
-    const fatigue=active/(s.config.seconds*60)*s.management.setup.rules.fatigue*(.5+t.press/100+t.tempo/200)*(1.3-person.stamina/200);
+    const fatigue=managed.fatigueLoad[slot]/(s.config.seconds*60*40000);
     p.ability=playerPerformance(person,t,managed.cohesion,anchor[2],fatigue,team===0?s.management.setup.rules.homeAdvantage:0);
     p.rosterId=person.id;p.positionRole=anchor[2];
   }
@@ -432,14 +441,16 @@ export function createFootballMatch(input) {
   const setup=validateMatchSetup(input);
   const s=createState({seed:setup.seed,seconds:setup.rules.seconds,humans:[false,false],difficulty:2,weather:setup.weather});
   s.clubs=[];
-  s.management={setup,commands:[],teams:setup.teams.map(t=>({players:structuredClone(t.players),tactics:{...t.tactics},cohesion:t.cohesion,entered:Array(11).fill(0),used:t.players.map(p=>p.id),substitutions:0}))};
+  s.management={setup,commands:[],teams:setup.teams.map(t=>({players:structuredClone(t.players),tactics:{...t.tactics},cohesion:t.cohesion,entered:Array(11).fill(0),fatigueAt:0,fatigueLoad:Array(11).fill(0),used:t.players.map(p=>p.id),substitutions:0}))};
   refreshTeam(s,0);refreshTeam(s,1);resetPositions(s,0);return s;
 }
 export function stepFootball(s) {
   if(s.phase==='fulltime')return s;
   if(s.tick>=MAX_MATCH_TICKS)throw new RangeError('Football tick budget exceeded');
   if(s.elapsed%60===0){refreshTeam(s,0);refreshTeam(s,1);}
-  return step(s);
+  const priorPhase=s.phase;step(s);
+  if(s.phase!==priorPhase&&(s.phase==='halftime'||s.phase==='fulltime')){refreshTeam(s,0);refreshTeam(s,1);}
+  return s;
 }
 export function commandFootball(s,input) {
   const cmd=copyFootballData(input);
@@ -451,14 +462,15 @@ export function commandFootball(s,input) {
   if(cmd.type==='tactics') {
     exact(['type','team','tactics']);const tactics=validateTactics(cmd.tactics);
     if(!s.management.setup.formations.some(f=>f.id===tactics.formation))throw new TypeError('Unknown formation');
-    team.tactics=tactics;
+    accrueFatigue(s,cmd.team);team.tactics=tactics;
   }else if(cmd.type==='substitute') {
     exact(['type','team','slot','playerId']);
     if(!Number.isInteger(cmd.slot)||cmd.slot<0||cmd.slot>10||team.substitutions>=3)throw new RangeError('Invalid slot or three substitutions already used');
     const incoming=s.management.setup.teams[cmd.team].club.players.find(p=>p.id===cmd.playerId);
     if(!incoming||team.used.includes(incoming.id))throw new TypeError('Substitute must be an unused squad player');
     if((cmd.slot===0)!==(incoming.role==='GK'))throw new TypeError('Goalkeeper must stay in slot zero');
-    team.players[cmd.slot]=validatePlayer(incoming);team.used.push(incoming.id);team.entered[cmd.slot]=s.elapsed;team.substitutions++;
+    const replacement=validatePlayer(incoming);accrueFatigue(s,cmd.team);
+    team.players[cmd.slot]=replacement;team.fatigueLoad[cmd.slot]=0;team.used.push(incoming.id);team.entered[cmd.slot]=s.elapsed;team.substitutions++;
   }else throw new TypeError('Unknown match command');
   s.management.commands.push({tick:s.tick,command:cmd});refreshTeam(s,cmd.team);return s;
 }

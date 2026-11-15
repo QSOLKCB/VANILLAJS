@@ -73,15 +73,18 @@ Readiness is `(4 × condition + 2 × morale + 2 × sharpness + 2 × cohesion) / 
 Effective attributes are rounded from `(.6 × attribute + .4 × readiness) ×
 familiarity / 100 + homeAdvantage`, clamped to 1–100. The exported
 `playerPerformance` function returns the exact integer movement/AI parameters.
-During matches, abilities refresh each simulated active second. Fatigue grows
-with active playing time, pressing and tempo, and decreases with stamina.
+During matches, abilities refresh each simulated active second and at half/full
+time. Fatigue accumulates as integer workload under each tactical interval;
+changing pressing or tempo affects only subsequent active time and cannot refund
+earlier effort. Stoppages add no fatigue, and substitutes start a fresh workload.
+Stamina reduces the rate of accumulation.
 
 Normal training costs one `trainingCost`, adds one to each focused attribute,
 adds one sharpness net, and restores 11 condition before facility bonuses.
 Intense training costs twice that, adds two attributes and five sharpness net,
 and restores four condition before facilities. It also gives reserves a seeded
-6% injury chance. Recovery costs nothing, restores 18 condition, and loses three
-sharpness. Injured players cannot start or come on. Exhausted participants below
+6% injury chance. Recovery costs nothing, remains available when the club is in debt, restores 18
+condition, and loses three sharpness. Injured players cannot start or come on. Exhausted participants below
 55 condition have a seeded 18% chance of a two-week knock after the match.
 Injuries and reserve sales preserve at least one fit keeper and ten fit outfield
 players: this compact demo has no emergency loan market.
@@ -146,7 +149,9 @@ All fields listed below are required; unknown fields are rejected.
   hyphens, start with a letter and have at most 48 characters. Names/regions/styles
   have at most 80 characters, short names at most four. Colors are `#RRGGBB`.
   Club attack/press/pass values are integers 1–100. Squads have 16–22 players,
-  including at least two goalkeepers. Player IDs are unique across the league.
+  including at least two goalkeepers and ten outfield players. Initial user and
+  AI elevens select a keeper and ten outfield players independently of squad array
+  ordering. Player IDs are unique across the league.
 - **Player:** `id`, `name`, `role`, `pace`, `passing`, `finishing`, `defending`,
   `keeping`, `stamina`, `condition`, `morale`, `sharpness`. Names have at most
   40 characters. Role is `GK`, `DF`, `MF` or `FW`; every numeric field is an
@@ -208,7 +213,9 @@ const match = createFootballMatch({
   seed: 1988, weather: 'clear', rules: content.rules,
   formations: content.formations,
   teams: [home, away].map(club => ({
-    club, players: club.players.slice(0, 11), tactics, cohesion: 70
+    club, players: [club.players.find(p => p.role === 'GK'),
+      ...club.players.filter(p => p.role !== 'GK').slice(0, 10)],
+    tactics, cohesion: 70
   }))
 });
 // Run exactly one 1/60-second authoritative tick per call.
@@ -222,8 +229,8 @@ In a browser, load the JSON with same-origin `fetch` and call `stepFootball`
 from a bounded fixed-step animation host, as the demo does; do not run the
 headless `while` loop on every render frame.
 
-For a new roster, explicitly choose a goalkeeper followed by ten outfield players;
-`slice(0,11)` above relies on the starter's ordering. Starting records must match
+The example explicitly chooses a goalkeeper followed by ten outfield players,
+so roster array ordering cannot introduce a reserve keeper into an outfield slot. Starting records must match
 the corresponding full squad records. Inputs are copied at match creation; the
 returned state is caller-owned and mutable. Use commands for recorded changes,
 not direct state mutations, if you need replay verification.

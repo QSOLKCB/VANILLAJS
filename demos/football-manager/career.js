@@ -21,11 +21,16 @@ export function ownClub(c){return c.squads.find(s=>s.id===c.clubId);}
 export function log(c,message){c.log.unshift(message);c.log.length=Math.min(24,c.log.length);}
 function marketId(season,index,existing){const base=`free-${season}-${index}`;let id=base,n=0;while(existing.includes(id))id=base+'-'+(++n);return id;}
 function market(seed,season,existing=[]){const rng={rng:(seed+season*31337)>>>0||1};return Array.from({length:6},(_,i)=>({id:marketId(season,i,existing),name:['Sage Quinn','River Lane','Ellis Moss','Sky Arden','Drew Stone','Finley West'][i],role:['DF','MF','FW','GK','DF','MF'][i],...Object.fromEntries(['pace','passing','finishing','defending','keeping','stamina'].map(k=>[k,48+random(rng)%37])),condition:90,morale:65,sharpness:62}));}
+function startingEleven(players){
+  const keeper=players.find(p=>p.role==='GK'),outfield=players.filter(p=>p.role!=='GK').slice(0,10);
+  if(!keeper||outfield.length!==10)throw new TypeError('A goalkeeper and ten outfield players are required');
+  return [keeper,...outfield];
+}
 export function createCareer(bundle,clubId,seed=1988){
   const validated=loadFootballBundle(bundle),content=validated.content,club=content.clubs.find(c=>c.id===clubId);if(!club)throw new TypeError('Choose a club');
   if(!Number.isInteger(seed)||seed<1||seed>4294967295)throw new RangeError('Invalid career seed');
   const formation=content.formations.find(f=>f.id==='four-four-two')||content.formations[0];
-  return {kind:SAVE_KIND,bundle:validated.bundle,seed,season:1,clubId,round:0,budget:content.rules.startingBudget,board:60,facility:0,cohesion:65,training:{focus:'balanced',load:1,talk:'encourage'},tactics:{formation:formation.id,mentality:50,press:50,tempo:50,width:50},lineup:club.players.slice(0,11).map(p=>p.id),squads:structuredClone(content.clubs),injuries:{},results:[],market:market(seed,1,content.clubs.flatMap(c=>c.players.map(p=>p.id))),log:['Welcome to the touchline. Finish in the top half and keep the club solvent.'],lastReplay:null};
+  return {kind:SAVE_KIND,bundle:validated.bundle,seed,season:1,clubId,round:0,budget:content.rules.startingBudget,board:60,facility:0,cohesion:65,training:{focus:'balanced',load:1,talk:'encourage'},tactics:{formation:formation.id,mentality:50,press:50,tempo:50,width:50},lineup:startingEleven(club.players).map(p=>p.id),squads:structuredClone(content.clubs),injuries:{},results:[],market:market(seed,1,content.clubs.flatMap(c=>c.players.map(p=>p.id))),log:['Welcome to the touchline. Finish in the top half and keep the club solvent.'],lastReplay:null};
 }
 export function selectPlayer(c,slot,id){
   if(!Number.isInteger(slot)||slot<0||slot>10)throw new TypeError('Unknown lineup slot');
@@ -45,7 +50,7 @@ export function trainRound(input){
   const c=structuredClone(input),rules=loadFootballBundle(c.bundle).content.rules,rng={rng:(c.seed+c.season*10007+c.round*7919)>>>0||1};
   for(const [id,left] of Object.entries(c.injuries)){if(left<=1)delete c.injuries[id];else c.injuries[id]--;}
   const cost=rules.trainingCost*c.training.load;
-  if(c.budget<cost)throw new Error('Training is unaffordable. Choose recovery (load 0) or sell a player.');
+  if(cost>0&&c.budget<cost)throw new Error('Training is unaffordable. Choose recovery (load 0) or sell a player.');
   c.budget-=cost;
   for(const club of c.squads)for(const p of club.players){
     const own=club.id===c.clubId,load=own?c.training.load:1;
@@ -67,7 +72,7 @@ export function matchSetup(c,home,away){
   const content=loadFootballBundle(c.bundle).content;
   return {seed:((c.seed+c.season*101+c.round*1009+c.squads.findIndex(s=>s.id===home)*73)>>>0)||1,rules:content.rules,formations:content.formations,weather:(c.round+c.seed)%4===0?'rain':'clear',teams:[home,away].map(id=>{
     const club=c.squads.find(s=>s.id===id),own=id===c.clubId;
-    const players=own?c.lineup.map(id=>club.players.find(p=>p.id===id)):club.players.slice(0,11);
+    const players=own?c.lineup.map(id=>club.players.find(p=>p.id===id)):startingEleven(club.players);
     if(own&&players.some(p=>c.injuries[p.id]>0))throw new Error('Replace injured starters before kick-off.');
     return {club,players,tactics:own?c.tactics:{formation:(content.formations.find(f=>f.id==='four-four-two')||content.formations[0]).id,mentality:club.attack,press:club.press,tempo:100-club.pass,width:50},cohesion:own?c.cohesion:70};
   })};
@@ -121,7 +126,7 @@ export function importCareer(input){
   validateTactics(c.tactics);if(!loadFootballBundle(c.bundle).content.formations.some(f=>f.id===c.tactics.formation))throw new TypeError('Missing saved formation');
   if(!c.training||Object.keys(c.training).sort().join()!=='focus,load,talk'||!['balanced','attack','defence','possession'].includes(c.training.focus)||!['encourage','demand','calm'].includes(c.training.talk))throw new TypeError('Invalid training');int(c.training.load,0,2);
   if(!Array.isArray(c.squads)||c.squads.length!==template.squads.length)throw new TypeError('Invalid clubs');
-  for(let i=0;i<c.squads.length;i++){const {players,...club}=c.squads[i],{players:_,...original}=template.squads[i];if(JSON.stringify(club)!==JSON.stringify(original)||!Array.isArray(players)||players.length<16||players.length>22)throw new TypeError('Invalid saved squad');players.forEach(validatePlayer);if(players.filter(p=>p.role==='GK').length<2)throw new TypeError('Two keepers required');}
+  for(let i=0;i<c.squads.length;i++){const {players,...club}=c.squads[i],{players:_,...original}=template.squads[i];if(JSON.stringify(club)!==JSON.stringify(original)||!Array.isArray(players)||players.length<16||players.length>22)throw new TypeError('Invalid saved squad');players.forEach(validatePlayer);if(players.filter(p=>p.role==='GK').length<2)throw new TypeError('Two keepers required');if(players.filter(p=>p.role!=='GK').length<10)throw new TypeError('Ten outfield players required');}
   const all=c.squads.flatMap(c=>c.players),ids=all.map(p=>p.id);if(new Set(ids).size!==ids.length)throw new TypeError('Duplicate player');
   if(!Array.isArray(c.lineup)||c.lineup.length!==11||new Set(c.lineup).size!==11||c.lineup.some((id,i)=>{const p=ownClub(c).players.find(p=>p.id===id);return !p||(i===0)!==(p.role==='GK');}))throw new TypeError('Invalid lineup');
   if(!c.injuries||Array.isArray(c.injuries)||typeof c.injuries!=='object')throw new TypeError('Invalid injuries');for(const [id,left]of Object.entries(c.injuries)){if(!ids.includes(id))throw new TypeError('Unknown injured player');int(left,1,2);}

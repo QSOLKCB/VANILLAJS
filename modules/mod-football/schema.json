@@ -223,7 +223,33 @@
             "$ref": "#/$defs/player"
           },
           "minItems": 16,
-          "maxItems": 22
+          "maxItems": 22,
+          "allOf": [
+            {
+              "contains": {
+                "properties": {
+                  "role": {
+                    "const": "GK"
+                  }
+                }
+              },
+              "minContains": 2
+            },
+            {
+              "contains": {
+                "properties": {
+                  "role": {
+                    "enum": [
+                      "DF",
+                      "MF",
+                      "FW"
+                    ]
+                  }
+                }
+              },
+              "minContains": 10
+            }
+          ]
         }
       }
     },

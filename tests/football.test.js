@@ -113,3 +113,59 @@ test('custom formation defender roles drive marking, including the fifth defende
  const midfield=structuredClone(s);midfield.players[5].positionRole='MF';
  aiIntent(s,p);aiIntent(midfield,midfield.players[5]);assert.ok(p.tx>midfield.players[5].tx,'the additional defender closes the nearby threat');
 });
+
+test('reordered club squads produce legal user and AI elevens and settle every fixture',async()=>{
+ const bundle=structuredClone(starter);bundle.packs.at(-1).entries.find(e=>e.data.kind==='qsol.football-rules.v1').data.value.seconds=20;
+ for(const pack of bundle.packs)for(const entry of pack.entries)if(entry.data.kind==='qsol.football-club.v1'){
+   const players=entry.data.value.players;[players[1],players[11]]=[players[11],players[1]];[players[0],players[5]]=[players[5],players[0]];
+ }
+ loadFootballBundle(bundle);
+ const illegal=structuredClone(bundle),roster=illegal.packs[0].entries[0].data.value.players;roster.filter(p=>p.role!=='GK').slice(0,7).forEach(p=>p.role='GK');assert.throws(()=>loadFootballBundle(illegal),/Ten outfield/);
+ for(const club of loadFootballBundle(bundle).content.clubs){const c=createCareer(bundle,club.id),players=c.lineup.map(id=>ownClub(c).players.find(p=>p.id===id));assert.equal(players[0].role,'GK');assert.ok(players.slice(1).every(p=>p.role!=='GK'));assert.equal(new Set(c.lineup).size,11);}
+ const c=trainRound(createCareer(bundle,'sol')),pair=fixtureList(c)[0].find(p=>p.includes(c.clubId));const match=finish(createFootballMatch(matchSetup(c,...pair)));
+ const results=await playOtherFixtures(c,match,async()=>{},()=>false);assert.equal(finishRound(c,results,match).round,1);
+});
+
+test('free recovery allows a debt-funded club to play the next revenue-earning fixture',async()=>{
+ const bundle=structuredClone(starter),rules=bundle.packs.at(-1).entries.find(e=>e.data.kind==='qsol.football-rules.v1').data.value;rules.startingBudget=0;rules.seconds=20;
+ let c=createCareer(bundle,'vio');c.training.load=0;
+ const prepared=trainRound(c),pair=fixtureList(c)[0].find(p=>p.includes(c.clubId));assert.notEqual(pair[0],c.clubId);
+ const match=finish(createFootballMatch(matchSetup(prepared,...pair)));c=finishRound(prepared,await playOtherFixtures(prepared,match,async()=>{},()=>false),match);assert.ok(c.budget<0);
+ const before=structuredClone(c),recovered=trainRound(c);assert.equal(recovered.budget,c.budget);assert.deepEqual(c,before);
+ const nextPair=fixtureList(c)[1].find(p=>p.includes(c.clubId)),next=finish(createFootballMatch(matchSetup(recovered,...nextPair)));
+ assert.equal(finishRound(recovered,await playOtherFixtures(recovered,next,async()=>{},()=>false),next).round,2);
+ c.training.load=1;assert.throws(()=>trainRound(c),/unaffordable/);
+ // Modded training can also be free at a nonzero load.
+ c.bundle.packs.at(-1).entries.find(e=>e.data.kind==='qsol.football-rules.v1').data.value.trainingCost=0;assert.equal(trainRound(c).budget,c.budget);
+});
+
+test('changing tactical intensity cannot refund accumulated fatigue and replays remain exact',()=>{
+ const initial=setup();initial.teams[0].tactics.press=100;initial.teams[0].tactics.tempo=100;
+ const s=createFootballMatch(initial);while(s.phase!=='halftime')stepFootball(s);
+ const elapsed=s.elapsed,before=s.players[1].ability.condition,person=s.management.teams[0].players[1];
+ const highFatigue=elapsed/(s.config.seconds*60)*initial.rules.fatigue*2*(1.3-person.stamina/200);
+ commandFootball(s,{type:'tactics',team:0,tactics:{...s.management.teams[0].tactics,press:0,tempo:0}});
+ assert.ok(s.players[1].ability.condition<=before,'lowering intensity must not restore condition without a tick');
+ assert.equal(s.players[1].ability.condition,Math.round(Math.max(15,person.condition-highFatigue)));
+ const atSwitch=s.players[1].ability.condition;for(let i=0;i<90;i++)stepFootball(s);assert.equal(s.elapsed,elapsed);assert.equal(s.players[1].ability.condition,atSwitch,'stoppage time adds no fatigue');
+ while(s.elapsed<elapsed+600)stepFootball(s);
+ commandFootball(s,{type:'tactics',team:0,tactics:{...s.management.teams[0].tactics,press:100,tempo:100}});
+ const expected=highFatigue+600/(s.config.seconds*60)*initial.rules.fatigue*.5*(1.3-person.stamina/200);
+ assert.equal(s.players[1].ability.condition,Math.round(Math.max(15,person.condition-expected)),'new intensity applies only after the change');
+ const beforeInvalid=footballHash(s);assert.throws(()=>commandFootball(s,{type:'tactics',team:0,tactics:{...s.management.teams[0].tactics,press:101}}));assert.equal(footballHash(s),beforeInvalid);
+ const teammateCondition=s.players[2].ability.condition;
+ commandFootball(s,{type:'substitute',team:0,slot:1,playerId:'sol-13'});assert.equal(s.players[1].ability.condition,initial.teams[0].club.players[12].condition);assert.equal(s.players[2].ability.condition,teammateCondition);
+ assert.equal(verifyFootballReplay(exportFootballReplay(s)).status,'PASS');finish(s);assert.equal(verifyFootballReplay(exportFootballReplay(s)).complete,true);
+});
+
+test('late low-intensity instructions preserve the condition saved after a match',async()=>{
+ const bundle=structuredClone(starter),rules=bundle.packs.at(-1).entries.find(e=>e.data.kind==='qsol.football-rules.v1').data.value;rules.seconds=20;rules.fatigue=30;
+ const c=trainRound(createCareer(bundle,'sol'));c.tactics.press=100;c.tactics.tempo=100;
+ const pair=fixtureList(c)[0].find(p=>p.includes(c.clubId)),team=pair[0]===c.clubId?0:1,s=createFootballMatch(matchSetup(c,...pair));
+ while(s.elapsed<s.config.seconds*60-1)stepFootball(s);
+ const person=s.management.teams[team].players[1],spent=s.elapsed;
+ commandFootball(s,{type:'tactics',team,tactics:{...c.tactics,press:0,tempo:0}});finish(s);
+ const expected=Math.round(Math.max(15,person.condition-rules.fatigue*(2*spent+.5*(s.elapsed-spent))/(s.config.seconds*60)*(1.3-person.stamina/200)));
+ assert.equal(s.players[team*11+1].ability.condition,expected);
+ const done=finishRound(c,await playOtherFixtures(c,s,async()=>{},()=>false),s);assert.equal(ownClub(done).players.find(p=>p.id===person.id).condition,expected);assert.deepEqual(importCareer(exportCareer(done)),done);
+});
