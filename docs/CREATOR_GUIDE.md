@@ -142,3 +142,12 @@ Continue with [Build a game](../BUILD_A_GAME.md), [editor contracts](EDITOR_WORK
 ## Make an original arcade combat pack
 
 Open [Arcade Combat Foundry](../demos/arcade-combat-lab/index.html), try both modes, then expand **Data pack workshop**. Load Iron Meridian or Neon Shift into the draft, edit health/speed/light damage or the JSON stage, and choose **Validate & apply** to start a new run. Export active pack saves the last accepted data; rejected drafts leave it intact. The JSON remains data-only. Replays include the complete accepted pack, difficulty, seed and commands; snapshots verify full simulation state against the replay on restore. [Schema, limits and Games2-ready API](ARCADE_FOUNDATION_001.md).
+
+## Build your first blocky FPS
+
+[Block Arena Foundry](../demos/block-arena-lab/index.html) provides two original
+arenas, three weapon archetypes, offline bots and editable inert packs. Follow
+[Build Your First Blocky FPS](BUILD_YOUR_FIRST_BLOCKY_FPS.md) to place cover,
+relocate spawns, tune weapons, test both modes, export data and consume public
+engine modules from a separately owned game. It does not change the Visual
+Workbench exporter or create a finished Games2 game.

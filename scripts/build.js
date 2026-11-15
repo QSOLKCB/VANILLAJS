@@ -2,6 +2,8 @@ import {cp,mkdir,rm,readdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve,relative} from 'node:path';
 import {createHash} from 'node:crypto';
 import {packagePursuitRuntime,packageLabRuntime} from './pursuit-package.mjs';
+import {verifyFPSSource} from './fps-source-identity.mjs';
+await verifyFPSSource();
 const root=resolve(import.meta.dirname,'..'),out=resolve(root,'dist');
 await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
 for(const path of ['index.html','modules','demos','api','offline','LICENSE','NOTICE','MODULES.json'])await cp(resolve(root,path),resolve(out,path),{recursive:true});
@@ -18,6 +20,7 @@ await writeFile(resolve(out,'.nojekyll'),'');
 await packagePursuitRuntime(out);
 await packageLabRuntime(out,'skyguard-lab');
 await packageLabRuntime(out,'arcade-combat-lab');
+await packageLabRuntime(out,'block-arena-lab');
 const files=[];
 async function walk(dir){for(const e of await readdir(dir,{withFileTypes:true})){
   const p=resolve(dir,e.name);if(e.isDirectory())await walk(p);else{const data=await readFile(p);files.push({path:relative(out,p),bytes:data.length,sha256:createHash('sha256').update(data).digest('hex')});}

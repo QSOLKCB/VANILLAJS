@@ -18,8 +18,12 @@ SPEC.loader.exec_module(bundle)
 
 
 class CapsuleTests(unittest.TestCase):
+    def test_real_capsule_inventory_includes_the_build_identity_verifier(self):
+        self.assertIn('scripts/fps-source-identity.mjs', self.real_extra)
+
     @classmethod
     def setUpClass(cls):
+        cls.real_extra = bundle.EXTRA
         cls.temp = tempfile.TemporaryDirectory()
         cls.root = Path(cls.temp.name)
         def git(*args):
@@ -46,6 +50,9 @@ class CapsuleTests(unittest.TestCase):
             'demos/skyguard-lab/js/start.js': 'export const fixture=true;\n',
             'demos/arcade-combat-lab/index.html': '<script type="module" src="./start.js"></script>',
             'demos/arcade-combat-lab/start.js': 'export const fixture=true;\n',
+            'demos/block-arena-lab/index.html': '<script type="module" src="./start.js"></script>',
+            'demos/block-arena-lab/start.js': 'export const fixture=true;\n',
+            'demos/block-arena-lab/replay.js': 'export const fixture=true;\n',
             'api/index.js': 'export const fixture=true;\n',
             'offline/register.js': '// fixture registration\n',
             'index.html': '<!doctype html><title>Fixture</title>',
@@ -55,7 +62,7 @@ class CapsuleTests(unittest.TestCase):
             'experiments/arch-omi/index.js': 'export const fixture=true;\n',
             'experiments/e8-geometry/index.js': 'export const fixture=true;\n',
         }
-        build_sources = ['scripts/build.js', 'scripts/pursuit-package.mjs',
+        build_sources = ['scripts/build.js', 'scripts/pursuit-package.mjs', 'scripts/fps-source-identity.mjs',
                          'scripts/browser-dependencies.mjs', 'scripts/service-worker.template.js',
                          'scripts/verify-offline.js']
         for name in build_sources:
@@ -64,6 +71,7 @@ class CapsuleTests(unittest.TestCase):
             target = cls.root / name
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(text)
+        subprocess.run(['node', 'scripts/fps-source-identity.mjs', '--write'], cwd=cls.root, check=True, stdout=subprocess.DEVNULL)
         (cls.root / Path(bundle.FORMAL).parent).mkdir(parents=True)
         formal = {'baseline': cls.base, 'files': {'modules/kernel/index.js': bundle.sha((cls.root / 'modules/kernel/index.js').read_bytes())}}
         (cls.root / bundle.FORMAL).write_bytes(bundle.canonical(formal))

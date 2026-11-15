@@ -115,12 +115,13 @@ export class Renderer {
     }
   }
   clearMeshes() {for(const m of this.meshes){this.gl.deleteBuffer(m.buffer);this.#capacities.delete(m);}this.meshes.clear();}
-  begin(position,orientation,{fog=.003,resolution=1}={}) {
+  begin(position,orientation,{fog=.003,resolution=1,fov=Math.PI/2.6}={}) {
+    if(!Number.isFinite(fov)||fov<.2||fov>2.5)throw new RangeError('vertical field of view must be 0.2..2.5 radians');
     const gl=this.gl,rect=this.canvas.getBoundingClientRect(),dpr=Math.min(globalThis.devicePixelRatio||1,2)*resolution;
     const width=Math.max(1,Math.floor(rect.width*dpr)),height=Math.max(1,Math.floor(rect.height*dpr));
     if(this.canvas.width!==width||this.canvas.height!==height){this.canvas.width=width;this.canvas.height=height;}
     gl.viewport(0,0,width,height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(this.program);
-    gl.uniformMatrix4fv(this.vp,false,multiplyMatrices(perspective(Math.PI/2.6,width/height),viewMatrix(position,orientation)));
+    gl.uniformMatrix4fv(this.vp,false,multiplyMatrices(perspective(fov,width/height),viewMatrix(position,orientation)));
     gl.uniform1f(this.fog,fog);gl.uniform1f(this.pointSize,Math.max(1,dpr*1.3));
   }
   draw(mesh) {

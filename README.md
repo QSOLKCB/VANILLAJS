@@ -1,172 +1,397 @@
 <p align="center">
-
-  <img src="assets/vanillajs-hero.svg" width="100%" alt="VANILLAJS Mod SDK — Build games. Extend the engine. Own your creations. This is not a product. This is INDEPENDENCE." />
+  <img src="assets/vanillajs-hero.svg" width="100%" alt="VANILLAJS — Build games. Extend the engine. Own your creations." />
 </p>
 
-**Start creating:** [Creator Hub](demos/creator-hub/index.html) · [Game-making guide](docs/CREATOR_GUIDE.md) · [Soundtrack Lab](demos/soundtrack-lab/index.html). New editor starters, gameplay pieces and scene checks help you reach a first playable; the game-folder exporter includes its runtime. VOIDWARD now includes eight campaigns.
+# VANILLAJS 👽
 
-**Proposed v2.2.0 — The Arcade Foundry (experimental, unreleased):** [Play the Arcade Combat Foundry](demos/arcade-combat-lab/index.html): Iron Meridian run-and-gun and Ring Zero arena brawler compose a shared integer 2D combat module. Edit data-only packs, use keyboard/touch/standard gamepad controls, and download complete pack-bound replays and verified snapshots. [Contracts, provenance and verification](docs/ARCADE_FOUNDATION_001.md). Games2 remains unchanged.
+**Build games. Extend the engine. Own your creations.**
 
-**Spooky v0.1.0 → Skyguard Lab:** [Take the watch aboard DDG Resolute](demos/skyguard-lab/index.html). A new naval air-defence game: twin autocannon, proximity flak, guided VLS interceptors and a charged piercing railgun. Aircraft, drones and sea-skimmers replace the ground horde; station refits, gentle Cadet raids and deterministic music carry the Spooky loop to sea. [Integration, controls and provenance](docs/SKYGUARD_INTEGRATION.md).
+A native JavaScript game-engine workshop: playable browser games, reusable
+simulation modules, visual authoring tools, procedural sound and exact-math
+experiments. Open a lab, find a mechanic you like, change its data, then take
+the public modules into a game of your own.
 
-**Outruin → Pursuit Lab:** [Play Highway Intercept](demos/pursuit-lab/index.html), an original Chase H.Q.–style demo with five timed pursuits, traffic, bumper contacts, three turbos per case, fitted/fullscreen display, replay export and a deterministic 32-second soundtrack. Reusable [road handling, display lifecycle and bounded PCM effects](docs/OUTRUIN_INTEGRATION.md) bring Outruin's improvements upstream. Native JavaScript; no ROMs, external assets or runtime packages.
+**This is not a product. This is INDEPENDENCE.**
 
-**SubHunt release integration:** [Play SubHunt Lab](demos/subhunt-lab/index.html)—Fleet Hunt, living-toy Pond Panic, three difficulties and four power-ups. Reuse its new native [raw gamepad mapping and multi-phrase soundtrack APIs](docs/SUBHUNT_INTEGRATION.md), including tick-driven playback and complete-loop WAV export. Source-pinned to SubHunt v0.1.0/v0.2.0 with v0.3.0 recovery fixes; game content stays demo-owned.
+**Latest published release:** [v2.2.0 — The Arcade Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.2.0), 15 November 2026.
+**Proposed next release:** [v2.3.0 — The FPS Foundry](docs/FPS_2_3_0_DRAFT.md).
+The FPS Foundry is implemented in this branch; its release has not been published.
 
+| In this source tree | What you can do |
+| --- | --- |
+| **59 experimental modules** | Compose movement, collision, combat, navigation, rendering, sound and validated content |
+| **42 registered recipes** | Learn from playable games, focused mechanics and creator workflows |
+| **2 research experiments** | Inspect ARCH OMI and E8 geometry with their attribution and mathematical limits |
+| **Native browser runtime** | Run ES modules, WebGL, Canvas, SVG and Web Audio without an engine framework or CDN |
+| **Offline packages** | Build a bounded static site with verified asset hashes and a generated service worker |
 
-<p align="center">
-  <a href="https://doi.org/10.5281/zenodo.24049474"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24049474.svg" alt="FP-HIST-001 dataset DOI" /></a>
-</p>
+[**Play the published labs**](https://qsolkcb.github.io/VANILLAJS/) ·
+[**Start creating**](https://qsolkcb.github.io/VANILLAJS/demos/creator-hub/index.html) ·
+[Run locally](#run-the-labs) · [Build a game](#build-a-game) ·
+[Module catalogue](#modules) · [Verification](#development-and-verification) ·
+[Releases](#published-milestones)
 
-**VANILLAJS Mod SDK — Build games. Extend the engine. Own your creations.**
+## Welcome to the foundry
 
-**Latest release: [v1.8.0 — Five Ways to Defy Physics](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.8.0)** · 12 November 2026.
+Fly through a conduit. Defend a warship. Build a football club. Chase a suspect
+along a neon highway. Shape an arena, tune a weapon and see what happens when a
+bot finds another route around your cover. These labs make the engine's ideas
+playable, and leave the implementation open for you to inspect.
 
-Reusable JavaScript game modules, exact authoring tools and playable browser labs
-built directly on web standards. The current [catalogue](MODULES.json) contains
-**57 experimental modules, 41 registered recipes and two research experiments**.
-The full, stable Mod SDK remains planned; local data-only packs and the
-experimental Visual Workbench are available now.
+- **Start with something that moves.** Each lab demonstrates a concrete game or
+  mechanic; the Creator Hub helps you choose a starting point.
+- **Keep the parts you need.** Public modules have declared, one-way dependencies.
+  World fiction, match rules, campaigns and interfaces stay with their games.
+- **Author data you can keep.** Download projects, arena packs, tracks, campaigns,
+  replays and original WAV files through the tools that support those formats.
+- **Make changes with feedback.** Bounded schemas, transactional imports and
+  visible diagnostics help catch mistakes before replacing an accepted session.
+- **Know what was tested.** Numerical contracts, source pins, independent checks
+  and recorded evidence accompany the systems that make stronger claims.
 
-**This is not a product. This is INDEPENDENCE. 👽**
+> **Play the game. Own the game.** No accounts, advertising SDKs, premium
+> currencies, paid weapon unlocks, loot boxes, tracking or entitlement checks.
 
 **QSOL–IMC motto:** Make amazing alien tech and put it under an Apache 2.0 license. 🛸
 
-[Run the labs](#run-the-labs) · [Build a game](BUILD_A_GAME.md) ·
-[API contracts](docs/API.md) · [Architecture](docs/ARCHITECTURE.md) ·
-[Verification](docs/VERIFICATION.md) · [Roadmap](ROADMAP.md) ·
-[All releases](https://github.com/QSOLKCB/VANILLAJS/releases)
+## Next up: The FPS Foundry
 
+**[Block Arena Foundry](demos/block-arena-lab/index.html)** is an original blocky
+3D FPS and a practical arena-building workshop. It extends the existing FPS
+character, collision, weapon, projectile, navigation and rendering facilities.
+Run this branch locally to try it; the published site gains it after an approved
+merge and Pages deployment.
 
-## Touchline — SOCCERWEB meets VANILLAJS
+![Block Arena Foundry running in Chromium: block-built cover, bots, raised positions and the first-person weapon](evidence/FPS-FOUNDATION-001/block-arena-playing.png)
 
-**[Play Football Manager](https://qsolkcb.github.io/VANILLAJS/demos/football-manager/)** · **[Football modding SDK](docs/FOOTBALL_SDK.md)** · **[Editable starter pack](demos/football-manager/starter.json)**
+### Build your advantage
 
-Take charge of one of SOCCERWEB’s eight original clubs. Pick your eleven, recruit
-players, shape training and tactics, balance the books, then press Play and watch
-your team perform in the real animated SOCCERWEB match engine. Make changes from
-the dugout and build a season across all 56 home-and-away fixtures.
-
-- Player attributes, condition, morale, sharpness, cohesion and role familiarity
-  affect actual movement, decisions, shooting and goalkeeping.
-- Live substitutions, tactical instructions, broadcast cameras, match statistics
-  and 1×–8× viewing speed put you on the touchline.
-- A complete football content SDK covers clubs, squads, kits, formations, match
-  rules and economy through validated, locally stored data packs.
-- Export careers, verify and watch full or partial replays, and keep playing
-  offline after the packaged app’s first successful installation.
-
-Native modules, Canvas2D and browser standards throughout. Football APIs are
-experimental and versioned; SOCCERWEB v3.1.1 provenance and Apache-2.0 attribution
-are retained. The linked demo becomes available when this integration is merged
-and the Pages workflow deploys it.
-
-
-## New on main
-
-[**RACING-002B — Track Foundry**](demos/racing-lab/index.html) provides
-a visual offline editor for original road and circuit tracks. Author four
-continuous road sections, change the environment, drag eight circuit gates,
-preview eight physical touring branches and import/export strictly validated
-16 KiB JSON packs. **Validate & Drive** launches Scenic Tour, an authored
-4.8 km Coastal Sprint or Circuit Race using the same data as the rendered
-track. [Creator contract](docs/RACING_002B.md). Experimental.
-
-[**RACING-002 — Classic Touring Lab**](demos/racing-lab/index.html) adds
-two original, playable styles to the Racing Lab: **Scenic Tour**, a four-stage
-pseudo-3D highway with player-selected left/right forks and distinct scenery
-palettes, and **Coastal Sprint**, a 3.6 km winding 3D road with traffic,
-road-edge penalties and fast-pass vehicle contact detection. The five
-RACING-001 modes remain available. [Scope and numerical limits](docs/RACING_002.md).
-Experimental; not a stable public engine API.
-
-[**4X Game Lab — Ternary Reach**](demos/4x-game-lab/index.html): explore a seeded
-star sector, settle colonies, develop an exact economy and command fleets against
-a deterministic rival. Native controls, offline play and validated command replay.
-[Rules, ALIEN MATH links and verification](docs/4X_GAME_LAB.md). Experimental.
-
-[**VOIDWARD Campaign Lab**](demos/4x-game-lab/voidward/index.html) extends the 4X
-Lab with eight moddable campaigns, selectable empires, fleet orders, production
-queues, ship designs/refits, diplomacy and staged objectives. The
-[**Visual Workbench campaign panel**](demos/editor/index.html#fourx) edits text packs,
-places stars in the real viewport and turns selected geometry into ship hulls.
-[Player and creator guide](demos/4x-game-lab/voidward/guide.html) ·
-[Integration, limits and walkthrough](docs/VOIDWARD_WORKFLOW.md).
-Adapted from [4XGAMES PR #2](https://github.com/QSOLKCB/4XGAMES/pull/2), using native
-VANILLAJS modules. Ternary Reach replays and existing Workbench projects retain
-their formats. These additions are experimental and are not part of v1.7.0.
-
-## What's available in v1.7.0
-
-| Play or author | What it demonstrates |
+| Play | The challenge |
 | --- | --- |
-| [Ternary Constellation](demos/quantum-game-lab/index.html) | Exact GF(3) puzzles, directed state graphs, deterministic symbolic scores, reference WAV export and classical constellation motion |
-| [ALIEN Circuit Foundry](demos/circuit-mod-lab/index.html) | Exact cardinal X/Z checkpoints, ordered laps and local data-only course packs |
-| [ALIEN Course Foundry](demos/alien-course-lab/index.html) | Decimal-string authoring, explicit Q16.16 conversion and exact swept gate crossings |
-| [Visual Workbench](demos/editor/index.html) | Typed components, transform tools, local assets/prefabs, exact position tools, project recovery and playable HTML export |
-| [The Kinetic Foundry](demos/gpu-lab/index.html) | Animated procedural geometry, bounded sculpture presets and JS/WASM projection parity |
-| [Orbital Proving Ground](demos/space-lab/index.html) | Navigation gates, docking, visible broadsides and classical Newtonian orbit trails |
-| [Graph & Spectral Lab](demos/graph-lab/index.html) | Bounded simple graphs, deterministic traversal and exact adjacency characteristic polynomials |
+| **Arena Skirmish** | Fight offline bots, manage ammunition, respawn and race to the score or time limit |
+| **Survival Waves** | Clear escalating enemy rosters with finite supplies and no player respawn |
+| **Cobalt Courtyard** | Use the central cover, open lanes and raised deck |
+| **Violet Switchyard** | Work around offset corridors and a second original block-built layout |
 
-**QGAME-MATH-001:** Ternary Constellation separates exact finite algebra,
-declared musical/spatial mappings, Float64 orbital motion and browser presentation.
-Edit, validate, export and reimport local experiment packs; export event logs,
-run receipts and up to eight seconds of reference PCM audio.
-[Contract](docs/QGAME_MATH_001.md) ·
-[Executed evidence](evidence/QGAME-MATH-001/README.md).
-Quantum-inspired means classical finite mechanics, not quantum simulation.
-Exact algebra does not imply bit-exact floating-point physics, rendered pixels
-or speaker output.
+Three weapons give the same arena three different rhythms:
 
-**Mod SDK foundations (experimental):**
-[MOD-SDK-001](docs/MOD_SDK_001.md) provides a versioned, bounded data-only
-manifest registry with exact-version dependencies and transactional lifecycle.
-[MOD-SDK-002](docs/MOD_SDK_002.md) adds typed course adapters and cardinal
-circuit math; QGAME adds typed experiment packs. These are shipped foundations,
-while a full game kit and executable plugin APIs remain future work.
+| Weapon | Behaviour |
+| --- | --- |
+| **Needle** | Precise semi-automatic hitscan, headshots, optional scope and bounded penetration |
+| **Pulse** | Sustained automatic fire with configurable spread, recoil and reload timing |
+| **Orb** | A finite-speed projectile with wall collision, occluded splash and self-damage |
 
-**Exact course authoring:** The original decreasing-Z
-[course bridge](docs/ALIEN_COURSE_BRIDGE.md) and newer cardinal circuit format
-coexist. The documented [DRONE-RACER v0.2.0 integration](https://github.com/QSOLKCB/DRONE-RACER/releases/tag/v0.2.0)
-consumes the Q16.16 gate bridge while retaining independent Float64 flight.
-[Play source-owned DRONE-RACER](https://qsolkcb.github.io/DRONE-RACER/).
+Bots patrol, detect, react, pursue, strafe and seek cover. Their shots use the
+same collision and damage systems as yours. Keyboard/mouse, Pointer Lock,
+standard gamepad and touch controls feed one fixed-tick input path; settings
+include sensitivity, inversion and fullscreen presentation.
 
-**Visual Workbench:** The released [Component Forge](docs/COMPONENT_FORGE.md)
-provides schema-v2 components, XYZ movement/scale handles, Y-yaw rotation,
-snapping and component-driven Play mode. Existing v1 scenes migrate explicitly.
-[Local OBJ/PNG assets and prefabs](docs/ASSET_FOUNDRY.md),
-[search, keyboard navigation, framing and recovery](docs/EDITOR_QOL.md), and
-[exact decimal/Q16 position tools](docs/EDITOR_ALIEN_AUTHORING.md) extend that
-foundation. Playable HTML exports use locally served engine directories;
-they are not self-contained engine bundles.
+### Make the next arena yours
 
-**Optional rendering:** Kinetic Foundry and Orbital Proving Ground start on CPU.
-Compatible WebGPU/WASM acceleration requires explicit opt-in; simulation ticks
-remain independent of the renderer. The editor can include this choice in
-exported games. [Controls, export instructions and budgets](docs/OPTIONAL_GPU_WASM.md).
+Load a starter, place cover, move spawns, add supplies and tune weapon fields.
+Validate the draft and immediately play it. Advanced inert JSON exposes the
+palette, geometry, rules, bot types, difficulty and wave composition. Rejected
+imports preserve your accepted pack and current match.
+
+Export the arena or keep a complete source-bound input replay. Verification
+reruns the journal and compares the final state exactly **within the same source
+and JavaScript runtime**. This is Float64 simulation with AABB bodies and stair
+ramps; cross-engine bit equality and general voxel physics are not claimed.
+
+[**Build Your First Blocky FPS**](docs/BUILD_YOUR_FIRST_BLOCKY_FPS.md) ·
+[Combat and pack contracts](docs/FPS_FOUNDATION_001.md) ·
+[Public-module example](api/fps/example.js) ·
+[Pinned donor review](docs/FPS_DONOR_REVIEW.md) ·
+[Executed development evidence](evidence/FPS-FOUNDATION-001/README.md)
+
+## Find your next lab
+
+The published links open the deployed collection. Source paths identify the
+same entrypoints when served locally. The existing FPS movement lab remains
+available alongside the new Block Arena workshop.
+
+### Games and worlds
+
+| Lab | Get into it | Contracts and creator material |
+| --- | --- | --- |
+| [Arcade Combat Foundry](https://qsolkcb.github.io/VANILLAJS/demos/arcade-combat-lab/index.html) | **Iron Meridian** run-and-gun and **Ring // Zero** arena brawler share integer 2D combat, editable packs and complete replays | [Arcade foundation](docs/ARCADE_FOUNDATION_001.md) |
+| [SKYGUARD](https://qsolkcb.github.io/VANILLAJS/demos/skyguard-lab/index.html) | Take the watch aboard **DDG Resolute**: autocannon, flak, guided interceptors, charged railgun and station refits | [Spooky integration](docs/SKYGUARD_INTEGRATION.md) |
+| [Pursuit Lab](https://qsolkcb.github.io/VANILLAJS/demos/pursuit-lab/index.html) | **Highway Intercept**: five timed pursuits, traffic, bumper contacts, three turbos per case and an original soundtrack | [Outruin integration](docs/OUTRUIN_INTEGRATION.md) |
+| [Touchline](https://qsolkcb.github.io/VANILLAJS/demos/football-manager/index.html) | Manage one of eight SOCCERWEB clubs through a 56-fixture league; make live substitutions and tactical changes | [Football SDK](docs/FOOTBALL_SDK.md) · [Starter pack](demos/football-manager/starter.json) |
+| [SubHunt](https://qsolkcb.github.io/VANILLAJS/demos/subhunt-lab/index.html) | Fleet Hunt and living-toy Pond Panic, difficulty choices, power-ups and tick-driven music | [SubHunt integration](docs/SUBHUNT_INTEGRATION.md) |
+| [Racing & Track Foundry](https://qsolkcb.github.io/VANILLAJS/demos/racing-lab/index.html) | Retro traffic, circuits, derby, ball and stunt modes; Scenic Tour, Coastal Sprint and an editable road/circuit workshop | [Racing](docs/RACING_002.md) · [Track authoring](docs/RACING_002B.md) |
+| [Ternary Reach](https://qsolkcb.github.io/VANILLAJS/demos/4x-game-lab/index.html) | Explore a seeded star sector, settle colonies, develop an exact economy and command fleets | [4X Game Lab](docs/4X_GAME_LAB.md) |
+| [VOIDWARD](https://qsolkcb.github.io/VANILLAJS/demos/4x-game-lab/voidward/index.html) | Eight moddable campaigns, empire choices, fleet orders, ship designs, diplomacy and staged objectives | [Player guide](demos/4x-game-lab/voidward/guide.html) · [Campaign workflow](docs/VOIDWARD_WORKFLOW.md) |
+| [The Clockwork Vault](https://qsolkcb.github.io/VANILLAJS/demos/clockwork-vault/index.html) | Open six OMI seals, operate mechanisms and escape an original first-person chamber | [Game and evidence](docs/CLOCKWORK_VAULT.md) |
+
+### Mechanics you can take apart
+
+| Lab | What it demonstrates |
+| --- | --- |
+| [Flight](https://qsolkcb.github.io/VANILLAJS/) | Assisted and inertial 6DOF flight, mouse look, gamepads and fixed-step simulation |
+| [FPS movement](https://qsolkcb.github.io/VANILLAJS/demos/fps-lab/index.html) | Six recipes: footwork, live range, low passage, moving-target tracking, clearance lift and shuttle run |
+| [Interaction](https://qsolkcb.github.io/VANILLAJS/demos/interaction-lab/index.html) | Swept projectiles, shields and inspectable conditional reaction outcomes |
+| [RTS](https://qsolkcb.github.io/VANILLAJS/demos/rts-lab/index.html) | Route planning, squad orders, flow convoys and two-exit evacuation |
+| [2D Foundry](https://qsolkcb.github.io/VANILLAJS/demos/2d-lab/index.html) | Integer-tick movement, local PCM sound and bounded ternary document encoding |
+| [Integer Foundry](https://qsolkcb.github.io/VANILLAJS/demos/integer-foundry/index.html) | Checked Q16.16 movement, gantries, power cells and full-state replay |
+| [Bullet Time](https://qsolkcb.github.io/VANILLAJS/demos/bullet-time-lab/index.html) | Separate time domains and explicitly bounded slow-motion mechanics |
+| [ARCADE](https://qsolkcb.github.io/VANILLAJS/demos/arcade-lab/index.html) | Original bounded arcade recipes and invariant presentation reuse |
+| [Kinetic Foundry](https://qsolkcb.github.io/VANILLAJS/demos/gpu-lab/index.html) | Procedural sculptures, a CPU baseline and optional WebGPU/WASM paths |
+| [Orbital Proving Ground](https://qsolkcb.github.io/VANILLAJS/demos/space-lab/index.html) | Navigation, docking, broadsides and classical Newtonian orbit trails |
+
+### Create, compose and investigate
+
+| Tool or experiment | What you can make or inspect |
+| --- | --- |
+| [Creator Hub](https://qsolkcb.github.io/VANILLAJS/demos/creator-hub/index.html) | Guided starting points, practical genre workflows and packaging help |
+| [Visual Workbench](https://qsolkcb.github.io/VANILLAJS/demos/editor/index.html) | Scene starters, components, transforms, local assets, prefabs, Play mode and export |
+| [Soundtrack Lab](https://qsolkcb.github.io/VANILLAJS/demos/soundtrack-lab/index.html) | Original cue recipes, declared mappings, listening and WAV/recipe/score export |
+| [ALIEN Course Foundry](https://qsolkcb.github.io/VANILLAJS/demos/alien-course-lab/index.html) | Decimal-string authoring, explicit Q16.16 conversion and swept gate crossings |
+| [ALIEN Circuit Foundry](https://qsolkcb.github.io/VANILLAJS/demos/circuit-mod-lab/index.html) | Cardinal X/Z checkpoints, ordered laps and local course packs |
+| [Ternary Constellation](https://qsolkcb.github.io/VANILLAJS/demos/quantum-game-lab/index.html) | Exact GF(3) puzzles, state graphs, symbolic scores and bounded reference audio |
+| [Graph & Spectral Lab](https://qsolkcb.github.io/VANILLAJS/demos/graph-lab/index.html) | Graph traversal and exact adjacency characteristic polynomials |
+| [OMI Lab](https://qsolkcb.github.io/VANILLAJS/demos/omi-lab/index.html) | Brian Thorne's attributed ARCH OMI delta law and exhaustive finite observations |
+| [The Brass Engine](https://qsolkcb.github.io/VANILLAJS/demos/ancient-machine/index.html) | A fictional mechanical presentation of the OMI calculation, with partial-step replay |
+
+## Run the labs
+
+Clone the source and serve it with any static HTTP server:
+
+```sh
+git clone https://github.com/QSOLKCB/VANILLAJS.git
+cd VANILLAJS
+python3 -m http.server 8000 --bind 127.0.0.1
+```
+
+Open **http://127.0.0.1:8000/**. For the FPS implementation branch, check out
+`feat/fps-foundation-001` before serving, then open
+**http://127.0.0.1:8000/demos/block-arena-lab/index.html**.
+
+Source labs need no build, npm runtime package, account or backend. Native ES
+modules require HTTP(S); opening HTML through `file://` is unsupported. The local
+server works without internet access. WebGL labs need browser WebGL support;
+optional-rendering labs document their CPU baselines and explicit opt-in paths.
+
+For the packaged site and offline reload, use Node.js 22+:
+
+```sh
+node scripts/build.js
+node scripts/verify-offline.js
+python3 -m http.server 8080 --bind 127.0.0.1 --directory dist
+```
+
+Open **http://127.0.0.1:8080/**. On localhost or HTTPS, allow the initial verified
+service-worker installation to finish and reload before testing offline. The
+generated package contains the worker and SHA-256 asset manifest; an unbuilt
+checkout does not install that worker. Packaging enforces a **16 MiB precache
+budget**. [Offline delivery contract](docs/DONOR_LABS_OFFLINE.md).
+
+Pursuit, SKYGUARD, Arcade Combat and Block Arena package their transitive native
+module graphs under content-derived URLs. Returning visitors can retain an older
+offline cache while loading a coherent new graph. Failed startup imports expose
+a visible reload action, carrying forward the [PR #94 fix](https://github.com/QSOLKCB/VANILLAJS/pull/94).
+
+## Build a game
+
+Choose a route that matches what you want to create:
+
+| Your starting point | Follow this route |
+| --- | --- |
+| **A first playable scene** | [Creator guide](docs/CREATOR_GUIDE.md) → [Visual Workbench](docs/EDITOR_WORKBENCH.md) → starter, pieces, scene checks, Play and project download |
+| **A blocky FPS** | [Build Your First Blocky FPS](docs/BUILD_YOUR_FIRST_BLOCKY_FPS.md) → arena, spawns, weapons, rules, supplies, playtest and data export |
+| **A moddable arcade game** | [Arcade Foundry](docs/ARCADE_FOUNDATION_001.md) → actor/attack/encounter packs over the shared combat boundary |
+| **A racing circuit or touring road** | [Track Foundry](docs/RACING_002B.md) → author physical geometry, validate and drive |
+| **A strategy campaign** | [VOIDWARD workflow](docs/VOIDWARD_WORKFLOW.md) → campaign text, stars, lanes, empires and attributed hull geometry |
+| **Original visuals and audio** | [Asset Foundry](docs/ASSET_FOUNDRY.md), [Component Forge](docs/COMPONENT_FORGE.md) and [Soundtrack Lab](demos/soundtrack-lab/index.html) |
+| **Your own engine composition** | [Build a game guide](BUILD_A_GAME.md), [API contracts](docs/API.md), [architecture](docs/ARCHITECTURE.md) and [public adapters](api/README.md) |
+
+### Know what your export contains
+
+| Export | What you keep |
+| --- | --- |
+| **Workbench project** | Editable scene and its local asset library; keep this as your authoring backup |
+| **Playable HTML** | A preview page that still references the local runtime folders |
+| **Game-folder export** | The experimental scene player and its runtime closure, licences, help and offline worker |
+| **FPS / arcade / track / campaign pack** | Validated content data for the matching consumer; not a standalone game engine |
+| **Replay or game save** | The particular lab's declared journal or progress format, with its version and limits |
+| **WAV / score / recipe** | Rendered audio or editable musical data, as offered by the audio tool |
+
+Package a Workbench project into a **new** directory:
+
+```sh
+node scripts/export-game.js /path/to/game.vproject.json --out /path/to/new-game-folder
+python3 -m http.server 8000 --bind 127.0.0.1 --directory /path/to/new-game-folder
+```
+
+The destination's parent must exist; existing directories are never overwritten.
+The exporter packages the current scene preview. It does not compile an arbitrary
+FPS, campaign or complete game from a content pack. Keep the editable project
+separately and review imported asset rights before sharing.
+
+### A small public FPS integration
+
+The [runnable FPS adapter](api/fps/example.js) imports public modules only:
+
+```js
+import {createFPSExample} from './vendor/vanillajs/api/fps/example.js';
+import {FixedClock} from './vendor/vanillajs/modules/time/index.js';
+
+// Your locally loaded, validated Export active pack JSON.
+const game = createFPSExample(packText);
+const clock = new FixedClock({step: 1 / 60, maxFrame: 0.1, maxSteps: 6});
+
+clock.advance(elapsedSeconds, () => {
+  const events = game.step({
+    move: [0, -1], look: {yaw: 0, pitch: 0},
+    fire: triggerHeld, reload: reloadPressed, weapon: 0
+  });
+  // Present events and game.combat.snapshot() through your own UI/renderer.
+});
+```
+
+The example provides a grounded player, stationary opponent, admitted arena and
+weapon timers. Your game supplies its bot policy, spread/recoil, match rules,
+rendering, cancellation and progression. Vendor an owner-reviewed immutable
+commit or a published release containing the needed APIs, retain LICENSE/NOTICE,
+and preserve the relative module layout. v2.2.0 does not contain the new FPS APIs.
+
+**Repository ownership stays clear:** VANILLAJS owns reusable facilities and
+demonstrations. [Games2](https://github.com/QSOLKCB/Games2) owns finished games,
+their worlds, progression, saves and individual releases. Future Strike Pixel
+work belongs in its own `/strikepixel/` directory, after separate authorization.
+This implementation does not modify Games2 or its existing catalogue.
+
+## Modules
+
+[MODULES.json](MODULES.json) is the source of truth for all **59 experimental
+modules**, their dependencies, environments and registered recipes. Import a
+module through `modules/<name>/index.js`.
+
+| Module family | Responsibility |
+| --- | --- |
+| `math`, `time`, `time-domains` | Vectors, quaternions, seeded randomness, fixed ticks and independent clock domains |
+| `flight`, `character`, `collision` | 6DOF flight, upright movement and static/translating AABB queries |
+| `weapons`, `projectiles`, `interactions`, `lead-solver` | Weapon timing, swept shots, conditional outcomes and bounded interception |
+| `combat2d`, `combat3d` | Integer XY combat and separately declared Float64 3D combat |
+| `input`, `gamepad` | Action state, keyboard/mouse, standard gamepads and explicit raw-controller mappings |
+| `navigation`, `navigation-pool` | Grid A*, flow fields, formations and reusable search workspaces |
+| `geometry`, `terrain`, `ballistics`, `adaptive-circles`, `range2d` | Geometry batching, terrain queries, gravity stepping and bounded candidate selection |
+| `render-webgl`, `cuboid-stream`, `appearance`, `frame-gate`, `render-optional` | WebGL, retained streams, appearance composition, idle reuse and CPU-first optional acceleration |
+| `motion2d`, `road-arcade` | Integer 2D movement and Float64 arcade road handling |
+| `audio2d`, `soundtrack`, `symbolic-events` | Procedural PCM/WAV, multi-phrase music and symbolic event scores |
+| `mod-sdk`, `mod-course`, `mod-experiment`, `mod-football`, `mod-arcade`, `mod-fps` | Transactional inert content registration and typed adapters |
+| `football` | SOCCERWEB spectator simulation, management effects, live commands and replay |
+| `integer-math`, `integer-vector`, `integer-time`, `integer-physics`, `integer-engine`, `integer-replay` | Checked Q16.16 state, exact intermediates, canonical snapshots and bounded replay |
+| `exact-rational`, `rational-q16`, `exact-interval`, `exact-geometry`, `exact-d4`, `exact-graph` | Exact authoring, explicit quantization, geometry, symmetry and graph invariants |
+| `exact-course`, `exact-circuit`, `qfloat` | Checkpoint compilation, exact crossings and decimal-to-Q16 authoring |
+| `orbital-physics`, `nexus-lattice`, `logical-sampling`, `gf3-lattice`, `gf3`, `ternary-store2d` | Classical orbits and distinct bounded lattice, algebra and encoding facilities |
+
+Pure simulation/math modules do not read the DOM, ambient clock or unseeded
+randomness. Browser adapters declare their requirements. New public APIs remain
+experimental: pin versions and read each contract before depending on it.
+
+### Numerical boundaries matter
+
+| Boundary | What it means |
+| --- | --- |
+| **Float64 gameplay** | Metre-scale flight, character and 3D combat use declared approximations; same-runtime replay does not imply cross-engine equality |
+| **Integer / Q16.16** | Checked integer state, explicit overflow and conversion rules within the individual subsystem's bounds |
+| **Exact algebra** | Bounded BigInt rationals, GF(3), graph and geometry results under their named contracts |
+| **Presentation** | Float32 meshes, WebGL pixels and live audio are separate from authoritative simulation or reference PCM identity |
+| **Formal and measured evidence** | A theorem, finite oracle, CPU workload and physical GPU observation each establish different things |
+
+Three-dimensional worlds use metres, +Y up, −Z forward and right-handed rotation.
+The 2D systems document their own XY boundary. No part of the FPS addition claims
+to turn all physics into exact Q16.16 or establish a universal FPS improvement.
+
+## Development and verification
+
+Use Node.js 22+ for the standard checks; the native test suite needs no npm
+runtime installation:
+
+```sh
+node --test tests/*.test.js
+node scripts/check.js
+node scripts/build.js
+node scripts/verify-offline.js
+```
+
+With the existing external Playwright/Chromium tooling available, run the
+packaged browser checks after building:
+
+```sh
+node scripts/browser-check.js
+# Local CPU observations for the FPS implementation:
+node scripts/fps-workload.mjs
+```
+
+The FPS implementation's [development evidence](evidence/FPS-FOUNDATION-001/README.md)
+records **954 passing Node tests**, source checks, packaged play/authoring/input
+checks, complete replay verification, an actual older-cache upgrade and failed
+startup recovery. Local software Chromium and emulated touch/controllers are
+identified explicitly. PR checks record the hosted execution separately.
+
+The build stages an allowlisted `dist/`, hashes every packaged asset and generates
+its service worker. A manifest identifies bytes; it is not a signature. Hosted
+CI uses pinned external Playwright and seven browser groups under `/VANILLAJS/`.
+New shared or unknown browser dependencies require real Chromium execution.
+[Qualified browser reuse](docs/BROWSER_INCREMENTAL_CI.md) preserves the existing
+source-bound, authenticated reviewed-main policy. Node tests, package integrity
+and archived evidence checks still run.
+
+[Verification guide](docs/VERIFICATION.md) · [Repository rules](AGENTS.md) ·
+[Architecture](docs/ARCHITECTURE.md) · [API contracts](docs/API.md) ·
+[Roadmap](ROADMAP.md)
+
+Physical RTX measurements, local-model experiments and paid-agent research have
+separate owner-dispatched protocols. Ordinary PR work does not activate personal
+hardware, paid APIs, model downloads or new infrastructure.
 
 ## Published milestones
 
-| Release | Main additions |
+| Published release | What it brought |
 | --- | --- |
-| [v1.7.0 — Reply to Your Own Tweets Edition](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.7.0) | Ternary Constellation, data-only Mod SDK foundations, exact course/circuit authoring, editor QoL and distinct GPU/space labs |
-| [v1.6.0 — Operation ALIEN MATH](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.6.0) | Exact rational mathematics, explicit Q16.16 conversion, geometry, D4 symmetry, graph invariants and formal correspondence |
-| [v1.5.0 — The Component Forge](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.5.0) | Typed scene components, transform handles, snapping and component-driven preview |
-| [v1.4.0 — The Proof of Speed](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.4.0) | Source-bound CPU/RTX evidence, complete-output parity and offline-cache negative controls |
-| [v1.3.0 — The Invariant Machine](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.3.0) | Bullet Time and ARCADE labs, independent time domains and packaged offline delivery |
-| [v1.2.0 — You Didn't Invent Doom Edition](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.2.0) | Independent Q16.16 scalar arithmetic, radix optimization and formal-verification evidence |
+| [v2.2.0 — The Arcade Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.2.0) | Shared 2D combat, two playable arcade modes, inert content packs and cached-startup recovery |
+| [v2.1.0 — SKYGUARD: General Quarters](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.1.0) | Naval air defence, four batteries, refits and original procedural music |
+| [v2.0.0 — Night Shift: Highway Intercept](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.0.0) | Pursuit Lab, road handling, display/audio adapters and versioned startup |
+| [v1.9.0 — Touchline & SubHunt](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.9.0) | Football management, SubHunt recipes, gamepad mapping and multi-phrase soundtracks |
+| [v1.8.0 — Five Ways to Defy Physics](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.8.0) | Five original racing modes and their shared foundations |
+| [v1.7.0 — Reply to Your Own Tweets Edition](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.7.0) | Ternary Constellation, inert Mod SDK foundations, exact course/circuit authoring and editor/space/GPU labs |
+| [v1.6.0 — Operation ALIEN MATH](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.6.0) | Exact rationals, Q16 conversion, geometry, symmetry, graphs and formal correspondence |
+| [v1.5.0 — The Component Forge](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.5.0) | Typed scene components, transform handles and component-driven preview |
+| [v1.4.0 — The Proof of Speed](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.4.0) | Source-bound CPU/RTX observations, complete-output parity and offline negative controls |
+| [v1.3.0 — The Invariant Machine](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.3.0) | Bullet Time, ARCADE, independent time domains and packaged offline delivery |
+| [v1.2.0 — You Didn't Invent Doom Edition](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.2.0) | Independent Q16.16 arithmetic, radix optimization and formal-verification evidence |
+| [v1.1.1 — Exact Vectors, Terrain Physics & the QSOL WebGL API](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.1.1) | Exact vectors, terrain/ballistic kernels and explicit WebGL facilities |
+| [v1.1.0 — Integer game engine foundation](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.1.0) | Integer simulation and replayable Integer Foundry |
+| [v1.0.0 — OPT rendering update & Initial Release](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.0.0) | Initial release and the Clockwork Vault showcase |
 
-The earlier [v1.1.1](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.1.1)
-added exact vectors, terrain/ballistics and the explicit WebGL API;
-[v1.1.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v1.1.0)
-introduced the integer engine and replayable Integer Foundry.
-[The Clockwork Vault](demos/clockwork-vault/index.html) remains the
-v1.0.0 showcase: six OMI seals in one expedition.
+[All releases](https://github.com/QSOLKCB/VANILLAJS/releases) include the separate
+[QFLOAT research prerelease](https://github.com/QSOLKCB/VANILLAJS/releases/tag/qfloat-001-research.1).
+Release names follow published GitHub tags. `package.json` and `MODULES.json`
+retain `1.0.0` metadata; those fields are not the latest milestone identifier.
+**v2.3.0 remains a draft proposal**, and API maturity remains experimental.
 
-Release names above follow the published GitHub tags.
-`package.json` and `MODULES.json` still carry `1.0.0` metadata;
-those fields do not identify the latest published milestone. API maturity
-remains experimental across these releases.
+## GitHub Pages
+
+Set **Settings → Pages → Source → GitHub Actions**. Pull requests verify the
+package without deploying. Pushes to `main` deploy the same artifact after the
+required simulation, contract and browser checks pass. Validation and deployment
+permissions are separate. CI does not create a tag or publish a release.
+
+## Research, provenance and deeper references
+
+The technical records below remain part of the project. Open the area you need;
+each links to the detailed contract and its evidence. Preserved historical
+measurements keep their original source and hardware scope.
+
+<p>
+  <a href="https://doi.org/10.5281/zenodo.24049474"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24049474.svg" alt="FP-HIST-001 dataset DOI" /></a>
+</p>
+
+
+<details>
+<summary><strong>ALIEN MATH, Q16.16, formal evidence and numerical boundaries</strong></summary>
 
 ## ALIEN MATH and research boundaries
 
@@ -286,6 +511,11 @@ off unless the owner explicitly enables it. If Lean is unavailable, the
 workflow fails with a prerequisite diagnosis rather than marking a theorem
 as failed. The GitHub-hosted CI remains a separate validation surface.
 
+</details>
+
+<details>
+<summary><strong>Owner-only FreeDM and local-model research</strong></summary>
+
 ## Qwen3-VL 2B text/image response isolation
 
 The owner-only, no-API-credit
@@ -327,55 +557,10 @@ are collected outside the checkout. No self-hosted hardware or credits are
 used by ordinary PR checks. See the lab README for local WAD setup and
 the explicit owner-only [workflow](.github/workflows/freedm-terra-deathmatch.yml).
 
-## Run the labs
+</details>
 
-Download or clone the repository, then serve its root with any static HTTP server:
-
-```sh
-python3 -m http.server 8000
-# Open http://localhost:8000
-# Visual Workbench: http://localhost:8000/demos/editor/index.html
-# Ternary Constellation: http://localhost:8000/demos/quantum-game-lab/index.html
-# 4X Game Lab: http://localhost:8000/demos/4x-game-lab/index.html
-# Circuit Foundry: http://localhost:8000/demos/circuit-mod-lab/index.html
-# Course Foundry: http://localhost:8000/demos/alien-course-lab/index.html
-# Kinetic Foundry: http://localhost:8000/demos/gpu-lab/index.html
-# Orbital Proving Ground: http://localhost:8000/demos/space-lab/index.html
-# Graph & Spectral Lab: http://localhost:8000/demos/graph-lab/index.html
-# Bullet Time Lab: http://localhost:8000/demos/bullet-time-lab/index.html
-# ARCADE Lab: http://localhost:8000/demos/arcade-lab/index.html
-# 2D Foundry: http://localhost:8000/demos/2d-lab/index.html
-# Integer Foundry: http://localhost:8000/demos/integer-foundry/index.html
-# Interaction Lab: http://localhost:8000/demos/interaction-lab/index.html
-# FPS Lab: http://localhost:8000/demos/fps-lab/index.html
-# RTS Lab: http://localhost:8000/demos/rts-lab/index.html
-# OMI Lab: http://localhost:8000/demos/omi-lab/index.html
-# Brass Engine: http://localhost:8000/demos/ancient-machine/index.html
-# Clockwork Vault: http://localhost:8000/demos/clockwork-vault/index.html
-```
-
-Running the browser labs from source needs no build, npm runtime dependency,
-CDN, account or backend. Bundled scenes use procedural geometry; the Workbench
-also supports explicitly imported local assets. Flight, Interaction, FPS,
-Integer Foundry and Clockwork Vault use WebGL 1. The optional-rendering labs
-start on Canvas 2D; other labs use Canvas, SVG and DOM controls. Unsupported
-graphics are reported visibly, with numerical fallbacks where supported.
-Serve over HTTP(S): opening `file://index.html` is not supported by the
-ES-module entrypoints. The local server works without internet access.
-
-For a packaged build with offline reload, use Node.js 22+ once before serving:
-
-```sh
-node scripts/build.js
-node scripts/verify-offline.js
-python3 -m http.server 8080 --directory dist
-# Open http://localhost:8080
-```
-
-Only the built `dist/` includes the generated service worker and hash manifest.
-On HTTPS or localhost, a successful initial install verifies and caches the
-packaged assets for subsequent offline navigation. An unbuilt source checkout
-does not install this worker. See [offline delivery and limits](docs/DONOR_LABS_OFFLINE.md).
+<details>
+<summary><strong>Movement, sound, numerical kernels and measured reuse</strong></summary>
 
 ## 2D Foundry — gameplay movement, sound and ternary memory
 
@@ -530,6 +715,11 @@ The separate [integer-vector operators](docs/INTEGER_VECTORS.md) provide checked
 3D fixed-point sums, widened dot/cross products, exact squared distances and
 rational interpolation. They are experimental; existing gameplay paths are unchanged.
 
+</details>
+
+<details>
+<summary><strong>Flight, Interaction, FPS movement and RTS controls</strong></summary>
+
 ## Flight Lab
 
 | Experiment | Flight model | Objective |
@@ -660,36 +850,10 @@ See [RTS contracts and limits](docs/RTS_LAB.md) and the
 scenario, individual A* settles 809,826 cells; one shared field settles 3,655,
 followed by 512 samples. These are search-operation counts, not measured FPS.
 
-## Modules
+</details>
 
-The catalogue contains **54 experimental modules**. Import each through
-`modules/<name>/index.js`; [MODULES.json](MODULES.json) records the exact
-dependency closure and environment for every entry.
-
-| Module names under `modules/` | Responsibility |
-| --- | --- |
-| `math` | Vectors, quaternions, camera matrices and seeded random numbers |
-| `time`, `time-domains` | Fixed ticks, interpolation, independent clock domains, pause and catch-up limits |
-| `integer-math`, `integer-vector`, `integer-time`, `integer-physics`, `integer-engine`, `integer-replay` | Checked Q16.16 simulation, exact vector intermediates, canonical snapshots and bounded replay |
-| `flight`, `character`, `collision` | Assisted/inertial flight, upright movement and static/translating AABB collision |
-| `projectiles`, `weapons`, `interactions`, `lead-solver` | Swept shots, weapon timing, conditional effects and constant-velocity interception |
-| `input` | Pure action state, keyboard/mouse adapters and standard gamepad sampling |
-| `navigation`, `navigation-pool` | Grid A*, shared flow fields, formations and reusable search workspaces |
-| `geometry`, `terrain`, `ballistics`, `adaptive-circles`, `range2d` | Geometry batching/indexing, terrain queries, gravity stepping and bounded query kernels |
-| `render-webgl`, `cuboid-stream`, `appearance`, `frame-gate`, `render-optional` | WebGL rendering, retained streams, appearance composition, idle reuse and CPU-first optional acceleration |
-| `motion2d`, `audio2d`, `ternary-store2d` | Integer movement, procedural PCM/WAV and bounded ternary document encoding |
-| `orbital-physics`, `nexus-lattice`, `logical-sampling`, `gf3-lattice` | Classical orbits and separate bounded numerical/lattice research kernels |
-| `qfloat` | Decimal-authoring facade over checked Q16.16 |
-| `exact-rational`, `rational-q16`, `exact-interval`, `exact-geometry`, `exact-d4`, `exact-graph` | Exact authoring, explicit quantization, geometry, symmetry and graph invariants |
-| `exact-course`, `exact-circuit` | Exact checkpoint compilation, swept crossings and cardinal circuit progression |
-| `mod-sdk`, `mod-course`, `mod-experiment`, `mod-football` | Transactional data-only registry and typed course/experiment/football packs |
-| `football` | SOCCERWEB spectator simulation, management performance, live commands and verified replays |
-| `gf3`, `symbolic-events` | Exact finite-field operations, symbolic scores and reference audio events |
-
-API maturity remains **experimental in v1.7.0**. Use a tagged release or exact
-commit, preserve the directory structure and record what your game imports.
-Pure simulation/math modules do not read the DOM or ambient time; rendering
-and input adapters have the browser requirements declared in the catalogue.
+<details>
+<summary><strong>OMI, the Brass Engine, the Clockwork Vault and the explicit GPU API</strong></summary>
 
 ## OMI Lab — research experiment
 
@@ -752,93 +916,10 @@ existing browser WebGL1 standard with no new runtime dependency or scene graph.
 It does **not** replace the normal renderer or retroactively claim an RTX
 performance improvement. Hardware measurements remain separately pinned.
 
-## Development and verification
+</details>
 
-Node.js 22+ is development tooling only. There is no `npm install` for these checks:
-
-```sh
-node --test tests/*.test.js
-node scripts/check.js
-node scripts/build.js
-node scripts/verify-offline.js
-node scripts/proof-speed.mjs --check
-node scripts/navigation-workload.js --check
-node scripts/verify-omi.js --check
-node scripts/verify-machine.js --check
-node scripts/verify-vault.js --check
-node scripts/opt-render-workload.js --check
-# Optional formal verification (requires pinned Lean in lean-toolchain)
-lake build Q16Formal
-lake env lean Q16Audit.lean | tee q16-axiom-audit.txt
-python3 scripts/verify-q16-axioms.py q16-axiom-audit.txt
-node scripts/q16-formal-bridge.mjs
-```
-
-The build stages an allowlisted `dist/` and generates `manifest.json` with sizes
-and SHA-256 hashes, plus the content-versioned offline service worker. The
-manifest identifies packaged bytes; it is not a signature.
-`npm test`, `npm run check`, and `npm run build` are optional aliases.
-
-The [ALIEN MATH audit](docs/ALIEN_MATH_FINAL.md) and
-[QGAME reproduction guide](docs/QGAME_MATH_001.md) list the independent Python
-oracles and source-pinned proof/evidence checks. Python uses its standard library;
-Lean is required only for the formal-verification gates.
-
-CI uses pinned Playwright 1.64.0 outside the checkout and verifies seven
-packaged Chromium suites under `/VANILLAJS/`, with software WebGL where required.
-[Browser reuse](docs/BROWSER_INCREMENTAL_CI.md) is allowed only for independently
-qualified reviewed-main witnesses; missing qualification executes the real suite.
-Node, package integrity and archived evidence checks always run. Screenshots and
-manifest are retained as the `flight-lab-evidence` artifact. See the verification
-document for executed checks and remaining coverage limits.
-
-## GitHub Pages
-
-Set **Settings → Pages → Source → GitHub Actions**. Pull requests verify the
-package without deploying. Pushes to `main` deploy the same artifact only after
-simulation, contract and Chromium checks pass. The workflow separates read-only
-validation from Pages deployment permissions. No tag or release is created by CI.
-
-## Authorship and attribution clarification — COMMENT-001
-
-**Maintainer statement (Trent Slade, QSOL-IMC): I did not steal or copy
-the work of the X account referenced in COMMENT-001 into VANILLAJS.**
-I dispute the copying/attribution allegation shown in the preserved screenshot.
-
-VANILLAJS is developed within QSOL-IMC. Its original implementations, external
-references and specifically adapted donor techniques are distinguished in
-[NOTICE](NOTICE), the [technical provenance documents](docs/ARCHITECTURE.md)
-and Git's source history. Where another QSOL repository informs a technique,
-the source commit and licence are documented; that is not a claim of authorship
-over the donor's work.
-
-The screenshot documents an **allegation**, not proof of plagiarism; it does
-not identify a matching file, commit, code excerpt or asset. See the dated
-[COMMENT-001 evidence and full citation](evidence/COMMENT-001/README.md),
-including Slade (2026), *COMMENT-001: YouTube comment incident and AI-mediated
-attribution claims — an image dataset*, v1.1.0,
-[DOI:10.5281/zenodo.24026140](https://doi.org/10.5281/zenodo.24026140).
-This attribution statement is the maintainer's position; it is not represented
-as an independent adjudication. Specific checkable source comparisons remain welcome.
-
-## Scope and licence
-
-This remains an experimental engine and authoring foundation. Body movement uses
-static axis-aligned boxes or translating kinematic surfaces; shot queries also
-track translating boxes. General reciprocal rigid-body contacts, oriented-box
-contacts, friction, atmospheric flight and network synchronisation remain outside
-the core contract. Individual labs can implement their own bounded responses,
-such as ARCADE puck reflections.
-
-Classical orbital gravity, procedural PCM audio, the Visual Workbench, local asset
-imports and playable HTML export are available within their documented limits.
-They do not establish a general N-body solver, full audio workstation, complete
-game kit or executable-plugin sandbox. Numerical tolerances and runtime limits
-are documented in [API.md](docs/API.md) and the feature contracts above.
-
-The repository's existing [Apache-2.0 licence](LICENSE) is preserved. See
-[NOTICE](NOTICE) for authorship and reference provenance. No ripped assets or
-third-party game engine source are included.
+<details>
+<summary><strong>Preserved physical RTX observations and optional rendering</strong></summary>
 
 ## Owner-activated RTX 5060 Ti full-path validation
 
@@ -881,3 +962,50 @@ CPU-first renderer, explicit player opt-in, editor project setting and playable
 HTML export, exact-math preparation, resource limits, and local test commands.
 The project v2 envelope preserves graphics policy; legacy v1 projects still load.
 Existing WebGL APIs remain supported.
+
+</details>
+
+## Authorship and attribution clarification — COMMENT-001
+
+**Maintainer statement (Trent Slade, QSOL-IMC): I did not steal or copy
+the work of the X account referenced in COMMENT-001 into VANILLAJS.**
+I dispute the copying/attribution allegation shown in the preserved screenshot.
+
+VANILLAJS is developed within QSOL-IMC. Its original implementations, external
+references and specifically adapted donor techniques are distinguished in
+[NOTICE](NOTICE), the [technical provenance documents](docs/ARCHITECTURE.md)
+and Git's source history. Where another QSOL repository informs a technique,
+the source commit and licence are documented; that is not a claim of authorship
+over the donor's work.
+
+The screenshot documents an **allegation**, not proof of plagiarism; it does
+not identify a matching file, commit, code excerpt or asset. See the dated
+[COMMENT-001 evidence and full citation](evidence/COMMENT-001/README.md),
+including Slade (2026), *COMMENT-001: YouTube comment incident and AI-mediated
+attribution claims — an image dataset*, v1.1.0,
+[DOI:10.5281/zenodo.24026140](https://doi.org/10.5281/zenodo.24026140).
+This attribution statement is the maintainer's position; it is not represented
+as an independent adjudication. Specific checkable source comparisons remain welcome.
+
+## Scope and licence
+
+This remains an experimental engine and authoring foundation. Body movement uses
+static axis-aligned boxes or translating kinematic surfaces; shot queries also
+track translating boxes. General reciprocal rigid-body contacts, oriented-box
+contacts, friction, atmospheric flight and network synchronisation remain outside
+the core contract. Individual labs can implement their own bounded responses,
+such as ARCADE puck reflections.
+
+Classical orbital gravity, procedural PCM audio, the Visual Workbench, local asset
+imports and playable HTML export are available within their documented limits.
+They do not establish a general N-body solver, full audio workstation, complete
+game kit or executable-plugin sandbox. Numerical tolerances and runtime limits
+are documented in [API.md](docs/API.md) and the feature contracts above.
+
+The repository's existing [Apache-2.0 licence](LICENSE) is preserved. See
+[NOTICE](NOTICE) for authorship and reference provenance. No ripped assets or
+third-party game engine source are included.
+
+Original content, explicit contracts, inspectable source.
+
+**Build the engine. Demonstrate the mechanics. Teach the creator. Verify the output.**
