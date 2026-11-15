@@ -494,6 +494,29 @@
       "status": "experimental",
       "demo": "demos/arcade-combat-lab/index.html",
       "description": "Strict data-only arcade content packs and transactional replacement over the Mod SDK registry"
+    },
+    "combat3d": {
+      "entry": "modules/combat3d/index.js",
+      "depends": [
+        "collision",
+        "projectiles",
+        "weapons"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/block-arena-lab/index.html",
+      "description": "Bounded Float64 3D hit regions, weapon timers, hitscan penetration, projectiles, splash occlusion and attributed damage/death/assist/respawn events"
+    },
+    "mod-fps": {
+      "entry": "modules/mod-fps/index.js",
+      "depends": [
+        "mod-sdk",
+        "combat3d"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/block-arena-lab/index.html",
+      "description": "Strict inert FPS arena packs, bounded blocks and stair ramps, supported spawns, weapons, bots and transactional admission"
     }
   },
   "recipes": {
@@ -962,6 +985,25 @@
         "audio2d"
       ],
       "preset": "arena"
+    },
+    "block-arena": {
+      "entry": "demos/block-arena-lab/index.html",
+      "modules": [
+        "combat3d",
+        "mod-fps",
+        "character",
+        "collision",
+        "weapons",
+        "projectiles",
+        "navigation",
+        "render-webgl",
+        "geometry",
+        "input",
+        "time",
+        "math",
+        "audio2d"
+      ],
+      "description": "Block Arena Foundry: skirmish, survival, arena and weapon authoring, source-bound same-runtime replay"
     }
   },
   "experiments": {

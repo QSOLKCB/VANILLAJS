@@ -270,3 +270,13 @@ Existing WebGL APIs remain supported.
 ## Experimental arcade combat composition
 
 `combat2d` owns bounded immutable integer XY combat transactions. `mod-arcade` depends only on combat2d admission and the existing Mod SDK. Arcade Combat Foundry owns game progression and replay sessions; it composes motion2d, integer-math randomness, the fixed clock, standard input and audio2d. Neither core module imports a demo. See [ARCADE-FOUNDATION-001](ARCADE_FOUNDATION_001.md) for the endpoint actor / swept projectile boundary and Games2 adapter.
+
+## Block Arena Foundry
+
+Experimental `combat3d` depends on collision, weapons and projectiles; `mod-fps`
+depends on combat3d validation and the existing Mod SDK. Neither imports a demo.
+The Block Arena recipe extends the existing grounded FPS composition with
+offline bot matches, inert arena authoring and source-bound same-runtime replay.
+Movement remains character/AABB Float64 physics; PR #93's integer 2D boundary is
+unchanged. PR #94's complete native module graph packaging also covers this lab.
+See [FPS-FOUNDATION-001](FPS_FOUNDATION_001.md).

@@ -93,3 +93,14 @@ test('Arcade Foundry packages its root-level bootstrap and complete shared depen
     assert.notEqual((await packageLabRuntime(root,'arcade-combat-lab')).entry,first.entry);
   }finally{await rm(root,{recursive:true,force:true});}
 });
+
+test('Block Arena startup and transitive shared-module changes produce isolated versioned graphs',async()=>{
+  const root=await mkdtemp(join(tmpdir(),'fps-package-')),base='demos/block-arena-lab';
+  const files={[base+'/index.html']:'<script type="module" src="./start.js"></script>',[base+'/start.js']:"await import('./app.js');",[base+'/app.js']:"import '../../modules/weapons/index.js';",'modules/weapons/index.js':'export const n=1;'};
+  try{for(const [path,source]of Object.entries(files)){await mkdir(dirname(join(root,path)),{recursive:true});await writeFile(join(root,path),source);}
+    const first=await packageLabRuntime(root,'block-arena-lab');assert.equal(first.files.length,3);const prefix=first.entry.slice(0,-(base+'/start.js').length);
+    for(const [path,source]of Object.entries(files).filter(([p])=>p.endsWith('.js')))assert.equal(await readFile(join(root,prefix,path),'utf8'),source);
+    await writeFile(join(root,base+'/index.html'),files[base+'/index.html']);await writeFile(join(root,'modules/weapons/index.js'),'export const n=2;');
+    const second=await packageLabRuntime(root,'block-arena-lab');assert.notEqual(first.version,second.version);assert.equal(await readFile(join(root,prefix,'modules/weapons/index.js'),'utf8'),'export const n=1;');
+  }finally{await rm(root,{recursive:true,force:true});}
+});

@@ -141,3 +141,11 @@ buffers. No maximum throughput, FPS or allocation-free claim is made.
 All source, environments and geometry were independently authored for this repo.
 No donor game code, third-party runtime, image, font or audio asset is bundled.
 Existing Apache-2.0 licence and provenance remain in place.
+
+## Continue into playable combat
+
+[Block Arena Foundry](../demos/block-arena-lab/index.html) composes this same
+character, weapon timer, projectile, collision, input and WebGL foundation into
+skirmish/survival play and a bounded arena/weapon workshop. Its new `combat3d`
+and `mod-fps` APIs are documented in [FPS-FOUNDATION-001](FPS_FOUNDATION_001.md).
+These six movement recipes and their existing contracts remain supported.

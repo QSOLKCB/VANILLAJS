@@ -13,6 +13,11 @@ export class WeaponTimer {
     return {ammo:this.#ammo,reserve:this.#reserve,magazineSize:this.#magazineSize,cooldown:this.#cooldown,reloadRemaining:this.#remaining,
       phase:this.#remaining>0?'reloading':this.#cooldown>0?'cooldown':this.#ammo===0?'empty':'ready'};
   }
+  /** Explicit bounded pickup; preserves magazine, cooldown and reload progress. */
+  addReserve(rounds,limit=10000) {
+    if(!Number.isSafeInteger(rounds)||rounds<0||!Number.isSafeInteger(limit)||limit<0||limit>1000000)throw new RangeError('invalid ammunition pickup');
+    const added=Math.min(rounds,Math.max(0,limit-this.#reserve));this.#reserve+=added;return added;
+  }
   /** At most one shot per tick, at t=0. Requests blocked by cooldown/reload are
    * discarded, not queued. Reload takes priority and finishes at its within-tick time. */
   step(dt,{fire=false,reload=false}={}) {

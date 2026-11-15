@@ -2,6 +2,8 @@ import {readdir,readFile} from 'node:fs/promises';
 import {resolve,dirname,relative} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import assert from 'node:assert/strict';
+import {verifyFPSSource} from './fps-source-identity.mjs';
+await verifyFPSSource();
 const root=resolve(import.meta.dirname,'..');
 async function walk(dir){
   const files=[];for(const entry of await readdir(dir,{withFileTypes:true})){

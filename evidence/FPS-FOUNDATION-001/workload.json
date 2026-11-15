@@ -1,0 +1,92 @@
+{
+  "kind": "qsol.vanillajs.fps-development-workload.v1",
+  "source": "18149f3e3fd57757cfc897649902d7a8851c3b7578a28c2d53cbb7148ab41953",
+  "node": "v24.22.1",
+  "platform": "linux",
+  "arch": "x64",
+  "simulation": [
+    {
+      "arena": "Cobalt Courtyard",
+      "mode": "skirmish",
+      "ticks": 1200,
+      "status": "playing",
+      "packSha256": "df816b4c70074e5b69226a5089fb8a5b2d8a6d089bf72b43ad1a3716b5444558",
+      "work": {
+        "paths": 38,
+        "expanded": 620,
+        "coverRays": 0
+      },
+      "samplesMs": [
+        1895.992883,
+        1167.3930489999998,
+        1299.1640469999998
+      ],
+      "medianMs": 1299.1640469999998
+    },
+    {
+      "arena": "Cobalt Courtyard",
+      "mode": "survival",
+      "ticks": 982,
+      "status": "defeat",
+      "packSha256": "df816b4c70074e5b69226a5089fb8a5b2d8a6d089bf72b43ad1a3716b5444558",
+      "work": {
+        "paths": 10,
+        "expanded": 193,
+        "coverRays": 0
+      },
+      "samplesMs": [
+        770.5294030000005,
+        717.1529979999996,
+        651.6213719999996
+      ],
+      "medianMs": 717.1529979999996
+    },
+    {
+      "arena": "Violet Switchyard",
+      "mode": "skirmish",
+      "ticks": 1200,
+      "status": "playing",
+      "packSha256": "1eb6c97f5489ffdb586574a08388287e22542517af2c32815c45d08e3e6f0d07",
+      "work": {
+        "paths": 35,
+        "expanded": 779,
+        "coverRays": 0
+      },
+      "samplesMs": [
+        1231.1569,
+        1065.2247510000007,
+        1135.0774650000003
+      ],
+      "medianMs": 1135.0774650000003
+    },
+    {
+      "arena": "Violet Switchyard",
+      "mode": "survival",
+      "ticks": 982,
+      "status": "defeat",
+      "packSha256": "1eb6c97f5489ffdb586574a08388287e22542517af2c32815c45d08e3e6f0d07",
+      "work": {
+        "paths": 9,
+        "expanded": 189,
+        "coverRays": 0
+      },
+      "samplesMs": [
+        612.0649500000018,
+        755.9278950000007,
+        551.5853999999999
+      ],
+      "medianMs": 612.0649500000018
+    }
+  ],
+  "geometry": {
+    "boxes": 165,
+    "vertices": 5940,
+    "frames": 120,
+    "referenceConstructions": 120,
+    "retainedConstructions": 1,
+    "referenceMs": 108.99511700000039,
+    "retainedMs": 0.26731199999994715,
+    "exactFloat32Parity": true
+  },
+  "scope": "CPU observations on this host; excludes GPU, input sampling and audio; no frame-rate or speedup guarantee"
+}

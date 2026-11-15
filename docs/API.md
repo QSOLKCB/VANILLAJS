@@ -798,3 +798,13 @@ missions, world data, layouts or a new synthesizer to the core.
 ## Experimental arcade combat and packs
 
 See [ARCADE-FOUNDATION-001](ARCADE_FOUNDATION_001.md) for `combat2d` immutable worlds, atomic ticks, bounded integer hit resolution, attack windows, and `mod-arcade` typed data-pack admission over DataModRegistry. Both playable modes in Arcade Combat Foundry use these contracts. Game progression/replay sessions remain game-owned; this is not a stable general game framework.
+
+## Experimental FPS combat and packs (FPS-FOUNDATION-001)
+
+`combat3d` composes existing collision, projectiles and WeaponTimer into bounded
+Float64 3D combat. `mod-fps` admits inert arena packs through DataModRegistry.
+See [complete APIs, hit ordering, schemas and bounds](FPS_FOUNDATION_001.md).
+`WeaponTimer.addReserve(rounds, limit=10000)` adds bounded reserve without changing
+magazine/cooldown/reload state. `Renderer.begin` accepts optional vertical `fov`
+(0.2–2.5 radians), with the previous default unchanged.
+[Public-module example](../api/fps/example.js) has no demo-directory dependency.
