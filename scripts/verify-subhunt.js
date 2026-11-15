@@ -5,7 +5,8 @@ import {createHash} from 'node:crypto';
 const base=new URL('../demos/subhunt-lab/',import.meta.url);
 const manifest=JSON.parse(await readFile(new URL('PROVENANCE.json',base),'utf8'));
 assert.equal(manifest.repository,'QSOLKCB/SubHunt');assert.equal(manifest.license,'Apache-2.0');
-assert.deepEqual(manifest.releases,{'v0.1.0':'4c5caa5db105cd1fbd08dd50bb05c1e8302bfee1','v0.2.0':'1603d51e8dd40bed06dd229dea0263a0988718d2'});
+assert.deepEqual(manifest.releases,{'v0.1.0':'4c5caa5db105cd1fbd08dd50bb05c1e8302bfee1','v0.2.0':'1603d51e8dd40bed06dd229dea0263a0988718d2','v0.3.0':'fa8b9778575959b709f565270c5c4bc0f984c435'});
+assert.equal(manifest.sourceRelease,'v0.3.0');
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const targets=new Set();
 for(const file of manifest.files){

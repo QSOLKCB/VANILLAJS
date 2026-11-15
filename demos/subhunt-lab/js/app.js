@@ -55,6 +55,13 @@ import '../../../offline/register.js';
     $('music').setAttribute('aria-pressed',String(music));
     $('music').setAttribute('aria-label',music?'Disable soundtrack':'Enable soundtrack');
   }
+  function musicFailed(error) {
+    // Audio is presentation only; failed playback/export cannot stop combat.
+    try { musicPlayer?.stop(); } catch { /* The device may itself have failed. */ }
+    musicPlayer=null; music=false; updateMusic();
+    console.warn('SubHunt soundtrack unavailable:',error);
+    toast('Soundtrack unavailable. You can keep playing; try MUSIC again to retry.');
+  }
   function selectMode(next) {
     if(screen!=='menu'||!Object.hasOwn(MODES,next))return;
     mode=next;
@@ -376,7 +383,10 @@ import '../../../offline/register.js';
   $('sound').addEventListener('click', () => { sound = !sound; if(!sound)stopAudio(); updateSound(); savePreferences(); unlockAudio(); tone(500); });
   $('music').addEventListener('click',()=>{music=!music;if(!music)musicPlayer?.stop();updateMusic();savePreferences();unlockAudio();});
   $('download-track').addEventListener('click',()=>{
-    const url=URL.createObjectURL(new Blob([SubHuntMusic.wav(state.mission)],{type:'audio/wav'})), a=document.createElement('a');
+    let wav;
+    try { wav=SubHuntMusic.wav(state.mission); }
+    catch(error) { musicFailed(error); return; }
+    const url=URL.createObjectURL(new Blob([wav],{type:'audio/wav'})), a=document.createElement('a');
     a.href=url;a.download='vanillajs-subhunt-sector-'+(state.mission+1)+'.wav';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
   $('effects').addEventListener('click', () => { effects = !effects; effectsOverride = true; updateEffects(); savePreferences(); });
@@ -426,7 +436,7 @@ import '../../../offline/register.js';
       hud();
     }
     try { musicPlayer?.sync(state,sound && music && screen==='playing' && !paused && !calibration); }
-    catch { stopAudio();musicPlayer=null;sound=false;updateSound();toast('Audio unavailable. The operation continues in silence.'); }
+    catch(error) { musicFailed(error); }
     draw.draw(state, visualTime, paused ? 0 : dt, {effects});
     requestAnimationFrame(frame);
   }

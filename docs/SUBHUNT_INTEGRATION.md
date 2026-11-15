@@ -2,7 +2,7 @@
 
 Play [SubHunt Lab](../demos/subhunt-lab/index.html). It includes Fleet Hunt and
 Pond Panic, both playable vessels, three difficulties, four power-ups, controller
-setup and three deterministic chip themes. The game is an Apache-2.0 adaptation;
+setup and three deterministic chip themes. The game is an Apache-2.0 adaptation of v0.3.0;
 the reusable parts are native VANILLAJS APIs.
 
 ## Source pins and boundaries
@@ -11,6 +11,7 @@ the reusable parts are native VANILLAJS APIs.
 |---|---|---|
 | QSOLKCB/SubHunt v0.1.0 | `4c5caa5db105cd1fbd08dd50bb05c1e8302bfee1` | Raw USB axes/buttons/hats, explicit centre confirmation, calibration cancellation, input release and controller handoff |
 | QSOLKCB/SubHunt v0.2.0 | `1603d51e8dd40bed06dd229dea0263a0988718d2` | Four-lane score composition, tick/sample playback, living toys, power-ups, difficulty and separate records |
+| QSOLKCB/SubHunt v0.3.0 | `fa8b9778575959b709f565270c5c4bc0f984c435` | Recoverable soundtrack/export failures and packaged-deployment regression coverage |
 
 The controller source is `js/controller.js`; lifecycle/UI references are
 `js/app.js` and `tests/browser.py`. Music references are `js/music.js` and
@@ -130,7 +131,9 @@ activity, voice/buffer counts, starts, resyncs, the last tick and disposal state
 The adapter neither creates nor resumes an AudioContext, installs listeners nor
 advances a game's clock. The caller owns gesture promises and must check its
 current enabled state after an asynchronous resume. SubHunt Lab reads that state
-every frame and continues silently if the device fails. Determinism covers
+every frame. A soundtrack playback/export failure disables music for the current
+session, retains sound effects and saved preferences, reports the failure, and
+allows MUSIC to retry without restarting combat. Determinism covers
 scores and generated PCM; device latency/resampling and oscillator effects are
 outside that contract.
 
@@ -147,8 +150,13 @@ Run `node --test tests/*.test.js`, `node scripts/check.js`,
 packaged Chromium donor suite runs `scripts/browser-subhunt.js`, covering real
 controls, both vessels, Pond Panic, raw USB calibration/cancel/reconnect,
 pause/mute/focus handling, desktop/mobile layouts, WAV download, offline reload
-and failed-device fallback. The shared browser dispatcher change invalidates
+and an eight-case playback/export failure-and-retry matrix. The shared browser dispatcher change invalidates
 reuse; new source remains unqualified until reviewed main evidence exists.
 
 Synthetic gamepads and emulated viewports do not establish physical USB or phone
 compatibility. Existing immutable proof and hardware evidence remain unchanged.
+
+The v0.3.0 standalone fix stages its vendor audio renderer into Pages. This
+adaptation uses VANILLAJS native modules: its allowlisted build already packages
+all of them, verifies asset hashes, and browser-tests `dist/` under the deployment
+URL prefix. It does not copy SubHunt's private deployment scripts or service worker.

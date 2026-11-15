@@ -3,7 +3,8 @@
   "license": "Apache-2.0",
   "releases": {
     "v0.1.0": "4c5caa5db105cd1fbd08dd50bb05c1e8302bfee1",
-    "v0.2.0": "1603d51e8dd40bed06dd229dea0263a0988718d2"
+    "v0.2.0": "1603d51e8dd40bed06dd229dea0263a0988718d2",
+    "v0.3.0": "fa8b9778575959b709f565270c5c4bc0f984c435"
   },
   "files": [
     {
@@ -40,11 +41,11 @@
     },
     {
       "source": "js/app.js",
-      "sha256": "3db6773b88b141235656c0bcfd8f8833dddbfe187b535346d5722996b6d1575c",
-      "gitBlob": "bee3254e2b48b33c540d5594cc432e753710f241",
+      "sha256": "d289a6eb0e1340bf050150ceb141d1cfb3242096815a429b010a11f89e0b2159",
+      "gitBlob": "9adba4b2986d97637c04cbf2e4d1e2f1a832e96d",
       "target": "demos/subhunt-lab/js/app.js",
       "status": "adapted",
-      "adaptedSHA256": "2ed13508432f49b8ae33e38fbbebb93f9880f737a63edaa676d96ff5319dcc72"
+      "adaptedSHA256": "c500b11bbd50aa2a21e459b48a3ffdc30d25b8302313dfab64c2d14809a87e90"
     },
     {
       "source": "js/render.js",
@@ -89,7 +90,8 @@
     "v0.1.0 supplies raw USB mapping, calibration and input lifecycle patterns.",
     "v0.2.0 supplies two game modes, power-ups, difficulty and score composition.",
     "Audio2d was originally supplied by VANILLAJS and is reused natively, not vendored back.",
-    "Demo uses native ES modules and VANILLAJS offline registration; standalone file:// contract belongs to SubHunt."
+    "Demo uses native ES modules and VANILLAJS offline registration; standalone file:// contract belongs to SubHunt.",
+    "v0.3.0 supplies recoverable soundtrack/export failure handling; VANILLAJS already stages all native modules and tests the built package."
   ],
   "extractions": [
     {
@@ -113,5 +115,6 @@
       "target": "api/audio/index.js",
       "adaptation": "Generalised native API; game-specific names/composition remain in demo."
     }
-  ]
+  ],
+  "sourceRelease": "v0.3.0"
 }

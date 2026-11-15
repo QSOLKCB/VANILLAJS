@@ -3,8 +3,12 @@ import assert from 'node:assert/strict';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 async function press(page,index){
-  await page.evaluate(i=>testPad.buttons[i].pressed=true,index);await page.waitForTimeout(70);
-  await page.evaluate(i=>testPad.buttons[i].pressed=false,index);await page.waitForTimeout(70);
+  // Polling is frame-driven. Wall-clock pulses can disappear between slow frames.
+  await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+  await page.evaluate(i=>testPad.buttons[i].pressed=true,index);
+  await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+  await page.evaluate(i=>testPad.buttons[i].pressed=false,index);
+  await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
 }
 export async function checkSubHunt(browser,base){
   await mkdir('browser-artifacts',{recursive:true});
@@ -92,17 +96,42 @@ export async function checkSubHunt(browser,base){
     await page.waitForFunction(()=>subhunt.snapshot().state.tick>3&&subhunt.snapshot().soundtrack?.active);
     await context.setOffline(false);assert.deepEqual(errors,[]);
   }finally{await context.close();}
-  // A failed playback device cannot freeze the game loop or fabricate a music PASS.
-  const unavailable=await browser.newContext(),silent=await unavailable.newPage();
-  try{
-    await silent.addInitScript(()=>{window.AudioContext=class{
-      state='running';resume(){return Promise.resolve();}createBuffer(){throw Error('test device unavailable');}createBufferSource(){throw Error('unavailable');}
-      createOscillator(){return {type:'sine',frequency:{setValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){},start(){},stop(){},disconnect(){}};}
-      createGain(){return {gain:{setValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){},disconnect(){}};}
-    };});
-    await silent.goto(base+'demos/subhunt-lab/index.html');await silent.locator('#launch').click();await silent.locator('#sound').click();
-    await silent.waitForFunction(()=>!subhunt.snapshot().sound&&subhunt.snapshot().state.tick>30);
-    assert.ok((await silent.locator('#toast').textContent()).includes('continues in silence'));
-  }finally{await unavailable.close();}
-  console.log('SubHunt: native modules, both roles, Pond race, difficulty, raw controller calibration/reconnect, PCM hash, pause/mute, mobile, offline and device-failure fallback passed.');
+  // v0.3.0 recovery matrix: playback/export failures cannot freeze either game.
+  for(const mode of ['campaign','pond'])for(const role of ['boat','sub'])for(const remembered of [false,true]){
+    const context=await browser.newContext(),page=await context.newPage(),errors=[];
+    page.on('pageerror',e=>errors.push(e.message));
+    try{
+      await page.addInitScript(remembered=>{
+        if(remembered)localStorage.setItem('vanillajs-subhunt-preferences-v1',JSON.stringify({sound:true,music:true}));
+        window.failMusic=true;window.failWav=false;
+        const create=AudioContext.prototype.createBuffer,write=DataView.prototype.setInt16;
+        AudioContext.prototype.createBuffer=function(...args){if(window.failMusic)throw Error('injected music device failure');return create.apply(this,args);};
+        DataView.prototype.setInt16=function(...args){if(window.failWav)throw Error('injected WAV write failure');return write.apply(this,args);};
+      },remembered);
+      await page.goto(base+'demos/subhunt-lab/index.html');
+      await page.locator('#mode-'+mode).click();await page.locator('#role-'+role).click();await page.locator('#launch').click();
+      if(!remembered)await page.locator('#sound').click();
+      await page.waitForFunction(()=>subhunt.snapshot().sound&&!subhunt.snapshot().music);
+      assert.ok((await page.locator('#toast').textContent()).includes('Soundtrack unavailable'));
+      assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('vanillajs-subhunt-preferences-v1')).music),true);
+      const before=await page.evaluate(()=>subhunt.snapshot().state);
+      await page.keyboard.down('ArrowRight');await page.keyboard.down('Space');
+      await page.waitForFunction(t=>subhunt.snapshot().state.tick>t+12,before.tick);
+      await page.keyboard.up('Space');await page.keyboard.up('ArrowRight');
+      const after=await page.evaluate(()=>subhunt.snapshot().state);
+      assert.ok(after.player.x>before.player.x&&after.stats.shots>before.stats.shots&&after.timeLeft<before.timeLeft);
+      if(mode==='pond')assert.notEqual(after.targets[0].x,before.targets[0].x);
+      await page.keyboard.press('Escape');const frozen=await page.evaluate(()=>subhunt.snapshot().state);
+      await page.waitForTimeout(120);assert.deepEqual(await page.evaluate(()=>subhunt.snapshot().state),frozen);
+      await page.locator('#resume').click();await page.waitForFunction(t=>subhunt.snapshot().state.tick>t+3,frozen.tick);
+      await page.locator('#music').click();await page.waitForFunction(()=>!subhunt.snapshot().music);
+      await page.evaluate(()=>window.failWav=true);await page.locator('#download-track').click();
+      const tick=await page.evaluate(()=>subhunt.snapshot().state.tick);
+      await page.waitForFunction(t=>subhunt.snapshot().state.tick>t+3,tick);
+      await page.evaluate(()=>{window.failMusic=false;window.failWav=false;});await page.locator('#music').click();
+      await page.waitForFunction(()=>subhunt.snapshot().soundtrack?.active);
+      assert.deepEqual(errors,[]);
+    }finally{await context.close();}
+  }
+  console.log('SubHunt: native modules, both roles, Pond race, difficulty, raw controller calibration/reconnect, PCM hash, pause/mute, mobile, offline and eight playback/export failure-and-retry cases passed.');
 }
