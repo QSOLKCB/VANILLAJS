@@ -31,6 +31,31 @@ experimental Visual Workbench are available now.
 [Verification](docs/VERIFICATION.md) · [Roadmap](ROADMAP.md) ·
 [All releases](https://github.com/QSOLKCB/VANILLAJS/releases)
 
+
+## Touchline — SOCCERWEB meets VANILLAJS
+
+**[Play Football Manager](https://qsolkcb.github.io/VANILLAJS/demos/football-manager/)** · **[Football modding SDK](docs/FOOTBALL_SDK.md)** · **[Editable starter pack](demos/football-manager/starter.json)**
+
+Take charge of one of SOCCERWEB’s eight original clubs. Pick your eleven, recruit
+players, shape training and tactics, balance the books, then press Play and watch
+your team perform in the real animated SOCCERWEB match engine. Make changes from
+the dugout and build a season across all 56 home-and-away fixtures.
+
+- Player attributes, condition, morale, sharpness, cohesion and role familiarity
+  affect actual movement, decisions, shooting and goalkeeping.
+- Live substitutions, tactical instructions, broadcast cameras, match statistics
+  and 1×–8× viewing speed put you on the touchline.
+- A complete football content SDK covers clubs, squads, kits, formations, match
+  rules and economy through validated, locally stored data packs.
+- Export careers, verify and watch full or partial replays, and keep playing
+  offline after the packaged app’s first successful installation.
+
+Native modules, Canvas2D and browser standards throughout. Football APIs are
+experimental and versioned; SOCCERWEB v3.1.1 provenance and Apache-2.0 attribution
+are retained. The linked demo becomes available when this integration is merged
+and the Pages workflow deploys it.
+
+
 ## New on main
 
 [**RACING-002B — Track Foundry**](demos/racing-lab/index.html) provides

@@ -1,0 +1,426 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qsolkcb.github.io/VANILLAJS/modules/mod-football/schema.json",
+  "title": "VANILLAJS football content bundle v1",
+  "description": "Structural authoring aid. Runtime validation additionally enforces unique IDs, goalkeeper slots, exact dependencies, data budgets and complete content composition.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "packs"
+  ],
+  "properties": {
+    "kind": {
+      "const": "qsol.football-content.v1"
+    },
+    "packs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/pack"
+      },
+      "minItems": 1,
+      "maxItems": 24
+    }
+  },
+  "$defs": {
+    "pack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "requires",
+        "entries"
+      ],
+      "properties": {
+        "kind": {
+          "const": "qsol.vanillajs.mod-pack.v1"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,47}$"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,2})\\.(0|[1-9][0-9]{0,2})\\.(0|[1-9][0-9]{0,2})$"
+        },
+        "requires": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "version"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{0,47}$"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]{0,2})\\.(0|[1-9][0-9]{0,2})\\.(0|[1-9][0-9]{0,2})$"
+              }
+            }
+          },
+          "minItems": 0,
+          "maxItems": 8
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entry"
+          },
+          "minItems": 1,
+          "maxItems": 32
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "data"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,47}$"
+        },
+        "kind": {
+          "const": "data"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "value"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "qsol.football-club.v1"
+                },
+                "value": {
+                  "$ref": "#/$defs/club"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "value"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "qsol.football-formation.v1"
+                },
+                "value": {
+                  "$ref": "#/$defs/formation"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "value"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "qsol.football-rules.v1"
+                },
+                "value": {
+                  "$ref": "#/$defs/rules"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "club": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "short",
+        "region",
+        "style",
+        "color",
+        "dark",
+        "accent",
+        "attack",
+        "press",
+        "pass",
+        "players"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,47}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "short": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4
+        },
+        "region": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "style": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[a-fA-F0-9]{6}$"
+        },
+        "dark": {
+          "type": "string",
+          "pattern": "^#[a-fA-F0-9]{6}$"
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[a-fA-F0-9]{6}$"
+        },
+        "attack": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "press": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "pass": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "players": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/player"
+          },
+          "minItems": 16,
+          "maxItems": 22
+        }
+      }
+    },
+    "player": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "role",
+        "pace",
+        "passing",
+        "finishing",
+        "defending",
+        "keeping",
+        "stamina",
+        "condition",
+        "morale",
+        "sharpness"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,47}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "role": {
+          "enum": [
+            "GK",
+            "DF",
+            "MF",
+            "FW"
+          ]
+        },
+        "pace": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "passing": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "finishing": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "defending": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "keeping": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "stamina": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "condition": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "morale": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "sharpness": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    "formation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "slots"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,47}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer",
+                "minimum": 10,
+                "maximum": 90
+              },
+              {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 48
+              },
+              {
+                "enum": [
+                  "GK",
+                  "DF",
+                  "MF",
+                  "FW"
+                ]
+              }
+            ],
+            "items": false,
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "minItems": 11,
+          "maxItems": 11
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seconds",
+        "fatigue",
+        "homeAdvantage",
+        "startingBudget",
+        "gate",
+        "prize",
+        "wage",
+        "trainingCost",
+        "transferCost"
+      ],
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "minimum": 20,
+          "maximum": 180
+        },
+        "fatigue": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "homeAdvantage": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "startingBudget": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "gate": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "prize": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "wage": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "trainingCost": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "transferCost": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        }
+      }
+    }
+  }
+}

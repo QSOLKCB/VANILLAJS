@@ -205,3 +205,13 @@ native module boundaries are recorded in that demo's PROVENANCE.json and
 docs/SUBHUNT_INTEGRATION.md. Game worlds, toys, power-ups and progression remain
 demo-owned; audio2d is reused from VANILLAJS directly, not vendored back. No
 Atari source, artwork or music is included.
+
+SOCCERWEB integration (Touchline Football Manager)
+------------------------------------------------
+Adapted from QSOLKCB/Soccerweb v3.1.1, commit
+e2b67c01b0edf7afa3577c60458e5366eea69bde, under Apache-2.0.
+Original fixed-step football simulation, AI, Canvas2D renderer and eight club
+identities are retained/adapted. See demos/football-manager/PROVENANCE.json
+and SOCCERWEB-LICENSE.txt for source records and retained licence.
+Management, mod contracts, career progression and Touchline UI are VANILLAJS
+additions. No third-party league identities, artwork or runtime libraries.

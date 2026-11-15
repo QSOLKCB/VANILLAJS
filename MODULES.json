@@ -445,6 +445,26 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Bounded multi-phrase PCM scores, exact tick positions and complete loop WAV export"
+    },
+    "mod-football": {
+      "entry": "modules/mod-football/index.js",
+      "depends": [
+        "mod-sdk"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Typed, bounded football content packs: clubs, rosters, formations and rules; transactional composition over the data-only registry.",
+      "demo": "demos/football-manager/index.html"
+    },
+    "football": {
+      "entry": "modules/football/index.js",
+      "depends": [
+        "mod-football"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "SOCCERWEB-derived fixed-step spectator football, management performance, live commands and versioned replay verification.",
+      "demo": "demos/football-manager/index.html"
     }
   },
   "recipes": {
@@ -856,6 +876,15 @@
         "audio2d"
       ],
       "description": "Source-pinned SubHunt release recipes: living-toy races, salvage, difficulty, raw controllers and tick-driven music"
+    },
+    "football-manager": {
+      "entry": "demos/football-manager/index.html",
+      "modules": [
+        "football",
+        "mod-football",
+        "mod-sdk"
+      ],
+      "description": "Touchline: eight SOCCERWEB clubs, squad and financial management, a full league, live matches and a JSON mod workshop."
     }
   },
   "experiments": {

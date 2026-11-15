@@ -396,3 +396,13 @@ A [typed data-only course adapter](docs/MOD_SDK_002.md) now composes MOD-SDK-001
 ## Racing Lab — five complete demo-owned starting points
 
 Open [Racing Lab](demos/racing-lab/index.html) for an original retro pseudo-3D highway, 3D circuit, demolition derby, car-football arena or elevated stunt course. Vehicle game rules live in `demos/racing-lab/world.js`; the optional 3D renderer uses existing `modules/render-webgl`, and the browser shell uses `modules/time` with fixed 1/60 s steps. These are **experimental demos**, not an exact Q16.16 driving API. For exact checkpoint authoring see [Circuit Mod Lab](demos/circuit-mod-lab/index.html). The controls, failure modes and replay limitations are described in [RACING_LAB.md](docs/RACING_LAB.md).
+
+## Manage a football club
+
+Open [Touchline](demos/football-manager/index.html), choose one of SOCCERWEB's
+eight clubs, and manage the squad, tactics, training and finances. Press Play to
+watch a real AI match, then continue through the home-and-away league. The
+[football SDK guide](docs/FOOTBALL_SDK.md) includes a runnable headless example,
+validated JSON mod format and replay contract. Start from
+[demos/football-manager/starter.json](demos/football-manager/starter.json), then
+use the in-game Mod workshop to validate, export and start a custom career.
