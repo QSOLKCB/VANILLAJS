@@ -4,6 +4,7 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {composeTrack} from '../demos/pursuit-lab/js/score.js';
 import {replay,snapshot} from '../demos/pursuit-lab/js/sim.js';
+import {checkPursuitUpgrade} from './pursuit-upgrade-check.mjs';
 export async function checkPursuit(browser,base){
   await mkdir('browser-artifacts',{recursive:true});
   const context=await browser.newContext({viewport:{width:1440,height:900}}),page=await context.newPage(),errors=[];
@@ -82,4 +83,5 @@ export async function checkPursuit(browser,base){
     // Diagnostic capture must not add another full timeout or hide the failure.
     await page.screenshot({path:'browser-artifacts/pursuit-failure.png',fullPage:true,timeout:5000}).catch(()=>{});throw error;
   }finally{await context.close();}
+  await checkPursuitUpgrade(browser,base);
 }

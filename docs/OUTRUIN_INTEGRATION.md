@@ -34,7 +34,29 @@ Pinned donor: `QSOLKCB/Outruin` at
 `c9a0839fa1f8329f3eee4c7fd8637ae78cbad8c7` (Apache-2.0).
 `demos/pursuit-lab/PROVENANCE.json` records donor Git blobs/SHA-256s and current
 adaptation hashes. `scripts/verify-pursuit.js` checks the local adaptation inventory.
-The donor licence and NOTICE are retained. There is no duplicate vendored VANILLAJS runtime.
+The donor licence and NOTICE are retained. Runtime source remains shared with VANILLAJS.
+
+## Loading after an update
+
+An older offline worker can know the shared engine URLs without knowing a newly
+added lab. Serving the new lab from the network alongside that worker's older
+audio API prevents module linking, leaving its buttons inert.
+
+The static build now places Pursuit's complete native-module dependency graph
+under a directory named by the graph's SHA-256. Relative imports remain intact,
+and changing any dependency changes the entry URL. An older worker cannot
+substitute its shared modules into this graph. The new worker includes every
+snapshot member in its existing verified offline inventory. No runtime package,
+cache purge, forced worker takeover or preference reset is used.
+
+Source development keeps ordinary shared imports. `scripts/pursuit-package.mjs`
+generates the snapshot only in `dist/`; build tooling never ships. Offline
+registration loads independently, and a failed game import shows a **Reload
+lab** button and status message instead of an inert Start button.
+
+For an already-open page from before this fix, close all VANILLAJS tabs and
+reopen the lab to let a fully installed waiting worker activate. Saved sound
+and display preferences do not need to be deleted.
 
 The pursuit loop is inspired by Taito's Chase H.Q. instruction booklet
 ([manual scan](https://www.thegameisafootarcade.com/wp-content/uploads/2017/03/Chase-H.Q.-Game-Manual.pdf)).

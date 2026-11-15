@@ -6,7 +6,6 @@ import {CASES} from './cases.js';
 import {Renderer} from './render.js';
 import {Controls} from './input.js';
 import {Audio} from './audio.js';
-import '../../../offline/register.js';
 const $=id=>document.getElementById(id),root=$('app'),renderer=new Renderer($('game')),audio=new Audio(),clock=new FixedClock({step:1/60,maxFrame:.1,maxSteps:6});
 const preference='vanillajs-pursuit-v1';let saved={};try{saved=JSON.parse(localStorage.getItem(preference)||'{}')??{};}catch{}
 let sound=saved.sound===true,windowed=saved.display==='page'?'page':'fit',s=createGame(),previous=null,screen='menu',paused=false,last=0,reportedFailure=false,paintPending=true;

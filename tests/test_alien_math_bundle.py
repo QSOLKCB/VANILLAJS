@@ -40,6 +40,8 @@ class CapsuleTests(unittest.TestCase):
             'docs/private.json': '{"not":"packaged"}\n',
             'docs/drafts/nested.md': '# Not a top-level guide\n',
             'demos/example/index.html': '<!doctype html><title>Fixture</title>',
+            'demos/pursuit-lab/index.html': '<script type="module" src="./js/start.js"></script>',
+            'demos/pursuit-lab/js/start.js': 'export const fixture=true;\n',
             'api/index.js': 'export const fixture=true;\n',
             'offline/register.js': '// fixture registration\n',
             'index.html': '<!doctype html><title>Fixture</title>',
@@ -49,7 +51,8 @@ class CapsuleTests(unittest.TestCase):
             'experiments/arch-omi/index.js': 'export const fixture=true;\n',
             'experiments/e8-geometry/index.js': 'export const fixture=true;\n',
         }
-        build_sources = ['scripts/build.js', 'scripts/service-worker.template.js',
+        build_sources = ['scripts/build.js', 'scripts/pursuit-package.mjs',
+                         'scripts/browser-dependencies.mjs', 'scripts/service-worker.template.js',
                          'scripts/verify-offline.js']
         for name in build_sources:
             fixture[name] = (bundle.ROOT / name).read_text()

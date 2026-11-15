@@ -26,7 +26,7 @@ PUBLIC = ('modules/', 'demos/', 'api/', 'offline/')
 EXTRA = (
     'LICENSE', 'NOTICE', 'AGENTS.md', 'README.md', 'ROADMAP.md', 'MODULES.json',
     'package.json', 'index.html', 'experiments/arch-omi/index.js',
-    'experiments/e8-geometry/index.js', 'scripts/build.js',
+    'experiments/e8-geometry/index.js', 'scripts/build.js', 'scripts/pursuit-package.mjs',
     'scripts/service-worker.template.js', 'scripts/verify-offline.js',
     'scripts/alien_math_bundle.py', 'tests/test_alien_math_bundle.py',
     'tests/alien-math-final.test.js', 'docs/ALIEN_MATH_FINAL.md',
