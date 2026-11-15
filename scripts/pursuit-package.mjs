@@ -7,8 +7,9 @@ import {hash,jsDependencies,resolveLocal} from './browser-dependencies.mjs';
 
 export async function packagePursuitRuntime(root){return packageLabRuntime(root,'pursuit-lab');}
 export async function packageLabRuntime(root,lab){
-  if(!['pursuit-lab','skyguard-lab'].includes(lab))throw Error('Unknown packaged lab');
-  const base='demos/'+lab,entry=base+'/js/start.js',htmlPath=base+'/index.html';
+  const startups={'pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js'};
+  if(!Object.hasOwn(startups,lab))throw Error('Unknown packaged lab');
+  const startup=startups[lab],base='demos/'+lab,entry=base+'/'+startup,htmlPath=base+'/index.html';
   const files=new Map(),pending=[entry];let size=0;
   while(pending.length){
     const path=pending.pop();if(files.has(path))continue;
@@ -21,7 +22,7 @@ export async function packageLabRuntime(root,lab){
   }
   const rows=[...files].map(([path,bytes])=>({path,sha256:hash(bytes)})).sort((a,b)=>a.path.localeCompare(b.path));
   const version=hash(JSON.stringify(rows)),prefix=base+'/runtime-'+version;
-  const html=await readFile(join(root,htmlPath),'utf8'),marker='src="./js/start.js"';
+  const html=await readFile(join(root,htmlPath),'utf8'),marker=`src="./${startup}"`;
   if(html.split(marker).length!==2)throw Error('Expected one lab startup entry');
   for(const [path,bytes] of files){
     const target=join(root,prefix,path);await mkdir(dirname(target),{recursive:true});await writeFile(target,bytes);
