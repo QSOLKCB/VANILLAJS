@@ -135,6 +135,7 @@ try{
   await runSuite('worlds','./browser-2d.js','verify2DLab');
   await runSuite('worlds','./browser-arcade-combat.js','verifyArcadeCombat');
   await runSuite('worlds','./browser-block-arena.js','verifyBlockArena');
+  await runSuite('worlds','./browser-demoscene.js','verifyDemoscene');
   await runSuite('worlds','./browser-4x.js','verify4XLab');
   await runSuite('worlds','./browser-voidward.js','verifyVoidwardLab');
   await runSuite('research','./browser-omi.js','verifyOmi');

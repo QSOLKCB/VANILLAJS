@@ -1,0 +1,17 @@
+Demoscene browser failure [] Validated project loaded · ready to play
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: mobile horizontal overflow
+    at verifyDemoscene (file:///workspace/work/VANILLAJS/scripts/browser-demoscene.js:32:63)
+    at async file:///workspace/work/check-demoscene.mjs:11:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

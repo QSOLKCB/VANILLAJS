@@ -517,6 +517,37 @@
       "status": "experimental",
       "demo": "demos/block-arena-lab/index.html",
       "description": "Strict inert FPS arena packs, bounded blocks and stair ramps, supported spawns, weapons, bots and transactional admission"
+    },
+    "demo-timeline": {
+      "entry": "modules/demo-timeline/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Absolute 48 kHz sample time, seekable keyframes and score-driven cue envelopes",
+      "demo": "demos/demoscene-lab/index.html"
+    },
+    "demo-scene": {
+      "entry": "modules/demo-scene/index.js",
+      "depends": [
+        "demo-timeline"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded procedural choreography, original 3D block glyphs and retained geometry streams",
+      "demo": "demos/demoscene-lab/index.html"
+    },
+    "mod-demo": {
+      "entry": "modules/mod-demo/index.js",
+      "depends": [
+        "mod-sdk",
+        "soundtrack",
+        "demo-timeline",
+        "demo-scene"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Strict inert demoscene projects, integer four-voice scores and atomic activation",
+      "demo": "demos/demoscene-lab/index.html"
     }
   },
   "recipes": {
@@ -1004,6 +1035,19 @@
         "audio2d"
       ],
       "description": "Block Arena Foundry: skirmish, survival, arena and weapon authoring, source-bound same-runtime replay"
+    },
+    "demoscene": {
+      "entry": "api/demoscene/index.js",
+      "modules": [
+        "demo-timeline",
+        "demo-scene",
+        "mod-demo",
+        "audio2d",
+        "soundtrack",
+        "render-webgl",
+        "frame-gate"
+      ],
+      "description": "Sample-indexed audiovisual production, strict compositions and opt-in audio transport"
     }
   },
   "experiments": {
