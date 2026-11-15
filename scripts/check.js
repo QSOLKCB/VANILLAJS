@@ -17,6 +17,7 @@ const catalogue=JSON.parse(await readFile(resolve(root,'MODULES.json'),'utf8'));
 const pkg=JSON.parse(await readFile(resolve(root,'package.json'),'utf8'));
 assert.equal(catalogue.release,pkg.version,'catalogue and package versions differ');
 await import('./verify-voidward.js');
+await import('./verify-subhunt.js');
 for(const [name,recipe] of Object.entries(catalogue.recipes)){
   await readFile(resolve(root,recipe.entry));
   for(const module of recipe.modules)assert.ok(catalogue.modules[module],`${name}: unknown module ${module}`);

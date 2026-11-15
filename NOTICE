@@ -194,3 +194,14 @@ engine adaptation remain pinned to their earlier revisions. File identities
 are recorded in demos/4x-game-lab/voidward/mods/HORIZONS_PROVENANCE.json
 (relative to the repository root). This import includes data only; the donor
 command deck and engine optimizations are not transplanted.
+
+SubHunt Lab and the experimental gamepad/soundtrack APIs adapt QSOLKCB/SubHunt
+v0.1.0 at 4c5caa5db105cd1fbd08dd50bb05c1e8302bfee1 and v0.2.0 at
+1603d51e8dd40bed06dd229dea0263a0988718d2, with v0.3.0 fixes at
+fa8b9778575959b709f565270c5c4bc0f984c435 under Apache-2.0.
+Copyright 2026 Trent Slade / QSOL-IMC and contributors. The original licence is
+retained in demos/subhunt-lab/LICENSE. Source hashes, adaptation hashes and
+native module boundaries are recorded in that demo's PROVENANCE.json and
+docs/SUBHUNT_INTEGRATION.md. Game worlds, toys, power-ups and progression remain
+demo-owned; audio2d is reused from VANILLAJS directly, not vendored back. No
+Atari source, artwork or music is included.

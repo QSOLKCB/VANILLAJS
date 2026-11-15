@@ -761,3 +761,8 @@ traversal tie rules, input admission, invariance limits and the standalone lab.
 ## QGAME-MATH-001 experimental modules
 
 `gf3` provides bounded exact finite-field vectors, matrices, affine transformations, syndromes and directed state graphs. `symbolic-events` declares deterministic composition rules and adapts canonical events to existing audio2d reference PCM. `mod-experiment` adds typed inert experiment admission over MOD-SDK-001. See [the API, schemas and numerical boundaries](QGAME_MATH_001.md). Existing gf3-lattice, exact math, course and registry APIs are unchanged.
+
+
+## SubHunt release integration (experimental)
+
+`gamepad` provides pure, bounded raw/standard input mapping and calibration capture with game-owned action names. `soundtrack` composes existing audio2d phrases into owned, bounded PCM loops with exact tick positions and WAV export. `api/audio` is an explicit opt-in Web Audio player. See [contracts, examples, source pins and limitations](SUBHUNT_INTEGRATION.md). Existing input and audio2d APIs are unchanged.

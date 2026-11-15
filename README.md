@@ -5,6 +5,9 @@
 
 **Start creating:** [Creator Hub](demos/creator-hub/index.html) · [Game-making guide](docs/CREATOR_GUIDE.md) · [Soundtrack Lab](demos/soundtrack-lab/index.html). New editor starters, gameplay pieces and scene checks help you reach a first playable; the game-folder exporter includes its runtime. VOIDWARD now includes eight campaigns.
 
+**SubHunt release integration:** [Play SubHunt Lab](demos/subhunt-lab/index.html)—Fleet Hunt, living-toy Pond Panic, three difficulties and four power-ups. Reuse its new native [raw gamepad mapping and multi-phrase soundtrack APIs](docs/SUBHUNT_INTEGRATION.md), including tick-driven playback and complete-loop WAV export. Source-pinned to SubHunt v0.1.0/v0.2.0 with v0.3.0 recovery fixes; game content stays demo-owned.
+
+
 <p align="center">
   <a href="https://doi.org/10.5281/zenodo.24049474"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24049474.svg" alt="FP-HIST-001 dataset DOI" /></a>
 </p>

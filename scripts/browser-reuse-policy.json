@@ -93,12 +93,14 @@
         "demos/shared-lab/",
         "demos/gpu-lab/",
         "demos/space-lab/",
-        "demos/soundtrack-lab/"
+        "demos/soundtrack-lab/",
+        "demos/subhunt-lab/"
       ],
       "scripts": [
         "scripts/browser-donor-labs.js",
         "scripts/browser-optional-labs.js",
-        "scripts/browser-soundtrack.js"
+        "scripts/browser-soundtrack.js",
+        "scripts/browser-subhunt.js"
       ],
       "serviceWorker": true,
       "consumes": [
@@ -274,6 +276,18 @@
       "tests/voidward-save-fixtures.js",
       "tests/fixtures/voidward-v1-frontier.json",
       "tests/fixtures/voidward-v1-machine-dawn.json"
+    ],
+    "modules/gamepad/": [
+      "docs/SUBHUNT_INTEGRATION.md",
+      "tests/gamepad.test.js"
+    ],
+    "modules/soundtrack/": [
+      "docs/SUBHUNT_INTEGRATION.md",
+      "tests/soundtrack-sequence.test.js"
+    ],
+    "api/audio/": [
+      "docs/SUBHUNT_INTEGRATION.md",
+      "tests/audio-player.test.js"
     ]
   },
   "shared": [

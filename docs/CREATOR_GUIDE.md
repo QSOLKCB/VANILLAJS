@@ -12,6 +12,7 @@ Start at the [Creator Hub](../demos/creator-hub/index.html) for a browser-readab
 | Retro driving, car combat, football or stunt racing | [Racing Lab](../demos/racing-lab/index.html) | Seven playable demo-owned vehicle recipes, including scenic touring and 3D sprints, plus input-tick JSON receipts |
 | Space flight or combat | [Space Lab](../demos/space-lab/index.html) | Docking/broadside/orbit recipe; add economy and missions |
 | A 2D game | [2D Foundry](../demos/2d-lab/index.html) | Platform, car, shooter or RTS example |
+| Arcade battles, pickups and raw USB controllers | [SubHunt Lab](../demos/subhunt-lab/index.html) | Two playable recipes plus reusable controller and soundtrack APIs |
 | Original short music cues | [Soundtrack Lab](../demos/soundtrack-lab/index.html) | WAV, editable recipe and audio2d score |
 
 The editor Play button previews the scene's box physics. It does not compile arbitrary game rules, implement quests, or turn a campaign pack into an editor scene automatically.
@@ -104,6 +105,8 @@ const sound = createSound2D(score);
 const wavBytes = sound.wav();
 // Play through a user-gesture-gated audio adapter; cancel on pause/focus loss.
 ```
+
+For multi-phrase, four-channel looping music and playback tied to simulation ticks, see the [SubHunt integration guide](SUBHUNT_INTEGRATION.md). It includes pure sequence construction, full-loop WAV export, explicit pause/gesture handling and raw USB mapping examples.
 
 ## Verify before sharing
 
