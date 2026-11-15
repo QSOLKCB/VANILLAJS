@@ -15,7 +15,7 @@ function save(){try{localStorage.setItem(preference,JSON.stringify({sound,displa
 const controls=new Controls(root,{active:playing,pause:toggle=>{if(toggle&&paused)resume();else pause();}});
 function pause(){if(!playing())return;paused=true;controls.clear();clock.setPaused(true);audio.stop();menu();}
 function resume(){if(screen!=='playing'||!paused)return;paused=false;controls.clear();clock.setPaused(false);last=performance.now();void audio.enable(sound);menu();}
-function launch(){s=createGame();previous=null;screen='playing';paused=false;controls.clear();clock.reset();clock.setPaused(false);last=performance.now();void audio.enable(sound);menu();}
+function launch(){audio.stop();s=createGame();previous=null;screen='playing';paused=false;controls.clear();clock.reset();clock.setPaused(false);last=performance.now();void audio.enable(sound);menu();}
 function menu(){
   const initial=screen==='menu',terminal=['cleared','won','lost'].includes(s.mode),visible=initial||paused||terminal;
   $('overlay').hidden=!visible;$('launch').hidden=!initial;$('resume').hidden=!paused;$('next').hidden=s.mode!=='cleared';$('restart').hidden=initial||(!paused&&!terminal);$('brief').hidden=!initial;
@@ -27,10 +27,10 @@ function menu(){
 function hud(){const c=CASES[s.caseIndex];$('case').textContent=`0${s.caseIndex+1} / 05`;$('phase').textContent=screen==='menu'?'STANDBY':s.mode==='catch'?'CLOSE GAP':s.mode==='contact'?`CONTACT ${s.target.hits}/${c.hits}`:s.mode.toUpperCase();$('time').textContent=String(Math.max(0,Math.ceil(s.time/60))).padStart(2,'0');$('armour').textContent=s.armour+'%';$('score').textContent=String(s.score).padStart(6,'0');}
 function fit(){const box=$('stage').getBoundingClientRect(),w=Math.max(0,Math.min(box.width-2,(box.height-2)*16/9));$('frame').style.width=w+'px';$('frame').style.height=w*9/16+'px';}
 new ResizeObserver(fit).observe($('stage'));
-const display=createDisplayController({root,initial:windowed,onTransition:()=>{controls.clear();pause();},save:mode=>{windowed=mode;save();},onChange:view=>{root.dataset.display=view.mode;$('display').value=view.mode;$('display').disabled=view.pending;if(view.message)$('status').textContent=view.message;fit();}});
+const display=createDisplayController({root,initial:windowed,onTransition:()=>{controls.clear();pause();audio.stop();},save:mode=>{windowed=mode;save();},onChange:view=>{root.dataset.display=view.mode;$('display').value=view.mode;$('display').disabled=view.pending;if(view.message)$('status').textContent=view.message;fit();}});
 $('display').addEventListener('change',()=>{void display.setMode($('display').value);});
 $('launch').onclick=launch;$('restart').onclick=launch;$('resume').onclick=resume;$('pause').onclick=()=>paused?resume():pause();
-$('next').onclick=()=>{if(nextCase(s)){previous=null;controls.clear();clock.reset();clock.setPaused(false);last=performance.now();void audio.enable(sound);menu();}};
+$('next').onclick=()=>{if(nextCase(s)){audio.stop();previous=null;controls.clear();clock.reset();clock.setPaused(false);last=performance.now();void audio.enable(sound);menu();}};
 function soundLabel(){$('sound').textContent=sound?'SOUND ON':'SOUND OFF';$('sound').setAttribute('aria-pressed',String(sound));}
 $('sound').onclick=()=>{sound=!sound;save();soundLabel();reportedFailure=false;void audio.enable(sound);};
 window.addEventListener('keydown',e=>{
@@ -38,13 +38,13 @@ window.addEventListener('keydown',e=>{
   if(e.code==='KeyP'||e.code==='Escape'){if(screen==='playing'){e.preventDefault();if(paused&&e.code==='KeyP')resume();else pause();}}
   if(e.code==='KeyF'){e.preventDefault();void display.setMode(display.snapshot().fullscreen?windowed:'fullscreen');}
 });
-window.addEventListener('blur',()=>{controls.clear();pause();});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){controls.clear();pause();}});
+window.addEventListener('blur',()=>{controls.clear();pause();audio.stop();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){controls.clear();pause();audio.stop();}});
 window.addEventListener('pagehide',()=>{controls.clear();pause();audio.stop();});
 function download(bytes,type,name){const url=URL.createObjectURL(new Blob([bytes],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 $('replay-export').onclick=()=>download(JSON.stringify(runRecord(s),null,2),'application/json','pursuit-replay.json');
 $('track-export').onclick=()=>{try{download(audio.track.wav(),'audio/wav','pursuit-night-shift.wav');$('status').textContent='Night Shift · complete 32-second PCM soundtrack exported';}catch{$('status').textContent='Track export unavailable. Your game and sound preference are preserved.';}};
-function update(mask){previous={caseIndex:s.caseIndex,mode:s.mode,distance:s.distance,car:{...s.car}};step(s,mask);audio.tick(s);if(!['catch','contact'].includes(s.mode)){controls.clear();clock.setPaused(true);audio.stop();menu();}}
+function update(mask){previous={caseIndex:s.caseIndex,mode:s.mode,distance:s.distance,car:{...s.car}};step(s,mask);audio.tick(s);if(!['catch','contact'].includes(s.mode)){controls.clear();clock.setPaused(true);audio.stopDriving();menu();}}
 function frame(now){const elapsed=last?Math.max(0,(now-last)/1000):0;last=now;const pad=controls.poll();let alpha=1;
   if(playing())alpha=clock.advance(elapsed,()=>update(controls.consume(pad))).alpha;
   audio.frame(s,playing());renderer.draw(s,alpha,previous);hud();

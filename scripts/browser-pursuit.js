@@ -31,7 +31,15 @@ export async function checkPursuit(browser,base){
     const wavDownload=page.waitForEvent('download');await page.locator('#track-export').click();const wav=await readFile(await (await wavDownload).path());const hash=b=>createHash('sha256').update(b).digest('hex');assert.equal(hash(wav),hash(composeTrack().wav()));await writeFile('browser-artifacts/pursuit-night-shift.wav',wav);
     const recordDownload=page.waitForEvent('download');await page.locator('#replay-export').click();const record=JSON.parse(await readFile(await (await recordDownload).path(),'utf8'));assert.deepEqual(snapshot(replay(record)),await page.evaluate(()=>pursuit.snapshot().state));
     // Full real rule loop under controlled input; no state, timer or health edits.
-    await page.locator('#restart').click();await page.evaluate(()=>pursuit.advance(Array(4200).fill(0)));assert.equal(await page.locator('#menu-title').textContent(),'TARGET LOST.');
+    await page.locator('#restart').click();
+    const terminal=await page.evaluate(()=>{pursuit.advance(Array(4200).fill(0));return pursuit.snapshot().audio;});
+    assert.equal(await page.locator('#menu-title').textContent(),'TARGET LOST.');
+    assert.equal(terminal.music.active,false);assert.ok(terminal.effects.voices>0,'Failure cue must survive the terminal update');
+    await page.waitForFunction(()=>pursuit.snapshot().audio.effects.voices===0);
+    // Focus loss must still cancel a terminal tail although gameplay is already stopped.
+    await page.locator('#restart').click();
+    const focusTail=await page.evaluate(()=>{pursuit.advance(Array(4200).fill(0));const before=pursuit.snapshot().audio.effects.voices;window.dispatchEvent(new Event('blur'));return {before,after:pursuit.snapshot().audio.effects.voices};});
+    assert.ok(focusTail.before>0);assert.equal(focusTail.after,0);
     for(const viewport of [{width:1836,height:888},{width:390,height:844},{width:844,height:390},{width:320,height:568}]){
       await page.setViewportSize(viewport);await page.locator('#restart').click();await fitted();
       if(viewport.width<800){const gas=page.locator('[data-control="throttle"]');

@@ -8,9 +8,9 @@ in `demos/pursuit-lab/PROVENANCE.json`.
 
 | Executed check | Observed result |
 | --- | --- |
-| `node --test tests/*.test.js` | 881 passed, 0 failed |
-| New road/display/effect/pursuit tests | 17 passed, including three complete winning campaigns and exact replay |
-| `node scripts/check.js` | 349 JavaScript files, 55 module contracts, two research experiments checked |
+| `node --test tests/*.test.js` | 883 passed, 0 failed |
+| New road/display/effect/pursuit tests | 19 passed, including three complete winning campaigns, exact replay and terminal audio lifetimes |
+| `node scripts/check.js` | 350 JavaScript files, 55 module contracts, two research experiments checked |
 | `node scripts/build.js` and `node scripts/verify-offline.js` | Allowlisted package and complete-content manifest verified |
 | Packaged Pursuit Chromium check | Keyboard launch/driving/turbo, pause and repeated-key cancellation, focus loss, native fullscreen entry/exit and denied-entry fallback passed |
 | Layout checks | Complete canvas/HUD visible at 1836×888, 390×844, 844×390 and 320×568; screenshots inspected |
@@ -33,6 +33,10 @@ Screenshots and a complete WAV are emitted into `browser-artifacts/` by
 - A short Space press could disappear before the next fixed tick. Turbo presses
   now remain pending until consumed; pause still clears them. The focused-toolbar
   Space path is covered by the browser check.
+- PR review found that clear/fail cues were cancelled by the terminal update
+  and by following result-screen frames. Music/engine shutdown is now separate
+  from full audio cancellation. Tests cover clear, win and loss tails, their
+  natural cleanup, and cancellation on pause, focus loss, mute and failure.
 - Early browser assertions raced fullscreen notification and gamepad-neutral
   polling. They now wait for the displayed mode and actual animation frames.
 - The first offline check used the debug query URL, which the existing worker

@@ -134,6 +134,9 @@ rendering allocations; each score is limited by audio2d to eight seconds.
 The demo stores only the user's sound/display preference, separately from a
 session audio failure. Playback and WAV-export failures cannot stop driving or
 silently persist mute. Toggle Sound to retry a recoverable device failure.
+Case-clear, campaign-win and failure cues finish naturally over their result
+screens after the music and engine stop. Pause, focus loss, display transitions,
+mute, a new shift or the next case still cancel every active voice.
 
 ## Replays and verification
 

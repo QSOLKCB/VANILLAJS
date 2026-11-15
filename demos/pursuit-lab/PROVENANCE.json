@@ -88,13 +88,13 @@
       "path": "demos/pursuit-lab/js/app.js",
       "status": "original",
       "sources": [],
-      "sha256": "b4488b320848db0959a2e5d8b49d54360680cb68f0f7725f61251292f5a8f268"
+      "sha256": "3f8a1256a161af12c5ba54a8f42df1bb7725a28ea59a21cc0a91475569439c07"
     },
     {
       "path": "demos/pursuit-lab/js/audio.js",
       "status": "original",
       "sources": [],
-      "sha256": "83c95e5e4a98076f9a49dd52daa0267fbbd44ff096de9da85c1846c44bab0bfd"
+      "sha256": "2b93b4d164570729f00b89e65402492cef28be2d95280fbe77df0a89ab608c33"
     },
     {
       "path": "demos/pursuit-lab/js/cases.js",
