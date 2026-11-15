@@ -343,7 +343,8 @@ node scripts/verify-offline.js
 Packaged Chromium CI runs `scripts/browser-football.js` through the donor suite:
 club selection, training, recruitment, live match pause and commands, substitution,
 partial replay, abandoned-match isolation, full round, local save reload, invalid
-mods, mobile width and offline navigation. Screenshots are workflow artifacts.
+mods, mobile width, offline navigation and export recovery after a local-storage
+quota failure. Screenshots are workflow artifacts.
 The dispatcher and dependency policy require fresh browser evidence for this
 integration; unrelated prior receipts cannot certify it. No owner GPU runner
 or local Playwright installation is required by these changes.

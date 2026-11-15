@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Real packaged Chromium flow. No test-only app hooks or predetermined goals.
 import assert from 'node:assert/strict';
-import {mkdir} from 'node:fs/promises';
+import {mkdir,readFile} from 'node:fs/promises';
 export async function checkFootball(browser,base){
  await mkdir('browser-artifacts',{recursive:true});
  const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[];
@@ -38,6 +38,12 @@ export async function checkFootball(browser,base){
   await page.setViewportSize({width:390,height:844});await page.locator('[data-tab="overview"]').click();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'manager mobile layout overflows');await page.screenshot({path:'browser-artifacts/football-mobile.png'});
   // First install must finish, then a fresh offline navigation uses packaged bytes.
   await page.waitForFunction(()=>document.documentElement.dataset.offlineWorker==='registered');await page.evaluate(async()=>{await Promise.race([navigator.serviceWorker.ready,new Promise((_,reject)=>setTimeout(()=>reject(new Error('football offline install timeout')),20000))]);});await page.reload();assert.equal(await page.evaluate(()=>Boolean(navigator.serviceWorker.controller)),true);await context.setOffline(true);await page.reload();await page.waitForFunction(()=>document.documentElement.dataset.labReady==='football-manager');await page.locator('#resume').click();assert.equal(await page.getAttribute('html','data-career-round'),'1');await context.setOffline(false);
-  assert.deepEqual(errors,[]);console.log('Chromium Touchline: management, live commands, partial replay, abandoned match, full round, save/reload, mod validation, mobile and offline passed.');
+  // Storage failure must remain visible; exporting still preserves the in-memory career.
+  const retained=await page.evaluate(()=>localStorage.getItem('vanillajs.touchline.v1'));
+  await page.evaluate(()=>{const set=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='vanillajs.touchline.v1')throw new DOMException('test quota','QuotaExceededError');return set.call(this,key,value);};});
+  await page.locator('#new-career').click();await page.getByRole('button',{name:'Manage EMBER FC',exact:true}).click();assert.match(await page.locator('#notice').textContent(),/storage is unavailable or full/);
+  assert.equal(await page.evaluate(()=>localStorage.getItem('vanillajs.touchline.v1')),retained);
+  const exportPending=page.waitForEvent('download');await page.locator('#save-file').click();const exported=JSON.parse(await readFile(await (await exportPending).path(),'utf8'));assert.equal(exported.career.clubId,'emb');assert.equal(exported.career.round,0);
+  assert.deepEqual(errors,[]);console.log('Chromium Touchline: management, live commands, partial replay, abandoned match, full round, save/reload, mod validation, mobile, offline and quota-failure export passed.');
  }catch(error){await page.screenshot({path:'browser-artifacts/football-failure.png',fullPage:true}).catch(()=>{});console.error('Football failure state',await page.evaluate(()=>({notice:document.querySelector('#notice')?.textContent,status:document.querySelector('#match-status')?.textContent,dataset:{...document.documentElement.dataset}})).catch(()=>({})));throw error;}finally{await context.close();}
 }

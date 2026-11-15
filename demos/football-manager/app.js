@@ -17,11 +17,11 @@ function table(headers,rows){const wrap=node('div','','table-wrap'),t=node('tabl
 function download(name,value){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)+'\n'],{type:'application/json'})),a=node('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 let starter,bundle,content,career=null,tab='overview',generation=0,run=null;
 const renderer=new Renderer($('pitch'));renderer.zoom='follow';
-function persist(){if(!career)return;try{localStorage.setItem(KEY,JSON.stringify(exportCareer(career)));}catch{notice('Local storage is unavailable or full. Export your career to keep it.');}}
+function persist(){if(!career)return false;try{localStorage.setItem(KEY,JSON.stringify(exportCareer(career)));return true;}catch{notice('Local storage is unavailable or full. Export your career to keep it.');return false;}}
 function show(view){for(const id of ['welcome','office','match-room','standalone-workshop'])$(id).hidden=id!==view;}
 function renderClubs(){
   $('clubs').replaceChildren();
-  for(const club of content.clubs){const b=button('',()=>{career=createCareer(bundle,club.id,Number($('seed').value));persist();tab='overview';renderOffice();notice('Your career is saved locally. Export a backup whenever you like.');});b.className='club-card';b.style.setProperty('--club',club.color);b.setAttribute('aria-label','Manage '+club.name);b.append(crest(club),node('h3',club.name),node('p',club.region+' / '+club.style),node('div',`ATT ${club.attack} · PRESS ${club.press} · PASS ${club.pass}`,'ratings'),node('span','Take charge →','muted'));$('clubs').append(b);}
+  for(const club of content.clubs){const b=button('',()=>{career=createCareer(bundle,club.id,Number($('seed').value));const saved=persist();tab='overview';renderOffice();if(saved)notice('Your career is saved locally. Export a backup whenever you like.');});b.className='club-card';b.style.setProperty('--club',club.color);b.setAttribute('aria-label','Manage '+club.name);b.append(crest(club),node('h3',club.name),node('p',club.region+' / '+club.style),node('div',`ATT ${club.attack} · PRESS ${club.press} · PASS ${club.pass}`,'ratings'),node('span','Take charge →','muted'));$('clubs').append(b);}
   $('resume').hidden=!career;show('welcome');
 }
 function metrics(){const club=ownClub(career),lineup=career.lineup.map(id=>club.players.find(p=>p.id===id)),rank=standings(career).findIndex(r=>r.id===career.clubId)+1;const avg=k=>Math.round(lineup.reduce((n,p)=>n+p[k],0)/11);$('summary').replaceChildren();for(const [name,value]of [['League position',`${rank} / ${career.squads.length}`],['Club balance',money(career.budget)],['Board confidence',career.board+'%'],['Squad condition',avg('condition')+'%'],['Cohesion',career.cohesion+'%']]){const box=node('div','','metric');box.append(node('small',name),node('strong',value));$('summary').append(box);}}
@@ -79,7 +79,7 @@ function feedEvents(){for(const e of run.state.events){let message;if(e.type==='
 function updateMatch(){const s=run.state;$('score').textContent=s.score.join(' – ');$('clock').textContent=`${Math.floor(s.elapsed/(s.config.seconds*60)*90)}′ · ${s.phase.toUpperCase()}${s.config.weather==='rain'?' · RAIN':''}`;document.documentElement.dataset.matchTick=s.tick;document.documentElement.dataset.matchPhase=s.phase;$('match-stats').replaceChildren();for(const [key,name]of [['shots','Shots'],['saves','Saves'],['completedPasses','Completed passes'],['tackles','Tackles']]){const row=node('div','','stat-row');row.append(node('strong',String(s.stats[key][0])),node('span',name),node('strong',String(s.stats[key][1])));$('match-stats').append(row);}$('feed').replaceChildren(...run.feed.map(s=>node('li',s)));}
 async function settle(){const current=run;current.processing=true;current.paused=true;$('pause').disabled=true;$('dugout').replaceChildren();$('match-status').textContent='Full time. Finishing the other fixtures…';const results=await playOtherFixtures(current.candidate,current.state,()=>new Promise(r=>setTimeout(r,0)),()=>run?.id!==current.id);
   if(!results||run?.id!==current.id)return;
-  const completed=finishRound(current.candidate,results,current.state);career=completed;persist();current.settled=true;current.processing=false;$('match-status').textContent='Round complete. Results and career saved. Return to the clubhouse for next week.';document.documentElement.dataset.roundSettled='true';
+  const completed=finishRound(current.candidate,results,current.state);career=completed;const saved=persist();current.settled=true;current.processing=false;$('match-status').textContent=saved?'Round complete. Results and career saved. Return to the clubhouse for next week.':'Round complete in memory. Local storage is unavailable; export your career from the clubhouse before closing.';document.documentElement.dataset.roundSettled='true';
 }
 function replayEnd(){run.settled=true;run.paused=true;$('pause').disabled=true;$('match-status').textContent=run.state.phase==='fulltime'?'Replay complete · full time.':'Replay complete · this recording ends before full time.';}
 function frame(now){
@@ -106,7 +106,7 @@ $('resume').onclick=()=>renderOffice();$('open-workshop').onclick=()=>{show('sta
 for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>{tab=b.dataset.tab;renderOffice();};
 $('file-input').onchange=act(async()=>{
   const file=$('file-input').files[0];$('file-input').value='';if(!file)return;if(file.size>1048576)throw new Error('Choose a JSON file of 1 MiB or less.');const value=JSON.parse(await file.text());
-  if(value.kind==='qsol.touchline-save.v1'){const restored=importCareer(value);generation++;run=null;career=restored;persist();renderOffice();notice('Career restored.');}
+  if(value.kind==='qsol.touchline-save.v1'){const restored=importCareer(value);generation++;run=null;career=restored;const saved=persist();renderOffice();if(saved)notice('Career restored.');}
   else if(value.kind==='qsol.football-replay.v1')watchReplay(value);
   else {const checked=loadFootballBundle(value);generation++;run=null;bundle=checked.bundle;content=checked.content;renderClubs();notice('Mod bundle loaded. Choose a club to start a new career.');}
 });
