@@ -175,6 +175,15 @@ not promised across engines. Export does not claim a cryptographic authenticity
 signature. The lab currently provides export and a pure replay function, not a
 user-facing replay viewer or a content-pack workshop.
 
+The browser download check reconstructs the exported journal inside Chromium,
+using the live page's packaged simulation module, then compares the entire
+snapshot exactly. Node campaign tests separately require exact replay in Node.
+There is no tolerance or snapshot rounding: `Math.sin` can differ by one ULP
+between runtimes (including the target offset at tick 109), so a Node-versus-
+Chromium bitwise comparison would exceed this contract. The browser regression
+also changes one journal command to verify that replay consumes the supplied
+inputs and leaves the paused live run unchanged.
+
 Run `node --test tests/*.test.js`, `node scripts/check.js`,
 `node scripts/build.js`, `node scripts/verify-offline.js`, and the packaged
 Chromium suite (`node scripts/browser-check.js --suites=donor`, with Playwright
