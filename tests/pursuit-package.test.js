@@ -68,3 +68,28 @@ test('Skyguard receives an isolated native module graph and unknown labs are rej
     await assert.rejects(()=>packageLabRuntime(root,'../outside'));
   }finally{await rm(root,{recursive:true,force:true});}
 });
+
+test('Arcade Foundry packages its root-level bootstrap and complete shared dependency graph',async()=>{
+  const root=await mkdtemp(join(tmpdir(),'arcade-package-'));
+  const base='demos/arcade-combat-lab',files={
+    [base+'/index.html']:'<script type="module" src="./start.js"></script>',
+    [base+'/start.js']:"await import('./app.js');",
+    [base+'/app.js']:"import '../../modules/audio2d/index.js';",
+    'modules/audio2d/index.js':'export const version=1;'
+  };
+  try{
+    for(const [path,source] of Object.entries(files)){
+      await mkdir(dirname(join(root,path)),{recursive:true});await writeFile(join(root,path),source);
+    }
+    const first=await packageLabRuntime(root,'arcade-combat-lab');
+    assert.equal(first.files.length,3);
+    assert.ok(first.entry.startsWith(base+'/runtime-'));
+    const prefix=first.entry.slice(0,-(base+'/start.js').length);
+    for(const [path,source] of Object.entries(files).filter(([path])=>path.endsWith('.js')))
+      assert.equal(await readFile(join(root,prefix,path),'utf8'),source);
+    assert.ok((await readFile(join(root,base+'/index.html'),'utf8')).includes(first.entry.slice(base.length+1)));
+    await writeFile(join(root,base+'/index.html'),files[base+'/index.html']);
+    await writeFile(join(root,'modules/audio2d/index.js'),'export const version=2;');
+    assert.notEqual((await packageLabRuntime(root,'arcade-combat-lab')).entry,first.entry);
+  }finally{await rm(root,{recursive:true,force:true});}
+});

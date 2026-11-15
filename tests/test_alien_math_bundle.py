@@ -44,6 +44,8 @@ class CapsuleTests(unittest.TestCase):
             'demos/pursuit-lab/js/start.js': 'export const fixture=true;\n',
             'demos/skyguard-lab/index.html': '<script type="module" src="./js/start.js"></script>',
             'demos/skyguard-lab/js/start.js': 'export const fixture=true;\n',
+            'demos/arcade-combat-lab/index.html': '<script type="module" src="./start.js"></script>',
+            'demos/arcade-combat-lab/start.js': 'export const fixture=true;\n',
             'api/index.js': 'export const fixture=true;\n',
             'offline/register.js': '// fixture registration\n',
             'index.html': '<!doctype html><title>Fixture</title>',

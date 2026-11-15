@@ -17,6 +17,7 @@ await cp(resolve(root,'experiments/e8-geometry/index.js'),resolve(out,'experimen
 await writeFile(resolve(out,'.nojekyll'),'');
 await packagePursuitRuntime(out);
 await packageLabRuntime(out,'skyguard-lab');
+await packageLabRuntime(out,'arcade-combat-lab');
 const files=[];
 async function walk(dir){for(const e of await readdir(dir,{withFileTypes:true})){
   const p=resolve(dir,e.name);if(e.isDirectory())await walk(p);else{const data=await readFile(p);files.push({path:relative(out,p),bytes:data.length,sha256:createHash('sha256').update(data).digest('hex')});}

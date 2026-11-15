@@ -1,0 +1,7 @@
+RTS: Canvas rendering, pointer/keyboard orders, blocked cells, gate rerouting, route/squad arrival, drag selection, pause cancellation, blur/reset, graphics failure and 390 px touch-emulated controls passed.
+Flow fields: incremental build/pause, replacement cancellation, blocked orders, gate rebuild, all 24/36 arrivals, exit closure, blur/reset, recipe switching and 390 px touch-emulated controls passed.
+2D Foundry: RTS A*, shmup/platform/car mode resets, pause/blur, exact tick, PCM preview, ternary save/restore/rejection, evidence download and 320px responsive layout passed.
+Arcade Combat Foundry: both modes, keyboard/jump/projectiles, actual damage, three completed encounters, defeat, pack authoring/export/reimport/rejection, exact replay/snapshot restoration, gamepad lifecycle, real touch cancellation, 320px layout, procedural audio stop, retained geometry and offline worker reload passed.
+Arcade upgrade: real legacy worker retained; both modes, controls, audio, pause/restart and failed-import reload recovery PASS
+4X Game Lab: packaged keyboard/touch exploration, colony, economy, research, fleet orders, atomic replay import, seed bounds, 320/390px and offline reconstruction passed.
+Browser verification finished for suites: worlds

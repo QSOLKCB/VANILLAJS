@@ -304,6 +304,22 @@ installs the content-hashed package; wait for installation before offline reload
 The lab is linked from the root catalogue and Creator Hub. Build registration is
 automatic through the existing allowlisted `modules/`, `demos/`, Markdown docs.
 
+The lab now uses the same build-time dependency snapshot mechanism as Pursuit
+and Skyguard. Its bootstrap and complete native module graph receive a
+content-derived `runtime-<sha256>/` URL prefix. An older active service worker
+can therefore keep its original shared-module cache while the new lab loads a
+consistent graph. Shared sources, worker activation rules and old caches remain
+intact; no automatic cache clearing or forced worker activation is used.
+
+Controls remain disabled until startup succeeds. Failed module loading displays
+an explanation and a **Reload lab** button instead of leaving apparently ready
+controls with no handlers. `arcade-upgrade-check.mjs`, called by the packaged
+worlds suite, installs the real verified-cache worker with audio2d from commit
+`3c35784636288bafe4923537463f853b6bcf0cb4`, then checks both modes, controls,
+audio and pause/restart while that incompatible cache remains active. It also
+checks visible recovery from a failed app import. The frozen fixture is test
+data only and is excluded from the deployed package.
+
 The packaged test is `scripts/browser-arcade-combat.js`, dispatched in the
 existing `worlds` group of `scripts/browser-check.js`. Use preinstalled external
 Playwright tooling (NODE_PATH), optionally PLAYWRIGHT_CHROMIUM_EXECUTABLE; it is

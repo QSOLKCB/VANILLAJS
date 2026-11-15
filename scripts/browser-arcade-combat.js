@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict';
 import {mkdir,readFile} from 'node:fs/promises';
 import {starterPack} from '../demos/arcade-combat-lab/packs.js';
+import {checkArcadeUpgrade} from './arcade-upgrade-check.mjs';
 const fixture=()=>{
   const p=starterPack(),c=p.entries.find(e=>e.id==='combat').data;
   c.actors[0].health=3000;c.actors[1].health=1;
@@ -102,4 +103,5 @@ export async function verifyArcadeCombat(browser,baseURL) {
     console.log('Arcade Combat Foundry: both modes, keyboard/jump/projectiles, actual damage, three completed encounters, defeat, pack authoring/export/reimport/rejection, exact replay/snapshot restoration, gamepad lifecycle, real touch cancellation, 320px layout, procedural audio stop, retained geometry and offline worker reload passed.');
   }catch(error){console.error('Arcade browser failure context:',await page.evaluate(()=>({status:document.querySelector('#status')?.textContent,packNote:document.querySelector('#pack-note')?.textContent,snapshot:window.arcadeFoundry?.snapshot()})),errors);throw error;}
   finally {await context.close();}
+  await checkArcadeUpgrade(browser,baseURL);
 }

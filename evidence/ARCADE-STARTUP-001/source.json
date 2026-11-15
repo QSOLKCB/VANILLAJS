@@ -1,0 +1,44 @@
+{
+  "kind": "qsol.vanillajs.arcade-startup-development-evidence.v1",
+  "baseline": "4f9958ce2aa050a72d05c1f6f1543338620dfd18",
+  "notAReuseWitness": true,
+  "publicURL": "https://qsolkcb.github.io/VANILLAJS/demos/arcade-combat-lab/index.html",
+  "findings": [
+    "Public page responds in a fresh Chromium session.",
+    "The real verified-cache worker serving audio2d from 3c35784636288bafe4923537463f853b6bcf0cb4 reproduces the inert UI: isSound2D is not exported, so app event handlers are never attached.",
+    "After the fix the same old cache stays active while both modes, movement, audio and pause/restart work.",
+    "A failed app import produces a visible reload action; removing the fault and reloading restores play."
+  ],
+  "environment": {
+    "node": "v24.22.1",
+    "playwright": "1.57.0 (preinstalled)",
+    "chromium": "156.0.8078.79 (system)"
+  },
+  "validation": {
+    "node": "928 tests passed",
+    "check": "373 JavaScript files, 57 module contracts, two research experiments",
+    "package": "558 files built and verified",
+    "browser": "node scripts/browser-check.js --suites=worlds: PASS, including fresh and legacy-cache Arcade tests"
+  },
+  "sourceSHA256": {
+    "demos/arcade-combat-lab/index.html": "7549f8fbac0f5d54b6d142d1db7f10a19f29e65628964b1e6ece6df625c5c618",
+    "demos/arcade-combat-lab/start.js": "cafa3f1843a6f821b1b119eb3a6ef7d8657894415f52627fdae885e279e81fb8",
+    "docs/ARCADE_FOUNDATION_001.md": "6aaaa979a17bfef569111770baab9909f58af87bffa5a729c2c19f6a6be43593",
+    "scripts/arcade-upgrade-check.mjs": "15f891011d95a20e31bea3a798c9de9bef141ac482d1fae964b2d77dbd5f2a28",
+    "scripts/browser-arcade-combat.js": "027010b04ba8a5786782f26cb91179bbd457d997e853fdc83bc688cb5fd68210",
+    "scripts/build.js": "5347bf17465e0778e4e4a31a3f34338dfd0483569e3b8b5bc27c0661d49c883f",
+    "scripts/pursuit-package.mjs": "fe070fe9e40249f1e8b6cad61bedcaa3ecf4c43815845179f6f72d1ae3939580",
+    "tests/fixtures/arcade-pre-foundry-audio2d.txt": "07e19391b84034acba56ef840a4d622b70e815f5376de123b6a07a9ccebf3098",
+    "tests/pursuit-package.test.js": "a5460a9890c0fbfa711ab6d89cc2d2324c3f95eb6a1c25524212299f6671e31c",
+    "tests/test_alien_math_bundle.py": "0baf754bfb0f0e3dd5ff309f98cdfa14df2fab84279e14e2341cf4313ed50f19"
+  },
+  "artifactSHA256": {
+    "upgrade-before.log.gz": "de24997d9547c01c323d4507c68c9d324e54d081367b74df7e17e2ce5bd524c1",
+    "upgrade-after.log": "a824d74ad6e438a6eb5a9e8d36d13d2c8ed957a9ef0f2c3ff4f63c25e6ac2fde",
+    "node-final.log.gz": "2c418059bd7aeff96ab7fc2ee14cbe385e0c873baa1445019b7512fec6cd5721",
+    "source-check.log": "fbe96b0e7aa74c4e14e310d8c7bb1877f4e0762bd7508142c9cce214bc0c198c",
+    "build.log": "1cd217171b0b85f7f79e879511b5d8ca146a38ca49d33959fa4699c15d74ef2e",
+    "offline.json": "04964bb288c65f26df30395400f5d6177dc7525ed811f66aa009334ff2784cad",
+    "browser-worlds.log": "d8fc762ccb7dffb4861289613c5ade8f6910f0ea4673620e66a0e59fc67a2ec7"
+  }
+}
