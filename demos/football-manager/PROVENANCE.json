@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "repository": "QSOLKCB/Soccerweb",
+  "sourceRelease": "v3.1.1",
+  "commit": "e2b67c01b0edf7afa3577c60458e5366eea69bde",
+  "license": "Apache-2.0",
+  "sources": [
+    {
+      "path": "simulation/math.mjs",
+      "gitBlob": "6de2a97f1f3c0a0db77123773bc31ac68e67c40a",
+      "sha256": "c20e2d07d8b8449b27fa2b2d784d071be281b0979451b85f2120ab08cfc81a8a",
+      "target": "modules/football/index.js"
+    },
+    {
+      "path": "game/state.mjs",
+      "gitBlob": "36acf86786e97ce2193c929f8cc13635b85fbadb",
+      "sha256": "205aaa3903efb6f378cf36f5a08c946fbfd704a709a626edc4a739c7fe210830",
+      "target": "modules/football/index.js"
+    },
+    {
+      "path": "ai/team.mjs",
+      "gitBlob": "b736126f64757945d5abfa3392e90b97d67ce088",
+      "sha256": "71622b1da57b16d0b40379b2d2eae56cf170c237653b27d7a8b03828b63b5702",
+      "target": "modules/football/index.js"
+    },
+    {
+      "path": "simulation/physics.mjs",
+      "gitBlob": "891f104e7bbcbb84982239522ce4cb0eeea71f3e",
+      "sha256": "17edb805c267adb135c001814890be81fe5172a24b11d1d676cdaa2d6bb3d19d",
+      "target": "modules/football/index.js"
+    },
+    {
+      "path": "game/match.mjs",
+      "gitBlob": "1d60aa2feb3dd4f94fcb6214a74954c40f56d4b4",
+      "sha256": "9c312867d56cd68071c25de1d46ca1a0c82d01404c4d7a9df7be3118a11865c2",
+      "target": "modules/football/index.js"
+    },
+    {
+      "path": "render/camera.mjs",
+      "gitBlob": "b7b9397a126d2e649f56b2a0a5a82b1349968d0e",
+      "sha256": "17aebe9198e66c0622527eeaecdd9386da6a8447e0805c76080f6a03bc48871e",
+      "target": "api/football/index.js"
+    },
+    {
+      "path": "render/players.mjs",
+      "gitBlob": "d0c63cb2cb9dde9e067545b8994e3b772bc13112",
+      "sha256": "0358e883d4eff35b6fa09fec8a726da37893f83a1c5ac17fb1c96e9061fc6a3e",
+      "target": "api/football/index.js"
+    },
+    {
+      "path": "render/stadium.mjs",
+      "gitBlob": "63648d3d4b322b416f2137e66ac9583bbf5b2683",
+      "sha256": "a691fc6213e61a4263aface3706c6180a1a0f58b2eb3ef03135f999f78079ad4",
+      "target": "api/football/index.js"
+    },
+    {
+      "path": "render/canvas.mjs",
+      "gitBlob": "ffa974304bb1441b8fef94a7a6887f0d6dc5a2e9",
+      "sha256": "627f8af1d8d0a3f4b4d42b3250cbaf088c9ed4c2ade6657c8149b0813ee46353",
+      "target": "api/football/index.js"
+    },
+    {
+      "path": "game/teams.mjs",
+      "gitBlob": "01905f28d3cc796b000dcedbd0b0421369e9d470",
+      "sha256": "4b898e84f781f6eb87ae4c01d34d6cc9dcd0f99077db972fda076a615c260357",
+      "target": "demos/football-manager/starter.json"
+    },
+    {
+      "path": "LICENSE",
+      "gitBlob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "target": "demos/football-manager/SOCCERWEB-LICENSE.txt"
+    }
+  ],
+  "targets": [
+    {
+      "path": "api/football/index.js",
+      "sha256": "68f1ba18eff50555b47c7db4fcd15e38dc6de3d8e0c93e54b2ee6b546fc70d69"
+    },
+    {
+      "path": "demos/football-manager/SOCCERWEB-LICENSE.txt",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "demos/football-manager/starter.json",
+      "sha256": "0a6d96d2fbeef24f71eb44e1c5c19e09a68339dc6cd393e5c00a68bbeed07037"
+    },
+    {
+      "path": "modules/football/index.js",
+      "sha256": "66a33708048a3b7c19e09ad602c4e72a7ca299622c8f7883770da7a155c332a6"
+    }
+  ],
+  "adaptations": [
+    "Standard 11-a-side spectator engine; input and GOALPOSTS progression removed. Source sections combined into one pure native module.",
+    "Caller-supplied club and player records replace fixed TEAMS imports. Management modifiers affect movement, decisions, tactics, goalkeeping and shot power.",
+    "Original Canvas2D rendering combined into a reusable browser adapter; caller club kits and spectator minimap text.",
+    "The exact eight clubs and kit colors are retained; fictional named 18-player squads, formations, economy and career are new VANILLAJS demo content.",
+    "Q8 pixel coordinates and +Y down preserved as an explicit donor compatibility frame."
+  ]
+}

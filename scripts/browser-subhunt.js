@@ -22,8 +22,11 @@ export async function checkSubHunt(browser,base){
     await page.reload();assert.equal(await page.locator('#mode-pond').getAttribute('aria-pressed'),'true');
     await page.locator('#launch').focus();await page.keyboard.press('Space');
     await page.waitForFunction(()=>subhunt.snapshot().state.tick>3);
+    // Verify real displacement; a fixed wall-clock pulse can span too few rendered frames in CI.
     const x=await page.evaluate(()=>subhunt.snapshot().state.player.x);
-    await page.keyboard.down('ArrowRight');await page.waitForTimeout(250);await page.keyboard.up('ArrowRight');
+    await page.keyboard.down('ArrowRight');
+    try{await page.waitForFunction(x=>subhunt.snapshot().state.player.x>x+20,x,{timeout:5000});}
+    finally{await page.keyboard.up('ArrowRight');}
     assert.ok(await page.evaluate(x=>subhunt.snapshot().state.player.x>x+20,x));
     await page.locator('#sound').click();await page.waitForFunction(()=>subhunt.snapshot().soundtrack?.active);
     // Toolbar focus must not steal Space from combat.
@@ -45,7 +48,9 @@ export async function checkSubHunt(browser,base){
     await writeFile('browser-artifacts/subhunt-porcelain-patrol.wav',wav);
     await page.locator('#pause-menu').click();await page.locator('#role-sub').click();await page.locator('#launch').click();
     const y=await page.evaluate(()=>subhunt.snapshot().state.player.y);
-    await page.keyboard.down('ArrowDown');await page.waitForTimeout(250);await page.keyboard.up('ArrowDown');
+    await page.keyboard.down('ArrowDown');
+    try{await page.waitForFunction(y=>subhunt.snapshot().state.player.y>y+20,y,{timeout:5000});}
+    finally{await page.keyboard.up('ArrowDown');}
     assert.ok(await page.evaluate(y=>subhunt.snapshot().state.player.y>y+20,y));
     await page.keyboard.press('Space');await page.waitForFunction(()=>subhunt.snapshot().state.stats.shots>0);
     await page.screenshot({path:'browser-artifacts/subhunt-desktop.png',fullPage:true});

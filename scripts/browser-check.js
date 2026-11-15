@@ -55,6 +55,7 @@ const browser=await chromium.launch({args:['--use-angle=swiftshader','--enable-u
 const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 try{
+  await runSuite('donor','./browser-football.js','checkFootball');
   if(needs('home')){
     await page.goto(base);
   // DRONE-RACER was formerly pushed beyond the right viewport edge by the

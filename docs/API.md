@@ -766,3 +766,14 @@ traversal tie rules, input admission, invariance limits and the standalone lab.
 ## SubHunt release integration (experimental)
 
 `gamepad` provides pure, bounded raw/standard input mapping and calibration capture with game-owned action names. `soundtrack` composes existing audio2d phrases into owned, bounded PCM loops with exact tick positions and WAV export. `api/audio` is an explicit opt-in Web Audio player. See [contracts, examples, source pins and limitations](SUBHUNT_INTEGRATION.md). Existing input and audio2d APIs are unchanged.
+
+## Football management integration (experimental)
+
+`modules/football` provides the SOCCERWEB-derived 60 Hz spectator match facade,
+management performance parameters, validated live tactics/substitutions and
+versioned replay verification. `modules/mod-football` adds typed club, roster,
+formation and rules packs over `mod-sdk`. `api/football` renders matches with the
+original animated Canvas2D presentation. See [Football SDK](FOOTBALL_SDK.md) for
+signatures, schemas, commands, errors, budgets, provenance and the explicit Q8
+pixel/+Y-down compatibility frame. Career progression and UI belong to the
+[Touchline demo](../demos/football-manager/index.html).

@@ -18,7 +18,7 @@
 
 Reusable JavaScript game modules, exact authoring tools and playable browser labs
 built directly on web standards. The current [catalogue](MODULES.json) contains
-**50 experimental modules, 23 registered recipes and two research experiments**.
+**54 experimental modules, 37 registered recipes and two research experiments**.
 The full, stable Mod SDK remains planned; local data-only packs and the
 experimental Visual Workbench are available now.
 
@@ -30,6 +30,31 @@ experimental Visual Workbench are available now.
 [API contracts](docs/API.md) · [Architecture](docs/ARCHITECTURE.md) ·
 [Verification](docs/VERIFICATION.md) · [Roadmap](ROADMAP.md) ·
 [All releases](https://github.com/QSOLKCB/VANILLAJS/releases)
+
+
+## Touchline — SOCCERWEB meets VANILLAJS
+
+**[Play Football Manager](https://qsolkcb.github.io/VANILLAJS/demos/football-manager/)** · **[Football modding SDK](docs/FOOTBALL_SDK.md)** · **[Editable starter pack](demos/football-manager/starter.json)**
+
+Take charge of one of SOCCERWEB’s eight original clubs. Pick your eleven, recruit
+players, shape training and tactics, balance the books, then press Play and watch
+your team perform in the real animated SOCCERWEB match engine. Make changes from
+the dugout and build a season across all 56 home-and-away fixtures.
+
+- Player attributes, condition, morale, sharpness, cohesion and role familiarity
+  affect actual movement, decisions, shooting and goalkeeping.
+- Live substitutions, tactical instructions, broadcast cameras, match statistics
+  and 1×–8× viewing speed put you on the touchline.
+- A complete football content SDK covers clubs, squads, kits, formations, match
+  rules and economy through validated, locally stored data packs.
+- Export careers, verify and watch full or partial replays, and keep playing
+  offline after the packaged app’s first successful installation.
+
+Native modules, Canvas2D and browser standards throughout. Football APIs are
+experimental and versioned; SOCCERWEB v3.1.1 provenance and Apache-2.0 attribution
+are retained. The linked demo becomes available when this integration is merged
+and the Pages workflow deploys it.
+
 
 ## New on main
 
@@ -631,7 +656,7 @@ followed by 512 samples. These are search-operation counts, not measured FPS.
 
 ## Modules
 
-The catalogue contains **50 experimental modules**. Import each through
+The catalogue contains **54 experimental modules**. Import each through
 `modules/<name>/index.js`; [MODULES.json](MODULES.json) records the exact
 dependency closure and environment for every entry.
 
@@ -651,7 +676,8 @@ dependency closure and environment for every entry.
 | `qfloat` | Decimal-authoring facade over checked Q16.16 |
 | `exact-rational`, `rational-q16`, `exact-interval`, `exact-geometry`, `exact-d4`, `exact-graph` | Exact authoring, explicit quantization, geometry, symmetry and graph invariants |
 | `exact-course`, `exact-circuit` | Exact checkpoint compilation, swept crossings and cardinal circuit progression |
-| `mod-sdk`, `mod-course`, `mod-experiment` | Transactional data-only registry and typed course/experiment packs |
+| `mod-sdk`, `mod-course`, `mod-experiment`, `mod-football` | Transactional data-only registry and typed course/experiment/football packs |
+| `football` | SOCCERWEB spectator simulation, management performance, live commands and verified replays |
 | `gf3`, `symbolic-events` | Exact finite-field operations, symbolic scores and reference audio events |
 
 API maturity remains **experimental in v1.7.0**. Use a tagged release or exact

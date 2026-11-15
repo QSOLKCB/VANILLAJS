@@ -94,13 +94,15 @@
         "demos/gpu-lab/",
         "demos/space-lab/",
         "demos/soundtrack-lab/",
-        "demos/subhunt-lab/"
+        "demos/subhunt-lab/",
+        "demos/football-manager/"
       ],
       "scripts": [
         "scripts/browser-donor-labs.js",
         "scripts/browser-optional-labs.js",
         "scripts/browser-soundtrack.js",
-        "scripts/browser-subhunt.js"
+        "scripts/browser-subhunt.js",
+        "scripts/browser-football.js"
       ],
       "serviceWorker": true,
       "consumes": [

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b28"><title>Touchline · SOCCERWEB × VANILLAJS</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header class="masthead"><a href="../../index.html" class="wordmark">V<span> / </span>VANILLAJS</a><span class="edition">SOCCERWEB · MANAGEMENT EDITION</span><a href="../../docs/FOOTBALL_SDK.md">Modding guide ↗</a></header>
+<main>
+<section id="welcome" aria-labelledby="welcome-title">
+<div class="hero"><div><p class="eyebrow">THE BEAUTIFUL GAME. YOUR DECISIONS.</p><h1 id="welcome-title">Life on the<br><em>touchline.</em></h1><p class="lead">Build a squad. Find your shape. Watch your ideas become football.</p><p>Eight familiar clubs. A full home-and-away season. Every match played out live by SOCCERWEB.</p></div><div class="pitch-art" aria-hidden="true"><div class="pitch-circle"></div><span>01</span><span>04</span><span>06</span><span>09</span><div class="chalk">THE NEXT CHAPTER<br>STARTS WITH YOU.</div></div></div>
+<div class="section-head"><div><p class="eyebrow">YOUR CLUB. YOUR CALL.</p><h2>Choose your dugout</h2></div><label>Career seed <input id="seed" type="number" min="1" max="4294967295" value="1988"></label></div>
+<div id="clubs" class="club-grid"></div><div class="actions"><button id="resume" hidden>Resume saved career</button><button id="open-save-welcome">Open a save</button><button id="open-workshop">Explore mod workshop</button></div>
+</section>
+<section id="office" hidden aria-labelledby="club-title">
+<div class="club-heading"><div id="club-crest" class="crest"></div><div><p class="eyebrow" id="season-label"></p><h1 id="club-title"></h1><p id="club-subtitle"></p></div><div class="heading-actions"><button id="save-file">Export career</button><button id="open-file">Import file</button><button id="new-career">Change club</button></div></div>
+<div id="summary" class="summary"></div>
+<nav class="tabs" aria-label="Club departments"><button data-tab="overview">Clubhouse</button><button data-tab="squad">Squad</button><button data-tab="tactics">Training &amp; tactics</button><button data-tab="scouting">Scouting</button><button data-tab="league">League</button><button data-tab="workshop">Mod workshop</button></nav>
+<div id="department"></div>
+</section>
+<section id="match-room" hidden aria-labelledby="fixture-title">
+<div class="section-head"><div><p class="eyebrow" id="match-label">MATCHDAY · LIVE FROM THE TOUCHLINE</p><h1 id="fixture-title"></h1></div><button id="leave-match">Return to clubhouse</button></div>
+<div class="broadcast"><div class="match-main"><div class="scoreboard"><span id="home-name"></span><strong id="score">0 – 0</strong><span id="away-name"></span><small id="clock">KICK OFF</small></div><canvas id="pitch" aria-label="Live animated football match"></canvas><div class="transport"><button id="pause">Pause</button><label>Speed <select id="speed"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option></select></label><label>Camera <select id="camera"><option value="follow">Broadcast</option><option value="wide">Wide</option><option value="close">Close</option></select></label><button id="replay-export">Export replay</button></div></div>
+<aside class="match-aside"><h2>From the dugout</h2><p id="match-status" role="status"></p><div id="match-stats"></div><div id="dugout"></div><h3>Match feed</h3><ol id="feed" class="feed"></ol></aside></div>
+</section>
+<section id="standalone-workshop" hidden><button id="back-workshop">← Back to clubs</button><div id="workshop-content"></div></section>
+<p id="notice" class="notice" role="status" aria-live="polite"></p>
+<input id="file-input" type="file" accept=".json,application/json" hidden>
+</main><footer><span>TOUCHLINE / Native browser football</span><span>Local saves · Offline after first install · Apache-2.0</span><a href="../../docs/FOOTBALL_SDK.md">Experimental football SDK</a></footer>
+<script type="module" src="app.js"></script><script type="module" src="../../offline/register.js"></script>
+</body></html>
