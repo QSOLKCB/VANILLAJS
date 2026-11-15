@@ -138,3 +138,7 @@ The existing packaged Chromium CI covers the editor, soundtrack, course builder 
 | An exported game needs modules | Use the game-folder exporter or keep the HTML beside packaged runtime folders |
 
 Continue with [Build a game](../BUILD_A_GAME.md), [editor contracts](EDITOR_WORKBENCH.md), and [source provenance](CREATOR_DONOR_REVIEW.md).
+
+## Make an original arcade combat pack
+
+Open [Arcade Combat Foundry](../demos/arcade-combat-lab/index.html), try both modes, then expand **Data pack workshop**. Load Iron Meridian or Neon Shift into the draft, edit health/speed/light damage or the JSON stage, and choose **Validate & apply** to start a new run. Export active pack saves the last accepted data; rejected drafts leave it intact. The JSON remains data-only. Replays include the complete accepted pack, difficulty, seed and commands; snapshots verify full simulation state against the replay on restore. [Schema, limits and Games2-ready API](ARCADE_FOUNDATION_001.md).

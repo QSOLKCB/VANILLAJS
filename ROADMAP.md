@@ -1,5 +1,15 @@
 # VANILLAJS roadmap
 
+## Proposed v2.2.0 — The Arcade Foundry (experimental, unreleased)
+
+- [x] Shared bounded integer combat: melee windows, directional reach, damage, knockback, stun, invulnerability and swept projectile contact.
+- [x] Original run-and-gun and flat XY arena brawler in the offline Arcade Combat Foundry.
+- [x] Strict typed Mod SDK packs, atomic replacement, complete input journals and replay-verified snapshots.
+- [x] Reference collision/cache comparisons and packaged Chromium registration; preserve frozen CI policy and formal assets.
+- [ ] Owner review/merge and separately authorized release/tag/publication.
+- [ ] Games2 implementation, belt-scrolling/co-op, rollback and full fighting systems remain future work.
+- [Contracts, donor audit and executed verification](docs/ARCADE_FOUNDATION_001.md).
+
 ## SKYGUARD-001 — Naval Air Defence Lab
 
 - [x] Spooky v0.1.0 station/refit loop re-authored as a destroyer defence game.

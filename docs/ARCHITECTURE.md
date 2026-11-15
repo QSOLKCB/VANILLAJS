@@ -266,3 +266,7 @@ CPU-first renderer, explicit player opt-in, editor project setting and playable
 HTML export, exact-math preparation, resource limits, and local test commands.
 The project v2 envelope preserves graphics policy; legacy v1 projects still load.
 Existing WebGL APIs remain supported.
+
+## Experimental arcade combat composition
+
+`combat2d` owns bounded immutable integer XY combat transactions. `mod-arcade` depends only on combat2d admission and the existing Mod SDK. Arcade Combat Foundry owns game progression and replay sessions; it composes motion2d, integer-math randomness, the fixed clock, standard input and audio2d. Neither core module imports a demo. See [ARCADE-FOUNDATION-001](ARCADE_FOUNDATION_001.md) for the endpoint actor / swept projectile boundary and Games2 adapter.

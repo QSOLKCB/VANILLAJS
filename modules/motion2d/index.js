@@ -32,10 +32,21 @@ export function createBody2D({x=0,y=0,vx=0,vy=0,heading=0,grounded=false}={}){
  */
 export function stepBody2D(body,controls={},{
   profile='rts',bounds={minX:-100000,minY:-100000,maxX:100000,maxY:100000},
-  groundY=0,blockedAt=null
+  groundY=0,blockedAt=null,motor={}
 }={}){
   if(!MOTION2D_PROFILES.includes(profile))throw new RangeError('unknown 2D movement profile');
   const a=createBody2D(body);
+  // Optional integer motor tuning; omitted values preserve historical profiles.
+  // Other profiles deliberately retain their original laws.
+  if(!motor||Object.getPrototypeOf(motor)!==Object.prototype ||
+    Object.keys(motor).some(k=>!['speed','acceleration','drag','jumpSpeed','gravity','fallSpeed'].includes(k)))
+    throw new TypeError('invalid motor settings');
+  const speed=int(motor.speed??(profile==='shmup'?16:48),'motor.speed',1,MAX_SPEED),
+    acceleration=int(motor.acceleration??8,'motor.acceleration',1,MAX_SPEED),
+    drag=int(motor.drag??8,'motor.drag',1,MAX_SPEED),
+    jumpSpeed=int(motor.jumpSpeed??56,'motor.jumpSpeed',1,MAX_SPEED),
+    gravity=int(motor.gravity??4,'motor.gravity',1,MAX_SPEED),
+    fallSpeed=int(motor.fallSpeed??80,'motor.fallSpeed',1,MAX_SPEED);
   if(!controls||typeof controls!=='object'||Array.isArray(controls))
     throw new TypeError('controls must be an object');
   const x=axis(controls.x??0,'controls.x'),y=axis(controls.y??0,'controls.y');
@@ -60,13 +71,13 @@ export function stepBody2D(body,controls={},{
       vx-=sign(vx)*Math.min(Math.abs(vx),4);
       vy-=sign(vy)*Math.min(Math.abs(vy),4);grounded=false;break;
     case 'shmup':
-      vx=16*x;vy=16*y;grounded=false;break;
+      vx=speed*x;vy=speed*y;grounded=false;break;
     case 'platform':
-      vx=clamp(vx+8*x,-48,48);
-      if(x===0)vx-=sign(vx)*Math.min(8,Math.abs(vx));
+      vx=clamp(vx+acceleration*x,-speed,speed);
+      if(x===0)vx-=sign(vx)*Math.min(drag,Math.abs(vx));
       if(a.y<=groundY&&a.vy<=0){grounded=true;vy=0;}
-      if(controls.jump===true&&grounded){vy=56;grounded=false;}
-      vy=clamp(vy-4,-80,80);
+      if(controls.jump===true&&grounded){vy=jumpSpeed;grounded=false;}
+      vy=clamp(vy-gravity,-fallSpeed,Math.max(fallSpeed,jumpSpeed));
       break;
     case 'car':{
       heading=(heading+steer+16)%16;
@@ -78,6 +89,9 @@ export function stepBody2D(body,controls={},{
       grounded=false;break;
     }
   }
+  // Caller-owned combat impulses use the same endpoint collision/bounds path.
+  vx=clamp(vx+int(controls.impulseX??0,'impulseX',-MAX_SPEED,MAX_SPEED),-MAX_SPEED,MAX_SPEED);
+  vy=clamp(vy+int(controls.impulseY??0,'impulseY',-MAX_SPEED,MAX_SPEED),-MAX_SPEED,MAX_SPEED);
   let px=a.x,py=a.y;
   const nx=clamp(px+vx,minX,maxX);
   if(nx===px&&vx!==0)vx=0;

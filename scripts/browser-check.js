@@ -133,6 +133,7 @@ try{
   await runSuite('worlds','./browser-rts.js','verifyRts');
   await runSuite('worlds','./browser-flow.js','verifyFlow');
   await runSuite('worlds','./browser-2d.js','verify2DLab');
+  await runSuite('worlds','./browser-arcade-combat.js','verifyArcadeCombat');
   await runSuite('worlds','./browser-4x.js','verify4XLab');
   await runSuite('worlds','./browser-voidward.js','verifyVoidwardLab');
   await runSuite('research','./browser-omi.js','verifyOmi');

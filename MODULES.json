@@ -475,6 +475,25 @@
       "status": "experimental",
       "demo": "demos/pursuit-lab/index.html",
       "description": "Outruin-derived road-local SI arcade handling and owned continuous curvature; stateless fixed-step vehicle response."
+    },
+    "combat2d": {
+      "entry": "modules/combat2d/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/arcade-combat-lab/index.html",
+      "description": "Bounded atomic integer XY combat, attack windows, deduplicated melee and swept projectile contacts"
+    },
+    "mod-arcade": {
+      "entry": "modules/mod-arcade/index.js",
+      "depends": [
+        "mod-sdk",
+        "combat2d"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/arcade-combat-lab/index.html",
+      "description": "Strict data-only arcade content packs and transactional replacement over the Mod SDK registry"
     }
   },
   "recipes": {
@@ -917,6 +936,32 @@
         "soundtrack"
       ],
       "description": "Spooky v0.1.0-derived naval air defence: autocannon, proximity flak, guided missiles, charged railgun, persistent refits and deterministic soundtrack."
+    },
+    "arcade-combat-run": {
+      "entry": "demos/arcade-combat-lab/world.js",
+      "modules": [
+        "combat2d",
+        "mod-arcade",
+        "motion2d",
+        "integer-math",
+        "time",
+        "input",
+        "audio2d"
+      ],
+      "preset": "run"
+    },
+    "arcade-combat-arena": {
+      "entry": "demos/arcade-combat-lab/world.js",
+      "modules": [
+        "combat2d",
+        "mod-arcade",
+        "motion2d",
+        "integer-math",
+        "time",
+        "input",
+        "audio2d"
+      ],
+      "preset": "arena"
     }
   },
   "experiments": {

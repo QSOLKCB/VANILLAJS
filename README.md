@@ -5,6 +5,8 @@
 
 **Start creating:** [Creator Hub](demos/creator-hub/index.html) · [Game-making guide](docs/CREATOR_GUIDE.md) · [Soundtrack Lab](demos/soundtrack-lab/index.html). New editor starters, gameplay pieces and scene checks help you reach a first playable; the game-folder exporter includes its runtime. VOIDWARD now includes eight campaigns.
 
+**Proposed v2.2.0 — The Arcade Foundry (experimental, unreleased):** [Play the Arcade Combat Foundry](demos/arcade-combat-lab/index.html): Iron Meridian run-and-gun and Ring Zero arena brawler compose a shared integer 2D combat module. Edit data-only packs, use keyboard/touch/standard gamepad controls, and download complete pack-bound replays and verified snapshots. [Contracts, provenance and verification](docs/ARCADE_FOUNDATION_001.md). Games2 remains unchanged.
+
 **Spooky v0.1.0 → Skyguard Lab:** [Take the watch aboard DDG Resolute](demos/skyguard-lab/index.html). A new naval air-defence game: twin autocannon, proximity flak, guided VLS interceptors and a charged piercing railgun. Aircraft, drones and sea-skimmers replace the ground horde; station refits, gentle Cadet raids and deterministic music carry the Spooky loop to sea. [Integration, controls and provenance](docs/SKYGUARD_INTEGRATION.md).
 
 **Outruin → Pursuit Lab:** [Play Highway Intercept](demos/pursuit-lab/index.html), an original Chase H.Q.–style demo with five timed pursuits, traffic, bumper contacts, three turbos per case, fitted/fullscreen display, replay export and a deterministic 32-second soundtrack. Reusable [road handling, display lifecycle and bounded PCM effects](docs/OUTRUIN_INTEGRATION.md) bring Outruin's improvements upstream. Native JavaScript; no ROMs, external assets or runtime packages.
@@ -22,7 +24,7 @@
 
 Reusable JavaScript game modules, exact authoring tools and playable browser labs
 built directly on web standards. The current [catalogue](MODULES.json) contains
-**55 experimental modules, 39 registered recipes and two research experiments**.
+**57 experimental modules, 41 registered recipes and two research experiments**.
 The full, stable Mod SDK remains planned; local data-only packs and the
 experimental Visual Workbench are available now.
 

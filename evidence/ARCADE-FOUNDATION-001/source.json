@@ -1,0 +1,124 @@
+{
+  "kind": "qsol.vanillajs.arcade-development-evidence.v1",
+  "dateUTC": "2026-11-15",
+  "baseline": "00401479163b775a43f4afe5577fecc289052de8",
+  "games2Reference": "2f3cd4d7e8fa6e1568922e1d7a269fe650196b58",
+  "environment": {
+    "os": "Linux / Debian 13",
+    "node": "v24.22.1",
+    "playwright": "1.57.0 (preinstalled)",
+    "chromium": "156.0.8078.79 (system executable)",
+    "rendering": "software; no physical GPU evidence",
+    "browserEnv": {
+      "NODE_PATH": "/opt/codex/cua_node/lib/node_modules",
+      "PLAYWRIGHT_CHROMIUM_EXECUTABLE": "/usr/bin/chromium"
+    }
+  },
+  "scope": "Final changed source hashes below. Node and worlds logs match final runtime; documentation/evidence-only edits followed. Earlier all-browser and home/donor/editor logs precede the final new-lab ledge fix, so final worlds was rerun. No existing test assertion was changed.",
+  "notAReuseWitness": true,
+  "commands": [
+    {
+      "command": "node --test tests/*.test.js",
+      "result": "PASS: 925 tests, 0 failed, including 24 new arcade tests",
+      "log": "unit-final.log"
+    },
+    {
+      "command": "node scripts/check.js",
+      "result": "PASS: 372 JavaScript files, 57 module contracts, 2 research experiments",
+      "log": "source-check-final.log"
+    },
+    {
+      "command": "node scripts/build.js",
+      "result": "PASS: 539 files",
+      "log": "build-final.log"
+    },
+    {
+      "command": "node scripts/verify-offline.js",
+      "result": "PASS: 539 files",
+      "log": "offline-final.json"
+    },
+    {
+      "command": "node scripts/lab2d-evidence.js --check",
+      "result": "PASS: historical default-motion/PCM/ternary identity",
+      "log": "lab2d-check.json"
+    },
+    {
+      "command": "node scripts/browser-check.js",
+      "result": "FAIL: unchanged scripts/browser-optional-labs.js:37 paused draw assertion, 11 vs 10. Earlier render/play/worlds/research checks passed. Retained failed invocation; no claim of one green full run.",
+      "log": "browser-all-attempt-1.log"
+    },
+    {
+      "command": "node scripts/browser-check.js --suites=home,donor,editor",
+      "result": "PASS: all selected checks including previously failed assertion, with assertions unchanged",
+      "log": "browser-home-donor-editor-followup.log"
+    },
+    {
+      "command": "node scripts/browser-check.js --suites=worlds",
+      "result": "PASS on final runtime: RTS, flow, 2D, Arcade Combat Foundry, 4X, VOIDWARD",
+      "log": "browser-worlds-final.log"
+    }
+  ],
+  "workCounts": {
+    "combatTicks": 1200,
+    "combatActors": 24,
+    "fullScanActorCandidates": 25416,
+    "retainedActorCandidates": 3237,
+    "worldAndEventEquality": true,
+    "sceneryRequests": 600,
+    "sceneryBuilds": 1,
+    "sceneryHits": 599,
+    "referenceBuilds": 600,
+    "sceneryEquality": true,
+    "timingOrGpuSpeedupClaim": false
+  },
+  "screenshots": {
+    "desktop.png": "1280px original starter, ready screen",
+    "mobile.png": "320px arena after public pack/replay validation and real touch cancellation"
+  },
+  "sourceSHA256": {
+    "MODULES.json": "8b5f0f8833e48e2efc8990c1d2b1d5e05fc6068686962e74827c260b9ee94720",
+    "README.md": "1b393a6305e2a91a7820b430b116e00334cac323cae7b2c218ab7b11ab563111",
+    "ROADMAP.md": "6e964832e833eacbd267d54763375b6f380e7bcd34afbb92c57bad228ef2c0ee",
+    "demos/arcade-combat-lab/app.js": "ba425dd94191c673374d23777067a7891529bcbd51c3b5cc0d511bf97d3223b8",
+    "demos/arcade-combat-lab/audio.js": "4be8e6b3dc5b1d33da908348f0e7d7ab41d27f7e182e9f78af138f43774d9ac9",
+    "demos/arcade-combat-lab/index.html": "b0c178a58715698404a242a6f99d8f14a89b737a69bbb85e233b75a34a20226b",
+    "demos/arcade-combat-lab/packs.js": "b838143432516986284a6886a9fcc715d06704f63fa541f1c87e13861529117e",
+    "demos/arcade-combat-lab/render.js": "41f2731f309b5f952d7d450886c98548df09ee4377cfe16b9cd8aa3269f6c637",
+    "demos/arcade-combat-lab/replay.js": "e1684c1ed560b058d68b40948eddcca6821e1e0fa3702b2462d3c2c03c330812",
+    "demos/arcade-combat-lab/scenery.js": "6d92adc48cfad7a3e280062ef73c0698af5ec3211e901dfd12c374d8b39ca579",
+    "demos/arcade-combat-lab/style.css": "5e267ee301db27a91d3d819d41255283ef0f8b628c306d22eac43622b5bb5185",
+    "demos/arcade-combat-lab/world.js": "5547a6ec7b74ffd5b9dbc590d86c4e0edccc6f9d858426641cada9687a3b08ba",
+    "demos/creator-hub/index.html": "b61ff6e23f18563201d886c4afe9af48ffe902459e1c3b6ef570a469ae1ca6a3",
+    "docs/2D_FOUNDATION.md": "6959947bf3d750c85db540fd47beb53c1eac29d4c87eb1bff9fdc75bceeb8f50",
+    "docs/API.md": "e49dfcdbb66489d92ecdcb817b7ff67ec265d6435fd80df28b6d676b2724252a",
+    "docs/ARCADE_FOUNDATION_001.md": "f70c994406dd998d84f444c1c08b46ce25f4e9f70e02c5925a79844b3438685f",
+    "docs/ARCHITECTURE.md": "0cd07843c6e297c8a2ccc3db25417242e2cea3c3324b4d5236a2b7cae6e82902",
+    "docs/CREATOR_GUIDE.md": "785f5dba583cd1d058670ef5d87112431167f044eded883ac6157a5d88a10a71",
+    "docs/MOD_SDK_001.md": "629d5709e4a5b18bc84fc94eb9deadf5964d462433cb4cba02db4682b4c20157",
+    "index.html": "17ee7b8fe8e5de04d60321601e692b737c1a3dd3905fec38864b6e12c91b945d",
+    "modules/combat2d/index.js": "b8a2917f093f186a6646d6cbe429955b13b02eeb928188d660bcbee81a92bd44",
+    "modules/mod-arcade/index.js": "8231c3efeaad22686cce71cbc53f8365c4bab37d8050573b038075e59c84eec2",
+    "modules/motion2d/index.js": "fb50d25a6c502e294a10c5daf9b227988d4465363c38cb428415383653e7e789",
+    "scripts/browser-arcade-combat.js": "1d0891dbe53203f67f5e938040513ad6f39799e1ed70148ec57db54eb81f0944",
+    "scripts/browser-check.js": "df36247b1d45a71080f2336d3ee3163f6cd85dd75cd017becd3a329320a40b9f",
+    "tests/arcade-foundation.test.js": "d8febdf5470851ed605e16a409463a68be301d6f20cad0c913d87071c640d8ac"
+  },
+  "artifactSHA256": {
+    "browser-all-attempt-1.log": "ecbeb1375189938c984dd6cd20d6a0d32eb0ab6f4c80b5469496acb95dbfe37b",
+    "browser-home-donor-editor-followup.log": "ec5534a447f60cdc5fd0b4c6952da52cefa47e114cd1abf1a00ca0338311d447",
+    "browser-worlds-final.log": "7d2fda41a52a6dcb5c8d23a9beb34da6a4411ecf1949d23eeef49d3361b8f0f5",
+    "build-final.log": "8a9f94cc6b5dcc49506355ef2bf9c561e80a1d0650de233b6458f51499f1ad2d",
+    "desktop.png": "d4b2b661230618b180ce7e0c9b284c1a7211b602c8cd0ef852da14aa82e156d5",
+    "lab2d-check.json": "45ad5a422f3d1417ebbb3ea2c3c1a2f1ca8bbea417f187c90bc0c0ac531088c0",
+    "mobile.png": "bf8baa66f9df2c43bbffca035ad38b54c183c4ee2210ed1b0373caee0057bd10",
+    "offline-final.json": "475c093099522e5d46347df836edfeafa9fffc5dafd8289459fbe14615415423",
+    "source-check-final.log": "4a19a592e1ab9cd01a47d0d94b791ff49c085a5139d09e636848332e835a5c4d",
+    "unit-final.log": "68454de84cc1943646d42ca250614d8fead2e46761ff29e3cbb92bd582429122"
+  },
+  "limitations": [
+    "No physical controller or mobile device coverage",
+    "No audio-device timing or pixel determinism claim",
+    "Hosted CI uses separate Node 22/pinned browser tooling; see PR checks",
+    "Not a formal proof or qualified browser cache witness"
+  ]
+}

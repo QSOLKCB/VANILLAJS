@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10171c">
+<title>The Arcade Combat Foundry — VANILLAJS / QSOL–IMC</title><link rel="stylesheet" href="./style.css"></head>
+<body>
+<header><a class="brand" href="../../index.html"><span class="brand-mark">V/</span><b>VANILLAJS</b><span class="byline">QSOL–IMC</span></a><nav><a href="../creator-hub/index.html">Creator Hub ↗</a><a href="../../docs/ARCADE_FOUNDATION_001.md">Engine contracts ↗</a><span class="build">v2.2.0 / EXPERIMENTAL</span></nav></header>
+<main>
+  <section class="intro"><div><p class="eyebrow"><span class="live-dot"></span> ARCADE–FOUNDATION / 001</p><h1>The Arcade<br><span>Combat Foundry.</span></h1></div><div class="intro-copy"><p>Forged in plain JavaScript.<br>Built for the next generation of independent games.</p><span class="small-label">TWO ORIGINAL GAMES. ONE SHARED COMBAT ENGINE.</span></div></section>
+  <div class="mode-select" role="group" aria-label="Arcade mode">
+    <button data-mode="run" aria-pressed="true"><span class="mode-number">01</span><span><small>RUN & GUN</small><strong>IRON MERIDIAN</strong><em>Break the perimeter. Reach extraction.</em></span><b>↗</b></button>
+    <button data-mode="arena" aria-pressed="false"><span class="mode-number">02</span><span><small>ARENA BRAWLER</small><strong>RING // ZERO</strong><em>Read the tell. Make your counter count.</em></span><b>↗</b></button>
+  </div>
+  <section class="cabinet" aria-label="Playable Arcade Combat Foundry">
+    <div class="hud"><div class="health"><span>INTEGRITY <b id="health-text">120 / 120</b></span><div class="health-track"><i id="health-bar"></i></div></div><div><span>SCORE</span><b id="score">000000</b></div><div><span>ENCOUNTERS</span><b id="encounter">00 / 03</b></div><div class="state-readout"><span id="status">READY</span><b id="combat-state">IDLE</b></div></div>
+    <div class="screen">
+      <canvas id="scene" width="960" height="540" tabindex="0" aria-label="Arcade playfield. Keyboard controls and touch buttons are below."></canvas>
+      <div class="overlay" id="overlay"><div class="launch-card"><p class="eyebrow" id="overlay-label">01 / RUN & GUN</p><h2 id="overlay-title">Break the perimeter.</h2><p id="overlay-copy">Fight through three sectors. Climb the gantries, collect repair cells and reach the extraction gate.</p><button id="run" class="primary">ENTER THE FOUNDRY <span>→</span></button><small id="overlay-help">A / D move · W / S aim · Space jump · J shoot · K melee</small></div></div>
+      <div class="screen-tag"><span id="pack-name">IRON MERIDIAN</span><span>60 HZ / LOCAL PLAY</span></div>
+    </div>
+    <div class="toolbar"><div><span class="live-dot"></span><span id="mission">CLEAR THE FIRST SECTOR</span></div><div><button id="pause">Pause <kbd>Esc</kbd></button><button id="restart">Restart ↺</button><button id="sound" aria-pressed="false">Sound off ♪</button><label class="difficulty">Difficulty<select id="difficulty"><option value="easy">Cadet</option><option value="normal" selected>Standard</option><option value="hard">Overdrive</option></select></label></div></div>
+  </section>
+  <div class="touch-controls" aria-label="Touch controls"><div class="dpad"><button data-input="4" class="up" aria-label="Up or aim up">↑</button><button data-input="1" class="left" aria-label="Move left">←</button><button data-input="8" class="down" aria-label="Down or aim down">↓</button><button data-input="2" class="right" aria-label="Move right">→</button></div><div class="touch-actions"><button data-input="16" id="touch-jump">JUMP</button><button data-input="32" class="action" id="touch-primary">SHOOT</button><button data-input="64" class="action heavy" id="touch-secondary">MELEE</button></div></div>
+  <section class="field-guide"><div><p class="eyebrow">OPERATOR'S FIELD GUIDE</p><h2 id="guide-title">Keep moving.<br>Keep the upper hand.</h2></div><div><b id="guide-controls">A / D or ← / →</b><p id="guide-copy">Move through the sector. W / S aim vertically; combine with movement to shoot diagonally. Space jumps, J fires, K strikes.</p></div><div><b id="guide-tactic">Watch for the red tell.</b><p id="guide-tactic-copy">Sentries commit to a direction before firing. Jump to reach elevated targets. Repair cells restore integrity; clear every encounter before extraction.</p></div></section>
+  <details class="workshop"><summary><span><small>MAKE IT YOURS</small><b>Data pack workshop</b></span><span>EDIT · VALIDATE · PLAY <i>＋</i></span></summary><div class="workshop-body">
+    <p>Change the stage, combat and palette with inert JSON. Applying valid content starts a fresh run. A rejected draft leaves the accepted pack and simulation intact.</p>
+    <div class="workshop-controls"><label>Starter pack<select id="starter"><option value="iron">Iron Meridian</option><option value="neon">Neon Shift</option></select></label><button id="load-starter">Load starter draft</button><label>Player health<input id="edit-health" type="number" min="1" max="3000"></label><label>Movement speed<input id="edit-speed" type="number" min="1" max="128"></label><label>Light damage<input id="edit-damage" type="number" min="1" max="333"></label></div>
+    <label class="json-label" for="pack-json">PACK JSON <span>Native Mod SDK · 32 KiB maximum</span></label><textarea id="pack-json" spellcheck="false" rows="14" aria-label="Arcade pack JSON" maxlength="32768"></textarea>
+    <div class="file-actions"><button id="apply-pack" class="primary">Validate & apply</button><label class="file-button">Import pack<input id="import-pack" type="file" accept=".json,application/json"></label><button id="export-pack">Export active pack ↓</button></div>
+    <p id="pack-note" class="note" role="status">Original starter pack active.</p>
+  </div></details>
+  <section class="receipts"><div><p class="eyebrow">EVERY TICK ACCOUNTED FOR</p><h2>Keep your run.</h2><p>Replays include the accepted pack, seed and commands. Snapshots verify the complete simulation against that replay.</p></div><div class="receipt-actions"><button id="export-replay">Download replay ↓</button><button id="export-snapshot">Download snapshot ↓</button><label class="file-button">Restore replay / snapshot<input id="import-replay" type="file" accept=".json,application/json"></label><p id="replay-note" role="status">Tick <span id="tick">0</span> / 36,000 · ten-minute run limit</p><p id="replay-message" role="status"></p></div></section>
+  <p class="access-note">Standard gamepad: left stick moves / aims · A jumps · right trigger shoots / light attack · left trigger melee / heavy attack · Menu pauses. Release controls after resume. Focus loss pauses play. Arena coordinates are flat XY, with no belt-scrolling depth.</p>
+</main>
+<footer><b>QSOL–IMC / VANILLAJS</b><span>This is not a product. This is INDEPENDENCE.</span><a href="../../docs/ARCADE_FOUNDATION_001.md">Native web. Original art & sound. Apache–2.0 ↗</a></footer>
+<script type="module" src="./app.js"></script><script type="module" src="../../offline/register.js"></script>
+</body></html>

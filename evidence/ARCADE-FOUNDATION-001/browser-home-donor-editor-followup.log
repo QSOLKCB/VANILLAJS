@@ -1,0 +1,27 @@
+Skyguard PASS: briefing, ship manual, default Cadet and keyboard deployment
+Skyguard PASS: absolute pointer, keyboard aiming, toolbar Space, reload and heat
+Skyguard PASS: focus, repeated held keys and history restore require explicit resume
+Skyguard PASS: native fullscreen, denied fullscreen, windowed mode and four fitted sizes
+Skyguard PASS: cannon: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: flak: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: missile: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: charged rail cancellation and independent touch pointers never discharge on cancel
+Skyguard PASS: rail: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: controller neutral interlock, disconnect, loss and restart
+Skyguard PASS: all four complete naval WAV exports match pure synthesis
+Skyguard PASS: offline reload uses the complete lab and its shared native module graph
+Skyguard PASS: audio device failure preserves combat and saved music preference
+Skyguard upgrade: legacy cached API retained, launch/firing/audio and visible module-failure recovery PASS
+Skyguard PASS: previous offline API and failed import recover without a dead launch button
+Pursuit Lab: controls, pause/repeat cancellation, native/fallback fullscreen, four fitted sizes, touch, gamepad, WAV/replay and offline PASS
+Pursuit upgrade: legacy cached API retained, launch/driving/audio and visible module-failure recovery PASS
+Chromium Touchline: management, live commands, partial replay, abandoned match, full round, save/reload, mod validation, mobile, offline and quota-failure export passed.
+Distinct CPU labs: sculpture presets/budgets/parity/idle, flight gates, docking, shots, orbit trail, fresh inputs, 320px/Canvas failure and editor exports PASS
+Chromium donor labs: real ticks, clock scaling, both modes, mobile layout and verified offline navigation passed.
+Editor creator workflow: templates, attachment-safe undo, gameplay pieces, duplicate rejection, actionable checks, basic view, project download, Play, stale progress and mobile fit passed.
+Visual Editor: real WebGL, hierarchy/search/keyboard navigation, native text undo, scene history/shortcuts, exact decimal/Q16/D4 authoring and rejection, gesture cancellation, project migration/assets/exports, recovery and quota failure, CPU fallback, distant-camera visibility, play controls, and 320px/390px layouts passed.
+Creator hub, course form, rejected edit, complete exported game, restart, blur and nested-path offline reload passed.
+Soundtrack Lab: real controls, PCM/WAV and score export, strict imports, audio stop/focus handling, mobile layout and offline rendering passed.
+SubHunt: native modules, both roles, Pond race, difficulty, raw controller calibration/reconnect, PCM hash, pause/mute, mobile, offline, eight recovery cases and preference persistence passed.
+Chromium: rendered geometry, both modes, thrust, braking, rotation, pause, held-key repeat cancellation, blur, reset, project subpath, mobile layout and unsupported WebGL passed.
+Browser verification finished for suites: home,donor,editor
