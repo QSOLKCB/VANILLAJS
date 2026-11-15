@@ -71,4 +71,3 @@ Reviewed integer phase accumulators and strict/replay-safe rendering distinction
 QwakeTF's own asset review distinguishes BSD-3-Clause LibreQuake assets from GPL engine/game-code material and proprietary or uncertain assets. None is redistributed here. BLOAT-OPS and CorpoWars3d carry their own upstream/asset notices; no such files are incorporated. SONIFICATION's MPL-2.0 terms are not treated as Apache permission. No new third-party runtime notices are required for design study alone.
 
 Games2 was inspected only as a planning reference. Its catalogue, donor list and individual game directories remain untouched. No commercial names, characters, levels, textures or audio become content in this lab. The future consumer owns its original fiction and releases separately.
-

@@ -32,7 +32,9 @@ export async function verifyOptionalLabs(browser,base){
         await page.locator('#parity').click();await page.waitForFunction(()=>document.querySelector('#result').textContent.startsWith('PASS'));
         assert.match(await page.locator('#result').textContent(),/9216 vertices/);
         await page.locator('#pause').click();const tick=await page.evaluate(()=>window.lab.world.tick);
-        await page.waitForTimeout(120);assert.equal(await page.evaluate(()=>window.lab.world.tick),tick);
+        // Pause marks one presentation dirty. Drain actual animation frames before
+        // measuring idle reuse; 120ms need not contain a frame on a busy host.
+        await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));assert.equal(await page.evaluate(()=>window.lab.world.tick),tick);
         const frames=await page.evaluate(()=>window.lab.renderer.stats().frames);await page.waitForTimeout(120);
         assert.equal(await page.evaluate(()=>window.lab.renderer.stats().frames),frames,'paused sculpture avoids repeated draws');
         await page.locator('[data-pattern="weave"]').click();assert.equal(await page.evaluate(()=>window.lab.world.tick),0);

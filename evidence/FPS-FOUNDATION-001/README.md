@@ -18,7 +18,7 @@ Chromium 156.0.8078.79 with software WebGL:
 - Source checks passed: 389 JavaScript files, 59 module contracts and two
   research experiments. See `check.log.gz`.
 - The standard build and independent offline verifier passed: 600 distributed
-  files, 3,628,013 bytes, within the 16 MiB precache limit. See `build.log.gz`
+  files, 3,628,012 bytes, within the 16 MiB precache limit. See `build.log.gz`
   and `offline-package.json` for the actual worker digest.
 - Packaged Block Arena passed actual controls, movement/jump, selected-weapon
   ammunition, scope, WebGL pixels, relative touch aim, Pointer Lock unlock,
@@ -36,7 +36,11 @@ Chromium 156.0.8078.79 with software WebGL:
 
 Reproduce with the repository's standard Node/check/build/offline commands,
 `node scripts/fps-workload.mjs` and `node scripts/browser-check.js` using an
-already available Playwright/Chromium environment. The full hosted browser run
+already available Playwright/Chromium environment. The full local regression reached an existing Kinetic Foundry idle-draw check
+that sampled wall time before its pending pause frame had completed. That test
+now drains actual animation frames before retaining its exact idle-draw equality
+assertion. Remaining regression checks and the full hosted run are reported in
+the PR. The full hosted browser run
 and its authenticated artifacts are reported by the PR checks; these local logs
 do not substitute for them.
 
