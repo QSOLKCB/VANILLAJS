@@ -429,6 +429,22 @@
       "status": "experimental",
       "demo": "demos/quantum-game-lab/index.html",
       "description": "Typed bounded data-only experiment packs over the existing transactional Mod SDK registry"
+    },
+    "gamepad": {
+      "entry": "modules/gamepad/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Owned action profiles, raw USB axes and hats, pure calibration capture and mapping"
+    },
+    "soundtrack": {
+      "entry": "modules/soundtrack/index.js",
+      "depends": [
+        "audio2d"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded multi-phrase PCM scores, exact tick positions and complete loop WAV export"
     }
   },
   "recipes": {
@@ -831,6 +847,15 @@
       ],
       "preset": "stunt",
       "description": "Experimental elevated stunt circuit with ramps, gaps, landings and checkpoint recovery"
+    },
+    "subhunt-lab": {
+      "entry": "demos/subhunt-lab/index.html",
+      "modules": [
+        "gamepad",
+        "soundtrack",
+        "audio2d"
+      ],
+      "description": "Source-pinned SubHunt release recipes: living-toy races, salvage, difficulty, raw controllers and tick-driven music"
     }
   },
   "experiments": {

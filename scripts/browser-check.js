@@ -143,6 +143,7 @@ try{
   await runSuite('editor','./browser-editor-4x.js','verifyEditor4X');
   await runSuite('editor','./browser-creator.js','checkCreator');
   await runSuite('donor','./browser-soundtrack.js','checkSoundtrack');
+  await runSuite('donor','./browser-subhunt.js','checkSubHunt');
   if(needs('home')){
   const unsupported=await browser.newPage();await unsupported.addInitScript(()=>HTMLCanvasElement.prototype.getContext=()=>null);
   await unsupported.goto(page.url());await unsupported.locator('#error').waitFor({state:'visible'});

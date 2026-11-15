@@ -1,0 +1,117 @@
+{
+  "repository": "QSOLKCB/SubHunt",
+  "license": "Apache-2.0",
+  "releases": {
+    "v0.1.0": "4c5caa5db105cd1fbd08dd50bb05c1e8302bfee1",
+    "v0.2.0": "1603d51e8dd40bed06dd229dea0263a0988718d2"
+  },
+  "files": [
+    {
+      "source": "index.html",
+      "sha256": "1c73ead3d8b0b92340bc65699999443b19cc19c88b5987a388ec54221db7cfb4",
+      "gitBlob": "8f88bb9e2c92c3292976116ccf0892120913d74b",
+      "target": "demos/subhunt-lab/index.html",
+      "status": "adapted",
+      "adaptedSHA256": "c8524a3971421e7815026aa3316e52028a5ddbdd1026908b2ed3ed0f72f2fdc2"
+    },
+    {
+      "source": "style.css",
+      "sha256": "10809f83e00abfec3c3689887eba0345aba04b4a7167a1f6a5c0a4fcef7217c0",
+      "gitBlob": "ce66402a3a03259962f0e63997fd8cd451f0a297",
+      "target": "demos/subhunt-lab/style.css",
+      "status": "adapted",
+      "adaptedSHA256": "10809f83e00abfec3c3689887eba0345aba04b4a7167a1f6a5c0a4fcef7217c0"
+    },
+    {
+      "source": "assets/icon.svg",
+      "sha256": "bfe16692f7338d8a7c119cd8dbd160aa1812ce8773d80f7b61d842feece52e55",
+      "gitBlob": "c0cbf12df5f429f098352276cdc6017c1fbb9da0",
+      "target": "demos/subhunt-lab/assets/icon.svg",
+      "status": "unchanged",
+      "adaptedSHA256": "bfe16692f7338d8a7c119cd8dbd160aa1812ce8773d80f7b61d842feece52e55"
+    },
+    {
+      "source": "LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "gitBlob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "target": "demos/subhunt-lab/LICENSE",
+      "status": "unchanged",
+      "adaptedSHA256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "source": "js/app.js",
+      "sha256": "3db6773b88b141235656c0bcfd8f8833dddbfe187b535346d5722996b6d1575c",
+      "gitBlob": "bee3254e2b48b33c540d5594cc432e753710f241",
+      "target": "demos/subhunt-lab/js/app.js",
+      "status": "adapted",
+      "adaptedSHA256": "2ed13508432f49b8ae33e38fbbebb93f9880f737a63edaa676d96ff5319dcc72"
+    },
+    {
+      "source": "js/render.js",
+      "sha256": "98391fd58d67a76443a8e7bcd657c783b9e837353665091bfe4c4ca427a9e24c",
+      "gitBlob": "987cfadf41b8239b31b87a6e36da059745c33646",
+      "target": "demos/subhunt-lab/js/render.js",
+      "status": "adapted",
+      "adaptedSHA256": "defdd5637e568825fded2ffadc92c325e6c0a8b4c517bcba36b8f47ce21a5bbd"
+    },
+    {
+      "source": "js/sim.js",
+      "sha256": "8be24c852c2573c2fae1cc03ea326f4cd2b473781e39a3bab092a1fdc00de2b0",
+      "gitBlob": "5dc60367dcada4d8b9df887788fb891dfce70e32",
+      "target": "demos/subhunt-lab/js/sim.js",
+      "status": "adapted",
+      "adaptedSHA256": "18b0596ba2c2fd70f53815f1763d0aaa81f56f91db43b62ebc127a464ca6e6a9"
+    },
+    {
+      "source": "js/controller.js",
+      "sha256": "00367344e1019c3c07cc7a12222159e013c9b870ede13002a77b36e2aa0c5ec0",
+      "gitBlob": "c5fd306ac22c188909865ba7b0285964c6fc95e3",
+      "target": "demos/subhunt-lab/js/controller.js",
+      "status": "adapted",
+      "adaptedSHA256": "edfacb938f3fe9d3b85bb44aced1ee61f84cd6d0a383079d6a8a7deb750ae6ff"
+    },
+    {
+      "source": "js/music.js",
+      "sha256": "99d15282cc23931f809370a8ecdadcedc3d1551f44ee808f5c09981bedf1e6fa",
+      "gitBlob": "19a4295272f37e80974ff87e71b83432a2f7cd1f",
+      "target": "demos/subhunt-lab/js/music.js",
+      "status": "adapted",
+      "adaptedSHA256": "e22ede6c05e857c39e3a6e08feb44f71f778608943500ee2567ebb42a145bed2"
+    }
+  ],
+  "nativeDependencies": [
+    "modules/gamepad/index.js",
+    "modules/soundtrack/index.js",
+    "modules/audio2d/index.js",
+    "api/audio/index.js"
+  ],
+  "notes": [
+    "v0.1.0 supplies raw USB mapping, calibration and input lifecycle patterns.",
+    "v0.2.0 supplies two game modes, power-ups, difficulty and score composition.",
+    "Audio2d was originally supplied by VANILLAJS and is reused natively, not vendored back.",
+    "Demo uses native ES modules and VANILLAJS offline registration; standalone file:// contract belongs to SubHunt."
+  ],
+  "extractions": [
+    {
+      "release": "v0.1.0",
+      "source": "js/controller.js",
+      "sourceSHA256": "00367344e1019c3c07cc7a12222159e013c9b870ede13002a77b36e2aa0c5ec0",
+      "target": "modules/gamepad/index.js",
+      "adaptation": "Generalised native API; game-specific names/composition remain in demo."
+    },
+    {
+      "release": "v0.2.0",
+      "source": "js/music.js",
+      "sourceSHA256": "99d15282cc23931f809370a8ecdadcedc3d1551f44ee808f5c09981bedf1e6fa",
+      "target": "modules/soundtrack/index.js",
+      "adaptation": "Generalised native API; game-specific names/composition remain in demo."
+    },
+    {
+      "release": "v0.2.0",
+      "source": "js/music.js",
+      "sourceSHA256": "99d15282cc23931f809370a8ecdadcedc3d1551f44ee808f5c09981bedf1e6fa",
+      "target": "api/audio/index.js",
+      "adaptation": "Generalised native API; game-specific names/composition remain in demo."
+    }
+  ]
+}
