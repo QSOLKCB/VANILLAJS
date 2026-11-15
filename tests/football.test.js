@@ -14,6 +14,7 @@ test('SOCCERWEB eight clubs, colors, strengths and 18-person squads are retained
  const c=loadFootballBundle(starter).content;
  assert.deepEqual(c.clubs.map(c=>c.name).sort(),['SOLAR ATHLETIC','NEON ROVERS','TIDAL UNITED','MOSS CITY','VIOLET COMETS','EMBER FC','POLAR WANDERERS','COBALT STARS'].sort());
  assert.deepEqual(c.clubs.map(c=>[c.short,c.attack,c.press,c.pass]).sort(),[['SOL',72,62,65],['NEO',78,74,46],['TID',58,48,88],['MOS',50,84,70],['VIO',90,55,55],['EMB',70,90,57],['POL',62,64,78],['COB',85,80,82]].sort());
+ assert.deepEqual(c.clubs.map(c=>[c.short,c.color]).sort(),[['SOL','#f3c850'],['NEO','#ec6482'],['TID','#5ccbe2'],['MOS','#a5db70'],['VIO','#b49aff'],['EMB','#ff9566'],['POL','#e4edf0'],['COB','#729cfc']].sort());
  assert.ok(c.clubs.every(c=>c.players.length===18));assert.equal(c.formations.length,3);c.clubs[0].name='Changed';assert.equal(starter.packs[0].entries[0].data.value.name,'SOLAR ATHLETIC');
 });
 test('mods reject malformed, unsafe and ambiguous content before activation',()=>{
@@ -81,4 +82,11 @@ test('a full short-match season settles 56 fixtures and rolls into a new season'
  }
  assert.equal(c.results.length,56);assert.ok(standings(c).every(r=>r.played===14));assert.deepEqual(importCareer(exportCareer(c)),c);
  const savedPlayers=structuredClone(ownClub(c).players);nextSeason(c);assert.equal(c.season,2);assert.equal(c.round,0);assert.equal(c.results.length,0);assert.deepEqual(ownClub(c).players,savedPlayers);assert.equal(c.lastReplay,null);
+});
+
+test('custom squad IDs do not collide with generated recruitment candidates',()=>{
+ const bundle=structuredClone(starter);bundle.packs[0].entries[0].data.value.players[0].id='free-1-0';const c=createCareer(bundle,'sol');assert.equal(c.market[0].id,'free-1-0-1');assert.doesNotThrow(()=>importCareer(exportCareer(c)));
+});
+test('career copy budget accommodates large custom leagues without widening pack budgets',()=>{
+ const large={text:'x'.repeat(8192),rows:Array.from({length:40},()=> 'y'.repeat(8192))};assert.throws(()=>copyFootballData(large),/byte budget/);assert.deepEqual(copyFootballData(large,{maxBytes:1048576,maxNodes:100000}),large);assert.throws(()=>copyFootballData(large,{maxBytes:1048577}),/budget/);
 });

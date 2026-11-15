@@ -55,6 +55,7 @@ const browser=await chromium.launch({args:['--use-angle=swiftshader','--enable-u
 const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 try{
+  await runSuite('donor','./browser-football.js','checkFootball');
   if(needs('home')){
     await page.goto(base);
   // DRONE-RACER was formerly pushed beyond the right viewport edge by the
@@ -144,7 +145,6 @@ try{
   await runSuite('editor','./browser-creator.js','checkCreator');
   await runSuite('donor','./browser-soundtrack.js','checkSoundtrack');
   await runSuite('donor','./browser-subhunt.js','checkSubHunt');
-  await runSuite('donor','./browser-football.js','checkFootball');
   if(needs('home')){
   const unsupported=await browser.newPage();await unsupported.addInitScript(()=>HTMLCanvasElement.prototype.getContext=()=>null);
   await unsupported.goto(page.url());await unsupported.locator('#error').waitFor({state:'visible'});

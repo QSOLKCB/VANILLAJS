@@ -166,7 +166,7 @@ uniqueness, goalkeeper constraints, dependency closure and composition budgets.
 
 ### Limits and dependencies
 
-- Bundle/file budget: 256 KiB UTF-8 JSON, 30,000 copied nodes, depth 16, up to 24 packs.
+- Decoded bundle budget: 256 KiB compact UTF-8 JSON, 30,000 copied nodes, depth 16, up to 24 packs. The file picker allows up to 1 MiB to accommodate pretty-printed JSON; the decoded content still must fit its own budget.
 - Existing registry limits remain: 32 KiB per pack, 32 entries, eight exact-version
   dependencies, 512 nodes per entry and depth eight. Use one club per pack.
 - `requires` contains `{id, version}` records with exact versions, never ranges
@@ -183,16 +183,20 @@ career economy, training and season progression belong to the consuming game;
 the pure module owns football matches. The demo's `career.js` is a runnable
 example of this separation, not an engine-level career API.
 
+From the repository root, run this with `node --input-type=module` (or save it as
+a `.mjs` file in that root):
+
 ```js
+import {readFile} from 'node:fs/promises';
 import {loadFootballBundle} from './modules/mod-football/index.js';
 import {
   createFootballMatch, stepFootball, commandFootball,
   exportFootballReplay, verifyFootballReplay
 } from './modules/football/index.js';
 
-const {content} = loadFootballBundle(await fetch(
-  './demos/football-manager/starter.json'
-).then(r => r.json()));
+const {content} = loadFootballBundle(JSON.parse(await readFile(
+  'demos/football-manager/starter.json', 'utf8'
+)));
 const [home, away] = content.clubs;
 const tactics = {
   formation: 'four-four-two', mentality: 50,
@@ -211,6 +215,10 @@ console.log(match.score, match.stats);
 const replay = exportFootballReplay(match);
 console.log(verifyFootballReplay(replay).status); // PASS
 ```
+
+In a browser, load the JSON with same-origin `fetch` and call `stepFootball`
+from a bounded fixed-step animation host, as the demo does; do not run the
+headless `while` loop on every render frame.
 
 For a new roster, explicitly choose a goalkeeper followed by ten outfield players;
 `slice(0,11)` above relies on the starter's ordering. Starting records must match
@@ -291,7 +299,9 @@ A save therefore always describes a settled round, not a half-committed table.
 
 Career storage is `vanillajs.touchline.v1`. Save files use
 `qsol.touchline-save.v1` wrapping a `qsol.touchline-career.v1` state, checksum,
-content snapshot and most recent replay. Imports validate rosters, fixtures,
+content snapshot and most recent replay. Career imports have a separate 1 MiB /
+100,000-node budget because they include both source content and mutable squads.
+Imports validate rosters, fixtures,
 lineup, economy, injuries and any embedded replay. Failed imports preserve the
 current career. If local storage is unavailable or full, the UI asks you to
 export a file. Offline reload works after the packaged service worker finishes

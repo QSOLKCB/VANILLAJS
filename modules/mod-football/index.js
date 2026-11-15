@@ -4,10 +4,11 @@ import {DataModRegistry, validateModManifest} from '../mod-sdk/index.js';
 export const FOOTBALL_BUNDLE = 'qsol.football-content.v1';
 export const PLAYER_FIELDS = Object.freeze(['id','name','role','pace','passing','finishing','defending','keeping','stamina','condition','morale','sharpness']);
 const roles=['GK','DF','MF','FW'];
-export function copyFootballData(input) {
+export function copyFootballData(input, {maxBytes=262144,maxNodes=30000}={}) {
+  if(!Number.isInteger(maxBytes)||maxBytes<1||maxBytes>1048576||!Number.isInteger(maxNodes)||maxNodes<1||maxNodes>100000)throw new RangeError('Invalid football copy budget');
   let nodes=0;
   function copy(x,depth=0) {
-    if(++nodes>30000||depth>16)throw new RangeError('football data exceeds structural budget');
+    if(++nodes>maxNodes||depth>16)throw new RangeError('football data exceeds structural budget');
     if(x===null||typeof x==='boolean')return x;
     if(typeof x==='number'&&Number.isFinite(x))return x;
     if(typeof x==='string'&&x.length<=8192)return x;
@@ -22,7 +23,7 @@ export function copyFootballData(input) {
     return out;
   }
   const result=copy(input);
-  if(new TextEncoder().encode(JSON.stringify(result)).byteLength>262144)throw new RangeError('football file exceeds 256 KiB');
+  if(new TextEncoder().encode(JSON.stringify(result)).byteLength>maxBytes)throw new RangeError('football data exceeds byte budget');
   return result;
 }
 function fields(x,keys){if(!x||Array.isArray(x)||typeof x!=='object'||Object.keys(x).length!==keys.length||keys.some(k=>!Object.hasOwn(x,k)))throw new TypeError('Expected fields: '+keys.join(', '));}

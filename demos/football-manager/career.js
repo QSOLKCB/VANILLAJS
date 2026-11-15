@@ -19,12 +19,13 @@ export function standings(c){
 export function fixtureList(c){return schedule(c.squads.map(s=>s.id));}
 export function ownClub(c){return c.squads.find(s=>s.id===c.clubId);}
 export function log(c,message){c.log.unshift(message);c.log.length=Math.min(24,c.log.length);}
-function market(seed,season){const rng={rng:(seed+season*31337)>>>0||1};return Array.from({length:6},(_,i)=>({id:`free-${season}-${i}`,name:['Sage Quinn','River Lane','Ellis Moss','Sky Arden','Drew Stone','Finley West'][i],role:['DF','MF','FW','GK','DF','MF'][i],...Object.fromEntries(['pace','passing','finishing','defending','keeping','stamina'].map(k=>[k,48+random(rng)%37])),condition:90,morale:65,sharpness:62}));}
+function marketId(season,index,existing){const base=`free-${season}-${index}`;let id=base,n=0;while(existing.includes(id))id=base+'-'+(++n);return id;}
+function market(seed,season,existing=[]){const rng={rng:(seed+season*31337)>>>0||1};return Array.from({length:6},(_,i)=>({id:marketId(season,i,existing),name:['Sage Quinn','River Lane','Ellis Moss','Sky Arden','Drew Stone','Finley West'][i],role:['DF','MF','FW','GK','DF','MF'][i],...Object.fromEntries(['pace','passing','finishing','defending','keeping','stamina'].map(k=>[k,48+random(rng)%37])),condition:90,morale:65,sharpness:62}));}
 export function createCareer(bundle,clubId,seed=1988){
   const validated=loadFootballBundle(bundle),content=validated.content,club=content.clubs.find(c=>c.id===clubId);if(!club)throw new TypeError('Choose a club');
   if(!Number.isInteger(seed)||seed<1||seed>4294967295)throw new RangeError('Invalid career seed');
   const formation=content.formations.find(f=>f.id==='four-four-two')||content.formations[0];
-  return {kind:SAVE_KIND,bundle:validated.bundle,seed,season:1,clubId,round:0,budget:content.rules.startingBudget,board:60,facility:0,cohesion:65,training:{focus:'balanced',load:1,talk:'encourage'},tactics:{formation:formation.id,mentality:50,press:50,tempo:50,width:50},lineup:club.players.slice(0,11).map(p=>p.id),squads:structuredClone(content.clubs),injuries:{},results:[],market:market(seed,1),log:['Welcome to the touchline. Finish in the top half and keep the club solvent.'],lastReplay:null};
+  return {kind:SAVE_KIND,bundle:validated.bundle,seed,season:1,clubId,round:0,budget:content.rules.startingBudget,board:60,facility:0,cohesion:65,training:{focus:'balanced',load:1,talk:'encourage'},tactics:{formation:formation.id,mentality:50,press:50,tempo:50,width:50},lineup:club.players.slice(0,11).map(p=>p.id),squads:structuredClone(content.clubs),injuries:{},results:[],market:market(seed,1,content.clubs.flatMap(c=>c.players.map(p=>p.id))),log:['Welcome to the touchline. Finish in the top half and keep the club solvent.'],lastReplay:null};
 }
 export function selectPlayer(c,slot,id){
   if(!Number.isInteger(slot)||slot<0||slot>10)throw new TypeError('Unknown lineup slot');
@@ -106,10 +107,10 @@ export function transferPrice(c,p){const r=loadFootballBundle(c.bundle).content.
 export function signPlayer(c,id){const p=c.market.find(p=>p.id===id);if(!p)throw new TypeError('Player unavailable');const club=ownClub(c),price=transferPrice(c,p);if(club.players.length>=22)throw new Error('Squad limit: 22. Sell a reserve first.');if(c.budget<price)throw new Error('Insufficient transfer budget');club.players.push({...p});c.market=c.market.filter(q=>q.id!==id);c.budget-=price;c.cohesion=clamp(c.cohesion-4,1,100);log(c,`${p.name} signed for ${price.toLocaleString()} credits.`);}
 export function sellPlayer(c,id){const club=ownClub(c),p=club.players.find(p=>p.id===id);if(!p||c.lineup.includes(id)||club.players.length<=16||p.role==='GK'&&club.players.filter(q=>q.role==='GK').length<=2)throw new Error('Keep 16 players, two keepers and the starting eleven.');club.players=club.players.filter(q=>q.id!==id);delete c.injuries[id];const price=Math.round(transferPrice(c,p)*.65);c.budget+=price;c.cohesion=clamp(c.cohesion-2,1,100);log(c,`${p.name} sold for ${price.toLocaleString()} credits.`);}
 export function improveFacilities(c){const price=75000*(c.facility+1);if(c.facility>=3||c.budget<price)throw new Error('Upgrade unavailable or unaffordable');c.budget-=price;c.facility++;log(c,'Recovery facilities upgraded. Better weekly recovery and home attendance.');}
-export function nextSeason(c){if(c.round!==fixtureList(c).length)throw new Error('Finish the season first');c.season++;c.round=0;c.results=[];c.lastReplay=null;c.market=market(c.seed,c.season);c.injuries={};c.budget+=50000;c.board=clamp(c.board+5,0,100);log(c,'New season. Sponsorship adds 50,000 credits.');}
+export function nextSeason(c){if(c.round!==fixtureList(c).length)throw new Error('Finish the season first');c.season++;c.round=0;c.results=[];c.lastReplay=null;c.market=market(c.seed,c.season,c.squads.flatMap(s=>s.players.map(p=>p.id)));c.injuries={};c.budget+=50000;c.board=clamp(c.board+5,0,100);log(c,'New season. Sponsorship adds 50,000 credits.');}
 export function exportCareer(c){return {kind:'qsol.touchline-save.v1',checksum:hash(c),career:structuredClone(c)};}
 export function importCareer(input){
-  const envelope=copyFootballData(input),c=envelope.career;
+  const envelope=copyFootballData(input,{maxBytes:1048576,maxNodes:100000}),c=envelope.career;
   if(Object.keys(envelope).sort().join()!=='career,checksum,kind'||envelope.kind!=='qsol.touchline-save.v1'||!c||hash(c)!==envelope.checksum)throw new TypeError('Save checksum mismatch');
   const template=createCareer(c.bundle,c.clubId,c.seed);
   if(Object.keys(c).sort().join()!==Object.keys(template).sort().join()||c.kind!==SAVE_KIND)throw new TypeError('Unsupported career fields');

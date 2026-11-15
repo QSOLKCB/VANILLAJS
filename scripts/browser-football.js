@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Real packaged Chromium flow. No test-only app hooks or predetermined goals.
 import assert from 'node:assert/strict';
+import {mkdir} from 'node:fs/promises';
 export async function checkFootball(browser,base){
+ await mkdir('browser-artifacts',{recursive:true});
  const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  try{

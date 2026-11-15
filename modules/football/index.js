@@ -31,7 +31,7 @@ export function hash(value) {
 
 // Adapted source: game/state.mjs
 export const EMPTY = Object.freeze({ x: 0, y: 0, fire: false, pass: false, chip: false, switch: false, curve: 0, cancel: false });
-// v5 adds isolated GOALPOSTS configuration/state; ordinary football rules are unchanged.
+// Internal donor state version; the public management replay envelope is v1.
 export const VERSION = 5;
 function config(options = {}) {
   const c = { seed: (Number(options.seed) >>> 0) || 1988, indoor: !!options.indoor,
@@ -468,7 +468,7 @@ export function verifyFootballReplay(input) {
   const replay=copyFootballData(input);
   if(!replay||Object.keys(replay).sort().join()!==['kind','setup','commands','ticks','finalHash'].sort().join()||replay.kind!==FOOTBALL_REPLAY||!Number.isInteger(replay.ticks)||replay.ticks<0||replay.ticks>MAX_MATCH_TICKS||!Array.isArray(replay.commands)||replay.commands.length>64||! /^[0-9a-f]{8}$/.test(replay.finalHash))throw new TypeError('Invalid football replay');
   const s=createFootballMatch(replay.setup);let i=0,last=-1;
-  for(const cmd of replay.commands){if(!cmd||Object.keys(cmd).sort().join()!=='command,tick'||!Number.isInteger(cmd.tick)||cmd.tick<last||cmd.tick>replay.ticks)throw new TypeError('Invalid replay command order');last=cmd.tick;}
+  for(const cmd of replay.commands){if(!cmd||Object.keys(cmd).sort().join()!=='command,tick'||!Number.isInteger(cmd.tick)||cmd.tick<0||cmd.tick<last||cmd.tick>replay.ticks)throw new TypeError('Invalid replay command order');last=cmd.tick;}
   while(true){
     while(i<replay.commands.length&&replay.commands[i].tick===s.tick)commandFootball(s,replay.commands[i++].command);
     if(s.tick===replay.ticks)break;
