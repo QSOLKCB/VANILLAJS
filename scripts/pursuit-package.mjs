@@ -5,22 +5,24 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {join,dirname} from 'node:path';
 import {hash,jsDependencies,resolveLocal} from './browser-dependencies.mjs';
 
-export async function packagePursuitRuntime(root){
-  const entry='demos/pursuit-lab/js/start.js',htmlPath='demos/pursuit-lab/index.html';
+export async function packagePursuitRuntime(root){return packageLabRuntime(root,'pursuit-lab');}
+export async function packageLabRuntime(root,lab){
+  if(!['pursuit-lab','skyguard-lab'].includes(lab))throw Error('Unknown packaged lab');
+  const base='demos/'+lab,entry=base+'/js/start.js',htmlPath=base+'/index.html';
   const files=new Map(),pending=[entry];let size=0;
   while(pending.length){
     const path=pending.pop();if(files.has(path))continue;
-    if(!/^(?:api|modules|demos\/pursuit-lab)\/[a-zA-Z0-9_./-]+\.js$/.test(path)||path.split('/').includes('..'))throw Error('Unsupported Pursuit dependency: '+path);
+    if(!new RegExp('^(?:api|modules|demos/'+lab+')/[a-zA-Z0-9_./-]+\\.js$').test(path)||path.split('/').includes('..'))throw Error('Unsupported lab dependency: '+path);
     const bytes=await readFile(join(root,path)),deps=jsDependencies(bytes.toString('utf8'));
-    if(deps.issues.length)throw Error('Unresolved Pursuit dependency in '+path+': '+deps.issues.join(', '));
+    if(deps.issues.length)throw Error('Unresolved lab dependency in '+path+': '+deps.issues.join(', '));
     files.set(path,bytes);size+=bytes.length;
-    if(files.size>128||size>1024*1024)throw Error('Pursuit module package exceeds its budget');
+    if(files.size>128||size>1024*1024)throw Error('Lab module package exceeds its budget');
     for(const spec of deps.imports)pending.push(resolveLocal(path,spec));
   }
   const rows=[...files].map(([path,bytes])=>({path,sha256:hash(bytes)})).sort((a,b)=>a.path.localeCompare(b.path));
-  const version=hash(JSON.stringify(rows)),prefix='demos/pursuit-lab/runtime-'+version;
+  const version=hash(JSON.stringify(rows)),prefix=base+'/runtime-'+version;
   const html=await readFile(join(root,htmlPath),'utf8'),marker='src="./js/start.js"';
-  if(html.split(marker).length!==2)throw Error('Expected one Pursuit startup entry');
+  if(html.split(marker).length!==2)throw Error('Expected one lab startup entry');
   for(const [path,bytes] of files){
     const target=join(root,prefix,path);await mkdir(dirname(target),{recursive:true});await writeFile(target,bytes);
   }

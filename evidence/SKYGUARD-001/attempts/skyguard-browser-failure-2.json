@@ -1,0 +1,11 @@
+{
+  "status": "FAIL",
+  "browser": "141.0.7390.37",
+  "checks": [
+    "briefing, ship manual, default Cadet and keyboard deployment",
+    "absolute pointer, keyboard aiming, toolbar Space, reload and heat",
+    "focus, repeated held keys and history restore require explicit resume"
+  ],
+  "errors": [],
+  "failure": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok((await snap()).paused)\n\n    at file:///workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:42:125\n    at async check (file:///workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:17:32)\n    at async checkSkyguard (file:///workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:40:5)\n    at async runSuite (file:///workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-check.js:52:3)\n    at async file:///workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-check.js:58:3"
+}

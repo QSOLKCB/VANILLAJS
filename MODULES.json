@@ -906,6 +906,17 @@
         "soundtrack"
       ],
       "description": "Original Chase H.Q.-style five-case highway pursuit, traffic, turbo, replay, fitted/fullscreen display and deterministic PCM soundtrack."
+    },
+    "skyguard-lab": {
+      "entry": "demos/skyguard-lab/index.html",
+      "modules": [
+        "math",
+        "collision",
+        "time",
+        "audio2d",
+        "soundtrack"
+      ],
+      "description": "Spooky v0.1.0-derived naval air defence: autocannon, proximity flak, guided missiles, charged railgun, persistent refits and deterministic soundtrack."
     }
   },
   "experiments": {

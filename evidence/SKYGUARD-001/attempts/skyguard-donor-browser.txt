@@ -1,0 +1,30 @@
+Skyguard PASS: briefing, ship manual, default Cadet and keyboard deployment
+Skyguard PASS: absolute pointer, keyboard aiming, toolbar Space, reload and heat
+Skyguard PASS: focus, repeated held keys and history restore require explicit resume
+Skyguard PASS: native fullscreen, denied fullscreen, windowed mode and four fitted sizes
+Skyguard PASS: cannon: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: flak: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: missile: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: charged rail cancellation and independent touch pointers never discharge on cancel
+Skyguard PASS: rail: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: controller neutral interlock, disconnect, loss and restart
+Skyguard PASS: all four complete naval WAV exports match pure synthesis
+Skyguard browser failure null
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.reload: net::ERR_INTERNET_DISCONNECTED
+Call log:
+[2m  - waiting for navigation until "load"[22m
+
+    at /workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:96:212
+    at async check (/workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:17:32)
+    at async checkSkyguard (/workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:95:5)
+    at async runSuite (/workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-check.js:52:3)
+    at async file:///workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-check.js:58:3 {
+  log: [ '  - waiting for navigation until "load"' ],
+  name: 'Error'
+}
+
+Node.js v24.22.1

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp,mkdir,readFile,writeFile,rm,readdir} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
-import {packagePursuitRuntime} from '../scripts/pursuit-package.mjs';
+import {packagePursuitRuntime,packageLabRuntime} from '../scripts/pursuit-package.mjs';
 
 const entry='demos/pursuit-lab/js/start.js',html='demos/pursuit-lab/index.html';
 async function fixture(files,run){
@@ -51,4 +51,20 @@ test('unresolved imports fail packaging before writing a runnable snapshot',asyn
       assert.ok(!(await readdir(join(root,'demos/pursuit-lab'))).some(p=>p.startsWith('runtime-')));
     });
   }
+});
+
+// Skyguard shares the same verified dependency snapshot mechanism.
+test('Skyguard receives an isolated native module graph and unknown labs are rejected',async()=>{
+  const root=await mkdtemp(join(tmpdir(),'skyguard-package-'));
+  try{
+    await mkdir(join(root,'demos/skyguard-lab/js'),{recursive:true});await mkdir(join(root,'modules/math'),{recursive:true});
+    await writeFile(join(root,'demos/skyguard-lab/index.html'),'<script type="module" src="./js/start.js"></script>');
+    await writeFile(join(root,'demos/skyguard-lab/js/start.js'),"import '../../../modules/math/index.js';");
+    await writeFile(join(root,'modules/math/index.js'),'export const value=1;');
+    const result=await packageLabRuntime(root,'skyguard-lab');assert.equal(result.files.length,2);
+    assert.ok(result.entry.startsWith('demos/skyguard-lab/runtime-'));
+    const prefix=result.entry.slice(0,-'demos/skyguard-lab/js/start.js'.length);
+    assert.equal(await readFile(join(root,prefix,'modules/math/index.js'),'utf8'),'export const value=1;');
+    await assert.rejects(()=>packageLabRuntime(root,'../outside'));
+  }finally{await rm(root,{recursive:true,force:true});}
 });

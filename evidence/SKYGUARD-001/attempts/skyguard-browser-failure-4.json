@@ -1,0 +1,21 @@
+{
+  "status": "FAIL",
+  "browser": "141.0.7390.37",
+  "checks": [
+    "briefing, ship manual, default Cadet and keyboard deployment",
+    "absolute pointer, keyboard aiming, toolbar Space, reload and heat",
+    "focus, repeated held keys and history restore require explicit resume",
+    "native fullscreen, denied fullscreen, windowed mode and four fitted sizes",
+    "cannon: clear an air raid through actual aim/fire handlers and select a persistent refit",
+    "flak: clear an air raid through actual aim/fire handlers and select a persistent refit",
+    "missile: clear an air raid through actual aim/fire handlers and select a persistent refit",
+    "charged rail cancellation and independent touch pointers never discharge on cancel",
+    "rail: clear an air raid through actual aim/fire handlers and select a persistent refit",
+    "controller neutral interlock, disconnect, loss and restart",
+    "all four complete naval WAV exports match pure synthesis"
+  ],
+  "errors": [
+    "Failed to read the 'localStorage' property from 'Window': Access is denied for this document."
+  ],
+  "failure": "page.reload: net::ERR_INTERNET_DISCONNECTED\nCall log:\n\u001b[2m  - waiting for navigation until \"load\"\u001b[22m\n\n    at /workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:96:212\n    at async check (/workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:17:32)\n    at async checkSkyguard (/workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:95:5)\n    at async runSuite (/workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-check.js:52:3)\n    at async file:///workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-check.js:58:3"
+}

@@ -96,7 +96,8 @@
         "demos/soundtrack-lab/",
         "demos/subhunt-lab/",
         "demos/football-manager/",
-        "demos/pursuit-lab/"
+        "demos/pursuit-lab/",
+        "demos/skyguard-lab/"
       ],
       "scripts": [
         "scripts/browser-donor-labs.js",
@@ -104,7 +105,8 @@
         "scripts/browser-soundtrack.js",
         "scripts/browser-subhunt.js",
         "scripts/browser-football.js",
-        "scripts/browser-pursuit.js"
+        "scripts/browser-pursuit.js",
+        "scripts/browser-skyguard.js"
       ],
       "serviceWorker": true,
       "consumes": [
@@ -317,7 +319,8 @@
     "tests/fixtures/ci-invariant-001-input.json",
     "tests/fixtures/ci-invariant-001-expected.json",
     "tests/fixtures/ci-invariant-001-baseline.mjs",
-    "scripts/verify-pursuit.js"
+    "scripts/verify-pursuit.js",
+    "scripts/verify-skyguard.js"
   ],
   "opaqueRuntime": {
     "demos/editor/game-export.js": {

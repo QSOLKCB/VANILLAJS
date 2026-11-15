@@ -1,0 +1,2 @@
+Initial build failed: Unresolved dependency in demos/skyguard-lab/js/app.js: dynamic DOM execution dependency.
+The conservative package recognizer rejected createElement(tag) in the refit card builder. Replaced it with explicit span/strong/p element creation; the dependency gate was not relaxed.

@@ -1,0 +1,26 @@
+Skyguard PASS: briefing, ship manual, default Cadet and keyboard deployment
+Skyguard PASS: absolute pointer, keyboard aiming, toolbar Space, reload and heat
+Skyguard PASS: focus, repeated held keys and history restore require explicit resume
+Skyguard PASS: native fullscreen, denied fullscreen, windowed mode and four fitted sizes
+Skyguard PASS: cannon: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: flak: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: missile: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard browser failure { screen: 'game', station: 'rail', hp: 100 }
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: aim release preserves firing finger
+    at file:///workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:59:117
+    at async check (file:///workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:17:32)
+    at async checkSkyguard (file:///workspace/scratch/db4b0de70b71/VANILLAJS/scripts/browser-skyguard.js:53:27)
+    at async file:///workspace/scratch/db4b0de70b71/VANILLAJS/[eval1]:5:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.22.1
