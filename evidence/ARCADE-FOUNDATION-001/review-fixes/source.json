@@ -1,0 +1,99 @@
+{
+  "kind": "qsol.vanillajs.arcade-development-evidence.v1",
+  "dateUTC": "2026-11-15",
+  "previousReceipt": "../source.json",
+  "reviewedCommit": "07a6b1cd021ddd8572acde985a65356c086ebe42",
+  "review": "https://github.com/QSOLKCB/VANILLAJS/pull/93#discussion_r4579799544",
+  "notAReuseWitness": true,
+  "environment": {
+    "os": "Linux / Debian 13",
+    "node": "v24.22.1",
+    "playwright": "1.57.0 (preinstalled)",
+    "chromium": "156.0.8078.79 (system executable)",
+    "rendering": "software; no physical GPU evidence",
+    "browserEnv": {
+      "NODE_PATH": "/opt/codex/cua_node/lib/node_modules",
+      "PLAYWRIGHT_CHROMIUM_EXECUTABLE": "/usr/bin/chromium"
+    }
+  },
+  "corrections": [
+    "Use actual movement endpoints for ledge landing after drag and knockback; admit jumps only from a supported starting point.",
+    "Keep diagonal projectile components at least one subunit for every admitted positive speed."
+  ],
+  "scope": "Final runtime matches the full Node and packaged worlds logs. Documentation/evidence-only edits followed; check/build/offline verification was then repeated. Earlier evidence artifacts remain byte-identical. These logs are local development observations; hosted CI status is recorded in the PR.",
+  "commands": [
+    {
+      "command": "node --test --test-name-pattern='ledge support|minimum admitted' tests/arcade-foundation.test.js",
+      "source": "reviewed commit with only the two regression tests added",
+      "result": "EXPECTED FAIL: both reported bugs reproduced",
+      "log": "regressions-before.log.gz"
+    },
+    {
+      "command": "node --test tests/arcade-foundation.test.js",
+      "result": "PASS: 26 tests",
+      "log": "arcade-unit-final.log"
+    },
+    {
+      "command": "node --test tests/*.test.js",
+      "result": "PASS: 927 tests, zero failed",
+      "log": "unit-final.log"
+    },
+    {
+      "command": "node scripts/check.js",
+      "result": "PASS: 372 JS files, 57 module contracts, two research experiments",
+      "log": "source-check-final.log"
+    },
+    {
+      "command": "node scripts/build.js",
+      "result": "PASS: 539 files",
+      "log": "build-final.log"
+    },
+    {
+      "command": "node scripts/verify-offline.js",
+      "result": "PASS: 539 files",
+      "log": "offline-final.json"
+    },
+    {
+      "command": "node scripts/browser-check.js --suites=worlds",
+      "result": "PASS: RTS, flow fields, 2D, Arcade Combat Foundry, 4X and VOIDWARD",
+      "log": "browser-worlds-final.log"
+    }
+  ],
+  "sourceSHA256": {
+    "MODULES.json": "8b5f0f8833e48e2efc8990c1d2b1d5e05fc6068686962e74827c260b9ee94720",
+    "README.md": "1b393a6305e2a91a7820b430b116e00334cac323cae7b2c218ab7b11ab563111",
+    "ROADMAP.md": "6e964832e833eacbd267d54763375b6f380e7bcd34afbb92c57bad228ef2c0ee",
+    "demos/arcade-combat-lab/app.js": "ba425dd94191c673374d23777067a7891529bcbd51c3b5cc0d511bf97d3223b8",
+    "demos/arcade-combat-lab/audio.js": "4be8e6b3dc5b1d33da908348f0e7d7ab41d27f7e182e9f78af138f43774d9ac9",
+    "demos/arcade-combat-lab/index.html": "b0c178a58715698404a242a6f99d8f14a89b737a69bbb85e233b75a34a20226b",
+    "demos/arcade-combat-lab/packs.js": "b838143432516986284a6886a9fcc715d06704f63fa541f1c87e13861529117e",
+    "demos/arcade-combat-lab/render.js": "41f2731f309b5f952d7d450886c98548df09ee4377cfe16b9cd8aa3269f6c637",
+    "demos/arcade-combat-lab/replay.js": "e1684c1ed560b058d68b40948eddcca6821e1e0fa3702b2462d3c2c03c330812",
+    "demos/arcade-combat-lab/scenery.js": "6d92adc48cfad7a3e280062ef73c0698af5ec3211e901dfd12c374d8b39ca579",
+    "demos/arcade-combat-lab/style.css": "5e267ee301db27a91d3d819d41255283ef0f8b628c306d22eac43622b5bb5185",
+    "demos/arcade-combat-lab/world.js": "47879f28dfbeba840c30391f45eeede2fbc4eed76261cbab34509e856d5f4b94",
+    "demos/creator-hub/index.html": "b61ff6e23f18563201d886c4afe9af48ffe902459e1c3b6ef570a469ae1ca6a3",
+    "docs/2D_FOUNDATION.md": "6959947bf3d750c85db540fd47beb53c1eac29d4c87eb1bff9fdc75bceeb8f50",
+    "docs/API.md": "e49dfcdbb66489d92ecdcb817b7ff67ec265d6435fd80df28b6d676b2724252a",
+    "docs/ARCADE_FOUNDATION_001.md": "f977f52cef2bfd5cccbc8f936b1cd0db4bb2efad1d384072bebd5a135b59cb03",
+    "docs/ARCHITECTURE.md": "0cd07843c6e297c8a2ccc3db25417242e2cea3c3324b4d5236a2b7cae6e82902",
+    "docs/CREATOR_GUIDE.md": "785f5dba583cd1d058670ef5d87112431167f044eded883ac6157a5d88a10a71",
+    "docs/MOD_SDK_001.md": "629d5709e4a5b18bc84fc94eb9deadf5964d462433cb4cba02db4682b4c20157",
+    "index.html": "17ee7b8fe8e5de04d60321601e692b737c1a3dd3905fec38864b6e12c91b945d",
+    "modules/combat2d/index.js": "b8a2917f093f186a6646d6cbe429955b13b02eeb928188d660bcbee81a92bd44",
+    "modules/mod-arcade/index.js": "8231c3efeaad22686cce71cbc53f8365c4bab37d8050573b038075e59c84eec2",
+    "modules/motion2d/index.js": "fb50d25a6c502e294a10c5daf9b227988d4465363c38cb428415383653e7e789",
+    "scripts/browser-arcade-combat.js": "1d0891dbe53203f67f5e938040513ad6f39799e1ed70148ec57db54eb81f0944",
+    "scripts/browser-check.js": "df36247b1d45a71080f2336d3ee3163f6cd85dd75cd017becd3a329320a40b9f",
+    "tests/arcade-foundation.test.js": "075edfff9f006b6be720008529b1c1ab0d6fa58db22cb7af1f0ed4ea08ed5090"
+  },
+  "artifactSHA256": {
+    "arcade-unit-final.log": "a938f2fb130b8f196d8ee86e4ea8e181a140599c73c938894391296231d302be",
+    "browser-worlds-final.log": "7d2fda41a52a6dcb5c8d23a9beb34da6a4411ecf1949d23eeef49d3361b8f0f5",
+    "build-final.log": "8a9f94cc6b5dcc49506355ef2bf9c561e80a1d0650de233b6458f51499f1ad2d",
+    "offline-final.json": "3cb5eac2664f5416be53c50c233951ba3fa0b1d07f6006e1085960ff240071a0",
+    "source-check-final.log": "4a19a592e1ab9cd01a47d0d94b791ff49c085a5139d09e636848332e835a5c4d",
+    "unit-final.log": "b7f377b13c8e4183adef4f6951f0de497c05a0b25009923d92f8c18515945b56",
+    "regressions-before.log.gz": "bfc3a7ec615c14ba84165869d86ee4b201ab39ef4cfabb214554094cff91a41f"
+  }
+}

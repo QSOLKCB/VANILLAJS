@@ -192,6 +192,31 @@ test('run completion respects an authored elevated extraction gate',()=>{
   let s=createArcadeGame(p);for(let i=0;i<500;i++)s=stepArcadeGame(s,32).state;
   assert.equal(s.cleared,3);assert.equal(s.status,'playing');
 });
+test('ledge support uses the actual endpoint after released input and knockback',()=>{
+  const p=encounterFixture(),stage=p.entries[2].data;
+  stage.spawn.y=1200;stage.platforms=[{x1:500,x2:1090,y:1200}];
+  let s=createArcadeGame(p);
+  for(const word of [2,2,2,0])s=stepArcadeGame(s,word).state;
+  assert.equal(s.agents[0].body.x,1096);assert.equal(s.agents[0].body.grounded,false);
+  s=stepArcadeGame(s,16).state;assert.ok(s.agents[0].body.vy<0,'released-input inertia must not enable an airborne jump');
+  stage.encounters=[{trigger:0,spawns:[{actor:'scout',x:1080,y:1200}]}];
+  Object.assign(combatData(p).moves.find(m=>m.id==='claw').attack,{windup:0,active:1,knockback:512});
+  s=createArcadeGame(p);let hit=false;
+  for(let i=0;i<120&&!hit;i++){const r=stepArcadeGame(s,0);s=r.state;hit=r.events.some(e=>e.type==='hit'&&e.target===1&&e.damage>0);}
+  assert.ok(hit);assert.equal(s.combat.actors[0].knockX,-512);
+  s=stepArcadeGame(s,0).state;
+  assert.ok(s.agents[0].body.x<500);assert.ok(s.agents[0].body.y<1200);assert.equal(s.agents[0].body.grounded,false);
+});
+test('minimum admitted projectile speed supports every diagonal and exact replay',()=>{
+  const p=encounterFixture();combatData(p).actors[0].projectile.speed=1;
+  for(const word of [37,38,41,42]) {
+    const session=new ArcadeSession(p),result=session.advance(word);
+    assert.equal(result.accepted,true);assert.equal(session.state.tick,1);
+    const projectile=session.state.combat.projectiles[0];
+    assert.equal(projectile.vx,word&2?1:-1);assert.equal(projectile.vy,word&4?1:-1);
+    assert.equal(readArcadeReplay(session.exportReplay()).exportSnapshot(),session.exportSnapshot());
+  }
+});
 test('replay and snapshot reproduce exact state and preserve accepted pack versions',()=>{
   for(const mode of ['run','arena']){
     const source=starterPack();source.version='2.3.4';const session=new ArcadeSession(source,mode,'hard',0xffffffff);

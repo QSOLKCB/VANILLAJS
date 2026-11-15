@@ -77,18 +77,17 @@ export function stepArcadeGame(current,word,{reference=false}={}) {
     if(body.stun||body.attack||a.tell){x=0;y=0;jump=false;faceX=body.faceX;faceY=body.faceY;}
     const old=a.body;
     const blockedAt=(px,py)=>stage.solids.some(o=>px>o.box.minX&&px<o.box.maxX&&py>=o.box.minY&&py<o.box.maxY);
-    // A supported one-way ledge is a ground line for motion2d. Landing checks
-    // cross the top in Y at the endpoint X; actor/obstacle movement stays point-like.
+    // Admit a jump only from the current supported point. Resolve ledge landing
+    // after motion2d supplies the actual endpoint, including drag and impulses.
     const support=stage.platforms.find(p=>old.x>=p.x1&&old.x<=p.x2&&old.y===p.y&&old.vy<=0);
-    const groundY=s.mode==='run'&&support&&old.x+x*d.speed>=support.x1&&old.x+x*d.speed<=support.x2?support.y:stage.ground;
-    a.body=stepBody2D(old,{x,y,jump,impulseX:body.knockX,impulseY:body.knockY},
+    const start=s.mode==='run'?createBody2D({...old,grounded:old.y<=stage.ground||!!support}):old;
+    a.body=stepBody2D(start,{x,y,jump,impulseX:body.knockX,impulseY:body.knockY},
       {profile:s.mode==='run'?'platform':'shmup',bounds:{minX:180,maxX:stage.width-180,minY:stage.ground,maxY:stage.height-600},
-        groundY,blockedAt,motor:{speed:d.speed,acceleration:12,drag:12,jumpSpeed:148,gravity:6,fallSpeed:180}});
-    if(s.mode==='run'&&a.body.vy<=0) {
-      const landed=stage.platforms.filter(p=>a.body.x>=p.x1&&a.body.x<=p.x2&&old.y>=p.y&&a.body.y<=p.y).sort((p,q)=>q.y-p.y)[0];
+        groundY:stage.ground,blockedAt,motor:{speed:d.speed,acceleration:12,drag:12,jumpSpeed:148,gravity:6,fallSpeed:180}});
+    if(s.mode==='run') {
+      const landed=a.body.vy<=0&&stage.platforms.filter(p=>a.body.x>=p.x1&&a.body.x<=p.x2&&old.y>=p.y&&a.body.y<=p.y).sort((p,q)=>q.y-p.y)[0];
       if(landed)a.body=createBody2D({...a.body,y:landed.y,vy:0,grounded:true});
-      // A changed ground line cannot retain the old ledge's grounded flag.
-      else if(a.body.y>groundY)a.body=createBody2D({...a.body,grounded:false});
+      else a.body=createBody2D({...a.body,grounded:a.body.y<=stage.ground&&a.body.vy<=0});
     }
     poses.push({id:a.id,x:a.body.x,y:a.body.y,faceX,faceY});
     if(request&&!body.attack&&!body.stun) {
@@ -97,7 +96,7 @@ export function stepArcadeGame(current,word,{reference=false}={}) {
     }
     if(shoot&&!body.attack&&!body.stun&&(isPlayer?a.cooldown===0:true)) {
       const p=d.projectile,ax=a.aimX||a.aimY?a.aimX:faceX,ay=a.aimX||a.aimY?a.aimY:faceY;
-      const speed=ax&&ay?Math.trunc(p.speed*181/256):p.speed;
+      const speed=ax&&ay?Math.max(1,Math.trunc(p.speed*181/256)):p.speed;
       const {cooldown,speed:ignored,...shot}=p;
       shots.push({id:a.id,...shot,vx:(ax||(!ay?faceX:0))*speed,vy:ay*speed,
         damage:isPlayer?p.damage:Math.max(1,Math.trunc(p.damage*s.pack.settings.rules[s.difficulty].damagePercent/100))});

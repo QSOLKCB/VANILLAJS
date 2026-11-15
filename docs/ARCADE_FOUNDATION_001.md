@@ -132,6 +132,9 @@ a claim that all event categories share one continuous physical timestamp.
 
 Actor/static collision remains motion2d's axis-separated **point endpoint**
 query. The lab adds one-way ledge landing by downward Y crossing at endpoint X.
+Jump admission uses the currently supported point; landing uses the actual
+movement endpoint after drag and knockback. Sliding off an edge releases
+grounded state before another jump can be accepted.
 No body sweep, slopes, actor separation, relative moving-target projectile
 sweep, rotating boxes, rigid-body impulse solver or arbitrary thin-wall actor
 collision is claimed. Fast actor movement can cross thin obstacles. Projectile
@@ -144,6 +147,11 @@ gravity, fallSpeed` (integers 1–512); platform and shmup use the relevant fiel
 Other profiles retain their original laws. `controls.impulseX/impulseY` are
 −512…512, added before the existing collision/bounds path and clamped to ±512.
 Omitted options preserve historical behavior, including the default jump.
+
+The lab approximates diagonal projectile components as
+`max(1, floor(speed * 181 / 256))`. The minimum accepted speed therefore moves
+one subunit on each axis, rather than rounding both components to zero; nominal
+speed is not an exact Euclidean magnitude at this integer resolution.
 
 ## Playable compositions
 
@@ -314,7 +322,7 @@ installed and no physical owner runner was triggered.
 
 | Executed command | Actual result |
 | --- | --- |
-| `node --test tests/*.test.js` | PASS: 925 tests, zero failures, including 24 new arcade tests |
+| `node --test tests/*.test.js` | PASS: 927 tests, zero failures, including 26 new arcade tests |
 | `node scripts/check.js` | PASS: 372 JavaScript files, 57 module contracts, two research experiments |
 | `node scripts/build.js` | PASS: 539 allowlisted files and SHA-256 manifest |
 | `node scripts/verify-offline.js` | PASS: all 539 packaged files verified |
@@ -335,10 +343,16 @@ check without edits to existing assertions. This is a recorded failed full
 attempt plus successful follow-up coverage, not a claim that one complete
 invocation passed. The final worlds run followed the last arcade ledge fix.
 
-[Local evidence](../evidence/ARCADE-FOUNDATION-001/source.json) records final
-source hashes, commands, raw logs, the failed attempt and desktop/mobile
-screenshots. It is ordinary development evidence, not a formal proof or a
-qualified browser-reuse witness.
+[Initial local evidence](../evidence/ARCADE-FOUNDATION-001/source.json) preserves
+the original 925-test run, failed browser attempt and desktop/mobile screenshots.
+[Review-fix evidence](../evidence/ARCADE-FOUNDATION-001/review-fixes/source.json)
+records the final source hashes and 927-test run. Automated review identified
+released-input inertia leaving stale ledge support and speed-1 diagonal shots
+rounding to zero. Both new regressions failed before the corrections and pass
+afterward, including knockback leaving a ledge and all four diagonal directions
+with replay equality. The final worlds browser run includes these corrections.
+These are development observations, not formal proofs or qualified browser-reuse
+witnesses. Earlier evidence files are preserved unchanged.
 
 New Node coverage includes closed boundaries, 2000 independent existing-collision oracle
 queries, fast thin contacts, stable ties, simultaneous attacks, deduplication,
