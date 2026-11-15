@@ -26,7 +26,10 @@ export async function verifyVault(browser,baseURL){
     assert.equal(await page.locator('#engage').isDisabled(),false);await page.locator('#engage').click();
     await page.waitForFunction(n=>document.querySelector('#seal-count').textContent===`${String(n).padStart(2,'0')} / 06 SEALS`,index+1);
   }
-  await page.goto(baseURL);await page.locator('.vault-link').click();assert.match(page.url(),/\/VANILLAJS\/demos\/clockwork-vault\/index.html$/);
+  await page.goto(baseURL);
+  // Promotional cards share styling; identify the Vault card by its destination.
+  await page.locator('.vault-link[href="demos/clockwork-vault/index.html"]').click();
+  assert.match(page.url(),/\/VANILLAJS\/demos\/clockwork-vault\/index.html$/);
   // HTML ships with READY already present; require the actual first WebGL
   // render before probing pixels. Preserve the real >500 pixel contract,
   // sampling bounded animation frames to tolerate browser/compositor startup.

@@ -37,6 +37,10 @@ Screenshots and a complete WAV are emitted into `browser-artifacts/` by
   and by following result-screen frames. Music/engine shutdown is now separate
   from full audio cancellation. Tests cover clear, win and loss tails, their
   natural cleanup, and cancellation on pause, focus loss, mute and failure.
+- Full hosted Chromium CI found that the new Pursuit promotion shares the
+  Vault card's CSS class. The Vault test's class-only locator matched both cards
+  and failed strict selection. The test now also matches the Vault destination;
+  its existing destination assertion and complete gameplay checks remain intact.
 - Early browser assertions raced fullscreen notification and gamepad-neutral
   polling. They now wait for the displayed mode and actual animation frames.
 - The first offline check used the debug query URL, which the existing worker
