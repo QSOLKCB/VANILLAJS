@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "repository": "QSOLKCB/Outruin",
+  "commit": "c9a0839fa1f8329f3eee4c7fd8637ae78cbad8c7",
+  "license": "Apache-2.0",
+  "sources": [
+    {
+      "path": "LICENSE",
+      "gitBlob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "js/driving.js",
+      "gitBlob": "ee19935d69dbbb309cf55c3b9ed822c7bd7f1657",
+      "sha256": "1569960f5f1ac1024b83cec7e2f8abd7d1658a4a4c377a4863b6365e85fac0a2"
+    },
+    {
+      "path": "js/sim.js",
+      "gitBlob": "db4632d2db4c584831d6987a74eca8577a2f8c43",
+      "sha256": "ee32b1fd88bf940a6c6a1c522046ade4d1bee04a8cef755456ca7afba2f1c1ab"
+    },
+    {
+      "path": "js/display.js",
+      "gitBlob": "bc49590b24a57fca4d7658da6748eeab4e3149e3",
+      "sha256": "60875bf0362a16887e1264f2e77d49a9d801991a551bde281c8300acd484fbea"
+    },
+    {
+      "path": "js/sound.js",
+      "gitBlob": "89cd01a0cf45293b8cc03425d4bdad5c1ec4dabf",
+      "sha256": "d82226cee1eea1c8536f55f87e801e9bd53280732c9ac84d60c4843341b56f1e"
+    },
+    {
+      "path": "js/render.js",
+      "gitBlob": "591f8b4e79b32acc54a8ab7b349158cbf909ab40",
+      "sha256": "cfb0a0f3bd141bfc0964c36646c8a48040574f3a6b3a64a474e51be319b56d29"
+    },
+    {
+      "path": "js/radio.js",
+      "gitBlob": "441da90f85c39e5bc52ba28dba18661c203b72b0",
+      "sha256": "b57cb4dd1db8f57055cba5613aabb6a0115595b7c78ca98334b8a016eb1f037a"
+    },
+    {
+      "path": "NOTICE",
+      "gitBlob": "6a520f82f7f38aa56bb91cf3e707f8f1f6508d78",
+      "sha256": "44b71b8a29318475624541d171c27b64c9720bf0fb0e8052ab0bffa8d40042a2"
+    }
+  ],
+  "targets": [
+    {
+      "path": "api/audio/effects.js",
+      "status": "adapted",
+      "sources": [
+        "js/sound.js"
+      ],
+      "sha256": "fc026d3cb208e3a915ad06c6bffae73f267c1ce7d5748ef5a6205b4df594fc5b"
+    },
+    {
+      "path": "api/display/index.js",
+      "status": "adapted",
+      "sources": [
+        "js/display.js"
+      ],
+      "sha256": "e062f02ff45ff4402138f90124eb1454e878f1b6ec300278ce75ab0516368f6d"
+    },
+    {
+      "path": "demos/pursuit-lab/LICENSE",
+      "status": "retained",
+      "sources": [
+        "LICENSE"
+      ],
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "demos/pursuit-lab/OUTRUIN-NOTICE.txt",
+      "status": "retained",
+      "sources": [
+        "NOTICE"
+      ],
+      "sha256": "44b71b8a29318475624541d171c27b64c9720bf0fb0e8052ab0bffa8d40042a2"
+    },
+    {
+      "path": "demos/pursuit-lab/index.html",
+      "status": "original",
+      "sources": [],
+      "sha256": "036e1755b671c0ee87baac9edef295ce02d7ce3d4b574e5cb1c2d6c0e1b1f851"
+    },
+    {
+      "path": "demos/pursuit-lab/js/app.js",
+      "status": "original",
+      "sources": [],
+      "sha256": "3f8a1256a161af12c5ba54a8f42df1bb7725a28ea59a21cc0a91475569439c07"
+    },
+    {
+      "path": "demos/pursuit-lab/js/audio.js",
+      "status": "original",
+      "sources": [],
+      "sha256": "2b93b4d164570729f00b89e65402492cef28be2d95280fbe77df0a89ab608c33"
+    },
+    {
+      "path": "demos/pursuit-lab/js/cases.js",
+      "status": "original",
+      "sources": [],
+      "sha256": "269a6efd23116f60bb9ad68fdd915f00789628f700bd03a36dc05755c457dbd7"
+    },
+    {
+      "path": "demos/pursuit-lab/js/input.js",
+      "status": "original",
+      "sources": [],
+      "sha256": "e27f465783b8343da551535644c96313a7c459baf96d0c1df9dda9e24309d3fb"
+    },
+    {
+      "path": "demos/pursuit-lab/js/render.js",
+      "status": "adapted",
+      "sources": [
+        "js/render.js"
+      ],
+      "sha256": "e8769a7e45504e5521e17bd192ada7db40f1f25809cfcc342d5bfdc986719afd"
+    },
+    {
+      "path": "demos/pursuit-lab/js/score.js",
+      "status": "adapted",
+      "sources": [
+        "js/radio.js"
+      ],
+      "sha256": "d30cfdba08a2e9de68264e554dcbcbc4826e1d35366ad886b2ce2daa0feb5242"
+    },
+    {
+      "path": "demos/pursuit-lab/js/sim.js",
+      "status": "original",
+      "sources": [],
+      "sha256": "931e5ab4488c19ae0ff9b5e85864621cdcaa73bc062d1a321da2308287e80dcf"
+    },
+    {
+      "path": "demos/pursuit-lab/style.css",
+      "status": "original",
+      "sources": [],
+      "sha256": "d0cdcf442c3be51f32085feb5c64955f153add3e0acd9271aa019c806619c6d2"
+    },
+    {
+      "path": "modules/road-arcade/index.js",
+      "status": "adapted",
+      "sources": [
+        "js/driving.js",
+        "js/sim.js"
+      ],
+      "sha256": "d887ab6edec499057c75529e0a850a3edc7438fd7c0fdb302d57deca398e24fa"
+    }
+  ]
+}

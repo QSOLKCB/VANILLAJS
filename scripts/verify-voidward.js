@@ -26,7 +26,12 @@ for(const [kind,records,prefix] of [['vendored',manifest.files,base],['native',m
       assert.ok(record.local.startsWith('vendor/'),`vendored: outside vendor ${record.local}`);
       assert.notEqual(record.repository,'QSOLKCB/VANILLAJS','Use native VANILLAJS dependencies rather than a second vendored copy.');
     }else assert.equal(record.repository,'QSOLKCB/VANILLAJS');
-    assert.equal(hash(await readFile(resolve(root,prefix,record.local))),record.sha256,`${kind}: source digest mismatch ${record.local}`);
+    if(record.adaptedSHA256!==undefined){
+      assert.equal(kind,'native','Only native dependencies may declare a local adaptation');
+      assert.match(record.adaptedSHA256,/^[a-f0-9]{64}$/);
+      assert.ok(typeof record.adaptation==='string'&&record.adaptation.length>20,'Native adaptation needs an explanation');
+    }
+    assert.equal(hash(await readFile(resolve(root,prefix,record.local))),record.adaptedSHA256??record.sha256,`${kind}: source digest mismatch ${record.local}`);
   }
 }
 async function walk(dir){

@@ -298,7 +298,9 @@
       "commit": "5a91cd4cc7251c485eaf2fc80d5227a20571fd8c",
       "source": "modules/audio2d/index.js",
       "local": "modules/audio2d/index.js",
-      "sha256": "07e19391b84034acba56ef840a4d622b70e815f5376de123b6a07a9ccebf3098"
+      "sha256": "07e19391b84034acba56ef840a4d622b70e815f5376de123b6a07a9ccebf3098",
+      "adaptedSHA256": "838c90cc71d2ffb89a205eb47d280721bd36e3bfd8b3f7467f31668359d50034",
+      "adaptation": "Pursuit integration adds private score identity branding for bounded effect playback. Integer PCM rendering and event contracts are unchanged; original source commit and digest retained."
     },
     {
       "repository": "QSOLKCB/VANILLAJS",
@@ -343,5 +345,5 @@
       "sha256": "1b8e11d442d77365e4ec79ace6736855dcb8b7946edabbf0123168f790f52b64"
     }
   ],
-  "adaptation": "World, campaign data and authoring adapters remain demo-owned. Imports use the existing byte-identical native modules/editor instead of duplicating vendor/vanillajs."
+  "adaptation": "World, campaign data and authoring adapters remain demo-owned. Imports use native VANILLAJS modules/editor rather than duplicating vendor/vanillajs. Native source identities remain pinned; explicit local adaptations carry separate digests and reasons."
 }

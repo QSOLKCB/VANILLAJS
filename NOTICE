@@ -215,3 +215,15 @@ identities are retained/adapted. See demos/football-manager/PROVENANCE.json
 and SOCCERWEB-LICENSE.txt for source records and retained licence.
 Management, mod contracts, career progression and Touchline UI are VANILLAJS
 additions. No third-party league identities, artwork or runtime libraries.
+
+Outruin integration (Pursuit Lab / Highway Intercept)
+--------------------------------------------------
+Road-local handling, fullscreen lifecycle, bounded PCM playback, road projection
+and arrangement patterns adapted from QSOLKCB/Outruin commit
+c9a0839fa1f8329f3eee4c7fd8637ae78cbad8c7 under Apache-2.0.
+Copyright 2026 Trent Slade / QSOL-IMC and contributors. The donor licence and
+source/adaptation hashes are retained in demos/pursuit-lab/LICENSE and
+PROVENANCE.json. See docs/OUTRUIN_INTEGRATION.md for API boundaries.
+The independent Chase H.Q.-style demo uses original art, cases and music; it
+contains no Taito ROMs, source code, sprites, samples or recordings. Chase H.Q.
+is referenced as gameplay inspiration only; no affiliation is implied.

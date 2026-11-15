@@ -777,3 +777,20 @@ original animated Canvas2D presentation. See [Football SDK](FOOTBALL_SDK.md) for
 signatures, schemas, commands, errors, budgets, provenance and the explicit Q8
 pixel/+Y-down compatibility frame. Career progression and UI belong to the
 [Touchline demo](../demos/football-manager/index.html).
+
+
+## Outruin-derived road, display and PCM effects (experimental)
+
+- `modules/road-arcade/index.js`: `createRoadVehicle(options)` returns immutable
+  SI handling settings and stateless `step(state, input, curvature, dt)`.
+  `createRoadCurve(bends, {segmentLength})` owns periodic smooth curvature.
+- `api/display/index.js`: `createDisplayController({root, initial, onChange,
+  onTransition, save})` owns explicit-root fullscreen transitions and exposes
+  `setMode`, `snapshot`, `dispose`; the caller owns layout and pause/input policy.
+- `api/audio/index.js`: `createEffectPlayer(context, options)` supplies bounded
+  PCM caches/voices, `play`, `stop`, `stopAll`, `snapshot`, `dispose`. Scores must
+  be authentic `createSound2D` results (`isSound2D` checks identity).
+
+See [full units, limits, lifecycle and examples](OUTRUIN_INTEGRATION.md) and
+[play the Pursuit Lab](../demos/pursuit-lab/index.html). These APIs do not add
+missions, world data, layouts or a new synthesizer to the core.
