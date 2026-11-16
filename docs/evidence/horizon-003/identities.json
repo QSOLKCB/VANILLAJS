@@ -1,0 +1,27 @@
+{
+  "sourceSHA": "dc5e4d72916685ed4379c2dd4976ae87e2bc86dd",
+  "reviewedBase": "718afebb7146424ed8718f80a488c3b76eea1c85",
+  "runtimeIdentity": {
+    "modules/vehicle-audio/index.js": "fae1d9d8a9c68cffc02deb5233baf66e8ce94085d813c6e71111f8c456e0b283",
+    "modules/vehicle3d/index.js": "60e0bc1e11d44773af302ab8e76e8076aacd7b324461d2ea1f08ea86297797ad",
+    "modules/scenic3d/index.js": "ff7a8193648e807a72c4017d4b1f129f77d4e731646e0d29928e6db603d649c1",
+    "modules/render-lit/index.js": "a6aa9266f3195e082ea0248321c44d759abaf60155dd81256d0f51091bfb8863",
+    "demos/horizon-lab/race-project.js": "cadb20c8c77b1747f1cc29633f113027ceb6625bb6f6bf0bdd74d61f9fa3b26c",
+    "demos/horizon-lab/race-course.js": "1c698c1efd9251540b2b4742114d629b4652587f1be289b4016618b5541e7dfc",
+    "demos/horizon-lab/race-model.js": "1591a337a4a9a8180b7e400e5cc88e768d3ae397322dc74ec2db3633b79395a1",
+    "demos/horizon-lab/race-player.js": "33a9f742bc4b5895ffa812ab437ed17660757149584a64febb1b80b30ad213bf",
+    "demos/horizon-lab/race-view.js": "e466126313cfbce8794c0b3158adcf4b30fdd533f48040bcd38e1ca674f6f88f",
+    "demos/horizon-lab/race-audio.js": "39badae195e22e68580f65e2e47da72ad4cef5c21e9b613b54b12b2c64d2b122",
+    "demos/horizon-lab/race-export.js": "098d3eaf9759c3e2a9436a8a74f3d655baf9985118005c9ad53e4735e02e87ca",
+    "demos/horizon-lab/race-runtime.js": "de31c8864aa47cd507a17c0d41a1698f1d18fcb1b083d6a7cf960b4ec75a2a3d",
+    "scripts/horizon-race-runtime.mjs": "db6cee13f02a25ea471d2aad9fdbdb60693d3e9535755fe51459211ff57a3d39",
+    "scripts/browser-cache-profile.json": "b01bb2c39f164e87988b933fe4075a71c567511b0a5138170e65e45020bf8361"
+  },
+  "package": {
+    "manifestSHA256": "57a8df45954962253876174f87ea919d16bd24680d14dce005c050ce9c88aa3c",
+    "workerSHA256": "d923d58d1282e7cb3a9b1384b9927b6b97b4b397995fdfed4de918e62b0b3968",
+    "files": 968,
+    "bytes": 6983091
+  },
+  "scope": "Fresh local execution; not a trusted-main CI receipt. Evidence-only follow-up commit does not change shipped runtime."
+}

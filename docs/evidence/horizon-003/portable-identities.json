@@ -1,0 +1,8 @@
+{
+  "project": "default high-profile starter race; browser ZIP test separately exports low profile",
+  "filesIncludingManifest": 31,
+  "manifestSHA256": "78893c5062e09104eecae8b5d20f6f15cffbd6fdb1c5228918fae4531751fe57",
+  "workerSHA256": "e7bf54f1d1a7848d12c23f42cf8bd3b342c9c0d814669cf654d763ae14b279f4",
+  "runtimeSourceEntries": 22,
+  "source": "dc5e4d72916685ed4379c2dd4976ae87e2bc86dd"
+}

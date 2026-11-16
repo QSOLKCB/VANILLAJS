@@ -1,0 +1,7 @@
+EXECUTE checkHorizonRace
+HORIZON race: actual keyboard course completion, rival/checkpoints/finish, three cameras/classes, course/vehicle/audio editing, strict rollback/history/export cancellation, sound lifecycle, 320px touch, native context recovery, graphics fallback and offline startup PASS
+EXECUTE checkHorizonExport
+HORIZON portable race: real UI ZIP, full keyboard route, native runtime/source/licences, nested offline play/restart and tampered-install rejection PASS
+EXECUTE checkHorizonRaceStartup
+horizon-lab/race.html: failed-import reload and retained older-worker module isolation PASS
+Editor partition passed: new; checkHorizonRace,checkHorizonExport,checkHorizonRaceStartup

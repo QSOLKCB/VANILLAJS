@@ -1,0 +1,7 @@
+OMI Lab: exact word vectors, invalid edits, bits, face fault/common-mask limits, all 65,536 states, minimal periods, fixed-point step count, atlas pointer/keyboard, fresh press, pause/blur/hidden/reset, Canvas failure and 390 px touch-emulated layout passed.
+Brass Engine: visible SVG, eight staged detents, exact words, reverse, short periods, fixed point, motor pause, fractional JSON download/restore, malformed replay rejection, keyboard repeat/late pointer cancellation, blur/hidden, counter limit, reduced motion and 390/320 px touch-emulated layouts passed.
+ALIEN Course Foundry: actual browser module, Q16 output, multi-gate sweep, bad data rejection, rounding and 320px viewport passed.
+MOD-SDK-002 Circuit Foundry: packaged v2 course, exact gate, ordered sweep, reject/restore, 320px and Canvas fallback passed.
+Graph Lab: exact polynomial, cospectral distinction, traversal/relabel/D4 controls, empty/disconnected cases, Canvas fallback and 320px layout passed.
+QGAME-MATH-001: packaged desktop/mobile, 320/390px, keyboard, exact events, PCM download, imports, pause, graphics/audio fallbacks and offline replay passed.
+Browser verification finished for suites: research

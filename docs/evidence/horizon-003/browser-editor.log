@@ -1,0 +1,34 @@
+EXECUTE checkHorizonDrive
+HORIZON driving: actual throttle/steer/brake, torque comparison, four-wheel ramp jump/landing, coast contact, strict sidecar/vehicle exports and rollback, retained meshes, pause/fresh-input, 320px native touch cancellation, context restoration, graphics fallback and prefixed offline driving PASS
+EXECUTE checkHorizonDriveStartup
+horizon-lab/drive.html: failed-import reload and retained older-worker module isolation PASS
+EXECUTE checkHorizon
+HORIZON: native lit scenery/car pixels, height/bank geometry, materials/light/rig with retained uploads, classes/paint, strict project roundtrip/rollback, camera tour/idle/focus, low detail, native context restoration, 320px touch, graphics fallback and controlled offline authoring PASS
+EXECUTE checkHorizonStartup
+horizon-lab/index.html: failed-import reload and retained older-worker module isolation PASS
+EXECUTE checkGameMakerAPI
+Game Maker API: native Canvas primitive/text/sprite pixels, atlas/parallax alignment, rejected import/allocation rollback, fixed-tick tap/cancellation, seeded bounded particles, independent instances, real Web Audio resource ownership/failure cleanup and copyable public-only example movement/jump/pickup/win/restart/disposal PASS
+EXECUTE checkGameMaker
+Game Maker export cancellation: Restart and rejected import allow immediate retry; stale success/failure preserve newer exports, refresh respects busy state and incomplete projects stay disabled PASS
+Game Maker: original game win/lose, empty-stage authoring, sprite/palette/layer/collision edits, real input/cancellation, native pixels, export package gameplay and nested offline reload, strict rejection, keyboard/touch/narrow layout, Canvas fallback and scoped integrity rejection PASS
+EXECUTE checkGameMakerStartup
+game-maker-lab/index.html: failed-import reload and retained older-worker module isolation PASS
+EXECUTE checkNarrativeFoundry
+Narrative Foundry: real node/choice/condition authoring, three endings, actual scene cues, exact story/progress roundtrip, rejected data, keyboard/narrow layout, retained rendering, graphics fallback and controlled offline editing/play PASS
+EXECUTE checkNarrativeStartup
+narrative-foundry/index.html: failed-import reload and retained older-worker module isolation PASS
+EXECUTE checkSceneComposition
+Scene Composition: actual affine WebGL preview, capture/edit/keyframes, play/blur, undo/redo, nested prefab/rejection, camera/light, inert export/import, scene-Play locks, 320px and controlled offline startup PASS
+EXECUTE checkTutorial
+Tutorial: keyboard start, changed movement/render, failed test, repair, download and Workbench import/Play, invalidation, restart, 320px and offline startup passed.
+EXECUTE checkSpriteFoundry
+Sprite Foundry: exact seeded pixels, pencil/erase/fill, keyboard/touch, frames/timing, palette/alpha, undo/redo, rejected imports, PNG/atlas, real Asset Foundry import, cancellation, narrow layout and offline authoring PASS
+EXECUTE checkSpriteStartup
+sprite-foundry/index.html: failed-import reload and retained older-worker module isolation PASS
+EXECUTE verifyEditor
+Editor creator workflow: templates, attachment-safe undo, gameplay pieces, duplicate rejection, actionable checks, basic view, project download, Play, stale progress and mobile fit passed.
+Visual Editor: real WebGL, hierarchy/search/keyboard navigation, native text undo, scene history/shortcuts, exact decimal/Q16/D4 authoring and rejection, gesture cancellation, project migration/assets/exports, recovery and quota failure, CPU fallback, distant-camera visibility, play controls, and 320px/390px layouts passed.
+EXECUTE verifyEditor4X
+EXECUTE checkCreator
+Creator hub, course form, rejected edit, complete exported game, restart, blur and nested-path offline reload passed.
+Editor partition passed: legacy; checkHorizonDrive,checkHorizonDriveStartup,checkHorizon,checkHorizonStartup,checkGameMakerAPI,checkGameMaker,checkGameMakerStartup,checkNarrativeFoundry,checkNarrativeStartup,checkSceneComposition,checkTutorial,checkSpriteFoundry,checkSpriteStartup,verifyEditor,verifyEditor4X,checkCreator

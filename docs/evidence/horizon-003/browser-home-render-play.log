@@ -1,0 +1,15 @@
+Lit WebGL1: actual directional/roughness/procedural texture/glass/fog/contact-shadow and outward-embankment pixels, retained geometry, rejected upload, low-profile budget, disposal and native context-loss/recreation PASS
+Weapon Feel: three live profiles, real hits/motion/projectiles, immediate mouse aim, ADS/ray alignment, buffering/cancellation, reload, recipe edit/rejection/roundtrip, 320px touch, retained geometry, graphics recovery and fresh offline play PASS
+weapon-feel-lab/index.html: failed-import reload and retained older-worker module isolation PASS
+Integer Foundry: packaged full-state replay parity, WebGL, movement/jump, pause, fresh-input, blur, reset, touch cancellation, mobile layout and graphics failure passed.
+OPT rendering: native pixel parity, retained buffers, idle/camera/partial-turn reuse, changed glyphs and unchanged HUD checks passed; paired observations recorded.
+WebGL API: 96x96 native WebGL1 pixel parity, exact no-op reuse, changed upload and stale-handle rejection passed.
+Frame gate: packaged WebGL1 pixels, idle skip, mesh change and context epoch passed.
+Interaction Lab: rendering, shields, all reaction outcomes, brief key tap, fresh-fire resume, pause/blur, target focus/reset, touch tap, pointer cancellation, mobile layout, context loss and unsupported WebGL passed.
+Chromium mouse controls: native capture/click/Escape, synthetic relative aim/no-spin/blur, arrows/WASD and real denied-capture drag passed in both labs.
+FPS Lab: render, sprint/stairs/jump, held-input cancellation, capture/no-spin, finite ammo/reload pause, traces/bolts, focus/reset, touch tap, layout and WebGL failures passed.
+FPS motion: low-ceiling entry, crouch/headroom/stand, held-C cancellation, moving plates, pause/blur/reset, delayed moving bolt hit, instant trace, on-screen keyboard control and 390 px touch-emulated layout passed.
+Platforms: lift carry, pause, clearance interlock, crouch recovery, complete deck transfer, shuttle jump/landing, reversal, blur/reset and 390 px touch-emulated layout passed.
+Clockwork Vault: visible chamber, all six locks and physical exit, gate/causeway/lift traversal with zero rescues, staged motor/undo/hints, real partial JSON download/restore, invalid/stale files, fresh keys, cancelled pointer, native mouse capture, pause/blur/hidden, WebGL failure and 390/320 px touch-emulated layouts passed.
+Chromium: rendered geometry, both modes, thrust, braking, rotation, pause, held-key repeat cancellation, blur, reset, project subpath, mobile layout and unsupported WebGL passed.
+Browser verification finished for suites: home,render,play

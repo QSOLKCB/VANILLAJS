@@ -1,0 +1,49 @@
+{
+  "scope": "Packaged native Chromium/SwiftShader, actual DOM input handlers and fixed-step vehicle physics; no physical GPU, mobile or controller claim.",
+  "high": {
+    "frames": 1,
+    "frameDraws": 62,
+    "totalDraws": 62,
+    "uploads": 26,
+    "skippedIdentical": 0,
+    "vertices": 43260,
+    "bytes": 1903440,
+    "meshes": 26,
+    "profile": "high",
+    "lost": false,
+    "disposed": false
+  },
+  "race": {
+    "time": 43.06666666666667,
+    "result": "win",
+    "checkpoints": 8,
+    "position": [
+      15.763764658023378,
+      10.176786470130622,
+      -478.6783704299894
+    ],
+    "rivalDistance": 425.95915518913364,
+    "wallMilliseconds": 34774,
+    "graphics": {
+      "frames": 2884,
+      "frameDraws": 62,
+      "totalDraws": 178808,
+      "uploads": 26,
+      "skippedIdentical": 0,
+      "vertices": 30660,
+      "bytes": 1349040,
+      "meshes": 26,
+      "profile": "low",
+      "lost": false,
+      "disposed": false
+    }
+  },
+  "offline": {
+    "fromServiceWorker": true,
+    "position": [
+      -2.3240436857638556,
+      4.582091962504262,
+      -12.630282257999584
+    ]
+  }
+}
