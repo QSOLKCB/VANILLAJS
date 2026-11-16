@@ -1,0 +1,22 @@
+Verified VOIDWARD source pin, 27 donor files and 9 native dependencies.
+Verified SubHunt release pins and 9 adapted/retained files.
+Verified SOCCERWEB v3.1.1 pin, 11 source records and 4 adapted/retained targets.
+Verified Outruin pin, 8 source records and 15 pursuit adaptations/original files.
+Verified Spooky v0.1.0 pin, 8 source records and 10 Skyguard adaptations/original files.
+Verified Demoscene source/asset closure and full-minute PCM/WAV receipt; fresh command parity (archive uses a different runtime).
+Checked 470 JavaScript files, 69 module contracts and 2 research experiments.
+node:internal/fs/promises:1037
+  const result = await PromisePrototypeThen(
+                 ^
+
+Error: ENOENT: no such file or directory, stat '/home/trent/vanillajs-horizon-001/docs/HORIZON_LAB.md'
+    at async stat (node:internal/fs/promises:1037:18)
+    at async link (file:///home/trent/vanillajs-horizon-001/scripts/audit-docs.mjs:18:3)
+    at async file:///home/trent/vanillajs-horizon-001/scripts/audit-docs.mjs:28:79 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/home/trent/vanillajs-horizon-001/docs/HORIZON_LAB.md'
+}
+
+Node.js v22.18.0

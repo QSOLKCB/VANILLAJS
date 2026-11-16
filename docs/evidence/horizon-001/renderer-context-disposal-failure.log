@@ -1,0 +1,15 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.evaluate: Error: GPU buffer upload failed
+    at upload (http://127.0.0.1:40129/VANILLAJS/modules/render-lit/index.js:103:128)
+    at new LitRenderer (http://127.0.0.1:40129/VANILLAJS/modules/render-lit/index.js:124:109)
+    at eval (eval at evaluate (:370:30), <anonymous>:26:23)
+    at async <anonymous>:396:30
+    at checkRenderLit (/home/trent/vanillajs-horizon-001/scripts/browser-render-lit.js:8:29)
+    at async file:///tmp/horizon-render-lit-focused.mjs:9:5 {
+  log: []
+}
+
+Node.js v22.18.0

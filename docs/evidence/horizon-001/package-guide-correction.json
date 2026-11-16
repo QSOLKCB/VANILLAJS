@@ -1,0 +1,32 @@
+{
+  "changedPaths": [
+    "docs/SCENIC3D_API.md",
+    "service-worker.js"
+  ],
+  "allExecutableAssetBytesIdentical": true,
+  "note": "Final source clarifies that the 2000m bound applies to generated road-edge coordinates; the terrain domain can extend farther. The ten-byte documentation correction was committed after the first final package build. Browser suites ran unchanged executable sources; final editor/offline checks use the corrected complete package.",
+  "before": [
+    {
+      "path": "docs/SCENIC3D_API.md",
+      "bytes": 11679,
+      "sha256": "ee3d7ef5cc41afeccb5132011407dd2649190ceb20900287b40cc9a799ce66ab"
+    },
+    {
+      "path": "service-worker.js",
+      "bytes": 150649,
+      "sha256": "91f64419ef97e5f7124c1d22960668838311a8cbc0d52253c9b7b993270dc42e"
+    }
+  ],
+  "after": [
+    {
+      "path": "docs/SCENIC3D_API.md",
+      "bytes": 11689,
+      "sha256": "d18e37045e3044eca22ad34c051ac2578fa33359ffe36ad22a25c3d870c09e61"
+    },
+    {
+      "path": "service-worker.js",
+      "bytes": 150649,
+      "sha256": "469d4d6ab216cb7b2d7f7cd08c9420c7070622c3b7c3c49b5ba6727ea7e059ee"
+    }
+  ]
+}
