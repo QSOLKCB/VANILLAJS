@@ -1,0 +1,721 @@
+{
+  "beforeSource": "4357902787d4eaa5734225261f12dffa6d319abe",
+  "afterSource": "6bd08698674423de4606fdffaf0df2a4ec38b130",
+  "beforeSHA256": "04ade94cc925000f757946350d330207e4ace9a91c5ae2b1e77473e30d1370b6",
+  "afterSHA256": "04ade94cc925000f757946350d330207e4ace9a91c5ae2b1e77473e30d1370b6",
+  "identical": true,
+  "compared": [
+    "exact serialized starterHorizonProject",
+    "low/high validated scenery recipes",
+    "low/high world stats and bounds",
+    "all road triangles",
+    "every low/high material batch and exact Float32 source bytes"
+  ],
+  "identities": {
+    "project": "{\"format\":\"qsol.vanillajs.horizon-lab.v1\",\"version\":1,\"name\":\"Aster Coast\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster \u2014 the high road\",\"seed\":7331,\"profile\":\"high\",\"environment\":\"coast\",\"road\":[{\"id\":\"span-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":10,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-1\",\"x\":0,\"y\":5,\"z\":-35,\"width\":9,\"bank\":0.02,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-2\",\"x\":-12,\"y\":8,\"z\":-75,\"width\":9,\"bank\":0.08,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-3\",\"x\":-38,\"y\":16,\"z\":-112,\"width\":9,\"bank\":0.13,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-4\",\"x\":-42,\"y\":24,\"z\":-155,\"width\":9,\"bank\":0.09,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-5\",\"x\":-15,\"y\":27,\"z\":-195,\"width\":9,\"bank\":-0.05,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-6\",\"x\":27,\"y\":26,\"z\":-230,\"width\":9,\"bank\":-0.12,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-7\",\"x\":50,\"y\":19,\"z\":-270,\"width\":9,\"bank\":-0.1,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-8\",\"x\":39,\"y\":13,\"z\":-315,\"width\":9,\"bank\":0.03,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-9\",\"x\":8,\"y\":10,\"z\":-355,\"width\":9,\"bank\":0.09,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-10\",\"x\":-20,\"y\":14,\"z\":-395,\"width\":9,\"bank\":0.04,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-11\",\"x\":-8,\"y\":21,\"z\":-435,\"width\":9,\"bank\":-0.05,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-12\",\"x\":27,\"y\":28,\"z\":-475,\"width\":9,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"classId\":\"sport\",\"paint\":[0.8470588235294118,0.30980392156862746,0.20392156862745098],\"roughness\":0.25,\"metalness\":0.7,\"steer\":-0.20943951023931953,\"wheelSpin\":0,\"compression\":[0.04,0.04,0.04,0.04],\"pitch\":0,\"roll\":0,\"brake\":0},\"lighting\":{\"azimuth\":-0.6108652381980153,\"elevation\":0.6108652381980153,\"fogDensity\":0.004}}",
+    "worlds": {
+      "low": {
+        "recipe": {
+          "format": "qsol.vanillajs.scenic3d.v1",
+          "version": 1,
+          "name": "Cape Aster \u2014 the high road",
+          "seed": 7331,
+          "profile": "low",
+          "environment": "coast",
+          "road": [
+            {
+              "id": "span-0",
+              "x": 0,
+              "y": 4,
+              "z": 0,
+              "width": 10,
+              "bank": 0,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-1",
+              "x": 0,
+              "y": 5,
+              "z": -35,
+              "width": 9,
+              "bank": 0.02,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-2",
+              "x": -12,
+              "y": 8,
+              "z": -75,
+              "width": 9,
+              "bank": 0.08,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-3",
+              "x": -38,
+              "y": 16,
+              "z": -112,
+              "width": 9,
+              "bank": 0.13,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-4",
+              "x": -42,
+              "y": 24,
+              "z": -155,
+              "width": 9,
+              "bank": 0.09,
+              "structure": "bridge",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-5",
+              "x": -15,
+              "y": 27,
+              "z": -195,
+              "width": 9,
+              "bank": -0.05,
+              "structure": "bridge",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-6",
+              "x": 27,
+              "y": 26,
+              "z": -230,
+              "width": 9,
+              "bank": -0.12,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-7",
+              "x": 50,
+              "y": 19,
+              "z": -270,
+              "width": 9,
+              "bank": -0.1,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-8",
+              "x": 39,
+              "y": 13,
+              "z": -315,
+              "width": 9,
+              "bank": 0.03,
+              "structure": "tunnel",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-9",
+              "x": 8,
+              "y": 10,
+              "z": -355,
+              "width": 9,
+              "bank": 0.09,
+              "structure": "tunnel",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-10",
+              "x": -20,
+              "y": 14,
+              "z": -395,
+              "width": 9,
+              "bank": 0.04,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-11",
+              "x": -8,
+              "y": 21,
+              "z": -435,
+              "width": 9,
+              "bank": -0.05,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-12",
+              "x": 27,
+              "y": 28,
+              "z": -475,
+              "width": 9,
+              "bank": 0,
+              "structure": "ground",
+              "surface": "asphalt"
+            }
+          ]
+        },
+        "stats": {
+          "vertices": 30030,
+          "batches": 11,
+          "roadTriangles": 192,
+          "terrainCells": 3136,
+          "trees": 29
+        },
+        "bounds": {
+          "min": [
+            -448,
+            -18,
+            -688
+          ],
+          "max": [
+            448,
+            107.2837142944336,
+            208
+          ]
+        },
+        "road": "b83bd3c7a11521f579f6ac1c90638ca6fe19be4ad665a78986effbea9acc85bd",
+        "batches": [
+          {
+            "id": "terrain",
+            "material": {
+              "color": [
+                0.3,
+                0.42,
+                0.24
+              ],
+              "roughness": 0.95,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "grass",
+              "patternScale": 0.6
+            },
+            "sha256": "0f3eb5187ee68903167f62d2a075b77083125a863c3670905e51503541a414fa"
+          },
+          {
+            "id": "asphalt",
+            "material": {
+              "color": [
+                0.19,
+                0.22,
+                0.24
+              ],
+              "roughness": 0.82,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "asphalt",
+              "patternScale": 4
+            },
+            "sha256": "28b5f1d9cac0842c1a228e406573ba2a730dd478ccb830dd25ae653ddba96bae"
+          },
+          {
+            "id": "markings",
+            "material": {
+              "color": [
+                0.9,
+                0.85,
+                0.65
+              ],
+              "roughness": 0.65,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "none",
+              "patternScale": 1
+            },
+            "sha256": "1741e49859437dfcedb1f29f57aa334ab37eee2d3664b84b16edfbd7ab48ff30"
+          },
+          {
+            "id": "stone",
+            "material": {
+              "color": [
+                0.5,
+                0.48,
+                0.43
+              ],
+              "roughness": 0.95,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "stone",
+              "patternScale": 0.4
+            },
+            "sha256": "9300036aad2df23dedf400e8889a2ef9662e8a0e1734a51358fdd56d806dc02e"
+          },
+          {
+            "id": "metal",
+            "material": {
+              "color": [
+                0.44,
+                0.49,
+                0.47
+              ],
+              "roughness": 0.3,
+              "metalness": 0.7,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "none",
+              "patternScale": 1
+            },
+            "sha256": "6887980bbb7d86c8cd1afbc73e136dc3db538a37677a13484223ff9e144e4679"
+          },
+          {
+            "id": "water",
+            "material": {
+              "color": [
+                0.1,
+                0.37,
+                0.43
+              ],
+              "roughness": 0.16,
+              "metalness": 0.45,
+              "opacity": 0.82,
+              "emission": 0,
+              "pattern": "glass",
+              "patternScale": 1
+            },
+            "sha256": "c5583f8a5a8a0349e242693b5f13c076de9358d423ab860584c66966eaa1e51c"
+          },
+          {
+            "id": "trunk",
+            "material": {
+              "color": [
+                0.29,
+                0.19,
+                0.12
+              ],
+              "roughness": 0.85,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "none",
+              "patternScale": 1
+            },
+            "sha256": "7e2ee80c60291b0574d0eed832c55d48ecca15c147f982abf8f8ebc083c71921"
+          },
+          {
+            "id": "foliage",
+            "material": {
+              "color": [
+                0.14,
+                0.31,
+                0.21
+              ],
+              "roughness": 0.95,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "grass",
+              "patternScale": 1
+            },
+            "sha256": "cef7aa8f67e7db68e07e2390290c5e8d565510ef36e414ab6be4a75001e4760d"
+          },
+          {
+            "id": "building",
+            "material": {
+              "color": [
+                0.71,
+                0.65,
+                0.49
+              ],
+              "roughness": 0.9,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "stone",
+              "patternScale": 0.6
+            },
+            "sha256": "ddfc05761942d08f9f4d92bdca93886104072db1431e1c750baa5a4c68835f84"
+          },
+          {
+            "id": "roof",
+            "material": {
+              "color": [
+                0.39,
+                0.2,
+                0.14
+              ],
+              "roughness": 0.85,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "none",
+              "patternScale": 1
+            },
+            "sha256": "6d5777bfc08d8bf9aaf8026981627664daa785a27239ef77e361c036087bbbf3"
+          },
+          {
+            "id": "glass",
+            "material": {
+              "color": [
+                0.16,
+                0.36,
+                0.45
+              ],
+              "roughness": 0.12,
+              "metalness": 0.25,
+              "opacity": 0.65,
+              "emission": 0,
+              "pattern": "glass",
+              "patternScale": 1
+            },
+            "sha256": "10c209a93def750f1d93c2456ca35233f2e933a355d201932f6c10ff5ff46237"
+          }
+        ]
+      },
+      "high": {
+        "recipe": {
+          "format": "qsol.vanillajs.scenic3d.v1",
+          "version": 1,
+          "name": "Cape Aster \u2014 the high road",
+          "seed": 7331,
+          "profile": "high",
+          "environment": "coast",
+          "road": [
+            {
+              "id": "span-0",
+              "x": 0,
+              "y": 4,
+              "z": 0,
+              "width": 10,
+              "bank": 0,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-1",
+              "x": 0,
+              "y": 5,
+              "z": -35,
+              "width": 9,
+              "bank": 0.02,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-2",
+              "x": -12,
+              "y": 8,
+              "z": -75,
+              "width": 9,
+              "bank": 0.08,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-3",
+              "x": -38,
+              "y": 16,
+              "z": -112,
+              "width": 9,
+              "bank": 0.13,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-4",
+              "x": -42,
+              "y": 24,
+              "z": -155,
+              "width": 9,
+              "bank": 0.09,
+              "structure": "bridge",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-5",
+              "x": -15,
+              "y": 27,
+              "z": -195,
+              "width": 9,
+              "bank": -0.05,
+              "structure": "bridge",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-6",
+              "x": 27,
+              "y": 26,
+              "z": -230,
+              "width": 9,
+              "bank": -0.12,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-7",
+              "x": 50,
+              "y": 19,
+              "z": -270,
+              "width": 9,
+              "bank": -0.1,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-8",
+              "x": 39,
+              "y": 13,
+              "z": -315,
+              "width": 9,
+              "bank": 0.03,
+              "structure": "tunnel",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-9",
+              "x": 8,
+              "y": 10,
+              "z": -355,
+              "width": 9,
+              "bank": 0.09,
+              "structure": "tunnel",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-10",
+              "x": -20,
+              "y": 14,
+              "z": -395,
+              "width": 9,
+              "bank": 0.04,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-11",
+              "x": -8,
+              "y": 21,
+              "z": -435,
+              "width": 9,
+              "bank": -0.05,
+              "structure": "ground",
+              "surface": "asphalt"
+            },
+            {
+              "id": "span-12",
+              "x": 27,
+              "y": 28,
+              "z": -475,
+              "width": 9,
+              "bank": 0,
+              "structure": "ground",
+              "surface": "asphalt"
+            }
+          ]
+        },
+        "stats": {
+          "vertices": 43104,
+          "batches": 11,
+          "roadTriangles": 192,
+          "terrainCells": 3136,
+          "trees": 83
+        },
+        "bounds": {
+          "min": [
+            -448,
+            -18,
+            -688
+          ],
+          "max": [
+            448,
+            107.2837142944336,
+            208
+          ]
+        },
+        "road": "b83bd3c7a11521f579f6ac1c90638ca6fe19be4ad665a78986effbea9acc85bd",
+        "batches": [
+          {
+            "id": "terrain",
+            "material": {
+              "color": [
+                0.3,
+                0.42,
+                0.24
+              ],
+              "roughness": 0.95,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "grass",
+              "patternScale": 0.6
+            },
+            "sha256": "0f3eb5187ee68903167f62d2a075b77083125a863c3670905e51503541a414fa"
+          },
+          {
+            "id": "asphalt",
+            "material": {
+              "color": [
+                0.19,
+                0.22,
+                0.24
+              ],
+              "roughness": 0.82,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "asphalt",
+              "patternScale": 4
+            },
+            "sha256": "28b5f1d9cac0842c1a228e406573ba2a730dd478ccb830dd25ae653ddba96bae"
+          },
+          {
+            "id": "markings",
+            "material": {
+              "color": [
+                0.9,
+                0.85,
+                0.65
+              ],
+              "roughness": 0.65,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "none",
+              "patternScale": 1
+            },
+            "sha256": "1741e49859437dfcedb1f29f57aa334ab37eee2d3664b84b16edfbd7ab48ff30"
+          },
+          {
+            "id": "stone",
+            "material": {
+              "color": [
+                0.5,
+                0.48,
+                0.43
+              ],
+              "roughness": 0.95,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "stone",
+              "patternScale": 0.4
+            },
+            "sha256": "9ba6b81d8647585a07f87455585e4a40ca3d318325163d94477950ba3ed7763a"
+          },
+          {
+            "id": "metal",
+            "material": {
+              "color": [
+                0.44,
+                0.49,
+                0.47
+              ],
+              "roughness": 0.3,
+              "metalness": 0.7,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "none",
+              "patternScale": 1
+            },
+            "sha256": "6887980bbb7d86c8cd1afbc73e136dc3db538a37677a13484223ff9e144e4679"
+          },
+          {
+            "id": "water",
+            "material": {
+              "color": [
+                0.1,
+                0.37,
+                0.43
+              ],
+              "roughness": 0.16,
+              "metalness": 0.45,
+              "opacity": 0.82,
+              "emission": 0,
+              "pattern": "glass",
+              "patternScale": 1
+            },
+            "sha256": "c5583f8a5a8a0349e242693b5f13c076de9358d423ab860584c66966eaa1e51c"
+          },
+          {
+            "id": "trunk",
+            "material": {
+              "color": [
+                0.29,
+                0.19,
+                0.12
+              ],
+              "roughness": 0.85,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "none",
+              "patternScale": 1
+            },
+            "sha256": "e158d20295ea8365cb1dcc00000422c74f13bfef642cbb1c434bd36c5e0abe24"
+          },
+          {
+            "id": "foliage",
+            "material": {
+              "color": [
+                0.14,
+                0.31,
+                0.21
+              ],
+              "roughness": 0.95,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "grass",
+              "patternScale": 1
+            },
+            "sha256": "40bbca532e855efafd8e69b776666d03a55d048f48006ee0452955129962f4eb"
+          },
+          {
+            "id": "building",
+            "material": {
+              "color": [
+                0.71,
+                0.65,
+                0.49
+              ],
+              "roughness": 0.9,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "stone",
+              "patternScale": 0.6
+            },
+            "sha256": "ddfc05761942d08f9f4d92bdca93886104072db1431e1c750baa5a4c68835f84"
+          },
+          {
+            "id": "roof",
+            "material": {
+              "color": [
+                0.39,
+                0.2,
+                0.14
+              ],
+              "roughness": 0.85,
+              "metalness": 0,
+              "opacity": 1,
+              "emission": 0,
+              "pattern": "none",
+              "patternScale": 1
+            },
+            "sha256": "6d5777bfc08d8bf9aaf8026981627664daa785a27239ef77e361c036087bbbf3"
+          },
+          {
+            "id": "glass",
+            "material": {
+              "color": [
+                0.16,
+                0.36,
+                0.45
+              ],
+              "roughness": 0.12,
+              "metalness": 0.25,
+              "opacity": 0.65,
+              "emission": 0,
+              "pattern": "glass",
+              "patternScale": 1
+            },
+            "sha256": "10c209a93def750f1d93c2456ca35233f2e933a355d201932f6c10ff5ff46237"
+          }
+        ]
+      }
+    }
+  }
+}
