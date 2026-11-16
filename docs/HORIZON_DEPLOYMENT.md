@@ -22,7 +22,7 @@ at the workflow's 20-minute job limit. Its browser checks reported:
   browser work; the whole verification run did **not** pass.
 
 The Pages artifact staging and deployment were skipped. Fresh HTTP requests
-(including a cache-bypassing query) and Chromium with service workers blocked
+(including a query URL with `Cache-Control: no-cache`) and Chromium with service workers blocked
 both returned the old **Coastline Atelier** from the public server. Its
 `Last-Modified` was 2026-11-16 18:11:20 UTC, before the merge. Clicking its camera
 tour reproduced the stationary-car symptom. This establishes an outdated server

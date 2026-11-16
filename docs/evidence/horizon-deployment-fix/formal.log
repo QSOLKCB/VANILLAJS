@@ -1,0 +1,157 @@
+Traceback (most recent call last):
+  File "/home/trent/vanillajs-horizon-deploy-fix/scripts/pin_alien_math_006.py", line 11, in <module>
+    verify_baseline(ROOT,manifest);verify_pins(ROOT,manifest)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/trent/vanillajs-horizon-deploy-fix/scripts/verify_alien_math_006.py", line 68, in verify_baseline
+    if sha(raw)!=manifest['files'][path]:raise ValueError('historical baseline drift: '+path)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: historical baseline drift: .github/workflows/flight-lab.yml
+Source inventory written. Proof and conformance NOT RUN; review diff and execute verifier.
+test_axiom_forgery_missing_duplicate_unknown (test_alien_math_006.BoundaryTests.test_axiom_forgery_missing_duplicate_unknown) ... ok
+test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates (test_alien_math_006.BoundaryTests.test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates) ... ok
+test_finite_outcome_requires_exact_bytes_and_count (test_alien_math_006.BoundaryTests.test_finite_outcome_requires_exact_bytes_and_count) ... ok
+test_source_inventory_and_corruption (test_alien_math_006.BoundaryTests.test_source_inventory_and_corruption) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.022s
+
+OK
+SOURCE PINS ONLY verified; Lean proof and conformance NOT RUN
+{
+  "baseline": "ce7e38eb3c7412407a3ba2bc472120b589e6eb9e",
+  "claims": [
+    "LEAN_MODEL_THEOREMS",
+    "FINITE_SOURCE_CONFORMANCE"
+  ],
+  "gitCommit": "54634ba45d4205d2afcf0c40c61fb9bff0312a86",
+  "javascriptRefinement": "OPEN",
+  "lean": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+  "leanCompilerSHA256": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38",
+  "leanLauncherSHA256": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38",
+  "manifestSHA256": "9bb0b7ccd47db45fd87b262a7df7b448fcb6a33ecc5693d2df35d6b1b66f48c5",
+  "negativeControls": [
+    "removed theorem",
+    "weakened proposition",
+    "unapproved axiom",
+    "opaque proof hole",
+    "wrong graph coefficient",
+    "valid model, wrong source convention"
+  ],
+  "node": "v22.18.0",
+  "observations": 856,
+  "python": "3.14.4",
+  "schema": "qsol.alien-math-006.observation.v1",
+  "streamSHA256": "964981f119a1e8372a6dd678663d443fe363eac05c1e5886a0003fc1b6070ed9",
+  "theorems": {
+    "d4_action_compose": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "d4_area": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "d4_associative": [],
+    "d4_distance": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "d4_inverse": [
+      "propext"
+    ],
+    "d4_left_identity": [],
+    "d4_right_identity": [],
+    "graph3_determinant": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "graph3_spectral_relabel": [
+      "propext"
+    ],
+    "interval_reflection": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "normalization_certificate": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "q16_exact_magnitude": [
+      "propext"
+    ],
+    "q16_floor_certificate": [
+      "propext"
+    ],
+    "rational_add_assoc": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "rational_add_comm": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "rational_distributive": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "rational_mul_comm": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "relabel_compose": [],
+    "relabel_inverse": [
+      "Quot.sound",
+      "propext"
+    ],
+    "relabel_no_loops": [],
+    "relabel_symmetry": []
+  }
+}
+
+Executed command record:
+python3 scripts/pin_alien_math_006.py --write — first attempt rejected frozen workflow drift; exact reviewed compatibility added; second attempt PASS
+python3 -m unittest discover -s tests -p 'test_alien_math_006.py' -v — PASS 4 tests
+python3 scripts/verify_alien_math_006.py --pins-only — PASS
+python3 scripts/verify_alien_math_006.py --lean /home/trent/.elan/toolchains/leanprover--lean4---v4.35.0/bin/lean --negative-controls --output /tmp/horizon-deploy-formal-result.json — PASS
+python3 scripts/ci_invariant_oracle.py --check — PASS
+node scripts/ci-invariant-workload.mjs — PASS; result /tmp/horizon-deploy-invariant-workload.json
+actionlint — NOT RUN: no installed binary found in PATH or searched home/tmp trees; no installation attempted
+git diff --check — PASS
+{
+  "formal": {
+    "gitCommit": "54634ba45d4205d2afcf0c40c61fb9bff0312a86",
+    "manifestSHA256": "9bb0b7ccd47db45fd87b262a7df7b448fcb6a33ecc5693d2df35d6b1b66f48c5",
+    "lean": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+    "observations": 856,
+    "negativeControls": [
+      "removed theorem",
+      "weakened proposition",
+      "unapproved axiom",
+      "opaque proof hole",
+      "wrong graph coefficient",
+      "valid model, wrong source convention"
+    ],
+    "streamSHA256": "964981f119a1e8372a6dd678663d443fe363eac05c1e5886a0003fc1b6070ed9",
+    "javascriptRefinement": "OPEN"
+  },
+  "theoremCount": 21,
+  "invariantWorkloadKeys": [
+    "kind",
+    "authority",
+    "baseline",
+    "forcedExecution",
+    "initialIssues",
+    "runtimeMembers",
+    "scenarios"
+  ]
+}

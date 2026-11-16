@@ -1,0 +1,12 @@
+import {chromium} from '/home/trent/.local/share/qsol/browser-tools/node_modules/playwright/index.mjs';
+import {createServer} from 'node:http';
+import {readFile} from 'node:fs/promises';
+import {resolve,sep,extname} from 'node:path';
+import {checkHorizonRace} from '/home/trent/vanillajs-horizon-deploy-fix/scripts/browser-horizon-race.js';
+import {checkHorizon} from '/home/trent/vanillajs-horizon-deploy-fix/scripts/browser-horizon.js';
+import {checkHorizonDrive} from '/home/trent/vanillajs-horizon-deploy-fix/scripts/browser-horizon-drive.js';
+import {checkHorizonRaceStartup,checkHorizonStartup,checkHorizonDriveStartup} from '/home/trent/vanillajs-horizon-deploy-fix/scripts/foundry-startup-check.mjs';
+const root='/home/trent/vanillajs-horizon-deploy-fix/dist';
+const server=createServer(async(req,res)=>{try{const path=decodeURIComponent(new URL(req.url,'http://localhost').pathname);if(!path.startsWith('/VANILLAJS/'))throw Error('prefix');const file=resolve(root,path.slice('/VANILLAJS/'.length)||'index.html');if(!file.startsWith(root+sep))throw Error('path');const bytes=await readFile(file);res.writeHead(200,{'content-type':({'.js':'text/javascript','.css':'text/css','.json':'application/json','.html':'text/html'})[extname(file)]||'application/octet-stream'});res.end(bytes);}catch{res.writeHead(404);res.end();}});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+const browser=await chromium.launch({headless:true,executablePath:'/home/trent/.cache/ms-playwright/chromium_headless_shell-1254/chrome-headless-shell-linux64/chrome-headless-shell',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+try{const base=`http://127.0.0.1:${server.address().port}/VANILLAJS/`;await checkHorizonRace(browser,base);await checkHorizonRaceStartup(browser,base);await checkHorizon(browser,base);await checkHorizonStartup(browser,base);await checkHorizonDrive(browser,base);await checkHorizonDriveStartup(browser,base);console.log('Canonical HORIZON race, compatible alias, scenery and driving entries PASS');}finally{await browser.close();await new Promise(resolve=>server.close(resolve));}
