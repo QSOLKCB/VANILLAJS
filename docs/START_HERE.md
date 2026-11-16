@@ -18,5 +18,5 @@ costs health, opens a door or wins a match. Keep those rules in your game.
 The [Creator Guide](CREATOR_GUIDE.md) explains more tools. The
 [Workbench reference](EDITOR_WORKBENCH.md), [code recipes](../BUILD_A_GAME.md),
 [API](API.md) and [architecture](ARCHITECTURE.md) are the advanced layer.
-[Agents start here](../AGENTS.md); people do not need to read engineering policy
+[Agents start here](AGENT_GUIDE.md); people do not need to read engineering policy
 before trying the lesson.

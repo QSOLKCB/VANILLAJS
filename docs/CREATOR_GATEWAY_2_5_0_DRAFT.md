@@ -4,7 +4,7 @@ Draft release notes; this PR does not merge, tag or publish a release.
 
 - Refreshed project landing page and roadmap, with complete historical references.
 - A progressive creator path from first scene through mods, testing and export.
-- Root agent entry point, detailed task guide and locally validated workflow catalogue.
+- Preserved root engineering policy, detailed task guide and locally validated workflow catalogue.
 - Interactive Tutorial Lab linked from the Creator Hub: edit movement, run real
   Workbench physics, diagnose and repair a failure, then export an editable project.
 - Games2 integration register preserving every current concept and donor, with

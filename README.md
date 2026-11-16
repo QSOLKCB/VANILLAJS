@@ -149,6 +149,7 @@ Keep the editable project separately. See [export instructions](docs/HOW_TO_EXPO
 The root policy preserves architecture, numerical contracts, provenance,
 verification and owner-only runner restrictions. The detailed guide maps tasks
 to actual modules, labs, tests and authoring contracts.
+Root `AGENTS.md` retains its historical source pin; new onboarding lives in the guide.
 
 [agents/catalog.json](agents/catalog.json) is a small declarative workflow index,
 validated against [its schema](agents/catalog.schema.json) and `MODULES.json`.

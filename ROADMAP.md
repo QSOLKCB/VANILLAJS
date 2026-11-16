@@ -14,7 +14,7 @@ package/catalogue metadata remains unchanged.
 
 - A concise landing page with preserved research and milestone references.
 - Progressive human guides: start, build, modify, export and troubleshoot.
-- Concise agent policy, detailed task guidance and a validated declarative catalogue.
+- Preserved agent policy, detailed task guidance and a validated declarative catalogue.
 - Interactive Tutorial Lab: edit a supported scene, run real physics, diagnose a
   failure and export an editable project; navigation from the Creator Hub.
 - Documentation audits, packaged browser interactions and offline evidence.

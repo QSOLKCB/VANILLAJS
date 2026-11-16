@@ -41,7 +41,7 @@ keyboard activation, restart, 320px layout and cached offline startup. Existing
 creator browser coverage packages a project and checks nested-path offline reload.
 No engine APIs, schemas, mathematical proofs or browser trust rules are changed.
 
-## Execution results
+## Initial recovery execution results
 
 Recovery review on 16 November 2026 used Node v22.18.0, Python 3.14.4 and existing
 external Playwright tooling with Chromium 158.0.8127.18 / software rendering.
@@ -67,7 +67,7 @@ Fresh execution, rather than the previous agent's logs, supplies the results bel
   the repository byte-for-byte.
 - `git diff --check`: passed.
 
-Final `node --test tests/*.test.js`: **976 passed, one failed, 977 total**.
+Initial PR submission's `node --test tests/*.test.js`: **976 passed, one failed, 977 total**.
 The sole failure is the root policy source-pin conflict described below.
 No physical RTX, controller or mobile-device validation is claimed.
 Chromium narrow-viewport testing is emulation, not physical hardware. No new
@@ -87,10 +87,10 @@ An initial sandboxed Node run stalled in existing process-based tests and was
 stopped. Running with normal process access completed 968 tests: 967 passed and
 one rejected the proposed AGENTS.md expansion because ALIEN-MATH-006 pins its
 exact bytes. No assertion, frozen manifest, proof or evidence was changed to
-hide this failure. The final run including cache repairs completed 977 tests,
-with the same sole failure. The requested root expansion is retained pending the
-owner's decision. This PR is a draft and is not merge-ready while that gate fails.
-The recommended resolution is to preserve the original root file and use README,
+hide this failure. The initial run including cache repairs completed 977 tests,
+with the same sole failure. At initial submission the requested root expansion
+was retained pending the owner's decision, and the PR was opened as a draft.
+The recommended resolution was to preserve the original root file and use README,
 the new agent guide and catalogue for onboarding. Moving root policy out of the
 historical proof input requires separate approval and verification-boundary work.
 
@@ -121,3 +121,33 @@ GitHub reported main as unprotected during this audit, so live trusted reuse is
 not activated. Protection settings, qualification workflow dispatches and Pages
 deployment were not changed or triggered. All browser results above were freshly
 executed. Packaged-input changes continue to invalidate every offline suite.
+
+## CI correction after initial PR submission
+
+The owner requested that the CI failures be fixed. The initial hosted Flight Lab,
+ALIEN-MATH-006 and ALIEN-MATH-FINAL capsule jobs all rejected the changed
+`AGENTS.md` source pin. Root policy is now restored byte-for-byte to reviewed
+main; the new onboarding remains in README, the agent guide and catalogue.
+The frozen manifest, verifier, proofs and workflow assertions remain unchanged.
+
+Review also found that capsule reproduction imported new cache helpers absent
+from its explicit source inventory. The capsule now includes those four helper/
+profile files and three test files, and executes their tests during reproduction.
+A new regression runs the browser-cache tests inside an authenticated extracted
+capsule, so the developer checkout cannot conceal a missing packaged import.
+
+Executed locally after these corrections:
+
+- `node --test tests/*.test.js`: **977 passed, zero failed**.
+- Capsule Python suite: **16 tests passed**, including extracted cache tests and
+  identical offline builds from original and extracted fixture source.
+- `python3 scripts/verify_alien_math_006.py --pins-only`: passed unchanged pins.
+- Pinned Lean 4.35.0 verification with `--negative-controls`: passed all 21 model
+  theorems, 856 finite observations and six negative controls. JavaScript
+  refinement remains open; these results do not widen the formal claim.
+- Source/documentation check: passed, with 399 local links, 97 imported sources
+  and six workflows. Build/offline verification: passed, 776 files.
+- `git diff --check`: passed.
+
+These observations supplement the initial failure record above. Hosted results
+for the correction are reported on PR #99's checks and PR description.

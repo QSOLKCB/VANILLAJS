@@ -73,6 +73,15 @@ class CapsuleTests(unittest.TestCase):
         build_sources = ['scripts/build.js', 'scripts/pursuit-package.mjs', 'scripts/fps-source-identity.mjs',
                          'scripts/browser-dependencies.mjs', 'scripts/service-worker.template.js',
                          'scripts/verify-offline.js']
+        # Derive the browser source fixture from the real capsule allowlist.
+        # An omitted new import must fail inside the extracted package, rather
+        # than pass merely because the developer checkout contains that file.
+        browser_sources = [path for path in cls.real_extra
+                           if path.startswith(('scripts/browser-', 'tests/browser-'))]
+        browser_sources += ['scripts/browser-reuse-policy.json', '.github/workflows/flight-lab.yml',
+                            'tests/fixtures/ci-invariant-001-input.json',
+                            'tests/fixtures/ci-invariant-001-expected.json']
+        build_sources = list(dict.fromkeys(build_sources + browser_sources))
         for name in build_sources:
             fixture[name] = (bundle.ROOT / name).read_text()
         for name, text in fixture.items():
@@ -125,6 +134,15 @@ class CapsuleTests(unittest.TestCase):
         for name in ('docs/private.json', 'docs/drafts/nested.md'):
             self.assertNotIn('source/' + name, self.payload)
             self.assertFalse((extracted / 'dist' / name).exists())
+
+    def test_extracted_capsule_runs_browser_verification_and_cache_negative_controls(self):
+        self.write()
+        extracted = bundle.extract(self.path, self.revision, Path(self.work.name) / 'extracted')
+        names = ('browser-suite-cache', 'browser-cache-profile', 'browser-package-provenance',
+                 'browser-receipt-codec')
+        result = subprocess.run(['node', '--test', *['tests/' + name + '.test.js' for name in names]],
+                                cwd=extracted, capture_output=True, text=True, timeout=60)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_changed_source_with_rehashed_inventory_cannot_impersonate_git(self):
         changed = dict(self.payload)
