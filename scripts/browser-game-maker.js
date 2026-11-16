@@ -19,6 +19,53 @@ function unzipStored(raw){
 async function workerReady(page,scope){
   await page.waitForFunction(async expected=>{const registrations=await navigator.serviceWorker.getRegistrations();return registrations.some(r=>r.scope===expected&&r.active?.state==='activated');},scope,{timeout:45000});
 }
+async function checkExportCancellation(page){
+  // Hold only the first native digest of each selected export. The real handler,
+  // subsequent hashes and ZIP download still run; no timing guesses are needed.
+  await page.evaluate(()=>{
+    const button=document.querySelector('#export-game'),digest=crypto.subtle.digest,click=button.onclick,gates=new Map(),tasks=new Map();let armed=null,label=null;
+    crypto.subtle.digest=function(...args){
+      if(armed===null)return digest.apply(this,args);
+      const key=armed;armed=null;
+      return new Promise((resolve,reject)=>gates.set(key,fail=>fail?reject(Error('Deferred export failure')):resolve())).then(()=>digest.apply(this,args));
+    };
+    button.onclick=function(event){const task=click.call(this,event);tasks.set(label,task);return task;};
+    globalThis.__makerExportTest={
+      arm(key){armed=label=key;},pending:key=>gates.has(key),
+      async release(key,fail=false){gates.get(key)(fail);await tasks.get(key);},
+      async restore(){crypto.subtle.digest=digest;button.onclick=click;for(const release of gates.values())release(true);await Promise.allSettled(tasks.values());delete globalThis.__makerExportTest;}
+    };
+  });
+  let downloads=0;const onDownload=()=>downloads++;page.on('download',onDownload);
+  const begin=async key=>{await page.evaluate(key=>__makerExportTest.arm(key),key);await page.locator('#export-game').click();await page.waitForFunction(key=>__makerExportTest.pending(key),key);assert.equal(await page.locator('#export-game').isDisabled(),true);};
+  const release=(key,fail=false)=>page.evaluate(({key,fail})=>__makerExportTest.release(key,fail),{key,fail});
+  const finish=async key=>{const pending=page.waitForEvent('download');await release(key);await pending;assert.equal(await page.locator('#export-game').isEnabled(),true);};
+  try{
+    await begin('restart-old');await page.locator('#restart').click();
+    assert.equal(await page.locator('#export-game').isEnabled(),true,'Restart immediately permits retrying a canceled export');
+    assert.equal(await page.locator('#status').textContent(),'Export canceled.');
+    await begin('restart-new');await page.locator('#palette-target').selectOption('tiles');
+    assert.equal(await page.locator('#export-game').isDisabled(),true,'refresh preserves the current export busy state');
+    const preparing=await page.locator('#status').textContent();await release('restart-old');
+    assert.equal(downloads,0,'a canceled export cannot download');assert.equal(await page.locator('#export-game').isDisabled(),true,'stale cleanup cannot unlock a newer export');
+    assert.equal(await page.locator('#status').textContent(),preparing);await finish('restart-new');assert.equal(downloads,1);
+
+    await page.locator('#starter').click();await begin('import-old');
+    await page.locator('#import-project').setInputFiles({name:'invalid-export-race.json',mimeType:'application/json',buffer:Buffer.from('{"format":"bad"}')});
+    await page.waitForFunction(()=>document.querySelector('#status').textContent.startsWith('Not applied'));
+    assert.equal(await page.locator('#export-game').isEnabled(),true,'a rejected import permits export without editing the accepted project');
+    assert.equal(await page.evaluate(()=>__gameMakerLab.snapshot().progress.exported),false);
+    await begin('import-new');await finish('import-new');const completed=await page.locator('#status').textContent();
+    await release('import-old',true);assert.equal(downloads,2,'a late rejected export cannot download or overwrite the newer completion');
+    assert.equal(await page.locator('#status').textContent(),completed);assert.equal(await page.locator('#export-game').isEnabled(),true);
+    assert.equal(await page.evaluate(()=>__gameMakerLab.snapshot().progress.exported),true);
+
+    await begin('empty');await page.locator('#empty').click();await release('empty');
+    assert.equal(await page.locator('#export-game').isDisabled(),true,'cancellation must not enable an incomplete project');assert.equal(downloads,2);
+  }finally{page.off('download',onDownload);await page.evaluate(()=>__makerExportTest.restore());}
+  await page.locator('#starter').click();await page.locator('#palette-target').selectOption('player');
+  console.log('Game Maker export cancellation: Restart and rejected import allow immediate retry; stale success/failure preserve newer exports, refresh respects busy state and incomplete projects stay disabled PASS');
+}
 async function checkPortable(browser,files,expected){
   const manifest=JSON.parse(files.get('manifest.json').toString());
   for(const row of manifest.files){const bytes=files.get(row.path);assert.ok(bytes,row.path);assert.equal(bytes.length,row.bytes);assert.equal(createHash('sha256').update(bytes).digest('hex'),row.sha256);}
@@ -50,6 +97,7 @@ export async function checkGameMaker(browser,base){
     await page.goto(base+'demos/game-maker-lab/index.html');await page.waitForFunction(()=>document.documentElement.dataset.labReady==='game-maker-lab');assert.ok((await snapshot()).player);assert.equal(await page.locator('#graphics-fallback').isVisible(),false);
     const pixels=await page.locator('#game').evaluate(c=>{const p=c.getContext('2d').getImageData(0,0,c.width,c.height).data;return [...p].filter((v,i)=>i%4!==3&&v>150).length;});assert.ok(pixels>200,'real native canvas paints original sprites and tiles');
     await page.screenshot({path:'browser-artifacts/game-maker-desktop.png',fullPage:true});
+    await checkExportCancellation(page);
     // Actual original starter: terrain obstacle, two deliberate jumps, all signals.
     await page.locator('#sound').click();assert.equal((await snapshot()).player.sound,true);await play();await page.keyboard.down('KeyD');await page.waitForFunction(()=>__gameMakerLab.snapshot().player.state.body.x>8.35*256);await page.keyboard.press('Space');await page.waitForFunction(()=>__gameMakerLab.snapshot().player.graphics.voices>0);await page.waitForFunction(()=>__gameMakerLab.snapshot().player.state.body.x>13.7*256);await page.keyboard.press('Space');await page.waitForFunction(()=>__gameMakerLab.snapshot().player.state.body.x>21.4*256);await page.evaluate(()=>{const end=performance.now()+150;while(performance.now()<end){}});await page.waitForFunction(()=>__gameMakerLab.snapshot().player.state.status==='won');await page.keyboard.up('KeyD');assert.equal((await snapshot()).player.state.collected.length,3);assert.equal((await snapshot()).progress.tested,true);assert.equal((await snapshot()).player.graphics.particles,12,'catch-up after finishing emits the ending only once');
     await page.locator('#restart').click();await play();await page.keyboard.down('KeyD');await page.waitForFunction(()=>__gameMakerLab.snapshot().player.state.body.x>8.35*256);await page.keyboard.press('Space');await page.waitForFunction(()=>__gameMakerLab.snapshot().player.state.status==='lost');await page.keyboard.up('KeyD');
