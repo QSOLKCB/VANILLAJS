@@ -14,10 +14,10 @@ executions. This change does not alter repository protection settings, create
 qualification receipts or claim measured CI savings.
 
 Activation requires owner-managed protection of `main` with at least one required
-PR approval, followed by three distinct successful main workflow executions of
-identical inputs. A later matching run can reuse those results. Retrying one run
-does not provide another distinct run ID. A protection-policy change invalidates
-receipts authenticated under the previous policy.
+PR approval, followed by one successful main workflow execution of the matching
+inputs. A later matching run can reuse that result. The owner explicitly selected
+this one-run qualification policy during Creator Gateway review. A protection-
+policy change invalidates receipts authenticated under the previous policy.
 
 The authority check must be able to read the relevant GitHub protection/rules
 settings. Missing permissions, unavailable metadata or missing required approvals
@@ -62,12 +62,18 @@ resource analysis force execution. An audit update must describe the actual
 resources and bind their exact bytes; copying new hashes without reviewing the
 changed code is not an audit. Preserve the frozen policy and evidence references.
 
-The frozen [base policy](../scripts/browser-reuse-policy.json) is unchanged.
-The additive [live profile](../scripts/browser-cache-profile.json) records current
+The frozen [base policy](../scripts/browser-reuse-policy.json), its historical
+three-run rule and its independent fixtures remain unchanged. The version 2
+[live profile](../scripts/browser-cache-profile.json) explicitly selects one-run
+qualification and records current
 suite roots, harnesses, exact source hashes and reviewed resource mappings. Its
 [strict loader](../scripts/browser-cache-profile.mjs) retains all existing suites,
-whole-package worker coverage and the three-execution threshold. It does not
-learn exceptions from passing tests or change GitHub protection settings.
+whole-package worker coverage, source authentication and required-main-review
+controls. The live policy and loader are fingerprinted inputs, so results from a
+different policy cannot silently qualify. Historical tests still exercise the
+original three-run policy; live-policy tests exercise one-run qualification.
+The loader does not learn exceptions from passing tests or change GitHub
+protection settings.
 
 For a direct local run with the repository's existing external Playwright tooling,
 use the normal packaged browser command:
@@ -87,6 +93,10 @@ Its log reports `EXECUTE` or `REUSE` for each group, the reason, qualifying run 
 changed inputs and rejected receipt diagnostics. The `flight-lab-evidence`
 artifact includes `plan.json` with the decision inputs; the workflow summary
 reports actual execution separately from reuse.
+
+When the `editor` group needs execution, the Tutorial Lab runs first, before the
+longer labs. A tutorial regression therefore fails early; successful full runs
+still execute every selected check.
 
 To force all suites, the owner can manually run that workflow on reviewed `main`
 with **full_browser = true**. The override ignores matching receipts. The existing
@@ -134,7 +144,7 @@ importer invalidates its audit and requires review before reuse.
 | Diagnostic | Meaning and action |
 | --- | --- |
 | Main is not protected / required PR approval cannot be established | Owner reviews protection and read access; suites continue executing. |
-| Qualification 0/3, 1/3 or 2/3 | Too few distinct authenticated main executions match every input. |
+| Qualification 0/1 | No authenticated successful main execution matches every input. |
 | Unsupported dependency analysis | Inspect the listed source/resource; review and explicitly model it, or continue real execution. |
 | Package inventory/digest mismatch | Rebuild from current source and investigate changed or stale package files. |
 | Source tree does not bind receipt inputs | The artifact cannot prove the checked source/generated outputs; reject it. |

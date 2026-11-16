@@ -198,3 +198,36 @@ release and completed the full tutorial, Workbench import/Play and verified
 offline lesson. This reproduced the defect locally and distinguished the fix
 from the earlier timing-dependent passes. All 977 Node tests also passed after
 the explicit readiness correction.
+
+Hosted run `43809966545` at `45aa558` subsequently passed all seven browser
+groups, including the full tutorial and offline startup, on Chromium
+156.0.8078.4. Its log reports seven groups executed and zero reused. All seven
+workflows passed; the original CI failures are resolved at that revision.
+
+## Owner-requested one-run cache qualification
+
+After that successful run, the owner explicitly selected one trusted main
+execution as the active qualification threshold. Live profile version 2 records
+that decision. The frozen base policy, original three-run tests, independent
+oracle fixtures and historical evidence remain unchanged. Active CLI planning
+uses the validated live threshold; source/package/environment matching,
+protected-main review controls, artifact authentication, forced full execution
+and rejection of unknown inputs still apply.
+
+The Tutorial Lab also runs first whenever its browser group is selected, so a
+failure in the new creator journey is reported before the longer labs. No
+browser checks were removed. This changes failure feedback time, not the amount
+of coverage in a successful full run.
+
+Main was still unprotected at this review. One-run qualification alone does not
+activate reuse: a successful matching execution on trusted main is still needed.
+No repository protection settings, merge, tag or release were changed.
+
+Executed after this policy change: 979 Node tests passed; all 16 capsule tests
+passed; the packaged `editor` browser group passed with the tutorial first;
+source/documentation checks, build, offline verification and whitespace checks
+passed. All seven real package profiles had zero dependency-analysis issues.
+Synthetic decision fixtures demonstrated zero matching runs executing all seven
+groups and one matching trusted run reusing all seven; these fixtures are not
+authenticated CI receipts or measured speedups. The frozen Python oracle and
+the original three-run tests also passed unchanged.

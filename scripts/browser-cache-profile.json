@@ -1,5 +1,6 @@
 {
-  "schema": "qsol.browser.live-profile.v1",
+  "schema": "qsol.browser.live-profile.v2",
+  "qualification": 1,
   "basePolicySHA256": "bbe475409e15aff5ea43d4d38f97a40d990a284c576782e80e070f3ec3ed85c4",
   "suites": {
     "home": {
@@ -116,7 +117,7 @@
     "scripts/opt-render-reference.js": "7bfca288f555317228606b7f698105306f6635ef847a41af3d6143fc666395a3",
     "scripts/browser-integer.js": "f579a24481e641f9b1eea623eba0d680c5ebc13c309734ee1b5f56653e264a1d",
     "scripts/integer-fixture.js": "b36beb739f134fbbd6a49f238429d071f5603f5b6b3d09dcd9b381fe6144d793",
-    "scripts/browser-check.js": "210b982e9793695968f86979abfefa7b0c0a70eaf2ea8c948eb83374703dda4e"
+    "scripts/browser-check.js": "d90991ee0888aa12567979d9920c53a3b0280f2728694fb1719f13d788266faf"
   },
   "auditedRuntime": {
     "api/audio/effects.js": "fc026d3cb208e3a915ad06c6bffae73f267c1ce7d5748ef5a6205b4df594fc5b",

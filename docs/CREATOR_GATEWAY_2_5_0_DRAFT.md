@@ -12,7 +12,7 @@ Draft release notes; this PR does not merge, tag or publish a release.
 - Documentation audits and tutorial browser/offline regression coverage.
 - Repaired source-bound browser receipt handling, with bounded deduplication and
   generated-package provenance checks. Reuse still requires protected reviewed
-  main, matching source/environment and three qualifying real executions; no
+  main, matching source/environment and one qualifying real execution; no
   speedup is claimed before activation and measurement.
 
 The engine remains experimental. Existing maths, physics, labs, Mod SDK and

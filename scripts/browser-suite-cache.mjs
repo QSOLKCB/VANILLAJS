@@ -11,7 +11,7 @@ import {packageProvenance} from './browser-package-provenance.mjs';
 import {RECEIPT_KIND,producerAllowed,loadMainExecutions,decide,changedInputs} from './browser-receipt-authority.mjs';
 const ROOT=resolve(import.meta.dirname,'..');
 export const SUITES=Object.freeze(['home','render','play','worlds','research','donor','editor']);
-export const REQUIRED_PASSES=3;
+export const REQUIRED_PASSES=1;
 export const PROFILE='CI-INVARIANT-001/1';
 const policyPath=join(ROOT,'scripts/browser-reuse-policy.json');
 const read=p=>readFile(join(ROOT,p),'utf8');
@@ -24,7 +24,7 @@ async function inventory(dir,prefix=''){
 }
 export async function profileInputs({environment}={}){
   const policy=applyLiveProfile(await readFile(policyPath,'utf8'),JSON.parse(await read(LIVE_PROFILE)));
-  if(Object.keys(policy.suites).join(',')!==SUITES.join(',')||policy.qualification!==3||!policy.auditedRuntime)throw Error('invalid suite policy');
+  if(Object.keys(policy.suites).join(',')!==SUITES.join(',')||policy.qualification!==REQUIRED_PASSES||!policy.auditedRuntime)throw Error('invalid suite policy');
   const manifest=JSON.parse(await read('dist/manifest.json')),files=manifest.files,sources={},gitBlobs={};
   // Do not trust a stale manifest or omit newly introduced package members.
   const actual=(await inventory(join(ROOT,'dist'))).filter(p=>p!=='manifest.json');
@@ -84,10 +84,12 @@ export function executionReceipt({repository,ref,event,run,attempt,sha,workflow,
   return {kind:RECEIPT_KIND,repository,ref,event,run,attempt,sha,workflow,authorityDigest,
     results:Object.fromEntries(executed.map(g=>[g,{status:'PASS',executed:true,fingerprint:profiles[g].fingerprint,inputs:profiles[g].inputs}]))};
 }
-export function executionPlan(profiles,authority,receipts,forceFull=false){
+// Historical oracle/workload callers keep three runs; live execute() must pass
+// the explicit threshold from the validated live profile.
+export function executionPlan(profiles,authority,receipts,forceFull=false,qualification=3){
   return Object.fromEntries(SUITES.map(group=>{
     const executions=receipts.filter(r=>r.results[group]).map(r=>({run:r.run,...r.results[group]}));
-    const decision=decide({profile:profiles[group],executions,authority,forceFull});
+    const decision=decide({profile:profiles[group],executions,authority,forceFull,qualification});
     const prior=receipts.find(r=>r.results[group]);
     return [group,{...decision,changed:prior?changedInputs(prior.results[group].inputs,profiles[group].inputs):['no prior authenticated execution']}];
   }));
@@ -95,7 +97,7 @@ export function executionPlan(profiles,authority,receipts,forceFull=false){
 async function execute(){
   const {policy,profiles}=await sourceProfile(),token=process.env.GITHUB_TOKEN;
   const {authority,executions,diagnostics}=token?await loadMainExecutions({token,policy}):{authority:{ok:false,reason:'GitHub token unavailable'},executions:[],diagnostics:[]};
-  const plan=executionPlan(profiles,authority,executions,process.env.BROWSER_FORCE_FULL==='true');
+  const plan=executionPlan(profiles,authority,executions,process.env.BROWSER_FORCE_FULL==='true',policy.qualification);
   const stale=SUITES.filter(g=>!plan[g].reuse),reused=SUITES.filter(g=>plan[g].reuse);
   const temp=process.env.RUNNER_TEMP;if(!temp)throw Error('RUNNER_TEMP required');
   const out=join(temp,'flight-suite-evidence');await mkdir(out,{recursive:true});

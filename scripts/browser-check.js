@@ -55,6 +55,8 @@ const browser=await chromium.launch({...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTA
 const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 try{
+  // Check the new creator journey first so regressions fail before long labs.
+  await runSuite('editor','./browser-tutorial.js','checkTutorial');
   await runSuite('donor','./browser-skyguard.js','checkSkyguard');
   await runSuite('donor','./browser-pursuit.js','checkPursuit');
   await runSuite('donor','./browser-football.js','checkFootball');
@@ -148,7 +150,6 @@ try{
   await runSuite('editor','./browser-editor.js','verifyEditor');
   await runSuite('editor','./browser-editor-4x.js','verifyEditor4X');
   await runSuite('editor','./browser-creator.js','checkCreator');
-  await runSuite('editor','./browser-tutorial.js','checkTutorial');
   await runSuite('donor','./browser-soundtrack.js','checkSoundtrack');
   await runSuite('donor','./browser-subhunt.js','checkSubHunt');
   if(needs('home')){

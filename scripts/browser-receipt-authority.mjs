@@ -21,12 +21,16 @@ export function validateExecution(receipt,run,repository,workflow){
     Object.values(receipt.results).every(r=>r?.status==='PASS'&&r.executed===true&&
       /^[a-f0-9]{64}$/.test(r.fingerprint)&&r.inputs&&identity(r.inputs)===r.fingerprint));
 }
-export function decide({profile,executions=[],forceFull=false,authority}){
+// The historical three-run oracle keeps its default; live CI supplies the
+// reviewed profile's explicit threshold. No other threshold is supported.
+export function decide({profile,executions=[],forceFull=false,authority,qualification=3}){
   if(forceFull)return {reuse:false,reason:'manual full-browser override',runs:[]};
+  if(qualification!==1&&qualification!==3)return {reuse:false,reason:'unsupported qualification threshold',runs:[]};
   if(profile.issues.length)return {reuse:false,reason:'unsupported dependency analysis: '+profile.issues.join('; '),runs:[]};
   if(!authority?.ok)return {reuse:false,reason:'unverified authority: '+(authority?.reason??'no authority'),runs:[]};
   const runs=[...new Set(executions.filter(e=>e.fingerprint===profile.fingerprint).map(e=>String(e.run)))];
-  return {reuse:runs.length>=3,reason:runs.length>=3?'three distinct authenticated main executions match every input':`qualification ${runs.length}/3: exact source/environment executions missing`,runs:runs.slice(0,3)};
+  const qualified=runs.length>=qualification;
+  return {reuse:qualified,reason:qualified?(qualification===1?'one authenticated main execution matches every input':'three distinct authenticated main executions match every input'):`qualification ${runs.length}/${qualification}: exact source/environment executions missing`,runs:runs.slice(0,qualification)};
 }
 export function changedInputs(before,after){
   const changes=[];for(const name of new Set([...Object.keys(before??{}),...Object.keys(after??{})]))
