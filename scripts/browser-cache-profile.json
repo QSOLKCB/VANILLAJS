@@ -69,7 +69,7 @@
     "tests/fixtures/pursuit-pre89-audio.txt"
   ],
   "auditedHarnesses": {
-    "scripts/browser-tutorial.js": "b8f6cd21ab8c48e4d27566ba8452f533e6db84a6856422903fceb40a9479b3e6",
+    "scripts/browser-tutorial.js": "883c13c87757228770a5ebc891c18534c0e80d7c82faeaefef9c332272c290d6",
     "scripts/browser-creator.js": "3881ed9fa861956cab5114546a5b8ce2f03ba09e3db6c9794e68ef6dcbe39450",
     "scripts/export-game.js": "f2705f297adb6ed7dc82f424a5c6536840a34defce1ecd0f31a44240f5837846",
     "scripts/browser-editor-4x.js": "8449892312352bb0930bc26f122eb5c65368fb233fa2c42da783293666a27278",

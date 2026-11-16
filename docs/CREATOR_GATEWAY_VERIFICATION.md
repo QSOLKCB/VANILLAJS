@@ -151,3 +151,24 @@ Executed locally after these corrections:
 
 These observations supplement the initial failure record above. Hosted results
 for the correction are reported on PR #99's checks and PR description.
+
+### Tutorial offline-startup CI correction
+
+Hosted run `43806265994` passed the preceding browser interactions, including
+tutorial download and Workbench import/Play, but timed out waiting for the
+tutorial's reloaded tab to become service-worker controlled. The unchanged
+editor suite subsequently passed locally; the hosted timeout was not reproduced
+locally. Six other hosted workflows passed at commit `90eddb4`.
+
+The tutorial check now opens a fresh tab in the same browser context after
+worker activation, disables networking before navigation, and requires both a
+service-worker response and a controlled document. It then executes the existing
+offline lesson and restart assertions. This tests a new offline visit directly
+without depending on the original tab's reload/control timing. No product code,
+worker activation policy, test assertion or CI trust condition was removed.
+
+After this correction, the packaged Chromium `editor` group passed, including
+the fresh offline navigation, lesson interactions and Workbench import/Play.
+All 977 Node tests passed again. Source/documentation checks, build, offline
+verification and whitespace checks also passed. Hosted confirmation remains
+recorded separately in PR #99's checks and description.

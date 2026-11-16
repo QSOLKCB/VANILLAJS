@@ -77,12 +77,21 @@ export async function checkTutorial(browser,base){
     await page.waitForFunction(async()=>{
       const r=await navigator.serviceWorker.getRegistration();return r?.active?.state==='activated';
     },{},{timeout:45000});
-    await page.reload();await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
-    await context.setOffline(true);await page.reload();await page.locator('#load').click();
-    await page.locator('#speed').fill('6');await page.locator('#apply').click();
-    await page.locator('#test').click();
-    assert.match(await page.locator('#result').textContent(),/Executed 60 fixed steps/);
-    assert.ok(await page.locator('#download').isDisabled(),'restart clears the earlier diagnosis');
+    // The worker deliberately does not claim existing clients. Start a new
+    // client after activation, with the network already unavailable, rather
+    // than relying on the original page's reload to acquire a controller.
+    const offline=await context.newPage();
+    offline.setDefaultTimeout(10000);
+    await context.setOffline(true);
+    const response=await offline.goto(base+'demos/tutorial-lab/index.html');
+    assert.equal(response.status(),200,'offline tutorial document loads successfully');
+    assert.equal(response.fromServiceWorker(),true,'the worker supplies the offline navigation');
+    assert.equal(await offline.evaluate(()=>!!navigator.serviceWorker.controller),true);
+    await offline.locator('#load').click();
+    await offline.locator('#speed').fill('6');await offline.locator('#apply').click();
+    await offline.locator('#test').click();
+    assert.match(await offline.locator('#result').textContent(),/Executed 60 fixed steps/);
+    assert.ok(await offline.locator('#download').isDisabled(),'restart clears the earlier diagnosis');
     assert.deepEqual(errors,[]);
   }finally{await context.close();}
   console.log('Tutorial: keyboard start, changed movement/render, failed test, repair, download and Workbench import/Play, invalidation, restart, 320px and offline startup passed.');
