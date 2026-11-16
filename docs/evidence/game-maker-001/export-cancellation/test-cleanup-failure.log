@@ -1,0 +1,48 @@
+Game Maker API: native Canvas primitive/text/sprite pixels, atlas/parallax alignment, rejected import/allocation rollback, fixed-tick tap/cancellation, seeded bounded particles, independent instances, real Web Audio resource ownership/failure cleanup and copyable public-only example movement/jump/pickup/win/restart/disposal PASS
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+locator.selectOption: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('#palette-target')[22m
+[2m    - locator resolved to <select id="palette-target">…</select>[22m
+[2m  - attempting select option action[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m      - waiting 100ms[22m
+[2m    30 × waiting for element to be visible and enabled[22m
+[2m       - did not find some options[22m
+[2m     - retrying select option action[22m
+[2m       - waiting 500ms[22m
+
+    at checkExportCancellation (/home/trent/vanillajs-game-maker-api/scripts/browser-game-maker.js:65:80)
+    at async checkGameMaker (/home/trent/vanillajs-game-maker-api/scripts/browser-game-maker.js:99:5)
+    at async runSuite (/home/trent/vanillajs-game-maker-api/scripts/browser-check.js:52:3)
+    at async file:///home/trent/vanillajs-game-maker-api/scripts/browser-check.js:60:3 {
+  log: [
+    "  - waiting for locator('#palette-target')",
+    '    - locator resolved to <select id="palette-target">…</select>',
+    '  - attempting select option action',
+    '    2 × waiting for element to be visible and enabled',
+    '      - did not find some options',
+    '    - retrying select option action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible and enabled',
+    '      - did not find some options',
+    '    - retrying select option action',
+    '      - waiting 100ms',
+    '    30 × waiting for element to be visible and enabled',
+    '       - did not find some options',
+    '     - retrying select option action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v22.18.0

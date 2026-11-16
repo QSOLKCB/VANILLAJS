@@ -1,0 +1,19 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Restart immediately permits retrying a canceled export
+
+false !== true
+
+    at checkExportCancellation (file:///home/trent/vanillajs-game-maker-api/scripts/browser-game-maker.js:45:12)
+    at async checkGameMaker (file:///home/trent/vanillajs-game-maker-api/scripts/browser-game-maker.js:99:5)
+    at async file:///tmp/game-maker-focused.mjs:11:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual'
+}
+
+Node.js v22.18.0
