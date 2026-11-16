@@ -1,0 +1,256 @@
+TAP version 13
+# Subtest: ALIEN-MATH-006 source-bound admission and adversarial audit tests
+ok 1 - ALIEN-MATH-006 source-bound admission and adversarial audit tests
+  ---
+  duration_ms: 145.634473
+  type: 'test'
+  ...
+# Subtest: ALIEN-MATH-006 production output equals frozen independent finite oracle
+ok 2 - ALIEN-MATH-006 production output equals frozen independent finite oracle
+  ---
+  duration_ms: 34.953513
+  type: 'test'
+  ...
+# Subtest: live browser profile extends frozen policy without changing protection or whole-package boundaries
+ok 3 - live browser profile extends frozen policy without changing protection or whole-package boundaries
+  ---
+  duration_ms: 6.053698
+  type: 'test'
+  ...
+# Subtest: live profile rejects invented fields, changed frozen identity, unsafe paths and mismatched opaque pins
+ok 4 - live profile rejects invented fields, changed frozen identity, unsafe paths and mismatched opaque pins
+  ---
+  duration_ms: 11.333088
+  type: 'test'
+  ...
+# Subtest: one-run live qualification still requires an exact authenticated source and environment match
+ok 5 - one-run live qualification still requires an exact authenticated source and environment match
+  ---
+  duration_ms: 2.73007
+  type: 'test'
+  ...
+# Subtest: live policy identity invalidates old qualification receipts and reaches all seven suite decisions
+ok 6 - live policy identity invalidates old qualification receipts and reaches all seven suite decisions
+  ---
+  duration_ms: 24.656925
+  type: 'test'
+  ...
+# Subtest: exact opaque source pin can describe reviewed local resources; changed or unknown source still executes
+ok 7 - exact opaque source pin can describe reviewed local resources; changed or unknown source still executes
+  ---
+  duration_ms: 7.108469
+  type: 'test'
+  ...
+# Subtest: an active editor import of a dormant builder copy invalidates its reviewed executable pin
+ok 8 - an active editor import of a dormant builder copy invalidates its reviewed executable pin
+  ---
+  duration_ms: 0.57041
+  type: 'test'
+  ...
+# Subtest: known runtime copies and fourteen exact entry rewrites bind to original Git source
+ok 9 - known runtime copies and fourteen exact entry rewrites bind to original Git source
+  ---
+  duration_ms: 129.574236
+  type: 'test'
+  ...
+# Subtest: local provenance replay rejects forged HTML, copied code and unknown generated members
+ok 10 - local provenance replay rejects forged HTML, copied code and unknown generated members
+  ---
+  duration_ms: 215.556699
+  type: 'test'
+  ...
+# Subtest: compact receipt fits existing wire limit and preserves all seven execution inputs
+ok 11 - compact receipt fits existing wire limit and preserves all seven execution inputs
+  ---
+  duration_ms: 38.314553
+  type: 'test'
+  ...
+# Subtest: tampered blocks, references, fingerprints and unknown fields fail closed
+ok 12 - tampered blocks, references, fingerprints and unknown fields fail closed
+  ---
+  duration_ms: 224.775807
+  type: 'test'
+  ...
+# Subtest: bounded decoder rejects wire and expansion amplification
+ok 13 - bounded decoder rejects wire and expansion amplification
+  ---
+  duration_ms: 82.285884
+  type: 'test'
+  ...
+# Subtest: A/K: three distinct qualified executions reuse; retries and reuse never add evidence
+ok 14 - A/K: three distinct qualified executions reuse; retries and reuse never add evidence
+  ---
+  duration_ms: 10.999498
+  type: 'test'
+  ...
+# Subtest: B/C: documentation ignored; standalone unreachable math invalidates worker scopes only
+ok 15 - B/C: documentation ignored; standalone unreachable math invalidates worker scopes only
+  ---
+  duration_ms: 3.774129
+  type: 'test'
+  ...
+# Subtest: D: reachable runtime invalidates every consumer
+ok 16 - D: reachable runtime invalidates every consumer
+  ---
+  duration_ms: 3.976849
+  type: 'test'
+  ...
+# Subtest: E: oracle code, mathematical contract and domain identity are bound, not expected value alone
+ok 17 - E: oracle code, mathematical contract and domain identity are bound, not expected value alone
+  ---
+  duration_ms: 4.69766
+  type: 'test'
+  ...
+# Subtest: F: unknown imports, missing source, new unclassified packages and unsupported syntax fail closed
+ok 18 - F: unknown imports, missing source, new unclassified packages and unsupported syntax fail closed
+  ---
+  duration_ms: 8.614358
+  type: 'test'
+  ...
+# Subtest: G/H: scoped harness and all execution environment inputs invalidate identities
+ok 19 - G/H: scoped harness and all execution environment inputs invalidate identities
+  ---
+  duration_ms: 9.100578
+  type: 'test'
+  ...
+# Subtest: M: cross-suite imports and generated service-worker/index dependencies are explicit
+ok 20 - M: cross-suite imports and generated service-worker/index dependencies are explicit
+  ---
+  duration_ms: 6.465919
+  type: 'test'
+  ...
+# Subtest: literal static/re-export/dynamic imports, comments, strings, cycles and resource syntax
+ok 21 - literal static/re-export/dynamic imports, comments, strings, cycles and resource syntax
+  ---
+  duration_ms: 1.00923
+  type: 'test'
+  ...
+# Subtest: I/J: forged metadata, PR producer, source tree substitution, failed/reused run cannot authenticate
+ok 22 - I/J: forged metadata, PR producer, source tree substitution, failed/reused run cannot authenticate
+  ---
+  duration_ms: 1.318529
+  type: 'test'
+  ...
+# Subtest: I: corrupt, oversized, wrong digest or wrong ZIP membership never authenticates
+ok 23 - I: corrupt, oversized, wrong digest or wrong ZIP membership never authenticates
+  ---
+  duration_ms: 222.094528
+  type: 'test'
+  ...
+# Subtest: trust audit fails closed on absent protection, unreadable API or no required review
+ok 24 - trust audit fails closed on absent protection, unreadable API or no required review
+  ---
+  duration_ms: 0.96401
+  type: 'test'
+  ...
+# Subtest: immutable artifact is selected by authoritative run, never restored cache metadata
+ok 25 - immutable artifact is selected by authoritative run, never restored cache metadata
+  ---
+  duration_ms: 53.11413
+  type: 'test'
+  ...
+# Subtest: L: manual full-browser selects all seven regardless of qualification
+ok 26 - L: manual full-browser selects all seven regardless of qualification
+  ---
+  duration_ms: 2.717079
+  type: 'test'
+  ...
+# Subtest: workflow retains mandatory gates, main-only artifact publication and no PR-scoped witness restore
+ok 27 - workflow retains mandatory gates, main-only artifact publication and no PR-scoped witness restore
+  ---
+  duration_ms: 6.868729
+  type: 'test'
+  ...
+# Subtest: complete hosted browser verification has headroom and a failure cannot stage or deploy Pages
+ok 28 - complete hosted browser verification has headroom and a failure cannot stage or deploy Pages
+  ---
+  duration_ms: 1.44273
+  type: 'test'
+  ...
+# Subtest: independent Python fixture agrees on finite closure and qualification cases
+ok 29 - independent Python fixture agrees on finite closure and qualification cases
+  ---
+  duration_ms: 1.610109
+  type: 'test'
+  ...
+# Subtest: changed reachable executable cannot qualify until its closure audit is reviewed
+ok 30 - changed reachable executable cannot qualify until its closure audit is reviewed
+  ---
+  duration_ms: 1.50477
+  type: 'test'
+  ...
+# Subtest: exact pinned package and core in an isolated cache are reusable
+ok 31 - exact pinned package and core in an isolated cache are reusable
+  ---
+  duration_ms: 2.47943
+  type: 'test'
+  ...
+# Subtest: outdated Playwright package invalidates cache
+ok 32 - outdated Playwright package invalidates cache
+  ---
+  duration_ms: 1.879919
+  type: 'test'
+  ...
+# Subtest: mismatched playwright-core invalidates cache
+ok 33 - mismatched playwright-core invalidates cache
+  ---
+  duration_ms: 1.57293
+  type: 'test'
+  ...
+# Subtest: browser binaries must use the dedicated path and environment
+ok 34 - browser binaries must use the dedicated path and environment
+  ---
+  duration_ms: 0.73105
+  type: 'test'
+  ...
+# Subtest: symlinked modules escaping the cache are rejected
+ok 35 - symlinked modules escaping the cache are rejected
+  ---
+  duration_ms: 1.11739
+  type: 'test'
+  ...
+# Subtest: ARCADE executable assets are restricted to immutable merged PR \#16
+ok 36 - ARCADE executable assets are restricted to immutable merged PR \#16
+  ---
+  duration_ms: 1.036699
+  type: 'test'
+  ...
+# Subtest: untrusted URL forms and arbitrary remote content never pass allowlist
+ok 37 - untrusted URL forms and arbitrary remote content never pass allowlist
+  ---
+  duration_ms: 0.28092
+  type: 'test'
+  ...
+# Subtest: CLI refuses arbitrary branch identities and writes inside checkout
+ok 38 - CLI refuses arbitrary branch identities and writes inside checkout
+  ---
+  duration_ms: 0.34274
+  type: 'test'
+  ...
+# Subtest: a bare Node process cannot execute the physical owner workstation
+ok 39 - a bare Node process cannot execute the physical owner workstation
+  ---
+  duration_ms: 0.29808
+  type: 'test'
+  ...
+# Subtest: a cleanup failure cannot leave a PASS result or success exit code
+ok 40 - a cleanup failure cannot leave a PASS result or success exit code
+  ---
+  duration_ms: 0.23263
+  type: 'test'
+  ...
+# Subtest: dedicated local workflow is manual owner-only and never launches PR code
+ok 41 - dedicated local workflow is manual owner-only and never launches PR code
+  ---
+  duration_ms: 0.34437
+  type: 'test'
+  ...
+1..41
+# tests 41
+# suites 0
+# pass 41
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 397.005974

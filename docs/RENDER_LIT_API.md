@@ -1,8 +1,8 @@
-# Lit rendering API — HORIZON-001
+# Lit rendering API — HORIZON
 
 [`modules/render-lit/index.js`](../modules/render-lit/index.js) is an optional,
 explicitly owned native **WebGL1** material path. Existing `Renderer` and `WebGLAPI`
-callers, shaders, vertex layouts and defaults are unchanged. The new renderer
+callers, shaders, vertex layouts and defaults are unchanged. This renderer
 uses existing `math` camera/projection operations; there is no third-party engine,
 WebGL2 requirement, global frame loop or network resource loader.
 
@@ -10,6 +10,10 @@ Open [Scenery Atelier](../demos/horizon-lab/scenery.html) to inspect the actual 
 Geometry, environment recipes and vehicle presentation belong to the separate
 [scenic3d contract](SCENIC3D_API.md). Neither renderer nor visual vehicle pose
 advances racing simulation.
+
+HORIZON-004 refines this renderer's material response without changing its public
+arguments, defaults, admission limits, vertex layout or resource lifecycle. Existing
+materials remain valid; rendered pixels intentionally change.
 
 ## Owned surface and retained meshes
 
@@ -77,20 +81,30 @@ A renderer material is an API argument, not a new Workbench project format.
 | `pattern` | `'none'` | `none`, `asphalt`, `stone`, `grass`, `glass`, `shadow` |
 | `patternScale` | `1` | 0.01–256 |
 
-Procedural UV textures are original bounded shader functions: granular asphalt,
-mortared stone and grass color variation. They use no external images, texture
-allocation or downloaded assets. The high profile adds fine asphalt variation;
-the low profile keeps a simpler sample. Shader arithmetic is visual Float32/
-implementation precision, **not exact source-pixel generation or numerical proof**.
+Procedural UV patterns are original bounded shader functions. Grass uses
+continuously interpolated color variation and a restrained slope tint; high detail
+adds a second, smaller variation. Asphalt combines broad variation with fine
+high-profile grain that fades between 8 and 55 metres from the eye. Stone uses
+softened mortar edges and continuous surface variation. World-aligned UVs let
+terrain and shoulder meshes share the same field without restarting it per span.
+These functions use no external images, texture allocation or downloaded assets.
+Shader arithmetic uses the implementation's highp or mediump precision,
+**not exact source-pixel generation or numerical proof**.
 
 Directional diffuse light and a roughness-controlled Blinn-style highlight sit
-beside ambient illumination and a simple Fresnel/environment tint. Metalness
-adjusts highlight/base contribution. This is a documented approximate material
-model, **not physically based energy-conserving rendering**. Glass blends a tinted
-surface with reflected sky and alpha; it does not implement refraction, scene
-reflections or optical ray tracing. The sky is a camera-oriented gradient with
-an original analytic sun/haze. Distance fog uses an exponential view-distance
-factor. Exposure is a bounded visual multiplier.
+beside hemisphere ambient illumination. The reflected normal/view direction
+selects an analytic sky, horizon and dark ground response; Fresnel and metalness
+control its contribution. Smooth, unpatterned surfaces also receive a bounded
+clearcoat approximation, with an extra sun highlight in the high profile. Curved
+vertex normals expose this response without adding meshes or draw calls.
+
+This is an approximate material model, **not physically based energy-conserving
+rendering**. Glass blends a tinted surface with the same analytic environment and
+alpha. It does not reflect actual cars, tunnel walls or scenery, and provides no
+refraction or optical ray tracing. Tunnel fixtures are decorative; the renderer
+has no local lights or geometry-aware sunlight occlusion. The sky is a
+camera-oriented gradient with original analytic sun/haze. Distance fog retains
+its exponential view-distance factor. Exposure is a bounded visual multiplier.
 
 `begin` accepts only these optional settings:
 
@@ -141,6 +155,16 @@ storage, excluding that constant 24-byte sky buffer and shader-driver storage.
 CPU snapshots and GPU storage each require at most 44 bytes per admitted vertex;
 transactional replacement temporarily holds old and new allocations.
 
+The material shader has no sampling loops. Each continuous noise sample evaluates
+four bounded arithmetic hashes, sharing the two lattice coordinates per axis
+across its four corners. Per fragment, grass uses four hashes on low or
+eight on high, asphalt four or five, and stone four in either profile; other
+patterns use none. Both profiles use two common highlight/Fresnel powers, with
+one extra clearcoat power for smooth unpatterned materials on high. The sky uses
+two powers. These are source-level work bounds, not GPU instruction counts or
+measured frame times. HORIZON-004 adds no textures, shader programs, per-mesh
+allocations, uniforms or draws to the retained rendering path.
+
 Shader/program/buffer allocation failures clean partial construction. Rejected
 mesh updates preserve accepted handles/counts/data. A lost native context prevents
 new begin/draw/update/mesh calls. The listener prevents the browser's default
@@ -156,8 +180,17 @@ native deletes after restoration. All old handles are foreign to the new instanc
 transpose perpendicularity, resource-budget preflight, transactional failure,
 retained ownership and cleanup/lifecycle. `scripts/browser-render-lit.js` checks
 actual native WebGL1 pixels for lighting, roughness, procedural patterns, glass,
-fog and contact shadow; identical rendering without reupload; rejected mesh parity;
+fog and contact shadow; continuous grass at former hash-cell boundaries and
+normal-directed sky/ground reflections; identical rendering without reupload;
+rejected mesh parity;
 low profile pixel bounds; and real `WEBGL_lose_context` loss/recreation.
+
+The native noise regression recompiles the actual material shader with only its
+continuous noise function replaced by the scalar four-corner reference. Both
+profiles compare complete pixel buffers across bounded positive/negative UVs,
+including wrapping coordinates and grass/asphalt/stone patterns. A deliberately
+wrong corner must fail parity. This checks the vectorized shared-corner reuse
+without claiming that all GPUs produce the same pixels.
 
 Exact scene/physics reference cases remain independent of GPU pixels. No universal
 cross-browser raster identity, physical GPU speed, mobile device support or

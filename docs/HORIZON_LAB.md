@@ -1,9 +1,10 @@
 # HORIZON — Coastline Atelier
 
 [Open Scenery Atelier](../demos/horizon-lab/scenery.html) through local HTTP or the
-packaged site. This is **HORIZON-001**, the first of three reviewed parts of the
-planned v2.9.0 milestone. It authors a real lit 3D scene and an original vehicle
-visual rig. The car stays still here: camera controls orbit a visual study. To drive, open
+packaged site. This workshop began with **HORIZON-001**; **HORIZON-004** adds visual
+polish as the final pre-release quality gate for the planned v2.9.0 milestone.
+It authors a real lit 3D scene and an original vehicle visual rig. The car stays
+still here: camera controls orbit a visual study. To drive, open
 [HORIZON Race Foundry](../demos/horizon-lab/index.html), the main HORIZON entry,
 then press **Start race** and use W/up to accelerate.
 
@@ -19,8 +20,9 @@ then press **Start race** and use W/up to accelerate.
    procedural scenery and different lighting palettes. No remote art is loaded.
 4. Move the sun, change fog, and compare rough versus polished body finishes.
    Light and material edits keep the existing GPU geometry. Roughness is a
-   documented approximation; glass uses reflected sky color and transparency,
-   without full optical refraction or physically based ray tracing.
+   documented approximation; paint and glass respond to an analytic sky, horizon
+   and dark ground reflection. Actual scenery is not reflected in the windows,
+   and the renderer does not perform optical refraction or ray tracing.
 5. Choose the original sports, touring or utility class. Change paint, wheel
    steering, wheel rotation, suspension compression, body pitch/roll or brake
    lights. Those controls operate a visual rig with retained local mesh parts.
@@ -77,6 +79,24 @@ are in the renderer reference. The diagnostics show current retained vertices,
 mesh draw calls, GPU mesh uploads and rendered frames. One additional draw paints
 the procedural sky. Counts are actual local diagnostics, not an FPS benchmark
 or a promise about physical hardware.
+
+HORIZON-004 uses rounded vehicle lofts, open wheel arches, shaped tyres and alloy
+wheels, with smooth normals on curved bodywork and glass. Trees combine seeded
+lobed crowns; bridges have rails/bracing and tunnels have ribs/fixtures. Terrain
+and road shoulders share continuous procedural color variation and smooth visual
+normals. These lighting normals leave the exact contact triangles and their
+planar physics normals unchanged. Asphalt's fine
+grain fades with distance, while fog and sky haze separate distant scenery.
+These are original procedural assets. Tunnel fixtures are decorative geometry,
+not dynamic lights. Trees, tunnel walls and braces do not add collision surfaces.
+
+Static scenery is capped at 100,000/280,000 vertices on low/high; each vehicle
+visual at 28,000/48,000 vertices in the same 13 retained parts. Each vertex takes
+44 source/GPU mesh bytes. Actual scenes usually use less: inspect the diagnostics
+instead of treating a ceiling as a measured count. The renderer adds no texture
+assets or per-detail draw calls. Source geometry, approximate shader pixels and
+authoritative contact/physics are separate contracts; no cross-GPU pixel identity
+or physical-hardware frame rate follows from these budgets.
 
 Camera tours, lighting, fog, roughness and visual rig changes reuse the existing
 static buffers. Paint/class changes replace vehicle meshes; road/terrain edits

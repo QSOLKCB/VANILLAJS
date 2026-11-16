@@ -12,8 +12,10 @@ HORIZON-001 was merged in [PR #105](https://github.com/QSOLKCB/VANILLAJS/pull/10
 **Reviewed main for HORIZON-002:** `69dd325243633f66844a5ef85d87ab24e8677a63`.
 HORIZON-002 was merged in [PR #107](https://github.com/QSOLKCB/VANILLAJS/pull/107).
 **Reviewed main for HORIZON-003:** `718afebb7146424ed8718f80a488c3b76eea1c85`.
-The current PR implements **HORIZON-003**, the final separately reviewed candidate:
-[creator tools, race and portable export](HORIZON_003.md). v2.9.0 publication still
+HORIZON-003 was merged in [PR #108](https://github.com/QSOLKCB/VANILLAJS/pull/108).
+**Reviewed main for HORIZON-004:** `f263d43627970d8c3cfb2d54eed8fdeed2e7c457`.
+The current candidate adds [visual fidelity and reverse-driving polish](HORIZON_004.md)
+as the final pre-release quality gate. v2.9.0 publication still
 requires owner review and explicit release approval.
 
 | Release | Milestone | Dependency and review gate |
@@ -21,7 +23,7 @@ requires owner review and explicit release approval.
 | v2.6.0 | SPRITE-FEEL-001 — Game Feel & Sprite Foundry | Published after owner review, PR #101 merge and release |
 | v2.7.0 | SCENE-NARRATIVE-001 — Scene & Narrative Foundry | Published after owner review, PR #102 merge and release |
 | v2.8.0 | GAME-MAKER-001 — Game Maker API | Published after owner review, PR #103 merge and release |
-| v2.9.0 | HORIZON-3D-001 — 3D Racing Foundry | HORIZON-001 and HORIZON-002 merged; HORIZON-003 candidate awaits review |
+| v2.9.0 | HORIZON-3D-001 — 3D Racing Foundry | HORIZON-001/002/003 merged; HORIZON-004 polish awaits review |
 
 Games2 is a future consumer and remains unmodified throughout this programme.
 The owner decides when another game begins. No automatic code copying, mutable
@@ -186,7 +188,7 @@ release's actual behavior from the HORIZON programme.
 
 ## v2.9.0 — HORIZON, 3D Racing Foundry (in progress)
 
-HORIZON is **three separately reviewed implementation PRs**. The complete
+HORIZON has **three reviewed foundation PRs and a final HORIZON-004 polish PR**. The complete
 milestone must pass review before v2.9.0 publication.
 
 ### HORIZON-001 — Rendering, materials and environments (merged PR #105)
@@ -239,7 +241,7 @@ jump/landing and high-speed barriers. Include negative controls for tunnelling,
 energy growth and invalid states. Compare numerical trajectories independently
 of GPU pixels; report approximation/error bounds and timestep sensitivity.
 
-### HORIZON-003 — Creator tools, showcase and polish (current candidate)
+### HORIZON-003 — Creator tools, showcase and polish (merged PR #108)
 
 The main [HORIZON entry](../demos/horizon-lab/index.html) opens the playable race.
 The [Scenery Atelier](../demos/horizon-lab/scenery.html) and
@@ -307,7 +309,7 @@ owner-approved release and game-specific validation; no row permits editing Game
 | Strike Pixel and other FPS | character, weapons, combat3d, weapon-feel, sprite2d | Optional lit visuals; integration stays game-owned |
 | Arcade platformers | Game Maker API, tilemap, sprite2d, motion2d, combat2d, audio2d | No new platformer contract in HORIZON |
 | Tactical/adventure | scene-graph, narrative, navigation, tilemap | Optional lit scene presentation |
-| Racing | road-arcade, existing Track Foundry, exact-circuit | Merged scenic3d/render-lit/vehicle3d; candidate vehicle-audio and complete single-route race authoring/export |
+| Racing | road-arcade, existing Track Foundry, exact-circuit | Merged scenic3d/render-lit/vehicle3d/vehicle-audio and complete single-route race authoring/export; HORIZON-004 visual and reverse-driving polish candidate |
 | RTS/strategy | navigation/flow fields, tilemap, scene-graph, narrative | Optional static lit environments |
 | Space | flight, orbital-physics, scene-graph, rendering/audio | Optional lit materials; ship systems remain game-owned |
 | Intros/cinematics | demo-scene, demo-timeline, soundtrack, scene tracks | Optional lit environment/vehicle presentation |

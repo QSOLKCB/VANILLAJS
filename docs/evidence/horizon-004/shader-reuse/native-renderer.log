@@ -1,0 +1,1 @@
+Lit WebGL1: actual directional/roughness/procedural texture/glass/fog/contact-shadow, curved sky/ground reflections, continuous terrain color, scalar/vector noise pixel parity with negative control and outward-embankment pixels, retained geometry, rejected upload, low-profile budget, disposal and native context-loss/recreation PASS

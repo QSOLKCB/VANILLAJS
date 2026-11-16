@@ -1,10 +1,15 @@
 # Scenic3D — bounded road, environment and vehicle geometry
 
 The experimental [`scenic3d`](../modules/scenic3d/index.js) module provides
-original scenery and vehicle presentation for HORIZON-001. It is pure JavaScript:
+original scenery and vehicle presentation for HORIZON. It is pure JavaScript:
 no renderer, device listener, ambient clock, unseeded randomness or vehicle
 simulation. It composes the existing `math` seeded generator/matrices and
 `terrain` heightfield. Existing Racing Lab tracks and `road-arcade` are unchanged.
+
+HORIZON-004 refines generated visual geometry and materials. Existing scenery and
+vehicle recipe formats, vehicle dimensions, pose fields and road/terrain contact
+surfaces retain their contracts. Decorative source vertex arrays intentionally
+change with the implementation; they are not immutable art identifiers.
 
 All distances use metres. World coordinates are right-handed, **+Y up and −Z
 forward**. Positive yaw follows standard right-handed Y rotation: local −Z turns
@@ -98,22 +103,42 @@ resource construction succeed. Imported text is not HTML, JavaScript or a URL.
   underwater are skipped rather than causing an invalid sample.
 
 The original generator creates curved elevated/banked roads, terrain, ground
-embankments down to the sampled terrain, trees, cottages, bridge decks/piers and
-rails, enclosed tunnel roof surfaces, roadside markings and coastal water.
+embankments down to the sampled terrain, cottages, roadside markings and coastal
+water. Seeded broadleaf and evergreen trees use layered lobed crowns and branches.
+Bridge decks, piers, rails and under-deck bracing share existing material batches;
+tunnels have curved shells, structural ribs and decorative overhead fixtures.
 Objects with the same material are collected into a bounded static batch. The
 renderer owns GPU uploads; this module creates no graphics resource.
 
 Profiles retain **identical road and terrain contact geometry**. Both use eight
 road subdivisions per span and a 56×56 terrain-cell grid. Low quality requests
-30 trees with six-sided crowns and 12-segment vehicle wheels; high quality
-requests 84 trees with nine-sided crowns and 24-segment wheels. Static world
-vertex ceilings are respectively 100,000 and 280,000. Actual counts depend on
-accepted scenery. Renderer resolution/draw budgets are separate.
+30 trees with two six-sided crown lobes/layers; high requests 84 trees with
+three eight-sided lobes/layers. Both use four crown rings. Requested locations can
+be rejected by the terrain/water bounds. Vehicle wheels have 12 circumferential
+segments on low and 24 on high.
+
+| Generator budget | Low | High |
+| --- | --- | --- |
+| Static world vertices | 100,000 | 280,000 |
+| Vertices per vehicle visual | 28,000 | 48,000 |
+| Retained parts per vehicle visual | 13 | 13 |
+
+Each vertex occupies 44 source-buffer bytes. Actual counts come from `stats` and
+depend on the accepted scenery and vehicle class; these ceilings are not a frame
+rate claim. Renderer resolution, total storage and draw budgets are separate.
 
 Terrain grid spacing is a power of two; grid origins are aligned to that spacing
 and heights are stored as Float32 values. Therefore generated terrain triangle
 coordinates are exactly the coordinates supplied to the retained GPU mesh.
 Profile selection cannot quietly change future wheel support surfaces.
+Road normals and all contact-query normals remain the sampled triangle normals.
+Terrain, shoulders and foliage use shared, area-weighted visual vertex normals;
+the renderer interpolates these for lighting. They do not replace the planar
+normal returned by a terrain/contact query. World-aligned shoulder UVs and new
+material colors also change presentation without moving contact vertices.
+Trees, braces, tunnel shells/fixtures and bodywork are decorative geometry, not
+new colliders or support surfaces. In particular, a visible fixture does not
+create a local light or change the renderer's sunlight occlusion model.
 
 The same validated recipe and implementation produce the same source arrays in
 one JavaScript runtime. Integer seeding is explicit; trigonometric Float64
@@ -197,10 +222,14 @@ const draws = vehicleDraws(car, {
 });
 ```
 
-Original `sport`, `touring` and `utility` classes have distinct lofted bodies,
-bonnet/cabin/roof proportions, glass, door seams/handles, mirrors, bumpers,
-headlights/brake lamps, circular tyres, alloy wheel faces and class-specific rear
-wing or roof rails. These are generated original assets, not copied car models.
+Original `sport`, `touring` and `utility` classes have distinct curved lofts and
+bonnet/cabin/roof proportions. Open wheel arches, rounded tyre cross-sections,
+alloy spokes/hubs, shaped fasciae, lamp housings, grilles, seams and trim share
+the existing material groups. Sport has a rear lip; utility has roof rails.
+Curved body, roof, glass and tyres use smooth vertex normals; planar trim, lamps
+and alloy faces retain face normals. These are original generated assets, not
+copied car models. Their published length, width, height, wheelbase, track and
+wheel-radius descriptors remain unchanged; visual detail is not a physics change.
 
 `buildVehicleVisual(classId, {paint,profile})` returns a branded owned visual with
 `dimensions` (`length,width,height,wheelbase,track,wheelRadius`), `parts`, four

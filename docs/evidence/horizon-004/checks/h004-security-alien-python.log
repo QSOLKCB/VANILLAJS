@@ -1,0 +1,10 @@
+test_axiom_forgery_missing_duplicate_unknown (test_alien_math_006.BoundaryTests.test_axiom_forgery_missing_duplicate_unknown) ... ok
+test_exact_fetch_restores_admission_without_unshallowing_checkout (test_alien_math_006.BoundaryTests.test_exact_fetch_restores_admission_without_unshallowing_checkout) ... ok
+test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates (test_alien_math_006.BoundaryTests.test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates) ... ok
+test_finite_outcome_requires_exact_bytes_and_count (test_alien_math_006.BoundaryTests.test_finite_outcome_requires_exact_bytes_and_count) ... ok
+test_source_inventory_and_corruption (test_alien_math_006.BoundaryTests.test_source_inventory_and_corruption) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.084s
+
+OK

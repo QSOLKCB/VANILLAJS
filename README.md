@@ -55,20 +55,23 @@ not imply API stability.
 
 The published v2.8.0 baseline has **67 experimental modules, 48 recipes and two
 research experiments**. Merged HORIZON-001 adds lit rendering and scenery.
-Merged HORIZON-002 adds vehicle dynamics. This final HORIZON candidate adds
+Merged HORIZON-002 adds vehicle dynamics. Merged HORIZON-003 adds
 vehicle audio and racing authoring: **71 modules, 51 recipes**,
 with research unchanged.
 [MODULES.json](MODULES.json) is authoritative. Its `release` and the private
 `package.json` version retain historical `1.0.0` metadata, not GitHub release numbers.
 
-**HORIZON-003 — final v2.9.0 candidate:** [Race Foundry](demos/horizon-lab/index.html)
+**HORIZON-004 — final v2.9.0 polish candidate:** [Race Foundry](demos/horizon-lab/index.html)
 combines elevated route editing, vehicle and sound tuning, retained history and
 an original scenic race against a physics-driven rival. Drive through ordered
 checkpoints, switch cameras and export the complete local race package.
 [Vehicle Dynamics](demos/horizon-lab/drive.html) and the
 [Scenery Atelier](demos/horizon-lab/scenery.html) remain specialist tools.
 v2.9.0 awaits owner review and release approval.
-[Creator tutorial](docs/HORIZON_RACING.md) · [Contracts and verification](docs/HORIZON_003.md) · [Programme](docs/ENGINE_EXPANSION_001.md).
+Curved automotive bodywork, smoother terrain/materials and safe keyboard/touch
+reverse driving complete the final pre-release quality gate. No v2.9.0 tag yet.
+
+[Creator tutorial](docs/HORIZON_RACING.md) · [Polish and verification](docs/HORIZON_004.md) · [Programme](docs/ENGINE_EXPANSION_001.md).
 
 ## Run the labs
 

@@ -3,7 +3,8 @@
 **Full milestone draft for owner review; v2.9.0 is not published.**
 HORIZON-001 was merged in [PR #105](https://github.com/QSOLKCB/VANILLAJS/pull/105)
 and HORIZON-002 in [PR #107](https://github.com/QSOLKCB/VANILLAJS/pull/107).
-HORIZON-003 is the final implementation candidate. Its complete verification,
+HORIZON-003 was merged in [PR #108](https://github.com/QSOLKCB/VANILLAJS/pull/108).
+HORIZON-004 is the final visual and driving polish candidate. Its verification,
 owner review, merge and release approval remain separate gates. The current
 published baseline is v2.8.0; these notes describe the proposed v2.9.0 release.
 
@@ -20,10 +21,14 @@ complete supported race.
   entry points remain compatible.
 - Original scenery recipes generate terrain, trees, roadside buildings,
   bridges, tunnels and elevated/banked road geometry. Static batches and
-  low/high profiles have explicit resource budgets.
+  low/high profiles have explicit resource budgets. Continuous terrain shading,
+  distance-faded road grain and approximate sky/ground metallic reflections
+  improve presentation without changing road contacts.
 - Original sport, touring and utility vehicles have distinct proportions,
   detailed body silhouettes, windows, lights, individual wheels, steering,
-  wheel rotation, suspension response and brake-light feedback.
+  wheel rotation, suspension response and brake-light feedback. HORIZON-004 adds
+  curved lofted bodywork, smooth normals, open arches, profiled tyres and alloy
+  wheels, integrated fascias, original lamps, trim and glazing.
 - [Scenery Atelier](HORIZON_LAB.md) remains the focused environment/appearance
   tool. Its camera tour and JSON study are not a driving simulation or game.
 
@@ -51,6 +56,11 @@ complete supported race.
 - Chase, bonnet and cockpit-style cameras accompany speed, gear/RPM, race time,
   route and checkpoint HUDs. Keyboard and pointer/touch controls support pause,
   restart, recovery and explicit resumption after focus/graphics loss.
+- W/Up drives forward; S/Down brakes forward motion, then requests the real
+  reverse gear below 0.5 m/s. Forward return also brakes through that threshold
+  and respects gearbox shift time. Space brakes independently. Touch offers
+  the same controls; R, RPM, wheel motion and audio follow actual telemetry.
+  Pause/focus cancellation requires a fresh press before motion resumes.
 - The creator desk edits road positions/elevation/bank, surfaces, environment,
   vehicle classes, paint/materials, mass, torque/gears, suspension, grip,
   cameras and sound. Accepted history supports undo/redo; rejected imports
@@ -86,7 +96,7 @@ from GPU pixels, cross-engine floating-point identity and device audio output.
 No unmeasured physical GPU, phone or controller performance is claimed.
 
 [HORIZON-001](HORIZON_001.md), [HORIZON-002](HORIZON_002.md) and
-[HORIZON-003](HORIZON_003.md) document contracts, verification boundaries and
+[HORIZON-003](HORIZON_003.md) and [HORIZON-004](HORIZON_004.md) document contracts, verification boundaries and
 execution records. The final candidate must pass Node, package, offline and
 actual Chromium gameplay/export checks before release approval; screenshots
 supplement those checks.

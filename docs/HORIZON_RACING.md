@@ -19,19 +19,41 @@ visual-authoring workshop whose camera tour does not drive the car.
 
 Cape Aster — Sunward Run is a complete short race through original elevated
 coastal scenery: about 509 m, eight ordered checkpoints and a three-second
-countdown in the supplied recipe. Select **Start race**, wait for the countdown,
-accelerate with W/up,
-brake with S/down/Space and steer with A/D or left/right. Keyboard driving belongs
-to the focused canvas; form fields remain ordinary authoring controls. Touch
-buttons offer the same throttle, brake and steering. Escape pauses.
+countdown in the supplied recipe. Select **Start race** and wait for the countdown.
+Keyboard driving belongs to the focused canvas; form fields remain ordinary
+authoring controls.
+
+| Control | Action |
+| --- | --- |
+| W / Up | Drive forward; brake first if currently reversing |
+| S / Down | Brake while travelling forward, then engage reverse and drive backwards |
+| A / D or Left / Right | Steer |
+| Space | Brake independently without requesting a direction change |
+| Escape | Pause |
+
+Hold S/down to slow to **0.5 m/s or less**, request the actual reverse gear, wait
+for its shift delay, then drive backwards. W/up follows the same safe transition
+back into first gear. The threshold uses total vehicle speed, including sideways
+motion. This is a lab-owned control policy over the existing `vehicle3d` gearbox;
+it never negates velocity or moves the rendered car independently. Reverse uses
+the configured reverse ratio, and automatic forward shifts do not cancel it.
+Holding both direction controls, or holding Space, applies the brake instead.
+
+The five touch buttons provide left, right, **Brake / reverse**, independent
+**Brake** and **Forward** actions. The gear display shows **R** in reverse, while
+engine audio and wheel rotation follow actual vehicle telemetry. Pause, focus
+loss or a hidden page clears driving requests. Release held keys and press again
+after resuming; an old held reverse key cannot restart driving by itself.
 
 Follow the amber checkpoint gates in order and race the turquoise rival to the
 finish. The rival steers a real vehicle through the same physics; it is a
 non-contact pace opponent, so cars can overlap. Brake before corners. **Recover**
 returns you just beyond the last accepted gate (or to the start before any gate)
 and adds the displayed time penalty: four seconds in the supplied recipe.
-Recovery does not award skipped gates. **Restart** begins a new attempt with your
-accepted tuning intact. Race time advances only during simulation; a recovery
+Recovery does not award skipped gates. Passing a checkpoint backwards does not
+award it. Recovery and **Restart** restore first gear with cleared driving input;
+Restart begins a new attempt with your accepted tuning intact. Race time advances
+only during simulation; a recovery
 penalty can leave you waiting at the finish before the result is decided.
 Switch between chase, bonnet and cockpit-style cameras without changing physics.
 Enable sound with its button to hear original procedural engine/exhaust and tyre
@@ -59,9 +81,11 @@ are N/m and damper values are N·s/m. Paint and material appearance are independ
 of forces. Both cars use the accepted vehicle recipe; **Rival target (m/s)**
 sets the opponent's desired speed rather than teleporting it along the road.
 The supplied race uses automatic gearing. The lower-level vehicle recipe also
-permits a manual gearbox, but this race UI has no shift buttons; disabling
-`vehicle.gearbox.automatic` keeps the car in its initial forward gear. Use the
-Vehicle Dynamics study for manual-gear experiments.
+permits a manual gearbox, but this race UI has no forward-ratio shift buttons;
+disabling `vehicle.gearbox.automatic` retains first gear during forward driving.
+The safe first/reverse direction requests still work. The separate Vehicle
+Dynamics study retains its existing manual gear controls and brake mapping;
+the race's directional control policy does not change that workshop.
 
 The camera field of view and steering/bank angles are in radians. Engine, exhaust,
 tyre and shift gains are linear mix levels from 0 to 0.4; **Exhaust tone** is a

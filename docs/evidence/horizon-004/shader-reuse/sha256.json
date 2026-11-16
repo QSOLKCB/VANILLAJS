@@ -1,0 +1,15 @@
+{
+  "adopted-renderer.js.txt": "6f1fd13f577b41ada51242591661e80d55707b5152888655a25e79e0ea4b2a47",
+  "baseline-geometry.js.txt": "ff7a8193648e807a72c4017d4b1f129f77d4e731646e0d29928e6db603d649c1",
+  "baseline-renderer.js.txt": "a6aa9266f3195e082ea0248321c44d759abaf60155dd81256d0f51091bfb8863",
+  "candidate-geometry.js.txt": "dfed00913da27f97806c39ddc5d472de1d9382994fed51101048b24d0775a30e",
+  "current-renderer.js.txt": "864663e095d298e456dabb2b5ab4e1a874822cb2b7cf0c5758d903577cf0ec76",
+  "initial-isolation.json": "f25c776374a454a3c66718731e72c073f3fdc2656384bb84395076e012adc653",
+  "initial-isolation.mjs": "b97ebfe5599baed4bdc82e625b380787c208f044cb649c31b33bfa805d264b14",
+  "native-renderer.log": "64a5d860af3a720367f02af3d72b0ba39788a4bc188e0cb48a27346fa472c3e2",
+  "noNoiseDiagnostic-renderer.js.txt": "916c97c384e6a8e338361bdea82dca3b6fd93e7ecb0cdde3d086d6e7733bad2b",
+  "oldLightingDiagnostic-renderer.js.txt": "50714a9d6113d9748d9e076b33682077a1ae1fd958b11c0439771d477e6890a8",
+  "shader-cost-isolation.json": "4f308a35d09cc188801e79d55df80d1ce3f7368c4476262018e2b05cb5312f75",
+  "shader-cost-isolation.mjs": "b2bf2b93d3d14f7ad32f56769ca7a4c9a53b60982a44705f190931baec6b4c57",
+  "vector-renderer.js.txt": "75cca729d1e3ed07bcbe28b8b0c2540a6a0b3d670f2aa69d5cd66e762bcbf032"
+}

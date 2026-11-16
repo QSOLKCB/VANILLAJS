@@ -92,6 +92,7 @@
         "docs/VEHICLE3D_API.md",
         "docs/HORIZON_DRIVING.md",
         "docs/HORIZON_003.md",
+        "docs/HORIZON_004.md",
         "docs/HORIZON_RACING.md",
         "docs/VEHICLE_AUDIO_API.md"
       ],
@@ -105,7 +106,7 @@
         "node scripts/browser-check.js"
       ],
       "limitations": [
-        "HORIZON-001 and HORIZON-002 are merged. HORIZON-003 is the final v2.9.0 candidate; publication requires owner approval.",
+        "HORIZON-001/002/003 are merged. HORIZON-004 visual and reverse-driving polish is the final v2.9.0 review gate; publication requires owner approval.",
         "Scenery/drive JSON exports are inert studies. Race Foundry can also export its fixed original single-route game with local runtime, not arbitrary scripts or a migration of qsol.vanillajs.track.v1.",
         "Road surface samples refer to rendered triangles and explicit surface IDs; terrain alone cannot describe bridges/tunnels.",
         "Glass uses a documented approximate material; contact patches are not general scene shadows or photorealism.",
