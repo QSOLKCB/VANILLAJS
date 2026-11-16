@@ -1,0 +1,507 @@
+{
+  "schema": "qsol.scene-narrative.execution.v1",
+  "recordedUTC": "2026-11-16T12:27:37.228645+00:00",
+  "baseSourceSHA": "7f2d5e62bb64aaf8c6ef7af8df678da9fe38412d",
+  "candidateSourceSHA": "7bb8b5ba13932d4165e9610868155b7db1c67959",
+  "sourceNote": "Final implementation bytes were committed at this SHA. Required checks and full Chromium used this identical source/package tree, with the commit created while Chromium was running. Subsequent evidence-only commits change no packaged file, harness or policy. The source commit contains an evidence README placeholder replaced by this record.",
+  "environment": {
+    "node": "v22.18.0",
+    "python": "3.14.4",
+    "platform": "linux",
+    "arch": "x64",
+    "playwright": "1.64.0",
+    "chromium": "158.0.8127.18",
+    "graphics": "headless Chromium, --use-angle=swiftshader --enable-unsafe-swiftshader",
+    "browserProvisioning": "Pre-existing external installation; no installation or protected-runner dispatch",
+    "authority": "Local execution only; not a reusable trusted-main CI witness"
+  },
+  "package": {
+    "kind": "qsol.vanillajs.offline-package.v1",
+    "verified": 848,
+    "bytes": 5359311,
+    "workerSha256": "f0ec86398ed85cda40085d3592967864591b5975b5b6a296c060fa36a29a5a96",
+    "manifestSHA256": "cd6eae5d57247479301894c9195dd7c1b5f356d6ef03578f9ed9962d7b808465",
+    "manifest": "package-manifest.json"
+  },
+  "results": [
+    {
+      "command": "node --test tests/*.test.js",
+      "exitCode": 0,
+      "tests": 1026,
+      "passed": 1026,
+      "failed": 0,
+      "log": "node.tap"
+    },
+    {
+      "command": "node scripts/check.js",
+      "exitCode": 0,
+      "javascriptFiles": 442,
+      "moduleContracts": 66,
+      "researchExperiments": 2,
+      "documentationLinks": 537,
+      "sourceImports": 116,
+      "agentWorkflows": 10,
+      "log": "source-check.log"
+    },
+    {
+      "command": "node scripts/build.js",
+      "exitCode": 0,
+      "log": "build.log"
+    },
+    {
+      "command": "node scripts/verify-offline.js",
+      "exitCode": 0,
+      "log": "offline.json"
+    },
+    {
+      "command": "node scripts/browser-check.js",
+      "environmentVariables": [
+        "NODE_PATH=/home/trent/.local/share/qsol/browser-tools/node_modules",
+        "PLAYWRIGHT_CHROMIUM_EXECUTABLE=/home/trent/.cache/ms-playwright/chromium_headless_shell-1254/chrome-headless-shell-linux64/chrome-headless-shell"
+      ],
+      "exitCode": 0,
+      "groups": [
+        "home",
+        "render",
+        "play",
+        "worlds",
+        "research",
+        "donor",
+        "editor"
+      ],
+      "log": "browser.log"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    {
+      "command": "sourceProfile with explicit local-untrusted environment",
+      "groups": 7,
+      "unresolvedIssues": 0,
+      "log": "cache-closures.json"
+    }
+  ],
+  "preserved": {
+    "existingModules": {
+      "baseFilesChecked": 68,
+      "unchanged": true,
+      "baseInventorySHA256": "d9616ca4c09f15aea0e16139882a263691edfe39ec95670d80d692d7863db4ff"
+    },
+    "formalProofs": {
+      "baseFilesChecked": 6,
+      "unchanged": true,
+      "baseInventorySHA256": "d52d94478d342a82f2b99f09938dad083fb925d0146c7bd62f89304cae4fbc2d"
+    },
+    "researchHistory": {
+      "baseFilesChecked": 6,
+      "unchanged": true,
+      "baseInventorySHA256": "bad8baa53ae32d89005a6d9126271ac5abaa9bcf8b1d5ee25911b91e4229290d"
+    },
+    "existingExecutionEvidence": {
+      "baseFilesChecked": 36,
+      "unchanged": true,
+      "baseInventorySHA256": "c895572f36ad203033a9b1c09dfd55f00c812a3819b4d78563bbcb020728698c"
+    },
+    "workflows": {
+      "baseFilesChecked": 24,
+      "unchanged": true,
+      "baseInventorySHA256": "4c1af405342a422062e5a1d52b60cc88e2d53a0ee86149f41bc161f1e760a307"
+    },
+    "policyAndMetadata": {
+      "baseFilesChecked": 10,
+      "unchanged": true,
+      "baseInventorySHA256": "91a4bacce60659a38d3baa153b653515741d5b53fe33898c804d34e9618af4d6"
+    }
+  },
+  "changedSourceFiles": [
+    {
+      "path": "MODULES.json",
+      "bytes": 36056,
+      "sha256": "605f1642c3e19368331c25a6a60519f14cc86f172743fba4fbad79fb35cdd1d5",
+      "gitBlob": "28c9694b49f8d707cae200807b3ae111950d1d70"
+    },
+    {
+      "path": "README.md",
+      "bytes": 21702,
+      "sha256": "f57c75da0944ef626fac3188727c3c9796d3597c84e9f775453afcfcec8bd1cf",
+      "gitBlob": "c0fdf2fd230bd0a7ad2fad7bd3b6731c3f925aeb"
+    },
+    {
+      "path": "ROADMAP.md",
+      "bytes": 10096,
+      "sha256": "d5b7a9efceefcbb72f07c649b6769f5ba941cddc35fe8886c2315dda04da3a4a",
+      "gitBlob": "e7aa381d922fb478061658a42348d26c7e32f3f3"
+    },
+    {
+      "path": "agents/catalog.json",
+      "bytes": 11464,
+      "sha256": "282a0ab763c969fc6edec1581ce51754b0d7de8b24279b27b8f28ec0390eb354",
+      "gitBlob": "4e58845d8f1fe710b6afa5fa7e0da332c4cb38d3"
+    },
+    {
+      "path": "agents/catalog.schema.json",
+      "bytes": 5252,
+      "sha256": "0c18d3c8d7b4c1810954fd503d999083becb0dbf96ce5362b0191ce045ece0f6",
+      "gitBlob": "bae77e6af56c91e5b7bcf7e9c8e6eaec12f2b646"
+    },
+    {
+      "path": "demos/creator-hub/index.html",
+      "bytes": 10621,
+      "sha256": "284a9ef85536c0005fc66d9e374dec0cd5328ecd46dc4c5d8f3c1b55b2de7a89",
+      "gitBlob": "8bc2c684a2ea35e668d3a6fe759a4d2266cba7bc"
+    },
+    {
+      "path": "demos/editor/app.js",
+      "bytes": 45507,
+      "sha256": "b844764e4bd426b5de9ad2ed614eaf4209ccc0810b9b3e27e332e09f66dd260d",
+      "gitBlob": "ce6e03576e3198e1884bdd832ed31f88f7d232e5"
+    },
+    {
+      "path": "demos/editor/index.html",
+      "bytes": 15576,
+      "sha256": "3b93903c907a3749f96602806797bd24a0be11ac90dbb6cfbff8ba7bfc31729d",
+      "gitBlob": "848ccd84c0568b45e61b8c8dedefd0025633047f"
+    },
+    {
+      "path": "demos/editor/scene-composition-panel.js",
+      "bytes": 16303,
+      "sha256": "ef2c82b82ee9b7103dbc0ef1dac9e687665b35de8c2ad146038d95f60785d847",
+      "gitBlob": "8644df6b0b934f719bad298432f8d4c242d8d486"
+    },
+    {
+      "path": "demos/editor/scene-composition-preview.js",
+      "bytes": 2927,
+      "sha256": "209a64aa004454cfaa1911203ca1a3bc3d12acf6d62bea2c9b29c5dcb0ba5560",
+      "gitBlob": "48227d1e32d39e9682a22bb75b19553cd4d61fe8"
+    },
+    {
+      "path": "demos/editor/scene-composition.js",
+      "bytes": 4424,
+      "sha256": "8bcc5a349c3b5aee167e37bce927df5664410f9ce6eba72809ccbb2ed8f443b8",
+      "gitBlob": "1ad0fdc61fc45a9c62fac4bc149d13019ab4d6dd"
+    },
+    {
+      "path": "demos/editor/style.css",
+      "bytes": 15935,
+      "sha256": "f21005d7a165ec93892cf28cbaa60b50da4970991b55399dd39e24206c60302c",
+      "gitBlob": "acb4c8250e92d4311a1c52032377e96626c13ad9"
+    },
+    {
+      "path": "demos/narrative-foundry/app.js",
+      "bytes": 16648,
+      "sha256": "cf5227f2eb54f8b98e675e3220e554b3703b500f3de63f8d4f72ee2ce0be8101",
+      "gitBlob": "37f93ef06f3d25ff0c29eaddbd1ad689a489d367"
+    },
+    {
+      "path": "demos/narrative-foundry/index.html",
+      "bytes": 9736,
+      "sha256": "ce546c3471bb84209c3f9fb6b25d71b32ffc5885b391e4a93ef26b1e84b2e0f8",
+      "gitBlob": "84de927a667aa3868c8b51d5e09bb3d6abda3a0c"
+    },
+    {
+      "path": "demos/narrative-foundry/scene.js",
+      "bytes": 4683,
+      "sha256": "aa8cd1b8df07d4d7ddd52e99288c3243ec46bc6ffd61893f2ab9554692ed21a8",
+      "gitBlob": "c6ead25fb9362fa9f7b936a110eb5128ba0582b0"
+    },
+    {
+      "path": "demos/narrative-foundry/start.js",
+      "bytes": 835,
+      "sha256": "9df5aebd3588aef92a1585c738f53368a480fa8eeb17525b331c273bd582ca6f",
+      "gitBlob": "4ed69500881cb89906e15e601af9489e930f7a4a"
+    },
+    {
+      "path": "demos/narrative-foundry/story.js",
+      "bytes": 3798,
+      "sha256": "1bbc16a52611c57e160334c930eeebcb54bd3a551b43b8d1e1607b6e3b40d59c",
+      "gitBlob": "369345bb286872320a162613e6c42c3db884c27d"
+    },
+    {
+      "path": "demos/narrative-foundry/style.css",
+      "bytes": 10801,
+      "sha256": "b48002e5b88fae73f79dc55c3b8e3608d50bd7acc7d896b2e594e9f509c324b4",
+      "gitBlob": "2a7412a15f9b9973e425af4fce2144fa755a8a1c"
+    },
+    {
+      "path": "docs/AGENT_GUIDE.md",
+      "bytes": 8396,
+      "sha256": "bb2c3a2c93a1687410c80a7575f1991019592d017cadacc3bc096973036ad890",
+      "gitBlob": "3710df6b5f9369ed1e0d4da6666401fc2fa972be"
+    },
+    {
+      "path": "docs/API.md",
+      "bytes": 51068,
+      "sha256": "5024b26cfc57db7820b8c8318336de7da4f784ba928f01caba3e4626885e0712",
+      "gitBlob": "1e6aba87c9d29a7f5a597f2fd336e336e817dfdc"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "bytes": 20657,
+      "sha256": "53dcad7ffa602d4526b4b48124a902a3d91eef7e4ef8831e4ca1e174ca4a1a80",
+      "gitBlob": "566fe82d4519cbea82623367b341249b3d78a0e9"
+    },
+    {
+      "path": "docs/EDITOR_WORKBENCH.md",
+      "bytes": 5394,
+      "sha256": "10383fd8526b62685a2a3095b608fa30cb2adc5aaf8eef91eb3c6be11beeb7a3",
+      "gitBlob": "e1657dfe06d0bbc776b52cdf3e16c5ec29adf1ee"
+    },
+    {
+      "path": "docs/ENGINE_EXPANSION_001.md",
+      "bytes": 20268,
+      "sha256": "5e44d3e5cabf545481fbc5ff115319640631ee103045305e69767125e1a9bffd",
+      "gitBlob": "3007ed2d563d5bd55f54397d19172dc36dfcbecf"
+    },
+    {
+      "path": "docs/NARRATIVE_API.md",
+      "bytes": 12945,
+      "sha256": "f9ec6254b166aaffa672015cb26e6b048240b81a70837b6e0057d37cea94e65c",
+      "gitBlob": "c602b9217f8672544c6b8866ce23ac086a4cd313"
+    },
+    {
+      "path": "docs/NARRATIVE_FOUNDRY.md",
+      "bytes": 10821,
+      "sha256": "e629df0acbb6db477957ffe713aab2df666e756a3ce9cfab899c22230d36199b",
+      "gitBlob": "67785f44347794aef0ff8703b899b6fe2c93337e"
+    },
+    {
+      "path": "docs/SCENE_COMPOSITION.md",
+      "bytes": 11981,
+      "sha256": "f0b21c774cc29cb453b2fd176ccb3e20406598b104872f07f47115ae354df619",
+      "gitBlob": "f8116478d030f698820ff8bd05d476d089e9947c"
+    },
+    {
+      "path": "docs/SCENE_NARRATIVE_001.md",
+      "bytes": 8125,
+      "sha256": "6c8e7aae97017a05e91fd64867a617786bc23e51513c351f4afa0c03a8c8b210",
+      "gitBlob": "4f499088cb7dd257c216885df2ff60dc7e2047c3"
+    },
+    {
+      "path": "docs/SCENE_NARRATIVE_2_7_0_DRAFT.md",
+      "bytes": 2325,
+      "sha256": "c57aced79abfa8c02e57239d496fba9fde995a639ab484e3bdc1b355f890c10b",
+      "gitBlob": "43399cea8779dab0ad3b4f3ae8db7dcfb24ec3a7"
+    },
+    {
+      "path": "docs/evidence/scene-narrative-001/README.md",
+      "bytes": 97,
+      "sha256": "71aa5ab1b9136e312ab90975b31b5837d3acfc14d669a9b7ac000be3143b5420",
+      "gitBlob": "2b1d7dd96af243bdff81e81dc3eeef1e89fc24f7"
+    },
+    {
+      "path": "index.html",
+      "bytes": 11669,
+      "sha256": "69114f716fb9f38438e7303a9b9f66debad67ee90798074d69938e0f00ee4ada",
+      "gitBlob": "0e1abf63a77f5f767732358f456effd2c20f8d52"
+    },
+    {
+      "path": "modules/narrative/index.js",
+      "bytes": 16821,
+      "sha256": "d3e1527a7c48f7976a638cd911a8edf694f197eff6fc5acba1c2c9b2224789b4",
+      "gitBlob": "cd83ca0ac1a2be65f5eeb8aaa21467ac9a898815"
+    },
+    {
+      "path": "modules/scene-graph/index.js",
+      "bytes": 13069,
+      "sha256": "3bc148011cf382c4e35fbea17a1df5ff5aef5caef305d3bc7c323b8986e02c16",
+      "gitBlob": "e35474f13f1920ff8cc55728683ee87e177427e1"
+    },
+    {
+      "path": "scripts/audit-docs.mjs",
+      "bytes": 6142,
+      "sha256": "1150455d7f6bebb8c44aa25ed37885c97bb45720c10b09d2f7fecc5ece9c7e19",
+      "gitBlob": "699ea206872feb1999e02d7a4f79e029e55484af"
+    },
+    {
+      "path": "scripts/browser-cache-profile.json",
+      "bytes": 143238,
+      "sha256": "44fc3ed732cdc332b0bde10ad91c7aead8e7d1073f1ed1d3bb04f421c6fe13df",
+      "gitBlob": "4f4f1d59b263382132f916035c134ffe117f61e6"
+    },
+    {
+      "path": "scripts/browser-check.js",
+      "bytes": 10914,
+      "sha256": "7626f62b361a538ef7f36aa2ae9b9adcf7ff474ceccc474e6d054fba2b0b05b8",
+      "gitBlob": "5c1adeb70cdf95d7f1cae46dbf37c8c1fc5a1a51"
+    },
+    {
+      "path": "scripts/browser-narrative.js",
+      "bytes": 16458,
+      "sha256": "7d227c83a8c9ee9fa04ce3d90a7689c7b55280ee5f60453d7644c66ed60f7678",
+      "gitBlob": "8d155fb29e5e9864b159676da1b50b7cfac5ea0a"
+    },
+    {
+      "path": "scripts/browser-package-provenance.mjs",
+      "bytes": 8672,
+      "sha256": "51cff92817d6e74599ad2c092986a7d51e75a3bd15bfaf2aa2b2dfc9936a9c09",
+      "gitBlob": "e1ac7b00c015f69fd3a3da686c1b6bf0c8c9cd3f"
+    },
+    {
+      "path": "scripts/browser-scene-composition.js",
+      "bytes": 10280,
+      "sha256": "46953c11642b5859fde0c83aadc23911f72e70cefa114beab64c2d533a2503fd",
+      "gitBlob": "c184646c22f5f7aebb6746ec58f2663c50f6123a"
+    },
+    {
+      "path": "scripts/build.js",
+      "bytes": 3530,
+      "sha256": "6af6dcc75cda3174ff55f872bb49aee083e33ee5836e3895076f7d89a07a592d",
+      "gitBlob": "51ac89b23f229ea0178f4244b77a4a02431f1802"
+    },
+    {
+      "path": "scripts/foundry-startup-check.mjs",
+      "bytes": 5074,
+      "sha256": "bf06bb87a4cececd5a35425dadac22da9c41a78dc0af0e38386aeae4cb2e198d",
+      "gitBlob": "eef4f973adad5ce561b7b0207e75e8c234454f91"
+    },
+    {
+      "path": "scripts/pursuit-package.mjs",
+      "bytes": 4594,
+      "sha256": "f37883fe7ee82f43398790771d91a167130cda06d0f5ad4b7ce0464672e64976",
+      "gitBlob": "36caf57bc36b983a62e8c7ee928c9b6d08ecbc1c"
+    },
+    {
+      "path": "tests/browser-package-provenance.test.js",
+      "bytes": 6960,
+      "sha256": "7657294f9f5734ec3b361737f6b265c2f2cc73ef91a7a6202cb7a0e401a6942c",
+      "gitBlob": "07f872a2369b1023cc42c8a3ddae5f28826ab764"
+    },
+    {
+      "path": "tests/creator-gateway.test.js",
+      "bytes": 3566,
+      "sha256": "76fee6f3d2e94c85cd51a6c66b430a8406176b7be0cca6dd3b7a5aa3f90b1254",
+      "gitBlob": "17dc40342e71ae9f430f8cf22bbaf1536243aae8"
+    },
+    {
+      "path": "tests/narrative.test.js",
+      "bytes": 14362,
+      "sha256": "bad478cd7aa7bec0e72f9591d9ab243523b93fe7610221eb057f4906afdd0a7c",
+      "gitBlob": "7551d0f43ee30613b4d9eb559a38768fbe7b3533"
+    },
+    {
+      "path": "tests/scene-graph.test.js",
+      "bytes": 9792,
+      "sha256": "2048bcca02a2c022a1478b4e8311cdcd7505d3115e119f1b84d6af127f039c99",
+      "gitBlob": "a9ef342e3b49d69c2946e922fb40982ef272b00d"
+    },
+    {
+      "path": "tests/test_alien_math_bundle.py",
+      "bytes": 14122,
+      "sha256": "4a8b590d4d3343945115b4a0ecd26d3078501b8da81110de9559dfd0b5f13eb4",
+      "gitBlob": "ffa39a13852308066dbe13522c6bc61134953cf5"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "browser.log",
+      "bytes": 9834,
+      "sha256": "c5ffb70e33aa2da26a218e8f6b28608919f0c4355dc16d4982a212c82eb81365"
+    },
+    {
+      "path": "build.log",
+      "bytes": 57,
+      "sha256": "76101cbe28ddba49a1493e495c3fba1c14d819165dbde6cb2a18cbe4438e049b"
+    },
+    {
+      "path": "cache-closures.json",
+      "bytes": 861,
+      "sha256": "964364babb5f3b115c5ab07475c0afa85bb57f0f1732ecb87f0fd445feee31f5"
+    },
+    {
+      "path": "cache-tests.tap",
+      "bytes": 6609,
+      "sha256": "61865fd1ec98c189210a151ede31a1dfad9aad6f9041e7542441986d343ba614"
+    },
+    {
+      "path": "narrative-first-failure.log",
+      "bytes": 10995,
+      "sha256": "b34cb1bb6352a416681de1a8c8d277e32c16d9b66def46111950edaba63de36a"
+    },
+    {
+      "path": "narrative-focused.log",
+      "bytes": 241,
+      "sha256": "6658bfdbd5cd1190d0eab54b0c18c44032dd818293fe102e607df7344a10c8b3"
+    },
+    {
+      "path": "narrative-foundry-desktop.png",
+      "bytes": 383462,
+      "sha256": "f5d9a0b4cc83d2852ec31460d3d07e9e80fd3b71bd79ccde652e9f4bf3705d61"
+    },
+    {
+      "path": "narrative-foundry-mobile.png",
+      "bytes": 362145,
+      "sha256": "93b18b25b725b69adbb6cf0b309914f334ecf022b85d36be7ee6dea49560ced3"
+    },
+    {
+      "path": "node.tap",
+      "bytes": 227131,
+      "sha256": "268c4c2db3ef73fe70fe97f6e33614460491f65e4c568e1cff64ddb8d745736d"
+    },
+    {
+      "path": "offline.json",
+      "bytes": 158,
+      "sha256": "324d981e6c31c9d1db283cec388dbfeb8b0c0041c67dea95e7154570c6ae6396"
+    },
+    {
+      "path": "package-manifest.json",
+      "bytes": 165575,
+      "sha256": "cd6eae5d57247479301894c9195dd7c1b5f356d6ef03578f9ed9962d7b808465"
+    },
+    {
+      "path": "scene-composition-desktop.png",
+      "bytes": 322371,
+      "sha256": "228c628c4b6ab23e603529416e21b53ccd26390797650d4ffbbbadaa212c8e0b"
+    },
+    {
+      "path": "scene-composition-mobile.png",
+      "bytes": 372726,
+      "sha256": "ce426b06db4bad88c5ea7b749793817b7b63810745f5a14f964bdaf427a0e66a"
+    },
+    {
+      "path": "scene-composition-preview.png",
+      "bytes": 3185,
+      "sha256": "0d47d517584e4d6f2723a8a45508a2befa50c67b77d90752047f8b911a9229ea"
+    },
+    {
+      "path": "scene-first-failure.log",
+      "bytes": 1913,
+      "sha256": "19c7eb15bbfefc3819f401640d1e2407a51ae6d25be48b5d8747188f9472229e"
+    },
+    {
+      "path": "scene-focused.log",
+      "bytes": 214,
+      "sha256": "545dcf3dde73af3d79d3d6824ba38854112f9c09347b4bee821599636e6b7959"
+    },
+    {
+      "path": "scene-offline-setup-failure.log",
+      "bytes": 454,
+      "sha256": "9921ba4d7d857aa054b45e2c2ab0cfe7fb54660e9ea8ccce2003470953e1fa34"
+    },
+    {
+      "path": "source-check.log",
+      "bytes": 736,
+      "sha256": "3b2922e162c3ba9db6e315583231ce1fa4fa19ee7b4c4dde0ece20318bcd35ab"
+    }
+  ],
+  "limitations": [
+    "Experimental APIs; owner review and release pending",
+    "Workbench v1/v2 project saves do not include the separate scene sidecar",
+    "Full affine composition may differ visually from legacy decomposed rotated/nonuniform parent transforms",
+    "Directional lighting and roughness are portable metadata, not newly implemented shaders",
+    "Continuous scene samples retain bounds checks; endpoint admission is not a proof of every intermediate sample",
+    "Narrative diagnostics are structural; they do not prove condition satisfiability",
+    "Exact narrative traversal and saves are separate from Float64 transforms and GPU pixel output",
+    "Software WebGL and touch emulation only; no physical RTX/mobile/controller execution",
+    "Firefox/Safari not executed",
+    "No benchmark/performance improvement claim",
+    "No Games2 adoption or modification"
+  ],
+  "evidencePackagingVerification": {
+    "command": "node scripts/build.js && node scripts/verify-offline.js; compare rebuilt manifest and offline receipt to tested copies",
+    "exitCode": 0,
+    "manifestByteIdentical": true,
+    "offlineReceiptByteIdentical": true,
+    "note": "Evidence directory is excluded from the runtime package; identical package needs no second browser execution."
+  }
+}

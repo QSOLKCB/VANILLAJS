@@ -1,22 +1,23 @@
 # ENGINE-EXPANSION-001 — Build the Engine First
 
-**Published baseline:** [v2.5.0 — The Creator Gateway](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0),
-release commit `32b4fb1ca80e854297998aa00f87a8f012398b89`.
-**Reviewed starting main:** `433f8c87a74ed145a612510ee388a7aacc1280f6`.
-At that revision, `MODULES.json` registers 62 experimental modules, 43 recipes
-and two research experiments. The historical package/catalogue `1.0.0` metadata
-is not a release counter and is not migrated by this programme.
+**Published baseline:** [v2.6.0 — The Game Feel & Sprite Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.6.0).
+**Reviewed main for v2.7.0:** `7f2d5e62bb64aaf8c6ef7af8df678da9fe38412d`.
+Owner review/merge of PR #101 and publication of v2.6.0 satisfy the previous gate.
+That release contains 64 experimental modules, 45 recipes and two experiments.
+The programme originally began at `433f8c87a74ed145a612510ee388a7aacc1280f6`,
+after v2.5.0 (`32b4fb1ca80e854297998aa00f87a8f012398b89`, 62 modules/43 recipes).
+Historical package/catalogue `1.0.0` metadata is not a release counter.
 
-This document defines four sequential milestones. The current PR implements only
-the **v2.6.0 candidate**; owner review, merge and release remain separate gates.
-All v2.7.0–v2.9.0 interfaces and formats below are **proposed design contracts,
-not available APIs**. They need their own implementations, tests, docs and reviews.
+The current PR implements only **v2.7.0**. Its public contracts are described in
+[Scene Composition](SCENE_COMPOSITION.md), [Narrative API](NARRATIVE_API.md) and
+[the milestone record](SCENE_NARRATIVE_001.md). v2.8.0–v2.9.0 contracts below remain
+**proposed designs, not available APIs**. Each needs separate implementation and review.
 
 | Release | Milestone | Dependency and review gate |
 | --- | --- | --- |
-| v2.6.0 | SPRITE-FEEL-001 — Game Feel & Sprite Foundry | Current implementation candidate; complete Sprite/Weapon Feel labs and verification before owner review |
-| v2.7.0 | SCENE-NARRATIVE-001 — Scene & Narrative Foundry | Start only in a later task after owner-approved v2.6.0 merge/release |
-| v2.8.0 | GAME-MAKER-001 — Game Maker API | Reviewed scene/resource contracts and v2.7.0 merge/release |
+| v2.6.0 | SPRITE-FEEL-001 — Game Feel & Sprite Foundry | Published after owner review, PR #101 merge and release |
+| v2.7.0 | SCENE-NARRATIVE-001 — Scene & Narrative Foundry | Current candidate; owner review, merge and release pending |
+| v2.8.0 | GAME-MAKER-001 — Game Maker API | Later task after owner-reviewed v2.7.0 merge/release; consumes scene/resource contracts |
 | v2.9.0 | HORIZON-3D-001 — 3D Racing Foundry | Earlier milestones reviewed/released; three separately reviewed HORIZON implementation PRs |
 
 Games2 is a future consumer and remains unmodified throughout this programme.
@@ -45,9 +46,9 @@ GPU/audio resources and authored fiction. Resource handles never enter data-only
 JSON. Import admission must finish before accepted state changes. Preserve existing
 formats and numerical boundaries, including Q16.16 and archived formal evidence.
 
-## v2.6.0 — Game Feel & Sprite Foundry
+## v2.6.0 — Game Feel & Sprite Foundry (published)
 
-The implementation candidate adds a pure `sprite2d` module and an FPS weapon-feel
+The published implementation adds a pure `sprite2d` module and an FPS weapon-feel
 adapter, with separate creator labs. Neither changes existing simulation defaults.
 
 **Sprite contract:** validated implementation-version/seed/recipe/palette input
@@ -78,65 +79,61 @@ tests, actual packaged Chromium editing/play, offline startup and old-worker
 recovery. Creator Hub/catalogue links and tutorials must lead to the real labs.
 Only executed results against the candidate count; this roadmap is not evidence.
 
-## v2.7.0 — Scene & Narrative Foundry (proposed)
+## v2.7.0 — Scene & Narrative Foundry (current candidate)
 
 ### Scene composition
 
-Extract or extend the Workbench's existing hierarchy with a reusable pure scene
-contract before adding more editor-only rules. The initial design retains the
-existing 128-object/16-depth bounds unless a separately measured capacity change
-is reviewed. Validate IDs, single ownership, missing parents, cycles, transforms,
-component fields and resource references before replacement.
+The new pure `scene-graph` module implements validated hierarchy, stable traversal,
+full affine local/world conversion, typed component descriptors, caller-time
+transform tracks and bounded nested prefabs. Expanded scenes retain the
+128-node/16-depth bounds. IDs, parents, cycles, transforms, component fields and
+prefab expansion are checked before replacement. Matrix inversion retains shear
+and rejects singular or out-of-bounds results; it is not a new physics solver.
 
-Planned operations: validate a scene, traverse in stable order, compose a local
-transform with its parent, convert world/local poses, instantiate a bounded
-prefab, sample keyframed transforms and produce a renderable snapshot. Full
-transform support must document scale/inversion/rotation order and reject singular
-conversions rather than silently corrupting physics. Nested prefab expansion needs
-explicit depth/object budgets, cycle rejection and fresh identity remapping.
+Camera, light and appearance components are inert descriptors. The Workbench's
+owned preview adapter consumes these through the existing renderer, supports
+ambient tint/exposure, and disposes its resources explicitly. Directional light
+and roughness remain portable metadata, not newly implemented shaders.
 
-Camera, light and appearance components are inert descriptors. A renderer adapter
-creates owned resources, resolves local asset IDs and disposes them explicitly.
-Animation tracks use caller-supplied time and defined interpolation; rendering
-must not advance authoritative state. Root physics-body restrictions remain until
-a separate world/local collision contract is implemented and tested.
-
-Keep v1/v2 scene and project imports working. An extended scene envelope must have
-an explicit new version or validated sidecar plus documented upgrade/downgrade
-behaviour. Roundtrip legacy fixtures unchanged, test rejected-import rollback,
-transform inverses, hierarchy reparenting, prefab capacity, animation seeks and
-resource disposal. Do not silently generalise `demo-timeline`'s existing contract.
+The Workbench panel authors, samples, previews and exports
+`qsol.vanillajs.scene-graph.v1` as a separate sidecar. Existing v1/v2 scenes,
+projects, physics-root restrictions and the original exporter remain unchanged.
+Save project does not include the sidecar. Capturing legacy local transforms can
+look different under rotated, nonuniform parents because the new full affine
+composition preserves shear that the legacy approximation discards. Intermediate
+animation samples remain subject to bounds checks; endpoint validation is not a
+proof of every continuous sample. See [Scene Composition](SCENE_COMPOSITION.md).
 
 ### Narrative engine and lab
 
-A proposed pure `narrative` module owns a bounded story graph, declared typed
-variables, dialogue, choices, conditions, objectives, events and save state.
-It must not import input devices, rendering, game fiction or the scene editor.
+The pure `narrative` module implements bounded story graphs, typed variables,
+dialogue, choices, conditions, objectives, inert events and saved progress. It
+imports neither input devices nor rendering, game fiction or the scene editor.
 
-The proposed versioned envelope contains a start node, node records, declared
-variables and objective IDs. Choices reference an existing target ID and use a
-fixed comparison/boolean condition vocabulary over declared variables. Effects
-are allowlisted typed assignments, bounded increments, objective transitions and
-named inert events. No JavaScript, HTML, expression strings, getters, external
-URLs, dynamic module names or implicit evaluation are accepted.
+The `qsol.vanillajs.narrative.v1` envelope declares the start node, nodes,
+variables, objectives and event IDs. Choices use fixed comparison/boolean
+conditions; effects use typed assignments, bounded increments, objective
+transitions and named events. Imported text, including HTML-like dialogue, stays
+literal text. There is no JavaScript/HTML execution, arbitrary expression
+evaluation, remote import or executable callback in story data.
 
-Proposed operations: validate graph, report unreachable/missing-link nodes and
-reachable endings, create initial state, list eligible choices, apply one choice,
-and validate/restore an owned save. Fixed story identity plus choice sequence
-must reproduce state/events. Cycles require explicit diagnostics and finite
-per-action traversal/event budgets; never auto-run an unbounded chain. Save
-admission verifies schema/story identity and all variables/objective/node IDs.
+The API validates graphs, reports structural reachability/endings/cycles, creates
+state, lists eligible choices, applies one atomic choice and restores owned saves.
+Structural diagnostics do not solve condition satisfiability. Cycles consume
+explicit choices within a finite step budget. Exact canonical story content and
+replayed choice history bind progress; replayed event IDs remain inert until a
+game's own allowlisted adapter consumes them. See [Narrative API](NARRATIVE_API.md).
 
-The Narrative Foundry must author nodes/dialogue, link choices, edit a condition,
-preview an original branching story, trigger a simple scene change via an
-allowlisted application event mapping, save/reimport and export reusable data.
-The scene change is demonstrated application behaviour, not executable story
-content. Tests cover unreachable endings, cycles, malformed effects, save
-rejection, deterministic traversal, actual authoring and offline roundtrip.
+[Narrative Foundry](NARRATIVE_FOUNDRY.md) provides node/dialogue/choice authoring,
+condition/effect forms, diagnostics, undo/redo, story/progress import/export and
+an original seven-node story with three endings. Actual scene cues use the new
+scene graph and existing native renderer. The lab owns that event mapping and
+fiction; stories cannot call the renderer or execute imported instructions.
 
-Future consumer seams are tactical mission dialogue, RPG campaigns, space
-missions, investigation clues, RTS briefings, survival quests and branching
-endings. Those games and their fiction remain outside VANILLAJS.
+The [milestone execution record](evidence/scene-narrative-001/README.md) separates
+actual tests from claims. Future consumer seams include tactical mission dialogue,
+RPG campaigns, space missions, investigation clues, RTS briefings, survival quests
+and branching endings. Those games and their fiction remain outside VANILLAJS.
 
 ## v2.8.0 — Game Maker API (proposed)
 

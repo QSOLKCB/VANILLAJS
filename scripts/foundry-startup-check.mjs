@@ -7,8 +7,9 @@ import {createHash} from 'node:crypto';
 import {createServer} from 'node:http';
 import {resolve,extname,sep} from 'node:path';
 
-const labs=new Map([['sprite-foundry','sprite-foundry'],['weapon-feel-lab','weapon-feel']]);
+const labs=new Map([['sprite-foundry','sprite-foundry'],['weapon-feel-lab','weapon-feel'],['narrative-foundry','narrative-foundry']]);
 export const checkSpriteStartup=(browser,base)=>checkFoundryStartup(browser,base,'sprite-foundry');
+export const checkNarrativeStartup=(browser,base)=>checkFoundryStartup(browser,base,'narrative-foundry');
 export const checkWeaponFeelStartup=(browser,base)=>checkFoundryStartup(browser,base,'weapon-feel-lab');
 async function ready(page,value){
   await page.waitForFunction(expected=>document.documentElement.dataset.labReady===expected,value);
@@ -36,7 +37,9 @@ export async function checkFoundryStartup(browser,base,lab){
     ['demos/'+lab+'/app.js',poisoned],
     ['modules/math/index.js',poisoned],
     ['modules/sprite2d/index.js',poisoned],
-    ['modules/weapon-feel/index.js',poisoned]
+    ['modules/weapon-feel/index.js',poisoned],
+    ['modules/narrative/index.js',poisoned],
+    ['modules/scene-graph/index.js',poisoned]
   ]);
   const entries=[...old].map(([path,text])=>({path,bytes:Buffer.byteLength(text),
     sha256:createHash('sha256').update(text).digest('hex')}));

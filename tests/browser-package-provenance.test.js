@@ -8,7 +8,7 @@ import {hash,gitBlob} from '../scripts/browser-dependencies.mjs';
 import {packageEditorRuntime,packageLabRuntime} from '../scripts/pursuit-package.mjs';
 import {packageProvenance,packageSourceBound,provenanceHTMLRecords} from '../scripts/browser-package-provenance.mjs';
 import {sourceBoundToTree} from '../scripts/browser-receipt-authority.mjs';
-const labs=['pursuit-lab','skyguard-lab','arcade-combat-lab','block-arena-lab','demoscene-lab','sprite-foundry','weapon-feel-lab'];
+const labs=['pursuit-lab','skyguard-lab','arcade-combat-lab','block-arena-lab','demoscene-lab','sprite-foundry','weapon-feel-lab','narrative-foundry'];
 const row=(path,bytes)=>({path,sha256:hash(bytes),gitBlob:gitBlob(bytes)});
 async function inventory(root,path=''){
   const out=[];
@@ -51,11 +51,11 @@ async function fixture(){
   return {root,files,inputs,tree,htmlSources,receipt:{results:{editor:{inputs}}}};
 }
 
-test('known runtime copies and eight exact entry rewrites bind to original Git source',async()=>{
+test('known runtime copies and nine exact entry rewrites bind to original Git source',async()=>{
   const f=await fixture();
   try{
     assert.equal(sourceBoundToTree(f.receipt,f.tree,f.htmlSources),true);
-    assert.equal(provenanceHTMLRecords(f.receipt).length,8);
+    assert.equal(provenanceHTMLRecords(f.receipt).length,9);
     assert.equal(sourceBoundToTree(f.receipt,f.tree),false,'HTML bytes are required, not a claimed source hash');
     const entries=new Map(f.tree.tree.map(e=>[e.path,e.sha]));
     const mutate=[

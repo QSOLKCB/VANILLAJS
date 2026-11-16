@@ -817,7 +817,7 @@ sample positions, bounded effects and strict inert compositions; the browser
 adapter owns Web Audio nodes and device timing. See [DEMOSCENE_001.md](DEMOSCENE_001.md)
 for the 48 kHz / 60 second profile, schemas, frame endpoints, borrowed geometry
 buffers, rejection behaviour and reproducibility scope.
-## v2.6.0 candidate additions
+## v2.6.0 additions (experimental)
 
 The experimental [Sprite Foundry API](SPRITE_FOUNDRY.md) adds bounded seeded
 generation, editable animation data, source RGBA and atlas/mask export through
@@ -831,3 +831,18 @@ These are opt-in additions. Existing module signatures, FPS packs, Workbench
 project formats and track formats remain unchanged. The
 [milestone contract](SPRITE_FEEL_001.md) records identity boundaries and checks;
 future [programme APIs](ENGINE_EXPANSION_001.md) are proposals.
+
+## v2.7.0 candidate additions
+
+`scene-graph` supplies bounded hierarchical scene data, affine transforms,
+components, keyframed sampling and nested prefab expansion.
+[Scene Composition](SCENE_COMPOSITION.md) describes the pure contract and its
+Workbench sidecar, including explicit preview resource ownership.
+
+`narrative` supplies typed inert story graphs, conditions/effects, objective state,
+diagnostics, deterministic choice traversal and replay-validated saves. Read the
+[Narrative API](NARRATIVE_API.md) and [authoring tutorial](NARRATIVE_FOUNDRY.md).
+Events are application-owned mappings, never executable content. Neither module
+changes existing public signatures or Workbench/Mod SDK schemas.
+
+[Compatibility and verification](SCENE_NARRATIVE_001.md).

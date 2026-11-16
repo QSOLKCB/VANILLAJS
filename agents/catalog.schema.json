@@ -80,7 +80,9 @@
               "data-mod",
               "games2-review",
               "sprite-foundry",
-              "weapon-feel"
+              "weapon-feel",
+              "scene-composition",
+              "narrative-foundry"
             ]
           },
           "title": {

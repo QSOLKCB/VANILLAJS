@@ -4,6 +4,7 @@ import {hierarchyRows,eligibleParents,matchesAsset} from './workflows.js';
 import {STARTER_SCENES,createStarterScene,addGameplayPiece,inspectCreatorScene} from './creator-workflow.js';
 import {mount4XPanel} from './4x-panel.js';
 import {startupFailure} from './startup-status.js';
+import {mountSceneComposition} from './scene-composition-panel.js';
 import {mountDemoscenePanel} from './demoscene-panel.js';
 import {parseExactPosition,previewQ16Position,transformExactPositionXY,snapEditorDelta,formatPositionNumber} from './authoring-math.js';
 import {SceneMeshes} from './scene-meshes.js';
@@ -25,7 +26,7 @@ import {createAssetLibrary,validateAssetLibrary,addMeshAsset,addTextureAsset,
 
 const $=id=>document.getElementById(id),canvas=$('view');
 let importGeneration=0;
-let campaignPanel=null,demoscenePanel=null;
+let campaignPanel=null,demoscenePanel=null,compositionPanel=null;
 let checksScene=null,creatorChecks=null,lastPlayedScene=null,lastSavedScene=null,lastSavedLibrary=null,lastSavedGPU=false;
 let history=makeHistory(createForgeScene()),selected='entity-3',draft=null,
   library=createAssetLibrary(),chosenAsset=null,
@@ -95,6 +96,7 @@ function syncEditor(){
   syncCreator(scene);
   campaignPanel?.sync();
   demoscenePanel?.sync();
+  compositionPanel?.sync();
   scheduleRecovery();
   syncAssets();
   if(!selected){requestFrame();return;}
@@ -832,6 +834,9 @@ try{
   console.error('Visual FX startup failed',error);
 }
 Object.defineProperty(window,'__editorDemoscene',{get:()=>demoscenePanel?.snapshot()??null});
+try{compositionPanel=mountSceneComposition($('scene-composition-workshop'),{getScene:()=>editScene(),getSelection:()=>selected,isPlaying:()=>playing,stopScene:stop});document.documentElement.dataset.compositionReady='ready';}
+catch(error){document.documentElement.dataset.compositionReady='failed';startupFailure($('scene-composition-workshop'),'Scene Composition',error);console.error('Scene Composition startup failed',error);}
+Object.defineProperty(window,'__editorComposition',{get:()=>compositionPanel?.snapshot()??null});
 try{initGraphics();syncEditor();requestFrame();document.documentElement.dataset.editorReady='ready';inform('Editor ready.');}
 catch(error){inform('WebGL unavailable: '+error.message,true);
   document.documentElement.dataset.editorReady='unavailable';syncEditor();}

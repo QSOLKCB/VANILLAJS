@@ -200,6 +200,77 @@
       "experimental": true
     },
     {
+      "id": "scene-composition",
+      "title": "Compose a hierarchical scene and animate reusable prefabs",
+      "entryPoints": [
+        "demos/editor/index.html",
+        "modules/scene-graph/index.js"
+      ],
+      "modules": [
+        "scene-graph",
+        "math",
+        "render-webgl"
+      ],
+      "examples": [
+        "demos/editor/index.html"
+      ],
+      "docs": [
+        "docs/SCENE_COMPOSITION.md",
+        "docs/SCENE_NARRATIVE_001.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js --suites=editor"
+      ],
+      "limitations": [
+        "The scene-graph sidecar is separate from existing Workbench v1/v2 project data; it does not migrate physics or compile a complete game.",
+        "Rendering and resource ownership remain explicit application responsibilities."
+      ],
+      "experimental": true
+    },
+    {
+      "id": "narrative-foundry",
+      "title": "Author, preview and export an original branching story",
+      "entryPoints": [
+        "demos/narrative-foundry/index.html",
+        "demos/narrative-foundry/story.js",
+        "modules/narrative/index.js"
+      ],
+      "modules": [
+        "narrative",
+        "scene-graph",
+        "render-webgl"
+      ],
+      "examples": [
+        "demos/narrative-foundry/index.html"
+      ],
+      "docs": [
+        "docs/NARRATIVE_FOUNDRY.md",
+        "docs/NARRATIVE_API.md",
+        "docs/SCENE_NARRATIVE_001.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js --suites=editor"
+      ],
+      "limitations": [
+        "Stories contain inert data, never scripts or agent instructions.",
+        "Narrative events require an explicit game-owned allowlist; the story does not own rendering, input or fiction outside its data.",
+        "A story or progress download is not a complete game."
+      ],
+      "experimental": true
+    },
+    {
       "id": "audiovisual",
       "title": "Make a procedural audiovisual demo",
       "entryPoints": [

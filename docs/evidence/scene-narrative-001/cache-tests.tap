@@ -1,0 +1,172 @@
+TAP version 13
+# Subtest: live browser profile extends frozen policy without changing protection or whole-package boundaries
+ok 1 - live browser profile extends frozen policy without changing protection or whole-package boundaries
+  ---
+  duration_ms: 5.093443
+  type: 'test'
+  ...
+# Subtest: live profile rejects invented fields, changed frozen identity, unsafe paths and mismatched opaque pins
+ok 2 - live profile rejects invented fields, changed frozen identity, unsafe paths and mismatched opaque pins
+  ---
+  duration_ms: 9.758406
+  type: 'test'
+  ...
+# Subtest: one-run live qualification still requires an exact authenticated source and environment match
+ok 3 - one-run live qualification still requires an exact authenticated source and environment match
+  ---
+  duration_ms: 1.785711
+  type: 'test'
+  ...
+# Subtest: live policy identity invalidates old qualification receipts and reaches all seven suite decisions
+ok 4 - live policy identity invalidates old qualification receipts and reaches all seven suite decisions
+  ---
+  duration_ms: 22.110344
+  type: 'test'
+  ...
+# Subtest: exact opaque source pin can describe reviewed local resources; changed or unknown source still executes
+ok 5 - exact opaque source pin can describe reviewed local resources; changed or unknown source still executes
+  ---
+  duration_ms: 7.060954
+  type: 'test'
+  ...
+# Subtest: an active editor import of a dormant builder copy invalidates its reviewed executable pin
+ok 6 - an active editor import of a dormant builder copy invalidates its reviewed executable pin
+  ---
+  duration_ms: 0.569881
+  type: 'test'
+  ...
+# Subtest: known runtime copies and nine exact entry rewrites bind to original Git source
+ok 7 - known runtime copies and nine exact entry rewrites bind to original Git source
+  ---
+  duration_ms: 116.474552
+  type: 'test'
+  ...
+# Subtest: local provenance replay rejects forged HTML, copied code and unknown generated members
+ok 8 - local provenance replay rejects forged HTML, copied code and unknown generated members
+  ---
+  duration_ms: 125.270108
+  type: 'test'
+  ...
+# Subtest: compact receipt fits existing wire limit and preserves all seven execution inputs
+ok 9 - compact receipt fits existing wire limit and preserves all seven execution inputs
+  ---
+  duration_ms: 37.392483
+  type: 'test'
+  ...
+# Subtest: tampered blocks, references, fingerprints and unknown fields fail closed
+ok 10 - tampered blocks, references, fingerprints and unknown fields fail closed
+  ---
+  duration_ms: 222.929528
+  type: 'test'
+  ...
+# Subtest: bounded decoder rejects wire and expansion amplification
+ok 11 - bounded decoder rejects wire and expansion amplification
+  ---
+  duration_ms: 79.560499
+  type: 'test'
+  ...
+# Subtest: A/K: three distinct qualified executions reuse; retries and reuse never add evidence
+ok 12 - A/K: three distinct qualified executions reuse; retries and reuse never add evidence
+  ---
+  duration_ms: 10.255247
+  type: 'test'
+  ...
+# Subtest: B/C: documentation ignored; standalone unreachable math invalidates worker scopes only
+ok 13 - B/C: documentation ignored; standalone unreachable math invalidates worker scopes only
+  ---
+  duration_ms: 3.618422
+  type: 'test'
+  ...
+# Subtest: D: reachable runtime invalidates every consumer
+ok 14 - D: reachable runtime invalidates every consumer
+  ---
+  duration_ms: 4.966023
+  type: 'test'
+  ...
+# Subtest: E: oracle code, mathematical contract and domain identity are bound, not expected value alone
+ok 15 - E: oracle code, mathematical contract and domain identity are bound, not expected value alone
+  ---
+  duration_ms: 5.365183
+  type: 'test'
+  ...
+# Subtest: F: unknown imports, missing source, new unclassified packages and unsupported syntax fail closed
+ok 16 - F: unknown imports, missing source, new unclassified packages and unsupported syntax fail closed
+  ---
+  duration_ms: 7.859045
+  type: 'test'
+  ...
+# Subtest: G/H: scoped harness and all execution environment inputs invalidate identities
+ok 17 - G/H: scoped harness and all execution environment inputs invalidate identities
+  ---
+  duration_ms: 8.710006
+  type: 'test'
+  ...
+# Subtest: M: cross-suite imports and generated service-worker/index dependencies are explicit
+ok 18 - M: cross-suite imports and generated service-worker/index dependencies are explicit
+  ---
+  duration_ms: 8.888735
+  type: 'test'
+  ...
+# Subtest: literal static/re-export/dynamic imports, comments, strings, cycles and resource syntax
+ok 19 - literal static/re-export/dynamic imports, comments, strings, cycles and resource syntax
+  ---
+  duration_ms: 1.019471
+  type: 'test'
+  ...
+# Subtest: I/J: forged metadata, PR producer, source tree substitution, failed/reused run cannot authenticate
+ok 20 - I/J: forged metadata, PR producer, source tree substitution, failed/reused run cannot authenticate
+  ---
+  duration_ms: 1.274851
+  type: 'test'
+  ...
+# Subtest: I: corrupt, oversized, wrong digest or wrong ZIP membership never authenticates
+ok 21 - I: corrupt, oversized, wrong digest or wrong ZIP membership never authenticates
+  ---
+  duration_ms: 219.793256
+  type: 'test'
+  ...
+# Subtest: trust audit fails closed on absent protection, unreadable API or no required review
+ok 22 - trust audit fails closed on absent protection, unreadable API or no required review
+  ---
+  duration_ms: 0.65953
+  type: 'test'
+  ...
+# Subtest: immutable artifact is selected by authoritative run, never restored cache metadata
+ok 23 - immutable artifact is selected by authoritative run, never restored cache metadata
+  ---
+  duration_ms: 46.748499
+  type: 'test'
+  ...
+# Subtest: L: manual full-browser selects all seven regardless of qualification
+ok 24 - L: manual full-browser selects all seven regardless of qualification
+  ---
+  duration_ms: 2.288342
+  type: 'test'
+  ...
+# Subtest: workflow retains mandatory gates, main-only artifact publication and no PR-scoped witness restore
+ok 25 - workflow retains mandatory gates, main-only artifact publication and no PR-scoped witness restore
+  ---
+  duration_ms: 6.087443
+  type: 'test'
+  ...
+# Subtest: independent Python fixture agrees on finite closure and qualification cases
+ok 26 - independent Python fixture agrees on finite closure and qualification cases
+  ---
+  duration_ms: 1.600041
+  type: 'test'
+  ...
+# Subtest: changed reachable executable cannot qualify until its closure audit is reviewed
+ok 27 - changed reachable executable cannot qualify until its closure audit is reviewed
+  ---
+  duration_ms: 1.421341
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 390.326971
