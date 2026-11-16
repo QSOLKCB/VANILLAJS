@@ -36,13 +36,16 @@ experimental API will never change.
 
 ## Published milestones
 
-**Latest published release: [v2.4.0 — The Demoscene Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.4.0).**
-Published 16 November 2026 from `128d7c924513f7d8ac08e2e11cc6832c5b7082fb`.
-It includes the procedural audiovisual composition tools and **The Machine Remembers**.
-The Arcade and FPS Foundries arrived in v2.2.0 and v2.3.0 respectively.
+**Latest published release: [v2.5.0 — The Creator Gateway](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0).**
+Published 16 November 2026 from `32b4fb1ca80e854297998aa00f87a8f012398b89`.
+It brings together the progressive creator guides, interactive Tutorial Lab,
+AI-agent guide and validated workflow catalogue, and Games2 integration programme.
+Start with a scene, edit and test it, diagnose a failure, then export your project
+to the Visual Workbench.
 
-**Proposed v2.5.0 — The Creator Gateway** adds the learning path, agent catalogue
-and interactive tutorial in this change. It is not a published release.
+The previous release, [v2.4.0 — The Demoscene Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.4.0),
+introduced the procedural audiovisual composition tools and **The Machine Remembers**.
+The Arcade and FPS Foundries arrived in v2.2.0 and v2.3.0 respectively.
 A published release does not make its modules stable.
 
 The audited baseline has **62 experimental modules, 43 recipes and two research
@@ -256,8 +259,9 @@ actual execution, historical evidence and unavailable hardware coverage.
 
 ## Games2 relationship and roadmap
 
-[ROADMAP.md](ROADMAP.md) separates the published v2.4.0 baseline from proposed
-v2.5.0 and later capabilities. [Games2 integration](docs/GAMES2_INTEGRATION.md)
+[ROADMAP.md](ROADMAP.md) records the Creator Gateway planning baseline and future
+capability proposals. The Creator Gateway is now published as v2.5.0.
+[Games2 integration](docs/GAMES2_INTEGRATION.md)
 records every current concept, donor reference and previously proposed candidate.
 
 Games2 games consume a reviewed engine release independently. Reusable systems
