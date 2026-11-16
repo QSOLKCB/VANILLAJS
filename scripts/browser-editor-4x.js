@@ -14,7 +14,7 @@ export async function verifyEditor4X(browser,base){
   async function imported(text){await control('import').setInputFiles({name:'campaign.json',mimeType:'application/json',buffer:Buffer.from(text)});await page.waitForFunction(()=>document.querySelector('#fourx-status').textContent.includes('Campaign imported and validated')&&!document.querySelector('#fourx-export').disabled);}
   async function screenshot(name){await page.screenshot({path:'browser-artifacts/'+name,fullPage:true});screenshots.push(name);}
   try{
-    await page.goto(base+'demos/editor/index.html#fourx');await page.waitForFunction(()=>__editor4x&&!document.querySelector('#fourx-export').disabled&&document.documentElement.dataset.editorReady==='ready');
+    await page.goto(base+'demos/editor/index.html#fourx');await page.waitForFunction(()=>globalThis.__editor4x&&!document.querySelector('#fourx-export').disabled&&document.documentElement.dataset.editorReady==='ready');
     assert.equal(await page.locator('#fourx-workshop>details').evaluate(el=>el.open),true);
     await control('starter').click();await page.waitForFunction(()=>document.querySelector('#fourx-status').textContent.includes('Frontier template loaded'));
     const original=await files(),nativeTemplate=await download(control('export'));await imported(nativeTemplate);assert.deepEqual(await files(),original);checks.push('native-template-import');
@@ -46,11 +46,11 @@ export async function verifyEditor4X(browser,base){
     await writeFile('browser-artifacts/editor-4x-campaign.json',portable);await writeFile('browser-artifacts/editor-4x-hull.json',JSON.stringify(hull,null,2));
     await imported(portable);assert.deepEqual(await files(),expected);await imported(sdk);assert.deepEqual(await files(),expected);
     await control('import').setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from('{"kind":"voidward.text-pack.v1","files":{}}')});await page.waitForFunction(()=>document.querySelector('#fourx-status').dataset.error==='true');assert.deepEqual(await files(),expected);checks.push('native-sdk-roundtrip-invalid-admission');
-    await page.reload();await page.waitForFunction(()=>__editor4x&&!document.querySelector('#fourx-restore').disabled);await control('restore').click();assert.deepEqual(await files(),expected);checks.push('separate-campaign-recovery');
+    await page.reload();await page.waitForFunction(()=>globalThis.__editor4x&&!document.querySelector('#fourx-restore').disabled);await control('restore').click();assert.deepEqual(await files(),expected);checks.push('separate-campaign-recovery');
 
     const pending=context.waitForEvent('page');await control('play').click();const game=await pending;await game.waitForFunction(()=>globalThis.__voidward?.pack.meta.id==='editor-browser-universe');assert.deepEqual(await game.evaluate(()=>__voidward.pack.raw),expected);
     assert.equal(await game.evaluate(()=>localStorage.getItem('vanillajs.editor.4x-handoff.v1')),null);await game.locator('[data-action="end"]').click();assert.equal(await game.evaluate(()=>__voidward.state.turn),2);
-    await game.locator('.nav').getByRole('button',{name:'Campaign workshop',exact:true}).click();await game.locator('[data-action="visual-workshop"]').click();await game.locator('[data-action="visual-editor-draft"]').click();await game.waitForURL('**/editor/index.html?draft=voidward');await game.waitForFunction(()=>__editor4x?.files['campaign.txt'].includes('editor-browser-universe'));
+    await game.locator('.nav').getByRole('button',{name:'Campaign workshop',exact:true}).click();await game.locator('[data-action="visual-workshop"]').click();await game.locator('[data-action="visual-editor-draft"]').click();await game.waitForURL('**/editor/index.html?draft=voidward');await game.waitForFunction(()=>globalThis.__editor4x?.files['campaign.txt'].includes('editor-browser-universe'));
     assert.deepEqual(await game.evaluate(()=>__editor4x.files),expected);assert.equal(await game.evaluate(()=>localStorage.getItem('vanillajs.voidward.editor-draft.v1')),null);await game.close();checks.push('play-exported-draft-and-return-to-editor');
 
     const recovery=await page.evaluate(()=>localStorage.getItem('vanillajs.editor.4x-recovery.v1'));

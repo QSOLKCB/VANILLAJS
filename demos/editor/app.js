@@ -3,6 +3,7 @@
 import {hierarchyRows,eligibleParents,matchesAsset} from './workflows.js';
 import {STARTER_SCENES,createStarterScene,addGameplayPiece,inspectCreatorScene} from './creator-workflow.js';
 import {mount4XPanel} from './4x-panel.js';
+import {startupFailure} from './startup-status.js';
 import {mountDemoscenePanel} from './demoscene-panel.js';
 import {parseExactPosition,previewQ16Position,transformExactPositionXY,snapEditorDelta,formatPositionNumber} from './authoring-math.js';
 import {SceneMeshes} from './scene-meshes.js';
@@ -819,11 +820,18 @@ campaignPanel=mount4XPanel($('fourx-workshop'),{
   replaceScene:scene=>{finishGesture(false);applyScene(scene,scene.objects[0]?.id??null);frameSelection(true);}
 });
 Object.defineProperty(window,'__editor4x',{get:()=>campaignPanel.snapshot()});
-demoscenePanel=mountDemoscenePanel($('demoscene-workshop'),{
-  getScene:()=>editScene(),getLibrary:()=>prunePlacements(editScene(),library),
-  getSelection:()=>selected,isPlaying:()=>playing
-});
-Object.defineProperty(window,'__editorDemoscene',{get:()=>demoscenePanel.snapshot()});
-try{initGraphics();syncEditor();requestFrame();document.documentElement.dataset.editorReady='ready';}
+try{
+  demoscenePanel=mountDemoscenePanel($('demoscene-workshop'),{
+    getScene:()=>editScene(),getLibrary:()=>prunePlacements(editScene(),library),
+    getSelection:()=>selected,isPlaying:()=>playing,stopScene:stop
+  });
+  document.documentElement.dataset.fxReady='ready';
+}catch(error){
+  document.documentElement.dataset.fxReady='failed';
+  startupFailure($('demoscene-workshop'),'Visual FX',error);
+  console.error('Visual FX startup failed',error);
+}
+Object.defineProperty(window,'__editorDemoscene',{get:()=>demoscenePanel?.snapshot()??null});
+try{initGraphics();syncEditor();requestFrame();document.documentElement.dataset.editorReady='ready';inform('Editor ready.');}
 catch(error){inform('WebGL unavailable: '+error.message,true);
   document.documentElement.dataset.editorReady='unavailable';syncEditor();}

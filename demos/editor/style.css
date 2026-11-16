@@ -123,3 +123,17 @@ input[aria-invalid=true]{border-color:#ffb6a4}.viewport-head>span{min-width:0;ov
 .viewport-foot>span{min-width:0;max-height:100%;overflow:auto}
 /* Recovery feedback reserves its width so async saves cannot reflow the toolbar. */
 @media(min-width:751px){.draft-status{width:140px;flex:0 0 140px}}
+
+/* Visual FX actions and their feedback stay inside the scrollable sidebar. */
+.demoscene-panel{border-top:1px solid var(--line);padding-top:12px;margin-top:12px;min-width:0}
+.demoscene-panel summary{cursor:pointer;color:var(--accent);font-weight:600;padding:5px 0}
+.demoscene-panel p{font-size:11px;overflow-wrap:anywhere;margin:8px 0}
+.demoscene-panel label{display:flex;flex-direction:column;gap:4px;margin:9px 0;font-size:11px;color:var(--muted)}
+.demoscene-panel input,.demoscene-panel select{width:100%;min-width:0}
+.demoscene-panel button{white-space:normal;max-width:100%;font-size:11px;padding:7px 8px}
+.demoscene-panel details{border-top:1px solid var(--line);margin:12px 0;padding-top:5px}
+.fx-feedback{position:sticky;top:-15px;background:var(--panel);padding:6px 0;z-index:1}
+#fx-mode{color:#e5ccaa}#fx-status{color:var(--accent)}
+
+.startup-failure{border:1px solid #e5ccaa;padding:10px;overflow-wrap:anywhere;color:#e5ccaa}
+.startup-failure button{white-space:normal;max-width:100%}

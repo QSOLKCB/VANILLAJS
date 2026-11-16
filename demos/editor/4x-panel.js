@@ -70,7 +70,7 @@ export function mount4XPanel(host,{getScene,getLibrary,getSelection,isPlaying,re
   $('hull-export').onclick=()=>asynchronous(async token=>{const text=await Flow.exportCampaignHull(history.present,$('hull').value);if(token===generation&&!isPlaying())download('campaign-hull.vhull.json',text);});
   $('export').onclick=()=>run(()=>{download(parsePack(history.present).meta.id+'.json',Flow.exportCampaign(history.present));status('Native campaign exported. Unapplied text edits are excluded.');});
   $('sdk').onclick=()=>run(()=>{download(parsePack(history.present).meta.id+'.mod.json',Flow.exportCampaignSDK(history.present));status('Mod SDK exchange exported under its unchanged 32 KiB budget.');});
-  $('play').onclick=()=>run(()=>{localStorage.setItem(Flow.HANDOFF_KEY,Flow.exportCampaign(history.present));window.open(new URL('../4x-game-lab/voidward/index.html?draft=editor',import.meta.url),'_blank','noopener');status('Validated draft sent to the local advanced 4X lab. If a popup is blocked, export and import the pack there.');});
+  $('play').onclick=()=>run(()=>{localStorage.setItem(Flow.HANDOFF_KEY,Flow.exportCampaign(history.present));window.open(new URL('../4x-game-lab/voidward/index.html?draft=editor',document.baseURI),'_blank','noopener');status('Validated draft sent to the local advanced 4X lab. If a popup is blocked, export and import the pack there.');});
   // Do not overwrite a recovery draft simply by opening the editor.
   busy=true;const initial=++generation;sync();loadPack(new URL('../4x-game-lab/voidward/mods/frontier/',import.meta.url)).then(p=>{
     if(initial!==generation||isPlaying())return;history=Flow.makeCampaignDraft(p.raw);renderDraft();status('Frontier template ready. Restore campaign draft to recover previous edits.');
