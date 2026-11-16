@@ -49,7 +49,7 @@ function frame(now){
   }catch(error){pause('Range stopped: '+error.message);}
   if(running)raf=requestAnimationFrame(frame);
 }
-function select(index){world.feel.select(index);ads=false;if(running)canvas.focus({preventScroll:true});draw();hud();}
+function select(index){if(world.feel.select(index))ads=false;if(running)canvas.focus({preventScroll:true});draw();hud();}
 function toggleADS(){ads=!ads;world.feel.setADS(ads);if(running)canvas.focus({preventScroll:true});hud();}
 const fields=[['recoil','Cosmetic recoil (rad)',0,.15,.005,'weapon'],['spread','Base spread (rad)',0,.2,.001,'weapon'],['adsSeconds','ADS time (s)',.03,1,.01,'view'],['recoilReturn','Recoil recovery (s)',.03,2,.01,'view'],['hipFov','Hip FOV (rad)',.4,2,.01,'view'],['adsFov','ADS FOV (rad)',.2,2,.01,'view'],['triggerBuffer','Trigger buffer (s)',0,.25,.01,'handling'],['switchSeconds','Switch lock (s)',.05,1,.01,'handling'],['spreadKick','Spread growth / shot',0,.1,.001,'handling'],['spreadRecovery','Spread recovery / s',.01,2,.01,'handling'],['sensitivity','Base sensitivity',.1,4,.1,'view'],['adsSensitivity','ADS multiplier',.25,2,.05,'view']];
 function fill(){

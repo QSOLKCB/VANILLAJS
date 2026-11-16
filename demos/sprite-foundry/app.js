@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 import {SPRITE_MAX_BYTES,generateSprite,validateSpriteProject,parseSpriteProject,serializeSpriteProject,
-  rgbaFrame,paintSpritePixel,fillSpritePixels,setSpritePalette,duplicateSpriteFrame,moveSpriteFrame,
+  rgbaFrame,paintSpritePixel,paintSpriteStroke,fillSpritePixels,setSpritePalette,duplicateSpriteFrame,moveSpriteFrame,
   removeSpriteFrame,setSpriteDuration,spriteFrameAt,buildSpriteAtlas} from '../../modules/sprite2d/index.js';
 import {examples,exampleSprite,palettes} from './examples.js';
 const $=id=>document.getElementById(id),canvas=$('pixel-canvas'),ctx=canvas.getContext('2d'),
@@ -129,13 +129,16 @@ canvas.addEventListener('pointerdown',event=>{
 });
 canvas.addEventListener('pointermove',event=>{
   if(!gesture||gesture.id!==event.pointerId||tool==='fill')return;const point=pointAt(event);if(!point)return;
-  // Bounded interpolation keeps fast pointer strokes contiguous in pixel space.
+  // Build the line locally, validate/copy one project, repaint once.
+  if(point.x===gesture.last.x&&point.y===gesture.last.y)return;
   let {x,y}=gesture.last;const dx=Math.abs(point.x-x),dy=-Math.abs(point.y-y),sx=x<point.x?1:-1,sy=y<point.y?1:-1;let error=dx+dy;
+  const points=[];
   for(let budget=0;budget<128;budget++){
-    applyAt({x,y});if(x===point.x&&y===point.y)break;const twice=error*2;
+    points.push({x,y});if(x===point.x&&y===point.y)break;const twice=error*2;
     if(twice>=dy){error+=dy;x+=sx;}if(twice<=dx){error+=dx;y+=sy;}
   }
-  gesture.last=point;
+  project=paintSpriteStroke(project,frame,points,tool==='erase'?0:color);
+  cursor=point;gesture.last=point;drawEditor();drawPreview(frame);
 });
 canvas.addEventListener('pointerup',event=>{
   if(!gesture||gesture.id!==event.pointerId)return;

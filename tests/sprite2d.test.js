@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {SPRITE_FORMAT,SPRITE_MAX_BYTES,SPRITE_SIZES,SPRITE_KINDS,generateSprite,validateSpriteRecipe,
-  validateSpriteProject,parseSpriteProject,serializeSpriteProject,rgbaFrame,paintSpritePixel,fillSpritePixels,
+  validateSpriteProject,parseSpriteProject,serializeSpriteProject,rgbaFrame,paintSpritePixel,paintSpriteStroke,fillSpritePixels,
   setSpritePalette,duplicateSpriteFrame,moveSpriteFrame,removeSpriteFrame,setSpriteDuration,spriteFrameAt,buildSpriteAtlas}
   from '../modules/sprite2d/index.js';
 import {exampleSprite,examples,palettes} from '../demos/sprite-foundry/examples.js';
@@ -53,6 +53,32 @@ test('pixel, fill and palette operations own output and preserve source on rejec
   const retained=parseSpriteProject(before);
   assert.throws(()=>parseSpriteProject(before.replace(SPRITE_FORMAT,'malicious.format.v8')),/unsupported/);
   assert.deepEqual(retained,original);
+});
+test('batched 64-pixel strokes own the accepted 64x64 / 16-frame project and reject bad paths',()=>{
+  const original=generateSprite(recipe({size:64,frameCount:16})),before=serializeSpriteProject(original);
+  const points=Array.from({length:64},(_,x)=>({x,y:7})),expected=structuredClone(original);
+  for(const {x,y} of points)expected.frames[15].pixels[y*64+x]=2;
+  const painted=paintSpriteStroke(original,15,points,2);
+  assert.deepEqual(painted,expected);
+  assert.equal(serializeSpriteProject(original),before);
+  assert.deepEqual(painted.frames.slice(0,15),original.frames.slice(0,15));
+  assert.notStrictEqual(painted.frames[15].pixels,original.frames[15].pixels);
+  assert.equal(paintSpriteStroke(original,15,[{x:0,y:0},{x:0,y:0}],3).frames[15].pixels[0],3);
+  const small=generateSprite(recipe()),coords=[{x:0,y:1},{x:1,y:1},{x:2,y:2},{x:3,y:2}];
+  let serial=small;
+  for(const {x,y} of coords)serial=paintSpritePixel(serial,0,x,y,3);
+  assert.deepEqual(paintSpriteStroke(small,0,coords,3),serial);
+  for(const invalid of [[{x:0,y:0},{x:64,y:0}],[{x:-1,y:0}],[{x:0,y:NaN}],[],Array.from({length:129},()=>({x:0,y:0})),[{x:0,y:0,script:'bad'}]]){
+    assert.throws(()=>paintSpriteStroke(original,15,invalid,1));
+    assert.equal(serializeSpriteProject(original),before);
+  }
+  assert.throws(()=>paintSpriteStroke(original,16,points,1),/frame index/);
+  assert.throws(()=>paintSpriteStroke(original,0,points,99),/palette index/);
+  let invoked=false;
+  const hostile={x:0,y:0};Object.defineProperty(hostile,'x',{get(){invoked=true;return 0;},enumerable:true});
+  assert.throws(()=>paintSpriteStroke(original,15,[hostile],1),/executable/);
+  assert.equal(invoked,false);
+  assert.equal(serializeSpriteProject(original),before);
 });
 test('bounded flood fill fills only connected equal indices and does not wrap rows',()=>{
   const p=generateSprite(recipe({frameCount:1}));p.frames[0].pixels=Array(64).fill(1);

@@ -104,6 +104,7 @@ callers explicitly adopt an accepted result. Existing engine APIs are unchanged.
 | `parseSpriteProject(text)` / `serializeSpriteProject(project)` | Bounded inert JSON import/export; returns/serialises canonical property order |
 | `rgbaFrame(project,index=0)` | Owned row-major `Uint8Array`, four bytes R,G,B,A per pixel |
 | `paintSpritePixel(project,frame,x,y,index)` | Replace one palette index; coordinates must be in bounds |
+| `paintSpriteStroke(project,frame,points,index)` | Admit 1–128 plain `{x,y}` points, validate/copy the project once and paint the selected frame in order; invalid paths leave the caller unchanged |
 | `fillSpritePixels(project,frame,x,y,index)` | Bounded four-neighbour flood fill, without wrapping rows |
 | `setSpritePalette(project,colors)` | Recolour while preserving indices; cannot remove a referenced palette entry |
 | `duplicateSpriteFrame(project,index)` / `removeSpriteFrame(project,index)` | Independent clone after selected frame / remove, maintaining the 1–16 budget |

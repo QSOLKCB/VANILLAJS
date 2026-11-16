@@ -14,6 +14,32 @@ export async function checkSpriteFoundry(browser,base){
   try{
     await page.goto(base+'demos/sprite-foundry/index.html');await wait();
     await page.screenshot({path:'browser-artifacts/sprite-foundry-desktop.png',fullPage:true});
+    // Fast drag at maximum sprite size and frame count: one pointermove
+    // may interpolate 64 pixels but must perform one draw of each surface.
+    const strokeSource=generateSprite({kind:'character',size:64,seed:17,symmetry:true,frameCount:16,palette:palettes.relay},{name:'Fast stroke'});
+    await page.locator('#import-project').setInputFiles({name:'stroke.sprite.json',mimeType:'application/json',buffer:Buffer.from(serializeSpriteProject(strokeSource))});
+    await page.waitForFunction(()=>JSON.parse(__spriteFoundry.snapshot().project).recipe.size===64);
+    await page.locator('#zoom').selectOption('8');
+    const strokeCanvas=page.locator('#pixel-canvas');await strokeCanvas.scrollIntoViewIfNeeded();
+    const box=await strokeCanvas.boundingBox(),rowY=box.y+box.height*.5/64;
+    await page.mouse.move(box.x+box.width*.5/64,rowY);await page.mouse.down();
+    await page.evaluate(()=>{
+      const original=CanvasRenderingContext2D.prototype.drawImage;
+      window.strokeDraws={editor:0,preview:0};
+      CanvasRenderingContext2D.prototype.drawImage=function(...args){
+        if(this.canvas.id==='pixel-canvas')strokeDraws.editor++;
+        if(this.canvas.id==='preview')strokeDraws.preview++;
+        return original.apply(this,args);
+      };
+    });
+    await page.mouse.move(box.x+box.width*63.5/64,rowY);
+    assert.deepEqual(await page.evaluate(()=>strokeDraws),{editor:1,preview:1},'one draw pair for the interpolated event');
+    await page.mouse.up();
+    const stroked=await state();
+    for(let x=0;x<64;x++)assert.equal(stroked.frames[0].pixels[x],1,'continuous row stroke');
+    assert.deepEqual(stroked.frames.slice(1),strokeSource.frames.slice(1),'unselected frames unchanged');
+    await page.locator('#undo').click();assert.deepEqual(await state(),strokeSource,'one undo for the full stroke');
+    await page.locator('#load-example').click();
     await page.locator('#seed').fill('42');await page.locator('#generate').click();
     const expected=generateSprite({kind:'character',size:16,seed:42,symmetry:true,frameCount:4,palette:palettes.relay},{name:'Relay Cadet'});
     assert.deepEqual(await state(),expected,'visible seed controls generate exact public-module data');

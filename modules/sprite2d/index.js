@@ -127,6 +127,19 @@ export function rgbaFrame(value,index=0){
   const p=validateSpriteProject(value),frame=p.frames[frameIndex(p,index)],rgba=new Uint8Array(frame.pixels.length*4);
   frame.pixels.forEach((color,i)=>rgba.set(p.recipe.palette[color],i*4));return rgba;
 }
+/** Validate and copy once per bounded stroke, not once per interpolated pixel.
+ * Check all positions before modifying the owned candidate frame. */
+export function paintSpriteStroke(value,frame,points,color){
+  const p=validateSpriteProject(value),size=p.recipe.size;
+  frameIndex(p,frame);integer(color,0,p.recipe.palette.length-1,'palette index');
+  const positions=array(points,1,128,'stroke points').map(point=>{
+    exact(point,['x','y'],'stroke point');
+    return [integer(point.x,0,size-1,'pixel x'),integer(point.y,0,size-1,'pixel y')];
+  });
+  const pixels=p.frames[frame].pixels;
+  for(const [x,y] of positions)pixels[y*size+x]=color;
+  return p;
+}
 export function paintSpritePixel(value,frame,x,y,color){
   const p=validateSpriteProject(value),s=p.recipe.size;
   frameIndex(p,frame);integer(x,0,s-1,'pixel x');integer(y,0,s-1,'pixel y');integer(color,0,p.recipe.palette.length-1,'palette index');

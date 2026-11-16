@@ -16,6 +16,21 @@ export async function verifyWeaponFeel(browser,base){
     const pixels=await page.locator('#scene').evaluate(canvas=>new Promise(resolve=>requestAnimationFrame(()=>{const gl=canvas.getContext('webgl'),p=new Uint8Array(canvas.width*canvas.height*4);gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,p);let bright=0;for(let i=0;i<p.length;i+=4)if(p[i]+p[i+1]+p[i+2]>120)bright++;resolve(bright);})));
     assert.ok(pixels>500,'actual WebGL range geometry');await page.screenshot({path:'browser-artifacts/weapon-feel-desktop.png',fullPage:true});
     await page.keyboard.press('q');await page.waitForFunction(()=>weaponFeelLab.snapshot().presentation.ads===1);s=await snapshot();assert.equal(s.presentation.fov,.65);assert.deepEqual(s.aim.direction,[0,0,-1]);
+    // Both reselect inputs must preserve ADS target and UI state.
+    await page.keyboard.press('1');await page.waitForTimeout(80);
+    assert.equal((await snapshot()).presentation.ads,1);
+    assert.equal(await page.locator('#ads').getAttribute('aria-pressed'),'true');
+    await page.locator('[data-profile="0"]').click();
+    assert.equal((await snapshot()).presentation.ads,1);
+    assert.equal(await page.locator('#ads').getAttribute('aria-pressed'),'true');
+    await page.keyboard.press('q');await page.waitForFunction(()=>weaponFeelLab.snapshot().presentation.ads===0);
+    assert.equal(await page.locator('#ads').getAttribute('aria-pressed'),'false','next Q exits sights');
+    await page.keyboard.press('q');await page.waitForFunction(()=>weaponFeelLab.snapshot().presentation.ads===1);
+    await page.locator('[data-profile="1"]').click();
+    assert.equal((await snapshot()).presentation.selected,1);
+    assert.equal((await snapshot()).presentation.ads,0);
+    assert.equal(await page.locator('#ads').getAttribute('aria-pressed'),'false','actual switch resets ADS');
+    await page.locator('[data-profile="0"]').click();
     const position=s.player.position;await page.keyboard.down('w');await page.waitForFunction(z=>weaponFeelLab.snapshot().player.position[2]<z-.4,position[2]);await page.keyboard.up('w');
     await page.locator('#scene').click();await page.waitForFunction(()=>document.pointerLockElement?.id==='scene'&&document.querySelector('#scene').dataset.capture==='active');
     const immediate=await page.evaluate(()=>{const before=weaponFeelLab.snapshot();document.dispatchEvent(new MouseEvent('mousemove',{movementX:30,movementY:-8,bubbles:true}));const after=weaponFeelLab.snapshot();return {before,after};});
