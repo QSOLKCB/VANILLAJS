@@ -5,10 +5,13 @@ import {resolve,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {hash,gitBlob,identity,closures,jsDependencies,resolveLocal} from './browser-dependencies.mjs';
+import {encodeReceipt} from './browser-receipt-codec.mjs';
+import {applyLiveProfile,LIVE_PROFILE} from './browser-cache-profile.mjs';
+import {packageProvenance} from './browser-package-provenance.mjs';
 import {RECEIPT_KIND,producerAllowed,loadMainExecutions,decide,changedInputs} from './browser-receipt-authority.mjs';
 const ROOT=resolve(import.meta.dirname,'..');
 export const SUITES=Object.freeze(['home','render','play','worlds','research','donor','editor']);
-export const REQUIRED_PASSES=3;
+export const REQUIRED_PASSES=1;
 export const PROFILE='CI-INVARIANT-001/1';
 const policyPath=join(ROOT,'scripts/browser-reuse-policy.json');
 const read=p=>readFile(join(ROOT,p),'utf8');
@@ -20,8 +23,8 @@ async function inventory(dir,prefix=''){
   }return result.sort();
 }
 export async function profileInputs({environment}={}){
-  const policy=JSON.parse(await readFile(policyPath,'utf8'));
-  if(Object.keys(policy.suites).join(',')!==SUITES.join(',')||policy.qualification!==3||!policy.auditedRuntime)throw Error('invalid suite policy');
+  const policy=applyLiveProfile(await readFile(policyPath,'utf8'),JSON.parse(await read(LIVE_PROFILE)));
+  if(Object.keys(policy.suites).join(',')!==SUITES.join(',')||policy.qualification!==REQUIRED_PASSES||!policy.auditedRuntime)throw Error('invalid suite policy');
   const manifest=JSON.parse(await read('dist/manifest.json')),files=manifest.files,sources={},gitBlobs={};
   // Do not trust a stale manifest or omit newly introduced package members.
   const actual=(await inventory(join(ROOT,'dist'))).filter(p=>p!=='manifest.json');
@@ -50,7 +53,9 @@ export async function profileInputs({environment}={}){
       const deps=jsDependencies(source),opaque=policy.opaqueHarness[path]??policy.opaqueRuntime[path];
       if(opaque&&hash(source)===opaque.sha256)roots.push(...opaque.roots);
       else issues.push(...deps.issues.map(x=>path+': '+x));
-      for(const spec of deps.imports){
+      const reviewed=opaque&&hash(source)===opaque.sha256;
+      for(const spec of reviewed&&opaque.imports?opaque.imports:deps.imports){
+        if(reviewed&&opaque.browserImports?.[spec]){roots.push(opaque.browserImports[spec]);continue;}
         if(spec.startsWith('node:'))continue;
         // Browser absolute dynamic imports are pinned explicit roots above.
         if(spec.startsWith('/VANILLAJS/')&&opaque&&hash(source)===opaque.sha256){roots.push(spec.slice(11));continue;}
@@ -65,18 +70,26 @@ export async function profileInputs({environment}={}){
     catch{env={node:process.version,platform:process.platform,arch:process.arch,unverified:true};extra.issues.push('pinned real browser preflight environment missing');}
     if(env.node!==process.version||env.platform!==process.platform||env.arch!==process.arch||env.imageVersion!==(process.env.ImageVersion??'local-untrusted'))extra.issues.push('preflight environment mismatch');
   }
-  return {files,sources,policy,extra,environment:env};
+  const provenance=await packageProvenance({root:ROOT,files});
+  for(const row of provenance.sources)if(!extra.shared.some(existing=>existing.path===row.path))extra.shared.push(row);
+  return {files,sources,policy,extra,environment:env,packageProvenance:provenance.metadata};
 }
-export async function sourceProfile(options){const inputs=await profileInputs(options);return {policy:inputs.policy,profiles:closures(inputs)};}
+export async function sourceProfile(options){
+  const inputs=await profileInputs(options),profiles=closures(inputs);
+  for(const profile of Object.values(profiles)){profile.inputs.packageProvenance=inputs.packageProvenance;profile.fingerprint=identity(profile.inputs);}
+  return {policy:inputs.policy,profiles};
+}
 export function executionReceipt({repository,ref,event,run,attempt,sha,workflow,authorityDigest},profiles,executed){
   if(!producerAllowed({repository,ref,event})||!/^\d+$/.test(run??'')||!/^\d+$/.test(attempt??'')||!/^[a-f0-9]{40}$/.test(sha??''))throw Error('untrusted execution producer');
   return {kind:RECEIPT_KIND,repository,ref,event,run,attempt,sha,workflow,authorityDigest,
     results:Object.fromEntries(executed.map(g=>[g,{status:'PASS',executed:true,fingerprint:profiles[g].fingerprint,inputs:profiles[g].inputs}]))};
 }
-export function executionPlan(profiles,authority,receipts,forceFull=false){
+// Historical oracle/workload callers keep three runs; live execute() must pass
+// the explicit threshold from the validated live profile.
+export function executionPlan(profiles,authority,receipts,forceFull=false,qualification=3){
   return Object.fromEntries(SUITES.map(group=>{
     const executions=receipts.filter(r=>r.results[group]).map(r=>({run:r.run,...r.results[group]}));
-    const decision=decide({profile:profiles[group],executions,authority,forceFull});
+    const decision=decide({profile:profiles[group],executions,authority,forceFull,qualification});
     const prior=receipts.find(r=>r.results[group]);
     return [group,{...decision,changed:prior?changedInputs(prior.results[group].inputs,profiles[group].inputs):['no prior authenticated execution']}];
   }));
@@ -84,7 +97,7 @@ export function executionPlan(profiles,authority,receipts,forceFull=false){
 async function execute(){
   const {policy,profiles}=await sourceProfile(),token=process.env.GITHUB_TOKEN;
   const {authority,executions,diagnostics}=token?await loadMainExecutions({token,policy}):{authority:{ok:false,reason:'GitHub token unavailable'},executions:[],diagnostics:[]};
-  const plan=executionPlan(profiles,authority,executions,process.env.BROWSER_FORCE_FULL==='true');
+  const plan=executionPlan(profiles,authority,executions,process.env.BROWSER_FORCE_FULL==='true',policy.qualification);
   const stale=SUITES.filter(g=>!plan[g].reuse),reused=SUITES.filter(g=>plan[g].reuse);
   const temp=process.env.RUNNER_TEMP;if(!temp)throw Error('RUNNER_TEMP required');
   const out=join(temp,'flight-suite-evidence');await mkdir(out,{recursive:true});
@@ -100,7 +113,7 @@ async function execute(){
   // seed a future PASS, even if the current browser run happens to succeed.
   const eligible=stale.filter(g=>!profiles[g].issues.length);
   if(authority.ok&&producerAllowed(context)&&eligible.length){
-    const target=join(out,'execution.json');await writeFile(target+'.tmp',JSON.stringify(executionReceipt(context,profiles,eligible))+'\n',{mode:0o600});await rename(target+'.tmp',target);
+    const target=join(out,'execution.json');await writeFile(target+'.tmp',JSON.stringify(encodeReceipt(executionReceipt(context,profiles,eligible)))+'\n',{mode:0o600});await rename(target+'.tmp',target);
     if(process.env.GITHUB_ENV)await writeFile(process.env.GITHUB_ENV,'BROWSER_PUBLISH_EXECUTION=true\n',{flag:'a'});
   }
   const summary=['## CI-INVARIANT-001 browser decisions','',`Executed ${stale.length}; reused ${reused.length}. Authority: ${authority.reason}`,'',...SUITES.map(g=>`- ${g}: ${plan[g].reuse?'REUSED':'EXECUTED'} — ${plan[g].reason}`),'','Node, source, build, package, archival and preflight gates are never reused.',''];

@@ -2,7 +2,9 @@
 // Actions caches are NOT an authority. Read immutable, digest-verified artifacts
 // directly from successful main workflow runs; PR cache shadowing is irrelevant.
 import {spawnSync} from 'node:child_process';
-import {hash,identity} from './browser-dependencies.mjs';
+import {hash,gitBlob,identity} from './browser-dependencies.mjs';
+import {packageSourceBound,provenanceHTMLRecords} from './browser-package-provenance.mjs';
+import {decodeReceipt} from './browser-receipt-codec.mjs';
 export const RECEIPT_KIND='qsol.browser.execution.v3';
 export const ARTIFACT_PREFIX='ci-invariant-main-';
 export function producerAllowed({repository,ref,event}){
@@ -19,12 +21,16 @@ export function validateExecution(receipt,run,repository,workflow){
     Object.values(receipt.results).every(r=>r?.status==='PASS'&&r.executed===true&&
       /^[a-f0-9]{64}$/.test(r.fingerprint)&&r.inputs&&identity(r.inputs)===r.fingerprint));
 }
-export function decide({profile,executions=[],forceFull=false,authority}){
+// The historical three-run oracle keeps its default; live CI supplies the
+// reviewed profile's explicit threshold. No other threshold is supported.
+export function decide({profile,executions=[],forceFull=false,authority,qualification=3}){
   if(forceFull)return {reuse:false,reason:'manual full-browser override',runs:[]};
+  if(qualification!==1&&qualification!==3)return {reuse:false,reason:'unsupported qualification threshold',runs:[]};
   if(profile.issues.length)return {reuse:false,reason:'unsupported dependency analysis: '+profile.issues.join('; '),runs:[]};
   if(!authority?.ok)return {reuse:false,reason:'unverified authority: '+(authority?.reason??'no authority'),runs:[]};
   const runs=[...new Set(executions.filter(e=>e.fingerprint===profile.fingerprint).map(e=>String(e.run)))];
-  return {reuse:runs.length>=3,reason:runs.length>=3?'three distinct authenticated main executions match every input':`qualification ${runs.length}/3: exact source/environment executions missing`,runs:runs.slice(0,3)};
+  const qualified=runs.length>=qualification;
+  return {reuse:qualified,reason:qualified?(qualification===1?'one authenticated main execution matches every input':'three distinct authenticated main executions match every input'):`qualification ${runs.length}/${qualification}: exact source/environment executions missing`,runs:runs.slice(0,qualification)};
 }
 export function changedInputs(before,after){
   const changes=[];for(const name of new Set([...Object.keys(before??{}),...Object.keys(after??{})]))
@@ -73,7 +79,7 @@ with zipfile.ZipFile(io.BytesIO(raw)) as z:
 export function unpackArtifact(bytes,digest){
   if(bytes.length>1048576||!/^sha256:[0-9a-f]{64}$/.test(digest)||'sha256:'+hash(bytes)!==digest)throw Error('artifact digest/size mismatch');
   const p=spawnSync('python3',['-c',unzip],{input:bytes,maxBuffer:1048576});
-  if(p.status!==0)throw Error('invalid artifact archive');return JSON.parse(p.stdout.toString('utf8'));
+  if(p.status!==0)throw Error('invalid artifact archive');return decodeReceipt(JSON.parse(p.stdout.toString('utf8')));
 }
 async function downloadArtifact(id,token){
   if(!Number.isSafeInteger(id)||id<=0)throw Error('invalid artifact id');
@@ -86,11 +92,12 @@ async function downloadArtifact(id,token){
   while(true){const {value,done}=await reader.read();if(done)break;size+=value.length;if(size>1048576){await reader.cancel();throw Error('oversized archive');}chunks.push(Buffer.from(value));}
   return Buffer.concat(chunks);
 }
-export function sourceBoundToTree(receipt,tree){
+export function sourceBoundToTree(receipt,tree,htmlSources=new Map()){
   if(tree?.truncated||!Array.isArray(tree?.tree))return false;
   const entries=new Map(tree.tree.filter(e=>e.type==='blob'&&e.mode==='100644').map(e=>[e.path,e.sha]));
   const rows=Object.values(receipt.results);
   return rows.length>0&&rows.every(r=>['shared','tests','runtime','requirements'].every(kind=>
+    kind==='runtime'&&r.inputs.packageProvenance!==undefined?packageSourceBound(r.inputs,entries,htmlSources):
     Array.isArray(r.inputs[kind])&&r.inputs[kind].every(f=>
       ['service-worker.js','.nojekyll'].includes(f.path)&&kind==='runtime'||
       /^[a-f0-9]{40}$/.test(f.gitBlob??'')&&entries.get(f.path)===f.gitBlob)));
@@ -113,7 +120,16 @@ export async function loadMainExecutions({token,policy,api=path=>githubJSON(path
         if(!validateExecution(receipt,run,policy.repository,policy.workflow)||receipt.authorityDigest!==authority.policyDigest)throw Error('invalid receipt or changed protection controls');
         const commit=await api(`repos/QSOLKCB/VANILLAJS/git/commits/${run.head_sha}`);
         const tree=await api(`repos/QSOLKCB/VANILLAJS/git/trees/${commit.tree.sha}?recursive=1`);
-        if(!sourceBoundToTree(receipt,tree))throw Error('GitHub source tree does not bind receipt inputs');
+        const htmlSources=new Map();
+        for(const f of provenanceHTMLRecords(receipt)){
+          if(tree.truncated||!tree.tree?.some(e=>e.path===f.path&&e.type==='blob'&&e.mode==='100644'&&e.sha===f.gitBlob))throw Error('HTML source not bound to Git tree');
+          const blob=await api(`repos/QSOLKCB/VANILLAJS/git/blobs/${f.gitBlob}`);
+          if(blob.sha!==f.gitBlob||blob.encoding!=='base64'||!Number.isSafeInteger(blob.size)||blob.size>131072||typeof blob.content!=='string'||blob.content.length>180224)throw Error('invalid source HTML blob');
+          const bytes=Buffer.from(blob.content,'base64');
+          if(bytes.length!==blob.size||gitBlob(bytes)!==f.gitBlob||hash(bytes)!==f.sha256)throw Error('HTML source blob digest mismatch');
+          htmlSources.set(f.path,bytes);
+        }
+        if(!sourceBoundToTree(receipt,tree,htmlSources))throw Error('GitHub source tree does not bind receipt inputs');
         executions.push(receipt);
       }catch(e){diagnostics.push(run.id+': '+e.message);}
     }

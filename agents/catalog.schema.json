@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "VANILLAJS declarative agent workflow catalogue",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "project",
+    "moduleCatalogue",
+    "policy",
+    "validation",
+    "workflows",
+    "games2"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "project": {
+      "const": "QSOLKCB/VANILLAJS"
+    },
+    "moduleCatalogue": {
+      "const": "MODULES.json"
+    },
+    "policy": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[a-zA-Z0-9_./-]+$"
+      }
+    },
+    "validation": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "node --test tests/*.test.js",
+          "node scripts/check.js",
+          "node scripts/build.js",
+          "node scripts/verify-offline.js",
+          "node scripts/validate-agent-catalog.mjs",
+          "node scripts/audit-docs.mjs",
+          "node scripts/browser-check.js",
+          "node scripts/browser-check.js --suites=editor",
+          "node scripts/browser-check.js --suites=worlds",
+          "node scripts/browser-check.js --suites=play,worlds",
+          "node scripts/browser-check.js --suites=worlds,editor",
+          "node scripts/browser-check.js --suites=research,editor"
+        ]
+      }
+    },
+    "workflows": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "entryPoints",
+          "modules",
+          "examples",
+          "docs",
+          "validation",
+          "limitations",
+          "experimental"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "first-scene",
+              "platformer",
+              "offline-fps",
+              "audiovisual",
+              "data-mod",
+              "games2-review"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "entryPoints": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[a-zA-Z0-9_./-]+$"
+            }
+          },
+          "modules": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "examples": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[a-zA-Z0-9_./-]+$"
+            }
+          },
+          "docs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[a-zA-Z0-9_./-]+$"
+            }
+          },
+          "validation": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "node --test tests/*.test.js",
+                "node scripts/check.js",
+                "node scripts/build.js",
+                "node scripts/verify-offline.js",
+                "node scripts/validate-agent-catalog.mjs",
+                "node scripts/audit-docs.mjs",
+                "node scripts/browser-check.js",
+                "node scripts/browser-check.js --suites=editor",
+                "node scripts/browser-check.js --suites=worlds",
+                "node scripts/browser-check.js --suites=play,worlds",
+                "node scripts/browser-check.js --suites=worlds,editor",
+                "node scripts/browser-check.js --suites=research,editor"
+              ]
+            }
+          },
+          "limitations": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "experimental": {
+            "const": true
+          }
+        }
+      }
+    },
+    "games2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision",
+        "readOnly",
+        "guide",
+        "reviewAfterCompletedGames",
+        "promotion"
+      ],
+      "properties": {
+        "revision": {
+          "const": "0329dd9b5a6ba8912b062696afdff6a3944619ab"
+        },
+        "readOnly": {
+          "const": true
+        },
+        "guide": {
+          "const": "docs/GAMES2_INTEGRATION.md"
+        },
+        "reviewAfterCompletedGames": {
+          "const": 3
+        },
+        "promotion": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
