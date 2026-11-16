@@ -1,0 +1,1 @@
+Game Maker API: native Canvas primitive/text/sprite pixels, atlas/parallax alignment, rejected import/allocation rollback, fixed-tick tap/cancellation, seeded bounded particles, independent instances, real Web Audio resource ownership/failure cleanup and copyable public-only example movement/jump/pickup/win/restart/disposal PASS

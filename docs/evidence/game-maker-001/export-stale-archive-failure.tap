@@ -1,0 +1,191 @@
+TAP version 13
+# Subtest: portable source archive exactly matches its native module closure and notices
+not ok 1 - portable source archive exactly matches its native module closure and notices
+  ---
+  duration_ms: 23.990516
+  type: 'test'
+  location: '/home/trent/vanillajs-game-maker-api/tests/game-maker-export.test.js:16:1'
+  failureType: 'testCodeFailure'
+  error: 'Stale Game Maker portable runtime; run node scripts/game-maker-runtime.mjs --write and review the generated diff'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    verifyGameMakerRuntime (file:///home/trent/vanillajs-game-maker-api/scripts/game-maker-runtime.mjs:41:97)
+    async TestContext.<anonymous> (file:///home/trent/vanillajs-game-maker-api/tests/game-maker-export.test.js:17:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: complete game package preserves exact data, source, licences and scoped digest worker
+ok 2 - complete game package preserves exact data, source, licences and scoped digest worker
+  ---
+  duration_ms: 21.324645
+  type: 'test'
+  ...
+# Subtest: downloaded ZIP passes Python standard-library CRC/inventory validation
+ok 3 - downloaded ZIP passes Python standard-library CRC/inventory validation
+  ---
+  duration_ms: 48.008543
+  type: 'test'
+  ...
+# Subtest: maximum frame-count art exports editable project data within its admission budget
+ok 4 - maximum frame-count art exports editable project data within its admission budget
+  ---
+  duration_ms: 184.071407
+  type: 'test'
+  ...
+# Subtest: portable export refuses incomplete/malicious data; text cannot escape the data module
+ok 5 - portable export refuses incomplete/malicious data; text cannot escape the data module
+  ---
+  duration_ms: 16.520084
+  type: 'test'
+  ...
+# Subtest: Node export creates a new complete folder and never overwrites an existing one
+not ok 6 - Node export creates a new complete folder and never overwrites an existing one
+  ---
+  duration_ms: 10.786073
+  type: 'test'
+  location: '/home/trent/vanillajs-game-maker-api/tests/game-maker-export.test.js:64:1'
+  failureType: 'testCodeFailure'
+  error: 'Stale Game Maker portable runtime; run node scripts/game-maker-runtime.mjs --write and review the generated diff'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    verifyGameMakerRuntime (file:///home/trent/vanillajs-game-maker-api/scripts/game-maker-runtime.mjs:41:97)
+    async packageGameMaker (file:///home/trent/vanillajs-game-maker-api/scripts/export-game-maker.mjs:9:3)
+    async TestContext.<anonymous> (file:///home/trent/vanillajs-game-maker-api/tests/game-maker-export.test.js:68:18)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: runtime collector rejects missing, external, computed and symlinked dependencies
+ok 7 - runtime collector rejects missing, external, computed and symlinked dependencies
+  ---
+  duration_ms: 2.82489
+  type: 'test'
+  ...
+# Subtest: native drawing facade preserves +Y-up lower-left coordinates and camera projection
+ok 8 - native drawing facade preserves +Y-up lower-left coordinates and camera projection
+  ---
+  duration_ms: 2.064321
+  type: 'test'
+  ...
+# Subtest: sprites retain admitted pixels and use existing atlas rectangles; replacement releases owned scratch canvas
+ok 9 - sprites retain admitted pixels and use existing atlas rectangles; replacement releases owned scratch canvas
+  ---
+  duration_ms: 3.197091
+  type: 'test'
+  ...
+# Subtest: tile layers use source frame indices, downward rows, parallax and transactional map admission
+ok 10 - tile layers use source frame indices, downward rows, parallax and transactional map admission
+  ---
+  duration_ms: 2.599101
+  type: 'test'
+  ...
+# Subtest: fixed-tick input preserves taps across zero-step frames, consumes edges once and requires release after cancellation
+ok 11 - fixed-tick input preserves taps across zero-step frames, consumes edges once and requires release after cancellation
+  ---
+  duration_ms: 0.68207
+  type: 'test'
+  ...
+# Subtest: render cadence does not change fixed input/particle evolution, pause stops ticks and callback faults cancel
+ok 12 - render cadence does not change fixed input/particle evolution, pause stops ticks and callback faults cancel
+  ---
+  duration_ms: 5.979161
+  type: 'test'
+  ...
+# Subtest: seeded particles have bounded bursts, deterministic eviction, explicit ticks and owned snapshots
+ok 13 - seeded particles have bounded bursts, deterministic eviction, explicit ticks and owned snapshots
+  ---
+  duration_ms: 0.48298
+  type: 'test'
+  ...
+# Subtest: audio facade owns voices but not devices; replacement, pause and disposal release native resources
+ok 14 - audio facade owns voices but not devices; replacement, pause and disposal release native resources
+  ---
+  duration_ms: 3.414501
+  type: 'test'
+  ...
+# Subtest: local sound data rejects executable/unknown records before synthesis and validates options without a device
+ok 15 - local sound data rejects executable/unknown records before synthesis and validates options without a device
+  ---
+  duration_ms: 0.26921
+  type: 'test'
+  ...
+# Subtest: independent instances retain their resources and rejected allocations do not replace accepted assets
+ok 16 - independent instances retain their resources and rejected allocations do not replace accepted assets
+  ---
+  duration_ms: 1.17654
+  type: 'test'
+  ...
+# Subtest: surface, asset and data budgets reject before partial replacement
+ok 17 - surface, asset and data budgets reject before partial replacement
+  ---
+  duration_ms: 4.641931
+  type: 'test'
+  ...
+# Subtest: tilemap admission owns layers, atlas, markers and camera without widening Sprite Foundry
+ok 18 - tilemap admission owns layers, atlas, markers and camera without widening Sprite Foundry
+  ---
+  duration_ms: 4.472941
+  type: 'test'
+  ...
+# Subtest: versioned tilemap rejects unsafe, unknown, oversized and inconsistent records
+ok 19 - versioned tilemap rejects unsafe, unknown, oversized and inconsistent records
+  ---
+  duration_ms: 12.308803
+  type: 'test'
+  ...
+# Subtest: marker identity, bounds, collision and capacity are checked before replacement
+ok 20 - marker identity, bounds, collision and capacity are checked before replacement
+  ---
+  duration_ms: 7.307472
+  type: 'test'
+  ...
+# Subtest: tile/world conversion has exact bottom-left and half-open boundary semantics
+ok 21 - tile/world conversion has exact bottom-left and half-open boundary semantics
+  ---
+  duration_ms: 3.872981
+  type: 'test'
+  ...
+# Subtest: swept body stops at a thin wall even when the endpoint is beyond it
+ok 22 - swept body stops at a thin wall even when the endpoint is beyond it
+  ---
+  duration_ms: 1.16392
+  type: 'test'
+  ...
+# Subtest: floor, ceiling and world boundaries stop full bodies with stable contact normals
+ok 23 - floor, ceiling and world boundaries stop full bodies with stable contact normals
+  ---
+  duration_ms: 1.1107
+  type: 'test'
+  ...
+# Subtest: axis sweeps match an independent integer rectangle oracle across corners and high speeds
+ok 24 - axis sweeps match an independent integer rectangle oracle across corners and high speeds
+  ---
+  duration_ms: 6.989642
+  type: 'test'
+  ...
+# Subtest: platform adapter reuses motion2d motor law, grounds on tiles, jumps and clears support on walkoff
+ok 25 - platform adapter reuses motion2d motor law, grounds on tiles, jumps and clears support on walkoff
+  ---
+  duration_ms: 2.832311
+  type: 'test'
+  ...
+# Subtest: deterministic ticks are independent of presentation grouping and inputs remain owned
+ok 26 - deterministic ticks are independent of presentation grouping and inputs remain owned
+  ---
+  duration_ms: 2.45548
+  type: 'test'
+  ...
+# Subtest: camera deadzones, disabled follow and world clamps use caller-owned integer coordinates
+ok 27 - camera deadzones, disabled follow and world clamps use caller-owned integer coordinates
+  ---
+  duration_ms: 1.099021
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 25
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 363.441174

@@ -1,0 +1,24 @@
+PIXEL DEBUG {"changedPixels":[[39,17,[0,24,0,255],[0,0,0,255]],[40,17,[0,24,0,255],[0,0,0,255]],[36,18,[0,25,0,255],[0,0,0,255]],[37,18,[0,120,0,255],[0,93,0,255]],[38,18,[0,203,0,255],[0,173,0,255]],[39,18,[0,245,0,255],[0,229,0,255]],[40,18,[0,245,0,255],[0,229,0,255]],[41,18,[0,202,0,255],[0,173,0,255]],[42,18,[0,120,0,255],[0,93,0,255]],[43,18,[0,24,0,255],[0,0,0,255]],[35,19,[0,71,0,255],[0,31,0,255]],[36,19,[0,184,0,255],[0,185,0,255]]],"changedCount":47,"primitivePixels":{"rect":[255,0,0,255],"circle":[0,255,0,255],"line":[0,0,255,255],"transparent":[0,0,0,255],"sprite":[200,100,50,255],"spriteCorner":[0,255,0,255]},"textPixels":651,"before":2558310509,"afterRejected":302398202,"afterAllocation":302398202,"rejected":true,"failedAllocation":true,"ownsData":true,"tiles":{"normal":[0,0,255,255],"parallax":[200,100,50,255]},"beforeMap":3890152964,"afterMap":3890152964,"mapRejected":true,"zeroTickCalled":false,"ticks":[[1,1,false,true,true],[2,1,false,false,true]],"blocked":{"x":0,"y":0,"jump":false,"action":false,"held":{"left":false,"right":false,"up":false,"down":false,"jump":false,"action":false},"pressed":{"left":false,"right":false,"up":false,"down":false,"jump":false,"action":false}},"rearmed":{"x":1,"y":0,"jump":true,"action":false,"held":{"left":false,"right":true,"up":false,"down":false,"jump":true,"action":false},"pressed":{"left":false,"right":true,"up":false,"down":false,"jump":true,"action":false}},"particleIdentity":true,"boundedParticles":256,"unavailableMessage":"Canvas 2D is unavailable"}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 2558310509
+- 302398202
+
+    at checkGameMakerAPI (file:///home/trent/vanillajs-game-maker-api/scripts/browser-game-maker-api.js:78:62)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:453:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+    at async file:///tmp/game-maker-api-browser.mjs:15:5 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 2558310509,
+  expected: 302398202,
+  operator: 'strictEqual'
+}
+
+Node.js v22.18.0

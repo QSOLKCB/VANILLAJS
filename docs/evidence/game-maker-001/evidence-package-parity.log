@@ -1,0 +1,3 @@
+After adding evidence, node scripts/build.js and node scripts/verify-offline.js exited 0.
+The rebuilt manifest and offline verification output are byte-identical to the tested package.
+All recorded artifact hashes and evidence Markdown local links verified.
