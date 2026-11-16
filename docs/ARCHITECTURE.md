@@ -307,7 +307,7 @@ Movement remains character/AABB Float64 physics; PR #93's integer 2D boundary is
 unchanged. PR #94's complete native module graph packaging also covers this lab.
 See [FPS-FOUNDATION-001](FPS_FOUNDATION_001.md).
 
-## Scene and narrative composition (v2.7.0 candidate)
+## Scene and narrative composition (v2.7.0)
 
 `scene-graph` depends only on `math`. It owns validated scene descriptors,
 hierarchical affine transforms, nested prefab expansion and caller-time sampling;
@@ -325,3 +325,26 @@ Imported data cannot name modules, evaluate expressions or issue agent instructi
 [compatibility boundaries](SCENE_NARRATIVE_001.md) define ownership and numerical
 limits. Scene Float64 transforms are separate from deterministic discrete narrative
 state and from exact Q16.16/formal proofs.
+
+## Game Maker ownership and tile worlds (v2.8.0 candidate)
+
+`modules/tilemap/` is pure and depends only on `motion2d` and `sprite2d`. Validated
+layered maps own their atlas data, collision grid and markers. Whole-body integer
+sweeps resolve X then Y; original motion laws are reused without modifying the
+existing point-collision contract. Rows/pixels and +Y-up subunit conversions are
+explicit in [TILEMAP_API.md](TILEMAP_API.md).
+
+`api/game-maker/` composes existing input/time/sprite/audio facilities with native
+Canvas2D, already used by the 2D labs. Instances own caches, voices, particle state
+and clock; callers own the canvas, AudioContext, listeners and animation loop.
+The facade does not import the example game or discover external assets.
+
+`demos/game-maker-lab/` owns Signal Garden's rules, fiction, authoring forms and
+input lifecycle. Its checked source archive packages the actual portable player
+closure; it is generated distribution data, not another runtime implementation.
+Project JSON is validated and escaped as inert values. Only the trusted static
+closure becomes native JavaScript in the ZIP; the existing SHA-256 worker and
+licence/notice requirements are reused. [Export boundary](GAME_MAKER_EXPORT.md).
+
+The new game envelope is separate from Workbench v1/v2, scene/narrative and Mod
+SDK formats. No schema or metadata migration is implicit.

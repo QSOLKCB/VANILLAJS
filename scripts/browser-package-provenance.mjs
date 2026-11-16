@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Generated package rows are never assigned a caller-selected source path.
-// Rebuild the nine known immutable runtime namespaces from source, then bind
+// Rebuild the ten known immutable runtime namespaces from source, then bind
 // their byte-identical copies and narrowly rewritten entry pages to Git blobs.
 import {mkdtemp,mkdir,readdir,readFile,writeFile,rm} from 'node:fs/promises';
 import {join} from 'node:path';
@@ -8,9 +8,9 @@ import {tmpdir} from 'node:os';
 import {hash,gitBlob} from './browser-dependencies.mjs';
 import {packageEditorRuntime,packageLabRuntime} from './pursuit-package.mjs';
 export const PROVENANCE_SCHEMA='qsol.browser.package-provenance.v1';
-const LABS=['editor','pursuit-lab','skyguard-lab','arcade-combat-lab','block-arena-lab','demoscene-lab','sprite-foundry','weapon-feel-lab','narrative-foundry'];
-const STARTUPS={'editor':'start.js','pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js','block-arena-lab':'start.js','demoscene-lab':'start.js','sprite-foundry':'start.js','weapon-feel-lab':'start.js','narrative-foundry':'start.js'};
-const GENERATORS=['scripts/build.js','scripts/pursuit-package.mjs','scripts/browser-dependencies.mjs','scripts/browser-package-provenance.mjs'];
+const LABS=['editor','pursuit-lab','skyguard-lab','arcade-combat-lab','block-arena-lab','demoscene-lab','sprite-foundry','weapon-feel-lab','narrative-foundry','game-maker-lab'];
+const STARTUPS={'editor':'start.js','pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js','block-arena-lab':'start.js','demoscene-lab':'start.js','sprite-foundry':'start.js','weapon-feel-lab':'start.js','narrative-foundry':'start.js','game-maker-lab':'start.js'};
+const GENERATORS=['scripts/build.js','scripts/pursuit-package.mjs','scripts/browser-dependencies.mjs','scripts/browser-package-provenance.mjs','scripts/game-maker-runtime.mjs'];
 const record=(path,bytes)=>({path,sha256:hash(bytes),gitBlob:gitBlob(bytes)});
 const sameKeys=(value,keys)=>value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).sort().join(',')===[...keys].sort().join(',');
 const safe=path=>typeof path==='string'&&/^[a-zA-Z0-9._/-]+$/.test(path)&&!path.startsWith('/')&&!path.split('/').some(p=>!p||p==='.'||p==='..');

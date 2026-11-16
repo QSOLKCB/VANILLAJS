@@ -7,7 +7,8 @@ import {createHash} from 'node:crypto';
 import {createServer} from 'node:http';
 import {resolve,extname,sep} from 'node:path';
 
-const labs=new Map([['sprite-foundry','sprite-foundry'],['weapon-feel-lab','weapon-feel'],['narrative-foundry','narrative-foundry']]);
+const labs=new Map([['sprite-foundry','sprite-foundry'],['weapon-feel-lab','weapon-feel'],['narrative-foundry','narrative-foundry'],['game-maker-lab','game-maker-lab']]);
+export const checkGameMakerStartup=(browser,base)=>checkFoundryStartup(browser,base,'game-maker-lab');
 export const checkSpriteStartup=(browser,base)=>checkFoundryStartup(browser,base,'sprite-foundry');
 export const checkNarrativeStartup=(browser,base)=>checkFoundryStartup(browser,base,'narrative-foundry');
 export const checkWeaponFeelStartup=(browser,base)=>checkFoundryStartup(browser,base,'weapon-feel-lab');
@@ -39,7 +40,9 @@ export async function checkFoundryStartup(browser,base,lab){
     ['modules/sprite2d/index.js',poisoned],
     ['modules/weapon-feel/index.js',poisoned],
     ['modules/narrative/index.js',poisoned],
-    ['modules/scene-graph/index.js',poisoned]
+    ['modules/scene-graph/index.js',poisoned],
+    ['modules/tilemap/index.js',poisoned],
+    ['api/game-maker/index.js',poisoned]
   ]);
   const entries=[...old].map(([path,text])=>({path,bytes:Buffer.byteLength(text),
     sha256:createHash('sha256').update(text).digest('hex')}));

@@ -36,30 +36,32 @@ experimental API will never change.
 
 ## Published milestones
 
-**Latest published release: [v2.6.0 — The Game Feel & Sprite Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.6.0).**
-Published 16 November 2026 from `7f2d5e62bb64aaf8c6ef7af8df678da9fe38412d`,
-after owner review and merge of [PR #101](https://github.com/QSOLKCB/VANILLAJS/pull/101).
-Generate, paint and animate original sprites; export reusable projects, PNGs and
-atlases. Tune responsive FPS input, ADS, accuracy and cosmetic weapon feedback
-against actual moving targets. Both public APIs remain experimental.
+**Latest published release: [v2.7.0 — Scene & Narrative Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.7.0).**
+Published 16 November 2026 from `70e63b902834ae31b994ea40ae584bd93892e6bf`,
+after owner review and merge of [PR #102](https://github.com/QSOLKCB/VANILLAJS/pull/102).
+Compose hierarchical scenes, animate reusable prefabs and author branching stories
+with typed conditions, inert events and replay-validated progress. The Workbench
+keeps its existing project formats; scene composition uses a separate sidecar.
 
-[v2.5.0 — The Creator Gateway](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0)
-introduced the progressive guides, Tutorial Lab and validated agent catalogue.
-[v2.4.0 — The Demoscene Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.4.0)
-introduced audiovisual composition and **The Machine Remembers**. Arcade and FPS
-Foundries arrived in v2.2.0 and v2.3.0. Publication does not imply API stability.
+[v2.6.0 — Game Feel & Sprite Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.6.0)
+introduced seeded sprite authoring and reusable FPS weapon presentation.
+[v2.5.0 — Creator Gateway](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0)
+introduced progressive guides, Tutorial Lab and the validated agent catalogue.
+[v2.4.0 — Demoscene Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.4.0)
+introduced audiovisual composition and **The Machine Remembers**. Publication does
+not imply API stability.
 
-The published v2.6.0 baseline has **64 experimental modules, 45 recipes and two
-research experiments**. This v2.7.0 candidate adds scene composition and narrative:
-**66 modules, 47 recipes**, with research experiments unchanged.
+The published v2.7.0 baseline has **66 experimental modules, 47 recipes and two
+research experiments**. This v2.8.0 candidate adds the tilemap module and Game
+Maker workflow: **67 modules, 48 recipes**, with research experiments unchanged.
 [MODULES.json](MODULES.json) is authoritative. Its `release` and the private
 `package.json` version retain historical `1.0.0` metadata, not GitHub release numbers.
 
-**In review for v2.7.0 — Scene & Narrative Foundry:** compose hierarchical scenes,
-animate reusable prefabs, author branching dialogue, preview conditions and scene
-events, and export validated data. Existing Workbench projects keep their formats.
-See [contracts and verification](docs/SCENE_NARRATIVE_001.md).
-Game Maker v2.8 and HORIZON v2.9 remain [planned](docs/ENGINE_EXPANSION_001.md).
+**Candidate for v2.8.0 — The Game Maker API:** draw with a small owned browser API,
+author sprites and layered tile worlds, test a complete original platform game,
+and export its actual runtime in an offline ZIP.
+[Contracts and verification](docs/GAME_MAKER_001.md) explain the supported rules
+and formats. HORIZON v2.9 remains [planned](docs/ENGINE_EXPANSION_001.md).
 
 ## Run the labs
 
@@ -92,6 +94,7 @@ contracts, even when the demonstrations are playable.
 
 | Build or investigate | Working entry point | Guide |
 | --- | --- | --- |
+| Build a complete small 2D game | [Game Maker Lab](demos/game-maker-lab/index.html) | [Create, play and export](docs/GAME_MAKER_LAB.md) |
 | First scene, without coding | [Tutorial Lab](demos/tutorial-lab/index.html) | [Quickstart](docs/CREATOR_QUICKSTART.md) |
 | Branching stories and dialogue | [Narrative Foundry](demos/narrative-foundry/index.html) | [Author and preview a story](docs/NARRATIVE_FOUNDRY.md) |
 | Hierarchies, animation and nested prefabs | [Workbench Scene Composition](demos/editor/index.html) | [Compose a reusable scene](docs/SCENE_COMPOSITION.md) |
@@ -137,6 +140,12 @@ the controls and the [Workbench reference](docs/EDITOR_WORKBENCH.md) defines lim
 including fixed clocks, grounded characters, moving shots, platforms and navigation.
 
 ### Know what your export contains
+
+[Game Maker Lab](demos/game-maker-lab/index.html) exports a complete ZIP for its
+original platform-game rules: authored level/sprites, native modules, controls,
+win/lose/restart, local sound, licences and a verified offline worker. Extract
+and serve the entire folder. This does not turn arbitrary scripts or Workbench
+projects into games. [Game Maker export contract](docs/GAME_MAKER_EXPORT.md).
 
 The Tutorial Lab downloads an editable `.vproject.json`, not a complete game.
 It uses the same supported project format as the Workbench. Open it there to
@@ -194,6 +203,7 @@ module's linked specialist guide before calling an API.
 | Exact simulation | `integer-math`, `integer-vector`, `integer-time`, `integer-physics`, `integer-engine`, `integer-replay` |
 | ALIEN MATH authoring | `exact-rational`, `exact-interval`, `exact-geometry`, `rational-q16`, `exact-d4`, `exact-graph`, `exact-course`, `exact-circuit` |
 | Arcade and FPS | `motion2d`, `combat2d`, `combat3d`, `mod-arcade`, `mod-fps` |
+| Tile worlds and body collision | `tilemap`, `motion2d` |
 | Scene composition and narrative | `scene-graph`, `narrative` |
 | Sprites and game feel | `sprite2d`, `weapon-feel` |
 | Sound and visuals | `audio2d`, `soundtrack`, `render-webgl`, `render-optional`, `demo-timeline`, `demo-scene`, `mod-demo` |

@@ -54,6 +54,55 @@
       "experimental": true
     },
     {
+      "id": "game-maker",
+      "title": "Build and export a first 2D game",
+      "entryPoints": [
+        "demos/game-maker-lab/index.html",
+        "api/game-maker/index.js",
+        "modules/tilemap/index.js",
+        "demos/game-maker-lab/game.js",
+        "demos/game-maker-lab/starter.js",
+        "demos/game-maker-lab/player.js",
+        "demos/game-maker-lab/api-example.html",
+        "demos/game-maker-lab/api-example.js"
+      ],
+      "modules": [
+        "tilemap",
+        "sprite2d",
+        "motion2d",
+        "input",
+        "time",
+        "audio2d"
+      ],
+      "examples": [
+        "demos/game-maker-lab/index.html"
+      ],
+      "docs": [
+        "docs/GAME_MAKER_LAB.md",
+        "docs/GAME_MAKER_API.md",
+        "docs/TILEMAP_API.md",
+        "docs/GAME_MAKER_EXPORT.md",
+        "docs/GAME_MAKER_001.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js --suites=editor"
+      ],
+      "limitations": [
+        "Game Maker ZIP exports the fixed original platform-game rules; it does not compile arbitrary imported code.",
+        "Tilemap collision uses bounded integer axis-aligned body sweeps; no slopes, dynamic rigid bodies or continuous actor-versus-actor solver.",
+        "Pixel rows grow downward; motion uses +Y up and 256 subunits per tile/game unit.",
+        "The caller owns canvas, audio context, input devices and animation loop.",
+        "Source changes require regenerating and reviewing the portable runtime archive; imported project data never selects code."
+      ],
+      "experimental": true
+    },
+    {
       "id": "platformer",
       "title": "Build an original 2D platformer",
       "entryPoints": [
