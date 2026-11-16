@@ -134,3 +134,6 @@ input[aria-invalid=true]{border-color:#ffb6a4}.viewport-head>span{min-width:0;ov
 .demoscene-panel details{border-top:1px solid var(--line);margin:12px 0;padding-top:5px}
 .fx-feedback{position:sticky;top:-15px;background:var(--panel);padding:6px 0;z-index:1}
 #fx-mode{color:#e5ccaa}#fx-status{color:var(--accent)}
+
+.startup-failure{border:1px solid #e5ccaa;padding:10px;overflow-wrap:anywhere;color:#e5ccaa}
+.startup-failure button{white-space:normal;max-width:100%}

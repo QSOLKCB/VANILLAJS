@@ -8,8 +8,11 @@ export async function verifyDemosceneWorkbench(page,base){
   const status=message=>page.waitForFunction(s=>document.querySelector('#fx-status').textContent.includes(s),message);
   const click=async(id,message)=>{await page.locator('#fx-'+id).click();if(message)await status(message);};
   const set=async(selector,value)=>{await page.locator(selector).fill(value);await page.locator(selector).press('Tab');};
-  await page.goto(base+'demos/editor/index.html#visual-fx');
+  await page.goto(base+'demos/editor/index.html');
   await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready');
+  // Enter through the sidebar the user sees, without an anchor opening it for us.
+  await page.locator('#visual-fx>summary').click();
+  assert.equal(await page.locator('#visual-fx').evaluate(el=>el.open),true);
   assert.equal(await page.locator('#fx-effect-apply').isDisabled(),true,'capture an object before applying its effect');
   assert.equal(await page.locator('#fx-key').isDisabled(),true);
   const initial=await bytes();

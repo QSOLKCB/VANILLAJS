@@ -4,6 +4,7 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {machineRemembers} from '../demos/demoscene-lab/preset.js';
 import {verifyDemosceneWorkbench} from './browser-demoscene-workbench.js';
+import {checkEditorStartup} from './editor-startup-check.mjs';
 import {checkDemosceneUpgrade} from './demoscene-upgrade-check.mjs';
 import {createServer} from 'node:http';
 import {portableDemo} from './demoscene-package.mjs';
@@ -46,6 +47,7 @@ export async function verifyDemoscene(browser,base){
     console.log('Demoscene: six visual states, full WAV hash, sample seek, audio cancellation, fullscreen, mobile, real Workbench roundtrip and offline playback PASS');
   }catch(error){await page.screenshot({path:'browser-artifacts/demoscene-failed.png',fullPage:true}).catch(()=>{});console.error('Demoscene browser failure',errors,await page.locator('#status').textContent().catch(()=>''));throw error;}finally{await context.close();}
   await checkDemosceneUpgrade(browser,base);
+  await checkEditorStartup(browser,base);
   await checkPortableDemo(browser);
 }
 async function checkPortableDemo(browser){

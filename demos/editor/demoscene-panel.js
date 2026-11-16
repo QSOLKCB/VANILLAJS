@@ -5,13 +5,118 @@ import {validateDemo,DEMO_EFFECTS} from '../../modules/mod-demo/index.js';
 import {demoSample} from '../../modules/demo-timeline/index.js';
 import {demoDraft,commitDemo,travelDemo,addSelectedDemo,editDemoNode,captureDemoKey,editDemoData} from './demoscene-workflow.js';
 export function mountDemoscenePanel(host,{getScene,getLibrary,getSelection,isPlaying,stopScene}){
-  host.innerHTML=`<details id="visual-fx" class="demoscene-panel"><summary>Demoscene / Visual FX</summary><p>Use the hierarchy, transform inspector and Asset Foundry above. Selected objects and visible descendants become an inert audiovisual composition. Flat materials only; existing scene formats stay compatible.</p>
-  <div class="fx-feedback"><p id="fx-mode" role="status" hidden>Scene Play locks Visual FX editing, including when paused. Stop the scene to use these controls.</p><button type="button" id="fx-edit" hidden>Stop scene & edit Visual FX</button><p id="fx-status" role="status" aria-live="polite">Original production template ready. Add a selected object, then preview or export the composition.</p></div>
-  <label>Effect<select id="fx-effect">${DEMO_EFFECTS.map(e=>'<option>'+e+'</option>').join('')}</select></label><label>Copies<input id="fx-copies" type="number" min="1" max="48" value="1"></label><button type="button" id="fx-add">Add selected object / prefab</button><label>Composition object<select id="fx-node"></select></label><button type="button" id="fx-effect-apply">Apply effect & copies</button>
-  <label>Time in seconds<input id="fx-time" type="number" min="0" max="60" step=".02" value="0"></label><button type="button" id="fx-key">Capture inspector transform + colour as keyframe</button><p>Move, rotate, scale and recolour the selected object in the main inspector, then capture at another time. Up to eight ordered keys.</p>
-  <details><summary>Camera, typography & music</summary><label>Camera XYZ<input id="fx-camera" value="0, 4, 30"></label><label>Camera target XYZ<input id="fx-target" value="0, 3, 0"></label><button type="button" id="fx-camera-key">Set camera key at time</button><label>3D title<input id="fx-title" value="VANILLAJS" maxlength="32"></label><label>Scroller<input id="fx-scroller" maxlength="96" value="MAKE AMAZING ALIEN TECH"></label><button type="button" id="fx-text">Apply original text</button><label>Musical phrase (0–7)<input id="fx-phrase" type="number" min="0" max="7" value="2"></label><label>Arpeggio frequency multiplier<select id="fx-transpose"><option value="1">Original</option><option value="2">One octave up</option><option value="0.5">One octave down</option></select></label><button type="button" id="fx-music">Apply phrase variation</button><label>Visual cue lane<select id="fx-cue"><option value="3">Percussion</option><option value="0">Bass</option><option value="1">Lead</option><option value="2">Arpeggio</option></select></label><button type="button" id="fx-sync">Sync effects to cue lane</button></details>
-  <div class="asset-buttons"><button type="button" id="fx-undo">Undo FX</button><button type="button" id="fx-redo">Redo FX</button></div><p id="fx-preview-state">Preview idle. Press Preview with sound, or choose a time and Preview at time. The production opens on black at 0 seconds.</p><canvas id="fx-preview" style="width:100%;height:200px;background:#000" aria-label="Demoscene effect preview"></canvas><div class="asset-buttons"><button type="button" id="fx-preview-play">Preview with sound</button><button type="button" id="fx-preview-stop">Pause</button><button type="button" id="fx-preview-seek">Preview at time</button></div><button type="button" id="fx-export">Export validated composition</button><label class="import">Import composition<input id="fx-import" type="file" accept=".json,application/json"></label><p>FX undo/redo keeps a separate composition history. Export it separately from the scene.</p><a href="../demoscene-lab/index.html">Open Demoscene Lab ↗</a></details>`;
-  const $=id=>host.querySelector('#fx-'+id);let history=demoDraft(machineRemembers()),player=null,raf=0,generation=0,lastPlaying=false;
+  let history=demoDraft(machineRemembers());
+  // Dynamic labels are text nodes; no value is parsed as HTML.
+  const element=(tag,attributes,...children)=>{
+    const node=document.createElement(tag);
+    for(const [name,value] of Object.entries(attributes))node.setAttribute(name,value);
+    node.append(...children);return node;
+  };
+  host.replaceChildren(element("details",{"id":"visual-fx","class":"demoscene-panel"},
+      element("summary",{},
+        "Demoscene / Visual FX"),
+      element("p",{},
+        "Use the hierarchy, transform inspector and Asset Foundry above. Selected objects and visible descendants become an inert audiovisual composition. Flat materials only; existing scene formats stay compatible."),
+      element("div",{"class":"fx-feedback"},
+        element("p",{"id":"fx-mode","role":"status","hidden":""},
+          "Scene Play locks Visual FX editing, including when paused. Stop the scene to use these controls."),
+        element("button",{"type":"button","id":"fx-edit","hidden":""},
+          "Stop scene & edit Visual FX"),
+        element("p",{"id":"fx-status","role":"status","aria-live":"polite"},
+          "Original production template ready. Add a selected object, then preview or export the composition.")),
+      element("label",{},
+        "Effect",
+        element("select",{"id":"fx-effect"})),
+      element("label",{},
+        "Copies",
+        element("input",{"id":"fx-copies","type":"number","min":"1","max":"48","value":"1"})),
+      element("button",{"type":"button","id":"fx-add"},
+        "Add selected object / prefab"),
+      element("label",{},
+        "Composition object",
+        element("select",{"id":"fx-node"})),
+      element("button",{"type":"button","id":"fx-effect-apply"},
+        "Apply effect & copies"),
+      element("label",{},
+        "Time in seconds",
+        element("input",{"id":"fx-time","type":"number","min":"0","max":"60","step":".02","value":"0"})),
+      element("button",{"type":"button","id":"fx-key"},
+        "Capture inspector transform + colour as keyframe"),
+      element("p",{},
+        "Move, rotate, scale and recolour the selected object in the main inspector, then capture at another time. Up to eight ordered keys."),
+      element("details",{},
+        element("summary",{},
+          "Camera, typography & music"),
+        element("label",{},
+          "Camera XYZ",
+          element("input",{"id":"fx-camera","value":"0, 4, 30"})),
+        element("label",{},
+          "Camera target XYZ",
+          element("input",{"id":"fx-target","value":"0, 3, 0"})),
+        element("button",{"type":"button","id":"fx-camera-key"},
+          "Set camera key at time"),
+        element("label",{},
+          "3D title",
+          element("input",{"id":"fx-title","value":"VANILLAJS","maxlength":"32"})),
+        element("label",{},
+          "Scroller",
+          element("input",{"id":"fx-scroller","maxlength":"96","value":"MAKE AMAZING ALIEN TECH"})),
+        element("button",{"type":"button","id":"fx-text"},
+          "Apply original text"),
+        element("label",{},
+          "Musical phrase (0–7)",
+          element("input",{"id":"fx-phrase","type":"number","min":"0","max":"7","value":"2"})),
+        element("label",{},
+          "Arpeggio frequency multiplier",
+          element("select",{"id":"fx-transpose"},
+            element("option",{"value":"1"},
+              "Original"),
+            element("option",{"value":"2"},
+              "One octave up"),
+            element("option",{"value":"0.5"},
+              "One octave down"))),
+        element("button",{"type":"button","id":"fx-music"},
+          "Apply phrase variation"),
+        element("label",{},
+          "Visual cue lane",
+          element("select",{"id":"fx-cue"},
+            element("option",{"value":"3"},
+              "Percussion"),
+            element("option",{"value":"0"},
+              "Bass"),
+            element("option",{"value":"1"},
+              "Lead"),
+            element("option",{"value":"2"},
+              "Arpeggio"))),
+        element("button",{"type":"button","id":"fx-sync"},
+          "Sync effects to cue lane")),
+      element("div",{"class":"asset-buttons"},
+        element("button",{"type":"button","id":"fx-undo"},
+          "Undo FX"),
+        element("button",{"type":"button","id":"fx-redo"},
+          "Redo FX")),
+      element("p",{"id":"fx-preview-state"},
+        "Preview idle. Press Preview with sound, or choose a time and Preview at time. The production opens on black at 0 seconds."),
+      element("canvas",{"id":"fx-preview","style":"width:100%;height:200px;background:#000","aria-label":"Demoscene effect preview"}),
+      element("div",{"class":"asset-buttons"},
+        element("button",{"type":"button","id":"fx-preview-play"},
+          "Preview with sound"),
+        element("button",{"type":"button","id":"fx-preview-stop"},
+          "Pause"),
+        element("button",{"type":"button","id":"fx-preview-seek"},
+          "Preview at time")),
+      element("button",{"type":"button","id":"fx-export"},
+        "Export validated composition"),
+      element("label",{"class":"import"},
+        "Import composition",
+        element("input",{"id":"fx-import","type":"file","accept":".json,application/json"})),
+      element("p",{},
+        "FX undo/redo keeps a separate composition history. Export it separately from the scene."),
+      element("a",{"href":"../demoscene-lab/index.html"},
+        "Open Demoscene Lab ↗")));
+  const $=id=>host.querySelector('#fx-'+id);
+  $('effect').replaceChildren(...DEMO_EFFECTS.map(effect=>element('option',{value:effect},effect)));
+  let player=null,raf=0,generation=0,lastPlaying=false;
   if(location.hash==='#visual-fx')host.querySelector('details').open=true;
   const status=s=>$('status').textContent=s;
   function previewState(){

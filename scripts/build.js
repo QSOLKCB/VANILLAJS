@@ -1,7 +1,7 @@
 import {cp,mkdir,rm,readdir,readFile,writeFile} from 'node:fs/promises';
 import {resolve,relative} from 'node:path';
 import {createHash} from 'node:crypto';
-import {packagePursuitRuntime,packageLabRuntime} from './pursuit-package.mjs';
+import {packagePursuitRuntime,packageLabRuntime,packageEditorRuntime} from './pursuit-package.mjs';
 import {verifyFPSSource} from './fps-source-identity.mjs';
 await verifyFPSSource();
 const root=resolve(import.meta.dirname,'..'),out=resolve(root,'dist');
@@ -17,6 +17,7 @@ await cp(resolve(root,'experiments/arch-omi/index.js'),resolve(out,'experiments/
 await mkdir(resolve(out,'experiments/e8-geometry'),{recursive:true});
 await cp(resolve(root,'experiments/e8-geometry/index.js'),resolve(out,'experiments/e8-geometry/index.js'));
 await writeFile(resolve(out,'.nojekyll'),'');
+await packageEditorRuntime(out);
 await packagePursuitRuntime(out);
 await packageLabRuntime(out,'skyguard-lab');
 await packageLabRuntime(out,'arcade-combat-lab');
