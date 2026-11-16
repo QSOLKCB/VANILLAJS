@@ -122,7 +122,7 @@ transforms, animation or prefab handling; preserve legacy project formats.
 Read [Narrative API](NARRATIVE_API.md) before authoring story variables, effects
 or saves. Keep event-to-scene mappings in the consuming app and treat imported
 text as inert data. The [milestone boundaries](SCENE_NARRATIVE_001.md) distinguish
-implemented APIs from proposed Game Maker/HORIZON work and future Games2 adoption.
+the published scene/narrative APIs from the later programme and future Games2 adoption.
 
 ## Build a first game with the Game Maker API
 
@@ -144,3 +144,30 @@ Run `tests/game-maker.test.js`, `tests/tilemap.test.js`,
 required checks and packaged browser interactions. Test the downloaded ZIP under
 a nested HTTP prefix and offline. Games2 adoption requires a separate owner-reviewed
 PR and immutable release provenance; never modify it during this engine milestone.
+
+## HORIZON environment and visual tasks
+
+Use the `horizon` workflow in [the catalogue](../agents/catalog.json). Read
+[HORIZON-001](HORIZON_001.md), [render-lit](RENDER_LIT_API.md) and
+[scenic3d](SCENIC3D_API.md), then open [the authoring lab](HORIZON_LAB.md).
+Reusable GPU resource/material behavior belongs in `render-lit`; pure scenery,
+road-surface queries and procedural visual geometry belong in `scenic3d`.
+DOM, camera-tour scheduling, controls and the original setting are lab-owned.
+
+Keep shader source engine-owned and imported configuration inert. Validate a
+complete replacement before committing authoring history or disposing accepted
+GPU resources. Preserve triangle/render/contact alignment, surface identity,
+unit conventions and independent numerical tests. A single terrain height cannot
+represent both a bridge deck and the ground underneath it.
+
+This is HORIZON-001 only. Do not advertise a camera tour or visual rig as vehicle
+physics. Implement HORIZON-002 dynamics only in its separately authorised PR;
+HORIZON-003 racing tools/showcase/polish follow that review. Preserve current
+Racing Lab and Track Foundry v1, all existing rendering callers and frozen
+verification evidence. Games2 remains unchanged and adoption remains separate.
+
+Run the new render/scenery/lab tests and required repository checks. Packaged
+Chromium must exercise real material/geometry changes, rejected-import rollback,
+profile limits, context recovery, offline startup and retained rendering. Record
+exact source/package identities and actual inspected visuals; never translate
+software rendering results into physical GPU or universal speed claims.

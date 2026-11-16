@@ -863,3 +863,22 @@ while world Y grows upward. It is not a slopes or dynamic-rigid-body solver.
 [Game Maker Lab](GAME_MAKER_LAB.md) consumes both APIs. Its [ZIP export](GAME_MAKER_EXPORT.md)
 contains the original example rules and complete native runtime, rather than
 claiming to compile arbitrary game scripts.
+
+## HORIZON-001 optional rendering and scenery
+
+The candidate [render-lit API](RENDER_LIT_API.md) adds explicitly owned WebGL1
+meshes with normals/materials, procedural texture patterns, directional/ambient
+light, atmosphere/fog and bounded profiles. Existing `render-webgl.Renderer`
+callers are unchanged. Shader/material behavior is approximate and separate from
+simulation, exact arithmetic and proof claims.
+
+The pure [scenic3d API](SCENIC3D_API.md) validates versioned environment/road data,
+generates original static scenery and detailed vehicle visuals, and exposes
+samples of the same road triangles used for rendering. Geometry uses metres,
++Y up/-Z forward. Explicit road surface IDs and a separate terrain heightfield
+avoid conflating bridge decks with ground underneath them.
+
+[HORIZON Lab](HORIZON_LAB.md) consumes these APIs for actual visual authoring.
+Its project export is inert configuration, not a complete race. HORIZON-002
+vehicle dynamics and HORIZON-003 full racing creation remain separate proposals.
+[Compatibility and review gates](HORIZON_001.md).

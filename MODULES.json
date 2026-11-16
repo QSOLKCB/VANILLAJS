@@ -592,6 +592,27 @@
       "status": "experimental",
       "description": "Bounded layered tile worlds, sprite atlases, integer body sweeps, markers and camera follow",
       "demo": "demos/game-maker-lab/index.html"
+    },
+    "render-lit": {
+      "entry": "modules/render-lit/index.js",
+      "depends": [
+        "math"
+      ],
+      "environment": "browser-webgl1",
+      "status": "experimental",
+      "description": "Optional owned normal/material lighting, procedural textures, atmosphere and bounded retained native WebGL1 rendering",
+      "demo": "demos/horizon-lab/index.html"
+    },
+    "scenic3d": {
+      "entry": "modules/scenic3d/index.js",
+      "depends": [
+        "math",
+        "terrain"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded versioned scenery, elevated/banked road surfaces, static batches and detailed original vehicle visual rigs",
+      "demo": "demos/horizon-lab/index.html"
     }
   },
   "recipes": {
@@ -1146,6 +1167,16 @@
         "audio2d"
       ],
       "description": "Author an original 2D platform game with the owned Game Maker facade and export its complete offline package"
+    },
+    "horizon": {
+      "entry": "demos/horizon-lab/index.html",
+      "modules": [
+        "render-lit",
+        "scenic3d",
+        "math",
+        "terrain"
+      ],
+      "description": "Author original lit environments, road geometry and vehicle appearance; HORIZON-001 visual workshop"
     }
   },
   "experiments": {

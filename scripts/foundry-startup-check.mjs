@@ -7,7 +7,8 @@ import {createHash} from 'node:crypto';
 import {createServer} from 'node:http';
 import {resolve,extname,sep} from 'node:path';
 
-const labs=new Map([['sprite-foundry','sprite-foundry'],['weapon-feel-lab','weapon-feel'],['narrative-foundry','narrative-foundry'],['game-maker-lab','game-maker-lab']]);
+const labs=new Map([['sprite-foundry','sprite-foundry'],['weapon-feel-lab','weapon-feel'],['narrative-foundry','narrative-foundry'],['game-maker-lab','game-maker-lab'],['horizon-lab','horizon-lab']]);
+export const checkHorizonStartup=(browser,base)=>checkFoundryStartup(browser,base,'horizon-lab');
 export const checkGameMakerStartup=(browser,base)=>checkFoundryStartup(browser,base,'game-maker-lab');
 export const checkSpriteStartup=(browser,base)=>checkFoundryStartup(browser,base,'sprite-foundry');
 export const checkNarrativeStartup=(browser,base)=>checkFoundryStartup(browser,base,'narrative-foundry');
@@ -42,6 +43,8 @@ export async function checkFoundryStartup(browser,base,lab){
     ['modules/narrative/index.js',poisoned],
     ['modules/scene-graph/index.js',poisoned],
     ['modules/tilemap/index.js',poisoned],
+    ['modules/render-lit/index.js',poisoned],
+    ['modules/scenic3d/index.js',poisoned],
     ['api/game-maker/index.js',poisoned]
   ]);
   const entries=[...old].map(([path,text])=>({path,bytes:Buffer.byteLength(text),
