@@ -19,7 +19,9 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20 # cold-cache and complete browser-suite margin; not permission to skip checks
+    # HORIZON extends the full software-rendered suite beyond the former 20-minute
+    # whole-job limit. Keep every gate and allow time for cold tooling and uploads.
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Verify frozen RTX5060TI-001 archival evidence (offline)

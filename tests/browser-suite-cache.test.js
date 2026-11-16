@@ -119,6 +119,21 @@ test('workflow retains mandatory gates, main-only artifact publication and no PR
   assert.doesNotMatch(yaml,/actions\/cache\/(restore|save)@/);assert.match(yaml,/github.ref == 'refs\/heads\/main'.*BROWSER_PUBLISH_EXECUTION/);
 });
 
+test('complete hosted browser verification has headroom and a failure cannot stage or deploy Pages',async()=>{
+  const yaml=await readFile(new URL('../.github/workflows/flight-lab.yml',import.meta.url),'utf8');
+  const verify=yaml.split('\n  verify:\n')[1]?.split('\n  deploy:\n')[0];
+  const deploy=yaml.split('\n  deploy:\n')[1];
+  assert.ok(verify&&deploy,'verification and deployment remain separate jobs');
+  const timeout=Number(verify.match(/^    timeout-minutes: (\d+)/m)?.[1]);
+  assert.ok(timeout>=35&&timeout<=45,'full hosted verification needs bounded cold-cache and upload headroom');
+  assert.match(verify,/run: node scripts\/browser-suite-cache\.mjs execute/);
+  assert.doesNotMatch(yaml,/continue-on-error:/,'verification failures must fail the job');
+  assert.match(verify,/- name: Publish immutable real executions on verified main only\n        if: github\.ref == 'refs\/heads\/main' && github\.event_name != 'pull_request' && env\.BROWSER_PUBLISH_EXECUTION == 'true'\n/);
+  assert.match(verify,/- name: Stage verified Pages artifact\n        if: github\.ref == 'refs\/heads\/main' && github\.event_name != 'pull_request'\n/);
+  assert.match(deploy,/^    if: github\.ref == 'refs\/heads\/main' && github\.event_name != 'pull_request'\n    needs: verify\n/m);
+  assert.doesNotMatch(deploy,/always\(\)|failure\(\)|cancelled\(\)/,'deployment keeps the implicit success gate');
+});
+
 test('independent Python fixture agrees on finite closure and qualification cases',async()=>{
   const input=JSON.parse(await readFile(new URL('./fixtures/ci-invariant-001-input.json',import.meta.url),'utf8'));
   const expected=JSON.parse(await readFile(new URL('./fixtures/ci-invariant-001-expected.json',import.meta.url),'utf8'));

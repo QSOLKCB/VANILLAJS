@@ -7,7 +7,7 @@
   "baseline": "ce7e38eb3c7412407a3ba2bc472120b589e6eb9e",
   "files": {
     ".github/workflows/alien-math-formal.yml": "bbe3beb8ca3df9eb90eac75b0ce237f704ce74b8c395518e35863a12354133cd",
-    ".github/workflows/flight-lab.yml": "dee8b35061e6768a76aad700e30486f1d13a4cfcfcdaaef16f1dcf5ef7f0f4b9",
+    ".github/workflows/flight-lab.yml": "05f6a9784014d762bc297ec813b1fd7ad305e4f39b2bd66999470245a7544439",
     ".github/workflows/q16-formal.yml": "7bc3e6b4043c6d5c140996e78abdf6c6b3520cd49d22c3bd1fa66957ece05b71",
     "AGENTS.md": "57eb9dcab057bb1adbc5e019a1a37ffd9bfe1b1ad183930c5bba49f097640329",
     "Q16Audit.lean": "1bd7bd9f3567ed52e61ceb7b9191561ae540d69a22abe519889c6a0e672d8fbe",
@@ -46,7 +46,7 @@
     "scripts/pin_alien_math_006.py": "38b8d63dcb6e5186aad7d37d05e06e18264a1a61a4637bb2ad348aa16ab28179",
     "scripts/verify-q16-axioms.py": "1523ce456304737267b8abc380a6592656f2ab6d7e339f8f3b7996bb8936291e",
     "scripts/verify-q16-proof-boundary.py": "35ef5297ccfcc42b2ae73ad0a4c04488d545c8e5e2f91a00f5d4c0fc3e048fd0",
-    "scripts/verify_alien_math_006.py": "d0f36f7ead94843633d4a3b5b694c0a9f96319981aeb57703d2c98d589bffd85",
+    "scripts/verify_alien_math_006.py": "f14949b064ec760d818ebb70d54c17602ddc105ea0866de94d0963c1021cce9b",
     "tests/alien-math-006.test.js": "0841d6664866ef1899f5f846176cbfa2eb3ef338e6b6e2ee6dc9c07709f081fe",
     "tests/exact-d4.test.js": "aea4b6c684c8b8146cffeda9ae0838009186dacf2ec676e3340b2c2a8b33eed7",
     "tests/exact-geometry.test.js": "13722dcea7baf21d0217210858ff7033c2c36f85342adb017034b1ed1094f71c",
@@ -62,7 +62,7 @@
     "tests/fixtures/alien-math-006-input.json": "390a7400f1ab01b0243979ea707e1498d5090fe64afccd9b38962ec878782c7c",
     "tests/fixtures/alien-math-006-oracle.json": "1866040c3fdd08477f190b47c44f6bfb47c9ca66d3e51c7352d8a6b417a23b45",
     "tests/rational-q16.test.js": "b2a7b7daa0b6b3a8ba2603ccfb112f18bed41676eff3cf25a1d94a2a780acbab",
-    "tests/test_alien_math_006.py": "d570b6931a61494916a3ae747d72b90f3e574731355f8df35118e243f8c3b3bb"
+    "tests/test_alien_math_006.py": "5abd12da76b409e529c2c8a22b156e1f6f4a90744f04bd8969ac928a41a79cf4"
   },
   "leanCommit": "eb6cafb7290e8bd5f2937522d8d804f58f02bafc",
   "leanVersion": "4.35.0",

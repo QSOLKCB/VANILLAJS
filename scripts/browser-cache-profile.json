@@ -139,7 +139,7 @@
     "scripts/opt-render-reference.js": "7bfca288f555317228606b7f698105306f6635ef847a41af3d6143fc666395a3",
     "scripts/browser-integer.js": "f579a24481e641f9b1eea623eba0d680c5ebc13c309734ee1b5f56653e264a1d",
     "scripts/integer-fixture.js": "b36beb739f134fbbd6a49f238429d071f5603f5b6b3d09dcd9b381fe6144d793",
-    "scripts/browser-check.js": "69ee11480969c1b43eb544ab8b12a570f910c388e654997df9387a23b2081c4c",
+    "scripts/browser-check.js": "2b1b8eb31e99a77bb97fb059800b1cd070ed8ce66b7d1c2a12fea5609cafb8b4",
     "scripts/browser-sprite-foundry.js": "c36c901f1e70012700e1d0000436659f64fa6a40a199501dff63e3cd2b385288",
     "scripts/browser-weapon-feel.js": "f342de424ad652ab57f1fa371bd25d9810bcd66c09c72753a8e3c2ae302678ed",
     "scripts/foundry-startup-check.mjs": "e15c3efea4409993d12181b907f1e1f53519b6f6dd899e5ef20d74d13c169ff7",
