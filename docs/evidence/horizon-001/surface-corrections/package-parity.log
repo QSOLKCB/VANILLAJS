@@ -1,0 +1,2 @@
+PASS: evidence-only rebuild produced byte-identical complete manifest.
+Packaged 913 files into dist/; SHA-256 manifest written.

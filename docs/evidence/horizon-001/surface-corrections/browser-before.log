@@ -1,0 +1,18 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: embankment face 0 must receive overhead light in actual native pixels: {"above":[0,0,0,255],"below":[76,76,76,255],"error":0}
+    at checkRenderLit (file:///home/trent/vanillajs-horizon-001/scripts/browser-render-lit.js:56:45)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:453:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+    at async file:///tmp/horizon-render-lit-packaged.mjs:9:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}
+
+Node.js v22.18.0

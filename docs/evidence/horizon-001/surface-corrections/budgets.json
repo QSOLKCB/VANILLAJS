@@ -1,0 +1,49 @@
+{
+  "high": {
+    "frames": 1,
+    "frameDraws": 25,
+    "totalDraws": 25,
+    "uploads": 25,
+    "skippedIdentical": 0,
+    "vertices": 46374,
+    "bytes": 2040456,
+    "meshes": 25,
+    "profile": "high",
+    "lost": false,
+    "disposed": false
+  },
+  "highWorld": {
+    "vertices": 43104,
+    "batches": 11,
+    "roadTriangles": 192,
+    "terrainCells": 3136,
+    "trees": 83
+  },
+  "highVehicle": {
+    "vertices": 3222,
+    "parts": 13
+  },
+  "retainedCameraUploads": 25,
+  "retainedLightUploads": 25,
+  "low": {
+    "frames": 2,
+    "frameDraws": 25,
+    "totalDraws": 50,
+    "uploads": 25,
+    "skippedIdentical": 0,
+    "vertices": 32148,
+    "bytes": 1414512,
+    "meshes": 25,
+    "profile": "low",
+    "lost": false,
+    "disposed": false
+  },
+  "scope": "Local headless Chromium diagnostic counts; no physical GPU or FPS performance claim",
+  "lowWorld": {
+    "vertices": 30030,
+    "batches": 11,
+    "roadTriangles": 192,
+    "terrainCells": 3136,
+    "trees": 29
+  }
+}
