@@ -56,6 +56,9 @@ const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 try{
   // Check the new creator journey first so regressions fail before long labs.
+  await runSuite('render','./browser-render-lit.js','checkRenderLit');
+  await runSuite('editor','./browser-horizon.js','checkHorizon');
+  await runSuite('editor','./foundry-startup-check.mjs','checkHorizonStartup');
   await runSuite('editor','./browser-game-maker-api.js','checkGameMakerAPI');
   await runSuite('editor','./browser-game-maker.js','checkGameMaker');
   await runSuite('editor','./foundry-startup-check.mjs','checkGameMakerStartup');

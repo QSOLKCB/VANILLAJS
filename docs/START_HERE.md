@@ -28,3 +28,9 @@ Its [guided tutorial](GAME_MAKER_LAB.md) starts with an empty map or a playable
 original example. Paint, place a player/exit, test and download a complete ZIP
 for the supported platform-game rules. This is separate from the Workbench scene
 format. [Understand the export](GAME_MAKER_EXPORT.md) before sharing your files.
+
+For 3D scenery and vehicle appearance, open
+[HORIZON Lab](../demos/horizon-lab/index.html) and its [tutorial](HORIZON_LAB.md).
+This first HORIZON workshop teaches lit environments, road shape and visual rigs.
+The existing [Racing Lab](../demos/racing-lab/index.html) remains the playable
+racing entry while new HORIZON vehicle dynamics and racing tools await review.

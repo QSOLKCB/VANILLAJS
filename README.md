@@ -36,13 +36,15 @@ experimental API will never change.
 
 ## Published milestones
 
-**Latest published release: [v2.7.0 — Scene & Narrative Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.7.0).**
-Published 16 November 2026 from `70e63b902834ae31b994ea40ae584bd93892e6bf`,
-after owner review and merge of [PR #102](https://github.com/QSOLKCB/VANILLAJS/pull/102).
-Compose hierarchical scenes, animate reusable prefabs and author branching stories
-with typed conditions, inert events and replay-validated progress. The Workbench
-keeps its existing project formats; scene composition uses a separate sidecar.
+**Latest published release: [v2.8.0 — The Game Maker API](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.8.0).**
+Published 16 November 2026 from `f7cd8d6a61791128b12fd72f8c94b6481889d197`,
+after owner review and merge of [PR #103](https://github.com/QSOLKCB/VANILLAJS/pull/103).
+Draw with an owned browser API, author sprites and layered tile worlds, test an
+original platform game and export its complete offline ZIP. The Game Maker Lab
+and public-module Ember Relay example use the same reusable engine contracts.
 
+[v2.7.0 — Scene & Narrative Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.7.0)
+introduced hierarchical scene sidecars and inert branching stories.
 [v2.6.0 — Game Feel & Sprite Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.6.0)
 introduced seeded sprite authoring and reusable FPS weapon presentation.
 [v2.5.0 — Creator Gateway](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0)
@@ -51,17 +53,18 @@ introduced progressive guides, Tutorial Lab and the validated agent catalogue.
 introduced audiovisual composition and **The Machine Remembers**. Publication does
 not imply API stability.
 
-The published v2.7.0 baseline has **66 experimental modules, 47 recipes and two
-research experiments**. This v2.8.0 candidate adds the tilemap module and Game
-Maker workflow: **67 modules, 48 recipes**, with research experiments unchanged.
+The published v2.8.0 baseline has **67 experimental modules, 48 recipes and two
+research experiments**. This HORIZON-001 candidate adds optional lit rendering
+and procedural 3D scenery: **69 modules, 49 recipes**, with research unchanged.
 [MODULES.json](MODULES.json) is authoritative. Its `release` and the private
 `package.json` version retain historical `1.0.0` metadata, not GitHub release numbers.
 
-**Candidate for v2.8.0 — The Game Maker API:** draw with a small owned browser API,
-author sprites and layered tile worlds, test a complete original platform game,
-and export its actual runtime in an offline ZIP.
-[Contracts and verification](docs/GAME_MAKER_001.md) explain the supported rules
-and formats. HORIZON v2.9 remains [planned](docs/ENGINE_EXPANSION_001.md).
+**HORIZON-001 — first of three v2.9.0 PRs:** inspect and author original lit
+scenery, elevated/banked roads and detailed vehicle visuals in
+[HORIZON Lab](demos/horizon-lab/index.html). This is a rendering and environment
+workshop. World-space vehicle dynamics and the final playable racing showcase
+remain the separately reviewed HORIZON-002 and HORIZON-003 work.
+[Contracts and verification](docs/HORIZON_001.md) · [Programme](docs/ENGINE_EXPANSION_001.md).
 
 ## Run the labs
 
@@ -94,6 +97,7 @@ contracts, even when the demonstrations are playable.
 
 | Build or investigate | Working entry point | Guide |
 | --- | --- | --- |
+| Lit 3D scenery, roads and vehicle visuals | [HORIZON Lab](demos/horizon-lab/index.html) | [Rendering and environment tutorial](docs/HORIZON_LAB.md) |
 | Build a complete small 2D game | [Game Maker Lab](demos/game-maker-lab/index.html) | [Create, play and export](docs/GAME_MAKER_LAB.md) |
 | First scene, without coding | [Tutorial Lab](demos/tutorial-lab/index.html) | [Quickstart](docs/CREATOR_QUICKSTART.md) |
 | Branching stories and dialogue | [Narrative Foundry](demos/narrative-foundry/index.html) | [Author and preview a story](docs/NARRATIVE_FOUNDRY.md) |
@@ -203,6 +207,7 @@ module's linked specialist guide before calling an API.
 | Exact simulation | `integer-math`, `integer-vector`, `integer-time`, `integer-physics`, `integer-engine`, `integer-replay` |
 | ALIEN MATH authoring | `exact-rational`, `exact-interval`, `exact-geometry`, `rational-q16`, `exact-d4`, `exact-graph`, `exact-course`, `exact-circuit` |
 | Arcade and FPS | `motion2d`, `combat2d`, `combat3d`, `mod-arcade`, `mod-fps` |
+| Lit 3D meshes and procedural scenery | `render-lit`, `scenic3d` |
 | Tile worlds and body collision | `tilemap`, `motion2d` |
 | Scene composition and narrative | `scene-graph`, `narrative` |
 | Sprites and game feel | `sprite2d`, `weapon-feel` |

@@ -1,0 +1,54 @@
+{
+  "kind": "qsol.horizon-001.world-ownership.local-execution.v1",
+  "candidateSource": "6bd08698674423de4606fdffaf0df2a4ec38b130",
+  "previousPRHead": "4357902787d4eaa5734225261f12dffa6d319abe",
+  "recordedAtUTC": "2026-11-16T16:32:54.231218+00:00",
+  "node": {
+    "passed": 1079,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browserGroupsExecuted": [
+    "editor"
+  ],
+  "unchangedGeometryIdentity": true,
+  "sourceCheck": "PASS",
+  "buildOffline": "PASS",
+  "cacheTestsPassed": 27,
+  "sourceProfileIssues": {
+    "home": [],
+    "render": [],
+    "play": [],
+    "worlds": [],
+    "research": [],
+    "donor": [],
+    "editor": []
+  },
+  "cacheQualification": 1,
+  "trustedMainReceipt": false,
+  "manifestSHA256": "394bde06f9f563835f41d620ffedb95c830c51d87db72751a1a583b75c93a0d1",
+  "workerSHA256": "1c7b420dd1481f3595f90edf312320c89a1d03091fc1e28f2e88e26db30f03ae",
+  "liveProfileSHA256": "9f3d5261aab3c9f4905982d4f2e909526084a69da2346e9883adff8623df6227",
+  "sourceSHA256": {
+    "modules/scenic3d/index.js": "f96f5dec0e5e233507242466a94b5423e30d8b341343596a5678e238c1add3d5",
+    "demos/horizon-lab/scenery.js": "f6618721b2ad4365292300d0ff534f1ce2f47712ebc5c740381b250a32068acf",
+    "demos/horizon-lab/project.js": "a799a67bf0b519d5f44c4671f2b8069d28dea7e2f7d73b84a9fdeaf7aaeb9337",
+    "tests/scenic3d.test.js": "869295893edfb84f9a7848c6153490344220a7708da8577a9647e2a230bc4a04"
+  },
+  "gitDiffCheck": "PASS",
+  "evidenceRebuildManifestIdentity": "exact bytes",
+  "artifacts": {
+    "README.md": "0e5f51fe67a9278451680a4543ebb8873a264d0681e681a4df48184224f4af35",
+    "browser-editor.log": "6d68e3d2b6ea51ac9b6b26de6fa909b808fe18ce1a09feabfa61b4ecf54f5765",
+    "build.log": "bba69621703f1e066d750a96cf1418306e1db22b3f7d5c3f14aed94281afc1bb",
+    "cache-tests.tap": "dba91196f63162b1d3563c9d878434814e5f08a52d1ed6e73fb3bf78eb8467c8",
+    "geometry-parity.json": "6100a25605dea90c3bed1b56746309266974e3fc660463ff88c6db7984a5c89b",
+    "node.tap.gz": "741f9058f0fb64703582191711840067836a9e6055873c7504aea5f6287455e4",
+    "offline.json": "096b91771e78c7423e30e12bcc076f5efb63e829da464bf3ad028222fc6c28cf",
+    "package-manifest.json.gz": "bd85e9839d0be9ab6a75e1791b5374ee4d962098614434e8490ffd152a21d000",
+    "package-parity.log": "c5ca9864227287f15c6f1a2d0b7e1c7c9a941867d1198b54e5a1b004cd62344c",
+    "profile-issues.json": "169f57e79e7913fd242cd699c5ef19a442aa5899890e401f460253d4cae7b058",
+    "source-check.log": "31dd31db9303c20fc11d7bef82d472bd52a920b061c382a4cd65cf24ca5dd154",
+    "source-profiles.json.gz": "53938861b1b1db3c54fe86a2d705c0d46cbb2488ad6e990de474c1c7e8b3c7d6"
+  }
+}

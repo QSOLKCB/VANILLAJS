@@ -54,6 +54,47 @@
       "experimental": true
     },
     {
+      "id": "horizon",
+      "title": "Author lit 3D scenery and vehicle visuals",
+      "entryPoints": [
+        "demos/horizon-lab/index.html",
+        "modules/render-lit/index.js",
+        "modules/scenic3d/index.js"
+      ],
+      "modules": [
+        "render-lit",
+        "scenic3d",
+        "math",
+        "terrain"
+      ],
+      "examples": [
+        "demos/horizon-lab/index.html"
+      ],
+      "docs": [
+        "docs/HORIZON_001.md",
+        "docs/HORIZON_LAB.md",
+        "docs/RENDER_LIT_API.md",
+        "docs/SCENIC3D_API.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js"
+      ],
+      "limitations": [
+        "HORIZON-001 implements rendering/environment/vehicle visuals; vehicle dynamics and the complete racing showcase remain separate HORIZON-002/003 work.",
+        "Scenery/project exports are inert data, not complete runnable games or a migration of qsol.vanillajs.track.v1.",
+        "Road surface samples refer to rendered triangles and explicit surface IDs; terrain alone cannot describe bridges/tunnels.",
+        "Glass uses a documented approximate material; contact patches are not general scene shadows or photorealism.",
+        "GPU pixel output and Float64/Float32 geometry are separate from exact numerical proof contracts."
+      ],
+      "experimental": true
+    },
+    {
       "id": "game-maker",
       "title": "Build and export a first 2D game",
       "entryPoints": [

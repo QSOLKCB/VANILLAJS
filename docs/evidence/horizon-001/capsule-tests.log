@@ -1,0 +1,21 @@
+test_bounds_reject_before_extraction (test_alien_math_bundle.CapsuleTests.test_bounds_reject_before_extraction) ... ok
+test_changed_source_with_rehashed_inventory_cannot_impersonate_git (test_alien_math_bundle.CapsuleTests.test_changed_source_with_rehashed_inventory_cannot_impersonate_git) ... ok
+test_corrupted_checksums_rejected (test_alien_math_bundle.CapsuleTests.test_corrupted_checksums_rejected) ... ok
+test_existing_symlink_destination_rejected (test_alien_math_bundle.CapsuleTests.test_existing_symlink_destination_rejected) ... ok
+test_extra_source_or_evidence_rejected (test_alien_math_bundle.CapsuleTests.test_extra_source_or_evidence_rejected) ... ok
+test_extract_to_new_directory_supports_original_git_show_offline (test_alien_math_bundle.CapsuleTests.test_extract_to_new_directory_supports_original_git_show_offline) ... ok
+test_extracted_capsule_builds_the_same_offline_package_with_guides (test_alien_math_bundle.CapsuleTests.test_extracted_capsule_builds_the_same_offline_package_with_guides) ... ok
+test_extracted_capsule_runs_browser_verification_and_cache_negative_controls (test_alien_math_bundle.CapsuleTests.test_extracted_capsule_runs_browser_verification_and_cache_negative_controls) ... ok
+test_forged_git_object_rejected_despite_rehashed_inventory (test_alien_math_bundle.CapsuleTests.test_forged_git_object_rejected_despite_rehashed_inventory) ... ok
+test_hidden_members_after_tar_end_rejected (test_alien_math_bundle.CapsuleTests.test_hidden_members_after_tar_end_rejected) ... ok
+test_identical_inputs_byte_identical_archives (test_alien_math_bundle.CapsuleTests.test_identical_inputs_byte_identical_archives) ... ok
+test_missing_source_and_missing_object_rejected (test_alien_math_bundle.CapsuleTests.test_missing_source_and_missing_object_rejected) ... ok
+test_real_capsule_inventory_includes_the_build_identity_verifier (test_alien_math_bundle.CapsuleTests.test_real_capsule_inventory_includes_the_build_identity_verifier) ... ok
+test_uncommitted_work_is_not_a_source (test_alien_math_bundle.CapsuleTests.test_uncommitted_work_is_not_a_source) ... ok
+test_unsafe_paths_symlinks_duplicate_members (test_alien_math_bundle.CapsuleTests.test_unsafe_paths_symlinks_duplicate_members) ... ok
+test_wrong_external_revision_rejected (test_alien_math_bundle.CapsuleTests.test_wrong_external_revision_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 1.601s
+
+OK

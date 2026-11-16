@@ -326,7 +326,7 @@ Imported data cannot name modules, evaluate expressions or issue agent instructi
 limits. Scene Float64 transforms are separate from deterministic discrete narrative
 state and from exact Q16.16/formal proofs.
 
-## Game Maker ownership and tile worlds (v2.8.0 candidate)
+## Game Maker ownership and tile worlds (v2.8.0)
 
 `modules/tilemap/` is pure and depends only on `motion2d` and `sprite2d`. Validated
 layered maps own their atlas data, collision grid and markers. Whole-body integer
@@ -348,3 +348,24 @@ licence/notice requirements are reused. [Export boundary](GAME_MAKER_EXPORT.md).
 
 The new game envelope is separate from Workbench v1/v2, scene/narrative and Mod
 SDK formats. No schema or metadata migration is implicit.
+
+## HORIZON-001 rendering/environment boundary
+
+`render-lit` is an optional browser WebGL1 module with explicitly owned retained
+GPU resources. It uses existing maths for camera transforms and does not modify
+`render-webgl`, install a global loop, fetch external resources or advance
+simulation. The approximate material model and resource budgets are public
+contracts; GPU images do not establish physical or numerical equivalence.
+
+`scenic3d` is pure geometry/data code. It reuses the existing terrain contract,
+generates original static batches and exposes explicit road triangles/surface
+queries. Geometry is independent of the GPU and lab DOM. Vehicle rigs consume
+provided visual state and do not integrate torque, suspension or tyre forces.
+The lab owns its original scene configuration, controls, camera animation,
+accepted history, context recovery and disposal.
+
+Existing Track Foundry `qsol.vanillajs.track.v1`, Workbench formats, Game Maker,
+scene/narrative and Mod SDK formats retain their contracts. New HORIZON recipe
+and project data do not migrate or execute older projects. A later dynamics
+adapter must use the reviewed road geometry/surface contract and independently
+verify world-space motion. See [HORIZON-001](HORIZON_001.md).

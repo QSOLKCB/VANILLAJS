@@ -1,24 +1,25 @@
 # ENGINE-EXPANSION-001 — Build the Engine First
 
-**Published baseline:** [v2.7.0 — Scene & Narrative Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.7.0).
-**Reviewed main for v2.8.0:** `70e63b902834ae31b994ea40ae584bd93892e6bf`.
-Owner review/merge of PR #102 and publication of v2.7.0 satisfy the previous gate.
-That release contains 66 experimental modules, 47 recipes and two experiments.
+**Published baseline:** [v2.8.0 — The Game Maker API](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.8.0).
+**Reviewed main for HORIZON-001:** `f7cd8d6a61791128b12fd72f8c94b6481889d197`.
+Owner review/merge of PR #103 and publication of v2.8.0 satisfy the previous gate.
+That release contains 67 experimental modules, 48 recipes and two experiments.
 The programme originally began at `433f8c87a74ed145a612510ee388a7aacc1280f6`,
 after v2.5.0 (`32b4fb1ca80e854297998aa00f87a8f012398b89`, 62 modules/43 recipes).
 Historical package/catalogue `1.0.0` metadata is not a release counter.
 
-The current PR implements only **v2.8.0**. Its contracts are described in
-[Game Maker API](GAME_MAKER_API.md), [Tilemap API](TILEMAP_API.md) and
-[the milestone record](GAME_MAKER_001.md). HORIZON v2.9.0 below remains a
-**proposed design, not an available API**, with three separate implementation PRs.
+The current PR implements **HORIZON-001**, the first of three independently
+reviewed v2.9.0 changes. [Contracts and evidence](HORIZON_001.md) describe its
+lit rendering, procedural scenery and visual authoring surface. HORIZON-002
+vehicle dynamics and HORIZON-003 complete racing creator tools/showcase remain
+**proposals, not available APIs**. v2.9.0 is not release-ready after this first PR.
 
 | Release | Milestone | Dependency and review gate |
 | --- | --- | --- |
 | v2.6.0 | SPRITE-FEEL-001 — Game Feel & Sprite Foundry | Published after owner review, PR #101 merge and release |
 | v2.7.0 | SCENE-NARRATIVE-001 — Scene & Narrative Foundry | Published after owner review, PR #102 merge and release |
-| v2.8.0 | GAME-MAKER-001 — Game Maker API | Current candidate after v2.7.0 owner gate; v2.8.0 review/merge/release pending |
-| v2.9.0 | HORIZON-3D-001 — 3D Racing Foundry | Earlier milestones reviewed/released; three separately reviewed HORIZON implementation PRs |
+| v2.8.0 | GAME-MAKER-001 — Game Maker API | Published after owner review, PR #103 merge and release |
+| v2.9.0 | HORIZON-3D-001 — 3D Racing Foundry | HORIZON-001 current candidate; HORIZON-002/003 await separate review |
 
 Games2 is a future consumer and remains unmodified throughout this programme.
 The owner decides when another game begins. No automatic code copying, mutable
@@ -135,7 +136,7 @@ actual tests from claims. Future consumer seams include tactical mission dialogu
 RPG campaigns, space missions, investigation clues, RTS briefings, survival quests
 and branching endings. Those games and their fiction remain outside VANILLAJS.
 
-## v2.8.0 — Game Maker API (current candidate)
+## v2.8.0 — Game Maker API (published)
 
 The implemented [Game Maker facade](GAME_MAKER_API.md) owns a supplied native
 Canvas2D surface, local sprite/tile assets, buffered input, fixed clock, seeded
@@ -179,14 +180,17 @@ checks that damaged package bytes cannot install successfully.
 The declarative agent workflow references real files, supported schemas, modules,
 ownership boundaries and tests, validated against `MODULES.json`.
 [Milestone contracts and execution evidence](GAME_MAKER_001.md) distinguish the
-candidate's actual behavior from the later HORIZON proposals.
+release's actual behavior from the HORIZON programme.
 
-## v2.9.0 — HORIZON, 3D Racing Foundry (proposed)
+## v2.9.0 — HORIZON, 3D Racing Foundry (in progress)
 
 HORIZON is **three separately reviewed implementation PRs**. The complete
 milestone must pass review before v2.9.0 publication.
 
-### HORIZON-001 — Rendering, materials and environments
+### HORIZON-001 — Rendering, materials and environments (current candidate)
+
+[Implemented contracts and execution record](HORIZON_001.md). The following
+requirements define this first PR; later physics and racing gates remain separate.
 
 Add an optional compatible native WebGL path for meshes/normals/materials,
 procedural textures, directional/ambient light and a documented approximate
@@ -274,19 +278,19 @@ execution. Only reviewed-main authority may permit browser receipt reuse.
 
 ## Games2 readiness
 
-This table separates existing baseline seams from this candidate and later work.
-The actual v2.6.0 adoption decision must use its verification record and an
-owner-published immutable release; no row is permission to edit Games2.
+This table separates published baseline capabilities from the current rendering
+candidate and remaining HORIZON work. Adoption still requires an immutable
+owner-approved release and game-specific validation; no row permits editing Games2.
 
-| Consumer genre | Existing verified baseline facilities | Candidate / planned addition |
+| Consumer genre | Published v2.8.0 baseline | Current candidate / remaining work |
 | --- | --- | --- |
-| Strike Pixel and other FPS | character, weapons, combat3d, input, render-webgl | v2.6 candidate: weapon feel and presentation recipes; adopt only after milestone verification/release |
-| Arcade platformers | motion2d, combat2d, audio2d | v2.6 candidate: sprites/atlases; tilemaps remain v2.8 proposal |
-| Tactical/adventure | navigation and interactions | Scene/narrative composition remains v2.7 proposal |
-| Racing | road-arcade, current Track Foundry, exact-circuit | HORIZON rendering/vehicle/authoring remains v2.9 proposal |
-| RTS/strategy | navigation/flow fields, existing lab recipes | Tilemap and scene/narrative additions remain proposed |
-| Space | flight, orbital-physics, rendering and audio | Richer scene composition remains proposed |
-| Intros/cinematics | demo-scene, demo-timeline, soundtrack | General scene animation remains proposed |
+| Strike Pixel and other FPS | character, weapons, combat3d, weapon-feel, sprite2d | Optional lit visuals; integration stays game-owned |
+| Arcade platformers | Game Maker API, tilemap, sprite2d, motion2d, combat2d, audio2d | No new platformer contract in HORIZON-001 |
+| Tactical/adventure | scene-graph, narrative, navigation, tilemap | Optional lit scene presentation |
+| Racing | road-arcade, existing Track Foundry, exact-circuit | HORIZON-001 visuals/contact surface seam; dynamics and playable racing remain 002/003 |
+| RTS/strategy | navigation/flow fields, tilemap, scene-graph, narrative | Optional static lit environments |
+| Space | flight, orbital-physics, scene-graph, rendering/audio | Optional lit materials; ship systems remain game-owned |
+| Intros/cinematics | demo-scene, demo-timeline, soundtrack, scene tracks | Optional lit environment/vehicle presentation |
 
 A later Games2 consuming PR must pin an immutable release/commit, retain the
 dependency closure and licences, document conversions/limits, and run its own

@@ -1,20 +1,19 @@
 # VANILLAJS roadmap
 
-## Published baseline — v2.7.0, Scene & Narrative Foundry
+## Published baseline — v2.8.0, The Game Maker API
 
-[v2.7.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.7.0) was published on
-16 November 2026 from `70e63b902834ae31b994ea40ae584bd93892e6bf`, after
-[PR #102](https://github.com/QSOLKCB/VANILLAJS/pull/102) was reviewed and merged.
-It adds pure scene composition and narrative APIs, Workbench sidecar authoring
-and Narrative Foundry. This is the reviewed base for v2.8.0.
+[v2.8.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.8.0) was published on
+16 November 2026 from `f7cd8d6a61791128b12fd72f8c94b6481889d197`, after
+[PR #103](https://github.com/QSOLKCB/VANILLAJS/pull/103) was reviewed and merged.
+It adds the owned Game Maker facade, layered tile worlds/body collision and the
+complete portable platform-game workflow. This is the reviewed HORIZON baseline.
 
-The published baseline has 66 experimental modules, 47 recipes and two research
+The published baseline has 67 experimental modules, 48 recipes and two research
 experiments; [MODULES.json](MODULES.json) describes the current tree. Publication
 does not imply stability. Historical `1.0.0` metadata is unchanged. The preceding
-[v2.6.0 Sprite/Game Feel](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.6.0)
-and [v2.5.0 Creator Gateway](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0),
-existing engine/labs, Workbench/Asset Foundry, maths and offline contracts remain.
-Browser reuse retains its [source-bound authority rules](docs/BROWSER_CACHE.md).
+[v2.7.0 Scene & Narrative Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.7.0),
+Sprite/Game Feel and Creator Gateway, existing labs/Workbench, maths and offline
+contracts remain. Browser reuse retains its [source-bound authority rules](docs/BROWSER_CACHE.md).
 
 ## ENGINE-EXPANSION-001 — sequential creator milestones
 
@@ -27,8 +26,8 @@ separate decisions; no automatic tagging, publishing or deployment is authorised
 | --- | --- | --- |
 | v2.6.0 | **SPRITE-FEEL-001 — Game Feel & Sprite Foundry** | Published; owner merged PR #101 and released v2.6.0 |
 | v2.7.0 | **SCENE-NARRATIVE-001 — Scene & Narrative Foundry** | Published; owner merged PR #102 and released v2.7.0 |
-| v2.8.0 | **GAME-MAKER-001 — Game Maker API** | Current implementation candidate; v2.7.0 gate satisfied; owner review/release pending |
-| v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | Proposed; three separately reviewed implementation PRs after preceding milestones |
+| v2.8.0 | **GAME-MAKER-001 — Game Maker API** | Published; owner merged PR #103 and released v2.8.0 |
+| v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | HORIZON-001 current candidate; HORIZON-002/003 follow separate owner review |
 
 [Detailed contracts, dependencies and acceptance gates](docs/ENGINE_EXPANSION_001.md)
 distinguish existing primitives from future APIs. Every milestone needs a
@@ -67,11 +66,11 @@ The published narrative API and lab provide original dialogue/choices, typed
 conditions/effects, objectives/events, structural reachability/ending checks, bounded
 cycles and replay-validated progress. Stories cannot execute code or HTML.
 
-### v2.8.0 — Game Maker API (current candidate)
+### v2.8.0 — Game Maker API (published)
 
 [Milestone contracts, creator workflow and verification](docs/GAME_MAKER_001.md).
 
-The candidate adds an owned drawing/input/clock/audio facade, bounded layered
+The published release adds an owned drawing/input/clock/audio facade, bounded layered
 tilemaps and integer whole-body sweeps composed with existing motion laws. Game
 Maker Lab teaches actual playable platform rules from an empty map through sprite,
 level and interaction authoring to win/lose/restart and a complete offline ZIP.
@@ -79,14 +78,14 @@ level and interaction authoring to win/lose/restart and a complete offline ZIP.
 The public-module Ember Relay example can be copied independently. Native runtime
 packaging, source hashes, explicit resource disposal, creator guides and the agent
 catalogue define what is reusable versus game-owned. Exports support these original
-example rules, not arbitrary scripts or every Workbench project. Publication awaits
-owner review; existing schemas, numerical proofs and historical evidence remain.
+example rules, not arbitrary scripts or every Workbench project. Existing schemas,
+numerical proofs and historical evidence remain.
 
 ### v2.9.0 — HORIZON, three PRs
 
-1. **HORIZON-001:** optional compatible native rendering/materials, lit geometry,
+1. **HORIZON-001 (current candidate):** optional compatible native rendering/materials, lit geometry,
    procedural scenery, elevated/banked roads, original detailed vehicles, static
-   batching and bounded low/high visual profiles.
+   batching and bounded low/high visual profiles. [Contracts and evidence](docs/HORIZON_001.md).
 2. **HORIZON-002:** world-space SI vehicle dynamics, torque/gears, driven wheels,
    steering/grip/slip, four-wheel contact, suspension, elevation/banking,
    jump/landing and collision recovery with independent numerical reference cases.

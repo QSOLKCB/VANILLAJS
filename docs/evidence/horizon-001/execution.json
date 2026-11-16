@@ -1,0 +1,117 @@
+{
+  "kind": "qsol.horizon-001.local-execution.v1",
+  "recordedAtUTC": "2026-11-16T16:19:50.516159+00:00",
+  "baselineSource": "f7cd8d6a61791128b12fd72f8c94b6481889d197",
+  "candidateSource": "3b80e491238bba104187e969ecd1844d2b6d9d6a",
+  "environment": {
+    "node": "22.18.0",
+    "playwright": "1.64.0",
+    "chromium": "158.0.8127.18",
+    "platform": "linux",
+    "arch": "x64",
+    "graphics": "headless native WebGL1 via SwiftShader",
+    "physicalDeviceValidation": false,
+    "trustedMainReceipt": false
+  },
+  "results": {
+    "node": {
+      "pass": 1079,
+      "fail": 0,
+      "skip": 0
+    },
+    "sourceDocumentationCheck": "PASS",
+    "offline": {
+      "kind": "qsol.vanillajs.offline-package.v1",
+      "verified": 911,
+      "bytes": 6177338,
+      "workerSha256": "469d4d6ab216cb7b2d7f7cd08c9420c7070622c3b7c3c49b5ba6727ea7e059ee"
+    },
+    "browserGroups": {
+      "home": "PASS",
+      "render": "PASS",
+      "play": "PASS",
+      "research": "PASS",
+      "editor": "PASS",
+      "worlds": "PASS",
+      "donor": "PASS"
+    },
+    "finalPackageBrowserGroups": [
+      "editor"
+    ],
+    "fullSuitePackageNote": "Only the ten-byte SCENIC3D_API.md guide correction and generated worker identity differ. All executable files are identical. Both manifests are retained.",
+    "racingSmoke": "PASS with existing executable selected by local launcher",
+    "cacheTests": 27,
+    "capsuleTests": 16,
+    "sourceClosureIssues": {
+      "home": 0,
+      "render": 0,
+      "play": 0,
+      "research": 0,
+      "editor": 0,
+      "worlds": 0,
+      "donor": 0
+    },
+    "gitDiffCheck": "PASS",
+    "evidenceRebuildManifestIdentity": "exact bytes"
+  },
+  "attempts": {
+    "combinedBrowser": {
+      "exit": 143,
+      "reason": "Termination signal 15; cause not established; no assertion failure in log"
+    },
+    "racingDefault": {
+      "exit": 1,
+      "reason": "Default revision 1248 executable absent; existing revision 1254 selected without installation"
+    }
+  },
+  "identities": {
+    "manifestSHA256": "a9e7d6a5b6c267edf9c8646e9ceb5fda57a222d0ee83f115757483b31cfe55fd",
+    "fullSuiteManifestSHA256": "f21a299d048ed454df0e04800591b4bb067f9429cf978a247d2a6702e319feb7",
+    "workerSHA256": "469d4d6ab216cb7b2d7f7cd08c9420c7070622c3b7c3c49b5ba6727ea7e059ee",
+    "liveCacheProfileSHA256": "d34f8a23436140f4f5afc847766de557dbb43beeb95f9e59fbef5f74b952f988",
+    "moduleSourcesSHA256": {
+      "modules/render-lit/index.js": "a6aa9266f3195e082ea0248321c44d759abaf60155dd81256d0f51091bfb8863",
+      "modules/scenic3d/index.js": "ae3fcd917c0e3ce4df149e493d4cc56375cabafcc757bdba2c2439dbf6b58ec2"
+    },
+    "cacheQualification": 1
+  },
+  "artifacts": {
+    "README.md": "b0b9942e578948408cfde48301411dffc479216690d35c9cc09a2e313d49e657",
+    "browser-combined-interrupted.log": "0e34676329e490abdaaef79150019c6aebe773a30a09e63b66d0622aff1d3956",
+    "browser-donor.log": "a12c113cf65b7c4c8b0c8b35911f1f5674e80ede0046f45b549761c6570392b9",
+    "browser-editor-before-guide-correction.log": "6d68e3d2b6ea51ac9b6b26de6fa909b808fe18ce1a09feabfa61b4ecf54f5765",
+    "browser-editor.log": "6d68e3d2b6ea51ac9b6b26de6fa909b808fe18ce1a09feabfa61b4ecf54f5765",
+    "browser-home-render-play-research.log": "e07ea0b009e490a5cd88e91e0fdcac53f60151f05cc9275a11c359274322daaf",
+    "browser-worlds.log": "55cf89942527bca6713e804b89399e1010e6f01e960dc8d12eb75fda24f8c278",
+    "budgets.json": "2fc826153401c4417e04fc63c1e624934a7d8bdfa10f8f6eb8226a15f38ca5dd",
+    "build.log": "83b5348e87011ebadcd655a01ef7afe6fae6b2289c19d1c9a95b07ac789876e0",
+    "cache-tests.tap": "a8f8785e858a5da4d5e22c8f83a4aa92da5f1909e5d2fa80912369054dcab52b",
+    "capsule-tests.log": "183f3b58bf4a3cb494668749257fc42187c0499c7c16d43c247a6511af6f2429",
+    "evidence-package-parity.log": "40104ce1d735f72521664063e133d3a369bea4c2f4e19d08cd3d26b1abeefdd6",
+    "existing-racing-sprint.png": "8c7a1dca252c623d7da3ee5ec88a586980e9ca784b08ec589b9fb9556ae69866",
+    "full-suite-offline.json": "16b96b6093be3eedbc50cb37cc0b43f64a85ae0b5031f626b1eeb97336e3ea25",
+    "full-suite-package-manifest.json.gz": "b05c17c660378a28da77564aaaaecb99ae1aea814123fd5f4f9c9aad2f1ab707",
+    "full-suite-source-profiles.json.gz": "3c90a9afd824dd0f7b37936423bdbe62df3344e45f128ec73eb84bff6bba4fe0",
+    "horizon-desktop.png": "53d8eeaeaef0b85f28ee16090b62289eb33366b7ef4bf6cd162ad775dd468f67",
+    "horizon-hero.png": "01b6e88e6ba1d67a21b8aa35eb0a56dcedb4f93755def1cc1f32de87a28eb010",
+    "horizon-mobile.png": "4d3a2f823dfb253df191e124b4c82296ff3937dac45ad0a4c1955d84bd43ec12",
+    "horizon-overlook.png": "67df486c72b4eb9368ae84b40b59ba62cab4027f2d44417e3c5d11f7a47eb438",
+    "horizon-road.png": "6b948501b9a8cb970ee51dbb8cacef1ef2d08e050ef95605e36a1238a9c758c7",
+    "initial-missing-guide.log": "e0a6b080f2162c2bcc1a66b9034a2278a45dd929dea2269f61c4939c5e6289f0",
+    "initial-node.tap.gz": "7553e4a4f5969a5d0aac93681368c9b1d03ded751d56b5377393c883f4cb64f2",
+    "lab-fixture-correction.tap": "fa8497f31ac43a4ea4039bd088d6e9ae33f51143da016f91ef8c700580902426",
+    "node.tap.gz": "1b6fefdd586100189d8cdba3237c7c7572d004965dad9272c05bb7e044effe36",
+    "offline.json": "6a73ba18fc773e9c58d975b9494b084e2fe6bee9cbbfcf95a8c6e738752d4dae",
+    "package-guide-correction.json": "0d3fd2fe95b94c8f374330c9510f0f1b59e41138774ff85dd395d53a2960a76c",
+    "package-manifest.json": "a9e7d6a5b6c267edf9c8646e9ceb5fda57a222d0ee83f115757483b31cfe55fd",
+    "preservation.json": "ec51ec4edf938911c3366826121b348592cd3f4c848817b99ac26a2d5f1b9454",
+    "racing-browser-selection.mjs": "a76bf92759f058a05ee7d04495b64c6fd538a862625101f38e6748b977dff597",
+    "racing-default-browser-failure.log": "02595a3499f4bc2bd48dafef37be664ba7df059505ad4f8a57ab2d4d22be6efa",
+    "racing.log": "e2956606054a78c15e079e7e6fecf47730d20c01282c731328cbb603bb5afda8",
+    "renderer-context-disposal-failure.log": "eebb681fd7b8e52063765288b4fb952abe2482a1b3164221c1d26ebcecf8cdcd",
+    "scenery-fixture-correction.tap": "6e4143acc7af477c114eb98aff96b25c1cedbace696befa13bdbff21397c9923",
+    "source-check.log": "e2ee14f18ea7d9847343c31d4bf18bb02297e2c4a6b7e439b156f083efb94bd8",
+    "source-profile-issues.json": "dee517a5f3f0467db0900ac0e38a9fe8a69807c8cae327c361c293b6da30c376",
+    "source-profiles.json.gz": "db7cbe8d333faa041c02a25930b30f6a2c17942ed1471603734e2365ebd6f2ce"
+  }
+}

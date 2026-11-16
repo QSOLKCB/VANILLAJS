@@ -7,7 +7,7 @@ import {hash,jsDependencies,resolveLocal} from './browser-dependencies.mjs';
 
 export async function packagePursuitRuntime(root){return packageLabRuntime(root,'pursuit-lab');}
 export async function packageLabRuntime(root,lab){
-  const startups={'pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js','block-arena-lab':'start.js','demoscene-lab':'start.js','sprite-foundry':'start.js','weapon-feel-lab':'start.js','narrative-foundry':'start.js','game-maker-lab':'start.js'};
+  const startups={'pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js','block-arena-lab':'start.js','demoscene-lab':'start.js','sprite-foundry':'start.js','weapon-feel-lab':'start.js','narrative-foundry':'start.js','game-maker-lab':'start.js','horizon-lab':'start.js'};
   if(!Object.hasOwn(startups,lab))throw Error('Unknown packaged lab');
   const startup=startups[lab],base='demos/'+lab,entry=base+'/'+startup,htmlPath=base+'/index.html';
   const files=new Map(),pending=[entry];let size=0;

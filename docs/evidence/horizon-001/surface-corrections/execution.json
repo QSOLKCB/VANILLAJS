@@ -1,0 +1,64 @@
+{
+  "kind": "qsol.horizon-001.surface-corrections.local-execution.v1",
+  "candidateSource": "754d44443dc177d87ac87186be19380a74346c9c",
+  "previousPRHead": "0d3bb7572a9a8c56a1cafe2564f95c41804ed4e0",
+  "recordedAtUTC": "2026-11-16T17:13:18.750738+00:00",
+  "results": {
+    "node": {
+      "passed": 1090,
+      "failed": 0,
+      "skipped": 0
+    },
+    "newRegressionCases": 11,
+    "beforeFixFailedCases": 6,
+    "nativeBeforeFix": "FAIL: overhead black, below-surface light illuminated inward normal",
+    "browserGroupsExecuted": [
+      "render",
+      "editor"
+    ],
+    "sourceCheck": "PASS",
+    "buildOffline": "PASS",
+    "cacheTestsPassed": 27,
+    "sourceProfileIssues": {
+      "home": [],
+      "render": [],
+      "play": [],
+      "worlds": [],
+      "research": [],
+      "donor": [],
+      "editor": []
+    },
+    "gitDiffCheck": "PASS",
+    "evidenceRebuildManifestIdentity": "exact bytes"
+  },
+  "cacheQualification": 1,
+  "trustedMainReceipt": false,
+  "manifestSHA256": "ece573eb8506de6ace0df13eab651657f6e70a58b3abcbf6be2cb627302d70e0",
+  "workerSHA256": "b888187a2cfddccd41da88fb0550b15f36296cb165690168b299bb30d0fc87fd",
+  "liveProfileSHA256": "ef8e95d66adab3f78ec58bf043615aa1504e780d1e0301ffed6e9542fe715cdd",
+  "sourceSHA256": {
+    "modules/scenic3d/index.js": "ff7a8193648e807a72c4017d4b1f129f77d4e731646e0d29928e6db603d649c1",
+    "tests/scenic3d-regressions.test.js": "6b948bdc18e306dca7d5de102cbb2d9e5fe0b375dcd1588d7cc78507af69a29c",
+    "scripts/browser-render-lit.js": "1304c2cb50a7db2e8125671848629404ccc05125fde7e30f7ddadffc59f1cfb3",
+    "docs/SCENIC3D_API.md": "c18ad55fb0a66ac3f14a89efac087befc87d6f3748e9d4a94dd3395951a19dba"
+  },
+  "artifacts": {
+    "README.md": "777b38134994f8fc92cca9f7d04266bbb99ca50cbb524b5ef01c574b2a7e42f8",
+    "browser-before.log": "04ed9cce54767bc47baf78cea9761924fe7f2dc339f3eb0dffff34fcf6a71d67",
+    "browser.log": "0724c0c1e19e5678fb990dadcfbfc7d29944362ddc078a55836e893a78ef1ac2",
+    "budgets.json": "2fc826153401c4417e04fc63c1e624934a7d8bdfa10f8f6eb8226a15f38ca5dd",
+    "build.log": "bba69621703f1e066d750a96cf1418306e1db22b3f7d5c3f14aed94281afc1bb",
+    "cache-tests.tap": "9f28a5df577f4946f1f469a900d67a0bc4ecc32b5e48a82fc5151c244c16cd2a",
+    "corrected-reproduction.json": "cc750244241216d8a3deb99c5bd43102a1b2c6852d4f4cfaa92f84bbb2823db1",
+    "horizon-hero.png": "7a01c97285da571a638759f0310c5d0a531d5dfd6b940b65073817fd699d90c0",
+    "horizon-overlook.png": "5cd5717c234397c41f773a98847c877e035b703ed1711a1ec9682129205bc267",
+    "node-before.tap": "5f15334d0d5024d4be672cbab50e4d7a879e28e65ef25e3749e2d7915f03ead7",
+    "node.tap.gz": "faaa55330075325dc30f3b1c795b79a4058efc2b5d7badcd8d46d1d844794db2",
+    "offline.json": "3a00e31df10d46d8785f61786319c8f1e94638c8dee4cc0c4d645a29d84137d3",
+    "package-manifest.json.gz": "dfb780d84bd3312bcc6d86e15cf92693e9e79f2b24b1db2a1d1dddffa04c2afd",
+    "package-parity.log": "c5ca9864227287f15c6f1a2d0b7e1c7c9a941867d1198b54e5a1b004cd62344c",
+    "profile-issues.json": "169f57e79e7913fd242cd699c5ef19a442aa5899890e401f460253d4cae7b058",
+    "source-check.log": "730e0aef5776af7fb8a07b9c235a7d0e44272428582003b246e590b674f6708e",
+    "source-profiles.json.gz": "d2fd0b9069ac93656534395dae7ce62875d612f1b1ee0fc3dfd317cf661caf1a"
+  }
+}
