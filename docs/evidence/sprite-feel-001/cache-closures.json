@@ -1,0 +1,40 @@
+{
+  "environment": "explicit local, untrusted; no execution receipt or authority claim",
+  "suites": {
+    "home": {
+      "issues": [],
+      "fingerprint": "b6855601df591e85d6452515fe1227d5f862065f32aee45d5f6272c59081bf02",
+      "runtimeFiles": 819
+    },
+    "render": {
+      "issues": [],
+      "fingerprint": "ca25c013540fa84cf1bcbfc3742b5218f05b861286babb035b645bdd83bfc71f",
+      "runtimeFiles": 819
+    },
+    "play": {
+      "issues": [],
+      "fingerprint": "14d2fdc4b943ba9975a3a7c86fa7379a342a3c22f46d7261a346b79b3ac0330c",
+      "runtimeFiles": 819
+    },
+    "worlds": {
+      "issues": [],
+      "fingerprint": "f519d2758d2e11127829549f85fe25d0d730edfe45c6a2c991c650fc8c4433c8",
+      "runtimeFiles": 819
+    },
+    "research": {
+      "issues": [],
+      "fingerprint": "c85aec42df5b79fcb9f53979869391e19b351ce050d484df209c775eeb469877",
+      "runtimeFiles": 819
+    },
+    "donor": {
+      "issues": [],
+      "fingerprint": "cdf3fba85dd98330c47348327ff79509bf0cb6ad9aa10eaddc7b1d0f5b6cb2ce",
+      "runtimeFiles": 819
+    },
+    "editor": {
+      "issues": [],
+      "fingerprint": "531161078ca08583d4ed88bd75b01414af7f3b6b64c3eb1865d4f5b37954f97d",
+      "runtimeFiles": 819
+    }
+  }
+}
