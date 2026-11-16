@@ -75,3 +75,12 @@ Run `node --test tests/*.test.js`, `node scripts/check.js`,
 packaged Chromium suite exercises authoring, valid/invalid imports, undo,
 recovery, Play and mobile layout. Emulated screens and software WebGL do not
 establish physical mobile, controller or hardware GPU coverage.
+## Sprite Foundry bridge (v2.6.0 candidate)
+
+[Sprite Foundry](../demos/sprite-foundry/index.html) generates and edits original
+transparent pixel animations. Its sprite project and atlas are separate validated
+data formats. To use one frame in this Workbench, export its explicitly flattened
+opaque PNG (at most 64×64), then choose **Import PNG** in Asset Foundry. Retain the
+sprite project to preserve alpha, palette and animation; flattening is intentional.
+The current renderer and existing project/asset schemas remain unchanged.
+See [the sprite tutorial](SPRITE_FOUNDRY.md).

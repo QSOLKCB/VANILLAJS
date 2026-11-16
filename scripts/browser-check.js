@@ -57,6 +57,10 @@ page.on('pageerror',e=>errors.push(e.message));
 try{
   // Check the new creator journey first so regressions fail before long labs.
   await runSuite('editor','./browser-tutorial.js','checkTutorial');
+  await runSuite('editor','./browser-sprite-foundry.js','checkSpriteFoundry');
+  await runSuite('editor','./foundry-startup-check.mjs','checkSpriteStartup');
+  await runSuite('play','./browser-weapon-feel.js','verifyWeaponFeel');
+  await runSuite('play','./foundry-startup-check.mjs','checkWeaponFeelStartup');
   await runSuite('donor','./browser-skyguard.js','checkSkyguard');
   await runSuite('donor','./browser-pursuit.js','checkPursuit');
   await runSuite('donor','./browser-football.js','checkFootball');

@@ -817,3 +817,17 @@ sample positions, bounded effects and strict inert compositions; the browser
 adapter owns Web Audio nodes and device timing. See [DEMOSCENE_001.md](DEMOSCENE_001.md)
 for the 48 kHz / 60 second profile, schemas, frame endpoints, borrowed geometry
 buffers, rejection behaviour and reproducibility scope.
+## v2.6.0 candidate additions
+
+The experimental [Sprite Foundry API](SPRITE_FOUNDRY.md) adds bounded seeded
+generation, editable animation data, source RGBA and atlas/mask export through
+`modules/sprite2d/index.js`.
+
+The experimental [weapon-feel API](WEAPON_FEEL.md) adds responsive look, ADS,
+bounded trigger buffering, accuracy and cosmetic feedback through
+`modules/weapon-feel/index.js`, composed with existing combat timers.
+
+These are opt-in additions. Existing module signatures, FPS packs, Workbench
+project formats and track formats remain unchanged. The
+[milestone contract](SPRITE_FEEL_001.md) records identity boundaries and checks;
+future [programme APIs](ENGINE_EXPANSION_001.md) are proposals.

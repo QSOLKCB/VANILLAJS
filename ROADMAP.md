@@ -1,30 +1,101 @@
 # VANILLAJS roadmap
 
-## Published baseline — v2.4.0, The Demoscene Foundry
+## Published baseline — v2.5.0, The Creator Gateway
 
-[v2.4.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.4.0) was published on
-16 November 2026 from `128d7c924513f7d8ac08e2e11cc6832c5b7082fb`.
-It includes the Demoscene/Visual FX Foundry alongside the 2D, Arcade Combat,
-Block Arena FPS, racing/track, 4X, soundtrack and Visual Workbench facilities.
-The audited catalogue has 62 experimental modules, 43 recipes and two research
-experiments. Publication does not imply API stability. Historical `1.0.0`
-package/catalogue metadata remains unchanged.
+[v2.5.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0) was published on
+16 November 2026 from `32b4fb1ca80e854297998aa00f87a8f012398b89`.
+It adds progressive creator guides, the interactive Tutorial Lab, agent guidance
+and a validated workflow catalogue, documentation/browser verification and the
+Games2 integration programme. Reviewed main for ENGINE-EXPANSION-001 is
+`433f8c87a74ed145a612510ee388a7aacc1280f6`.
 
-## Proposed v2.5.0 — The Creator Gateway
+The published baseline has 62 experimental modules, 43 recipes and two research
+experiments; [MODULES.json](MODULES.json) remains authoritative for the current
+tree. Publication does not imply API stability. Historical `1.0.0`
+package/catalogue metadata remains unchanged. Existing maths, physics, Game Labs,
+Workbench/Asset Foundry, mods, replay and offline contracts stay supported.
+Browser reuse retains its [source-bound authority rules](docs/BROWSER_CACHE.md).
 
-- A concise landing page with preserved research and milestone references.
-- Progressive human guides: start, build, modify, export and troubleshoot.
-- Preserved agent policy, detailed task guidance and a validated declarative catalogue.
-- Interactive Tutorial Lab: edit a supported scene, run real physics, diagnose a
-  failure and export an editable project; navigation from the Creator Hub.
-- Documentation audits, packaged browser interactions and offline evidence.
-- Repair browser receipt reuse while retaining reviewed-main authority and all
-  mandatory checks; see [activation requirements](docs/BROWSER_CACHE.md).
-- A formal Games2 integration register and separately approved promotion process.
+## ENGINE-EXPANSION-001 — sequential creator milestones
 
-This is the scope of CREATOR-GATEWAY-001, not a release announcement.
-Owner review, merge and publication are separate decisions. No physics rewrite,
-new rendering backend, metadata migration or Games2 implementation is included.
+**Build the engine first.** Implement one milestone, verify its real workflows
+and obtain owner review before starting the next. Owner merge and release are
+separate decisions; no automatic tagging, publishing or deployment is authorised.
+**Games2 remains unmodified during this programme.**
+
+| Release | Milestone | Status and dependency |
+| --- | --- | --- |
+| v2.6.0 | **SPRITE-FEEL-001 — Game Feel & Sprite Foundry** | Current implementation candidate; owner review/release pending |
+| v2.7.0 | **SCENE-NARRATIVE-001 — Scene & Narrative Foundry** | Proposed; after v2.6.0 review, merge and release in a later task |
+| v2.8.0 | **GAME-MAKER-001 — Game Maker API** | Proposed; consumes reviewed scene/resource contracts after v2.7.0 |
+| v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | Proposed; three separately reviewed implementation PRs after preceding milestones |
+
+[Detailed contracts, dependencies and acceptance gates](docs/ENGINE_EXPANSION_001.md)
+distinguish existing primitives from future APIs. Every milestone needs a
+reusable API, working lab, creator workflow, versioned data, tutorial, agent
+integration, verification evidence and a future Games2 consumer seam.
+
+### v2.6.0 — Game Feel & Sprite Foundry
+
+- Seeded original sprites, editable RGBA palettes, transparent pixels, animation
+  frames, sheets/atlases, masks and bounded versioned import/export.
+- Sprite Foundry: generate, paint/erase/fill, duplicate and edit frames, preview,
+  undo/redo and export real reusable source data and PNGs.
+- FPS weapon feel composed with existing input, character, weapons and combat:
+  responsive look, ADS/FOV/sensitivity, explicit spread/recovery, trigger buffer,
+  switch protection and cosmetic recoil separated from canonical shot direction.
+- Weapon Feel Lab: three original profiles, moving hittable targets, actual
+  tuning controls, ray/impact/cooldown diagnostics and inert recipe export.
+- Exact source-pixel fixtures, strict rejection/rollback, cadence/ray/weapon
+  tests, actual packaged browser editing/gameplay and offline/stale-worker checks.
+
+The [AFTER//ZERO audit](docs/AFTER_ZERO_GAME_FEEL_AUDIT.md) records the reviewed
+source pin, behavioural observations and licence boundaries. No donor campaign
+or complete engine is copied. Sprite alpha/animation integration must preserve
+the current Asset Foundry project schema; source RGBA equality does not imply
+browser-encoded PNG byte equality.
+
+### v2.7.0 — Scene & Narrative Foundry
+
+Extend the existing bounded Workbench hierarchy/components rather than replace
+them. Add reviewed local/world transforms, reusable components, camera/light
+metadata, tracks, nested prefabs, explicit resource disposal and compatible
+versioned export/import. Migration is an explicit tested change.
+
+Add a pure data-only branching narrative system and authoring lab with original
+dialogue/choices, typed conditions/effects, objectives/events, reachability and
+ending checks, bounded cycles, deterministic choice traversal and saved state.
+Stories cannot execute code or HTML. Demonstrate a scene event and full roundtrip.
+
+### v2.8.0 — Game Maker API
+
+Provide a small explicitly owned facade over existing rendering, input, clocks
+and audio, plus sprite/tilemap drawing and bounded particles. Tilemaps need
+visual/collision layers, atlas references, spawn/trigger markers, camera follow,
+optional parallax, editing and strict validation. Document pixel-row to +Y-up
+integer-subunit conversion and test body collision rather than assume it.
+
+Game Maker Lab must teach an actual playable game from an empty scene through
+movement, interaction, sound, win/lose, restart and independently runnable export.
+Keep resource disposal explicit and expose real contracts through the agent catalogue.
+
+### v2.9.0 — HORIZON, three PRs
+
+1. **HORIZON-001:** optional compatible native rendering/materials, lit geometry,
+   procedural scenery, elevated/banked roads, original detailed vehicles, static
+   batching and bounded low/high visual profiles.
+2. **HORIZON-002:** world-space SI vehicle dynamics, torque/gears, driven wheels,
+   steering/grip/slip, four-wheel contact, suspension, elevation/banking,
+   jump/landing and collision recovery with independent numerical reference cases.
+3. **HORIZON-003:** Track/Vehicle Foundries, data validation and retained history,
+   original engine/tyre sound, scenic playable showcase with rival, camera choices,
+   checkpoints/finish, full lifecycle, polish and verified offline export.
+
+Preserve current arcade handling and `qsol.vanillajs.track.v1`; elevated roads
+require a versioned sidecar or separately reviewed migration. Real world-space
+steering must not be disguised lane motion. Review screenshots and measured
+budgets on identified hardware; GPU images never substitute for numerical tests.
+Publish v2.9.0 only after all three PRs and the complete milestone pass review.
 
 ## Games2 → VANILLAJS Integration Programme
 
@@ -55,12 +126,15 @@ prescribed tests successful, and an owner-approved release or equivalent
 reviewed completion milestone. A README idea is not a completed game.
 Promotion always needs separate owner approval and its own VANILLAJS PR.
 
-Games2 generally starts one new game per PR, then polishes it in later PRs.
-Each game owns a directory, AGENTS.md and ROADMAP.md. Exceptions need an explicit
-technical justification. Preserve existing ideas and donor lists. At the reviewed
-revision Games2 has no root AGENTS.md or ROADMAP.md; this PR creates neither.
+Games2's own current policy governs game implementation and polish PRs.
+Preserve its independent directories, ideas and donor lists. The linked
+integration register records its historical source snapshot; its observation
+that root instructions/roadmap were absent applies to that revision only.
+This engine programme neither changes Games2 nor decides when its next game starts.
 
-## Later priorities — proposals, not v2.5.0 promises
+<a id="later-priorities--proposals-not-v250-promises"></a>
+
+## Longer-term inputs — proposals beyond the scoped milestones
 
 | Priority | Existing foundation | Candidate extension requiring review |
 | --- | --- | --- |
@@ -75,6 +149,11 @@ The genre catalogue informs priorities; no row promises a complete new genre
 engine. Each proposal needs a bounded contract, consumer, provenance and tests.
 
 ## Historical milestones and evidence
+
+The preceding [v2.4.0 Demoscene Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.4.0)
+was published from `128d7c924513f7d8ac08e2e11cc6832c5b7082fb` on
+16 November 2026. It joined the 2D, Arcade Combat, Block Arena FPS, racing/track,
+4X, soundtrack and Visual Workbench facilities; those capabilities are preserved.
 
 [ROADMAP_HISTORY.md](ROADMAP_HISTORY.md) preserves the complete previous roadmap,
 including its original completion states and then-current release wording.

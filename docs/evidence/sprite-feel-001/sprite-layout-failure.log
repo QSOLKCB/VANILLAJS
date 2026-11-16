@@ -1,0 +1,15 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 320px creator layout
+    at checkSpriteFoundry (file:///home/trent/vanillajs-game-feel-sprite-foundry/scripts/browser-sprite-foundry.js:97:12)
+    at async file:///tmp/run-sprite-foundry.mjs:15:88 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}
+
+Node.js v22.18.0

@@ -1,0 +1,466 @@
+{
+  "schema": "qsol.sprite-feel.execution.v1",
+  "recordedUTC": "2026-11-16T10:50:52.631494+00:00",
+  "baseSourceSHA": "433f8c87a74ed145a612510ee388a7aacc1280f6",
+  "candidateSourceSHA": "157e7d932cb98c7f458dbffbfb3df7c673774e24",
+  "sourceNote": "Final source tree was committed at this SHA. Node/source and complete browser execution used identical source/package bytes. Subsequent evidence-only commits do not enter the runtime package.",
+  "afterZeroSourceSHA": "406a45927b819f7383f71649d261de675552ca9c",
+  "environment": {
+    "node": "v22.18.0",
+    "python": "3.14.4",
+    "platform": "linux",
+    "arch": "x64",
+    "playwright": "1.64.0",
+    "chromium": "158.0.8127.18",
+    "graphics": "headless Chromium, --use-angle=swiftshader --enable-unsafe-swiftshader",
+    "browserProvisioning": "Pre-existing external installation; no installation or protected-runner dispatch",
+    "authority": "Local execution only; not a reusable trusted-main CI witness"
+  },
+  "package": {
+    "kind": "qsol.vanillajs.offline-package.v1",
+    "verified": 819,
+    "bytes": 5076509,
+    "workerSha256": "ca49c416829914d20b02f1f6aee9980af3f81b51d7f4fc5d952d7045bcee4ed3",
+    "manifestSHA256": "5f7e5c5bb0caecf90d955cad4c33df4353eef3325c8487f4c81fcecbe46a40c1",
+    "manifest": "package-manifest.json"
+  },
+  "results": [
+    {
+      "command": "node --test tests/*.test.js",
+      "exitCode": 0,
+      "tests": 1001,
+      "passed": 1001,
+      "failed": 0,
+      "log": "node.tap"
+    },
+    {
+      "command": "node scripts/check.js",
+      "exitCode": 0,
+      "log": "source-check.log"
+    },
+    {
+      "command": "node scripts/build.js",
+      "exitCode": 0,
+      "log": "build.log"
+    },
+    {
+      "command": "node scripts/verify-offline.js",
+      "exitCode": 0,
+      "log": "offline.json"
+    },
+    {
+      "command": "node scripts/browser-check.js",
+      "environmentVariables": [
+        "NODE_PATH=/home/trent/.local/share/qsol/browser-tools/node_modules",
+        "PLAYWRIGHT_CHROMIUM_EXECUTABLE=/home/trent/.cache/ms-playwright/chromium_headless_shell-1254/chrome-headless-shell-linux64/chrome-headless-shell"
+      ],
+      "exitCode": 0,
+      "groups": [
+        "home",
+        "render",
+        "play",
+        "worlds",
+        "research",
+        "donor",
+        "editor"
+      ],
+      "log": "browser.log"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "preserved": {
+    "existingModules": {
+      "baseFilesChecked": 66,
+      "unchanged": true,
+      "baseInventorySHA256": "512099b58ba9fcb9ea4aa0122ea07690e05ff01bd92fda18a6f6bf6892d72958"
+    },
+    "formalProofs": {
+      "baseFilesChecked": 6,
+      "unchanged": true,
+      "baseInventorySHA256": "d52d94478d342a82f2b99f09938dad083fb925d0146c7bd62f89304cae4fbc2d"
+    },
+    "researchHistory": {
+      "baseFilesChecked": 6,
+      "unchanged": true,
+      "baseInventorySHA256": "bad8baa53ae32d89005a6d9126271ac5abaa9bcf8b1d5ee25911b91e4229290d"
+    },
+    "existingExecutionEvidence": {
+      "baseFilesChecked": 19,
+      "unchanged": true,
+      "baseInventorySHA256": "6db93d05e094b3e8a9473fcc786f1d134afb618b7f5816318060f34a7ffbfbf8"
+    },
+    "workflows": {
+      "baseFilesChecked": 24,
+      "unchanged": true,
+      "baseInventorySHA256": "4c1af405342a422062e5a1d52b60cc88e2d53a0ee86149f41bc161f1e760a307"
+    },
+    "policyAndMetadata": {
+      "baseFilesChecked": 9,
+      "unchanged": true,
+      "baseInventorySHA256": "76322a092fa2f3da22ff8d417250a6f197250c0474bfcae8ba3e86e7d65af022"
+    }
+  },
+  "changedSourceFiles": [
+    {
+      "path": "MODULES.json",
+      "bytes": 34802,
+      "sha256": "11bab4bc27384da273cb0eddd70315ef54960c5e419c5dccd1e5710b2d22587a",
+      "gitBlob": "5fc6c155c5186582c7b924ae798a0c53ae002167"
+    },
+    {
+      "path": "README.md",
+      "bytes": 21326,
+      "sha256": "9d40584b909df496831201574f37ffe51dfcf3459b376cdc6881aa41f87a6f6e",
+      "gitBlob": "30fc8dd8ef9d51fec2e2dfe569f8247907fcc075"
+    },
+    {
+      "path": "ROADMAP.md",
+      "bytes": 9952,
+      "sha256": "e5ffa222ad16f26a824c30d3a09e5bba0400e9c7dda20a79a60a36e204afcd4b",
+      "gitBlob": "a7bf24bbf29e565b1854d04352d276193e1f00f0"
+    },
+    {
+      "path": "agents/catalog.json",
+      "bytes": 9123,
+      "sha256": "a02908101062ad8ce435251040f1a899066d6c5663cc8aff8f6b95d4f8ba13fd",
+      "gitBlob": "a1e59fdc2bc67ed840322b21c646f9fa4d8ec850"
+    },
+    {
+      "path": "agents/catalog.schema.json",
+      "bytes": 5182,
+      "sha256": "de28880d5103a19d5bbc196a871d2066c108d605ae384add707bddd5a50c40d6",
+      "gitBlob": "d4e2eb1040b2ee551695beb3a3f4f552548fc5fc"
+    },
+    {
+      "path": "demos/creator-hub/index.html",
+      "bytes": 9987,
+      "sha256": "6a98cb189d2a185af65f8a76ca26546bf1d0462b4e4351f9d96e4ec06e0a16c8",
+      "gitBlob": "028b8337837b0e2d8aad2480d568b1d91c250f0c"
+    },
+    {
+      "path": "demos/editor/index.html",
+      "bytes": 15483,
+      "sha256": "421360e0e70e864d0a847365a4b09c6dd24df65b0c68ca3708327bc734cb717c",
+      "gitBlob": "00b91b21aefe81688a23fc8418cb1438d2d7909b"
+    },
+    {
+      "path": "demos/sprite-foundry/app.js",
+      "bytes": 16172,
+      "sha256": "7e8369832aa728d91d4781739befb14813e52c074bd8faa1fbb6219a497c132f",
+      "gitBlob": "5f740e263f4baebfdbf9f2d3aff28e01cfc7b0a6"
+    },
+    {
+      "path": "demos/sprite-foundry/examples.js",
+      "bytes": 1432,
+      "sha256": "4fb3bec069a8c820fa5ddcabbed855c845e09d568f73e43058db2af50aa8419d",
+      "gitBlob": "c898852eeb2e0be62545d7aa4da3088966bdc541"
+    },
+    {
+      "path": "demos/sprite-foundry/index.html",
+      "bytes": 8268,
+      "sha256": "8c73315d483d59efd0bcca7344855110e1e6b23a159018fda9e83ce324a49c11",
+      "gitBlob": "bed6c490ab1abb612b8873c60b36b927988086a7"
+    },
+    {
+      "path": "demos/sprite-foundry/start.js",
+      "bytes": 813,
+      "sha256": "cc333785da659bc4fc1db89750d289aeffccf89b688a77be18d5740898f69450",
+      "gitBlob": "76f6ee524a2a4bcd16861947e58c7282733f1fcf"
+    },
+    {
+      "path": "demos/sprite-foundry/style.css",
+      "bytes": 8629,
+      "sha256": "d226e8d7e24c0959b588a6798ceb3fc70ad446fe530ecc5f8b4a4c2172c3c4d6",
+      "gitBlob": "c81772a9b57bee9c5462f8aa749dd54e1406493f"
+    },
+    {
+      "path": "demos/weapon-feel-lab/app.js",
+      "bytes": 13387,
+      "sha256": "afd10eebb5faee676eeb269ccbf8e19fd644fbe75ea4cddb2941744e06840fac",
+      "gitBlob": "5017a98c607963814dc10d2ba2919cd8b991ee83"
+    },
+    {
+      "path": "demos/weapon-feel-lab/index.html",
+      "bytes": 5805,
+      "sha256": "930bd83d94a0775b2ad76676f93a581771a39cbf64067b899aec308568a49ae0",
+      "gitBlob": "5f02a9fb8a927efb192528371a47515d84df49c2"
+    },
+    {
+      "path": "demos/weapon-feel-lab/profiles.js",
+      "bytes": 1071,
+      "sha256": "b187d6b2389d32f6ccc87b4f9658f849d29171ff82a5342072ef4ce5df5eb86e",
+      "gitBlob": "1d593153f866b7fe233dfbc6eb93553b162e4abb"
+    },
+    {
+      "path": "demos/weapon-feel-lab/render.js",
+      "bytes": 3739,
+      "sha256": "f264eeddc378f4e1b812df1a81963ed23b83158de545b5d8ff29062ba6cce3ab",
+      "gitBlob": "412d904bbe7e0002ad9aa861ed352503c81eab59"
+    },
+    {
+      "path": "demos/weapon-feel-lab/start.js",
+      "bytes": 974,
+      "sha256": "e4e78857acb6994c946da1e22668690316adc08eba2a6831dd4abe235b33651c",
+      "gitBlob": "f76043d62ff8657d26ef64e3cd84461d8b9667bd"
+    },
+    {
+      "path": "demos/weapon-feel-lab/style.css",
+      "bytes": 6679,
+      "sha256": "4edf0fa0c286dce896051f9ada687131db51d4e1a2aeba3dc1a30097f236c546",
+      "gitBlob": "7aee11d5266265800eaf5f8aae96478debfd0e57"
+    },
+    {
+      "path": "demos/weapon-feel-lab/world.js",
+      "bytes": 4225,
+      "sha256": "9f17beea5d682d99081ce7df4a57d9ce7f9d4c4b328ce45814cee63e57de8da8",
+      "gitBlob": "d0ed82a684bac0ab2229f0a2dc9da4a84f11eac6"
+    },
+    {
+      "path": "docs/AFTER_ZERO_GAME_FEEL_AUDIT.md",
+      "bytes": 7794,
+      "sha256": "071c230043fa7581bc8662167e77a9b1240150913b1dbdb92294684cc89a06c1",
+      "gitBlob": "ad875c0827e2757c9a2c068217ff0921a288822b"
+    },
+    {
+      "path": "docs/API.md",
+      "bytes": 50300,
+      "sha256": "091a7bb791f47cdffbd9d035d29ad5fa6ba638d618fc8cff0366890492fc39ab",
+      "gitBlob": "91c8dd66c0fbda768ba7b4fbd5072e6813e920ae"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "bytes": 19534,
+      "sha256": "f07e8f0e07ad851695edfb905c5ce6abd9e704a215838ab7101539865bbd3176",
+      "gitBlob": "403f249212231d9da27ec3e4797aa12e371e3ff0"
+    },
+    {
+      "path": "docs/EDITOR_WORKBENCH.md",
+      "bytes": 4852,
+      "sha256": "aba6ff62c90283811cf828c5cfc1933c976e8b3d77a4cc67210d2fc12fbe1ec4",
+      "gitBlob": "91272126114d505885fa28b28c6acc67424984d1"
+    },
+    {
+      "path": "docs/ENGINE_EXPANSION_001.md",
+      "bytes": 20351,
+      "sha256": "4ec7622b181b37922833de1e59db1f8bb914063940831af6a1bd917d4edfed61",
+      "gitBlob": "5832704685e036a0787f88418cfc65e0d1fe66a3"
+    },
+    {
+      "path": "docs/SPRITE_FEEL_001.md",
+      "bytes": 8391,
+      "sha256": "5ec74a24a0779626eb0602c7145f15a71d602688f770ed4999d99a1ffacbbe2a",
+      "gitBlob": "a7729b2d3a9c006981043dc811248f818ccadb65"
+    },
+    {
+      "path": "docs/SPRITE_FEEL_2_6_0_DRAFT.md",
+      "bytes": 3007,
+      "sha256": "28587db8e463a43bc8cd741cedb098859251b25b6c842348be2728446bdba775",
+      "gitBlob": "05104ccf3d3714166576deff17ccb4d32e5a09e6"
+    },
+    {
+      "path": "docs/SPRITE_FOUNDRY.md",
+      "bytes": 12895,
+      "sha256": "5e254e7dc725d28f05f8629f288e3812cfa6e12b7e082e4a112be34347c24ae6",
+      "gitBlob": "97e96ab47768b2ecc774c77dd844e953dc4b7006"
+    },
+    {
+      "path": "docs/WEAPON_FEEL.md",
+      "bytes": 12439,
+      "sha256": "a05aa02f9be1580f3474eb92dc758a5412668c954f81a67305f54daf29277312",
+      "gitBlob": "68cc324b82272280a7b1eedcccc09e476d495a60"
+    },
+    {
+      "path": "index.html",
+      "bytes": 11576,
+      "sha256": "460fcc03a711e5e1c7ab4ab63896e6017681f145127030650478019a3c877d78",
+      "gitBlob": "0d92629cc28fc6e320ba18d8725912c98d47f0be"
+    },
+    {
+      "path": "modules/sprite2d/index.js",
+      "bytes": 11803,
+      "sha256": "b6cde8a4854114f6c8d095723f5990c578917ba3f9adf5761148c62b64acda9e",
+      "gitBlob": "4793adb0219026d534bcdfdc9a94119531afacdf"
+    },
+    {
+      "path": "modules/weapon-feel/index.js",
+      "bytes": 9378,
+      "sha256": "a0adcd145fe35ce085d4fba4e83e5e57c10de8d5bc6287f53e7c2d49afcbfb9f",
+      "gitBlob": "5b6cc5b09f3a7a25eb670e15777c1077fb513acc"
+    },
+    {
+      "path": "scripts/audit-docs.mjs",
+      "bytes": 5977,
+      "sha256": "d815e200b47f145018ec691ddcb12bfce794d9a9df723f8f3e24e4fac55040fb",
+      "gitBlob": "bad576b0cbe22a4fd1b009b470e12cb508c6104c"
+    },
+    {
+      "path": "scripts/browser-cache-profile.json",
+      "bytes": 139204,
+      "sha256": "7a24be1f06a496bb71643289bc08cf94fd744804760fd46e960709894578fbaf",
+      "gitBlob": "5a341c5a91cc8e01c9da3f9ebb1c57fc8329a529"
+    },
+    {
+      "path": "scripts/browser-check.js",
+      "bytes": 10670,
+      "sha256": "afef9b713deaee3578ff21bdbf849bff020eed253673dba56477fa5cc5a19cf4",
+      "gitBlob": "377f643431fdc284ac20802e302a9249edb2a0f3"
+    },
+    {
+      "path": "scripts/browser-package-provenance.mjs",
+      "bytes": 8622,
+      "sha256": "057290d6946c1da78df8f403de17fa249cd9d3aa22e46d17f487b6e9fc5242d8",
+      "gitBlob": "4e0a4eea87ced26a41aec9e010b822b8e3d0bf5b"
+    },
+    {
+      "path": "scripts/browser-sprite-foundry.js",
+      "bytes": 11535,
+      "sha256": "4837605b1da3b4a0723b0dbef55252ec8d9279c3c6fce76b0df6808d7ec13509",
+      "gitBlob": "91efd7e4d73903157799a566596742c193330416"
+    },
+    {
+      "path": "scripts/browser-weapon-feel.js",
+      "bytes": 11220,
+      "sha256": "74a64e4c99a015db5c70ff6f06d4db3d095721746f1dd4ffd9e67ea75d2bd3fc",
+      "gitBlob": "6020636b520f4e5baf886ba60cb68ad355b3505c"
+    },
+    {
+      "path": "scripts/build.js",
+      "bytes": 3480,
+      "sha256": "3b521db12ccdb1e14f89c90950d8390ec1e6f518b1c39fe569bc12db5eced87c",
+      "gitBlob": "4f4f87e91ed5240f9c1f9d501e44f4df641cbca9"
+    },
+    {
+      "path": "scripts/foundry-startup-check.mjs",
+      "bytes": 4834,
+      "sha256": "a22121453ae9ca840ba2b2ee526da7ca6c4709daaf676e0c1f99583a3a5d16e5",
+      "gitBlob": "f5ef601a0bc24d4faaa5073114b5c86722f97dcb"
+    },
+    {
+      "path": "scripts/pursuit-package.mjs",
+      "bytes": 4563,
+      "sha256": "6e5155aeeb61e1de50e67599988a2d95c85672ade01b955d84b26fcc7eda27ff",
+      "gitBlob": "4de8121399c7e0f34bde7d6ef2302dd65da4f4f2"
+    },
+    {
+      "path": "tests/browser-package-provenance.test.js",
+      "bytes": 6941,
+      "sha256": "2d7e75e7cc31b2132ec2ebdc2143c22ff1cc60ae48b6302ee1a3ad5e86e33c4e",
+      "gitBlob": "9d5953d095a6f4a40d8bcc89ef545f0f879f484b"
+    },
+    {
+      "path": "tests/creator-gateway.test.js",
+      "bytes": 3565,
+      "sha256": "826e99c03f23aa8b83ddea33dc225f99692511255cffe1d140467398f47b7d92",
+      "gitBlob": "8092da8f4ba5f36678cd38fc7a8df36c84b0bf9f"
+    },
+    {
+      "path": "tests/sprite2d.test.js",
+      "bytes": 8848,
+      "sha256": "91db1eca0f99c4e7bd4224273101021605efedd91a15e4f95cda0417da284d6d",
+      "gitBlob": "8b3b71b6bea338c2485e93e6543496ef132bfada"
+    },
+    {
+      "path": "tests/test_alien_math_bundle.py",
+      "bytes": 13940,
+      "sha256": "d443e0102f7b8401add2b4505edcdd88a3f26e447da42422a18061030672b992",
+      "gitBlob": "a1bfe373b0bd331a90d4d7f08838becbac923200"
+    },
+    {
+      "path": "tests/weapon-feel.test.js",
+      "bytes": 10103,
+      "sha256": "3670d81061616a2127f6c6f82d3462c10c304e881cd5c2b673f4b7395d8998b5",
+      "gitBlob": "43175bcf74053b3703ad5c991649f657cca67e4c"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "browser.log",
+      "bytes": 9291,
+      "sha256": "2ec186738131d6ac9c2b9f8f1a7ecbddfce636428e1e6089c586d2daff866a84"
+    },
+    {
+      "path": "build.log",
+      "bytes": 57,
+      "sha256": "5ac7f224f1ac228cf53826cc12be2d14c1d1372e8454a7ffefa6ecbd6c44accc"
+    },
+    {
+      "path": "cache-closures.json",
+      "bytes": 1211,
+      "sha256": "07f00b360c710af66f76478fb9e956c7242f95ead725797df8c1459a35ad40e4"
+    },
+    {
+      "path": "initial-browser-failure.log",
+      "bytes": 4010,
+      "sha256": "dfc675ccf1c46040bce2b8bc8af85b80cee63e65af530ee2b697f76af7cb41bf"
+    },
+    {
+      "path": "initial-node-failures.tap.gz",
+      "bytes": 47990,
+      "sha256": "bfe248b95a0224d54d1b1f041b1da7593352641bd91a13f2738c14d033c31324",
+      "uncompressedSHA256": "d97658a26ccb5fecad19552ae1ec7ab0af3f9392229de48c290d1a003aca2f89",
+      "uncompressedBytes": 226510
+    },
+    {
+      "path": "node.tap",
+      "bytes": 221169,
+      "sha256": "5d9c287694ce23326ab2b66c4a8654e4988d9bf2190bbdea25d47cbe4a5bf969"
+    },
+    {
+      "path": "offline.json",
+      "bytes": 158,
+      "sha256": "6162b854bd3636a4cedbb4b038bb0d98e3ea922d86345652d5b1ee3e68cbcefe"
+    },
+    {
+      "path": "package-manifest.json",
+      "bytes": 159551,
+      "sha256": "5f7e5c5bb0caecf90d955cad4c33df4353eef3325c8487f4c81fcecbe46a40c1"
+    },
+    {
+      "path": "source-check.log",
+      "bytes": 735,
+      "sha256": "789c00c2df9b4ec0fa1defb2a2959ef45c694596f2a9da05911ac43e70028ac7"
+    },
+    {
+      "path": "sprite-foundry-desktop.png",
+      "bytes": 209975,
+      "sha256": "2054a108b3cd641f51b0ed08cf7dcdc68409c207be6cd20b16cb4c009b5306cc"
+    },
+    {
+      "path": "sprite-foundry-mobile.png",
+      "bytes": 203426,
+      "sha256": "93bc104d2dbe1f071c2e4daeefa3d7b5aecdfd530e10a1f8c181ea3316526c3b"
+    },
+    {
+      "path": "sprite-layout-failure.log",
+      "bytes": 427,
+      "sha256": "c4cbea9bede6d8f7960a1dcae91224a91af4f073fc2b375dbd88ee6a92b3b9c6"
+    },
+    {
+      "path": "weapon-feel-desktop.png",
+      "bytes": 292877,
+      "sha256": "88b633658537a9bbdf1c0a0990007a855746558434b2349df8a39eddfdbfa32e"
+    },
+    {
+      "path": "weapon-feel-mobile.png",
+      "bytes": 331108,
+      "sha256": "9a98bf893d090f125a39fcd74ef786f41e49cd7cd016bf828bdb95468b620354"
+    },
+    {
+      "path": "weapon-focused.log",
+      "bytes": 247,
+      "sha256": "f9473e427b430fffa9a5dec375fc69d50b98595b72b2209fbef3165feb6957e1"
+    }
+  ],
+  "limitations": [
+    "Experimental APIs; owner review and release pending",
+    "Exact source RGBA, not cross-browser PNG bytes",
+    "Same-runtime Float64 fixed-step combat; event ordering and tick assignment are inputs",
+    "Software WebGL evidence, no physical RTX/mobile/controller claim",
+    "Firefox/Safari not executed",
+    "No benchmark/performance improvement claim",
+    "No Games2 adoption or modification"
+  ]
+}
