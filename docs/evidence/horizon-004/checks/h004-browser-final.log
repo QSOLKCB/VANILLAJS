@@ -1,0 +1,77 @@
+Browser START render/checkRenderLit
+Lit WebGL1: actual directional/roughness/procedural texture/glass/fog/contact-shadow, curved sky/ground reflections, continuous terrain color, scalar/vector noise pixel parity with negative control and outward-embankment pixels, retained geometry, rejected upload, low-profile budget, disposal and native context-loss/recreation PASS
+Browser PASS render/checkRenderLit (1.12s)
+Browser START editor/checkHorizonRace
+HORIZON race: real keyboard/touch reverse, safe direction changes and cancellation, canonical index car movement, scenery/return navigation, race alias, actual keyboard course completion, rival/checkpoints/finish, three cameras/classes, course/vehicle/audio editing, strict rollback/history/export cancellation, sound lifecycle, 320px touch, native context recovery, graphics fallback and offline startup PASS
+Browser PASS editor/checkHorizonRace (84.20s)
+Browser START editor/checkHorizonExport
+HORIZON portable race: real UI ZIP, full keyboard route, native runtime/source/licences, nested offline forward/reverse play, restart and tampered-install rejection PASS
+Browser PASS editor/checkHorizonExport (54.31s)
+Browser START editor/checkHorizonRaceStartup
+horizon-lab/index.html: failed-import reload and retained older-worker module isolation PASS
+Browser PASS editor/checkHorizonRaceStartup (0.89s)
+Browser START editor/checkHorizonDrive
+HORIZON driving: actual throttle/steer/brake, torque comparison, four-wheel ramp jump/landing, coast contact, strict sidecar/vehicle exports and rollback, retained meshes, pause/fresh-input, 320px native touch cancellation, context restoration, graphics fallback and prefixed offline driving PASS
+Browser PASS editor/checkHorizonDrive (22.70s)
+Browser START editor/checkHorizonDriveStartup
+horizon-lab/drive.html: failed-import reload and retained older-worker module isolation PASS
+Browser PASS editor/checkHorizonDriveStartup (0.75s)
+Browser START editor/checkHorizon
+HORIZON scenery workshop: native lit scenery/car pixels, height/bank geometry, materials/light/rig with retained uploads, classes/paint, strict project roundtrip/rollback, camera tour/idle/focus, low detail, native context restoration, 320px touch, graphics fallback and controlled offline authoring PASS
+Browser PASS editor/checkHorizon (10.18s)
+Browser START editor/checkHorizonStartup
+horizon-lab/scenery.html: failed-import reload and retained older-worker module isolation PASS
+Browser PASS editor/checkHorizonStartup (0.86s)
+Browser START editor/checkGameMakerAPI
+Game Maker API: native Canvas primitive/text/sprite pixels, atlas/parallax alignment, rejected import/allocation rollback, fixed-tick tap/cancellation, seeded bounded particles, independent instances, real Web Audio resource ownership/failure cleanup and copyable public-only example movement/jump/pickup/win/restart/disposal PASS
+Browser PASS editor/checkGameMakerAPI (2.37s)
+Browser START editor/checkGameMaker
+Game Maker export cancellation: Restart and rejected import allow immediate retry; stale success/failure preserve newer exports, refresh respects busy state and incomplete projects stay disabled PASS
+Game Maker: original game win/lose, empty-stage authoring, sprite/palette/layer/collision edits, real input/cancellation, native pixels, export package gameplay and nested offline reload, strict rejection, keyboard/touch/narrow layout, Canvas fallback and scoped integrity rejection PASS
+Browser PASS editor/checkGameMaker (13.91s)
+Browser START editor/checkGameMakerStartup
+game-maker-lab/index.html: failed-import reload and retained older-worker module isolation PASS
+Browser PASS editor/checkGameMakerStartup (0.32s)
+Browser START editor/checkNarrativeFoundry
+Narrative Foundry: real node/choice/condition authoring, three endings, actual scene cues, exact story/progress roundtrip, rejected data, keyboard/narrow layout, retained rendering, graphics fallback and controlled offline editing/play PASS
+Browser PASS editor/checkNarrativeFoundry (3.26s)
+Browser START editor/checkNarrativeStartup
+narrative-foundry/index.html: failed-import reload and retained older-worker module isolation PASS
+Browser PASS editor/checkNarrativeStartup (0.28s)
+Browser START editor/checkSceneComposition
+Scene Composition: actual affine WebGL preview, capture/edit/keyframes, play/blur, undo/redo, nested prefab/rejection, camera/light, inert export/import, scene-Play locks, 320px and controlled offline startup PASS
+Browser PASS editor/checkSceneComposition (2.90s)
+Browser START editor/checkTutorial
+Tutorial: keyboard start, changed movement/render, failed test, repair, download and Workbench import/Play, invalidation, restart, 320px and offline startup passed.
+Browser PASS editor/checkTutorial (1.32s)
+Browser START editor/checkSpriteFoundry
+Sprite Foundry: exact seeded pixels, pencil/erase/fill, keyboard/touch, frames/timing, palette/alpha, undo/redo, rejected imports, PNG/atlas, real Asset Foundry import, cancellation, narrow layout and offline authoring PASS
+Browser PASS editor/checkSpriteFoundry (3.28s)
+Browser START editor/checkSpriteStartup
+sprite-foundry/index.html: failed-import reload and retained older-worker module isolation PASS
+Browser PASS editor/checkSpriteStartup (0.27s)
+Browser START render/verifyIntegerFoundry
+Integer Foundry: packaged full-state replay parity, WebGL, movement/jump, pause, fresh-input, blur, reset, touch cancellation, mobile layout and graphics failure passed.
+Browser PASS render/verifyIntegerFoundry (1.53s)
+Browser START render/verifyRenderReuse
+OPT rendering: native pixel parity, retained buffers, idle/camera/partial-turn reuse, changed glyphs and unchanged HUD checks passed; paired observations recorded.
+Browser PASS render/verifyRenderReuse (6.49s)
+Browser START render/verifyWebGLAPI
+WebGL API: 96x96 native WebGL1 pixel parity, exact no-op reuse, changed upload and stale-handle rejection passed.
+Browser PASS render/verifyWebGLAPI (0.15s)
+Browser START render/verifyFrameGate
+Frame gate: packaged WebGL1 pixels, idle skip, mesh change and context epoch passed.
+Browser PASS render/verifyFrameGate (0.09s)
+Browser START render/verifyVault
+Clockwork Vault: visible chamber, all six locks and physical exit, gate/causeway/lift traversal with zero rescues, staged motor/undo/hints, real partial JSON download/restore, invalid/stale files, fresh keys, cancelled pointer, native mouse capture, pause/blur/hidden, WebGL failure and 390/320 px touch-emulated layouts passed.
+Browser PASS render/verifyVault (52.68s)
+Browser START editor/verifyEditor
+Editor creator workflow: templates, attachment-safe undo, gameplay pieces, duplicate rejection, actionable checks, basic view, project download, Play, stale progress and mobile fit passed.
+Visual Editor: real WebGL, hierarchy/search/keyboard navigation, native text undo, scene history/shortcuts, exact decimal/Q16/D4 authoring and rejection, gesture cancellation, project migration/assets/exports, recovery and quota failure, CPU fallback, distant-camera visibility, play controls, and 320px/390px layouts passed.
+Browser PASS editor/verifyEditor (7.33s)
+Browser START editor/verifyEditor4X
+Browser PASS editor/verifyEditor4X (3.27s)
+Browser START editor/checkCreator
+Creator hub, course form, rejected edit, complete exported game, restart, blur and nested-path offline reload passed.
+Browser PASS editor/checkCreator (0.78s)
+Browser verification finished for suites: render,editor

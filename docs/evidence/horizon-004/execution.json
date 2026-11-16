@@ -1,0 +1,124 @@
+{
+  "kind": "qsol.horizon.polish.local-execution.v1",
+  "implementationSource": "3bb5c5925dd7741cf307fc0b41134900875035e3",
+  "baselineSource": "f263d43627970d8c3cfb2d54eed8fdeed2e7c457",
+  "node": {
+    "passed": 1208,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "groups": [
+      "render",
+      "editor"
+    ],
+    "functions": [
+      {
+        "name": "render/checkRenderLit",
+        "seconds": 1.12
+      },
+      {
+        "name": "editor/checkHorizonRace",
+        "seconds": 84.2
+      },
+      {
+        "name": "editor/checkHorizonExport",
+        "seconds": 54.31
+      },
+      {
+        "name": "editor/checkHorizonRaceStartup",
+        "seconds": 0.89
+      },
+      {
+        "name": "editor/checkHorizonDrive",
+        "seconds": 22.7
+      },
+      {
+        "name": "editor/checkHorizonDriveStartup",
+        "seconds": 0.75
+      },
+      {
+        "name": "editor/checkHorizon",
+        "seconds": 10.18
+      },
+      {
+        "name": "editor/checkHorizonStartup",
+        "seconds": 0.86
+      },
+      {
+        "name": "editor/checkGameMakerAPI",
+        "seconds": 2.37
+      },
+      {
+        "name": "editor/checkGameMaker",
+        "seconds": 13.91
+      },
+      {
+        "name": "editor/checkGameMakerStartup",
+        "seconds": 0.32
+      },
+      {
+        "name": "editor/checkNarrativeFoundry",
+        "seconds": 3.26
+      },
+      {
+        "name": "editor/checkNarrativeStartup",
+        "seconds": 0.28
+      },
+      {
+        "name": "editor/checkSceneComposition",
+        "seconds": 2.9
+      },
+      {
+        "name": "editor/checkTutorial",
+        "seconds": 1.32
+      },
+      {
+        "name": "editor/checkSpriteFoundry",
+        "seconds": 3.28
+      },
+      {
+        "name": "editor/checkSpriteStartup",
+        "seconds": 0.27
+      },
+      {
+        "name": "render/verifyIntegerFoundry",
+        "seconds": 1.53
+      },
+      {
+        "name": "render/verifyRenderReuse",
+        "seconds": 6.49
+      },
+      {
+        "name": "render/verifyWebGLAPI",
+        "seconds": 0.15
+      },
+      {
+        "name": "render/verifyFrameGate",
+        "seconds": 0.09
+      },
+      {
+        "name": "render/verifyVault",
+        "seconds": 52.68
+      },
+      {
+        "name": "editor/verifyEditor",
+        "seconds": 7.33
+      },
+      {
+        "name": "editor/verifyEditor4X",
+        "seconds": 3.27
+      },
+      {
+        "name": "editor/checkCreator",
+        "seconds": 0.78
+      }
+    ],
+    "count": 25,
+    "renderer": "Chromium/SwiftShader",
+    "physicalGPU": false
+  },
+  "ciWorkflowChanges": false,
+  "historicalEvidenceChanges": false,
+  "releaseOrDeployment": false
+}

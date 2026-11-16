@@ -1,0 +1,19 @@
+{
+  "implementationSource": "3bb5c5925dd7741cf307fc0b41134900875035e3",
+  "manifestSHA256": "02b7c2421210e582be4f00fa4fba3eb15fc97fa5df6c92435046f465de8cd22f",
+  "changedSinceBrowserExecution": [
+    "docs/HORIZON_004.md",
+    "service-worker.js"
+  ],
+  "runtimeAndHarnessBytesChanged": false,
+  "sourceProfileIssues": {
+    "home": [],
+    "render": [],
+    "play": [],
+    "worlds": [],
+    "research": [],
+    "donor": [],
+    "editor": []
+  },
+  "note": "Only the documentation evidence link and content-derived worker identity changed after browser execution; final inventory and offline bytes reverified. Hosted CI verifies the eventual PR head."
+}

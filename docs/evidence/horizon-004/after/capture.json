@@ -1,0 +1,2796 @@
+{
+  "kind": "qsol.horizon.polish-capture.v1",
+  "source": "3bb5c5925dd7741cf307fc0b41134900875035e3",
+  "sourceDirty": false,
+  "manifestSHA256": "a477027506a7be159bf22347f19c6d34ded9837ce8e7b54fa913d298a8ce2780",
+  "browser": "158.0.8127.18",
+  "node": "v22.18.0",
+  "viewport": {
+    "width": 1440,
+    "height": 1100
+  },
+  "rendering": "Chromium / SwiftShader; frame samples include submission and synchronous one-pixel readback, not physical GPU FPS",
+  "referenceManifest": "53a8285e6cd93447657ff54198214e976255cd5f66a313e1ddee1620670fc411",
+  "captures": {
+    "scenery-hero-high": {
+      "camera": {
+        "position": [
+          -0.11263228028464844,
+          9.616104970772561,
+          -63.01479816343726
+        ],
+        "orientation": [
+          -0.040615559113401825,
+          0.9513533095947199,
+          0.14325145171556625,
+          0.26973371732592416
+        ],
+        "fov": 0.85
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-lab.v1\",\"version\":1,\"name\":\"Aster Coast\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — the high road\",\"seed\":7331,\"profile\":\"high\",\"environment\":\"coast\",\"road\":[{\"id\":\"span-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":10,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-1\",\"x\":0,\"y\":5,\"z\":-35,\"width\":9,\"bank\":0.02,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-2\",\"x\":-12,\"y\":8,\"z\":-75,\"width\":9,\"bank\":0.08,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-3\",\"x\":-38,\"y\":16,\"z\":-112,\"width\":9,\"bank\":0.13,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-4\",\"x\":-42,\"y\":24,\"z\":-155,\"width\":9,\"bank\":0.09,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-5\",\"x\":-15,\"y\":27,\"z\":-195,\"width\":9,\"bank\":-0.05,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-6\",\"x\":27,\"y\":26,\"z\":-230,\"width\":9,\"bank\":-0.12,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-7\",\"x\":50,\"y\":19,\"z\":-270,\"width\":9,\"bank\":-0.1,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-8\",\"x\":39,\"y\":13,\"z\":-315,\"width\":9,\"bank\":0.03,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-9\",\"x\":8,\"y\":10,\"z\":-355,\"width\":9,\"bank\":0.09,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-10\",\"x\":-20,\"y\":14,\"z\":-395,\"width\":9,\"bank\":0.04,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-11\",\"x\":-8,\"y\":21,\"z\":-435,\"width\":9,\"bank\":-0.05,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-12\",\"x\":27,\"y\":28,\"z\":-475,\"width\":9,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"classId\":\"sport\",\"paint\":[0.8470588235294118,0.30980392156862746,0.20392156862745098],\"roughness\":0.25,\"metalness\":0.7,\"steer\":-0.20943951023931953,\"wheelSpin\":0,\"compression\":[0.04,0.04,0.04,0.04],\"pitch\":0,\"roll\":0,\"brake\":0},\"lighting\":{\"azimuth\":-0.6108652381980153,\"elevation\":0.6108652381980153,\"fogDensity\":0.004}}",
+        "history": {
+          "cursor": 0,
+          "length": 1
+        },
+        "running": false,
+        "tourTime": 0,
+        "lost": false,
+        "view": {
+          "frames": 18,
+          "preparations": 1,
+          "cameraMode": "hero",
+          "camera": {
+            "position": [
+              -0.11263228028464844,
+              9.616104970772561,
+              -63.01479816343726
+            ],
+            "target": [
+              -4.626433483156315,
+              6.96610497077256,
+              -55.69457967619562
+            ]
+          },
+          "road": {
+            "distance": 56.32726451387862,
+            "lateral": 0,
+            "surfaceId": "span-1",
+            "surface": "asphalt",
+            "structure": "ground",
+            "segment": 1,
+            "triangle": 0,
+            "position": [
+              -4.626433483156315,
+              6.11610497077256,
+              -55.69457967619562
+            ],
+            "normal": [
+              -0.030474667552229443,
+              0.9967521076018983,
+              0.07454213995288106
+            ],
+            "yaw": 0.2974486603848161,
+            "pitch": 0.06245900213685864,
+            "roll": 0.051005505970157135
+          },
+          "world": {
+            "vertices": 77934,
+            "batches": 11,
+            "roadTriangles": 192,
+            "terrainCells": 3136,
+            "trees": 81
+          },
+          "vehicle": {
+            "vertices": 27618,
+            "parts": 13
+          },
+          "graphics": {
+            "frames": 18,
+            "frameDraws": 25,
+            "totalDraws": 450,
+            "uploads": 25,
+            "skippedIdentical": 0,
+            "vertices": 105600,
+            "bytes": 4646400,
+            "meshes": 25,
+            "profile": "high",
+            "lost": false,
+            "disposed": false
+          }
+        }
+      },
+      "canvas": {
+        "width": 992,
+        "height": 838,
+        "cssWidth": 993,
+        "cssHeight": 839
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          57.30000001192093,
+          57.19999998807907,
+          56.80000001192093,
+          52,
+          51.900000005960464,
+          54.8999999910593,
+          57.29999999701977,
+          46.30000001192093,
+          43.8999999910593,
+          53.29999999701977,
+          54.80000001192093,
+          53.5
+        ],
+        "median": 54.80000001192093,
+        "p95": 57.30000001192093
+      },
+      "error": 0,
+      "file": "scenery-hero-high.png",
+      "sha256": "822f623e7ae5313cff2f477a8a09742573dfae9b3f475b0f240b8d72857bb201"
+    },
+    "scenery-orbit-high": {
+      "camera": {
+        "position": [
+          130.79481713344632,
+          121.07275741986898,
+          -121.66351434971608
+        ],
+        "orientation": [
+          -0.2581186286324392,
+          0.3610494685973709,
+          0.10471502172942838,
+          0.8899734934270067
+        ],
+        "fov": 0.85
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-lab.v1\",\"version\":1,\"name\":\"Aster Coast\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — the high road\",\"seed\":7331,\"profile\":\"high\",\"environment\":\"coast\",\"road\":[{\"id\":\"span-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":10,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-1\",\"x\":0,\"y\":5,\"z\":-35,\"width\":9,\"bank\":0.02,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-2\",\"x\":-12,\"y\":8,\"z\":-75,\"width\":9,\"bank\":0.08,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-3\",\"x\":-38,\"y\":16,\"z\":-112,\"width\":9,\"bank\":0.13,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-4\",\"x\":-42,\"y\":24,\"z\":-155,\"width\":9,\"bank\":0.09,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-5\",\"x\":-15,\"y\":27,\"z\":-195,\"width\":9,\"bank\":-0.05,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-6\",\"x\":27,\"y\":26,\"z\":-230,\"width\":9,\"bank\":-0.12,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-7\",\"x\":50,\"y\":19,\"z\":-270,\"width\":9,\"bank\":-0.1,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-8\",\"x\":39,\"y\":13,\"z\":-315,\"width\":9,\"bank\":0.03,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-9\",\"x\":8,\"y\":10,\"z\":-355,\"width\":9,\"bank\":0.09,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-10\",\"x\":-20,\"y\":14,\"z\":-395,\"width\":9,\"bank\":0.04,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-11\",\"x\":-8,\"y\":21,\"z\":-435,\"width\":9,\"bank\":-0.05,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-12\",\"x\":27,\"y\":28,\"z\":-475,\"width\":9,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"classId\":\"sport\",\"paint\":[0.8470588235294118,0.30980392156862746,0.20392156862745098],\"roughness\":0.25,\"metalness\":0.7,\"steer\":-0.20943951023931953,\"wheelSpin\":0,\"compression\":[0.04,0.04,0.04,0.04],\"pitch\":0,\"roll\":0,\"brake\":0},\"lighting\":{\"azimuth\":-0.6108652381980153,\"elevation\":0.6108652381980153,\"fogDensity\":0.004}}",
+        "history": {
+          "cursor": 0,
+          "length": 1
+        },
+        "running": false,
+        "tourTime": 0,
+        "lost": false,
+        "view": {
+          "frames": 35,
+          "preparations": 1,
+          "cameraMode": "orbit",
+          "camera": {
+            "position": [
+              130.79481713344632,
+              121.07275741986898,
+              -121.66351434971608
+            ],
+            "target": [
+              26.288810731371505,
+              26.07275741986898,
+              -229.2669279846445
+            ]
+          },
+          "road": {
+            "distance": 56.32726451387862,
+            "lateral": 0,
+            "surfaceId": "span-1",
+            "surface": "asphalt",
+            "structure": "ground",
+            "segment": 1,
+            "triangle": 0,
+            "position": [
+              -4.626433483156315,
+              6.11610497077256,
+              -55.69457967619562
+            ],
+            "normal": [
+              -0.030474667552229443,
+              0.9967521076018983,
+              0.07454213995288106
+            ],
+            "yaw": 0.2974486603848161,
+            "pitch": 0.06245900213685864,
+            "roll": 0.051005505970157135
+          },
+          "world": {
+            "vertices": 77934,
+            "batches": 11,
+            "roadTriangles": 192,
+            "terrainCells": 3136,
+            "trees": 81
+          },
+          "vehicle": {
+            "vertices": 27618,
+            "parts": 13
+          },
+          "graphics": {
+            "frames": 35,
+            "frameDraws": 25,
+            "totalDraws": 875,
+            "uploads": 25,
+            "skippedIdentical": 0,
+            "vertices": 105600,
+            "bytes": 4646400,
+            "meshes": 25,
+            "profile": "high",
+            "lost": false,
+            "disposed": false
+          }
+        }
+      },
+      "canvas": {
+        "width": 992,
+        "height": 838,
+        "cssWidth": 993,
+        "cssHeight": 839
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          43.1000000089407,
+          44.599999994039536,
+          44.900000005960464,
+          44,
+          44,
+          43.29999999701977,
+          44.599999994039536,
+          46.29999999701977,
+          39.30000001192093,
+          42.8999999910593,
+          47.400000005960464,
+          48.099999994039536
+        ],
+        "median": 44.599999994039536,
+        "p95": 48.099999994039536
+      },
+      "error": 0,
+      "file": "scenery-orbit-high.png",
+      "sha256": "d82f534b0f09e19e83d603ec619ad958cc3da166752a6f8283930f2a7bca5424"
+    },
+    "scenery-road-high": {
+      "camera": {
+        "position": [
+          46.484163847729235,
+          19.393455259582577,
+          -288.39843682758436
+        ],
+        "orientation": [
+          -0.0645774813955767,
+          0.22098722543607288,
+          0.014666412551891602,
+          0.973025843147821
+        ],
+        "fov": 0.85
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-lab.v1\",\"version\":1,\"name\":\"Aster Coast\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — the high road\",\"seed\":7331,\"profile\":\"high\",\"environment\":\"coast\",\"road\":[{\"id\":\"span-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":10,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-1\",\"x\":0,\"y\":5,\"z\":-35,\"width\":9,\"bank\":0.02,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-2\",\"x\":-12,\"y\":8,\"z\":-75,\"width\":9,\"bank\":0.08,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-3\",\"x\":-38,\"y\":16,\"z\":-112,\"width\":9,\"bank\":0.13,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-4\",\"x\":-42,\"y\":24,\"z\":-155,\"width\":9,\"bank\":0.09,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-5\",\"x\":-15,\"y\":27,\"z\":-195,\"width\":9,\"bank\":-0.05,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-6\",\"x\":27,\"y\":26,\"z\":-230,\"width\":9,\"bank\":-0.12,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-7\",\"x\":50,\"y\":19,\"z\":-270,\"width\":9,\"bank\":-0.1,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-8\",\"x\":39,\"y\":13,\"z\":-315,\"width\":9,\"bank\":0.03,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-9\",\"x\":8,\"y\":10,\"z\":-355,\"width\":9,\"bank\":0.09,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-10\",\"x\":-20,\"y\":14,\"z\":-395,\"width\":9,\"bank\":0.04,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-11\",\"x\":-8,\"y\":21,\"z\":-435,\"width\":9,\"bank\":-0.05,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-12\",\"x\":27,\"y\":28,\"z\":-475,\"width\":9,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"classId\":\"sport\",\"paint\":[0.8470588235294118,0.30980392156862746,0.20392156862745098],\"roughness\":0.25,\"metalness\":0.7,\"steer\":-0.20943951023931953,\"wheelSpin\":0,\"compression\":[0.04,0.04,0.04,0.04],\"pitch\":0,\"roll\":0,\"brake\":0},\"lighting\":{\"azimuth\":-0.6108652381980153,\"elevation\":0.6108652381980153,\"fogDensity\":0.004}}",
+        "history": {
+          "cursor": 0,
+          "length": 1
+        },
+        "running": false,
+        "tourTime": 0,
+        "lost": false,
+        "view": {
+          "frames": 52,
+          "preparations": 1,
+          "cameraMode": "road",
+          "camera": {
+            "position": [
+              46.484163847729235,
+              19.393455259582577,
+              -288.39843682758436
+            ],
+            "target": [
+              23.34896136719359,
+              12.252654523802544,
+              -336.70442687282633
+            ]
+          },
+          "road": {
+            "distance": 56.32726451387862,
+            "lateral": 0,
+            "surfaceId": "span-1",
+            "surface": "asphalt",
+            "structure": "ground",
+            "segment": 1,
+            "triangle": 0,
+            "position": [
+              -4.626433483156315,
+              6.11610497077256,
+              -55.69457967619562
+            ],
+            "normal": [
+              -0.030474667552229443,
+              0.9967521076018983,
+              0.07454213995288106
+            ],
+            "yaw": 0.2974486603848161,
+            "pitch": 0.06245900213685864,
+            "roll": 0.051005505970157135
+          },
+          "world": {
+            "vertices": 77934,
+            "batches": 11,
+            "roadTriangles": 192,
+            "terrainCells": 3136,
+            "trees": 81
+          },
+          "vehicle": {
+            "vertices": 27618,
+            "parts": 13
+          },
+          "graphics": {
+            "frames": 52,
+            "frameDraws": 25,
+            "totalDraws": 1300,
+            "uploads": 25,
+            "skippedIdentical": 0,
+            "vertices": 105600,
+            "bytes": 4646400,
+            "meshes": 25,
+            "profile": "high",
+            "lost": false,
+            "disposed": false
+          }
+        }
+      },
+      "canvas": {
+        "width": 992,
+        "height": 838,
+        "cssWidth": 993,
+        "cssHeight": 839
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          44.20000000298023,
+          41.5,
+          43.29999999701977,
+          42,
+          41.099999994039536,
+          43.30000001192093,
+          45.69999998807907,
+          36.20000000298023,
+          35.900000005960464,
+          43.3999999910593,
+          45,
+          47.400000005960464
+        ],
+        "median": 43.30000001192093,
+        "p95": 47.400000005960464
+      },
+      "error": 0,
+      "file": "scenery-road-high.png",
+      "sha256": "6b599a6d597aded07cadcfe2ad8ee22d97297731d0955037c8ac2ee9c1c0475f"
+    },
+    "scenery-bonnet-high": {
+      "camera": {
+        "position": [
+          -4.919515342812095,
+          7.16610497077256,
+          -56.65066702761322
+        ],
+        "orientation": [
+          0.033096944339442026,
+          0.1480936637225254,
+          -0.004958937027478718,
+          0.9884069344071746
+        ],
+        "fov": 0.95
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-lab.v1\",\"version\":1,\"name\":\"Aster Coast\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — the high road\",\"seed\":7331,\"profile\":\"high\",\"environment\":\"coast\",\"road\":[{\"id\":\"span-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":10,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-1\",\"x\":0,\"y\":5,\"z\":-35,\"width\":9,\"bank\":0.02,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-2\",\"x\":-12,\"y\":8,\"z\":-75,\"width\":9,\"bank\":0.08,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-3\",\"x\":-38,\"y\":16,\"z\":-112,\"width\":9,\"bank\":0.13,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-4\",\"x\":-42,\"y\":24,\"z\":-155,\"width\":9,\"bank\":0.09,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-5\",\"x\":-15,\"y\":27,\"z\":-195,\"width\":9,\"bank\":-0.05,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-6\",\"x\":27,\"y\":26,\"z\":-230,\"width\":9,\"bank\":-0.12,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-7\",\"x\":50,\"y\":19,\"z\":-270,\"width\":9,\"bank\":-0.1,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-8\",\"x\":39,\"y\":13,\"z\":-315,\"width\":9,\"bank\":0.03,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-9\",\"x\":8,\"y\":10,\"z\":-355,\"width\":9,\"bank\":0.09,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-10\",\"x\":-20,\"y\":14,\"z\":-395,\"width\":9,\"bank\":0.04,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-11\",\"x\":-8,\"y\":21,\"z\":-435,\"width\":9,\"bank\":-0.05,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-12\",\"x\":27,\"y\":28,\"z\":-475,\"width\":9,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"classId\":\"sport\",\"paint\":[0.8470588235294118,0.30980392156862746,0.20392156862745098],\"roughness\":0.25,\"metalness\":0.7,\"steer\":-0.20943951023931953,\"wheelSpin\":0,\"compression\":[0.04,0.04,0.04,0.04],\"pitch\":0,\"roll\":0,\"brake\":0},\"lighting\":{\"azimuth\":-0.6108652381980153,\"elevation\":0.6108652381980153,\"fogDensity\":0.004}}",
+        "history": {
+          "cursor": 0,
+          "length": 1
+        },
+        "running": false,
+        "tourTime": 0,
+        "lost": false,
+        "view": {
+          "frames": 69,
+          "preparations": 1,
+          "cameraMode": "bonnet",
+          "camera": {
+            "position": [
+              -4.919515342812095,
+              7.16610497077256,
+              -56.65066702761322
+            ],
+            "target": [
+              -17.81511716766638,
+              10.116104970772561,
+              -98.71851048998735
+            ]
+          },
+          "road": {
+            "distance": 56.32726451387862,
+            "lateral": 0,
+            "surfaceId": "span-1",
+            "surface": "asphalt",
+            "structure": "ground",
+            "segment": 1,
+            "triangle": 0,
+            "position": [
+              -4.626433483156315,
+              6.11610497077256,
+              -55.69457967619562
+            ],
+            "normal": [
+              -0.030474667552229443,
+              0.9967521076018983,
+              0.07454213995288106
+            ],
+            "yaw": 0.2974486603848161,
+            "pitch": 0.06245900213685864,
+            "roll": 0.051005505970157135
+          },
+          "world": {
+            "vertices": 77934,
+            "batches": 11,
+            "roadTriangles": 192,
+            "terrainCells": 3136,
+            "trees": 81
+          },
+          "vehicle": {
+            "vertices": 27618,
+            "parts": 13
+          },
+          "graphics": {
+            "frames": 69,
+            "frameDraws": 25,
+            "totalDraws": 1725,
+            "uploads": 25,
+            "skippedIdentical": 0,
+            "vertices": 105600,
+            "bytes": 4646400,
+            "meshes": 25,
+            "profile": "high",
+            "lost": false,
+            "disposed": false
+          }
+        }
+      },
+      "canvas": {
+        "width": 992,
+        "height": 838,
+        "cssWidth": 993,
+        "cssHeight": 839
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          56.900000005960464,
+          57.29999999701977,
+          64.6000000089407,
+          63.29999999701977,
+          59.8999999910593,
+          57.80000001192093,
+          60.29999999701977,
+          65.70000000298023,
+          63.79999999701977,
+          54.70000000298023,
+          54.599999994039536,
+          53.79999999701977
+        ],
+        "median": 59.8999999910593,
+        "p95": 65.70000000298023
+      },
+      "error": 0,
+      "file": "scenery-bonnet-high.png",
+      "sha256": "7421141cbc729e8bb1019569fb563fc0c9b04719415627dbf90e7a055e9dad9b"
+    },
+    "scenery-hero-low": {
+      "camera": {
+        "position": [
+          -0.11263228028464844,
+          9.616104970772561,
+          -63.01479816343726
+        ],
+        "orientation": [
+          -0.040615559113401825,
+          0.9513533095947199,
+          0.14325145171556625,
+          0.26973371732592416
+        ],
+        "fov": 0.85
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-lab.v1\",\"version\":1,\"name\":\"Aster Coast\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — the high road\",\"seed\":7331,\"profile\":\"low\",\"environment\":\"coast\",\"road\":[{\"id\":\"span-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":10,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-1\",\"x\":0,\"y\":5,\"z\":-35,\"width\":9,\"bank\":0.02,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-2\",\"x\":-12,\"y\":8,\"z\":-75,\"width\":9,\"bank\":0.08,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-3\",\"x\":-38,\"y\":16,\"z\":-112,\"width\":9,\"bank\":0.13,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-4\",\"x\":-42,\"y\":24,\"z\":-155,\"width\":9,\"bank\":0.09,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-5\",\"x\":-15,\"y\":27,\"z\":-195,\"width\":9,\"bank\":-0.05,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-6\",\"x\":27,\"y\":26,\"z\":-230,\"width\":9,\"bank\":-0.12,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-7\",\"x\":50,\"y\":19,\"z\":-270,\"width\":9,\"bank\":-0.1,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-8\",\"x\":39,\"y\":13,\"z\":-315,\"width\":9,\"bank\":0.03,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-9\",\"x\":8,\"y\":10,\"z\":-355,\"width\":9,\"bank\":0.09,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-10\",\"x\":-20,\"y\":14,\"z\":-395,\"width\":9,\"bank\":0.04,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-11\",\"x\":-8,\"y\":21,\"z\":-435,\"width\":9,\"bank\":-0.05,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-12\",\"x\":27,\"y\":28,\"z\":-475,\"width\":9,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"classId\":\"sport\",\"paint\":[0.8470588235294118,0.30980392156862746,0.20392156862745098],\"roughness\":0.25,\"metalness\":0.7,\"steer\":-0.20943951023931953,\"wheelSpin\":0,\"compression\":[0.04,0.04,0.04,0.04],\"pitch\":0,\"roll\":0,\"brake\":0},\"lighting\":{\"azimuth\":-0.6108652381980153,\"elevation\":0.6108652381980153,\"fogDensity\":0.004}}",
+        "history": {
+          "cursor": 1,
+          "length": 2
+        },
+        "running": false,
+        "tourTime": 0,
+        "lost": false,
+        "view": {
+          "frames": 20,
+          "preparations": 2,
+          "cameraMode": "hero",
+          "camera": {
+            "position": [
+              -0.11263228028464844,
+              9.616104970772561,
+              -63.01479816343726
+            ],
+            "target": [
+              -4.626433483156315,
+              6.96610497077256,
+              -55.69457967619562
+            ]
+          },
+          "road": {
+            "distance": 56.32726451387862,
+            "lateral": 0,
+            "surfaceId": "span-1",
+            "surface": "asphalt",
+            "structure": "ground",
+            "segment": 1,
+            "triangle": 0,
+            "position": [
+              -4.626433483156315,
+              6.11610497077256,
+              -55.69457967619562
+            ],
+            "normal": [
+              -0.030474667552229443,
+              0.9967521076018983,
+              0.07454213995288106
+            ],
+            "yaw": 0.2974486603848161,
+            "pitch": 0.06245900213685864,
+            "roll": 0.051005505970157135
+          },
+          "world": {
+            "vertices": 38610,
+            "batches": 11,
+            "roadTriangles": 192,
+            "terrainCells": 3136,
+            "trees": 30
+          },
+          "vehicle": {
+            "vertices": 20394,
+            "parts": 13
+          },
+          "graphics": {
+            "frames": 19,
+            "frameDraws": 25,
+            "totalDraws": 475,
+            "uploads": 25,
+            "skippedIdentical": 0,
+            "vertices": 59052,
+            "bytes": 2598288,
+            "meshes": 25,
+            "profile": "low",
+            "lost": false,
+            "disposed": false
+          }
+        }
+      },
+      "canvas": {
+        "width": 694,
+        "height": 587,
+        "cssWidth": 993,
+        "cssHeight": 839
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          30.099999994039536,
+          28.5,
+          28.100000008940697,
+          27.899999991059303,
+          27.799999997019768,
+          22.900000005960464,
+          25.700000002980232,
+          25.899999991059303,
+          20.600000008940697,
+          27.799999997019768,
+          27.900000005960464,
+          27.399999991059303
+        ],
+        "median": 27.799999997019768,
+        "p95": 30.099999994039536
+      },
+      "error": 0,
+      "file": "scenery-hero-low.png",
+      "sha256": "3f45f59d139acbfa8140117698e9c6da62894f4f10e71c51588d7c00d937d45f"
+    },
+    "scenery-orbit-low": {
+      "camera": {
+        "position": [
+          130.79481713344632,
+          121.07275741986898,
+          -121.66351434971608
+        ],
+        "orientation": [
+          -0.2581186286324392,
+          0.3610494685973709,
+          0.10471502172942838,
+          0.8899734934270067
+        ],
+        "fov": 0.85
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-lab.v1\",\"version\":1,\"name\":\"Aster Coast\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — the high road\",\"seed\":7331,\"profile\":\"low\",\"environment\":\"coast\",\"road\":[{\"id\":\"span-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":10,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-1\",\"x\":0,\"y\":5,\"z\":-35,\"width\":9,\"bank\":0.02,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-2\",\"x\":-12,\"y\":8,\"z\":-75,\"width\":9,\"bank\":0.08,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-3\",\"x\":-38,\"y\":16,\"z\":-112,\"width\":9,\"bank\":0.13,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-4\",\"x\":-42,\"y\":24,\"z\":-155,\"width\":9,\"bank\":0.09,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-5\",\"x\":-15,\"y\":27,\"z\":-195,\"width\":9,\"bank\":-0.05,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-6\",\"x\":27,\"y\":26,\"z\":-230,\"width\":9,\"bank\":-0.12,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-7\",\"x\":50,\"y\":19,\"z\":-270,\"width\":9,\"bank\":-0.1,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-8\",\"x\":39,\"y\":13,\"z\":-315,\"width\":9,\"bank\":0.03,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-9\",\"x\":8,\"y\":10,\"z\":-355,\"width\":9,\"bank\":0.09,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-10\",\"x\":-20,\"y\":14,\"z\":-395,\"width\":9,\"bank\":0.04,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-11\",\"x\":-8,\"y\":21,\"z\":-435,\"width\":9,\"bank\":-0.05,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-12\",\"x\":27,\"y\":28,\"z\":-475,\"width\":9,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"classId\":\"sport\",\"paint\":[0.8470588235294118,0.30980392156862746,0.20392156862745098],\"roughness\":0.25,\"metalness\":0.7,\"steer\":-0.20943951023931953,\"wheelSpin\":0,\"compression\":[0.04,0.04,0.04,0.04],\"pitch\":0,\"roll\":0,\"brake\":0},\"lighting\":{\"azimuth\":-0.6108652381980153,\"elevation\":0.6108652381980153,\"fogDensity\":0.004}}",
+        "history": {
+          "cursor": 1,
+          "length": 2
+        },
+        "running": false,
+        "tourTime": 0,
+        "lost": false,
+        "view": {
+          "frames": 37,
+          "preparations": 2,
+          "cameraMode": "orbit",
+          "camera": {
+            "position": [
+              130.79481713344632,
+              121.07275741986898,
+              -121.66351434971608
+            ],
+            "target": [
+              26.288810731371505,
+              26.07275741986898,
+              -229.2669279846445
+            ]
+          },
+          "road": {
+            "distance": 56.32726451387862,
+            "lateral": 0,
+            "surfaceId": "span-1",
+            "surface": "asphalt",
+            "structure": "ground",
+            "segment": 1,
+            "triangle": 0,
+            "position": [
+              -4.626433483156315,
+              6.11610497077256,
+              -55.69457967619562
+            ],
+            "normal": [
+              -0.030474667552229443,
+              0.9967521076018983,
+              0.07454213995288106
+            ],
+            "yaw": 0.2974486603848161,
+            "pitch": 0.06245900213685864,
+            "roll": 0.051005505970157135
+          },
+          "world": {
+            "vertices": 38610,
+            "batches": 11,
+            "roadTriangles": 192,
+            "terrainCells": 3136,
+            "trees": 30
+          },
+          "vehicle": {
+            "vertices": 20394,
+            "parts": 13
+          },
+          "graphics": {
+            "frames": 36,
+            "frameDraws": 25,
+            "totalDraws": 900,
+            "uploads": 25,
+            "skippedIdentical": 0,
+            "vertices": 59052,
+            "bytes": 2598288,
+            "meshes": 25,
+            "profile": "low",
+            "lost": false,
+            "disposed": false
+          }
+        }
+      },
+      "canvas": {
+        "width": 694,
+        "height": 587,
+        "cssWidth": 993,
+        "cssHeight": 839
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          23.299999997019768,
+          20.5,
+          18.200000002980232,
+          18.19999998807907,
+          19.30000001192093,
+          18.399999991059303,
+          23.400000005960464,
+          24.099999994039536,
+          26.400000005960464,
+          25.899999991059303,
+          25.100000008940697,
+          26.099999994039536
+        ],
+        "median": 23.400000005960464,
+        "p95": 26.400000005960464
+      },
+      "error": 0,
+      "file": "scenery-orbit-low.png",
+      "sha256": "d2d2bb1f17962829d56074931afabf101d433ed64639b0ca758d30f7dbe420ed"
+    },
+    "scenery-road-low": {
+      "camera": {
+        "position": [
+          46.484163847729235,
+          19.393455259582577,
+          -288.39843682758436
+        ],
+        "orientation": [
+          -0.0645774813955767,
+          0.22098722543607288,
+          0.014666412551891602,
+          0.973025843147821
+        ],
+        "fov": 0.85
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-lab.v1\",\"version\":1,\"name\":\"Aster Coast\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — the high road\",\"seed\":7331,\"profile\":\"low\",\"environment\":\"coast\",\"road\":[{\"id\":\"span-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":10,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-1\",\"x\":0,\"y\":5,\"z\":-35,\"width\":9,\"bank\":0.02,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-2\",\"x\":-12,\"y\":8,\"z\":-75,\"width\":9,\"bank\":0.08,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-3\",\"x\":-38,\"y\":16,\"z\":-112,\"width\":9,\"bank\":0.13,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-4\",\"x\":-42,\"y\":24,\"z\":-155,\"width\":9,\"bank\":0.09,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-5\",\"x\":-15,\"y\":27,\"z\":-195,\"width\":9,\"bank\":-0.05,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-6\",\"x\":27,\"y\":26,\"z\":-230,\"width\":9,\"bank\":-0.12,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-7\",\"x\":50,\"y\":19,\"z\":-270,\"width\":9,\"bank\":-0.1,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-8\",\"x\":39,\"y\":13,\"z\":-315,\"width\":9,\"bank\":0.03,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-9\",\"x\":8,\"y\":10,\"z\":-355,\"width\":9,\"bank\":0.09,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-10\",\"x\":-20,\"y\":14,\"z\":-395,\"width\":9,\"bank\":0.04,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-11\",\"x\":-8,\"y\":21,\"z\":-435,\"width\":9,\"bank\":-0.05,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-12\",\"x\":27,\"y\":28,\"z\":-475,\"width\":9,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"classId\":\"sport\",\"paint\":[0.8470588235294118,0.30980392156862746,0.20392156862745098],\"roughness\":0.25,\"metalness\":0.7,\"steer\":-0.20943951023931953,\"wheelSpin\":0,\"compression\":[0.04,0.04,0.04,0.04],\"pitch\":0,\"roll\":0,\"brake\":0},\"lighting\":{\"azimuth\":-0.6108652381980153,\"elevation\":0.6108652381980153,\"fogDensity\":0.004}}",
+        "history": {
+          "cursor": 1,
+          "length": 2
+        },
+        "running": false,
+        "tourTime": 0,
+        "lost": false,
+        "view": {
+          "frames": 54,
+          "preparations": 2,
+          "cameraMode": "road",
+          "camera": {
+            "position": [
+              46.484163847729235,
+              19.393455259582577,
+              -288.39843682758436
+            ],
+            "target": [
+              23.34896136719359,
+              12.252654523802544,
+              -336.70442687282633
+            ]
+          },
+          "road": {
+            "distance": 56.32726451387862,
+            "lateral": 0,
+            "surfaceId": "span-1",
+            "surface": "asphalt",
+            "structure": "ground",
+            "segment": 1,
+            "triangle": 0,
+            "position": [
+              -4.626433483156315,
+              6.11610497077256,
+              -55.69457967619562
+            ],
+            "normal": [
+              -0.030474667552229443,
+              0.9967521076018983,
+              0.07454213995288106
+            ],
+            "yaw": 0.2974486603848161,
+            "pitch": 0.06245900213685864,
+            "roll": 0.051005505970157135
+          },
+          "world": {
+            "vertices": 38610,
+            "batches": 11,
+            "roadTriangles": 192,
+            "terrainCells": 3136,
+            "trees": 30
+          },
+          "vehicle": {
+            "vertices": 20394,
+            "parts": 13
+          },
+          "graphics": {
+            "frames": 53,
+            "frameDraws": 25,
+            "totalDraws": 1325,
+            "uploads": 25,
+            "skippedIdentical": 0,
+            "vertices": 59052,
+            "bytes": 2598288,
+            "meshes": 25,
+            "profile": "low",
+            "lost": false,
+            "disposed": false
+          }
+        }
+      },
+      "canvas": {
+        "width": 694,
+        "height": 587,
+        "cssWidth": 993,
+        "cssHeight": 839
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          24.700000002980232,
+          23.799999997019768,
+          22.299999997019768,
+          23.900000005960464,
+          22.799999997019768,
+          23,
+          23.200000002980232,
+          23.399999991059303,
+          23.600000008940697,
+          21,
+          23.799999997019768,
+          22.899999991059303
+        ],
+        "median": 23.399999991059303,
+        "p95": 24.700000002980232
+      },
+      "error": 0,
+      "file": "scenery-road-low.png",
+      "sha256": "3f3418cceb62f11fb49c6ba163d783a8642ecf31a768ea6561deda19f821514a"
+    },
+    "scenery-bonnet-low": {
+      "camera": {
+        "position": [
+          -4.919515342812095,
+          7.16610497077256,
+          -56.65066702761322
+        ],
+        "orientation": [
+          0.033096944339442026,
+          0.1480936637225254,
+          -0.004958937027478718,
+          0.9884069344071746
+        ],
+        "fov": 0.95
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-lab.v1\",\"version\":1,\"name\":\"Aster Coast\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — the high road\",\"seed\":7331,\"profile\":\"low\",\"environment\":\"coast\",\"road\":[{\"id\":\"span-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":10,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-1\",\"x\":0,\"y\":5,\"z\":-35,\"width\":9,\"bank\":0.02,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-2\",\"x\":-12,\"y\":8,\"z\":-75,\"width\":9,\"bank\":0.08,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-3\",\"x\":-38,\"y\":16,\"z\":-112,\"width\":9,\"bank\":0.13,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-4\",\"x\":-42,\"y\":24,\"z\":-155,\"width\":9,\"bank\":0.09,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-5\",\"x\":-15,\"y\":27,\"z\":-195,\"width\":9,\"bank\":-0.05,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"span-6\",\"x\":27,\"y\":26,\"z\":-230,\"width\":9,\"bank\":-0.12,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-7\",\"x\":50,\"y\":19,\"z\":-270,\"width\":9,\"bank\":-0.1,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-8\",\"x\":39,\"y\":13,\"z\":-315,\"width\":9,\"bank\":0.03,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-9\",\"x\":8,\"y\":10,\"z\":-355,\"width\":9,\"bank\":0.09,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"span-10\",\"x\":-20,\"y\":14,\"z\":-395,\"width\":9,\"bank\":0.04,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-11\",\"x\":-8,\"y\":21,\"z\":-435,\"width\":9,\"bank\":-0.05,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"span-12\",\"x\":27,\"y\":28,\"z\":-475,\"width\":9,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"classId\":\"sport\",\"paint\":[0.8470588235294118,0.30980392156862746,0.20392156862745098],\"roughness\":0.25,\"metalness\":0.7,\"steer\":-0.20943951023931953,\"wheelSpin\":0,\"compression\":[0.04,0.04,0.04,0.04],\"pitch\":0,\"roll\":0,\"brake\":0},\"lighting\":{\"azimuth\":-0.6108652381980153,\"elevation\":0.6108652381980153,\"fogDensity\":0.004}}",
+        "history": {
+          "cursor": 1,
+          "length": 2
+        },
+        "running": false,
+        "tourTime": 0,
+        "lost": false,
+        "view": {
+          "frames": 71,
+          "preparations": 2,
+          "cameraMode": "bonnet",
+          "camera": {
+            "position": [
+              -4.919515342812095,
+              7.16610497077256,
+              -56.65066702761322
+            ],
+            "target": [
+              -17.81511716766638,
+              10.116104970772561,
+              -98.71851048998735
+            ]
+          },
+          "road": {
+            "distance": 56.32726451387862,
+            "lateral": 0,
+            "surfaceId": "span-1",
+            "surface": "asphalt",
+            "structure": "ground",
+            "segment": 1,
+            "triangle": 0,
+            "position": [
+              -4.626433483156315,
+              6.11610497077256,
+              -55.69457967619562
+            ],
+            "normal": [
+              -0.030474667552229443,
+              0.9967521076018983,
+              0.07454213995288106
+            ],
+            "yaw": 0.2974486603848161,
+            "pitch": 0.06245900213685864,
+            "roll": 0.051005505970157135
+          },
+          "world": {
+            "vertices": 38610,
+            "batches": 11,
+            "roadTriangles": 192,
+            "terrainCells": 3136,
+            "trees": 30
+          },
+          "vehicle": {
+            "vertices": 20394,
+            "parts": 13
+          },
+          "graphics": {
+            "frames": 70,
+            "frameDraws": 25,
+            "totalDraws": 1750,
+            "uploads": 25,
+            "skippedIdentical": 0,
+            "vertices": 59052,
+            "bytes": 2598288,
+            "meshes": 25,
+            "profile": "low",
+            "lost": false,
+            "disposed": false
+          }
+        }
+      },
+      "canvas": {
+        "width": 694,
+        "height": 587,
+        "cssWidth": 993,
+        "cssHeight": 839
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          30.200000002980232,
+          28.299999997019768,
+          27.900000005960464,
+          31.400000005960464,
+          29.69999998807907,
+          30.200000002980232,
+          27.799999997019768,
+          29.400000005960464,
+          28.299999997019768,
+          29.700000002980232,
+          28.299999997019768,
+          30
+        ],
+        "median": 29.69999998807907,
+        "p95": 31.400000005960464
+      },
+      "error": 0,
+      "file": "scenery-bonnet-low.png",
+      "sha256": "c8020230e700630383cb4a8f5aff61c4c56e26977f100702fda871dcb269040f"
+    },
+    "race-chase-high": {
+      "camera": {
+        "position": [
+          -2.034817029543464,
+          8.589422202265762,
+          -2.9440965917583153
+        ],
+        "orientation": [
+          -0.12881568459289355,
+          0.014803939040451734,
+          0.0019232188502131885,
+          0.9915561829876333
+        ],
+        "fov": 0.92
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-race.v1\",\"version\":1,\"name\":\"Cape Aster — Sunward Run\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — Sunward Run\",\"seed\":7337,\"profile\":\"high\",\"environment\":\"coast\",\"road\":[{\"id\":\"sunward-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-1\",\"x\":0,\"y\":4,\"z\":-45,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-2\",\"x\":8,\"y\":7,\"z\":-90,\"width\":16,\"bank\":-0.035,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-3\",\"x\":24,\"y\":12,\"z\":-140,\"width\":16,\"bank\":-0.055,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"sunward-4\",\"x\":32,\"y\":17,\"z\":-190,\"width\":16,\"bank\":0,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"sunward-5\",\"x\":20,\"y\":20,\"z\":-240,\"width\":16,\"bank\":0.06,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-6\",\"x\":-1,\"y\":18,\"z\":-290,\"width\":16,\"bank\":0.055,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-7\",\"x\":-17,\"y\":12,\"z\":-340,\"width\":16,\"bank\":0,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"sunward-8\",\"x\":-10,\"y\":8,\"z\":-390,\"width\":16,\"bank\":-0.045,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-9\",\"x\":8,\"y\":8,\"z\":-440,\"width\":16,\"bank\":-0.025,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-10\",\"x\":20,\"y\":10,\"z\":-490,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"format\":\"qsol.vanillajs.vehicle3d.v1\",\"version\":1,\"name\":\"Sunward sport\",\"mass\":1200,\"inertia\":[1450,1750,650],\"chassis\":{\"width\":1.95,\"length\":4.4,\"height\":1.25},\"wheel\":{\"radius\":0.34,\"wheelbase\":2.62,\"track\":1.76},\"suspension\":{\"restLength\":0.45,\"travel\":0.32,\"spring\":34000,\"damper\":3400},\"tyres\":{\"grip\":1.15,\"corneringStiffness\":2600,\"rollingResistance\":0.015},\"steering\":{\"maxAngle\":0.52,\"rate\":2.6,\"speedReduction\":0.025},\"engine\":{\"idleRPM\":850,\"redlineRPM\":6800,\"torqueCurve\":[[850,140],[2200,240],[4200,300],[5800,265],[6800,190]],\"engineBrake\":40},\"gearbox\":{\"ratios\":[3.1,2.05,1.48,1.12,0.89],\"reverseRatio\":2.8,\"finalDrive\":3.7,\"efficiency\":0.9,\"shiftTime\":0.18,\"automatic\":true},\"drive\":\"all\",\"drag\":0.4},\"appearance\":{\"classId\":\"sport\",\"paint\":[0.92,0.31,0.09],\"roughness\":0.25,\"metalness\":0.62},\"surfaces\":{\"asphalt\":1,\"gravel\":0.65,\"terrain\":0.45},\"camera\":{\"mode\":\"chase\",\"chaseDistance\":9,\"chaseHeight\":4,\"fov\":0.92},\"audio\":{\"format\":\"qsol.vanillajs.vehicle-audio.v1\",\"version\":1,\"seed\":7331,\"cylinders\":4,\"engineGain\":0.2,\"exhaustGain\":0.15,\"tyreGain\":0.14,\"shiftGain\":0.08,\"exhaustTone\":1,\"smoothingMs\":35},\"race\":{\"countdownSeconds\":3,\"checkpointCount\":8,\"rivalSpeed\":10,\"recoveryPenaltySeconds\":4}}",
+        "phase": "ready",
+        "countdown": 3,
+        "time": 0,
+        "result": null,
+        "checkpointIndex": 0,
+        "checkpointCount": 8,
+        "distance": 12,
+        "fraction": 0,
+        "progress": {
+          "checkpointIndex": 0,
+          "finished": false,
+          "finishTime": null,
+          "penaltySeconds": 0,
+          "recoveries": 0,
+          "distance": 12,
+          "fraction": 0,
+          "lateral": -2,
+          "offRoad": false
+        },
+        "rivalProgress": {
+          "checkpointIndex": 0,
+          "finished": false,
+          "finishTime": null,
+          "penaltySeconds": 0,
+          "recoveries": 0,
+          "distance": 12,
+          "fraction": 0,
+          "lateral": 2,
+          "offRoad": false
+        },
+        "player": {
+          "tick": 0,
+          "position": [
+            -2.303497234280458,
+            4.589422202265761,
+            -11.94008519488485
+          ],
+          "velocity": [
+            0,
+            0,
+            0
+          ],
+          "orientation": [
+            -0.00561676157121527,
+            0.014928013667020356,
+            0.00006740847991020498,
+            0.9998727928359218
+          ],
+          "angularVelocity": [
+            0,
+            0,
+            0
+          ],
+          "steering": 0,
+          "gear": 1,
+          "rpm": 850,
+          "shiftRemaining": 0,
+          "wheelSpin": 0,
+          "brake": 0,
+          "wheels": [
+            {
+              "grounded": false,
+              "position": [
+                -3.2222104466215606,
+                4.124734469530932,
+                -13.223148055378052
+              ],
+              "contactPoint": [
+                -3.2222104466215606,
+                3.7847344695309317,
+                -13.223148055378052
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                -1.4629948791000902,
+                4.124676575427655,
+                -13.275689311914071
+              ],
+              "contactPoint": [
+                -1.4629948791000902,
+                3.784676575427655,
+                -13.275689311914071
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                -3.1439995894608255,
+                4.1541678291038675,
+                -10.604481077855628
+              ],
+              "contactPoint": [
+                -3.1439995894608255,
+                3.8141678291038676,
+                -10.604481077855628
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                -1.384784021939355,
+                4.154109935000591,
+                -10.657022334391646
+              ],
+              "contactPoint": [
+                -1.384784021939355,
+                3.814109935000591,
+                -10.657022334391646
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            }
+          ],
+          "contacts": [],
+          "truncated": false,
+          "needsRecovery": false
+        },
+        "rival": {
+          "tick": 0,
+          "position": [
+            1.6949758853959547,
+            4.58939066531382,
+            -12.05059633108919
+          ],
+          "velocity": [
+            0,
+            0,
+            0
+          ],
+          "orientation": [
+            -0.00561676157121527,
+            0.014928013667020356,
+            0.00006740847991020498,
+            0.9998727928359218
+          ],
+          "angularVelocity": [
+            0,
+            0,
+            0
+          ],
+          "steering": 0,
+          "gear": 1,
+          "rpm": 850,
+          "shiftRemaining": 0,
+          "wheelSpin": 0,
+          "brake": 0,
+          "wheels": [
+            {
+              "grounded": false,
+              "position": [
+                0.776262673054852,
+                4.12470293257899,
+                -13.333659191582393
+              ],
+              "contactPoint": [
+                0.776262673054852,
+                3.7847029325789903,
+                -13.333659191582393
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                2.5354782405763223,
+                4.124645038475713,
+                -13.386200448118412
+              ],
+              "contactPoint": [
+                2.5354782405763223,
+                3.7846450384757135,
+                -13.386200448118412
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                0.854473530215587,
+                4.154136292151926,
+                -10.714992214059968
+              ],
+              "contactPoint": [
+                0.854473530215587,
+                3.814136292151926,
+                -10.714992214059968
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                2.6136890977370575,
+                4.154078398048649,
+                -10.767533470595987
+              ],
+              "contactPoint": [
+                2.6136890977370575,
+                3.8140783980486495,
+                -10.767533470595987
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            }
+          ],
+          "contacts": [],
+          "truncated": false,
+          "needsRecovery": false
+        },
+        "routeLength": 509.25980562005657,
+        "nextCheckpoint": {
+          "id": "checkpoint-1",
+          "index": 0,
+          "distance": 72.65747570250707,
+          "position": [
+            3.972198254301351,
+            5.563962824848445,
+            -72.28528634878339
+          ],
+          "direction": [
+            0.18764671025197352,
+            0,
+            -0.9822365866386836
+          ],
+          "right": [
+            0.9822365866386836,
+            0,
+            0.18764671025197352
+          ],
+          "normal": [
+            0.008115618166063602,
+            0.9974809499248736,
+            0.07046908030302734
+          ],
+          "halfWidth": 7.3,
+          "altitudeMin": -0.3,
+          "altitudeMax": 2.8,
+          "finish": false
+        },
+        "drivingAdvice": {
+          "throttle": 1,
+          "brake": 0,
+          "steer": 0.0068586368321657334
+        },
+        "running": false,
+        "lost": false,
+        "ticks": 0,
+        "inputs": {
+          "input": {
+            "throttle": 0,
+            "brake": 0,
+            "steer": 0,
+            "reverse": 0
+          },
+          "heldKeys": [],
+          "pointers": 0,
+          "blockedKeys": []
+        },
+        "physicalInput": {
+          "throttle": 0,
+          "brake": 0,
+          "steer": 0
+        },
+        "view": {
+          "frames": 17,
+          "camera": {
+            "position": [
+              -1.754941828557305,
+              8.589422202265762,
+              -2.952455531461244
+            ],
+            "target": [
+              -2.482617370771787,
+              5.239422202265762,
+              -17.93741093030254
+            ]
+          },
+          "cameraMode": "chase",
+          "graphics": {
+            "frames": 17,
+            "frameDraws": 46,
+            "totalDraws": 782,
+            "uploads": 33,
+            "skippedIdentical": 0,
+            "vertices": 96897,
+            "bytes": 4263468,
+            "meshes": 33,
+            "profile": "high",
+            "lost": false,
+            "disposed": false
+          },
+          "world": {
+            "supportTriangles": 6688,
+            "supportBuckets": 3249,
+            "unsupportedSteepFaces": 0,
+            "barriers": 1
+          }
+        },
+        "audio": {
+          "enabled": false,
+          "active": false,
+          "disposed": false,
+          "voices": 0,
+          "maxVoices": 4,
+          "started": 0,
+          "resyncs": 0,
+          "error": "",
+          "stream": {
+            "sampleRate": 48000,
+            "samples": 0,
+            "phase": 0,
+            "exhaustPhase": 0,
+            "tyrePhase": 0,
+            "noiseLow": 0,
+            "shift": 0,
+            "gear": null,
+            "controls": {
+              "rpm": 0,
+              "throttle": 0,
+              "load": 0,
+              "slip": 0,
+              "brake": 0,
+              "speed": 0
+            }
+          }
+        },
+        "history": {
+          "cursor": 0,
+          "length": 1
+        },
+        "exportBusy": false
+      },
+      "canvas": {
+        "width": 1007,
+        "height": 633,
+        "cssWidth": 1008,
+        "cssHeight": 634
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          57.5,
+          57.900000005960464,
+          54.3999999910593,
+          53.1000000089407,
+          50.70000000298023,
+          42.69999998807907,
+          45,
+          50.6000000089407,
+          53.5,
+          59.599999994039536,
+          51.900000005960464,
+          57.099999994039536
+        ],
+        "median": 53.5,
+        "p95": 59.599999994039536
+      },
+      "error": 0,
+      "file": "race-chase-high.png",
+      "sha256": "160e074e73c459da79fabfff2a504c883fb77a7d84cde7d5a0adfcae7e682ac9"
+    },
+    "race-speed-high": {
+      "camera": {
+        "position": [
+          -2.272521427907949,
+          8.516333559743277,
+          -10.90910171156052
+        ],
+        "orientation": [
+          -0.12881568168340668,
+          0.014805439011956337,
+          0.0019234137154760444,
+          0.991556160591916
+        ],
+        "fov": 0.92
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-race.v1\",\"version\":1,\"name\":\"Cape Aster — Sunward Run\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — Sunward Run\",\"seed\":7337,\"profile\":\"high\",\"environment\":\"coast\",\"road\":[{\"id\":\"sunward-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-1\",\"x\":0,\"y\":4,\"z\":-45,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-2\",\"x\":8,\"y\":7,\"z\":-90,\"width\":16,\"bank\":-0.035,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-3\",\"x\":24,\"y\":12,\"z\":-140,\"width\":16,\"bank\":-0.055,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"sunward-4\",\"x\":32,\"y\":17,\"z\":-190,\"width\":16,\"bank\":0,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"sunward-5\",\"x\":20,\"y\":20,\"z\":-240,\"width\":16,\"bank\":0.06,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-6\",\"x\":-1,\"y\":18,\"z\":-290,\"width\":16,\"bank\":0.055,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-7\",\"x\":-17,\"y\":12,\"z\":-340,\"width\":16,\"bank\":0,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"sunward-8\",\"x\":-10,\"y\":8,\"z\":-390,\"width\":16,\"bank\":-0.045,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-9\",\"x\":8,\"y\":8,\"z\":-440,\"width\":16,\"bank\":-0.025,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-10\",\"x\":20,\"y\":10,\"z\":-490,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"format\":\"qsol.vanillajs.vehicle3d.v1\",\"version\":1,\"name\":\"Sunward sport\",\"mass\":1200,\"inertia\":[1450,1750,650],\"chassis\":{\"width\":1.95,\"length\":4.4,\"height\":1.25},\"wheel\":{\"radius\":0.34,\"wheelbase\":2.62,\"track\":1.76},\"suspension\":{\"restLength\":0.45,\"travel\":0.32,\"spring\":34000,\"damper\":3400},\"tyres\":{\"grip\":1.15,\"corneringStiffness\":2600,\"rollingResistance\":0.015},\"steering\":{\"maxAngle\":0.52,\"rate\":2.6,\"speedReduction\":0.025},\"engine\":{\"idleRPM\":850,\"redlineRPM\":6800,\"torqueCurve\":[[850,140],[2200,240],[4200,300],[5800,265],[6800,190]],\"engineBrake\":40},\"gearbox\":{\"ratios\":[3.1,2.05,1.48,1.12,0.89],\"reverseRatio\":2.8,\"finalDrive\":3.7,\"efficiency\":0.9,\"shiftTime\":0.18,\"automatic\":true},\"drive\":\"all\",\"drag\":0.4},\"appearance\":{\"classId\":\"sport\",\"paint\":[0.92,0.31,0.09],\"roughness\":0.25,\"metalness\":0.62},\"surfaces\":{\"asphalt\":1,\"gravel\":0.65,\"terrain\":0.45},\"camera\":{\"mode\":\"chase\",\"chaseDistance\":9,\"chaseHeight\":4,\"fov\":0.92},\"audio\":{\"format\":\"qsol.vanillajs.vehicle-audio.v1\",\"version\":1,\"seed\":7331,\"cylinders\":4,\"engineGain\":0.2,\"exhaustGain\":0.15,\"tyreGain\":0.14,\"shiftGain\":0.08,\"exhaustTone\":1,\"smoothingMs\":35},\"race\":{\"countdownSeconds\":3,\"checkpointCount\":8,\"rivalSpeed\":10,\"recoveryPenaltySeconds\":4}}",
+        "phase": "running",
+        "countdown": 0,
+        "time": 2.0166666666666666,
+        "result": null,
+        "checkpointIndex": 0,
+        "checkpointCount": 8,
+        "distance": 19.939747135401305,
+        "fraction": 0.016361847907959394,
+        "progress": {
+          "checkpointIndex": 0,
+          "finished": false,
+          "finishTime": null,
+          "penaltySeconds": 0,
+          "recoveries": 0,
+          "distance": 19.939747135401305,
+          "fraction": 0.016361847907959394,
+          "lateral": -2.038153894668807,
+          "offRoad": false
+        },
+        "rivalProgress": {
+          "checkpointIndex": 0,
+          "finished": false,
+          "finishTime": null,
+          "penaltySeconds": 0,
+          "recoveries": 0,
+          "distance": 19.97343156716728,
+          "fraction": 0.01643126316011063,
+          "lateral": 2.015014231346476,
+          "offRoad": false
+        },
+        "player": {
+          "tick": 1204,
+          "position": [
+            -2.5412288499147953,
+            4.516333559743278,
+            -19.905089501756684
+          ],
+          "orientation": [
+            0.008103139503277079,
+            0.014929656923685114,
+            -0.0001571673789335267,
+            0.9998556994750526
+          ],
+          "velocity": [
+            -0.2705331918153767,
+            -0.05977989623350714,
+            -9.06163315384258
+          ],
+          "angularVelocity": [
+            0.022973695110120245,
+            0.000032673878814576805,
+            -0.0007858129590592444
+          ],
+          "steering": 0,
+          "gear": 1,
+          "rpm": 2911.05900984319,
+          "shiftRemaining": 0,
+          "wheelSpin": 1.8097953878463322,
+          "brake": 0,
+          "wheels": [
+            {
+              "grounded": true,
+              "position": [
+                -3.459943231870645,
+                4.144871527167642,
+                -21.188058840316064
+              ],
+              "contactPoint": [
+                -3.459943231870645,
+                3.804871527167642,
+                -21.188058840316064
+              ],
+              "normal": [
+                -0.00009143749902510245,
+                0.999987974437449,
+                -0.0049033274081761846
+              ],
+              "compression": 0.05724100275825439,
+              "load": 1897.9145904856516,
+              "longitudinalSpeed": 9.054843265176748,
+              "lateralSpeed": 0.000027221880043504232,
+              "slip": 0.000027221880043504232,
+              "surfaceId": "asphalt:8"
+            },
+            {
+              "grounded": true,
+              "position": [
+                -1.7007279080088475,
+                4.144774717869531,
+                -21.2406081322428
+              ],
+              "contactPoint": [
+                -1.7007279080088475,
+                3.804774717869531,
+                -21.2406081322428
+              ],
+              "normal": [
+                -0.00009143749902510245,
+                0.999987974437449,
+                -0.0049033274081761846
+              ],
+              "compression": 0.057271503436113314,
+              "load": 1899.5394043585527,
+              "longitudinalSpeed": 9.054903520200993,
+              "lateralSpeed": 0.00002722186361658885,
+              "slip": 0.00002722186361658885,
+              "surfaceId": "asphalt:8"
+            },
+            {
+              "grounded": true,
+              "position": [
+                -3.381729791820743,
+                4.162299549547812,
+                -18.569570871270567
+              ],
+              "contactPoint": [
+                -3.381729791820743,
+                3.8222995495478114,
+                -18.569570871270567
+              ],
+              "normal": [
+                -0.0001717124435378877,
+                0.9999575901380447,
+                -0.009208063865494456
+              ],
+              "compression": 0.11713564449467384,
+              "load": 4002.9223979672315,
+              "longitudinalSpeed": 9.054845309017956,
+              "lateralSpeed": 0.00012877162623964322,
+              "slip": 0.00012877162623964322,
+              "surfaceId": "asphalt:7"
+            },
+            {
+              "grounded": true,
+              "position": [
+                -1.6225144679589456,
+                4.162117743763274,
+                -18.622120163197305
+              ],
+              "contactPoint": [
+                -1.6225144679589456,
+                3.8221177437632745,
+                -18.622120163197305
+              ],
+              "normal": [
+                -0.0001717124435378877,
+                0.9999575901380447,
+                -0.009208063865494456
+              ],
+              "compression": 0.11708114868610675,
+              "load": 4001.6564194734683,
+              "longitudinalSpeed": 9.05490828703564,
+              "lateralSpeed": 0.00012877165808972135,
+              "slip": 0.00012877165808972135,
+              "surfaceId": "asphalt:7"
+            }
+          ],
+          "contacts": [],
+          "truncated": false,
+          "needsRecovery": false
+        },
+        "rival": {
+          "tick": 1204,
+          "position": [
+            1.5111326120525805,
+            4.5162639631796075,
+            -19.99268546067858
+          ],
+          "orientation": [
+            0.005506686950055869,
+            0.008906663516381391,
+            0.0004474874170838128,
+            0.9999450722408963
+          ],
+          "velocity": [
+            -0.14967425310844365,
+            -0.05748387313536686,
+            -8.74777581434112
+          ],
+          "angularVelocity": [
+            -0.019816234243242057,
+            -0.016413017993546223,
+            0.001701977657978356
+          ],
+          "steering": 0.004997767132664326,
+          "gear": 1,
+          "rpm": 2812.9007145421383,
+          "shiftRemaining": 0,
+          "wheelSpin": 1.877168575515043,
+          "brake": 0,
+          "wheels": [
+            {
+              "grounded": true,
+              "position": [
+                0.6079319501344944,
+                4.144759676716153,
+                -21.2867276419559
+              ],
+              "contactPoint": [
+                0.6079319501344944,
+                3.804759676716153,
+                -21.2867276419559
+              ],
+              "normal": [
+                -0.00009143749902510245,
+                0.999987974437449,
+                -0.0049033274081761846
+              ],
+              "compression": 0.06495328444257176,
+              "load": 2344.2692213718656,
+              "longitudinalSpeed": 8.733578983426005,
+              "lateralSpeed": -0.014984133343861478,
+              "slip": 0.014984133343861478,
+              "surfaceId": "asphalt:8"
+            },
+            {
+              "grounded": true,
+              "position": [
+                2.367652008406556,
+                4.144766905727548,
+                -21.31806870157898
+              ],
+              "contactPoint": [
+                2.367652008406556,
+                3.804766905727548,
+                -21.31806870157898
+              ],
+              "normal": [
+                -0.00009143749902510245,
+                0.999987974437449,
+                -0.0049033274081761846
+              ],
+              "compression": 0.06321280161431009,
+              "load": 2277.759343572171,
+              "longitudinalSpeed": 8.704745177759547,
+              "lateralSpeed": -0.014840323635709377,
+              "slip": 0.014840323635709377,
+              "surfaceId": "asphalt:8"
+            },
+            {
+              "grounded": true,
+              "position": [
+                0.654613215698605,
+                4.162092714598028,
+                -18.66730221977818
+              ],
+              "contactPoint": [
+                0.654613215698605,
+                3.8220927145980284,
+                -18.66730221977818
+              ],
+              "normal": [
+                -0.0001717124435378877,
+                0.9999575901380447,
+                -0.009208063865494456
+              ],
+              "compression": 0.11111889235205119,
+              "load": 3622.943669091382,
+              "longitudinalSpeed": 8.733512321284909,
+              "lateralSpeed": -0.014258383149242632,
+              "slip": 0.014258383149242632,
+              "surfaceId": "asphalt:7"
+            },
+            {
+              "grounded": true,
+              "position": [
+                2.4143332739706667,
+                4.162106290526309,
+                -18.69864327940126
+              ],
+              "contactPoint": [
+                2.4143332739706667,
+                3.822106290526309,
+                -18.69864327940126
+              ],
+              "normal": [
+                -0.0001717124435378877,
+                0.9999575901380447,
+                -0.009208063865494456
+              ],
+              "compression": 0.1093847564406758,
+              "load": 3557.054156736862,
+              "longitudinalSpeed": 8.704668852315905,
+              "lateralSpeed": -0.014258696720317932,
+              "slip": 0.014258696720317932,
+              "surfaceId": "asphalt:7"
+            }
+          ],
+          "contacts": [],
+          "truncated": false,
+          "needsRecovery": false
+        },
+        "routeLength": 509.25980562005657,
+        "nextCheckpoint": {
+          "id": "checkpoint-1",
+          "index": 0,
+          "distance": 72.65747570250707,
+          "position": [
+            3.972198254301351,
+            5.563962824848445,
+            -72.28528634878339
+          ],
+          "direction": [
+            0.18764671025197352,
+            0,
+            -0.9822365866386836
+          ],
+          "right": [
+            0.9822365866386836,
+            0,
+            0.18764671025197352
+          ],
+          "normal": [
+            0.008115618166063602,
+            0.9974809499248736,
+            0.07046908030302734
+          ],
+          "halfWidth": 7.3,
+          "altitudeMin": -0.3,
+          "altitudeMax": 2.8,
+          "finish": false
+        },
+        "drivingAdvice": {
+          "throttle": 1,
+          "brake": 0,
+          "steer": 0.028834573314953323
+        },
+        "running": false,
+        "lost": false,
+        "ticks": 602,
+        "inputs": {
+          "input": {
+            "throttle": 0,
+            "brake": 0,
+            "steer": 0,
+            "reverse": 0
+          },
+          "heldKeys": [],
+          "pointers": 0,
+          "blockedKeys": []
+        },
+        "physicalInput": {
+          "throttle": 0,
+          "brake": 0,
+          "steer": 0
+        },
+        "view": {
+          "frames": 348,
+          "camera": {
+            "position": [
+              -1.9838008998068148,
+              8.522076683242384,
+              -10.620816149626213
+            ],
+            "target": [
+              -2.7507350613765045,
+              5.172076683242386,
+              -26.91948164933256
+            ]
+          },
+          "cameraMode": "chase",
+          "graphics": {
+            "frames": 348,
+            "frameDraws": 46,
+            "totalDraws": 16008,
+            "uploads": 33,
+            "skippedIdentical": 0,
+            "vertices": 96897,
+            "bytes": 4263468,
+            "meshes": 33,
+            "profile": "high",
+            "lost": false,
+            "disposed": false
+          },
+          "world": {
+            "supportTriangles": 6688,
+            "supportBuckets": 3249,
+            "unsupportedSteepFaces": 0,
+            "barriers": 1
+          }
+        },
+        "audio": {
+          "enabled": false,
+          "active": false,
+          "disposed": false,
+          "voices": 0,
+          "maxVoices": 4,
+          "started": 0,
+          "resyncs": 0,
+          "error": "",
+          "stream": {
+            "sampleRate": 48000,
+            "samples": 0,
+            "phase": 0,
+            "exhaustPhase": 0,
+            "tyrePhase": 0,
+            "noiseLow": 0,
+            "shift": 0,
+            "gear": null,
+            "controls": {
+              "rpm": 0,
+              "throttle": 0,
+              "load": 0,
+              "slip": 0,
+              "brake": 0,
+              "speed": 0
+            }
+          }
+        },
+        "history": {
+          "cursor": 0,
+          "length": 1
+        },
+        "exportBusy": false
+      },
+      "canvas": {
+        "width": 1007,
+        "height": 633,
+        "cssWidth": 1008,
+        "cssHeight": 634
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          52.5,
+          51.69999998807907,
+          45.30000001192093,
+          50.099999994039536,
+          54.79999999701977,
+          50.29999999701977,
+          50.8999999910593,
+          54.20000000298023,
+          44.900000005960464,
+          53,
+          53.20000000298023,
+          51.599999994039536
+        ],
+        "median": 51.69999998807907,
+        "p95": 54.79999999701977
+      },
+      "error": 0,
+      "file": "race-speed-high.png",
+      "sha256": "4f32d3b5bb1c6a507f130901545e1db92f525000edaeffceac1e67ee5f1c9637"
+    },
+    "race-chase-low": {
+      "camera": {
+        "position": [
+          -2.034817029543464,
+          8.589422202265762,
+          -2.9440965917583153
+        ],
+        "orientation": [
+          -0.12881568459289355,
+          0.014803939040451734,
+          0.0019232188502131885,
+          0.9915561829876333
+        ],
+        "fov": 0.92
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-race.v1\",\"version\":1,\"name\":\"Cape Aster — Sunward Run\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — Sunward Run\",\"seed\":7337,\"profile\":\"low\",\"environment\":\"coast\",\"road\":[{\"id\":\"sunward-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-1\",\"x\":0,\"y\":4,\"z\":-45,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-2\",\"x\":8,\"y\":7,\"z\":-90,\"width\":16,\"bank\":-0.035,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-3\",\"x\":24,\"y\":12,\"z\":-140,\"width\":16,\"bank\":-0.055,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"sunward-4\",\"x\":32,\"y\":17,\"z\":-190,\"width\":16,\"bank\":0,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"sunward-5\",\"x\":20,\"y\":20,\"z\":-240,\"width\":16,\"bank\":0.06,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-6\",\"x\":-1,\"y\":18,\"z\":-290,\"width\":16,\"bank\":0.055,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-7\",\"x\":-17,\"y\":12,\"z\":-340,\"width\":16,\"bank\":0,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"sunward-8\",\"x\":-10,\"y\":8,\"z\":-390,\"width\":16,\"bank\":-0.045,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-9\",\"x\":8,\"y\":8,\"z\":-440,\"width\":16,\"bank\":-0.025,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-10\",\"x\":20,\"y\":10,\"z\":-490,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"format\":\"qsol.vanillajs.vehicle3d.v1\",\"version\":1,\"name\":\"Sunward sport\",\"mass\":1200,\"inertia\":[1450,1750,650],\"chassis\":{\"width\":1.95,\"length\":4.4,\"height\":1.25},\"wheel\":{\"radius\":0.34,\"wheelbase\":2.62,\"track\":1.76},\"suspension\":{\"restLength\":0.45,\"travel\":0.32,\"spring\":34000,\"damper\":3400},\"tyres\":{\"grip\":1.15,\"corneringStiffness\":2600,\"rollingResistance\":0.015},\"steering\":{\"maxAngle\":0.52,\"rate\":2.6,\"speedReduction\":0.025},\"engine\":{\"idleRPM\":850,\"redlineRPM\":6800,\"torqueCurve\":[[850,140],[2200,240],[4200,300],[5800,265],[6800,190]],\"engineBrake\":40},\"gearbox\":{\"ratios\":[3.1,2.05,1.48,1.12,0.89],\"reverseRatio\":2.8,\"finalDrive\":3.7,\"efficiency\":0.9,\"shiftTime\":0.18,\"automatic\":true},\"drive\":\"all\",\"drag\":0.4},\"appearance\":{\"classId\":\"sport\",\"paint\":[0.9215686274509803,0.30980392156862746,0.09019607843137255],\"roughness\":0.25,\"metalness\":0.62},\"surfaces\":{\"asphalt\":1,\"gravel\":0.65,\"terrain\":0.45},\"camera\":{\"mode\":\"chase\",\"chaseDistance\":9,\"chaseHeight\":4,\"fov\":0.92},\"audio\":{\"format\":\"qsol.vanillajs.vehicle-audio.v1\",\"version\":1,\"seed\":7331,\"cylinders\":4,\"engineGain\":0.2,\"exhaustGain\":0.15,\"tyreGain\":0.14,\"shiftGain\":0.08,\"exhaustTone\":1,\"smoothingMs\":35},\"race\":{\"countdownSeconds\":3,\"checkpointCount\":8,\"rivalSpeed\":10,\"recoveryPenaltySeconds\":4}}",
+        "phase": "ready",
+        "countdown": 3,
+        "time": 0,
+        "result": null,
+        "checkpointIndex": 0,
+        "checkpointCount": 8,
+        "distance": 12,
+        "fraction": 0,
+        "progress": {
+          "checkpointIndex": 0,
+          "finished": false,
+          "finishTime": null,
+          "penaltySeconds": 0,
+          "recoveries": 0,
+          "distance": 12,
+          "fraction": 0,
+          "lateral": -2,
+          "offRoad": false
+        },
+        "rivalProgress": {
+          "checkpointIndex": 0,
+          "finished": false,
+          "finishTime": null,
+          "penaltySeconds": 0,
+          "recoveries": 0,
+          "distance": 12,
+          "fraction": 0,
+          "lateral": 2,
+          "offRoad": false
+        },
+        "player": {
+          "tick": 0,
+          "position": [
+            -2.303497234280458,
+            4.589422202265761,
+            -11.94008519488485
+          ],
+          "velocity": [
+            0,
+            0,
+            0
+          ],
+          "orientation": [
+            -0.00561676157121527,
+            0.014928013667020356,
+            0.00006740847991020498,
+            0.9998727928359218
+          ],
+          "angularVelocity": [
+            0,
+            0,
+            0
+          ],
+          "steering": 0,
+          "gear": 1,
+          "rpm": 850,
+          "shiftRemaining": 0,
+          "wheelSpin": 0,
+          "brake": 0,
+          "wheels": [
+            {
+              "grounded": false,
+              "position": [
+                -3.2222104466215606,
+                4.124734469530932,
+                -13.223148055378052
+              ],
+              "contactPoint": [
+                -3.2222104466215606,
+                3.7847344695309317,
+                -13.223148055378052
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                -1.4629948791000902,
+                4.124676575427655,
+                -13.275689311914071
+              ],
+              "contactPoint": [
+                -1.4629948791000902,
+                3.784676575427655,
+                -13.275689311914071
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                -3.1439995894608255,
+                4.1541678291038675,
+                -10.604481077855628
+              ],
+              "contactPoint": [
+                -3.1439995894608255,
+                3.8141678291038676,
+                -10.604481077855628
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                -1.384784021939355,
+                4.154109935000591,
+                -10.657022334391646
+              ],
+              "contactPoint": [
+                -1.384784021939355,
+                3.814109935000591,
+                -10.657022334391646
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            }
+          ],
+          "contacts": [],
+          "truncated": false,
+          "needsRecovery": false
+        },
+        "rival": {
+          "tick": 0,
+          "position": [
+            1.6949758853959547,
+            4.58939066531382,
+            -12.05059633108919
+          ],
+          "velocity": [
+            0,
+            0,
+            0
+          ],
+          "orientation": [
+            -0.00561676157121527,
+            0.014928013667020356,
+            0.00006740847991020498,
+            0.9998727928359218
+          ],
+          "angularVelocity": [
+            0,
+            0,
+            0
+          ],
+          "steering": 0,
+          "gear": 1,
+          "rpm": 850,
+          "shiftRemaining": 0,
+          "wheelSpin": 0,
+          "brake": 0,
+          "wheels": [
+            {
+              "grounded": false,
+              "position": [
+                0.776262673054852,
+                4.12470293257899,
+                -13.333659191582393
+              ],
+              "contactPoint": [
+                0.776262673054852,
+                3.7847029325789903,
+                -13.333659191582393
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                2.5354782405763223,
+                4.124645038475713,
+                -13.386200448118412
+              ],
+              "contactPoint": [
+                2.5354782405763223,
+                3.7846450384757135,
+                -13.386200448118412
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                0.854473530215587,
+                4.154136292151926,
+                -10.714992214059968
+              ],
+              "contactPoint": [
+                0.854473530215587,
+                3.814136292151926,
+                -10.714992214059968
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            },
+            {
+              "grounded": false,
+              "position": [
+                2.6136890977370575,
+                4.154078398048649,
+                -10.767533470595987
+              ],
+              "contactPoint": [
+                2.6136890977370575,
+                3.8140783980486495,
+                -10.767533470595987
+              ],
+              "normal": [
+                0,
+                1,
+                0
+              ],
+              "compression": 0,
+              "load": 0,
+              "longitudinalSpeed": 0,
+              "lateralSpeed": 0,
+              "slip": 0,
+              "surfaceId": null
+            }
+          ],
+          "contacts": [],
+          "truncated": false,
+          "needsRecovery": false
+        },
+        "routeLength": 509.25980562005657,
+        "nextCheckpoint": {
+          "id": "checkpoint-1",
+          "index": 0,
+          "distance": 72.65747570250707,
+          "position": [
+            3.972198254301351,
+            5.563962824848445,
+            -72.28528634878339
+          ],
+          "direction": [
+            0.18764671025197352,
+            0,
+            -0.9822365866386836
+          ],
+          "right": [
+            0.9822365866386836,
+            0,
+            0.18764671025197352
+          ],
+          "normal": [
+            0.008115618166063602,
+            0.9974809499248736,
+            0.07046908030302734
+          ],
+          "halfWidth": 7.3,
+          "altitudeMin": -0.3,
+          "altitudeMax": 2.8,
+          "finish": false
+        },
+        "drivingAdvice": {
+          "throttle": 1,
+          "brake": 0,
+          "steer": 0.0068586368321657334
+        },
+        "running": false,
+        "lost": false,
+        "ticks": 0,
+        "inputs": {
+          "input": {
+            "throttle": 0,
+            "brake": 0,
+            "steer": 0,
+            "reverse": 0
+          },
+          "heldKeys": [],
+          "pointers": 0,
+          "blockedKeys": []
+        },
+        "physicalInput": {
+          "throttle": 0,
+          "brake": 0,
+          "steer": 0
+        },
+        "view": {
+          "frames": 19,
+          "camera": {
+            "position": [
+              -1.754941828557305,
+              8.589422202265762,
+              -2.952455531461244
+            ],
+            "target": [
+              -2.482617370771787,
+              5.239422202265762,
+              -17.93741093030254
+            ]
+          },
+          "cameraMode": "chase",
+          "graphics": {
+            "frames": 17,
+            "frameDraws": 46,
+            "totalDraws": 782,
+            "uploads": 33,
+            "skippedIdentical": 0,
+            "vertices": 57237,
+            "bytes": 2518428,
+            "meshes": 33,
+            "profile": "low",
+            "lost": false,
+            "disposed": false
+          },
+          "world": {
+            "supportTriangles": 6688,
+            "supportBuckets": 3249,
+            "unsupportedSteepFaces": 0,
+            "barriers": 1
+          }
+        },
+        "audio": {
+          "enabled": false,
+          "active": false,
+          "disposed": false,
+          "voices": 0,
+          "maxVoices": 4,
+          "started": 0,
+          "resyncs": 0,
+          "error": "",
+          "stream": {
+            "sampleRate": 48000,
+            "samples": 0,
+            "phase": 0,
+            "exhaustPhase": 0,
+            "tyrePhase": 0,
+            "noiseLow": 0,
+            "shift": 0,
+            "gear": null,
+            "controls": {
+              "rpm": 0,
+              "throttle": 0,
+              "load": 0,
+              "slip": 0,
+              "brake": 0,
+              "speed": 0
+            }
+          }
+        },
+        "history": {
+          "cursor": 1,
+          "length": 2
+        },
+        "exportBusy": false
+      },
+      "canvas": {
+        "width": 705,
+        "height": 443,
+        "cssWidth": 1008,
+        "cssHeight": 634
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          28.900000005960464,
+          31.099999994039536,
+          27.5,
+          23.099999994039536,
+          29.600000008940697,
+          25.599999994039536,
+          23.69999998807907,
+          23.600000008940697,
+          23.600000008940697,
+          28.899999991059303,
+          23.700000002980232,
+          25.299999997019768
+        ],
+        "median": 25.599999994039536,
+        "p95": 31.099999994039536
+      },
+      "error": 0,
+      "file": "race-chase-low.png",
+      "sha256": "7f8bcaff069ab7d13921e6818acb2d37314d8735159f08a92577bd527bbc85a2"
+    },
+    "race-speed-low": {
+      "camera": {
+        "position": [
+          -2.268037368408837,
+          8.517327977027556,
+          -10.7587521532977
+        ],
+        "orientation": [
+          -0.12881568217541764,
+          0.014805185368857075,
+          0.0019233807640305959,
+          0.9915561643791602
+        ],
+        "fov": 0.92
+      },
+      "state": {
+        "project": "{\"format\":\"qsol.vanillajs.horizon-race.v1\",\"version\":1,\"name\":\"Cape Aster — Sunward Run\",\"scenery\":{\"format\":\"qsol.vanillajs.scenic3d.v1\",\"version\":1,\"name\":\"Cape Aster — Sunward Run\",\"seed\":7337,\"profile\":\"low\",\"environment\":\"coast\",\"road\":[{\"id\":\"sunward-0\",\"x\":0,\"y\":4,\"z\":0,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-1\",\"x\":0,\"y\":4,\"z\":-45,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-2\",\"x\":8,\"y\":7,\"z\":-90,\"width\":16,\"bank\":-0.035,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-3\",\"x\":24,\"y\":12,\"z\":-140,\"width\":16,\"bank\":-0.055,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"sunward-4\",\"x\":32,\"y\":17,\"z\":-190,\"width\":16,\"bank\":0,\"structure\":\"bridge\",\"surface\":\"asphalt\"},{\"id\":\"sunward-5\",\"x\":20,\"y\":20,\"z\":-240,\"width\":16,\"bank\":0.06,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-6\",\"x\":-1,\"y\":18,\"z\":-290,\"width\":16,\"bank\":0.055,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-7\",\"x\":-17,\"y\":12,\"z\":-340,\"width\":16,\"bank\":0,\"structure\":\"tunnel\",\"surface\":\"asphalt\"},{\"id\":\"sunward-8\",\"x\":-10,\"y\":8,\"z\":-390,\"width\":16,\"bank\":-0.045,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-9\",\"x\":8,\"y\":8,\"z\":-440,\"width\":16,\"bank\":-0.025,\"structure\":\"ground\",\"surface\":\"asphalt\"},{\"id\":\"sunward-10\",\"x\":20,\"y\":10,\"z\":-490,\"width\":16,\"bank\":0,\"structure\":\"ground\",\"surface\":\"asphalt\"}]},\"vehicle\":{\"format\":\"qsol.vanillajs.vehicle3d.v1\",\"version\":1,\"name\":\"Sunward sport\",\"mass\":1200,\"inertia\":[1450,1750,650],\"chassis\":{\"width\":1.95,\"length\":4.4,\"height\":1.25},\"wheel\":{\"radius\":0.34,\"wheelbase\":2.62,\"track\":1.76},\"suspension\":{\"restLength\":0.45,\"travel\":0.32,\"spring\":34000,\"damper\":3400},\"tyres\":{\"grip\":1.15,\"corneringStiffness\":2600,\"rollingResistance\":0.015},\"steering\":{\"maxAngle\":0.52,\"rate\":2.6,\"speedReduction\":0.025},\"engine\":{\"idleRPM\":850,\"redlineRPM\":6800,\"torqueCurve\":[[850,140],[2200,240],[4200,300],[5800,265],[6800,190]],\"engineBrake\":40},\"gearbox\":{\"ratios\":[3.1,2.05,1.48,1.12,0.89],\"reverseRatio\":2.8,\"finalDrive\":3.7,\"efficiency\":0.9,\"shiftTime\":0.18,\"automatic\":true},\"drive\":\"all\",\"drag\":0.4},\"appearance\":{\"classId\":\"sport\",\"paint\":[0.9215686274509803,0.30980392156862746,0.09019607843137255],\"roughness\":0.25,\"metalness\":0.62},\"surfaces\":{\"asphalt\":1,\"gravel\":0.65,\"terrain\":0.45},\"camera\":{\"mode\":\"chase\",\"chaseDistance\":9,\"chaseHeight\":4,\"fov\":0.92},\"audio\":{\"format\":\"qsol.vanillajs.vehicle-audio.v1\",\"version\":1,\"seed\":7331,\"cylinders\":4,\"engineGain\":0.2,\"exhaustGain\":0.15,\"tyreGain\":0.14,\"shiftGain\":0.08,\"exhaustTone\":1,\"smoothingMs\":35},\"race\":{\"countdownSeconds\":3,\"checkpointCount\":8,\"rivalSpeed\":10,\"recoveryPenaltySeconds\":4}}",
+        "phase": "running",
+        "countdown": 0,
+        "time": 2.0166666666666666,
+        "result": null,
+        "checkpointIndex": 0,
+        "checkpointCount": 8,
+        "distance": 19.939747135401305,
+        "fraction": 0.016361847907959394,
+        "progress": {
+          "checkpointIndex": 0,
+          "finished": false,
+          "finishTime": null,
+          "penaltySeconds": 0,
+          "recoveries": 0,
+          "distance": 19.939747135401305,
+          "fraction": 0.016361847907959394,
+          "lateral": -2.038153894668807,
+          "offRoad": false
+        },
+        "rivalProgress": {
+          "checkpointIndex": 0,
+          "finished": false,
+          "finishTime": null,
+          "penaltySeconds": 0,
+          "recoveries": 0,
+          "distance": 19.97343156716728,
+          "fraction": 0.01643126316011063,
+          "lateral": 2.015014231346476,
+          "offRoad": false
+        },
+        "player": {
+          "tick": 1204,
+          "position": [
+            -2.5412288499147953,
+            4.516333559743278,
+            -19.905089501756684
+          ],
+          "orientation": [
+            0.008103139503277079,
+            0.014929656923685114,
+            -0.0001571673789335267,
+            0.9998556994750526
+          ],
+          "velocity": [
+            -0.2705331918153767,
+            -0.05977989623350714,
+            -9.06163315384258
+          ],
+          "angularVelocity": [
+            0.022973695110120245,
+            0.000032673878814576805,
+            -0.0007858129590592444
+          ],
+          "steering": 0,
+          "gear": 1,
+          "rpm": 2911.05900984319,
+          "shiftRemaining": 0,
+          "wheelSpin": 1.8097953878463322,
+          "brake": 0,
+          "wheels": [
+            {
+              "grounded": true,
+              "position": [
+                -3.459943231870645,
+                4.144871527167642,
+                -21.188058840316064
+              ],
+              "contactPoint": [
+                -3.459943231870645,
+                3.804871527167642,
+                -21.188058840316064
+              ],
+              "normal": [
+                -0.00009143749902510245,
+                0.999987974437449,
+                -0.0049033274081761846
+              ],
+              "compression": 0.05724100275825439,
+              "load": 1897.9145904856516,
+              "longitudinalSpeed": 9.054843265176748,
+              "lateralSpeed": 0.000027221880043504232,
+              "slip": 0.000027221880043504232,
+              "surfaceId": "asphalt:8"
+            },
+            {
+              "grounded": true,
+              "position": [
+                -1.7007279080088475,
+                4.144774717869531,
+                -21.2406081322428
+              ],
+              "contactPoint": [
+                -1.7007279080088475,
+                3.804774717869531,
+                -21.2406081322428
+              ],
+              "normal": [
+                -0.00009143749902510245,
+                0.999987974437449,
+                -0.0049033274081761846
+              ],
+              "compression": 0.057271503436113314,
+              "load": 1899.5394043585527,
+              "longitudinalSpeed": 9.054903520200993,
+              "lateralSpeed": 0.00002722186361658885,
+              "slip": 0.00002722186361658885,
+              "surfaceId": "asphalt:8"
+            },
+            {
+              "grounded": true,
+              "position": [
+                -3.381729791820743,
+                4.162299549547812,
+                -18.569570871270567
+              ],
+              "contactPoint": [
+                -3.381729791820743,
+                3.8222995495478114,
+                -18.569570871270567
+              ],
+              "normal": [
+                -0.0001717124435378877,
+                0.9999575901380447,
+                -0.009208063865494456
+              ],
+              "compression": 0.11713564449467384,
+              "load": 4002.9223979672315,
+              "longitudinalSpeed": 9.054845309017956,
+              "lateralSpeed": 0.00012877162623964322,
+              "slip": 0.00012877162623964322,
+              "surfaceId": "asphalt:7"
+            },
+            {
+              "grounded": true,
+              "position": [
+                -1.6225144679589456,
+                4.162117743763274,
+                -18.622120163197305
+              ],
+              "contactPoint": [
+                -1.6225144679589456,
+                3.8221177437632745,
+                -18.622120163197305
+              ],
+              "normal": [
+                -0.0001717124435378877,
+                0.9999575901380447,
+                -0.009208063865494456
+              ],
+              "compression": 0.11708114868610675,
+              "load": 4001.6564194734683,
+              "longitudinalSpeed": 9.05490828703564,
+              "lateralSpeed": 0.00012877165808972135,
+              "slip": 0.00012877165808972135,
+              "surfaceId": "asphalt:7"
+            }
+          ],
+          "contacts": [],
+          "truncated": false,
+          "needsRecovery": false
+        },
+        "rival": {
+          "tick": 1204,
+          "position": [
+            1.5111326120525805,
+            4.5162639631796075,
+            -19.99268546067858
+          ],
+          "orientation": [
+            0.005506686950055869,
+            0.008906663516381391,
+            0.0004474874170838128,
+            0.9999450722408963
+          ],
+          "velocity": [
+            -0.14967425310844365,
+            -0.05748387313536686,
+            -8.74777581434112
+          ],
+          "angularVelocity": [
+            -0.019816234243242057,
+            -0.016413017993546223,
+            0.001701977657978356
+          ],
+          "steering": 0.004997767132664326,
+          "gear": 1,
+          "rpm": 2812.9007145421383,
+          "shiftRemaining": 0,
+          "wheelSpin": 1.877168575515043,
+          "brake": 0,
+          "wheels": [
+            {
+              "grounded": true,
+              "position": [
+                0.6079319501344944,
+                4.144759676716153,
+                -21.2867276419559
+              ],
+              "contactPoint": [
+                0.6079319501344944,
+                3.804759676716153,
+                -21.2867276419559
+              ],
+              "normal": [
+                -0.00009143749902510245,
+                0.999987974437449,
+                -0.0049033274081761846
+              ],
+              "compression": 0.06495328444257176,
+              "load": 2344.2692213718656,
+              "longitudinalSpeed": 8.733578983426005,
+              "lateralSpeed": -0.014984133343861478,
+              "slip": 0.014984133343861478,
+              "surfaceId": "asphalt:8"
+            },
+            {
+              "grounded": true,
+              "position": [
+                2.367652008406556,
+                4.144766905727548,
+                -21.31806870157898
+              ],
+              "contactPoint": [
+                2.367652008406556,
+                3.804766905727548,
+                -21.31806870157898
+              ],
+              "normal": [
+                -0.00009143749902510245,
+                0.999987974437449,
+                -0.0049033274081761846
+              ],
+              "compression": 0.06321280161431009,
+              "load": 2277.759343572171,
+              "longitudinalSpeed": 8.704745177759547,
+              "lateralSpeed": -0.014840323635709377,
+              "slip": 0.014840323635709377,
+              "surfaceId": "asphalt:8"
+            },
+            {
+              "grounded": true,
+              "position": [
+                0.654613215698605,
+                4.162092714598028,
+                -18.66730221977818
+              ],
+              "contactPoint": [
+                0.654613215698605,
+                3.8220927145980284,
+                -18.66730221977818
+              ],
+              "normal": [
+                -0.0001717124435378877,
+                0.9999575901380447,
+                -0.009208063865494456
+              ],
+              "compression": 0.11111889235205119,
+              "load": 3622.943669091382,
+              "longitudinalSpeed": 8.733512321284909,
+              "lateralSpeed": -0.014258383149242632,
+              "slip": 0.014258383149242632,
+              "surfaceId": "asphalt:7"
+            },
+            {
+              "grounded": true,
+              "position": [
+                2.4143332739706667,
+                4.162106290526309,
+                -18.69864327940126
+              ],
+              "contactPoint": [
+                2.4143332739706667,
+                3.822106290526309,
+                -18.69864327940126
+              ],
+              "normal": [
+                -0.0001717124435378877,
+                0.9999575901380447,
+                -0.009208063865494456
+              ],
+              "compression": 0.1093847564406758,
+              "load": 3557.054156736862,
+              "longitudinalSpeed": 8.704668852315905,
+              "lateralSpeed": -0.014258696720317932,
+              "slip": 0.014258696720317932,
+              "surfaceId": "asphalt:7"
+            }
+          ],
+          "contacts": [],
+          "truncated": false,
+          "needsRecovery": false
+        },
+        "routeLength": 509.25980562005657,
+        "nextCheckpoint": {
+          "id": "checkpoint-1",
+          "index": 0,
+          "distance": 72.65747570250707,
+          "position": [
+            3.972198254301351,
+            5.563962824848445,
+            -72.28528634878339
+          ],
+          "direction": [
+            0.18764671025197352,
+            0,
+            -0.9822365866386836
+          ],
+          "right": [
+            0.9822365866386836,
+            0,
+            0.18764671025197352
+          ],
+          "normal": [
+            0.008115618166063602,
+            0.9974809499248736,
+            0.07046908030302734
+          ],
+          "halfWidth": 7.3,
+          "altitudeMin": -0.3,
+          "altitudeMax": 2.8,
+          "finish": false
+        },
+        "drivingAdvice": {
+          "throttle": 1,
+          "brake": 0,
+          "steer": 0.028834573314953323
+        },
+        "running": false,
+        "lost": false,
+        "ticks": 602,
+        "inputs": {
+          "input": {
+            "throttle": 0,
+            "brake": 0,
+            "steer": 0,
+            "reverse": 0
+          },
+          "heldKeys": [],
+          "pointers": 0,
+          "blockedKeys": []
+        },
+        "physicalInput": {
+          "throttle": 0,
+          "brake": 0,
+          "steer": 0
+        },
+        "view": {
+          "frames": 350,
+          "camera": {
+            "position": [
+              -1.9838008998068148,
+              8.522076683242384,
+              -10.620816149626213
+            ],
+            "target": [
+              -2.7507350613765045,
+              5.172076683242386,
+              -26.91948164933256
+            ]
+          },
+          "cameraMode": "chase",
+          "graphics": {
+            "frames": 348,
+            "frameDraws": 46,
+            "totalDraws": 16008,
+            "uploads": 33,
+            "skippedIdentical": 0,
+            "vertices": 57237,
+            "bytes": 2518428,
+            "meshes": 33,
+            "profile": "low",
+            "lost": false,
+            "disposed": false
+          },
+          "world": {
+            "supportTriangles": 6688,
+            "supportBuckets": 3249,
+            "unsupportedSteepFaces": 0,
+            "barriers": 1
+          }
+        },
+        "audio": {
+          "enabled": false,
+          "active": false,
+          "disposed": false,
+          "voices": 0,
+          "maxVoices": 4,
+          "started": 0,
+          "resyncs": 0,
+          "error": "",
+          "stream": {
+            "sampleRate": 48000,
+            "samples": 0,
+            "phase": 0,
+            "exhaustPhase": 0,
+            "tyrePhase": 0,
+            "noiseLow": 0,
+            "shift": 0,
+            "gear": null,
+            "controls": {
+              "rpm": 0,
+              "throttle": 0,
+              "load": 0,
+              "slip": 0,
+              "brake": 0,
+              "speed": 0
+            }
+          }
+        },
+        "history": {
+          "cursor": 1,
+          "length": 2
+        },
+        "exportBusy": false
+      },
+      "canvas": {
+        "width": 705,
+        "height": 443,
+        "cssWidth": 1008,
+        "cssHeight": 634
+      },
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "timing": {
+        "samples": [
+          25.200000002980232,
+          28.700000002980232,
+          26.099999994039536,
+          30.299999997019768,
+          29.600000008940697,
+          29.69999998807907,
+          33,
+          31.30000001192093,
+          26.399999991059303,
+          28.100000008940697,
+          24.69999998807907,
+          24.30000001192093
+        ],
+        "median": 28.700000002980232,
+        "p95": 33
+      },
+      "error": 0,
+      "file": "race-speed-low.png",
+      "sha256": "54143a1eb4b985ad677d5cd9232d3ea22c52d8d4eaa97abeb3cb04f0ed31a1ca"
+    }
+  }
+}

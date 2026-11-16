@@ -67,7 +67,8 @@ Chromium uses SwiftShader here. Timing samples include submission and a
 synchronous one-pixel readback after two warmups, twelve samples per view.
 They describe this software-rendered observation, not physical GPU FPS.
 Screenshots supplement numerical, interaction, offline and package tests.
-Execution results and reviewed images are recorded with the final source pin.
+[Execution results, matched images and measurements](evidence/horizon-004/README.md)
+record the exact clean implementation source and package identities.
 The initial visual pass was rejected after screenshots exposed bonnet ridges
 and flat terrain lighting. Bounded longitudinal interpolation, fender-only arch
 lift and shared visual normals corrected those issues; contact geometry stayed
