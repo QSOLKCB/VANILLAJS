@@ -1,0 +1,68 @@
+[
+  {
+    "sample": 192000,
+    "bright": 11649,
+    "pixelHash": 404382641,
+    "vertices": {
+      "triangles": 2160,
+      "lines": 432,
+      "points": 384
+    },
+    "commandSha256": "d5b75e1164c4fe3f653f08360edb27370db5766444a84c1d042e1750c6374702"
+  },
+  {
+    "sample": 864000,
+    "bright": 239555,
+    "pixelHash": -558732752,
+    "vertices": {
+      "triangles": 50544,
+      "lines": 720,
+      "points": 2880
+    },
+    "commandSha256": "26c12a4d0cdf41ea60e3893c1ebf79a1d37371b83346bf27e2a9c7bd8882a669"
+  },
+  {
+    "sample": 1440000,
+    "bright": 49107,
+    "pixelHash": -59780970,
+    "vertices": {
+      "triangles": 52704,
+      "lines": 6912,
+      "points": 2880
+    },
+    "commandSha256": "a90562bc2b9ba8cda8baf4e93f92dbed33d171a5a0b68ff564f26a681fcb71ae"
+  },
+  {
+    "sample": 2016000,
+    "bright": 309246,
+    "pixelHash": 1231533844,
+    "vertices": {
+      "triangles": 34344,
+      "lines": 576,
+      "points": 2880
+    },
+    "commandSha256": "5d82cb5a551b2879cb40ec57ca29ec0a348fc2c123710dcec51c8a2014872e9a"
+  },
+  {
+    "sample": 2640000,
+    "bright": 25924,
+    "pixelHash": -1975259348,
+    "vertices": {
+      "triangles": 184896,
+      "lines": 0,
+      "points": 0
+    },
+    "commandSha256": "76f22f38cd33a70a947dd53c07d03839fff86e47d4ce28b530dfc1cd8cc57a94"
+  },
+  {
+    "sample": 2880000,
+    "bright": 0,
+    "pixelHash": -1018007547,
+    "vertices": {
+      "triangles": 0,
+      "lines": 0,
+      "points": 0
+    },
+    "commandSha256": "1bc1dfee4bf9e7a207e7492538beac1b2c49485dc028b18bcf5f04fb2b180e4b"
+  }
+]

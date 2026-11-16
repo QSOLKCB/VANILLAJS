@@ -50,6 +50,8 @@ class CapsuleTests(unittest.TestCase):
             'demos/skyguard-lab/js/start.js': 'export const fixture=true;\n',
             'demos/arcade-combat-lab/index.html': '<script type="module" src="./start.js"></script>',
             'demos/arcade-combat-lab/start.js': 'export const fixture=true;\n',
+            'demos/demoscene-lab/index.html': '<script type="module" src="./start.js"></script>',
+            'demos/demoscene-lab/start.js': 'export const fixture=true;\n',
             'demos/block-arena-lab/index.html': '<script type="module" src="./start.js"></script>',
             'demos/block-arena-lab/start.js': 'export const fixture=true;\n',
             'demos/block-arena-lab/replay.js': 'export const fixture=true;\n',

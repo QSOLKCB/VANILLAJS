@@ -3,6 +3,7 @@
 import {hierarchyRows,eligibleParents,matchesAsset} from './workflows.js';
 import {STARTER_SCENES,createStarterScene,addGameplayPiece,inspectCreatorScene} from './creator-workflow.js';
 import {mount4XPanel} from './4x-panel.js';
+import {mountDemoscenePanel} from './demoscene-panel.js';
 import {parseExactPosition,previewQ16Position,transformExactPositionXY,snapEditorDelta,formatPositionNumber} from './authoring-math.js';
 import {SceneMeshes} from './scene-meshes.js';
 import {OptionalRenderer} from '../../modules/render-optional/index.js';
@@ -23,7 +24,7 @@ import {createAssetLibrary,validateAssetLibrary,addMeshAsset,addTextureAsset,
 
 const $=id=>document.getElementById(id),canvas=$('view');
 let importGeneration=0;
-let campaignPanel=null;
+let campaignPanel=null,demoscenePanel=null;
 let checksScene=null,creatorChecks=null,lastPlayedScene=null,lastSavedScene=null,lastSavedLibrary=null,lastSavedGPU=false;
 let history=makeHistory(createForgeScene()),selected='entity-3',draft=null,
   library=createAssetLibrary(),chosenAsset=null,
@@ -92,6 +93,7 @@ function syncEditor(){
   renderHierarchy(scene);
   syncCreator(scene);
   campaignPanel?.sync();
+  demoscenePanel?.sync();
   scheduleRecovery();
   syncAssets();
   if(!selected){requestFrame();return;}
@@ -817,6 +819,11 @@ campaignPanel=mount4XPanel($('fourx-workshop'),{
   replaceScene:scene=>{finishGesture(false);applyScene(scene,scene.objects[0]?.id??null);frameSelection(true);}
 });
 Object.defineProperty(window,'__editor4x',{get:()=>campaignPanel.snapshot()});
+demoscenePanel=mountDemoscenePanel($('demoscene-workshop'),{
+  getScene:()=>editScene(),getLibrary:()=>prunePlacements(editScene(),library),
+  getSelection:()=>selected,isPlaying:()=>playing
+});
+Object.defineProperty(window,'__editorDemoscene',{get:()=>demoscenePanel.snapshot()});
 try{initGraphics();syncEditor();requestFrame();document.documentElement.dataset.editorReady='ready';}
 catch(error){inform('WebGL unavailable: '+error.message,true);
   document.documentElement.dataset.editorReady='unavailable';syncEditor();}

@@ -1,0 +1,366 @@
+{
+  "kind": "qsol.vanillajs.demoscene-execution.v1",
+  "runtime": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "source": {
+    "kind": "qsol.vanillajs.demoscene-build-receipt.v1",
+    "seed": 1983,
+    "sourceIdentity": "73321068b1d22c007e95a825e9a43ed2cd015f2e17825df25270046980d79ba2",
+    "files": [
+      {
+        "path": "api/demoscene/transport.js",
+        "sha256": "29f611e934be035526ebe25530878fc88bfa53fb8e6b2a9fbbb9ac7f81000f53"
+      },
+      {
+        "path": "demos/demoscene-lab/app.js",
+        "sha256": "73f2c2afd67c75eef64fc26b22e8d688cdc1cdfc67c8fc38fdff540be67c63ba"
+      },
+      {
+        "path": "demos/demoscene-lab/index.html",
+        "sha256": "77fed9a226131a5389e116aaf919090b515cc52bf9430edd35863050e7afafc7"
+      },
+      {
+        "path": "demos/demoscene-lab/intro-example.js",
+        "sha256": "fce8d26121c6df537be18ad2860a12dd0dce06b3c70c56a88b56020ab9ffb95a"
+      },
+      {
+        "path": "demos/demoscene-lab/intro.html",
+        "sha256": "476d4e8264f1e2f1e12b0298676a97c0615328f7b23115bd47df4411c7a4d2cb"
+      },
+      {
+        "path": "demos/demoscene-lab/intro.js",
+        "sha256": "f08d4bd5c2cdddaf52572032a9db29bfc7cd74dc0cc758e1eaf7e7f7071fe8e3"
+      },
+      {
+        "path": "demos/demoscene-lab/player.js",
+        "sha256": "9880b22157ecbe76f174f0e8180d9b6b321fd9bf18e0d3f601563ae9e43d0e59"
+      },
+      {
+        "path": "demos/demoscene-lab/preset.js",
+        "sha256": "bfaf6286765131a6b8de039a7fb92e53d0b5c3837a540a9343e1aa8d6fe01a24"
+      },
+      {
+        "path": "demos/demoscene-lab/start.js",
+        "sha256": "cb7f84dff7be5737d373994e2261b0f30a324f82d77861a363648ea69fc07b30"
+      },
+      {
+        "path": "demos/demoscene-lab/style.css",
+        "sha256": "638d7e989b994f2691342e5a39fc852ff29b4978f989d451f7e8b6fa6f94db9a"
+      },
+      {
+        "path": "demos/demoscene-lab/world.js",
+        "sha256": "cc91f03ae03ff22848bc937790c3897c2c9dccdab66d8e2177fd2ccba95043b2"
+      },
+      {
+        "path": "docs/DEMOSCENE_001.md",
+        "sha256": "b023faa84eaf007e9ce7facaf8b05733979b93b8fa3a09d67065741e101dd5dc"
+      },
+      {
+        "path": "docs/DEMOSCENE_DONOR_REVIEW.md",
+        "sha256": "282e3e3735eecda804b8fcfb0c1f98841daabbd9dd02024aa9d77a3d890db829"
+      },
+      {
+        "path": "docs/MAKE_YOUR_FIRST_DEMOSCENE_INTRO.md",
+        "sha256": "55465a9442ad12c6e08af66234ea22e1d8443eb4c6ea3c89c795c50be9f72957"
+      },
+      {
+        "path": "index.html",
+        "sha256": "8874c1d595cc73ca01c8fd22225b531a07b566d45719c6eb2f0fdbe60593d153"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      {
+        "path": "modules/audio2d/index.js",
+        "sha256": "838c90cc71d2ffb89a205eb47d280721bd36e3bfd8b3f7467f31668359d50034"
+      },
+      {
+        "path": "modules/demo-scene/index.js",
+        "sha256": "73e87848591b20e3903b769f8742b7ed89562e2b487208bb8425a762973f51fa"
+      },
+      {
+        "path": "modules/demo-timeline/index.js",
+        "sha256": "00efc76a9698aaac0f26c3ae32314dd7fd2c683a3f9e2d25108c8f9932d52229"
+      },
+      {
+        "path": "modules/frame-gate/index.js",
+        "sha256": "a64422e3f5a887effcbcf67581836e58c590dcb5737d2522939d1e3ff8aaa5ed"
+      },
+      {
+        "path": "modules/math/index.js",
+        "sha256": "4f4ebf0786b97342c11004b8830a535890b16693458a0436edb1fc581a411da7"
+      },
+      {
+        "path": "modules/mod-demo/index.js",
+        "sha256": "7c1a50d09487aeb150ccbb6b566975549ce736526d4ca684d98ca6251830bbe9"
+      },
+      {
+        "path": "modules/mod-sdk/index.js",
+        "sha256": "1b8e11d442d77365e4ec79ace6736855dcb8b7946edabbf0123168f790f52b64"
+      },
+      {
+        "path": "modules/render-webgl/index.js",
+        "sha256": "b23b2c427d3bf8b29c991e3cf676bcda13bdffa9dae88bbb9f0f4594088aba2d"
+      },
+      {
+        "path": "modules/soundtrack/index.js",
+        "sha256": "dd0760175923e4c55d85c19fb441b31890bc1bf6c138965f301cfbbb1eddaaee"
+      },
+      {
+        "path": "NOTICE",
+        "sha256": "3e00b198d9b7e8cf9aba1b6095caf815dd276bd7cff6c3e517927bf690c2c302"
+      },
+      {
+        "path": "project.demoscene.json",
+        "sha256": "d2a003bed78e9c4e1994fd9de13752da0fbaf7c427e857588a45fbc5dac6ec20"
+      },
+      {
+        "path": "score.json",
+        "sha256": "72932ec52202f8604a581118d0d6a6e8f34a097ad47540e021af9a2fdab59f67"
+      }
+    ],
+    "projectSha256": "d2a003bed78e9c4e1994fd9de13752da0fbaf7c427e857588a45fbc5dac6ec20",
+    "scoreSha256": "72932ec52202f8604a581118d0d6a6e8f34a097ad47540e021af9a2fdab59f67",
+    "pcm16leSha256": "25682ceb7ba79478c0e7199989a3586bd6bfc34d8b85c7ddb91c19382e0119e4",
+    "wavSha256": "4d8742d369894c598e05d5639358b5d3e48642305af8634cca6db60eb2356fe3",
+    "samples": 2880000,
+    "sampleRate": 48000,
+    "frames": 3000,
+    "assets": "Original procedural source; project provenance is authoritative. WAV generated on request, not bundled."
+  },
+  "fullTimeline": {
+    "frames": 3000,
+    "firstSample": 0,
+    "lastFrameSample": 2879040,
+    "terminalSample": 2880000,
+    "commandProfile": "same-source / same-JavaScript-runtime Float64 commands",
+    "commandStreamSha256": "9ceb9afd05bed01ecfcb5f47692b46451c401b53e6040ed1d610f1c1489dfbfc",
+    "maxVertices": {
+      "triangles": 31932,
+      "lines": 1152,
+      "points": 480
+    },
+    "cuts": [
+      {
+        "frame": 200,
+        "sample": 192000,
+        "commandSha256": "d5b75e1164c4fe3f653f08360edb27370db5766444a84c1d042e1750c6374702"
+      },
+      {
+        "frame": 900,
+        "sample": 864000,
+        "commandSha256": "26c12a4d0cdf41ea60e3893c1ebf79a1d37371b83346bf27e2a9c7bd8882a669"
+      },
+      {
+        "frame": 1500,
+        "sample": 1440000,
+        "commandSha256": "da99195e61492a5ca87648ae75320f071a9d3fe7392bf8392d9cd421f8712000"
+      },
+      {
+        "frame": 2100,
+        "sample": 2016000,
+        "commandSha256": "5d82cb5a551b2879cb40ec57ca29ec0a348fc2c123710dcec51c8a2014872e9a"
+      },
+      {
+        "frame": 2750,
+        "sample": 2640000,
+        "commandSha256": "d7439e41754849529fbfeac4d13db66c0578974f2484ccdd1805c857d4668418"
+      }
+    ],
+    "terminalGeometry": {
+      "triangles": 0,
+      "lines": 0,
+      "points": 0
+    }
+  },
+  "audio": {
+    "samples": 2880000,
+    "min": -6732,
+    "max": 7256,
+    "nonzero": 1717904,
+    "lastSample": 0,
+    "phraseSha256": [
+      "a3e93c24ab661234aac60278315ca3b7df19c0bfb96ad3923bd72383d7ff2dab",
+      "d32cb4dc7a069e53be03efb9e585d72e8ff80f35d91a9df59182219cdee7c8da",
+      "f9aa03bb9e9f9e61881e75767457099905257f43c53aed2ca6cbf473d1af3849",
+      "73cb009aef4de33d10be1240dc5f6f36f9743bf3248086f22bad05c1ec098eb5",
+      "d485e5e3811f594fcbf77661c84c2206ed61605101e03183299589d015ce2844",
+      "220e26241c7071a9aff4d5373aaf6a5cd84b7f7f390f6fb3e9470f2abedc992a",
+      "26a653e757d537a67358caaca1ce29dd0cacbe9018f03adb701f07a11993d25f",
+      "be24522f56eaedd320838c4467192c92f6013428098dc7451e2b2f803f6c4d94"
+    ]
+  },
+  "byteBudget": {
+    "kind": "qsol.vanillajs.demoscene-byte-report.v1",
+    "profile": "Full Demo",
+    "files": [
+      {
+        "path": "api/demoscene/transport.js",
+        "bytes": 2699,
+        "sha256": "29f611e934be035526ebe25530878fc88bfa53fb8e6b2a9fbbb9ac7f81000f53"
+      },
+      {
+        "path": "demos/demoscene-lab/app.js",
+        "bytes": 7267,
+        "sha256": "73f2c2afd67c75eef64fc26b22e8d688cdc1cdfc67c8fc38fdff540be67c63ba"
+      },
+      {
+        "path": "demos/demoscene-lab/index.html",
+        "bytes": 11408,
+        "sha256": "77fed9a226131a5389e116aaf919090b515cc52bf9430edd35863050e7afafc7"
+      },
+      {
+        "path": "demos/demoscene-lab/intro-example.js",
+        "bytes": 612,
+        "sha256": "fce8d26121c6df537be18ad2860a12dd0dce06b3c70c56a88b56020ab9ffb95a"
+      },
+      {
+        "path": "demos/demoscene-lab/intro.html",
+        "bytes": 992,
+        "sha256": "476d4e8264f1e2f1e12b0298676a97c0615328f7b23115bd47df4411c7a4d2cb"
+      },
+      {
+        "path": "demos/demoscene-lab/intro.js",
+        "bytes": 1064,
+        "sha256": "f08d4bd5c2cdddaf52572032a9db29bfc7cd74dc0cc758e1eaf7e7f7071fe8e3"
+      },
+      {
+        "path": "demos/demoscene-lab/player.js",
+        "bytes": 2411,
+        "sha256": "9880b22157ecbe76f174f0e8180d9b6b321fd9bf18e0d3f601563ae9e43d0e59"
+      },
+      {
+        "path": "demos/demoscene-lab/preset.js",
+        "bytes": 2580,
+        "sha256": "bfaf6286765131a6b8de039a7fb92e53d0b5c3837a540a9343e1aa8d6fe01a24"
+      },
+      {
+        "path": "demos/demoscene-lab/start.js",
+        "bytes": 727,
+        "sha256": "cb7f84dff7be5737d373994e2261b0f30a324f82d77861a363648ea69fc07b30"
+      },
+      {
+        "path": "demos/demoscene-lab/style.css",
+        "bytes": 5845,
+        "sha256": "638d7e989b994f2691342e5a39fc852ff29b4978f989d451f7e8b6fa6f94db9a"
+      },
+      {
+        "path": "demos/demoscene-lab/world.js",
+        "bytes": 6489,
+        "sha256": "cc91f03ae03ff22848bc937790c3897c2c9dccdab66d8e2177fd2ccba95043b2"
+      },
+      {
+        "path": "docs/DEMOSCENE_001.md",
+        "bytes": 12400,
+        "sha256": "b023faa84eaf007e9ce7facaf8b05733979b93b8fa3a09d67065741e101dd5dc"
+      },
+      {
+        "path": "docs/DEMOSCENE_DONOR_REVIEW.md",
+        "bytes": 7668,
+        "sha256": "282e3e3735eecda804b8fcfb0c1f98841daabbd9dd02024aa9d77a3d890db829"
+      },
+      {
+        "path": "docs/MAKE_YOUR_FIRST_DEMOSCENE_INTRO.md",
+        "bytes": 3356,
+        "sha256": "55465a9442ad12c6e08af66234ea22e1d8443eb4c6ea3c89c795c50be9f72957"
+      },
+      {
+        "path": "identity.json",
+        "bytes": 4593,
+        "sha256": "7ab139c4dfe81481865540ad01bb183bbf2b120274bef5b93f6ecf3ace3add4d"
+      },
+      {
+        "path": "index.html",
+        "bytes": 237,
+        "sha256": "8874c1d595cc73ca01c8fd22225b531a07b566d45719c6eb2f0fdbe60593d153"
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 11357,
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      {
+        "path": "modules/audio2d/index.js",
+        "bytes": 4440,
+        "sha256": "838c90cc71d2ffb89a205eb47d280721bd36e3bfd8b3f7467f31668359d50034"
+      },
+      {
+        "path": "modules/demo-scene/index.js",
+        "bytes": 7157,
+        "sha256": "73e87848591b20e3903b769f8742b7ed89562e2b487208bb8425a762973f51fa"
+      },
+      {
+        "path": "modules/demo-timeline/index.js",
+        "bytes": 1955,
+        "sha256": "00efc76a9698aaac0f26c3ae32314dd7fd2c683a3f9e2d25108c8f9932d52229"
+      },
+      {
+        "path": "modules/frame-gate/index.js",
+        "bytes": 2723,
+        "sha256": "a64422e3f5a887effcbcf67581836e58c590dcb5737d2522939d1e3ff8aaa5ed"
+      },
+      {
+        "path": "modules/math/index.js",
+        "bytes": 3042,
+        "sha256": "4f4ebf0786b97342c11004b8830a535890b16693458a0436edb1fc581a411da7"
+      },
+      {
+        "path": "modules/mod-demo/index.js",
+        "bytes": 8848,
+        "sha256": "7c1a50d09487aeb150ccbb6b566975549ce736526d4ca684d98ca6251830bbe9"
+      },
+      {
+        "path": "modules/mod-sdk/index.js",
+        "bytes": 8308,
+        "sha256": "1b8e11d442d77365e4ec79ace6736855dcb8b7946edabbf0123168f790f52b64"
+      },
+      {
+        "path": "modules/render-webgl/index.js",
+        "bytes": 7559,
+        "sha256": "b23b2c427d3bf8b29c991e3cf676bcda13bdffa9dae88bbb9f0f4594088aba2d"
+      },
+      {
+        "path": "modules/soundtrack/index.js",
+        "bytes": 3285,
+        "sha256": "dd0760175923e4c55d85c19fb441b31890bc1bf6c138965f301cfbbb1eddaaee"
+      },
+      {
+        "path": "NOTICE",
+        "bytes": 15487,
+        "sha256": "3e00b198d9b7e8cf9aba1b6095caf815dd276bd7cff6c3e517927bf690c2c302"
+      },
+      {
+        "path": "project.demoscene.json",
+        "bytes": 6215,
+        "sha256": "d2a003bed78e9c4e1994fd9de13752da0fbaf7c427e857588a45fbc5dac6ec20"
+      },
+      {
+        "path": "score.json",
+        "bytes": 62221,
+        "sha256": "72932ec52202f8604a581118d0d6a6e8f34a097ad47540e021af9a2fdab59f67"
+      }
+    ],
+    "totalUncompressedBytes": 212945,
+    "containerBytes": 213888,
+    "gzip9Bytes": 57282,
+    "brotli11Bytes": 45635,
+    "compression": "Sorted paths, u32LE path-byte length + u32LE data-byte length + UTF-8 path + raw bytes per file. gzip level 9; Brotli quality 11. Measured sizes are not executable competition entries.",
+    "challenge64K": {
+      "limit": 65536,
+      "submittedSelfContainedExecutable": false,
+      "claim": "not claimed; compressed container needs an unpacker and HTTP serving"
+    },
+    "challenge4K": {
+      "limit": 4096,
+      "status": "future research"
+    },
+    "compactDescription": {
+      "bytes": 6215,
+      "profile": "inert project only; runtime excluded here and counted above"
+    }
+  }
+}

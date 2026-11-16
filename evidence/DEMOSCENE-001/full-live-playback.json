@@ -1,0 +1,28 @@
+{
+  "kind": "demoscene-full-live-playback",
+  "elapsedMilliseconds": 66043,
+  "snapshot": {
+    "sample": 2880000,
+    "playing": false,
+    "starts": 1,
+    "stops": 0,
+    "quality": "standard",
+    "frame": {
+      "sample": 2880000,
+      "frame": 2999,
+      "act": 4,
+      "local": 576000,
+      "progress": 1,
+      "seconds": 60,
+      "ended": true
+    }
+  },
+  "sourceReleased": true,
+  "counts": {
+    "triangles": 0,
+    "lines": 0,
+    "points": 0
+  },
+  "contextRate": 48000,
+  "errors": []
+}
