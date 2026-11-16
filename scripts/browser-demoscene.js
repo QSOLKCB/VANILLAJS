@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {machineRemembers} from '../demos/demoscene-lab/preset.js';
+import {verifyDemosceneWorkbench} from './browser-demoscene-workbench.js';
 import {checkDemosceneUpgrade} from './demoscene-upgrade-check.mjs';
 import {createServer} from 'node:http';
 import {portableDemo} from './demoscene-package.mjs';
@@ -37,12 +38,7 @@ export async function verifyDemoscene(browser,base){
     await seek(864000);await page.locator('#toggle').click();await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true})));assert.equal(await page.evaluate(()=>__demoscene.snapshot().playing),false);
     await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})));await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Restored from browser history'));await seek(1440000);await page.waitForFunction(()=>document.querySelector('#act-name').textContent==='GEOMETRY UNLEASHED');await page.locator('#toggle').click();await page.waitForFunction(()=>__demoscene.snapshot().sample>1444800);await page.locator('#toggle').click();
     await page.setViewportSize({width:375,height:850});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile horizontal overflow');await page.screenshot({path:'browser-artifacts/demoscene-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1100});
-    // Real Workbench selection -> composition -> keyframe -> undo -> reimport.
-    await page.goto(base+'demos/editor/index.html#visual-fx');await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready');await page.locator('#fx-add').click();await page.waitForFunction(()=>JSON.parse(__editorDemoscene).manifest.entries.some(e=>e.id.startsWith('node-')));const captured=await page.evaluate(()=>__editorDemoscene);
-    await page.locator('#fx-effect').selectOption('radial');await page.locator('#fx-copies').fill('8');await page.locator('#fx-effect-apply').click();await page.locator('#fx-time').fill('18');await page.locator('#fx-key').click();await page.locator('#fx-preview-seek').click();assert.ok(!(await page.locator('#fx-status').textContent()).startsWith('Rejected'));await page.screenshot({path:'browser-artifacts/demoscene-workbench.png',fullPage:true});
-    await page.locator('#fx-time').fill('0.14');await page.locator('#fx-copies').fill('9');await page.locator('#fx-effect-apply').click();await page.waitForFunction(()=>document.querySelector('#fx-status').textContent==='Effect applied');assert.equal(await page.locator('#fx-node option').count(),1);
-    const acceptedFractional=await page.evaluate(()=>__editorDemoscene);await page.locator('#fx-time').fill('61');await page.locator('#fx-copies').fill('10');await page.locator('#fx-effect-apply').click();await page.waitForFunction(()=>document.querySelector('#fx-status').textContent.startsWith('Rejected'));assert.equal(await page.evaluate(()=>__editorDemoscene),acceptedFractional);await page.locator('#fx-time').fill('0.14');
-    const fx=await download('fx-export');await page.locator('#fx-undo').click();await page.locator('#fx-redo').click();assert.equal(await page.evaluate(()=>__editorDemoscene),fx.toString());await page.locator('#fx-import').setInputFiles({name:'fx.json',mimeType:'application/json',buffer:fx});assert.notEqual(fx.toString(),captured);
+    const fx=await verifyDemosceneWorkbench(page,base);
     await page.goto(base+'demos/demoscene-lab/index.html');await wait();await page.locator('#project-import').setInputFiles({name:'fx.json',mimeType:'application/json',buffer:fx});await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Validated project'));assert.equal(await page.evaluate(()=>__demoscene.snapshot().project),fx.toString());
     await page.goto(base+'demos/demoscene-lab/intro.html');await page.locator('#enabled').uncheck();await page.locator('#launch').click();await page.locator('#menu').waitFor({state:'visible'});await page.reload();await page.locator('#launch').click();await page.locator('#skip').click();await page.locator('#menu').waitFor({state:'visible'});
     await page.goto(base+'demos/demoscene-lab/index.html');await wait();

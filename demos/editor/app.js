@@ -821,7 +821,7 @@ campaignPanel=mount4XPanel($('fourx-workshop'),{
 Object.defineProperty(window,'__editor4x',{get:()=>campaignPanel.snapshot()});
 demoscenePanel=mountDemoscenePanel($('demoscene-workshop'),{
   getScene:()=>editScene(),getLibrary:()=>prunePlacements(editScene(),library),
-  getSelection:()=>selected,isPlaying:()=>playing
+  getSelection:()=>selected,isPlaying:()=>playing,stopScene:stop
 });
 Object.defineProperty(window,'__editorDemoscene',{get:()=>demoscenePanel.snapshot()});
 try{initGraphics();syncEditor();requestFrame();document.documentElement.dataset.editorReady='ready';}
