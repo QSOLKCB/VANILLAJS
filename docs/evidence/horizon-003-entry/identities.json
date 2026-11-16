@@ -1,0 +1,13 @@
+{
+  "source": "f064917ca3a104f9502a6bdced9e813f48e64693",
+  "previousPRHead": "f26cfa3fcf04010170b65a97e3b2e17fbf3ae3f1",
+  "files": 969,
+  "bytes": 6997660,
+  "manifestSHA256": "2d96f98ed3eb955da5b378cfd0cf6a2c939c3445dd1998fa8f7aec871ad06a47",
+  "workerSHA256": "93269b8cefc3c733919f019e74f95d96810595310621ce39e2148892130b06d0",
+  "canonicalHTMLSHA256": "d518675588b9748be2c2ec28d02b7d6e6a317c85b67a7715b34b10877582d734",
+  "aliasHTMLSHA256": "d518675588b9748be2c2ec28d02b7d6e6a317c85b67a7715b34b10877582d734",
+  "observedPublishedHTMLSHA256": "d61769455b29e0c21afb55122ae8531dd47f612fc56cfba65f54b83ee40f284b",
+  "allRuntimeJavaScriptUnchangedFromPreviousPRHead": true,
+  "trustedMainReceipt": false
+}
