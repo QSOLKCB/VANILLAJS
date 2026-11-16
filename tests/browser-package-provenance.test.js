@@ -34,6 +34,8 @@ async function fixture(){
     await put('demos/'+lab+'/index.html','<script type="module" src="./'+start+'"></script>\n');
     await put('demos/'+lab+'/'+start,'import "'+(start.startsWith('js/')?'../../../':'../../')+'modules/core/index.js";\n');
   }
+  await put('demos/horizon-lab/drive.html','<script type="module" src="./drive-start.js"></script>\n');
+  await put('demos/horizon-lab/drive-start.js',"import '../../modules/core/index.js';\n");
   for(const path of ['scripts/build.js','scripts/pursuit-package.mjs','scripts/browser-dependencies.mjs','scripts/browser-package-provenance.mjs','scripts/game-maker-runtime.mjs'])
     await put(path,await readFile(new URL('../'+path,import.meta.url)));
   const sourceRows=await Promise.all((await inventory(root)).map(async path=>row(path,await readFile(join(root,path)))));
@@ -47,15 +49,15 @@ async function fixture(){
   const {metadata,sources}=await packageProvenance({root,files});
   const inputs={runtime,shared:sources,tests:[],requirements:[],packageProvenance:metadata};
   const tree={truncated:false,tree:sourceRows.map(f=>({path:f.path,type:'blob',mode:'100644',sha:f.gitBlob}))};
-  const htmlSources=new Map(await Promise.all(metadata.packages.map(async p=>[p.html.path,await readFile(join(root,p.html.path))])));
+  const htmlSources=new Map(await Promise.all(metadata.packages.flatMap(p=>p.html).map(async html=>[html.path,await readFile(join(root,html.path))])));
   return {root,files,inputs,tree,htmlSources,receipt:{results:{editor:{inputs}}}};
 }
 
-test('known runtime copies and eleven exact entry rewrites bind to original Git source',async()=>{
+test('known runtime copies and twelve exact entry rewrites bind to original Git source',async()=>{
   const f=await fixture();
   try{
     assert.equal(sourceBoundToTree(f.receipt,f.tree,f.htmlSources),true);
-    assert.equal(provenanceHTMLRecords(f.receipt).length,11);
+    assert.equal(provenanceHTMLRecords(f.receipt).length,12);
     assert.equal(sourceBoundToTree(f.receipt,f.tree),false,'HTML bytes are required, not a claimed source hash');
     const entries=new Map(f.tree.tree.map(e=>[e.path,e.sha]));
     const mutate=[
@@ -66,7 +68,12 @@ test('known runtime copies and eleven exact entry rewrites bind to original Git 
       i=>{i.runtime.find(r=>r.path==='demos/editor/index.html').sha256=hash('forged HTML');},
       i=>{i.packageProvenance.packages[0].version='a'.repeat(64);},
       i=>{i.packageProvenance.generators.pop();},
-      i=>{i.packageProvenance.packages[0].html.sourcePath='README.md';},
+      i=>{i.packageProvenance.schema='qsol.browser.package-provenance.v1';},
+      i=>{i.packageProvenance.packages.at(-1).html.pop();},
+      i=>{i.packageProvenance.packages.at(-1).html[1].path='demos/horizon-lab/unknown.html';},
+      i=>{i.runtime.find(r=>r.path==='demos/horizon-lab/drive.html').sha256=hash('forged drive HTML');},
+      i=>{i.runtime=i.runtime.filter(r=>!r.path.includes('/runtime-')||!r.path.endsWith('/drive-start.js'));},
+      i=>{i.packageProvenance.packages[0].html[0].sourcePath='README.md';},
       i=>{i.shared=i.shared.filter(r=>r.path!=='scripts/build.js');},
       i=>{i.runtime.push({...i.runtime[0]});},
       i=>{i.runtime=i.runtime.filter(r=>!r.path.endsWith('/runtime-'+i.packageProvenance.packages[0].version+'/demos/editor/style.css'));}
@@ -83,7 +90,7 @@ test('known runtime copies and eleven exact entry rewrites bind to original Git 
 test('local provenance replay rejects forged HTML, copied code and unknown generated members',async()=>{
   const f=await fixture();
   try{
-    for(const path of ['demos/editor/index.html',f.files.find(r=>r.path.includes('/runtime-')&&r.path.endsWith('.js')).path]){
+    for(const path of ['demos/editor/index.html','demos/horizon-lab/drive.html',f.files.find(r=>r.path.includes('/runtime-')&&r.path.endsWith('.js')).path]){
       const original=await readFile(join(f.root,'dist',path));
       const forged=Buffer.concat([original,Buffer.from('\n/* forged */')]);
       await writeFile(join(f.root,'dist',path),forged);

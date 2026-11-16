@@ -27,7 +27,7 @@ separate decisions; no automatic tagging, publishing or deployment is authorised
 | v2.6.0 | **SPRITE-FEEL-001 — Game Feel & Sprite Foundry** | Published; owner merged PR #101 and released v2.6.0 |
 | v2.7.0 | **SCENE-NARRATIVE-001 — Scene & Narrative Foundry** | Published; owner merged PR #102 and released v2.7.0 |
 | v2.8.0 | **GAME-MAKER-001 — Game Maker API** | Published; owner merged PR #103 and released v2.8.0 |
-| v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | HORIZON-001 current candidate; HORIZON-002/003 follow separate owner review |
+| v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | HORIZON-001 merged; HORIZON-002 current candidate; HORIZON-003 follows review |
 
 [Detailed contracts, dependencies and acceptance gates](docs/ENGINE_EXPANSION_001.md)
 distinguish existing primitives from future APIs. Every milestone needs a
@@ -83,12 +83,13 @@ numerical proofs and historical evidence remain.
 
 ### v2.9.0 — HORIZON, three PRs
 
-1. **HORIZON-001 (current candidate):** optional compatible native rendering/materials, lit geometry,
+1. **HORIZON-001 (merged PR #105):** optional compatible native rendering/materials, lit geometry,
    procedural scenery, elevated/banked roads, original detailed vehicles, static
    batching and bounded low/high visual profiles. [Contracts and evidence](docs/HORIZON_001.md).
-2. **HORIZON-002:** world-space SI vehicle dynamics, torque/gears, driven wheels,
+2. **HORIZON-002 (current candidate):** world-space SI vehicle dynamics, torque/gears, driven wheels,
    steering/grip/slip, four-wheel contact, suspension, elevation/banking,
    jump/landing and collision recovery with independent numerical reference cases.
+   [Driving workflow and contracts](docs/HORIZON_002.md).
 3. **HORIZON-003:** Track/Vehicle Foundries, data validation and retained history,
    original engine/tyre sound, scenic playable showcase with rival, camera choices,
    checkpoints/finish, full lifecycle, polish and verified offline export.

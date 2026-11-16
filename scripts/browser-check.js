@@ -57,6 +57,8 @@ page.on('pageerror',e=>errors.push(e.message));
 try{
   // Check the new creator journey first so regressions fail before long labs.
   await runSuite('render','./browser-render-lit.js','checkRenderLit');
+  await runSuite('editor','./browser-horizon-drive.js','checkHorizonDrive');
+  await runSuite('editor','./foundry-startup-check.mjs','checkHorizonDriveStartup');
   await runSuite('editor','./browser-horizon.js','checkHorizon');
   await runSuite('editor','./foundry-startup-check.mjs','checkHorizonStartup');
   await runSuite('editor','./browser-game-maker-api.js','checkGameMakerAPI');

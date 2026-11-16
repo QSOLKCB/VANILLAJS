@@ -1,5 +1,9 @@
 # HORIZON-001 — Rendering, materials and environments
 
+This milestone record describes the candidate merged in
+[PR #105](https://github.com/QSOLKCB/VANILLAJS/pull/105). Its execution evidence
+is retained unchanged. Current vehicle work is tracked in [HORIZON-002](HORIZON_002.md).
+
 **Programme:** HORIZON v2.9.0, first of three separately reviewed implementation
 PRs. **Published baseline:** v2.8.0 at
 `f7cd8d6a61791128b12fd72f8c94b6481889d197`, merged PR #103.
