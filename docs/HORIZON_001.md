@@ -13,6 +13,12 @@ terrain, bridge/tunnel and roadside setting; tune light, fog and vehicle finish;
 preview wheel/steering/suspension visual inputs; export and reimport inert data.
 The camera tour is a presentation preview. It is not a vehicle simulation or race.
 
+The named Cape Aster route and seed are authored in
+[`demos/horizon-lab/scenery.js`](../demos/horizon-lab/scenery.js). The core accepts
+consumer-supplied scenery data; it contains no named starter world. The removed
+`starterScenery()` helper was part of this unreleased PR candidate only. Existing
+scenery/project formats and generated geometry remain compatible.
+
 | Public addition | Responsibility | Reference |
 | --- | --- | --- |
 | `render-lit` | Optional owned native WebGL1 lit meshes, materials, procedural texture patterns, atmosphere/fog and explicit resource budgets | [Rendering API](RENDER_LIT_API.md) |

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // The lab owns this inert authoring envelope. Renderer handles never enter it.
-import {starterScenery,validateScenery} from '../../modules/scenic3d/index.js';
+import {validateScenery} from '../../modules/scenic3d/index.js';
+import {createCapeAsterScenery} from './scenery.js';
 export const HORIZON_PROJECT_FORMAT='qsol.vanillajs.horizon-lab.v1';
 export const HORIZON_PROJECT_BYTES=32*1024;
 const PI=Math.PI;
@@ -27,4 +28,4 @@ export function validateHorizonProject(value){
 }
 export function parseHorizonProject(text){if(typeof text!=='string'||new TextEncoder().encode(text).length>HORIZON_PROJECT_BYTES)throw RangeError('HORIZON project exceeds 32 KiB');return validateHorizonProject(JSON.parse(text));}
 export function serializeHorizonProject(value){return JSON.stringify(validateHorizonProject(value));}
-export function starterHorizonProject(){return validateHorizonProject({format:HORIZON_PROJECT_FORMAT,version:1,name:'Aster Coast',scenery:starterScenery(),vehicle:{classId:'sport',paint:[216/255,79/255,52/255],roughness:.25,metalness:.7,steer:-12*PI/180,wheelSpin:0,compression:[.04,.04,.04,.04],pitch:0,roll:0,brake:0},lighting:{azimuth:-35*PI/180,elevation:35*PI/180,fogDensity:.004}});}
+export function starterHorizonProject(){return validateHorizonProject({format:HORIZON_PROJECT_FORMAT,version:1,name:'Aster Coast',scenery:createCapeAsterScenery(),vehicle:{classId:'sport',paint:[216/255,79/255,52/255],roughness:.25,metalness:.7,steer:-12*PI/180,wheelSpin:0,compression:[.04,.04,.04,.04],pitch:0,roll:0,brake:0},lighting:{azimuth:-35*PI/180,elevation:35*PI/180,fogDensity:.004}});}

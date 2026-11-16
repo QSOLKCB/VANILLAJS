@@ -15,11 +15,19 @@ steering convention when adapting a future vehicle.
 
 ```js
 import {
-  starterScenery, validateScenery, serializeScenery, parseScenery,
+  SCENIC_FORMAT, validateScenery, serializeScenery, parseScenery,
   buildScenicWorld
 } from './modules/scenic3d/index.js';
 
-const draft = structuredClone(starterScenery());
+// The consuming application authors its world and supplies it to the engine.
+const draft = {
+  format: SCENIC_FORMAT, version: 1, name: 'My road',
+  seed: 1, profile: 'high', environment: 'coast',
+  road: [0, 1, 2, 3].map(i => ({
+    id: 'section-' + i, x: 0, y: 2, z: -30 * i, width: 9,
+    bank: 0, structure: 'ground', surface: 'asphalt'
+  }))
+};
 draft.road[3].y = 19;
 draft.road[3].bank = 0.15;
 const accepted = validateScenery(draft); // new deeply frozen plain-data value
@@ -27,6 +35,13 @@ const world = buildScenicWorld(accepted);
 const json = serializeScenery(accepted);
 const restored = parseScenery(json);
 ```
+
+The authored Cape Aster name, seed, route and bridge/tunnel placements belong to
+[the HORIZON Lab recipe](../demos/horizon-lab/scenery.js). Its
+`createCapeAsterScenery()` helper is demo-owned, not a public engine API.
+The unreleased candidate's `starterScenery()` export has been removed; consumers
+supply their own recipe to the validation and geometry APIs. Existing recipe and
+Lab project data formats are unchanged.
 
 `qsol.vanillajs.scenic3d.v1` is a separate HORIZON recipe, not a migration or
 replacement for `qsol.vanillajs.track.v1`. Its exact fields are:
