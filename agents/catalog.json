@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "project": "QSOLKCB/VANILLAJS",
+  "moduleCatalogue": "MODULES.json",
+  "policy": [
+    "AGENTS.md",
+    "docs/AGENT_GUIDE.md",
+    "docs/ARCHITECTURE.md",
+    "docs/API.md"
+  ],
+  "validation": [
+    "node --test tests/*.test.js",
+    "node scripts/check.js",
+    "node scripts/build.js",
+    "node scripts/verify-offline.js",
+    "node scripts/validate-agent-catalog.mjs",
+    "node scripts/audit-docs.mjs",
+    "node scripts/browser-check.js"
+  ],
+  "workflows": [
+    {
+      "id": "first-scene",
+      "title": "Learn, edit, test and export a Workbench scene",
+      "entryPoints": [
+        "demos/tutorial-lab/index.html",
+        "demos/tutorial-lab/lesson.js",
+        "demos/editor/index.html"
+      ],
+      "modules": [
+        "collision",
+        "render-optional"
+      ],
+      "examples": [
+        "demos/tutorial-lab/index.html",
+        "demos/editor/index.html"
+      ],
+      "docs": [
+        "docs/CREATOR_QUICKSTART.md",
+        "docs/HOW_TO_EXPORT_A_GAME.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js --suites=editor"
+      ],
+      "limitations": [
+        "The project download is data, not a game.",
+        "The exporter packages the box preview, not arbitrary game code."
+      ],
+      "experimental": true
+    },
+    {
+      "id": "platformer",
+      "title": "Build an original 2D platformer",
+      "entryPoints": [
+        "demos/2d-lab/index.html",
+        "demos/2d-lab/world.js"
+      ],
+      "modules": [
+        "motion2d",
+        "collision",
+        "integer-math",
+        "audio2d"
+      ],
+      "examples": [
+        "demos/2d-lab/index.html",
+        "demos/arcade-combat-lab/index.html"
+      ],
+      "docs": [
+        "docs/2D_FOUNDATION.md",
+        "docs/HOW_TO_BUILD_A_GAME.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js --suites=worlds"
+      ],
+      "limitations": [
+        "Levels, scoring and progression remain game-owned."
+      ],
+      "experimental": true
+    },
+    {
+      "id": "offline-fps",
+      "title": "Create an offline FPS",
+      "entryPoints": [
+        "demos/block-arena-lab/index.html",
+        "demos/block-arena-lab/world.js"
+      ],
+      "modules": [
+        "character",
+        "collision",
+        "weapons",
+        "combat3d",
+        "mod-fps"
+      ],
+      "examples": [
+        "demos/block-arena-lab/index.html",
+        "demos/fps-lab/index.html"
+      ],
+      "docs": [
+        "docs/BUILD_YOUR_FIRST_BLOCKY_FPS.md",
+        "docs/FPS_FOUNDATION_001.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js --suites=play,worlds"
+      ],
+      "limitations": [
+        "FPS packs require a compatible runtime.",
+        "Workbench export is not an FPS compiler."
+      ],
+      "experimental": true
+    },
+    {
+      "id": "audiovisual",
+      "title": "Make a procedural audiovisual demo",
+      "entryPoints": [
+        "demos/demoscene-lab/index.html",
+        "demos/demoscene-lab/player.js"
+      ],
+      "modules": [
+        "demo-timeline",
+        "demo-scene",
+        "mod-demo",
+        "soundtrack"
+      ],
+      "examples": [
+        "demos/demoscene-lab/index.html"
+      ],
+      "docs": [
+        "docs/MAKE_YOUR_FIRST_DEMOSCENE_INTRO.md",
+        "docs/DEMOSCENE_001.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js --suites=worlds,editor"
+      ],
+      "limitations": [
+        "Composition data does not embed all scene or asset files."
+      ],
+      "experimental": true
+    },
+    {
+      "id": "data-mod",
+      "title": "Modify a data-only mod pack",
+      "entryPoints": [
+        "demos/circuit-mod-lab/index.html",
+        "modules/mod-course/index.js"
+      ],
+      "modules": [
+        "mod-sdk",
+        "mod-course",
+        "exact-circuit"
+      ],
+      "examples": [
+        "demos/circuit-mod-lab/index.html"
+      ],
+      "docs": [
+        "docs/HOW_TO_MOD_A_GAME.md",
+        "docs/MOD_SDK_002.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js --suites=research,editor"
+      ],
+      "limitations": [
+        "Adapters are format-specific; inert JSON never executes instructions."
+      ],
+      "experimental": true
+    },
+    {
+      "id": "games2-review",
+      "title": "Review a proposed reusable Games2 mechanism",
+      "entryPoints": [
+        "docs/GAMES2_INTEGRATION.md"
+      ],
+      "modules": [
+        "collision",
+        "flight",
+        "navigation"
+      ],
+      "examples": [
+        "demos/fps-lab/index.html",
+        "demos/rts-lab/index.html"
+      ],
+      "docs": [
+        "docs/GAMES2_INTEGRATION.md",
+        "docs/AGENT_GUIDE.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js"
+      ],
+      "limitations": [
+        "Read-only review; separate owner approval and PR required for promotion.",
+        "Audited Games2 contains concepts, not implemented games."
+      ],
+      "experimental": true
+    }
+  ],
+  "games2": {
+    "revision": "0329dd9b5a6ba8912b062696afdff6a3944619ab",
+    "readOnly": true,
+    "guide": "docs/GAMES2_INTEGRATION.md",
+    "reviewAfterCompletedGames": 3,
+    "promotion": "Separate owner approval and VANILLAJS PR; no automatic copying or coupling."
+  }
+}

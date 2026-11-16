@@ -36,7 +36,9 @@ locally after the verified offline installation. You own the exported data.
 7. **Start a separate game project.** Vendor the required public module closure
    from an owner-reviewed immutable VANILLAJS commit or published release that
    actually includes these APIs. v2.2.0 does not include `combat3d`/`mod-fps`;
-   v2.3.0 is proposed, not published by this PR. Record the commit and SHA-256
+   v2.3.0 introduced them. The reviewed published baseline is
+   [v2.4.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.4.0), commit
+   `128d7c924513f7d8ac08e2e11cc6832c5b7082fb`. Record the commit and SHA-256
    file identities; retain LICENSE and NOTICE. Never load mutable main or a CDN
    at runtime. Preserve the relative `modules/` and `api/` paths in your vendor
    snapshot. Your game supplies its world, bots, match rules, UI and progression.
@@ -80,5 +82,7 @@ upgrade. The existing Visual Workbench exporter produces a scene preview; it
 does not generate an arbitrary FPS game from this JSON.
 
 See [schema, limits and numerical contracts](FPS_FOUNDATION_001.md). A future
-Games2 integration must use a new `/strikepixel/` directory and preserve every
-existing game and catalogue entry. This PR leaves Games2 unchanged.
+Games2 game belongs in its own directory and separately reviewed PR, preserving
+existing games and catalogue entries. [The integration register](GAMES2_INTEGRATION.md)
+tracks proposals, including Strike Pixel, without allocating a game directory or
+authorising changes to Games2.

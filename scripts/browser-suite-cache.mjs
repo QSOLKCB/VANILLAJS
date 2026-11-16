@@ -5,6 +5,9 @@ import {resolve,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {hash,gitBlob,identity,closures,jsDependencies,resolveLocal} from './browser-dependencies.mjs';
+import {encodeReceipt} from './browser-receipt-codec.mjs';
+import {applyLiveProfile,LIVE_PROFILE} from './browser-cache-profile.mjs';
+import {packageProvenance} from './browser-package-provenance.mjs';
 import {RECEIPT_KIND,producerAllowed,loadMainExecutions,decide,changedInputs} from './browser-receipt-authority.mjs';
 const ROOT=resolve(import.meta.dirname,'..');
 export const SUITES=Object.freeze(['home','render','play','worlds','research','donor','editor']);
@@ -20,7 +23,7 @@ async function inventory(dir,prefix=''){
   }return result.sort();
 }
 export async function profileInputs({environment}={}){
-  const policy=JSON.parse(await readFile(policyPath,'utf8'));
+  const policy=applyLiveProfile(await readFile(policyPath,'utf8'),JSON.parse(await read(LIVE_PROFILE)));
   if(Object.keys(policy.suites).join(',')!==SUITES.join(',')||policy.qualification!==3||!policy.auditedRuntime)throw Error('invalid suite policy');
   const manifest=JSON.parse(await read('dist/manifest.json')),files=manifest.files,sources={},gitBlobs={};
   // Do not trust a stale manifest or omit newly introduced package members.
@@ -50,7 +53,9 @@ export async function profileInputs({environment}={}){
       const deps=jsDependencies(source),opaque=policy.opaqueHarness[path]??policy.opaqueRuntime[path];
       if(opaque&&hash(source)===opaque.sha256)roots.push(...opaque.roots);
       else issues.push(...deps.issues.map(x=>path+': '+x));
-      for(const spec of deps.imports){
+      const reviewed=opaque&&hash(source)===opaque.sha256;
+      for(const spec of reviewed&&opaque.imports?opaque.imports:deps.imports){
+        if(reviewed&&opaque.browserImports?.[spec]){roots.push(opaque.browserImports[spec]);continue;}
         if(spec.startsWith('node:'))continue;
         // Browser absolute dynamic imports are pinned explicit roots above.
         if(spec.startsWith('/VANILLAJS/')&&opaque&&hash(source)===opaque.sha256){roots.push(spec.slice(11));continue;}
@@ -65,9 +70,15 @@ export async function profileInputs({environment}={}){
     catch{env={node:process.version,platform:process.platform,arch:process.arch,unverified:true};extra.issues.push('pinned real browser preflight environment missing');}
     if(env.node!==process.version||env.platform!==process.platform||env.arch!==process.arch||env.imageVersion!==(process.env.ImageVersion??'local-untrusted'))extra.issues.push('preflight environment mismatch');
   }
-  return {files,sources,policy,extra,environment:env};
+  const provenance=await packageProvenance({root:ROOT,files});
+  for(const row of provenance.sources)if(!extra.shared.some(existing=>existing.path===row.path))extra.shared.push(row);
+  return {files,sources,policy,extra,environment:env,packageProvenance:provenance.metadata};
 }
-export async function sourceProfile(options){const inputs=await profileInputs(options);return {policy:inputs.policy,profiles:closures(inputs)};}
+export async function sourceProfile(options){
+  const inputs=await profileInputs(options),profiles=closures(inputs);
+  for(const profile of Object.values(profiles)){profile.inputs.packageProvenance=inputs.packageProvenance;profile.fingerprint=identity(profile.inputs);}
+  return {policy:inputs.policy,profiles};
+}
 export function executionReceipt({repository,ref,event,run,attempt,sha,workflow,authorityDigest},profiles,executed){
   if(!producerAllowed({repository,ref,event})||!/^\d+$/.test(run??'')||!/^\d+$/.test(attempt??'')||!/^[a-f0-9]{40}$/.test(sha??''))throw Error('untrusted execution producer');
   return {kind:RECEIPT_KIND,repository,ref,event,run,attempt,sha,workflow,authorityDigest,
@@ -100,7 +111,7 @@ async function execute(){
   // seed a future PASS, even if the current browser run happens to succeed.
   const eligible=stale.filter(g=>!profiles[g].issues.length);
   if(authority.ok&&producerAllowed(context)&&eligible.length){
-    const target=join(out,'execution.json');await writeFile(target+'.tmp',JSON.stringify(executionReceipt(context,profiles,eligible))+'\n',{mode:0o600});await rename(target+'.tmp',target);
+    const target=join(out,'execution.json');await writeFile(target+'.tmp',JSON.stringify(encodeReceipt(executionReceipt(context,profiles,eligible)))+'\n',{mode:0o600});await rename(target+'.tmp',target);
     if(process.env.GITHUB_ENV)await writeFile(process.env.GITHUB_ENV,'BROWSER_PUBLISH_EXECUTION=true\n',{flag:'a'});
   }
   const summary=['## CI-INVARIANT-001 browser decisions','',`Executed ${stale.length}; reused ${reused.length}. Authority: ${authority.reason}`,'',...SUITES.map(g=>`- ${g}: ${plan[g].reuse?'REUSED':'EXECUTED'} — ${plan[g].reason}`),'','Node, source, build, package, archival and preflight gates are never reused.',''];

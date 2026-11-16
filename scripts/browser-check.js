@@ -148,6 +148,7 @@ try{
   await runSuite('editor','./browser-editor.js','verifyEditor');
   await runSuite('editor','./browser-editor-4x.js','verifyEditor4X');
   await runSuite('editor','./browser-creator.js','checkCreator');
+  await runSuite('editor','./browser-tutorial.js','checkTutorial');
   await runSuite('donor','./browser-soundtrack.js','checkSoundtrack');
   await runSuite('donor','./browser-subhunt.js','checkSubHunt');
   if(needs('home')){
