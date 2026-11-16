@@ -1,0 +1,89 @@
+{
+  "format": "qsol.horizon-002.physics-observations.v1",
+  "runtime": {
+    "node": "v22.18.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "moduleSha256": "60e0bc1e11d44773af302ab8e76e8076aacd7b324461d2ea1f08ea86297797ad",
+  "consumerStepSeconds": 0.008333333333333333,
+  "internalStepSeconds": 0.004166666666666667,
+  "boundary": "Same-runtime Float64 model observations against independent analytic references; no browser, GPU, physical vehicle or hardware performance claim.",
+  "stopping": [
+    {
+      "surfaceFriction": 0.35,
+      "tyreGrip": 1,
+      "startSpeedMps": 20,
+      "stopThresholdMps": 0.08,
+      "residualSpeedMps": 0.05708749999952056,
+      "durationSeconds": 5.808333333333334,
+      "distanceMetres": 58.207577213539615,
+      "constantFrictionReferenceMetres": 58.2495995340032,
+      "relativeDifference": -0.0007214181865586375
+    },
+    {
+      "surfaceFriction": 1,
+      "tyreGrip": 1,
+      "startSpeedMps": 20,
+      "stopThresholdMps": 0.08,
+      "residualSpeedMps": 0.05300000000009408,
+      "durationSeconds": 2.033333333333333,
+      "distanceMetres": 20.345660416666757,
+      "constantFrictionReferenceMetres": 20.38735983690112,
+      "relativeDifference": -0.0020453565624954733
+    }
+  ],
+  "turn": {
+    "initialSpeedMps": 5,
+    "durationSeconds": 2,
+    "steerControl": 0.25,
+    "steerRadians": 0.12,
+    "endingSpeedMps": 4.939068071885641,
+    "yawRateRadiansPerSecond": -0.22422868429331425,
+    "worldPositionMetres": [
+      2.3871859893431453,
+      0.7034411764705882,
+      -9.54025121744339
+    ],
+    "dynamicRadiusMetres": 22.026923484173107,
+    "bicycleReferenceMetres": 21.728432587157673,
+    "relativeDifference": 0.01373734142203396
+  },
+  "support": {
+    "durationSeconds": 5,
+    "massKg": 1200,
+    "staticReferenceCOMMetres": 0.7034411764705882,
+    "observedCOMMetres": 0.7034411764706062,
+    "heightErrorMetres": 1.7985612998927536e-14,
+    "verticalVelocityMps": -4.014715811137068e-13,
+    "weightNewtons": 11772,
+    "supportNewtons": 11772.00000000293,
+    "supportErrorNewtons": 2.9303919291123748e-9,
+    "cornerLoadsNewtons": [
+      2943.0000000007326,
+      2943.0000000007326,
+      2943.0000000007326,
+      2943.0000000007326
+    ],
+    "cornerCompressionsMetres": [
+      0.08655882352939381,
+      0.08655882352939381,
+      0.08655882352939381,
+      0.08655882352939381
+    ]
+  },
+  "ballistic": {
+    "durationSeconds": 0.5,
+    "initialHeightMetres": 20,
+    "initialVerticalVelocityMps": 4,
+    "analyticHeightMetres": 20.77375,
+    "observedHeightMetres": 20.763531250000003,
+    "heightErrorMetres": -0.01021874999999639,
+    "semiImplicitHeightErrorPredictionMetres": -0.01021875,
+    "analyticVelocityMps": -0.9050000000000002,
+    "observedVelocityMps": -0.9049999999999887,
+    "velocityErrorMps": 1.1546319456101628e-14,
+    "horizontalDistanceMetres": -5.999999999999987,
+    "groundedWheels": 0
+  }
+}

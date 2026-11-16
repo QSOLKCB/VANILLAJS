@@ -1,0 +1,59 @@
+{
+  "candidate": "08f1d47dd71eac1f3547cbfdd319a4b1f67fc564",
+  "base": "69dd325243633f66844a5ef85d87ab24e8677a63",
+  "runtimeCandidate": "977130ae59ad315eafd18caa8e377ed34ca3b18b",
+  "candidateDifference": "Only two synthetic capsule fixture entries added after runtime freeze.",
+  "environment": {
+    "node": "v22.18.0",
+    "platform": "linux",
+    "arch": "x64",
+    "unverified": true
+  },
+  "package": {
+    "files": 934,
+    "bytes": 6373370,
+    "manifestSha256": "5fe63dd0a025fe2360f297d0c7b88d81f757c68ae7529e5ce4869f9b25bc57d5",
+    "workerSha256": "00779a9fc27f79430cda3fe8c29c0b1b06a3c640abfd3f2d9761c6cb594c53c2"
+  },
+  "preservation": {
+    "existingFilesCompared": 316,
+    "changed": []
+  },
+  "sourceChecks": {
+    "home": {
+      "fingerprint": "6f0ccd6611e2ce54a7e9cf719d02f0987a32b29d204a3c3049c7e3593e162bd0",
+      "issues": [],
+      "runtimeMembers": 934
+    },
+    "render": {
+      "fingerprint": "2f6611a60fba52846d934563e0f12a465a0c64a4c75494ea48ed09ceb1b3818b",
+      "issues": [],
+      "runtimeMembers": 934
+    },
+    "play": {
+      "fingerprint": "75cdcaeebc7fccbb8c3ca11ad3d65e7276b00a7540f1143b62ae06385c76ddcc",
+      "issues": [],
+      "runtimeMembers": 934
+    },
+    "worlds": {
+      "fingerprint": "caeb29ba9f7b01f12b3b35721d5819ec06ee3575441a1e7f934f70547c933ead",
+      "issues": [],
+      "runtimeMembers": 934
+    },
+    "research": {
+      "fingerprint": "13d427fcd4b99a64d7666e0473c076fad58ee60cbc13dedd0d17f4a36b237bfb",
+      "issues": [],
+      "runtimeMembers": 934
+    },
+    "donor": {
+      "fingerprint": "3a5692b6577cb64cd00eed9d9f0490cd79599417e4df1908d6f48566a3f7b923",
+      "issues": [],
+      "runtimeMembers": 934
+    },
+    "editor": {
+      "fingerprint": "2cd36c3d118b3148186c43b770fdf07c1fa0e43589ab298a8604f6fc35bb7e9c",
+      "issues": [],
+      "runtimeMembers": 934
+    }
+  }
+}
