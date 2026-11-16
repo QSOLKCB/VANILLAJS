@@ -1,0 +1,91 @@
+{
+  "scope": "Packaged native headless Chromium; simulation assertions independent of pixels. No physical GPU/controller/mobile claim.",
+  "initialGraphics": {
+    "frames": 1,
+    "frameDraws": 17,
+    "totalDraws": 17,
+    "uploads": 17,
+    "skippedIdentical": 0,
+    "vertices": 22662,
+    "bytes": 997128,
+    "meshes": 17,
+    "profile": "high",
+    "lost": false,
+    "disposed": false
+  },
+  "support": {
+    "supportTriangles": 6370,
+    "supportBuckets": 841,
+    "unsupportedSteepFaces": 0,
+    "barriers": 4
+  },
+  "driven": {
+    "position": [
+      0.4944969819638651,
+      4.703441176470588,
+      -15.356555918136978
+    ],
+    "velocity": [
+      2.5318006660615495,
+      9.210463907904943e-16,
+      -7.080458820892302
+    ],
+    "orientation": [
+      -0.00026642680428276224,
+      -0.14596498657869564,
+      0.02776089471454177,
+      0.9889001387574418
+    ],
+    "graphics": {
+      "frames": 95,
+      "frameDraws": 17,
+      "totalDraws": 1615,
+      "uploads": 17,
+      "skippedIdentical": 0,
+      "vertices": 22662,
+      "bytes": 997128,
+      "meshes": 17,
+      "profile": "high",
+      "lost": false,
+      "disposed": false
+    }
+  },
+  "accelerationComparison": {
+    "original": 5.837096584826784,
+    "halfTorque": 2.5031376686708144,
+    "units": "m/s after at least 180 actual 120Hz ticks"
+  },
+  "jump": {
+    "airborne": [
+      -3.9202856051100516e-16,
+      12.975244911330448,
+      -56.35152985395936
+    ],
+    "landed": [
+      -1.0634041100639172e-15,
+      4.726869498277089,
+      -94.03931605516907
+    ]
+  },
+  "lowGraphics": {
+    "frames": 1,
+    "frameDraws": 25,
+    "totalDraws": 25,
+    "uploads": 25,
+    "skippedIdentical": 0,
+    "vertices": 32136,
+    "bytes": 1413984,
+    "meshes": 25,
+    "profile": "low",
+    "lost": false,
+    "disposed": false
+  },
+  "offline": {
+    "fromServiceWorker": true,
+    "position": [
+      4.0720321294380633e-17,
+      4.703441176470588,
+      -8.598761027580846
+    ]
+  }
+}

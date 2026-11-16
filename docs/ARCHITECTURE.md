@@ -366,6 +366,22 @@ accepted history, context recovery and disposal.
 
 Existing Track Foundry `qsol.vanillajs.track.v1`, Workbench formats, Game Maker,
 scene/narrative and Mod SDK formats retain their contracts. New HORIZON recipe
-and project data do not migrate or execute older projects. A later dynamics
-adapter must use the reviewed road geometry/surface contract and independently
-verify world-space motion. See [HORIZON-001](HORIZON_001.md).
+and project data do not migrate or execute older projects. See
+[HORIZON-001](HORIZON_001.md).
+
+## HORIZON-002 vehicle dynamics boundary
+
+`vehicle3d` is a pure, separately versioned fixed-step vehicle model. It consumes
+explicit controls and trusted surface/barrier queries, returning new authoritative
+state. It composes existing vector/quaternion maths and continuous AABB collision
+queries; `road-arcade` keeps its existing road-local handling contract.
+
+The driving lab maps rendered triangles to contact surfaces and labels their
+friction. Its named courses, renderer, camera, keyboard/touch handling and recovery
+locations stay outside the engine. Vehicle JSON supplies bounded parameters, never
+callbacks, shaders, modules or game instructions. Rendering consumes simulation
+state and cannot feed cosmetic camera or wheel animation back into tyre forces.
+
+Read [the dynamics contract](VEHICLE3D_API.md) for coordinate frames, contact
+limits, timestep identity and approximations. The [driving experiment](HORIZON_002.md)
+is independently tested numerically and in packaged Chromium.

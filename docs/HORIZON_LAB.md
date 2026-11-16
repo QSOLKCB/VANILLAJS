@@ -113,3 +113,12 @@ Racing Creator Tools and playable polished showcase. Games2 adoption is separate
 [Creator Hub](../demos/creator-hub/index.html) ·
 [Existing Track Foundry](RACING_002B.md) ·
 [Engine programme](ENGINE_EXPANSION_001.md)
+
+## Continue into vehicle dynamics
+
+This visual workshop keeps its original project format. The separate
+[HORIZON Driving experiment](../demos/horizon-lab/drive.html) consumes the new
+`vehicle3d` module and provides real world-space steering, suspension and gearing.
+Follow [Tune and test a vehicle](HORIZON_DRIVING.md). A visual camera tour and
+manual wheel pose here remain presentation previews; driving exports a separate
+vehicle sidecar, not a replacement scene format or a complete racing game.

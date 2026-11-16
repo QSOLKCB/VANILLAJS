@@ -1,0 +1,29 @@
+Skyguard PASS: briefing, ship manual, default Cadet and keyboard deployment
+Skyguard PASS: absolute pointer, keyboard aiming, toolbar Space, reload and heat
+Skyguard PASS: focus, repeated held keys and history restore require explicit resume
+Skyguard PASS: native fullscreen, denied fullscreen, windowed mode and four fitted sizes
+Skyguard PASS: cannon: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: flak: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: missile: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: charged rail cancellation and independent touch pointers never discharge on cancel
+Skyguard PASS: rail: clear an air raid through actual aim/fire handlers and select a persistent refit
+Skyguard PASS: controller neutral interlock, disconnect, loss and restart
+Skyguard PASS: all four complete naval WAV exports match pure synthesis
+Skyguard PASS: offline reload uses the complete lab and its shared native module graph
+Skyguard PASS: audio device failure preserves combat and saved music preference
+Skyguard upgrade: legacy cached API retained, launch/firing/audio and visible module-failure recovery PASS
+Skyguard PASS: previous offline API and failed import recover without a dead launch button
+Pursuit Lab: controls, pause/repeat cancellation, native/fallback fullscreen, four fitted sizes, touch, gamepad, WAV/replay and offline PASS
+Pursuit upgrade: legacy cached API retained, launch/driving/audio and visible module-failure recovery PASS
+Chromium Touchline: management, live commands, partial replay, abandoned match, full round, save/reload, mod validation, mobile, offline and quota-failure export passed.
+OMI Lab: exact word vectors, invalid edits, bits, face fault/common-mask limits, all 65,536 states, minimal periods, fixed-point step count, atlas pointer/keyboard, fresh press, pause/blur/hidden/reset, Canvas failure and 390 px touch-emulated layout passed.
+Brass Engine: visible SVG, eight staged detents, exact words, reverse, short periods, fixed point, motor pause, fractional JSON download/restore, malformed replay rejection, keyboard repeat/late pointer cancellation, blur/hidden, counter limit, reduced motion and 390/320 px touch-emulated layouts passed.
+ALIEN Course Foundry: actual browser module, Q16 output, multi-gate sweep, bad data rejection, rounding and 320px viewport passed.
+MOD-SDK-002 Circuit Foundry: packaged v2 course, exact gate, ordered sweep, reject/restore, 320px and Canvas fallback passed.
+Graph Lab: exact polynomial, cospectral distinction, traversal/relabel/D4 controls, empty/disconnected cases, Canvas fallback and 320px layout passed.
+QGAME-MATH-001: packaged desktop/mobile, 320/390px, keyboard, exact events, PCM download, imports, pause, graphics/audio fallbacks and offline replay passed.
+Distinct CPU labs: sculpture presets/budgets/parity/idle, flight gates, docking, shots, orbit trail, fresh inputs, 320px/Canvas failure and editor exports PASS
+Chromium donor labs: real ticks, clock scaling, both modes, mobile layout and verified offline navigation passed.
+Soundtrack Lab: real controls, PCM/WAV and score export, strict imports, audio stop/focus handling, mobile layout and offline rendering passed.
+SubHunt: native modules, both roles, Pond race, difficulty, raw controller calibration/reconnect, PCM hash, pause/mute, mobile, offline, eight recovery cases and preference persistence passed.
+Browser verification finished for suites: research,donor

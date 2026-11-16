@@ -1,0 +1,14 @@
+{
+  "node": "v22.18.0",
+  "playwright": "1.64.0",
+  "chromium": "Google Chrome for Testing 158.0.8127.18",
+  "platform": "linux",
+  "arch": "x64",
+  "renderer": "ANGLE SwiftShader, native WebGL1",
+  "launchArgs": [
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader"
+  ],
+  "tooling": "Existing separately installed development tooling; no installation or owner hardware runner",
+  "authority": "Local execution only, not an authenticated main receipt"
+}

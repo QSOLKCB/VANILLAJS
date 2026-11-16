@@ -9,8 +9,11 @@ export async function packagePursuitRuntime(root){return packageLabRuntime(root,
 export async function packageLabRuntime(root,lab){
   const startups={'pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js','block-arena-lab':'start.js','demoscene-lab':'start.js','sprite-foundry':'start.js','weapon-feel-lab':'start.js','narrative-foundry':'start.js','game-maker-lab':'start.js','horizon-lab':'start.js'};
   if(!Object.hasOwn(startups,lab))throw Error('Unknown packaged lab');
-  const startup=startups[lab],base='demos/'+lab,entry=base+'/'+startup,htmlPath=base+'/index.html';
-  const files=new Map(),pending=[entry];let size=0;
+  const startup=startups[lab],base='demos/'+lab,entry=base+'/'+startup;
+  // The two HORIZON pages share one immutable dependency closure. This is an
+  // explicit allowlist, never discovery of arbitrary runnable HTML files.
+  const pages=[{html:base+'/index.html',startup},...(lab==='horizon-lab'?[{html:base+'/drive.html',startup:'drive-start.js'}]:[])];
+  const files=new Map(),pending=pages.map(page=>base+'/'+page.startup);let size=0;
   while(pending.length){
     const path=pending.pop();if(files.has(path))continue;
     if(!new RegExp('^(?:api|modules|demos/'+lab+')/[a-zA-Z0-9_./-]+\\.js$').test(path)||path.split('/').includes('..'))throw Error('Unsupported lab dependency: '+path);
@@ -22,12 +25,16 @@ export async function packageLabRuntime(root,lab){
   }
   const rows=[...files].map(([path,bytes])=>({path,sha256:hash(bytes)})).sort((a,b)=>a.path.localeCompare(b.path));
   const version=hash(JSON.stringify(rows)),prefix=base+'/runtime-'+version;
-  const html=await readFile(join(root,htmlPath),'utf8'),marker=`src="./${startup}"`;
-  if(html.split(marker).length!==2)throw Error('Expected one lab startup entry');
+  const rewrites=[];
+  for(const page of pages){
+    const html=await readFile(join(root,page.html),'utf8'),marker=`src="./${page.startup}"`;
+    if(html.split(marker).length!==2)throw Error('Expected one lab startup entry: '+page.html);
+    rewrites.push({path:page.html,html:html.replace(marker,`src="./runtime-${version}/${base}/${page.startup}"`)});
+  }
   for(const [path,bytes] of files){
     const target=join(root,prefix,path);await mkdir(dirname(target),{recursive:true});await writeFile(target,bytes);
   }
-  await writeFile(join(root,htmlPath),html.replace(marker,`src="./runtime-${version}/${entry}"`));
+  for(const page of rewrites)await writeFile(join(root,page.path),page.html);
   return {entry:prefix+'/'+entry,version,files:rows};
 }
 

@@ -155,3 +155,19 @@ importer invalidates its audit and requires review before reuse.
 See [Creator Gateway execution evidence](CREATOR_GATEWAY_VERIFICATION.md) for what
 was actually run during this change. No physical RTX, controller or mobile-device
 coverage follows from headless Chromium or a reused receipt.
+
+## Multiple entry pages in one runtime package
+
+HORIZON-002 explicitly packages `horizon-lab/index.html` and `drive.html` into one
+content-derived native-module namespace. Both startup closures contribute to the
+namespace digest. Only these named pages receive the rewrite; arbitrary HTML is
+not discovered or trusted automatically.
+
+Package-source metadata is now `qsol.browser.package-provenance.v2`: each package
+contains an ordered `html` array of original Git-bound page records. Authentication
+reconstructs every entry rewrite and checks all copied module bytes. Missing,
+forged, duplicated or extra pages fail closed. v1 metadata cannot prove the new
+two-page package and therefore causes execution, not reuse. This tooling-only
+schema change does not migrate game/project formats or alter historical receipts.
+The reviewed-main authority, one-execution qualification, manual override and
+frozen base policy remain unchanged.

@@ -8,18 +8,19 @@ The programme originally began at `433f8c87a74ed145a612510ee388a7aacc1280f6`,
 after v2.5.0 (`32b4fb1ca80e854297998aa00f87a8f012398b89`, 62 modules/43 recipes).
 Historical package/catalogue `1.0.0` metadata is not a release counter.
 
-The current PR implements **HORIZON-001**, the first of three independently
-reviewed v2.9.0 changes. [Contracts and evidence](HORIZON_001.md) describe its
-lit rendering, procedural scenery and visual authoring surface. HORIZON-002
-vehicle dynamics and HORIZON-003 complete racing creator tools/showcase remain
-**proposals, not available APIs**. v2.9.0 is not release-ready after this first PR.
+HORIZON-001 was merged in [PR #105](https://github.com/QSOLKCB/VANILLAJS/pull/105).
+**Reviewed main for HORIZON-002:** `69dd325243633f66844a5ef85d87ab24e8677a63`.
+The current PR implements **HORIZON-002**, the second independently reviewed
+v2.9.0 change. [Vehicle contracts and evidence](HORIZON_002.md) cover its dynamics
+and drivable tuning experiment. HORIZON-003 complete racing creator tools/showcase
+remains **proposed, not available**. v2.9.0 is not release-ready after this PR.
 
 | Release | Milestone | Dependency and review gate |
 | --- | --- | --- |
 | v2.6.0 | SPRITE-FEEL-001 — Game Feel & Sprite Foundry | Published after owner review, PR #101 merge and release |
 | v2.7.0 | SCENE-NARRATIVE-001 — Scene & Narrative Foundry | Published after owner review, PR #102 merge and release |
 | v2.8.0 | GAME-MAKER-001 — Game Maker API | Published after owner review, PR #103 merge and release |
-| v2.9.0 | HORIZON-3D-001 — 3D Racing Foundry | HORIZON-001 current candidate; HORIZON-002/003 await separate review |
+| v2.9.0 | HORIZON-3D-001 — 3D Racing Foundry | HORIZON-001 merged; HORIZON-002 candidate; HORIZON-003 awaits review |
 
 Games2 is a future consumer and remains unmodified throughout this programme.
 The owner decides when another game begins. No automatic code copying, mutable
@@ -187,7 +188,7 @@ release's actual behavior from the HORIZON programme.
 HORIZON is **three separately reviewed implementation PRs**. The complete
 milestone must pass review before v2.9.0 publication.
 
-### HORIZON-001 — Rendering, materials and environments (current candidate)
+### HORIZON-001 — Rendering, materials and environments (merged PR #105)
 
 [Implemented contracts and execution record](HORIZON_001.md). The following
 requirements define this first PR; later physics and racing gates remain separate.
@@ -211,7 +212,7 @@ compression, body pitch/roll, brake lights and paint/material options. Visual
 rig state consumes simulation output and cannot feed cosmetic motion back into it.
 Imported geometry must obey reviewed asset limits and source/licence obligations.
 
-### HORIZON-002 — Vehicle dynamics and simulation
+### HORIZON-002 — Vehicle dynamics and simulation (current candidate)
 
 Keep `road-arcade` unchanged for current consumers. A separately versioned
 world-space vehicle contract uses SI mass/inertia approximations, pose/velocity,

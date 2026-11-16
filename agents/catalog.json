@@ -55,17 +55,23 @@
     },
     {
       "id": "horizon",
-      "title": "Author lit 3D scenery and vehicle visuals",
+      "title": "Author lit scenery and tune world-space vehicle dynamics",
       "entryPoints": [
         "demos/horizon-lab/index.html",
         "modules/render-lit/index.js",
-        "modules/scenic3d/index.js"
+        "modules/scenic3d/index.js",
+        "demos/horizon-lab/drive.html",
+        "modules/vehicle3d/index.js",
+        "demos/horizon-lab/drive-world.js"
       ],
       "modules": [
         "render-lit",
         "scenic3d",
         "math",
-        "terrain"
+        "terrain",
+        "vehicle3d",
+        "collision",
+        "time"
       ],
       "examples": [
         "demos/horizon-lab/index.html"
@@ -74,7 +80,10 @@
         "docs/HORIZON_001.md",
         "docs/HORIZON_LAB.md",
         "docs/RENDER_LIT_API.md",
-        "docs/SCENIC3D_API.md"
+        "docs/SCENIC3D_API.md",
+        "docs/HORIZON_002.md",
+        "docs/VEHICLE3D_API.md",
+        "docs/HORIZON_DRIVING.md"
       ],
       "validation": [
         "node --test tests/*.test.js",
@@ -86,11 +95,13 @@
         "node scripts/browser-check.js"
       ],
       "limitations": [
-        "HORIZON-001 implements rendering/environment/vehicle visuals; vehicle dynamics and the complete racing showcase remain separate HORIZON-002/003 work.",
+        "HORIZON-001 rendering is merged; HORIZON-002 vehicle dynamics is this candidate. HORIZON-003 complete racing tools/showcase remains proposed.",
         "Scenery/project exports are inert data, not complete runnable games or a migration of qsol.vanillajs.track.v1.",
         "Road surface samples refer to rendered triangles and explicit surface IDs; terrain alone cannot describe bridges/tunnels.",
         "Glass uses a documented approximate material; contact patches are not general scene shadows or photorealism.",
-        "GPU pixel output and Float64/Float32 geometry are separate from exact numerical proof contracts."
+        "GPU pixel output and Float64/Float32 geometry are separate from exact numerical proof contracts.",
+        "Vehicle dynamics uses a bounded approximate rigid-body and tyre model; trusted game code supplies surface queries and static barriers. Imported vehicle data cannot select callbacks.",
+        "Vehicle sidecars do not include a world, executable rules or a complete game. Keep lab-authored routes and surface adapters outside the core."
       ],
       "experimental": true
     },

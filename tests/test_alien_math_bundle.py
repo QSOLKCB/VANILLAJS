@@ -66,6 +66,8 @@ class CapsuleTests(unittest.TestCase):
             'demos/narrative-foundry/start.js': 'export const fixture=true;\n',
             'demos/horizon-lab/index.html': '<script type="module" src="./start.js"></script>',
             'demos/horizon-lab/start.js': 'export const fixture=true;\n',
+            'demos/horizon-lab/drive.html': '<script type="module" src="./drive-start.js"></script>',
+            'demos/horizon-lab/drive-start.js': 'export const drivingFixture=true;\n',
             'demos/game-maker-lab/index.html': '<script type="module" src="./start.js"></script>',
             'demos/game-maker-lab/start.js': 'export const fixture=true;\n',
             'demos/game-maker-lab/portable.js': 'export const fixture=true;\n',

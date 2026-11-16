@@ -32,5 +32,7 @@ format. [Understand the export](GAME_MAKER_EXPORT.md) before sharing your files.
 For 3D scenery and vehicle appearance, open
 [HORIZON Lab](../demos/horizon-lab/index.html) and its [tutorial](HORIZON_LAB.md).
 This first HORIZON workshop teaches lit environments, road shape and visual rigs.
-The existing [Racing Lab](../demos/racing-lab/index.html) remains the playable
-racing entry while new HORIZON vehicle dynamics and racing tools await review.
+Next, [HORIZON Driving](../demos/horizon-lab/drive.html) lets you drive and tune
+four-wheel dynamics: follow the [driving tutorial](HORIZON_DRIVING.md). The existing
+[Racing Lab](../demos/racing-lab/index.html) remains the complete arcade race;
+the final HORIZON racing showcase follows a separate review.

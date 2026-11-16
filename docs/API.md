@@ -866,7 +866,7 @@ claiming to compile arbitrary game scripts.
 
 ## HORIZON-001 optional rendering and scenery
 
-The candidate [render-lit API](RENDER_LIT_API.md) adds explicitly owned WebGL1
+The [render-lit API](RENDER_LIT_API.md) adds explicitly owned WebGL1
 meshes with normals/materials, procedural texture patterns, directional/ambient
 light, atmosphere/fog and bounded profiles. Existing `render-webgl.Renderer`
 callers are unchanged. Shader/material behavior is approximate and separate from
@@ -879,6 +879,15 @@ samples of the same road triangles used for rendering. Geometry uses metres,
 avoid conflating bridge decks with ground underneath them.
 
 [HORIZON Lab](HORIZON_LAB.md) consumes these APIs for actual visual authoring.
-Its project export is inert configuration, not a complete race. HORIZON-002
-vehicle dynamics and HORIZON-003 full racing creation remain separate proposals.
+Its project export is inert configuration, not a complete race. HORIZON-001
+is merged; the complete racing creation workflow remains HORIZON-003.
 [Compatibility and review gates](HORIZON_001.md).
+
+## HORIZON-002 vehicle dynamics
+
+The experimental [vehicle3d API](VEHICLE3D_API.md) adds strict versioned vehicle
+parameters, an explicit fixed-step world-space controller, four-wheel contact and
+suspension, torque/gearing, tyre friction, braking and swept barrier response.
+The caller supplies trusted surface queries and owns scheduling, inputs, rendering
+and game rules. The [driving tutorial](HORIZON_DRIVING.md) uses these contracts in
+a real tuning experiment. Existing road-arcade and track formats are unchanged.

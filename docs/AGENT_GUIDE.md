@@ -145,7 +145,7 @@ required checks and packaged browser interactions. Test the downloaded ZIP under
 a nested HTTP prefix and offline. Games2 adoption requires a separate owner-reviewed
 PR and immutable release provenance; never modify it during this engine milestone.
 
-## HORIZON environment and visual tasks
+## HORIZON scenery and vehicle dynamics tasks
 
 Use the `horizon` workflow in [the catalogue](../agents/catalog.json). Read
 [HORIZON-001](HORIZON_001.md), [render-lit](RENDER_LIT_API.md) and
@@ -160,13 +160,20 @@ GPU resources. Preserve triangle/render/contact alignment, surface identity,
 unit conventions and independent numerical tests. A single terrain height cannot
 represent both a bridge deck and the ground underneath it.
 
-This is HORIZON-001 only. Do not advertise a camera tour or visual rig as vehicle
-physics. Implement HORIZON-002 dynamics only in its separately authorised PR;
-HORIZON-003 racing tools/showcase/polish follow that review. Preserve current
+Merged HORIZON-001 provides the visual authoring workshop. For HORIZON-002,
+read [vehicle3d](VEHICLE3D_API.md) and [the driving tutorial](HORIZON_DRIVING.md).
+Reusable forces, suspension, gearing and bounded state transitions belong in
+`modules/vehicle3d/`. The lab owns its surface-query adapter, named test courses,
+input lifecycle, renderer bridge and recovery locations. Supply trusted callback
+code explicitly; a vehicle JSON file must never name executable code.
+HORIZON-003 racing tools/showcase/polish follow separate review. Preserve current
 Racing Lab and Track Foundry v1, all existing rendering callers and frozen
 verification evidence. Games2 remains unchanged and adoption remains separate.
 
-Run the new render/scenery/lab tests and required repository checks. Packaged
+Run the vehicle, independent reference, render/scenery/lab tests and required
+repository checks. Preserve positive-right steering and world -Z forward, explicit
+COM/visual-origin conversion, terrain/bridge separation and fixed-step input
+cadence. Verify force/traction/landing/collision behavior without the GPU. Packaged
 Chromium must exercise real material/geometry changes, rejected-import rollback,
 profile limits, context recovery, offline startup and retained rendering. Record
 exact source/package identities and actual inspected visuals; never translate

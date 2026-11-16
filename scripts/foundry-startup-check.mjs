@@ -9,6 +9,7 @@ import {resolve,extname,sep} from 'node:path';
 
 const labs=new Map([['sprite-foundry','sprite-foundry'],['weapon-feel-lab','weapon-feel'],['narrative-foundry','narrative-foundry'],['game-maker-lab','game-maker-lab'],['horizon-lab','horizon-lab']]);
 export const checkHorizonStartup=(browser,base)=>checkFoundryStartup(browser,base,'horizon-lab');
+export const checkHorizonDriveStartup=(browser,base)=>checkFoundryStartup(browser,base,'horizon-lab',true);
 export const checkGameMakerStartup=(browser,base)=>checkFoundryStartup(browser,base,'game-maker-lab');
 export const checkSpriteStartup=(browser,base)=>checkFoundryStartup(browser,base,'sprite-foundry');
 export const checkNarrativeStartup=(browser,base)=>checkFoundryStartup(browser,base,'narrative-foundry');
@@ -16,13 +17,15 @@ export const checkWeaponFeelStartup=(browser,base)=>checkFoundryStartup(browser,
 async function ready(page,value){
   await page.waitForFunction(expected=>document.documentElement.dataset.labReady===expected,value);
 }
-export async function checkFoundryStartup(browser,base,lab){
+export async function checkFoundryStartup(browser,base,lab,driving=false){
   assert.ok(labs.has(lab),'unknown foundry startup fixture');
-  const expected=labs.get(lab),failed=await browser.newContext({serviceWorkers:'block'});
+  assert.ok(!driving||lab==='horizon-lab','unknown driving startup fixture');
+  const entry=driving?'drive.html':'index.html',app=driving?'drive-app.js':'app.js';
+  const expected=driving?'horizon-drive':labs.get(lab),failed=await browser.newContext({serviceWorkers:'block'});
   try{
-    const page=await failed.newPage(),pattern='**/demos/'+lab+'/app.js';
+    const page=await failed.newPage(),pattern='**/demos/'+lab+'/'+app;
     await failed.route(pattern,route=>route.abort());
-    await page.goto(base+'demos/'+lab+'/index.html');
+    await page.goto(base+'demos/'+lab+'/'+entry);
     const reload=page.locator('#startup-reload');
     await reload.waitFor({state:'visible'});
     assert.ok(await reload.isEnabled(),'failed imports leave a usable recovery action');
@@ -35,8 +38,8 @@ export async function checkFoundryStartup(browser,base,lab){
   const old=new Map([
     ['index.html','<!doctype html><title>Older worker fixture</title><script type="module" src="./offline/register.js"></script>'],
     ['offline/register.js',await readFile(resolve(root,'offline/register.js'),'utf8')],
-    ['demos/'+lab+'/index.html','<!doctype html><p>Older foundry shell fixture</p>'],
-    ['demos/'+lab+'/app.js',poisoned],
+    ['demos/'+lab+'/'+entry,'<!doctype html><p>Older foundry shell fixture</p>'],
+    ['demos/'+lab+'/'+app,poisoned],
     ['modules/math/index.js',poisoned],
     ['modules/sprite2d/index.js',poisoned],
     ['modules/weapon-feel/index.js',poisoned],
@@ -45,6 +48,7 @@ export async function checkFoundryStartup(browser,base,lab){
     ['modules/tilemap/index.js',poisoned],
     ['modules/render-lit/index.js',poisoned],
     ['modules/scenic3d/index.js',poisoned],
+    ['modules/vehicle3d/index.js',poisoned],
     ['api/game-maker/index.js',poisoned]
   ]);
   const entries=[...old].map(([path,text])=>({path,bytes:Buffer.byteLength(text),
@@ -76,15 +80,15 @@ export async function checkFoundryStartup(browser,base,lab){
       })]);}finally{clearTimeout(timer);}
     });
     initial=false;
-    await page.goto(address+'demos/'+lab+'/index.html');
+    await page.goto(address+'demos/'+lab+'/'+entry);
     assert.match(await page.locator('body').textContent(),/Older foundry shell fixture/);
     // Fresh HTML references a complete content-derived module namespace, while
     // the previous unversioned cache deliberately continues serving bad modules.
-    await page.goto(address+'demos/'+lab+'/index.html?foundry=current');
+    await page.goto(address+'demos/'+lab+'/'+entry+'?foundry=current');
     await ready(page,expected);
-    assert.equal(await page.evaluate(url=>fetch(url).then(r=>r.text()),address+'demos/'+lab+'/app.js'),poisoned);
+    assert.equal(await page.evaluate(url=>fetch(url).then(r=>r.text()),address+'demos/'+lab+'/'+app),poisoned);
     assert.equal(await page.evaluate(url=>fetch(url).then(r=>r.text()),address+'modules/math/index.js'),poisoned);
     assert.deepEqual(errors,[]);
   }finally{await context.close();await new Promise(r=>server.close(r));}
-  console.log(lab+': failed-import reload and retained older-worker module isolation PASS');
+  console.log(lab+'/'+entry+': failed-import reload and retained older-worker module isolation PASS');
 }

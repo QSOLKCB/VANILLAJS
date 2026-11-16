@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Generated package rows are never assigned a caller-selected source path.
 // Rebuild the eleven known immutable runtime namespaces from source, then bind
-// their byte-identical copies and narrowly rewritten entry pages to Git blobs.
+// their byte-identical copies and twelve narrowly rewritten entry pages to Git blobs.
 import {mkdtemp,mkdir,readdir,readFile,writeFile,rm} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {hash,gitBlob} from './browser-dependencies.mjs';
 import {packageEditorRuntime,packageLabRuntime} from './pursuit-package.mjs';
-export const PROVENANCE_SCHEMA='qsol.browser.package-provenance.v1';
+export const PROVENANCE_SCHEMA='qsol.browser.package-provenance.v2';
 const LABS=['editor','pursuit-lab','skyguard-lab','arcade-combat-lab','block-arena-lab','demoscene-lab','sprite-foundry','weapon-feel-lab','narrative-foundry','game-maker-lab','horizon-lab'];
 const STARTUPS={'editor':'start.js','pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js','block-arena-lab':'start.js','demoscene-lab':'start.js','sprite-foundry':'start.js','weapon-feel-lab':'start.js','narrative-foundry':'start.js','game-maker-lab':'start.js','horizon-lab':'start.js'};
 const GENERATORS=['scripts/build.js','scripts/pursuit-package.mjs','scripts/browser-dependencies.mjs','scripts/browser-package-provenance.mjs','scripts/game-maker-runtime.mjs'];
@@ -22,7 +22,8 @@ function allowedCopy(lab,path){
     /^demos\/4x-game-lab\/voidward\/mods\/frontier\/.+\.txt$/.test(path)||
     ['demos/gpu-lab/controls.js','demos/editor/style.css'].includes(path);
 }
-function rewrite(html,lab,version){
+const pages=lab=>['demos/'+lab+'/index.html',...(lab==='horizon-lab'?['demos/horizon-lab/drive.html']:[])];
+function rewrite(html,lab,version,path){
   const base='demos/'+lab;
   if(lab==='editor'){
     for(const name of ['start.js','style.css']){
@@ -30,15 +31,16 @@ function rewrite(html,lab,version){
       html=html.replace(marker,'"./runtime-'+version+'/'+base+'/'+name+'"');
     }
   }else{
-    const marker='src="./'+STARTUPS[lab]+'"';if(html.split(marker).length!==2)throw Error('unexpected lab entry');
-    html=html.replace(marker,'src="./runtime-'+version+'/'+base+'/'+STARTUPS[lab]+'"');
+    const startup=path==='demos/horizon-lab/drive.html'?'drive-start.js':STARTUPS[lab];
+    const marker='src="./'+startup+'"';if(html.split(marker).length!==2)throw Error('unexpected lab entry');
+    html=html.replace(marker,'src="./runtime-'+version+'/'+base+'/'+startup+'"');
   }
   return html;
 }
 function validMetadata(metadata){
   return sameKeys(metadata,['schema','packages','generators'])&&metadata.schema===PROVENANCE_SCHEMA&&
     Array.isArray(metadata.packages)&&metadata.packages.length===LABS.length&&metadata.packages.every((p,i)=>
-      sameKeys(p,['lab','version','html'])&&p.lab===LABS[i]&&/^[a-f0-9]{64}$/.test(p.version)&&row(p.html)&&p.html.path==='demos/'+p.lab+'/index.html')&&
+      sameKeys(p,['lab','version','html'])&&p.lab===LABS[i]&&/^[a-f0-9]{64}$/.test(p.version)&&Array.isArray(p.html)&&p.html.length===pages(p.lab).length&&p.html.every((h,j)=>row(h)&&h.path===pages(p.lab)[j]))&&
     Array.isArray(metadata.generators)&&metadata.generators.length===GENERATORS.length&&metadata.generators.every((f,i)=>row(f)&&f.path===GENERATORS[i]);
 }
 export function provenanceHTMLRecords(receipt){
@@ -46,10 +48,10 @@ export function provenanceHTMLRecords(receipt){
   for(const result of Object.values(receipt.results??{})){
     const metadata=result.inputs?.packageProvenance;if(metadata===undefined)continue;
     if(!validMetadata(metadata))throw Error('invalid package provenance metadata');
-    for(const p of metadata.packages){
-      const previous=records.get(p.html.path);
-      if(previous&&JSON.stringify(previous)!==JSON.stringify(p.html))throw Error('conflicting HTML source provenance');
-      records.set(p.html.path,p.html);
+    for(const p of metadata.packages)for(const html of p.html){
+      const previous=records.get(html.path);
+      if(previous&&JSON.stringify(previous)!==JSON.stringify(html))throw Error('conflicting HTML source provenance');
+      records.set(html.path,html);
     }
   }
   return [...records.values()];
@@ -70,13 +72,13 @@ export async function packageProvenance({root,files}){
     for(const path of ['api','modules','demos'])await copySource(path);
     const expected=new Set(),packages=[];
     for(const lab of LABS){
-      const htmlPath='demos/'+lab+'/index.html',original=await readFile(join(root,htmlPath));
+      const html=await Promise.all(pages(lab).map(async path=>record(path,await readFile(join(root,path)))));
       const result=lab==='editor'?await packageEditorRuntime(temporary):await packageLabRuntime(temporary,lab);
-      packages.push({lab,version:result.version,html:record(htmlPath,original)});
-      expected.add(htmlPath);
+      packages.push({lab,version:result.version,html});
+      for(const path of pages(lab))expected.add(path);
       for(const f of result.files)expected.add('demos/'+lab+'/runtime-'+result.version+'/'+f.path);
     }
-    const actual=files.filter(f=>generated(f.path)||LABS.some(lab=>f.path==='demos/'+lab+'/index.html')).map(f=>f.path).sort();
+    const actual=files.filter(f=>generated(f.path)||LABS.some(lab=>pages(lab).includes(f.path))).map(f=>f.path).sort();
     if(JSON.stringify(actual)!==JSON.stringify([...expected].sort()))throw Error('generated package inventory mismatch');
     for(const path of expected){
       const actualBytes=await readFile(join(root,'dist',path)),expectedBytes=await readFile(join(temporary,path));
@@ -85,7 +87,7 @@ export async function packageProvenance({root,files}){
       if(!f||hash(actualBytes)!==f.sha256||actualBytes.length!==f.bytes)throw Error('generated package digest mismatch: '+path);
     }
     const generators=await Promise.all(GENERATORS.map(async path=>record(path,await readFile(join(root,path)))));
-    return {metadata:{schema:PROVENANCE_SCHEMA,packages,generators},sources:[...packages.map(p=>p.html),...generators]};
+    return {metadata:{schema:PROVENANCE_SCHEMA,packages,generators},sources:[...packages.flatMap(p=>p.html),...generators]};
   }finally{await rm(temporary,{recursive:true,force:true});}
 }
 
@@ -96,7 +98,7 @@ export function packageSourceBound(inputs,entries,htmlSources=new Map()){
     const metadata=inputs.packageProvenance;
     if(!validMetadata(metadata)||!Array.isArray(inputs.runtime)||!Array.isArray(inputs.shared))return false;
     const bound=f=>row(f)&&entries.get(f.path)===f.gitBlob;
-    const originals=[...metadata.packages.map(p=>p.html),...metadata.generators];
+    const originals=[...metadata.packages.flatMap(p=>p.html),...metadata.generators];
     if(!originals.every(f=>bound(f)&&inputs.shared.some(s=>s.path===f.path&&s.sha256===f.sha256&&s.gitBlob===f.gitBlob)))return false;
     const runtime=new Map();
     for(const f of inputs.runtime){
@@ -112,19 +114,22 @@ export function packageSourceBound(inputs,entries,htmlSources=new Map()){
         copies.push({path:sourcePath,sha256:f.sha256});recognized.add(f.path);
       }
       copies.sort((a,b)=>a.path.localeCompare(b.path));
-      if(!copies.some(f=>f.path==='demos/'+pkg.lab+'/'+STARTUPS[pkg.lab])||hash(JSON.stringify(copies))!==pkg.version)return false;
+      const startups=[STARTUPS[pkg.lab],...(pkg.lab==='horizon-lab'?['drive-start.js']:[])];
+      if(!startups.every(startup=>copies.some(f=>f.path==='demos/'+pkg.lab+'/'+startup))||hash(JSON.stringify(copies))!==pkg.version)return false;
       // Editor packaging has an explicit extension allowlist, so authenticate
       // its complete inventory as well as each member's contents.
       if(pkg.lab==='editor'){
         const all=inputs.runtime.filter(f=>!generated(f.path)&&allowedCopy('editor',f.path)).map(f=>f.path).sort();
         if(JSON.stringify(all)!==JSON.stringify(copies.map(f=>f.path).sort()))return false;
       }
-      const bytes=htmlSources.get(pkg.html.path);
-      if(bytes===undefined||gitBlob(bytes)!==pkg.html.gitBlob||hash(bytes)!==pkg.html.sha256)return false;
-      const output=record(pkg.html.path,rewrite(Buffer.from(bytes).toString('utf8'),pkg.lab,pkg.version));
-      const actual=runtime.get(pkg.html.path);
-      if(!row(actual)||actual.sha256!==output.sha256||actual.gitBlob!==output.gitBlob)return false;
-      recognized.add(pkg.html.path);
+      for(const html of pkg.html){
+        const bytes=htmlSources.get(html.path);
+        if(bytes===undefined||gitBlob(bytes)!==html.gitBlob||hash(bytes)!==html.sha256)return false;
+        const output=record(html.path,rewrite(Buffer.from(bytes).toString('utf8'),pkg.lab,pkg.version,html.path));
+        const actual=runtime.get(html.path);
+        if(!row(actual)||actual.sha256!==output.sha256||actual.gitBlob!==output.gitBlob)return false;
+        recognized.add(html.path);
+      }
     }
     return inputs.runtime.every(f=>recognized.has(f.path)||
       (!generated(f.path)&&(['service-worker.js','.nojekyll'].includes(f.path)||bound(f))));

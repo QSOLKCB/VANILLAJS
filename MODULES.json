@@ -613,6 +613,17 @@
       "status": "experimental",
       "description": "Bounded versioned scenery, elevated/banked road surfaces, static batches and detailed original vehicle visual rigs",
       "demo": "demos/horizon-lab/index.html"
+    },
+    "vehicle3d": {
+      "entry": "modules/vehicle3d/index.js",
+      "depends": [
+        "math",
+        "collision"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded fixed-step world-space vehicle dynamics, torque/gears, four-wheel suspension and friction with explicit surface and swept barrier contracts",
+      "demo": "demos/horizon-lab/drive.html"
     }
   },
   "recipes": {
@@ -1177,6 +1188,18 @@
         "terrain"
       ],
       "description": "Author original lit environments, road geometry and vehicle appearance; HORIZON-001 visual workshop"
+    },
+    "horizon-drive": {
+      "entry": "demos/horizon-lab/drive.html",
+      "modules": [
+        "vehicle3d",
+        "scenic3d",
+        "render-lit",
+        "math",
+        "time",
+        "collision"
+      ],
+      "description": "Drive and tune a four-wheel vehicle on original test environments; export validated vehicle data"
     }
   },
   "experiments": {
