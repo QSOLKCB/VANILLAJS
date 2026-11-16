@@ -38,9 +38,15 @@ export async function verifyArcadeCombat(browser,baseURL) {
     await page.keyboard.down('j');await page.waitForFunction(()=>window.arcadeFoundry.snapshot().combat.nextProjectile>2);await page.keyboard.up('j');
     await page.keyboard.press('Escape');const stopped=await snapshot();await page.waitForTimeout(150);assert.deepEqual(await snapshot(),stopped);
     // Repeat suppression across a physical held-key pause/resume boundary.
-    await page.locator('#run').click();await page.keyboard.down('d');await page.waitForTimeout(120);await page.keyboard.press('Escape');
-    await page.locator('#run').click();await page.keyboard.down('d');await page.waitForTimeout(250);const coast=(await snapshot()).combat.actors[0].x;
-    await page.waitForTimeout(180);assert.equal((await snapshot()).combat.actors[0].x,coast);await page.keyboard.up('d');
+    await page.locator('#run').click();await page.keyboard.down('d');
+    await page.waitForFunction(()=>window.arcadeFoundry.snapshot().previousWord&2);await page.keyboard.press('Escape');
+    const pausedTick=(await snapshot()).tick;
+    await page.locator('#run').click();await page.keyboard.down('d');
+    await page.waitForFunction(t=>window.arcadeFoundry.snapshot().tick>=t+12,pausedTick);await page.keyboard.press('Escape');
+    const repeated=JSON.parse(await download('#export-replay')).inputs.slice(pausedTick);
+    assert.ok(repeated.length>=12&&repeated.every(word=>(word&2)===0),'held key repeat must not re-arm movement');
+    await page.keyboard.up('d');await page.locator('#run').click();await page.keyboard.down('d');
+    await page.waitForFunction(()=>window.arcadeFoundry.snapshot().previousWord&2);await page.keyboard.up('d');
     await page.evaluate(()=>window.dispatchEvent(new Event('blur')));assert.equal(await page.locator('#status').textContent(),'PAUSED');
     await page.locator('#restart').click();assert.equal((await snapshot()).tick,0);
     // Native standard-gamepad adapter: neutral arming, input and disconnect pause.
@@ -85,9 +91,12 @@ export async function verifyArcadeCombat(browser,baseURL) {
     const x=(await snapshot()).combat.actors[0].x;
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:rect.x+rect.width/2,y:rect.y+rect.height/2}]});
     await page.waitForFunction(x=>window.arcadeFoundry.snapshot().combat.actors[0].x>x+100,x);
-    await cdp.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});await page.waitForTimeout(100);
-    const released=(await snapshot()).combat.actors[0].x;await page.waitForTimeout(150);assert.equal((await snapshot()).combat.actors[0].x,released);
-    await page.keyboard.press('Escape');await page.screenshot({path:'browser-artifacts/arcade-combat-mobile.png',fullPage:true});
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});
+    const cancelledTick=(await snapshot()).tick;
+    await page.waitForFunction(t=>window.arcadeFoundry.snapshot().tick>=t+12,cancelledTick);await page.keyboard.press('Escape');
+    const cancelled=JSON.parse(await download('#export-replay')).inputs.slice(cancelledTick);
+    assert.ok(cancelled.length>=12&&cancelled.every(word=>(word&2)===0),'touch cancellation must clear movement');
+    await page.screenshot({path:'browser-artifacts/arcade-combat-mobile.png',fullPage:true});
     await page.setViewportSize({width:1280,height:1000});
     await page.locator('#sound').click();await page.locator('#run').click();
     await page.waitForFunction(()=>window.arcadeFoundry.audioStats()?.voices>0);await page.locator('#pause').click();
