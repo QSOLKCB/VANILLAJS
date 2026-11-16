@@ -7,7 +7,7 @@ import {checkCatalogue,localFile,root} from './validate-agent-catalog.mjs';
 import {jsDependencies} from './browser-dependencies.mjs';
 // Archive hashes independently checked against git show at audited main 128d7c9.
 const archiveHashes={'README.md':'3895215459b4ca9388b73f99a2ea8a8076bd619e564d04bbb5a7a0676ee2c0d5','ROADMAP.md':'6e964832e833eacbd267d54763375b6f380e7bcd34afbb92c57bad228ef2c0ee'};
-const docs=['README.md','ROADMAP.md','AGENTS.md','agents/README.md',...['START_HERE','CREATOR_QUICKSTART','HOW_TO_BUILD_A_GAME','HOW_TO_MOD_A_GAME','HOW_TO_EXPORT_A_GAME','TROUBLESHOOTING','AGENT_GUIDE','GAMES2_INTEGRATION','CREATOR_GATEWAY_VERIFICATION','CREATOR_GATEWAY_2_5_0_DRAFT','BROWSER_CACHE','SPRITE_FEEL_001','SPRITE_FOUNDRY','WEAPON_FEEL','AFTER_ZERO_GAME_FEEL_AUDIT','ENGINE_EXPANSION_001','SPRITE_FEEL_2_6_0_DRAFT'].map(n=>'docs/'+n+'.md')];
+const docs=['README.md','ROADMAP.md','AGENTS.md','agents/README.md',...['START_HERE','CREATOR_QUICKSTART','HOW_TO_BUILD_A_GAME','HOW_TO_MOD_A_GAME','HOW_TO_EXPORT_A_GAME','TROUBLESHOOTING','AGENT_GUIDE','GAMES2_INTEGRATION','CREATOR_GATEWAY_VERIFICATION','CREATOR_GATEWAY_2_5_0_DRAFT','BROWSER_CACHE','SPRITE_FEEL_001','SPRITE_FOUNDRY','WEAPON_FEEL','AFTER_ZERO_GAME_FEEL_AUDIT','ENGINE_EXPANSION_001','SPRITE_FEEL_2_6_0_DRAFT','SCENE_NARRATIVE_001','SCENE_NARRATIVE_2_7_0_DRAFT','SCENE_COMPOSITION','NARRATIVE_API','NARRATIVE_FOUNDRY'].map(n=>'docs/'+n+'.md')];
 const slug=s=>s.toLowerCase().replace(/[^\p{L}\p{N}_\- ]/gu,'').replace(/ /g,'-');
 let links=0;
 async function link(from,href,anchors=true){
@@ -33,16 +33,16 @@ for(const [archive,original]of [['README_HISTORY.md','README.md'],['ROADMAP_HIST
   assert.equal(createHash('sha256').update(bytes).digest('hex'),archiveHashes[original],'historical archive changed');
   for(const m of bytes.toString().matchAll(/!?\[[^\]]*\]\(([^\s)]+)(?:\s+"[^"]*")?\)/g))await link(archive,m[1],false);
 }
-for(const path of ['demos/tutorial-lab/index.html','demos/creator-hub/index.html','demos/sprite-foundry/index.html','demos/weapon-feel-lab/index.html']){
+for(const path of ['demos/tutorial-lab/index.html','demos/creator-hub/index.html','demos/sprite-foundry/index.html','demos/weapon-feel-lab/index.html','demos/narrative-foundry/index.html']){
   const html=await readFile(resolve(root,path),'utf8');
   for(const m of html.matchAll(/(?:href|src)="([^"]+)"/g))await link(path,m[1]);
 }
 const hub=await readFile(resolve(root,'demos/creator-hub/index.html'),'utf8');
 assert.ok(hub.includes('../tutorial-lab/index.html'),'hub must reach tutorial');
-for(const lab of ['sprite-foundry','weapon-feel-lab'])assert.ok(hub.includes('../'+lab+'/index.html'),'hub must reach '+lab);
+for(const lab of ['sprite-foundry','weapon-feel-lab','narrative-foundry'])assert.ok(hub.includes('../'+lab+'/index.html'),'hub must reach '+lab);
 const catalogue=JSON.parse(await readFile(resolve(root,'MODULES.json'),'utf8'));
-// v2.5.0 had 62 modules / 43 recipes; this additive milestone has 64 / 45.
-assert.equal(Object.keys(catalogue.modules).length,64);assert.equal(Object.keys(catalogue.recipes).length,45);assert.equal(Object.keys(catalogue.experiments).length,2);
+// v2.6.0 had 64 modules / 45 recipes; this additive milestone has 66 / 47.
+assert.equal(Object.keys(catalogue.modules).length,66);assert.equal(Object.keys(catalogue.recipes).length,47);assert.equal(Object.keys(catalogue.experiments).length,2);
 assert.ok(Object.values(catalogue.modules).every(m=>m.status==='experimental'));
 const pkg=JSON.parse(await readFile(resolve(root,'package.json'),'utf8'));
 assert.equal(pkg.version,'1.0.0');assert.equal(catalogue.release,'1.0.0');

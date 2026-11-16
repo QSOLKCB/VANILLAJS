@@ -84,3 +84,12 @@ opaque PNG (at most 64×64), then choose **Import PNG** in Asset Foundry. Retain
 sprite project to preserve alpha, palette and animation; flattening is intentional.
 The current renderer and existing project/asset schemas remain unchanged.
 See [the sprite tutorial](SPRITE_FOUNDRY.md).
+
+## Scene Composition sidecar (v2.7.0 candidate)
+
+Open **Scene Composition** for hierarchical affine transforms, caller-time
+animation and nested prefabs. This panel owns a separate preview and versioned
+sidecar; the main scene, gameplay preview and v1/v2 project formats are unchanged.
+**Save project does not include this sidecar.** Use its own export/import controls
+and keep both files when you need both workflows. See [Scene Composition](SCENE_COMPOSITION.md)
+for capture compatibility, metadata limits, controls and resource disposal.

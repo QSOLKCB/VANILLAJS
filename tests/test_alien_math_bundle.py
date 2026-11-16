@@ -62,6 +62,8 @@ class CapsuleTests(unittest.TestCase):
             'demos/sprite-foundry/start.js': 'export const fixture=true;\n',
             'demos/weapon-feel-lab/index.html': '<script type="module" src="./start.js"></script>',
             'demos/weapon-feel-lab/start.js': 'export const fixture=true;\n',
+            'demos/narrative-foundry/index.html': '<script type="module" src="./start.js"></script>',
+            'demos/narrative-foundry/start.js': 'export const fixture=true;\n',
             'demos/block-arena-lab/index.html': '<script type="module" src="./start.js"></script>',
             'demos/block-arena-lab/start.js': 'export const fixture=true;\n',
             'demos/block-arena-lab/replay.js': 'export const fixture=true;\n',

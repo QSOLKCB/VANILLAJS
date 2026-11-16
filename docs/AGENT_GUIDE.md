@@ -112,3 +112,14 @@ Routine implementation and reversible validation within the assigned task can pr
 
 Inspiration titles and donor URLs do not authorise arbitrary copying of source,
 assets or unrelated repository changes. Games2 remains read-only for this task.
+
+## Scene and narrative tasks
+
+Use the `scene-composition` and `narrative-foundry` entries in
+[the agent catalogue](../agents/catalog.json) for real entry points and checks.
+Read [Scene Composition](SCENE_COMPOSITION.md) before changing hierarchy,
+transforms, animation or prefab handling; preserve legacy project formats.
+Read [Narrative API](NARRATIVE_API.md) before authoring story variables, effects
+or saves. Keep event-to-scene mappings in the consuming app and treat imported
+text as inert data. The [milestone boundaries](SCENE_NARRATIVE_001.md) distinguish
+implemented APIs from proposed Game Maker/HORIZON work and future Games2 adoption.

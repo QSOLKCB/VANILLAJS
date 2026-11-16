@@ -565,6 +565,22 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Explicit look accumulation, ADS, trigger buffering, seeded accuracy and cosmetic weapon feedback over existing combat timers"
+    },
+    "scene-graph": {
+      "entry": "modules/scene-graph/index.js",
+      "depends": [
+        "math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded hierarchical scene composition, affine transforms, typed descriptors, caller-time animation and nested prefabs"
+    },
+    "narrative": {
+      "entry": "modules/narrative/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Inert branching-story graphs, typed conditions/effects, objective state, deterministic choice traversal and replay-validated saves"
     }
   },
   "recipes": {
@@ -1088,6 +1104,25 @@
         "audio2d"
       ],
       "description": "Three original weapon profiles, moving-target gameplay, editable feel recipes and ray/cooldown diagnostics"
+    },
+    "scene-composition": {
+      "entry": "demos/editor/index.html",
+      "modules": [
+        "scene-graph",
+        "math",
+        "render-webgl"
+      ],
+      "description": "Workbench scene-composition sidecar authoring, hierarchy, animation, prefabs and reusable export"
+    },
+    "narrative-foundry": {
+      "entry": "demos/narrative-foundry/index.html",
+      "modules": [
+        "narrative",
+        "scene-graph",
+        "math",
+        "render-webgl"
+      ],
+      "description": "Author branching stories, edit conditions, preview original outcomes and scene events, export story and progress"
     }
   },
   "experiments": {

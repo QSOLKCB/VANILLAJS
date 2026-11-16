@@ -1,19 +1,18 @@
 # VANILLAJS roadmap
 
-## Published baseline — v2.5.0, The Creator Gateway
+## Published baseline — v2.6.0, The Game Feel & Sprite Foundry
 
-[v2.5.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0) was published on
-16 November 2026 from `32b4fb1ca80e854297998aa00f87a8f012398b89`.
-It adds progressive creator guides, the interactive Tutorial Lab, agent guidance
-and a validated workflow catalogue, documentation/browser verification and the
-Games2 integration programme. Reviewed main for ENGINE-EXPANSION-001 is
-`433f8c87a74ed145a612510ee388a7aacc1280f6`.
+[v2.6.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.6.0) was published on
+16 November 2026 from `7f2d5e62bb64aaf8c6ef7af8df678da9fe38412d`, after
+[PR #101](https://github.com/QSOLKCB/VANILLAJS/pull/101) was reviewed and merged.
+It adds Sprite Foundry, a reusable weapon-feel adapter, the playable Weapon Feel
+Lab and their verified creator workflows. This is the reviewed base for v2.7.0.
 
-The published baseline has 62 experimental modules, 43 recipes and two research
-experiments; [MODULES.json](MODULES.json) remains authoritative for the current
-tree. Publication does not imply API stability. Historical `1.0.0`
-package/catalogue metadata remains unchanged. Existing maths, physics, Game Labs,
-Workbench/Asset Foundry, mods, replay and offline contracts stay supported.
+The published baseline has 64 experimental modules, 45 recipes and two research
+experiments; [MODULES.json](MODULES.json) describes the current tree. Publication
+does not imply stability. Historical `1.0.0` metadata is unchanged. The preceding
+[v2.5.0 Creator Gateway](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0),
+existing engine/labs, Workbench/Asset Foundry, maths and offline contracts remain.
 Browser reuse retains its [source-bound authority rules](docs/BROWSER_CACHE.md).
 
 ## ENGINE-EXPANSION-001 — sequential creator milestones
@@ -25,8 +24,8 @@ separate decisions; no automatic tagging, publishing or deployment is authorised
 
 | Release | Milestone | Status and dependency |
 | --- | --- | --- |
-| v2.6.0 | **SPRITE-FEEL-001 — Game Feel & Sprite Foundry** | Current implementation candidate; owner review/release pending |
-| v2.7.0 | **SCENE-NARRATIVE-001 — Scene & Narrative Foundry** | Proposed; after v2.6.0 review, merge and release in a later task |
+| v2.6.0 | **SPRITE-FEEL-001 — Game Feel & Sprite Foundry** | Published; owner merged PR #101 and released v2.6.0 |
+| v2.7.0 | **SCENE-NARRATIVE-001 — Scene & Narrative Foundry** | Current implementation candidate; v2.6.0 owner gate satisfied; v2.7.0 review/release pending |
 | v2.8.0 | **GAME-MAKER-001 — Game Maker API** | Proposed; consumes reviewed scene/resource contracts after v2.7.0 |
 | v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | Proposed; three separately reviewed implementation PRs after preceding milestones |
 
@@ -35,7 +34,7 @@ distinguish existing primitives from future APIs. Every milestone needs a
 reusable API, working lab, creator workflow, versioned data, tutorial, agent
 integration, verification evidence and a future Games2 consumer seam.
 
-### v2.6.0 — Game Feel & Sprite Foundry
+### v2.6.0 — Game Feel & Sprite Foundry (published)
 
 - Seeded original sprites, editable RGBA palettes, transparent pixels, animation
   frames, sheets/atlases, masks and bounded versioned import/export.
@@ -55,7 +54,9 @@ or complete engine is copied. Sprite alpha/animation integration must preserve
 the current Asset Foundry project schema; source RGBA equality does not imply
 browser-encoded PNG byte equality.
 
-### v2.7.0 — Scene & Narrative Foundry
+### v2.7.0 — Scene & Narrative Foundry (current candidate)
+
+[Milestone contracts, creator workflows and evidence](docs/SCENE_NARRATIVE_001.md).
 
 Extend the existing bounded Workbench hierarchy/components rather than replace
 them. Add reviewed local/world transforms, reusable components, camera/light

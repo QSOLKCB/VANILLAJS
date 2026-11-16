@@ -25,6 +25,7 @@ await packageLabRuntime(out,'block-arena-lab');
 await packageLabRuntime(out,'demoscene-lab');
 await packageLabRuntime(out,'sprite-foundry');
 await packageLabRuntime(out,'weapon-feel-lab');
+await packageLabRuntime(out,'narrative-foundry');
 const files=[];
 async function walk(dir){for(const e of await readdir(dir,{withFileTypes:true})){
   const p=resolve(dir,e.name);if(e.isDirectory())await walk(p);else{const data=await readFile(p);files.push({path:relative(out,p),bytes:data.length,sha256:createHash('sha256').update(data).digest('hex')});}

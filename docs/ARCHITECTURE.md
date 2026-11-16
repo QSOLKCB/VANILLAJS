@@ -3,7 +3,7 @@
 The title retains the historical package metadata. Published releases and the
 current candidate are tracked in the [README](../README.md).
 
-## Sprite and weapon-feel composition (v2.6.0 candidate)
+## Sprite and weapon-feel composition (v2.6.0, experimental)
 
 `sprite2d` owns bounded seeded pixel generation, validated palette/frame data,
 exact source RGBA, collision masks and atlas layout. It has no DOM, rendering or
@@ -306,3 +306,22 @@ offline bot matches, inert arena authoring and source-bound same-runtime replay.
 Movement remains character/AABB Float64 physics; PR #93's integer 2D boundary is
 unchanged. PR #94's complete native module graph packaging also covers this lab.
 See [FPS-FOUNDATION-001](FPS_FOUNDATION_001.md).
+
+## Scene and narrative composition (v2.7.0 candidate)
+
+`scene-graph` depends only on `math`. It owns validated scene descriptors,
+hierarchical affine transforms, nested prefab expansion and caller-time sampling;
+it owns no DOM, simulation loop or GPU resources. The Workbench adapter owns its
+preview, listener/animation lifecycle and disposal. Its scene sidecar does not
+silently widen existing v1/v2 project or physics contracts.
+
+`narrative` has no module dependencies. Stories own text, links and declared
+variables/objectives/events; transitions use a constrained condition/effect
+vocabulary. The lab owns the original fiction, input and rendering. A fixed
+allowlist maps narrative events to scene updates outside the pure story engine.
+Imported data cannot name modules, evaluate expressions or issue agent instructions.
+
+[Scene Composition](SCENE_COMPOSITION.md), [Narrative API](NARRATIVE_API.md) and
+[compatibility boundaries](SCENE_NARRATIVE_001.md) define ownership and numerical
+limits. Scene Float64 transforms are separate from deterministic discrete narrative
+state and from exact Q16.16/formal proofs.
