@@ -74,9 +74,39 @@ export async function checkTutorial(browser,base){
     await page.locator('#load').click();
     assert.equal(await page.locator('#progress .done').count(),1);
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'320px layout');
-    await page.waitForFunction(async()=>{
-      const r=await navigator.serviceWorker.getRegistration();return r?.active?.state==='activated';
-    },{},{timeout:45000});
+    // Playwright 1.64's waitForFunction treats an async predicate's Promise as
+    // truthy before its result arrives. Explicitly await real worker readiness.
+    const worker=await page.evaluate(async expectedBase=>{
+      let timer,registration,active,onStateChange,cancelled=false;
+      try{
+        return await Promise.race([
+          (async()=>{
+            registration=await navigator.serviceWorker.ready;
+            if(cancelled)throw Error('Tutorial offline readiness already timed out');
+            active=registration.active;
+            if(!active)throw Error('Tutorial offline registration has no active worker');
+            if(registration.scope!==expectedBase||active.scriptURL!==expectedBase+'service-worker.js')
+              throw Error('Tutorial offline worker has unexpected scope or script: '+registration.scope+' '+active.scriptURL);
+            if(active.state!=='activated')await new Promise((resolve,reject)=>{
+              onStateChange=()=>{
+                if(active.state==='activated')resolve();
+                else if(active.state==='redundant')reject(Error('Tutorial offline worker became redundant before activation'));
+              };
+              active.addEventListener('statechange',onStateChange);onStateChange();
+            });
+            return {scope:registration.scope,scriptURL:active.scriptURL,state:active.state};
+          })(),
+          new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error(
+            'Tutorial offline worker did not activate within 45 seconds; scope='+(registration?.scope??'not ready')+
+            ', active='+(active?.state??'none')
+          )),45000);})
+        ]);
+      }finally{
+        cancelled=true;clearTimeout(timer);
+        if(active&&onStateChange)active.removeEventListener('statechange',onStateChange);
+      }
+    },base);
+    assert.deepEqual(worker,{scope:base,scriptURL:base+'service-worker.js',state:'activated'});
     // The worker deliberately does not claim existing clients. Start a new
     // client after activation, with the network already unavailable, rather
     // than relying on the original page's reload to acquire a controller.

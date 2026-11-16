@@ -172,3 +172,29 @@ the fresh offline navigation, lesson interactions and Workbench import/Play.
 All 977 Node tests passed again. Source/documentation checks, build, offline
 verification and whitespace checks also passed. Hosted confirmation remains
 recorded separately in PR #99's checks and description.
+
+The next hosted run, `43807901679` at `e28a033`, still failed: the fresh offline
+navigation returned `ERR_INTERNET_DISCONNECTED`. Inspection then established
+the cause in pinned Playwright 1.64.0: `waitForFunction` treats the Promise
+returned by an async predicate as truthy, ending its polling even if the Promise
+resolves to false. A local minimal probe returned false in 16 ms for the async
+predicate; the synchronous false control correctly timed out at 502 ms. Thus the
+original activation check never established readiness, and the first correction
+was insufficient.
+
+The check now explicitly awaits `navigator.serviceWorker.ready` and activation
+inside `page.evaluate`, with the same 45-second bound, timer/listener cleanup,
+and exact scope/script checks. Fresh offline navigation and all subsequent
+assertions remain. Local Chromium is 158.0.8127.18; hosted preflight reports
+156.0.8078.4, both through Playwright 1.64.0. These are distinct environments,
+and local success is not presented as hosted confirmation.
+
+A local real-browser regression deliberately withheld `docs/ARCHITECTURE.md`
+from the package server while its worker was installing. Release was scheduled
+500 ms after the tutorial reached its readiness check. The old `e28a033` harness
+returned early and attempted to switch offline while the response was still
+withheld (expected negative-control failure). The corrected harness waited for
+release and completed the full tutorial, Workbench import/Play and verified
+offline lesson. This reproduced the defect locally and distinguished the fix
+from the earlier timing-dependent passes. All 977 Node tests also passed after
+the explicit readiness correction.
