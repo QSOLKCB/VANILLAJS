@@ -1,5 +1,31 @@
 # Architecture — VANILLAJS 1.0.0
 
+The title retains the historical package metadata. Published releases and the
+current candidate are tracked in the [README](../README.md).
+
+## Sprite and weapon-feel composition (v2.6.0 candidate)
+
+`sprite2d` owns bounded seeded pixel generation, validated palette/frame data,
+exact source RGBA, collision masks and atlas layout. It has no DOM, rendering or
+clock dependency. Sprite Foundry owns painting gestures, undo history, animation
+preview and Canvas PNG encoding. Transparent sidecars remain separate from the
+Workbench's existing opaque texture format; no project schema is migrated.
+
+`weapon-feel` composes `combat3d` and `math`. It owns explicit look accumulation,
+ADS, buffered requests, accuracy parameters and cosmetic weapon state. The
+existing combat/weapon timers remain authoritative for ammunition, firing and
+reloads. Character movement, targets and rendering belong to the consuming lab.
+Cosmetic weapon motion does not rotate the canonical combat ray. Same-runtime
+Float64 gameplay and exact integer sprite pixels have different identity bounds.
+
+Both labs use the existing content-derived native-module packaging mechanism.
+Their complete dependency closures receive isolated startup URLs; older workers
+cannot silently substitute a mixture of cached and current modules. The trust
+policy still requires authenticated source-bound browser execution evidence.
+
+See [Sprite Foundry](SPRITE_FOUNDRY.md), [Weapon Feel](WEAPON_FEEL.md) and
+[the compatibility and verification record](SPRITE_FEEL_001.md).
+
 The goal is to assemble future games from small, versioned systems. The labs
 prove composition against different environments and control laws.
 Rendering, input events and lifecycle policy belong to the application boundary.

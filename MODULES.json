@@ -548,6 +548,23 @@
       "status": "experimental",
       "description": "Strict inert demoscene projects, integer four-voice scores and atomic activation",
       "demo": "demos/demoscene-lab/index.html"
+    },
+    "sprite2d": {
+      "entry": "modules/sprite2d/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded seeded pixel sprites, palette/frame editing, exact RGBA, masks and versioned atlases"
+    },
+    "weapon-feel": {
+      "entry": "modules/weapon-feel/index.js",
+      "depends": [
+        "combat3d",
+        "math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Explicit look accumulation, ADS, trigger buffering, seeded accuracy and cosmetic weapon feedback over existing combat timers"
     }
   },
   "recipes": {
@@ -1048,6 +1065,29 @@
         "frame-gate"
       ],
       "description": "Sample-indexed audiovisual production, strict compositions and opt-in audio transport"
+    },
+    "sprite-foundry": {
+      "entry": "demos/sprite-foundry/index.html",
+      "modules": [
+        "sprite2d"
+      ],
+      "description": "Generate, edit, animate and export original sprites; transparent sidecars and explicit opaque Workbench export"
+    },
+    "weapon-feel-lab": {
+      "entry": "demos/weapon-feel-lab/index.html",
+      "modules": [
+        "weapon-feel",
+        "combat3d",
+        "weapons",
+        "character",
+        "collision",
+        "math",
+        "input",
+        "time",
+        "render-webgl",
+        "audio2d"
+      ],
+      "description": "Three original weapon profiles, moving-target gameplay, editable feel recipes and ray/cooldown diagnostics"
     }
   },
   "experiments": {

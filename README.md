@@ -48,11 +48,19 @@ introduced the procedural audiovisual composition tools and **The Machine Rememb
 The Arcade and FPS Foundries arrived in v2.2.0 and v2.3.0 respectively.
 A published release does not make its modules stable.
 
-The audited baseline has **62 experimental modules, 43 recipes and two research
-experiments**. [MODULES.json](MODULES.json) is authoritative for current entries.
+The published v2.5.0 baseline has **62 experimental modules, 43 recipes and two
+research experiments**. This v2.6.0 candidate adds two experimental modules and
+two lab recipes: **64 modules, 45 recipes**, with the research experiments unchanged.
+[MODULES.json](MODULES.json) is authoritative for current entries.
 Its `release` and the private `package.json` version remain historical `1.0.0`
 metadata; they are not the latest GitHub release number. See the
 [audit and verification record](docs/CREATOR_GATEWAY_VERIFICATION.md).
+
+**In review for v2.6.0 — Game Feel & Sprite Foundry:** generate and edit original
+animated sprites, then tune FPS input, ADS, accuracy and cosmetic weapon feedback
+against moving targets. See the [milestone contracts and verification](docs/SPRITE_FEEL_001.md).
+This is a release candidate, not a published release. Later scene/narrative,
+Game Maker and HORIZON work remains [planned](docs/ENGINE_EXPANSION_001.md).
 
 ## Run the labs
 
@@ -86,6 +94,8 @@ contracts, even when the demonstrations are playable.
 | Build or investigate | Working entry point | Guide |
 | --- | --- | --- |
 | First scene, without coding | [Tutorial Lab](demos/tutorial-lab/index.html) | [Quickstart](docs/CREATOR_QUICKSTART.md) |
+| Original pixel art and animation | [Sprite Foundry](demos/sprite-foundry/index.html) | [Generate, edit and export sprites](docs/SPRITE_FOUNDRY.md) |
+| FPS weapon feel and aim | [Weapon Feel Lab](demos/weapon-feel-lab/index.html) | [Tune input, ADS and weapon presentation](docs/WEAPON_FEEL.md) |
 | 2D movement and arcade combat | [2D Foundry](demos/2d-lab/index.html), [Arcade Combat](demos/arcade-combat-lab/index.html) | [2D foundation](docs/2D_FOUNDATION.md), [Arcade foundation](docs/ARCADE_FOUNDATION_001.md) |
 | Blocky FPS | [Block Arena](demos/block-arena-lab/index.html) | [First blocky FPS](docs/BUILD_YOUR_FIRST_BLOCKY_FPS.md) |
 | Demoscene and visual FX | [The Machine Remembers](demos/demoscene-lab/index.html) | [First demoscene intro](docs/MAKE_YOUR_FIRST_DEMOSCENE_INTRO.md) |
@@ -183,6 +193,7 @@ module's linked specialist guide before calling an API.
 | Exact simulation | `integer-math`, `integer-vector`, `integer-time`, `integer-physics`, `integer-engine`, `integer-replay` |
 | ALIEN MATH authoring | `exact-rational`, `exact-interval`, `exact-geometry`, `rational-q16`, `exact-d4`, `exact-graph`, `exact-course`, `exact-circuit` |
 | Arcade and FPS | `motion2d`, `combat2d`, `combat3d`, `mod-arcade`, `mod-fps` |
+| Sprites and game feel | `sprite2d`, `weapon-feel` |
 | Sound and visuals | `audio2d`, `soundtrack`, `render-webgl`, `render-optional`, `demo-timeline`, `demo-scene`, `mod-demo` |
 | Data-only modding | `mod-sdk`, `mod-course`, `mod-experiment`, `mod-football` |
 

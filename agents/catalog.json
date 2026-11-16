@@ -121,7 +121,81 @@
       ],
       "limitations": [
         "FPS packs require a compatible runtime.",
-        "Workbench export is not an FPS compiler."
+        "Workbench export is not an FPS compiler.",
+        "Weapon presentation recipes are a separate opt-in contract; existing FPS packs remain unchanged."
+      ],
+      "experimental": true
+    },
+    {
+      "id": "sprite-foundry",
+      "title": "Generate, edit and export original animated pixel sprites",
+      "entryPoints": [
+        "demos/sprite-foundry/index.html",
+        "modules/sprite2d/index.js"
+      ],
+      "modules": [
+        "sprite2d"
+      ],
+      "examples": [
+        "demos/sprite-foundry/index.html"
+      ],
+      "docs": [
+        "docs/SPRITE_FOUNDRY.md",
+        "docs/SPRITE_FEEL_001.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js --suites=editor"
+      ],
+      "limitations": [
+        "Exact identity applies to validated source RGBA, not browser-encoded PNG bytes.",
+        "Transparent sprites use a sidecar; the current opaque Workbench requires an explicit flattened PNG."
+      ],
+      "experimental": true
+    },
+    {
+      "id": "weapon-feel",
+      "title": "Tune FPS weapon feel against actual moving targets",
+      "entryPoints": [
+        "demos/weapon-feel-lab/index.html",
+        "demos/weapon-feel-lab/world.js",
+        "modules/weapon-feel/index.js"
+      ],
+      "modules": [
+        "weapon-feel",
+        "combat3d",
+        "character",
+        "weapons",
+        "input",
+        "render-webgl"
+      ],
+      "examples": [
+        "demos/weapon-feel-lab/index.html",
+        "demos/block-arena-lab/index.html"
+      ],
+      "docs": [
+        "docs/WEAPON_FEEL.md",
+        "docs/SPRITE_FEEL_001.md",
+        "docs/AFTER_ZERO_GAME_FEEL_AUDIT.md"
+      ],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/validate-agent-catalog.mjs",
+        "node scripts/audit-docs.mjs",
+        "node scripts/browser-check.js --suites=play,worlds"
+      ],
+      "limitations": [
+        "Cosmetic weapon motion is separate from the canonical combat ray.",
+        "Float64 gameplay replay is same-runtime; fixed input samples are required for cadence comparisons.",
+        "A presentation recipe is data, not a complete game or an FPS pack schema migration."
       ],
       "experimental": true
     },
