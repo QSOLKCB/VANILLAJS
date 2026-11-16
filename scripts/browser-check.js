@@ -57,6 +57,9 @@ page.on('pageerror',e=>errors.push(e.message));
 try{
   // Check the new creator journey first so regressions fail before long labs.
   await runSuite('render','./browser-render-lit.js','checkRenderLit');
+  await runSuite('editor','./browser-horizon-race.js','checkHorizonRace');
+  await runSuite('editor','./browser-horizon-export.js','checkHorizonExport');
+  await runSuite('editor','./foundry-startup-check.mjs','checkHorizonRaceStartup');
   await runSuite('editor','./browser-horizon-drive.js','checkHorizonDrive');
   await runSuite('editor','./foundry-startup-check.mjs','checkHorizonDriveStartup');
   await runSuite('editor','./browser-horizon.js','checkHorizon');

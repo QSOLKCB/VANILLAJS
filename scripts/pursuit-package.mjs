@@ -7,12 +7,12 @@ import {hash,jsDependencies,resolveLocal} from './browser-dependencies.mjs';
 
 export async function packagePursuitRuntime(root){return packageLabRuntime(root,'pursuit-lab');}
 export async function packageLabRuntime(root,lab){
-  const startups={'pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js','block-arena-lab':'start.js','demoscene-lab':'start.js','sprite-foundry':'start.js','weapon-feel-lab':'start.js','narrative-foundry':'start.js','game-maker-lab':'start.js','horizon-lab':'start.js'};
+  const startups={'pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js','block-arena-lab':'start.js','demoscene-lab':'start.js','sprite-foundry':'start.js','weapon-feel-lab':'start.js','narrative-foundry':'start.js','game-maker-lab':'start.js','horizon-lab':'race-start.js'};
   if(!Object.hasOwn(startups,lab))throw Error('Unknown packaged lab');
   const startup=startups[lab],base='demos/'+lab,entry=base+'/'+startup;
-  // The two HORIZON pages share one immutable dependency closure. This is an
+  // The four HORIZON pages share one immutable dependency closure. This is an
   // explicit allowlist, never discovery of arbitrary runnable HTML files.
-  const pages=[{html:base+'/index.html',startup},...(lab==='horizon-lab'?[{html:base+'/drive.html',startup:'drive-start.js'}]:[])];
+  const pages=[{html:base+'/index.html',startup},...(lab==='horizon-lab'?[{html:base+'/drive.html',startup:'drive-start.js'},{html:base+'/race.html',startup:'race-start.js'},{html:base+'/scenery.html',startup:'start.js'}]:[])];
   const files=new Map(),pending=pages.map(page=>base+'/'+page.startup);let size=0;
   while(pending.length){
     const path=pending.pop();if(files.has(path))continue;

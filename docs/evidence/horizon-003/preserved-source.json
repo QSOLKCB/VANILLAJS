@@ -1,0 +1,10 @@
+{
+  "base": "718afebb7146424ed8718f80a488c3b76eea1c85",
+  "candidate": "dc5e4d72916685ed4379c2dd4976ae87e2bc86dd",
+  "preexistingProtectedFilesCompared": 294,
+  "changedPreexistingProtectedFiles": [],
+  "additions": [
+    "docs/evidence/horizon-003/README.md",
+    "modules/vehicle-audio/index.js"
+  ]
+}

@@ -109,10 +109,11 @@ These downloads are reusable inert data, not a complete game or saved match. A
 consumer imports [`vehicle3d`](VEHICLE3D_API.md), supplies its own trusted surface
 and barrier adapter, and owns input, rendering, audio, rules and packaging. Pin an
 immutable reviewed engine release and preserve Apache-2.0 notices/source provenance.
-HORIZON-003 will separately address the complete racing creator/showcase workflow.
+For the complete racing creator workflow and playable export, open
+[Race Foundry](../demos/horizon-lab/index.html).
 
 For offline use, build and verify the repository package, serve `dist/`, and visit
-while online once so its worker can install. Both HORIZON pages and their complete
+while online once so its worker can install. The race, scenery and driving pages and their complete
 native-module graph are included. An uncached browser cannot start offline.
 Exports require a consumer package; they do not themselves install a service worker.
 

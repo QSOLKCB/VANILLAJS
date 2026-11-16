@@ -6,7 +6,7 @@ callers, shaders, vertex layouts and defaults are unchanged. The new renderer
 uses existing `math` camera/projection operations; there is no third-party engine,
 WebGL2 requirement, global frame loop or network resource loader.
 
-Open [HORIZON Lab](../demos/horizon-lab/index.html) to inspect the actual consumer.
+Open [Scenery Atelier](../demos/horizon-lab/scenery.html) to inspect the actual consumer.
 Geometry, environment recipes and vehicle presentation belong to the separate
 [scenic3d contract](SCENIC3D_API.md). Neither renderer nor visual vehicle pose
 advances racing simulation.

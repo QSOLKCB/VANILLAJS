@@ -44,3 +44,12 @@ python3 -m http.server 8000 --bind 127.0.0.1 --directory dist
 
 Record the reviewed engine revision alongside a distributed game. Pinning gives
 you a known API and numerical contract; test upgrades before replacing it.
+
+## Export a scenic race
+
+[HORIZON Race Foundry](HORIZON_RACING.md) exports a complete original single-route
+race after strict project validation: both vehicles, route, renderer, procedural
+sound, local native modules, notices and an integrity-checked offline worker.
+Its JSON download is the editable recipe; its ZIP is the runnable game. Extract
+the complete ZIP, run a local HTTP server and test the route before sharing.
+This does not turn arbitrary Workbench scenes or scripts into racing games.

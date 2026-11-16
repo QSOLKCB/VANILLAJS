@@ -1,0 +1,35 @@
+{
+  "source": "dc5e4d72916685ed4379c2dd4976ae87e2bc86dd",
+  "localOnly": true,
+  "trustedExecutionReceipt": false,
+  "profiles": {
+    "home": {
+      "fingerprint": "6d5c1c71fa05e8e60600e21e7181e0d4e9c6af2f5e21ded800dcd84d3822cf37",
+      "issues": []
+    },
+    "render": {
+      "fingerprint": "790fa99ebd03d57894c91b179568336b0d99a1030f37185e66ece460f190161d",
+      "issues": []
+    },
+    "play": {
+      "fingerprint": "013eab121bce127bc9544ee3b2d75b880c70373abab843f4b1416211d038ae46",
+      "issues": []
+    },
+    "worlds": {
+      "fingerprint": "1dc669856fe125d25888e349634109997b7b8265b7acf4e7f4584730290b769b",
+      "issues": []
+    },
+    "research": {
+      "fingerprint": "41204fd851ef49a6664949b5a84d76209074ca7ce19baafa720d9baf58ecce57",
+      "issues": []
+    },
+    "donor": {
+      "fingerprint": "fcae2a603e0775fd067f415b79dcc8fb3b0f011c09134243f261ebe36fcfa796",
+      "issues": []
+    },
+    "editor": {
+      "fingerprint": "acaf956ef7ad0793143338fc38c872bfeca195babae03eef841f6df82a1546ce",
+      "issues": []
+    }
+  }
+}

@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: known runtime copies and fourteen exact entry rewrites bind to original Git source
+ok 1 - known runtime copies and fourteen exact entry rewrites bind to original Git source
+  ---
+  duration_ms: 118.408067
+  type: 'test'
+  ...
+# Subtest: local provenance replay rejects forged HTML, copied code and unknown generated members
+ok 2 - local provenance replay rejects forged HTML, copied code and unknown generated members
+  ---
+  duration_ms: 161.031338
+  type: 'test'
+  ...
+# Subtest: Pursuit package retains native imports and binds transitive dependency bytes to the entry URL
+ok 3 - Pursuit package retains native imports and binds transitive dependency bytes to the entry URL
+  ---
+  duration_ms: 28.350064
+  type: 'test'
+  ...
+# Subtest: Pursuit packaging closes cycles without duplicating module identities
+ok 4 - Pursuit packaging closes cycles without duplicating module identities
+  ---
+  duration_ms: 3.70971
+  type: 'test'
+  ...
+# Subtest: unresolved imports fail packaging before writing a runnable snapshot
+ok 5 - unresolved imports fail packaging before writing a runnable snapshot
+  ---
+  duration_ms: 5.247439
+  type: 'test'
+  ...
+# Subtest: Skyguard receives an isolated native module graph and unknown labs are rejected
+ok 6 - Skyguard receives an isolated native module graph and unknown labs are rejected
+  ---
+  duration_ms: 3.046039
+  type: 'test'
+  ...
+# Subtest: Arcade Foundry packages its root-level bootstrap and complete shared dependency graph
+ok 7 - Arcade Foundry packages its root-level bootstrap and complete shared dependency graph
+  ---
+  duration_ms: 5.696669
+  type: 'test'
+  ...
+# Subtest: Block Arena startup and transitive shared-module changes produce isolated versioned graphs
+ok 8 - Block Arena startup and transitive shared-module changes produce isolated versioned graphs
+  ---
+  duration_ms: 4.651279
+  type: 'test'
+  ...
+# Subtest: HORIZON binds the default race, compatibility alias and two workshops to one complete immutable graph
+ok 9 - HORIZON binds the default race, compatibility alias and two workshops to one complete immutable graph
+  ---
+  duration_ms: 8.405028
+  type: 'test'
+  ...
+# Subtest: missing HORIZON drive entry rejects before replacing the authoring entry
+ok 10 - missing HORIZON drive entry rejects before replacing the authoring entry
+  ---
+  duration_ms: 1.25704
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 320.412416

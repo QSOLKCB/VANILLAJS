@@ -7,7 +7,7 @@ import {checkCatalogue,localFile,root} from './validate-agent-catalog.mjs';
 import {jsDependencies} from './browser-dependencies.mjs';
 // Archive hashes independently checked against git show at audited main 128d7c9.
 const archiveHashes={'README.md':'3895215459b4ca9388b73f99a2ea8a8076bd619e564d04bbb5a7a0676ee2c0d5','ROADMAP.md':'6e964832e833eacbd267d54763375b6f380e7bcd34afbb92c57bad228ef2c0ee'};
-const docs=['README.md','ROADMAP.md','AGENTS.md','agents/README.md',...['START_HERE','CREATOR_QUICKSTART','HOW_TO_BUILD_A_GAME','HOW_TO_MOD_A_GAME','HOW_TO_EXPORT_A_GAME','TROUBLESHOOTING','AGENT_GUIDE','GAMES2_INTEGRATION','CREATOR_GATEWAY_VERIFICATION','CREATOR_GATEWAY_2_5_0_DRAFT','BROWSER_CACHE','SPRITE_FEEL_001','SPRITE_FOUNDRY','WEAPON_FEEL','AFTER_ZERO_GAME_FEEL_AUDIT','ENGINE_EXPANSION_001','SPRITE_FEEL_2_6_0_DRAFT','SCENE_NARRATIVE_001','SCENE_NARRATIVE_2_7_0_DRAFT','SCENE_COMPOSITION','NARRATIVE_API','NARRATIVE_FOUNDRY','GAME_MAKER_001','GAME_MAKER_API','TILEMAP_API','GAME_MAKER_LAB','GAME_MAKER_EXPORT','GAME_MAKER_2_8_0_DRAFT','HORIZON_001','HORIZON_002','VEHICLE3D_API','HORIZON_DRIVING','HORIZON_LAB','RENDER_LIT_API','SCENIC3D_API','HORIZON_2_9_0_DRAFT'].map(n=>'docs/'+n+'.md')];
+const docs=['README.md','ROADMAP.md','AGENTS.md','agents/README.md',...['START_HERE','CREATOR_QUICKSTART','HOW_TO_BUILD_A_GAME','HOW_TO_MOD_A_GAME','HOW_TO_EXPORT_A_GAME','TROUBLESHOOTING','AGENT_GUIDE','GAMES2_INTEGRATION','CREATOR_GATEWAY_VERIFICATION','CREATOR_GATEWAY_2_5_0_DRAFT','BROWSER_CACHE','SPRITE_FEEL_001','SPRITE_FOUNDRY','WEAPON_FEEL','AFTER_ZERO_GAME_FEEL_AUDIT','ENGINE_EXPANSION_001','SPRITE_FEEL_2_6_0_DRAFT','SCENE_NARRATIVE_001','SCENE_NARRATIVE_2_7_0_DRAFT','SCENE_COMPOSITION','NARRATIVE_API','NARRATIVE_FOUNDRY','GAME_MAKER_001','GAME_MAKER_API','TILEMAP_API','GAME_MAKER_LAB','GAME_MAKER_EXPORT','GAME_MAKER_2_8_0_DRAFT','HORIZON_001','HORIZON_002','HORIZON_003','HORIZON_RACING','VEHICLE_AUDIO_API','VEHICLE3D_API','HORIZON_DRIVING','HORIZON_LAB','RENDER_LIT_API','SCENIC3D_API','HORIZON_2_9_0_DRAFT'].map(n=>'docs/'+n+'.md')];
 const slug=s=>s.toLowerCase().replace(/[^\p{L}\p{N}_\- ]/gu,'').replace(/ /g,'-');
 let links=0;
 async function link(from,href,anchors=true){
@@ -33,16 +33,20 @@ for(const [archive,original]of [['README_HISTORY.md','README.md'],['ROADMAP_HIST
   assert.equal(createHash('sha256').update(bytes).digest('hex'),archiveHashes[original],'historical archive changed');
   for(const m of bytes.toString().matchAll(/!?\[[^\]]*\]\(([^\s)]+)(?:\s+"[^"]*")?\)/g))await link(archive,m[1],false);
 }
-for(const path of ['demos/tutorial-lab/index.html','demos/creator-hub/index.html','demos/sprite-foundry/index.html','demos/weapon-feel-lab/index.html','demos/narrative-foundry/index.html','demos/game-maker-lab/index.html','demos/horizon-lab/index.html','demos/horizon-lab/drive.html']){
+for(const path of ['demos/tutorial-lab/index.html','demos/creator-hub/index.html','demos/sprite-foundry/index.html','demos/weapon-feel-lab/index.html','demos/narrative-foundry/index.html','demos/game-maker-lab/index.html','demos/horizon-lab/index.html','demos/horizon-lab/drive.html','demos/horizon-lab/race.html','demos/horizon-lab/scenery.html']){
   const html=await readFile(resolve(root,path),'utf8');
   for(const m of html.matchAll(/(?:href|src)="([^"]+)"/g))await link(path,m[1]);
 }
 const hub=await readFile(resolve(root,'demos/creator-hub/index.html'),'utf8');
 assert.ok(hub.includes('../tutorial-lab/index.html'),'hub must reach tutorial');
 for(const lab of ['sprite-foundry','weapon-feel-lab','narrative-foundry','game-maker-lab','horizon-lab'])assert.ok(hub.includes('../'+lab+'/index.html'),'hub must reach '+lab);
+assert.ok(hub.includes('../horizon-lab/index.html'),'hub must reach the primary playable HORIZON entry');
+assert.ok(hub.includes('../horizon-lab/scenery.html'),'hub must reach the preserved scenery workshop');
+const horizon=await readFile(resolve(root,'demos/horizon-lab/index.html'),'utf8');
+assert.ok(horizon.includes('id="race-canvas"')&&horizon.includes('id="race-start"')&&horizon.includes('src="./race-start.js"'),'primary HORIZON entry must mount the real playable race');
 const catalogue=JSON.parse(await readFile(resolve(root,'MODULES.json'),'utf8'));
-// v2.8.0: 67/48; merged HORIZON-001: 69/49; HORIZON-002 adds vehicle3d and its drive recipe.
-assert.equal(Object.keys(catalogue.modules).length,70);assert.equal(Object.keys(catalogue.recipes).length,50);assert.equal(Object.keys(catalogue.experiments).length,2);
+// v2.8.0: 67/48; merged HORIZON-001: 69/49; HORIZON-002: 70/50; HORIZON-003 adds vehicle-audio and its race recipe.
+assert.equal(Object.keys(catalogue.modules).length,71);assert.equal(Object.keys(catalogue.recipes).length,51);assert.equal(Object.keys(catalogue.experiments).length,2);
 assert.ok(Object.values(catalogue.modules).every(m=>m.status==='experimental'));
 const pkg=JSON.parse(await readFile(resolve(root,'package.json'),'utf8'));
 assert.equal(pkg.version,'1.0.0');assert.equal(catalogue.release,'1.0.0');

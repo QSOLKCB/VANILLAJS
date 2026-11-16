@@ -11,7 +11,7 @@ This rendering/environment candidate does not complete the v2.9.0 release gate.
 
 ## What this PR delivers
 
-[HORIZON Lab](../demos/horizon-lab/index.html) is an original environment and
+[Scenery Atelier](../demos/horizon-lab/scenery.html) is an original environment and
 vehicle-appearance workshop. Shape elevated, banked road geometry; inspect the
 terrain, bridge/tunnel and roadside setting; tune light, fog and vehicle finish;
 preview wheel/steering/suspension visual inputs; export and reimport inert data.

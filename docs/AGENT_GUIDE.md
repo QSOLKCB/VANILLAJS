@@ -149,7 +149,9 @@ PR and immutable release provenance; never modify it during this engine mileston
 
 Use the `horizon` workflow in [the catalogue](../agents/catalog.json). Read
 [HORIZON-001](HORIZON_001.md), [render-lit](RENDER_LIT_API.md) and
-[scenic3d](SCENIC3D_API.md), then open [the authoring lab](HORIZON_LAB.md).
+[scenic3d](SCENIC3D_API.md), then open [the scenery authoring lab](HORIZON_LAB.md).
+The main `demos/horizon-lab/index.html` is the playable race; `scenery.html` is
+the visual workshop and `drive.html` is the focused vehicle study.
 Reusable GPU resource/material behavior belongs in `render-lit`; pure scenery,
 road-surface queries and procedural visual geometry belong in `scenic3d`.
 DOM, camera-tour scheduling, controls and the original setting are lab-owned.
@@ -166,7 +168,15 @@ Reusable forces, suspension, gearing and bounded state transitions belong in
 `modules/vehicle3d/`. The lab owns its surface-query adapter, named test courses,
 input lifecycle, renderer bridge and recovery locations. Supply trusted callback
 code explicitly; a vehicle JSON file must never name executable code.
-HORIZON-003 racing tools/showcase/polish follow separate review. Preserve current
+For HORIZON-003 read [Race Foundry](HORIZON_RACING.md),
+[vehicle audio](VEHICLE_AUDIO_API.md) and [contracts/evidence](HORIZON_003.md).
+Race rules, checkpoint progression, rival steering and the named course stay in
+`demos/horizon-lab/race-*.js`; reusable synthesis belongs in `vehicle-audio`.
+`race-project.js` validates the separate race sidecar. `race-export.js` packages
+only its admitted data and the source-checked runtime. After changing that closure,
+run `node scripts/horizon-race-runtime.mjs --write` and review the generated diff.
+Run the race, view/audio/export tests and actual packaged/portable browser checks.
+Preserve current
 Racing Lab and Track Foundry v1, all existing rendering callers and frozen
 verification evidence. Games2 remains unchanged and adoption remains separate.
 

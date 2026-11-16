@@ -171,3 +171,10 @@ two-page package and therefore causes execution, not reuse. This tooling-only
 schema change does not migrate game/project formats or alter historical receipts.
 The reviewed-main authority, one-execution qualification, manual override and
 frozen base policy remain unchanged.
+
+HORIZON-003 extends the explicit page inventory to four URLs. The primary
+`horizon-lab/index.html` and compatible `race.html` entry both use `race-start.js`;
+`scenery.html` preserves the original visual workshop through `start.js`, and
+`drive.html` retains `drive-start.js`. All four source-bound HTML rewrites are
+authenticated against the same complete module namespace. The additional page
+does not grant trust to arbitrary HTML or relax witness qualification.
