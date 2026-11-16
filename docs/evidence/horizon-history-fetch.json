@@ -1,0 +1,136 @@
+{
+  "kind": "qsol.horizon.history-fetch.local-observation.v1",
+  "parentCommit": "93d3d5e5c8b037db9cee2d33f538f0cbde6f6c14",
+  "sourceSHA256": {
+    ".github/workflows/flight-lab.yml": "e6a1e69f4b44c06c23deeeb4126af32b18ff6e26efbef0a7dee89599ac80e9c7",
+    "scripts/verify_alien_math_006.py": "8269c631346a9183a35aa1bcac9ddcdaa713568c1852fbe978c8c33ae767bacc",
+    "tests/test_alien_math_006.py": "7c56b2f548698c8fa9055786edd1ad53a510ffa838fb1699c12e8ced259f0561",
+    "formal/alien-math-006/manifest.json": "44eb4b071580d12e8889ebbf1071dc1537b22aa4e0cced460f30229e5ca8fdc5",
+    "docs/HORIZON_DEPLOYMENT.md": "bac7b4744bbece6078f3c4321bdf52e90461e79fdbb1c131b0fc23c4593997f0"
+  },
+  "historicalCommit": "ce7e38eb3c7412407a3ba2bc472120b589e6eb9e",
+  "historicalWorkflowBlob": "544edab10a462991540b6192acf21b244e75bd42",
+  "historicalWorkflowSHA256": "dee8b35061e6768a76aad700e30486f1d13a4cfcfcdaaef16f1dcf5ef7f0f4b9",
+  "reproduction": "$ git clone --no-hardlinks --no-tags --depth=1 --single-branch --branch fix/horizon-main-deployment file:///home/trent/vanillajs-horizon-deploy-fix /tmp/horizon-shallow-g1_tju2s/checkout\nCloning into '/tmp/horizon-shallow-g1_tju2s/checkout'...\nexit=0\n$ git rev-parse HEAD\n93d3d5e5c8b037db9cee2d33f538f0cbde6f6c14\nexit=0\n$ git rev-parse --is-shallow-repository\ntrue\nexit=0\n$ git rev-list --count HEAD\n1\nexit=0\n$ git cat-file -e ce7e38eb3c7412407a3ba2bc472120b589e6eb9e^{commit}\nfatal: Not a valid object name ce7e38eb3c7412407a3ba2bc472120b589e6eb9e^{commit}\nexit=128\n$ git show ce7e38eb3c7412407a3ba2bc472120b589e6eb9e:.github/workflows/flight-lab.yml\nfatal: path '.github/workflows/flight-lab.yml' exists on disk, but not in 'ce7e38eb3c7412407a3ba2bc472120b589e6eb9e'\nexit=128\n$ python3 -m unittest discover -s tests -p test_alien_math_006.py -v\ntest_axiom_forgery_missing_duplicate_unknown (test_alien_math_006.BoundaryTests.test_axiom_forgery_missing_duplicate_unknown) ... ok\ntest_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates (test_alien_math_006.BoundaryTests.test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates) ... ERROR\ntest_finite_outcome_requires_exact_bytes_and_count (test_alien_math_006.BoundaryTests.test_finite_outcome_requires_exact_bytes_and_count) ... ok\ntest_source_inventory_and_corruption (test_alien_math_006.BoundaryTests.test_source_inventory_and_corruption) ... ok\n\n======================================================================\nERROR: test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates (test_alien_math_006.BoundaryTests.test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/horizon-shallow-g1_tju2s/checkout/tests/test_alien_math_006.py\", line 14, in test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates\n    baseline=v.run(['git','show',v.BASE+':'+v.FLIGHT_WORKFLOW])\n  File \"/tmp/horizon-shallow-g1_tju2s/checkout/scripts/verify_alien_math_006.py\", line 54, in run\n    if p.returncode:raise ValueError('command failed: '+' '.join(map(str,args))+'\\n'+p.stdout.decode(errors='replace')+p.stderr.decode(errors='replace'))\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: command failed: git show ce7e38eb3c7412407a3ba2bc472120b589e6eb9e:.github/workflows/flight-lab.yml\nfatal: path '.github/workflows/flight-lab.yml' exists on disk, but not in 'ce7e38eb3c7412407a3ba2bc472120b589e6eb9e'\n\n\n----------------------------------------------------------------------\nRan 4 tests in 0.005s\n\nFAILED (errors=1)\nexit=1\n$ git fetch --no-tags --depth=1 origin ce7e38eb3c7412407a3ba2bc472120b589e6eb9e\nFrom file:///home/trent/vanillajs-horizon-deploy-fix\n * branch            ce7e38eb3c7412407a3ba2bc472120b589e6eb9e -> FETCH_HEAD\nexit=0\n$ git rev-parse HEAD\n93d3d5e5c8b037db9cee2d33f538f0cbde6f6c14\nexit=0\n$ git rev-parse --is-shallow-repository\ntrue\nexit=0\n$ git rev-list --count HEAD\n1\nexit=0\n$ git rev-list --count ce7e38eb3c7412407a3ba2bc472120b589e6eb9e\n1\nexit=0\n$ git rev-parse ce7e38eb3c7412407a3ba2bc472120b589e6eb9e^{commit}\nce7e38eb3c7412407a3ba2bc472120b589e6eb9e\nexit=0\n$ git rev-parse ce7e38eb3c7412407a3ba2bc472120b589e6eb9e:.github/workflows/flight-lab.yml\n544edab10a462991540b6192acf21b244e75bd42\nexit=0\n$ git show ce7e38eb3c7412407a3ba2bc472120b589e6eb9e:.github/workflows/flight-lab.yml\nexit=0\nhistorical-workflow-sha256=dee8b35061e6768a76aad700e30486f1d13a4cfcfcdaaef16f1dcf5ef7f0f4b9\n$ python3 -m unittest discover -s tests -p test_alien_math_006.py -v\ntest_axiom_forgery_missing_duplicate_unknown (test_alien_math_006.BoundaryTests.test_axiom_forgery_missing_duplicate_unknown) ... ok\ntest_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates (test_alien_math_006.BoundaryTests.test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates) ... ok\ntest_finite_outcome_requires_exact_bytes_and_count (test_alien_math_006.BoundaryTests.test_finite_outcome_requires_exact_bytes_and_count) ... ok\ntest_source_inventory_and_corruption (test_alien_math_006.BoundaryTests.test_source_inventory_and_corruption) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.017s\n\nOK\nexit=0\nPASS: initial missing object fails closed; fetch depth1 exact baseline restores all 4 admission tests, unchanged HEAD, still shallow\n",
+  "executed": {
+    "python3 -m unittest discover -s tests -p test_alien_math_006.py -v": "test_axiom_forgery_missing_duplicate_unknown (test_alien_math_006.BoundaryTests.test_axiom_forgery_missing_duplicate_unknown) ... ok\ntest_exact_fetch_restores_admission_without_unshallowing_checkout (test_alien_math_006.BoundaryTests.test_exact_fetch_restores_admission_without_unshallowing_checkout) ... ok\ntest_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates (test_alien_math_006.BoundaryTests.test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates) ... ok\ntest_finite_outcome_requires_exact_bytes_and_count (test_alien_math_006.BoundaryTests.test_finite_outcome_requires_exact_bytes_and_count) ... ok\ntest_source_inventory_and_corruption (test_alien_math_006.BoundaryTests.test_source_inventory_and_corruption) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.083s\n\nOK\n",
+    "node --test tests/alien-math-006.test.js": "TAP version 13\n# Subtest: ALIEN-MATH-006 source-bound admission and adversarial audit tests\nok 1 - ALIEN-MATH-006 source-bound admission and adversarial audit tests\n  ---\n  duration_ms: 131.860117\n  type: 'test'\n  ...\n# Subtest: ALIEN-MATH-006 production output equals frozen independent finite oracle\nok 2 - ALIEN-MATH-006 production output equals frozen independent finite oracle\n  ---\n  duration_ms: 32.91499\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 204.647987\n",
+    "node --test tests/*.test.js": "1..1171\n# tests 1171\n# suites 0\n# pass 1171\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 15417.356938",
+    "node scripts/check.js": "Verified VOIDWARD source pin, 27 donor files and 9 native dependencies.\nVerified SubHunt release pins and 9 adapted/retained files.\nVerified SOCCERWEB v3.1.1 pin, 11 source records and 4 adapted/retained targets.\nVerified Outruin pin, 8 source records and 15 pursuit adaptations/original files.\nVerified Spooky v0.1.0 pin, 8 source records and 10 Skyguard adaptations/original files.\nVerified Demoscene source/asset closure and full-minute PCM/WAV receipt; fresh command parity (archive uses a different runtime).\nChecked 503 JavaScript files, 71 module contracts and 2 research experiments.\nDocumentation audit: 761 local links, 153 source imports, unchanged historical archives, published baseline references and 12 workflows passed.\n",
+    "node scripts/build.js": "Packaged 970 files into dist/; SHA-256 manifest written.\n",
+    "node scripts/verify-offline.js": {
+      "kind": "qsol.vanillajs.offline-package.v1",
+      "verified": 970,
+      "bytes": 7003656,
+      "workerSha256": "7abec5990e4138d8f3ae17dda4d61d64f32d7677a0b3dc55db9ae728b80fddac"
+    },
+    "python3 scripts/verify_alien_math_006.py --negative-controls --output /tmp/horizon-history-formal.json": {
+      "baseline": "ce7e38eb3c7412407a3ba2bc472120b589e6eb9e",
+      "claims": [
+        "LEAN_MODEL_THEOREMS",
+        "FINITE_SOURCE_CONFORMANCE"
+      ],
+      "gitCommit": "93d3d5e5c8b037db9cee2d33f538f0cbde6f6c14",
+      "javascriptRefinement": "OPEN",
+      "lean": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+      "leanCompilerSHA256": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38",
+      "leanLauncherSHA256": "f7f2abfd94493557451cc5b856b30088dbaa9460f4cdf30fdb8c857ffb335671",
+      "manifestSHA256": "44eb4b071580d12e8889ebbf1071dc1537b22aa4e0cced460f30229e5ca8fdc5",
+      "negativeControls": [
+        "removed theorem",
+        "weakened proposition",
+        "unapproved axiom",
+        "opaque proof hole",
+        "wrong graph coefficient",
+        "valid model, wrong source convention"
+      ],
+      "node": "v22.18.0",
+      "observations": 856,
+      "python": "3.14.4",
+      "schema": "qsol.alien-math-006.observation.v1",
+      "streamSHA256": "964981f119a1e8372a6dd678663d443fe363eac05c1e5886a0003fc1b6070ed9",
+      "theorems": {
+        "d4_action_compose": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "d4_area": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "d4_associative": [],
+        "d4_distance": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "d4_inverse": [
+          "propext"
+        ],
+        "d4_left_identity": [],
+        "d4_right_identity": [],
+        "graph3_determinant": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "graph3_spectral_relabel": [
+          "propext"
+        ],
+        "interval_reflection": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "normalization_certificate": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "q16_exact_magnitude": [
+          "propext"
+        ],
+        "q16_floor_certificate": [
+          "propext"
+        ],
+        "rational_add_assoc": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "rational_add_comm": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "rational_distributive": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "rational_mul_comm": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "relabel_compose": [],
+        "relabel_inverse": [
+          "Quot.sound",
+          "propext"
+        ],
+        "relabel_no_loops": [],
+        "relabel_symmetry": []
+      }
+    },
+    "git diff --check": "PASS"
+  },
+  "packageManifestSHA256": "53a8285e6cd93447657ff54198214e976255cd5f66a313e1ddee1620670fc411",
+  "notes": [
+    "Checks ran on the changed worktree bytes before commit; report HEAD is retained accurately.",
+    "Only the active workflow, verifier and test manifest pins were regenerated with python3 scripts/pin_alien_math_006.py --write.",
+    "No browser test or trusted receipt was manufactured locally for this history preparation change. Hosted CI outcome is reported on PR109.",
+    "No merge, tag, release or deployment performed."
+  ]
+}

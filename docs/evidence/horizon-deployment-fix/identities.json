@@ -1,0 +1,30 @@
+{
+  "kind": "qsol.horizon.deployment-fix.local-observation.v1",
+  "testedImplementation": "e02c01ab12b4dd98a4e37d20fe60a58da2fcdf21",
+  "base": "54634ba45d4205d2afcf0c40c61fb9bff0312a86",
+  "packageManifestSHA256": "a407049d74f636454d7965fef720fdc882c977d10f76d2c671f43d6af654883d",
+  "workerSHA256": "afa53f3d1c6d591fda9f7ea44a21a2619f2409283cb672daa763c476f787b25c",
+  "canonicalSourceSHA256": "d518675588b9748be2c2ec28d02b7d6e6a317c85b67a7715b34b10877582d734",
+  "browserDispatcherSHA256": "2b1b8eb31e99a77bb97fb059800b1cd070ed8ce66b7d1c2a12fea5609cafb8b4",
+  "formalManifestSHA256": "9bb0b7ccd47db45fd87b262a7df7b448fcb6a33ecc5693d2df35d6b1b66f48c5",
+  "files": {
+    "browser-launcher.txt": "f962eb86c010e2017ee5fec49f125986f86c7929b643f60252ab7a12208a49d1",
+    "build.log": "6f3fcea616d5295fc82a82f465219e6aa14598f24cae989f3d9c9f92bae268c5",
+    "check.log": "511178572ba5dcc40a535ea90c5c6da9b0cb2c235f40edc48c537c3f2a871f9f",
+    "donor-browser.log": "ec3e441d55cac28c0a852f9f008cec5604d3b1dbfaf5d5dc79e2033dd105f831",
+    "formal-result.json": "96cfd8e8aa6296ed5c80df6b614e405342847410bef36a58fdbe7de9697de85d",
+    "formal.log": "49478e74625338d657230b8bdc52d793621233d5a163279b862b3831457146ae",
+    "horizon-browser.log": "86436ff10379e66cf22f2484be1ababbfacd7008d7cf3a3b0e374a2969b02ced",
+    "horizon-diagnostics.json": "7685ca37db49ab7412a2211de71753e4ee040c58dd99995081e1477c6616d9d0",
+    "horizon-finish.png": "6d6a9f2f6e746dcb9c4b1f9f140e2f8c3fc5e9af828bf2d4e003add5f2a0e1a8",
+    "node-tests.tap.gz": "ba1d4b70839e6815253cedb66d405c879b6f8ddecd855e465985beb05adfec61",
+    "offline.json": "31fe34d31004e646ed7936daddd93864b086bc5fdc3b3e1d7e090a1bdc5e07f5",
+    "final-build.log": "6f3fcea616d5295fc82a82f465219e6aa14598f24cae989f3d9c9f92bae268c5",
+    "final-offline.json": "5d69e4b8c86352da76eaffde0d6918dae883944bfaa3f51971c04f147bd13516"
+  },
+  "trustedMainReceipt": false,
+  "productionDeploymentVerified": false,
+  "finalPackageManifestSHA256": "e7015cce72e44f24e6aadcdf1c99f0a2b342ee2ab8638a9d32070c6dd6106b2d",
+  "finalWorkerSHA256": "e029116eb6a9a1130534343eb4aa44c559022f04e47711a1762709594023df62",
+  "finalPackageNotes": "Rebuilt and verified after the HTTP wording clarification; runtime and harness unchanged from the browser-tested implementation."
+}

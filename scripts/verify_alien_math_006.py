@@ -38,6 +38,21 @@ NEW_FILES=[FORMAL+n+'.lean' for n in ['AlienMath006','Audit','Bridge']]+[
  'tests/fixtures/alien-math-006-input.json','tests/fixtures/alien-math-006-oracle.json',
  'docs/ALIEN_MATH_006.md','.github/workflows/alien-math-formal.yml','scripts/browser-reuse-policy.json']
 FILES=sorted(BASELINE_FILES+NEW_FILES)
+# The live hosted-job budget may advance without rewriting its frozen witness.
+# This exact, independently pinned baseline-to-current substitution permits only
+# the reviewed 20 -> 35 minute budget/comment and a narrow historical fetch before
+# admission tests. Every other action, command, condition and permission must match.
+FLIGHT_WORKFLOW='.github/workflows/flight-lab.yml'
+FLIGHT_BASE_SHA256='dee8b35061e6768a76aad700e30486f1d13a4cfcfcdaaef16f1dcf5ef7f0f4b9'
+FLIGHT_OLD_BUDGET=b'    timeout-minutes: 20 # cold-cache and complete browser-suite margin; not permission to skip checks\n'
+FLIGHT_NEW_BUDGET=(b'    # HORIZON extends the full software-rendered suite beyond the former 20-minute\n'
+                   b'    # whole-job limit. Keep every gate and allow time for cold tooling and uploads.\n'
+                   b'    timeout-minutes: 35\n')
+FLIGHT_CHECKOUT=b'      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4\n'
+FLIGHT_BASELINE_PREPARATION=(b'      - name: Fetch exact ALIEN-MATH-006 historical baseline\n'
+    b'        run: |\n'
+    b'          git fetch --no-tags --depth=1 origin ce7e38eb3c7412407a3ba2bc472120b589e6eb9e\n'
+    b'          python3 scripts/verify_alien_math_006.py --pins-only\n')
 def sha(raw):return hashlib.sha256(raw).hexdigest()
 def run(args,cwd=ROOT,env=None):
     p=subprocess.run(list(map(str,args)),cwd=cwd,env=env,capture_output=True,timeout=180)
@@ -62,9 +77,24 @@ def verify_pins(root,manifest):
     if re.findall(r'^import (.+)$',clean,re.M)!=['Lean','Init.Data.Rat.Lemmas']:raise ValueError('unapproved model import')
     return True
 
+def verify_workflow_budget_revision(baseline,current):
+    if sha(baseline)!=FLIGHT_BASE_SHA256:raise ValueError('frozen workflow witness mismatch')
+    if baseline.count(FLIGHT_OLD_BUDGET)!=1:raise ValueError('frozen workflow budget is ambiguous')
+    if baseline.count(FLIGHT_CHECKOUT)!=1:raise ValueError('frozen workflow checkout is ambiguous')
+    expected=baseline.replace(FLIGHT_OLD_BUDGET,FLIGHT_NEW_BUDGET,1)
+    expected=expected.replace(FLIGHT_CHECKOUT,FLIGHT_CHECKOUT+FLIGHT_BASELINE_PREPARATION,1)
+    if current!=expected:
+        raise ValueError('unreviewed workflow change outside exact timeout and historical-fetch revision')
+    return True
+
 def verify_baseline(root,manifest):
     for path in BASELINE_FILES:
         raw=run(['git','show',BASE+':'+path],cwd=root)
+        if path==FLIGHT_WORKFLOW:
+            current=(root/path).read_bytes()
+            verify_workflow_budget_revision(raw,current)
+            if sha(current)!=manifest['files'][path]:raise ValueError('live workflow pin mismatch')
+            continue
         if sha(raw)!=manifest['files'][path]:raise ValueError('historical baseline drift: '+path)
 
 def parse_audit(text):

@@ -1,0 +1,7 @@
+HORIZON race: canonical index car movement, scenery/return navigation, race alias, actual keyboard course completion, rival/checkpoints/finish, three cameras/classes, course/vehicle/audio editing, strict rollback/history/export cancellation, sound lifecycle, 320px touch, native context recovery, graphics fallback and offline startup PASS
+horizon-lab/index.html: failed-import reload and retained older-worker module isolation PASS
+HORIZON scenery workshop: native lit scenery/car pixels, height/bank geometry, materials/light/rig with retained uploads, classes/paint, strict project roundtrip/rollback, camera tour/idle/focus, low detail, native context restoration, 320px touch, graphics fallback and controlled offline authoring PASS
+horizon-lab/scenery.html: failed-import reload and retained older-worker module isolation PASS
+HORIZON driving: actual throttle/steer/brake, torque comparison, four-wheel ramp jump/landing, coast contact, strict sidecar/vehicle exports and rollback, retained meshes, pause/fresh-input, 320px native touch cancellation, context restoration, graphics fallback and prefixed offline driving PASS
+horizon-lab/drive.html: failed-import reload and retained older-worker module isolation PASS
+Canonical HORIZON race, compatible alias, scenery and driving entries PASS

@@ -3,6 +3,7 @@ import {createRequire} from 'node:module';
 import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
+import {performance} from 'node:perf_hooks';
 import assert from 'node:assert/strict';
 import {SUITES} from './browser-suite-cache.mjs';
 
@@ -47,9 +48,17 @@ await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const base=`http://127.0.0.1:${server.address().port}/VANILLAJS/`;
 async function runSuite(group,file,exported){
   if(!needs(group))return;
-  const fn=(await import(file))[exported];
-  if(typeof fn!=='function')throw new TypeError('browser suite function not found: '+exported);
-  await fn(browser,base);
+  const name=group+'/'+exported,started=performance.now();
+  console.log('Browser START '+name);
+  try{
+    const fn=(await import(file))[exported];
+    if(typeof fn!=='function')throw new TypeError('browser suite function not found: '+exported);
+    await fn(browser,base);
+    console.log('Browser PASS '+name+' ('+((performance.now()-started)/1000).toFixed(2)+'s)');
+  }catch(error){
+    console.error('Browser FAIL '+name+' ('+((performance.now()-started)/1000).toFixed(2)+'s)');
+    throw error;
+  }
 }
 const browser=await chromium.launch({...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{}),args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
