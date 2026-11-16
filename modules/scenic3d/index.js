@@ -79,11 +79,20 @@ function roadRows(recipe){
 }
 function roadTriangles(rows){
   const triangles=[];for(let i=0;i<rows.length-1;i++){
-    const a=rows[i],b=rows[i+1];for(const [triangle,points,uv] of [[0,[a.left,a.right,b.left],[[0,a.distance/6],[1,a.distance/6],[0,b.distance/6]]],[1,[a.right,b.right,b.left],[[1,a.distance/6],[1,b.distance/6],[0,b.distance/6]]]]){
+    const a=rows[i],b=rows[i+1],corners=[a.left,a.right,b.right,b.left];
+    // Every interpolated cross-section must remain inside the two road faces.
+    // Upward individual triangles alone do not exclude a concave strip.
+    for(let k=0;k<4;k++)if(cross(sub(corners[(k+1)%4],corners[k]),sub(corners[(k+2)%4],corners[(k+1)%4]))[1]<-1e-9)throw new RangeError('road cross-section must be convex in XZ');
+    for(const [triangle,points,uv] of [[0,[a.left,a.right,b.left],[[0,a.distance/6],[1,a.distance/6],[0,b.distance/6]]],[1,[a.right,b.right,b.left],[[1,a.distance/6],[1,b.distance/6],[0,b.distance/6]]]]){
       const normal=triangleNormal(...points);if(normal[1]<.15)throw new RangeError('road folds or exceeds supported slope');
       triangles.push({surfaceId:a.surfaceId,surface:a.surface,structure:a.structure,segment:a.segment,strip:i,triangle,points,normal,uv});
     }
   }return triangles;
+}
+function roadWeights(points,x,z){
+  const [a,b,c]=points,den=(b[2]-c[2])*(a[0]-c[0])+(c[0]-b[0])*(a[2]-c[2]);
+  const wa=((b[2]-c[2])*(x-c[0])+(c[0]-b[0])*(z-c[2]))/den,wb=((c[2]-a[2])*(x-c[0])+(a[0]-c[0])*(z-c[2]))/den;
+  return [wa,wb,1-wa-wb];
 }
 function sampleResult(points,normal,tangent,weights,fields){
   const position=[0,1,2].map(k=>points.reduce((s,p,i)=>s+p[k]*weights[i],0)),forward=unit(sub(tangent,scale(normal,dot(tangent,normal)))),right=unit(cross(forward,normal));
@@ -102,14 +111,22 @@ export class ScenicRoad{
   mesh(surface=null){if(surface!==null&&!['asphalt','gravel'].includes(surface))throw new TypeError('unknown surface');const out=[];for(const t of this.#triangles)if(surface===null||surface===t.surface)triangle(out,...t.points,[1,1,1],t.uv);return new Float32Array(out);}
   sample(distance,lateral=0){
     num(distance,0,this.length,'road distance');num(lateral,-9,9,'lateral offset');let i=this.#rows.length-2;for(let n=0;n<this.#rows.length-1;n++)if(distance<this.#rows[n+1].distance){i=n;break;}
-    const a=this.#rows[i],b=this.#rows[i+1],u=(distance-a.distance)/(b.distance-a.distance),width=lerp(a.width,b.width,u);if(Math.abs(lateral)>width/2)throw new RangeError('offset outside road');const v=.5+lateral/width,first=u+v<=1,t=this.#triangles[i*2+(first?0:1)],weights=first?[1-u-v,v,u]:[1-u,u+v-1,1-v];
-    return sampleResult(t.points,t.normal,sub(b.center,a.center),weights,{distance,lateral,surfaceId:t.surfaceId,surface:t.surface,structure:t.structure,segment:t.segment,triangle:t.triangle});
+    const a=this.#rows[i],b=this.#rows[i+1],u=(distance-a.distance)/(b.distance-a.distance),left=point(a.left,b.left,u),right=point(a.right,b.right,u),across=sub(right,left),width=Math.hypot(...across);
+    // Metres along the physical cross-section, followed by a vertical lift onto
+    // the actual rendered face. Unit-square weights skew tapered sections.
+    if(Math.abs(lateral)>width/2+2e-4)throw new RangeError('offset outside road');
+    const offset=Math.max(-width/2,Math.min(width/2,lateral)),target=add(point(left,right,.5),scale(across,offset/width));
+    for(let j=0;j<2;j++){
+      const t=this.#triangles[i*2+j],weights=roadWeights(t.points,target[0],target[2]);if(Math.min(...weights)<-1e-8)continue;
+      return sampleResult(t.points,t.normal,sub(b.center,a.center),weights,{distance,lateral,surfaceId:t.surfaceId,surface:t.surface,structure:t.structure,segment:t.segment,triangle:t.triangle});
+    }
+    throw new RangeError('cross-section lies outside the triangulated road');
   }
   sampleAt(x,z,options={}){
     num(x,-2000,2000,'sample x');num(z,-2000,2000,'sample z');record(options,['surfaceId','maxY'],'road query',true);const maxY=num(options.maxY??2000,-2000,2000,'maximum query height');
     if(options.surfaceId!==undefined&&(typeof options.surfaceId!=='string'||!this.#recipe.road.slice(0,-1).some(p=>p.id===options.surfaceId)))throw new TypeError('unknown road surface ID');
-    let hit=null;for(const t of this.#triangles){if(options.surfaceId!==undefined&&t.surfaceId!==options.surfaceId)continue;const [a,b,c]=t.points,den=(b[2]-c[2])*(a[0]-c[0])+(c[0]-b[0])*(a[2]-c[2]);const wa=((b[2]-c[2])*(x-c[0])+(c[0]-b[0])*(z-c[2]))/den,wb=((c[2]-a[2])*(x-c[0])+(a[0]-c[0])*(z-c[2]))/den,wc=1-wa-wb;if(Math.min(wa,wb,wc)<-1e-8)continue;
-      const rows=this.#rows,hitData=sampleResult(t.points,t.normal,sub(rows[t.strip+1].center,rows[t.strip].center),[wa,wb,wc],{surfaceId:t.surfaceId,surface:t.surface,structure:t.structure,segment:t.segment,triangle:t.triangle});if(hitData.position[1]<=maxY+1e-7&&(!hit||hitData.position[1]>hit.position[1]))hit=hitData;
+    let hit=null;for(const t of this.#triangles){if(options.surfaceId!==undefined&&t.surfaceId!==options.surfaceId)continue;const weights=roadWeights(t.points,x,z);if(Math.min(...weights)<-1e-8)continue;
+      const rows=this.#rows,hitData=sampleResult(t.points,t.normal,sub(rows[t.strip+1].center,rows[t.strip].center),weights,{surfaceId:t.surfaceId,surface:t.surface,structure:t.structure,segment:t.segment,triangle:t.triangle});if(hitData.position[1]<=maxY+1e-7&&(!hit||hitData.position[1]>hit.position[1]))hit=hitData;
     }return hit;
   }
 }
@@ -139,7 +156,7 @@ export function buildScenicWorld(value){
     if(i%2===0){const p=road.sample(a.distance,.06),q=road.sample(Math.min(b.distance,road.length),.06),r=road.sample(Math.min(b.distance,road.length),-.06),s=road.sample(a.distance,-.06);quad(batch('markings'),... [s,p,q,r].map(v=>add(v.position,scale(v.normal,.024))));}
     if(a.structure!=='bridge')for(const side of [-1,1]){
       const edge=r=>side<0?r.left:r.right,outer=r=>{const p=add(edge(r),scale(unit(sub(r.right,r.left)),side*3));return [p[0],terrain.sample(p[0],p[2]).height,p[2]];};
-      const p=edge(a),q=edge(b),r=outer(b),s=outer(a);quad(batch('terrain'),...(side<0?[p,s,r,q]:[p,q,r,s]),[1,1,1]);
+      const p=edge(a),q=edge(b),r=outer(b),s=outer(a);quad(batch('terrain'),...(side<0?[p,q,r,s]:[p,s,r,q]),[1,1,1]);
     }
     if(a.structure==='bridge'){
       const middle=point(a.center,b.center,.5),length=Math.hypot(...sub(b.center,a.center)),yaw=Math.atan2(-(b.center[0]-a.center[0]),-(b.center[2]-a.center[2])),pitch=Math.atan2(b.center[1]-a.center[1],Math.hypot(b.center[0]-a.center[0],b.center[2]-a.center[2]));box(batch('stone'),[middle[0],middle[1]-.55,middle[2]],[a.width+.9,.9,length+.25],[1,1,1],yaw,a.bank,pitch);

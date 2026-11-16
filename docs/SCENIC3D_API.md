@@ -69,7 +69,9 @@ Every road knot has exactly `id, x, y, z, width, bank, structure, surface`:
 Adjacent knots require 8…200 m horizontal separation and an absolute grade no
 greater than 0.7. Total knot chord length is bounded to 2,400 m. Generated road
 triangles must remain nondegenerate and upward-facing with normal Y ≥0.15;
-unsafe folding or extreme interpolation is rejected. Generated road-edge coordinates are
+unsafe folding, concave XZ strips or extreme interpolation are rejected. Convex
+strips keep each interpolated cross-section inside its two rendered triangles.
+Generated road-edge coordinates are
 bounded to ±2,000 m. Curves use eight Catmull–Rom subdivisions per knot span;
 width and bank interpolate linearly.
 
@@ -136,16 +138,30 @@ owned data copies; callers cannot mutate the road's private contact surface.
 `mesh()` returns the exact triangle mesh, optionally filtered by `asphalt` or
 `gravel`.
 
-`sample(distance, lateral = 0)` requires 0…length and an offset within the
-interpolated paved half-width. It returns `position`, the actual triangle
+`sample(distance, lateral = 0)` requires 0…length and a lateral offset in ±9 m
+within the actual rendered cross-section's half-width. It returns `position`, the actual triangle
 `normal`, `yaw`, `pitch`, `roll`, `distance`, `lateral`, `surfaceId`, `surface`,
 `structure`, `segment` and `triangle`. Pose rotation is Y(yaw) × X(pitch) ×
 Z(roll); its up axis matches the selected planar normal.
 
 The road's quantized left/right vertices define two triangles in every strip.
-Sampling uses **piecewise triangle barycentric interpolation**, not a bilinear
-height estimate or a separate spline height. Tests compare rendered coordinates
-and independent plane-height references for every original road triangle.
+At the requested distance, sampling interpolates the left and right edges to
+construct a straight cross-section. Lateral metres are measured along that 3D
+cross-section from its midpoint. Its XZ position selects a rendered triangle;
+**triangle barycentric interpolation** supplies the actual surface height and
+normal. This vertical projection keeps samples on the rendered surface through
+bank transitions; the lateral coordinate is not a geodesic surface distance.
+Widening or narrowing a straight road therefore preserves its centerline and
+signed metre offsets. Curvature can make the rendered cross-section narrower
+than the interpolated authored width. An offset exceeding the actual edge by at
+most 0.0002 m is clamped to the edge to accommodate Float32 coordinate rounding;
+larger excess is rejected. The supplied `lateral` field retains the caller's value.
+
+This corrects the unreleased candidate's unit-square sampling on tapered strips
+and rejects previously admitted concave strips whose cross-sections can leave
+the mesh. Recipe versions and road triangle positions are unchanged for retained
+valid recipes. Tests cover analytic straight/banked roads, curved transitions,
+section endpoints and independent rendered-triangle plane references.
 
 `sampleAt(x,z,{surfaceId,maxY = 2000})` queries those same triangles. It returns
 `position`, `normal`, orientation and span metadata, or `null` outside the road.
