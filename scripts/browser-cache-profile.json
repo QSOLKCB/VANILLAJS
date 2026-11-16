@@ -142,16 +142,16 @@
     "scripts/browser-check.js": "69ee11480969c1b43eb544ab8b12a570f910c388e654997df9387a23b2081c4c",
     "scripts/browser-sprite-foundry.js": "c36c901f1e70012700e1d0000436659f64fa6a40a199501dff63e3cd2b385288",
     "scripts/browser-weapon-feel.js": "f342de424ad652ab57f1fa371bd25d9810bcd66c09c72753a8e3c2ae302678ed",
-    "scripts/foundry-startup-check.mjs": "2f10d409ff107ce5d15363ef84c1c30fa8020086685c88e74137cc6e8578f606",
+    "scripts/foundry-startup-check.mjs": "e15c3efea4409993d12181b907f1e1f53519b6f6dd899e5ef20d74d13c169ff7",
     "scripts/browser-narrative.js": "7d227c83a8c9ee9fa04ce3d90a7689c7b55280ee5f60453d7644c66ed60f7678",
     "scripts/browser-scene-composition.js": "46953c11642b5859fde0c83aadc23911f72e70cefa114beab64c2d533a2503fd",
     "scripts/browser-game-maker.js": "ebe852066e959ede9f43f22f78fad4bcca85df4aa35b09e9c0cae3c747afa5e8",
     "scripts/browser-game-maker-api.js": "aa83bdc9d6c3d3d54ac1be56a9cb0af8f1e07d1e122acc06e0152b12b6e32386",
     "scripts/game-maker-runtime.mjs": "e3f7b3e4413df3ce7e288b522eba91d3c6e96c882aa35ef971718557b98871ad",
     "scripts/browser-render-lit.js": "1304c2cb50a7db2e8125671848629404ccc05125fde7e30f7ddadffc59f1cfb3",
-    "scripts/browser-horizon.js": "49c8d7ea5f2e7582016dc600bbce3ffdd12349e7e479794cef89a734e37342d7",
+    "scripts/browser-horizon.js": "81d1457f61fc7352c630c760cae4f6268b533f2762274104318428f59ce926d9",
     "scripts/browser-horizon-drive.js": "7f7f4041c2f62b3782a074ba3b24f94f0b77ca68c84807941bf1e9534f22478d",
-    "scripts/browser-horizon-race.js": "11d7a192fd709d934e1f85c83f057c218974bc0492f23a96b186222096d9c43e",
+    "scripts/browser-horizon-race.js": "a4dd6964278ecee8171e1856e92a5857a48251d07f4ffea2e1ed73a2aa95d758",
     "scripts/browser-horizon-export.js": "53deefa374a833405aacd72b3c77facca8d9fec6b90f2aeddad01356a0baf2f2"
   },
   "auditedRuntime": {
@@ -1010,7 +1010,7 @@
       "reason": "Browser evaluation imports the integer world and compares the explicit local fixture; URL inspection is assertion-only."
     },
     "scripts/foundry-startup-check.mjs": {
-      "sha256": "2f10d409ff107ce5d15363ef84c1c30fa8020086685c88e74137cc6e8578f606",
+      "sha256": "e15c3efea4409993d12181b907f1e1f53519b6f6dd899e5ef20d74d13c169ff7",
       "roots": [
         "demos/sprite-foundry/index.html",
         "demos/weapon-feel-lab/index.html",
@@ -1031,9 +1031,10 @@
         "demos/horizon-lab/drive.html",
         "modules/vehicle3d/index.js",
         "demos/horizon-lab/race.html",
-        "modules/vehicle-audio/index.js"
+        "modules/vehicle-audio/index.js",
+        "demos/horizon-lab/scenery.html"
       ],
-      "reason": "The source-owned five-lab map and explicit three HORIZON entries select only these local packaged entry points. A loopback server combines the bound worker template with explicit SHA-256 synthetic old-cache fixtures; URL construction stays under /VANILLAJS/ and browser fetch reads cached source text only for equality assertions. No fetched bytes or imported project data become executable instructions."
+      "reason": "The source-owned five-lab map and explicit HORIZON entry table select the canonical race index, compatible race alias, driving and scenery pages. A loopback server combines the bound worker template with explicit SHA-256 synthetic old-cache fixtures; URL construction stays under /VANILLAJS/ and browser fetch reads cached source text only for equality assertions. No fetched bytes or imported project data become executable instructions."
     },
     "scripts/browser-game-maker-api.js": {
       "sha256": "aa83bdc9d6c3d3d54ac1be56a9cb0af8f1e07d1e122acc06e0152b12b6e32386",

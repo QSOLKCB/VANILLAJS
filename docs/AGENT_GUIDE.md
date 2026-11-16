@@ -149,7 +149,9 @@ PR and immutable release provenance; never modify it during this engine mileston
 
 Use the `horizon` workflow in [the catalogue](../agents/catalog.json). Read
 [HORIZON-001](HORIZON_001.md), [render-lit](RENDER_LIT_API.md) and
-[scenic3d](SCENIC3D_API.md), then open [the authoring lab](HORIZON_LAB.md).
+[scenic3d](SCENIC3D_API.md), then open [the scenery authoring lab](HORIZON_LAB.md).
+The main `demos/horizon-lab/index.html` is the playable race; `scenery.html` is
+the visual workshop and `drive.html` is the focused vehicle study.
 Reusable GPU resource/material behavior belongs in `render-lit`; pure scenery,
 road-surface queries and procedural visual geometry belong in `scenic3d`.
 DOM, camera-tour scheduling, controls and the original setting are lab-owned.

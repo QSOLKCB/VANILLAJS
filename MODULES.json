@@ -601,7 +601,7 @@
       "environment": "browser-webgl1",
       "status": "experimental",
       "description": "Optional owned normal/material lighting, procedural textures, atmosphere and bounded retained native WebGL1 rendering",
-      "demo": "demos/horizon-lab/index.html"
+      "demo": "demos/horizon-lab/scenery.html"
     },
     "scenic3d": {
       "entry": "modules/scenic3d/index.js",
@@ -612,7 +612,7 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Bounded versioned scenery, elevated/banked road surfaces, static batches and detailed original vehicle visual rigs",
-      "demo": "demos/horizon-lab/index.html"
+      "demo": "demos/horizon-lab/scenery.html"
     },
     "vehicle3d": {
       "entry": "modules/vehicle3d/index.js",
@@ -1187,7 +1187,7 @@
       "description": "Author an original 2D platform game with the owned Game Maker facade and export its complete offline package"
     },
     "horizon": {
-      "entry": "demos/horizon-lab/index.html",
+      "entry": "demos/horizon-lab/scenery.html",
       "modules": [
         "render-lit",
         "scenic3d",
@@ -1209,7 +1209,7 @@
       "description": "Drive and tune a four-wheel vehicle on original test environments; export validated vehicle data"
     },
     "horizon-race": {
-      "entry": "demos/horizon-lab/race.html",
+      "entry": "demos/horizon-lab/index.html",
       "modules": [
         "vehicle3d",
         "vehicle-audio",

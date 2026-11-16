@@ -9,7 +9,7 @@ import {hash,gitBlob} from './browser-dependencies.mjs';
 import {packageEditorRuntime,packageLabRuntime} from './pursuit-package.mjs';
 export const PROVENANCE_SCHEMA='qsol.browser.package-provenance.v2';
 const LABS=['editor','pursuit-lab','skyguard-lab','arcade-combat-lab','block-arena-lab','demoscene-lab','sprite-foundry','weapon-feel-lab','narrative-foundry','game-maker-lab','horizon-lab'];
-const STARTUPS={'editor':'start.js','pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js','block-arena-lab':'start.js','demoscene-lab':'start.js','sprite-foundry':'start.js','weapon-feel-lab':'start.js','narrative-foundry':'start.js','game-maker-lab':'start.js','horizon-lab':'start.js'};
+const STARTUPS={'editor':'start.js','pursuit-lab':'js/start.js','skyguard-lab':'js/start.js','arcade-combat-lab':'start.js','block-arena-lab':'start.js','demoscene-lab':'start.js','sprite-foundry':'start.js','weapon-feel-lab':'start.js','narrative-foundry':'start.js','game-maker-lab':'start.js','horizon-lab':'race-start.js'};
 const GENERATORS=['scripts/build.js','scripts/pursuit-package.mjs','scripts/browser-dependencies.mjs','scripts/browser-package-provenance.mjs','scripts/game-maker-runtime.mjs','scripts/horizon-race-runtime.mjs'];
 const record=(path,bytes)=>({path,sha256:hash(bytes),gitBlob:gitBlob(bytes)});
 const sameKeys=(value,keys)=>value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).sort().join(',')===[...keys].sort().join(',');
@@ -22,7 +22,7 @@ function allowedCopy(lab,path){
     /^demos\/4x-game-lab\/voidward\/mods\/frontier\/.+\.txt$/.test(path)||
     ['demos/gpu-lab/controls.js','demos/editor/style.css'].includes(path);
 }
-const pages=lab=>['demos/'+lab+'/index.html',...(lab==='horizon-lab'?['demos/horizon-lab/drive.html','demos/horizon-lab/race.html']:[])];
+const pages=lab=>['demos/'+lab+'/index.html',...(lab==='horizon-lab'?['demos/horizon-lab/drive.html','demos/horizon-lab/race.html','demos/horizon-lab/scenery.html']:[])];
 function rewrite(html,lab,version,path){
   const base='demos/'+lab;
   if(lab==='editor'){
@@ -31,7 +31,7 @@ function rewrite(html,lab,version,path){
       html=html.replace(marker,'"./runtime-'+version+'/'+base+'/'+name+'"');
     }
   }else{
-    const startup=path==='demos/horizon-lab/race.html'?'race-start.js':path==='demos/horizon-lab/drive.html'?'drive-start.js':STARTUPS[lab];
+    const startup=path==='demos/horizon-lab/scenery.html'?'start.js':path==='demos/horizon-lab/race.html'?'race-start.js':path==='demos/horizon-lab/drive.html'?'drive-start.js':STARTUPS[lab];
     const marker='src="./'+startup+'"';if(html.split(marker).length!==2)throw Error('unexpected lab entry');
     html=html.replace(marker,'src="./runtime-'+version+'/'+base+'/'+startup+'"');
   }
@@ -114,7 +114,7 @@ export function packageSourceBound(inputs,entries,htmlSources=new Map()){
         copies.push({path:sourcePath,sha256:f.sha256});recognized.add(f.path);
       }
       copies.sort((a,b)=>a.path.localeCompare(b.path));
-      const startups=[STARTUPS[pkg.lab],...(pkg.lab==='horizon-lab'?['drive-start.js','race-start.js']:[])];
+      const startups=[STARTUPS[pkg.lab],...(pkg.lab==='horizon-lab'?['drive-start.js','start.js']:[])];
       if(!startups.every(startup=>copies.some(f=>f.path==='demos/'+pkg.lab+'/'+startup))||hash(JSON.stringify(copies))!==pkg.version)return false;
       // Editor packaging has an explicit extension allowlist, so authenticate
       // its complete inventory as well as each member's contents.

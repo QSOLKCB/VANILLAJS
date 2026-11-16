@@ -61,12 +61,12 @@ with research unchanged.
 [MODULES.json](MODULES.json) is authoritative. Its `release` and the private
 `package.json` version retain historical `1.0.0` metadata, not GitHub release numbers.
 
-**HORIZON-003 — final v2.9.0 candidate:** [Race Foundry](demos/horizon-lab/race.html)
+**HORIZON-003 — final v2.9.0 candidate:** [Race Foundry](demos/horizon-lab/index.html)
 combines elevated route editing, vehicle and sound tuning, retained history and
 an original scenic race against a physics-driven rival. Drive through ordered
 checkpoints, switch cameras and export the complete local race package.
 [Vehicle Dynamics](demos/horizon-lab/drive.html) and the
-[Scenery Atelier](demos/horizon-lab/index.html) remain specialist tools.
+[Scenery Atelier](demos/horizon-lab/scenery.html) remain specialist tools.
 v2.9.0 awaits owner review and release approval.
 [Creator tutorial](docs/HORIZON_RACING.md) · [Contracts and verification](docs/HORIZON_003.md) · [Programme](docs/ENGINE_EXPANSION_001.md).
 
@@ -101,9 +101,9 @@ contracts, even when the demonstrations are playable.
 
 | Build or investigate | Working entry point | Guide |
 | --- | --- | --- |
-| Build, race and export a scenic 3D route | [HORIZON Race Foundry](demos/horizon-lab/race.html) | [Author your first race](docs/HORIZON_RACING.md) |
+| Build, race and export a scenic 3D route | [HORIZON Race Foundry](demos/horizon-lab/index.html) | [Author your first race](docs/HORIZON_RACING.md) |
 | World-space driving, gearing and suspension | [HORIZON Driving](demos/horizon-lab/drive.html) | [Tune and test a vehicle](docs/HORIZON_DRIVING.md) |
-| Lit 3D scenery, roads and vehicle visuals | [HORIZON Lab](demos/horizon-lab/index.html) | [Rendering and environment tutorial](docs/HORIZON_LAB.md) |
+| Lit 3D scenery, roads and vehicle visuals | [Scenery Atelier](demos/horizon-lab/scenery.html) | [Rendering and environment tutorial](docs/HORIZON_LAB.md) |
 | Build a complete small 2D game | [Game Maker Lab](demos/game-maker-lab/index.html) | [Create, play and export](docs/GAME_MAKER_LAB.md) |
 | First scene, without coding | [Tutorial Lab](demos/tutorial-lab/index.html) | [Quickstart](docs/CREATOR_QUICKSTART.md) |
 | Branching stories and dialogue | [Narrative Foundry](demos/narrative-foundry/index.html) | [Author and preview a story](docs/NARRATIVE_FOUNDRY.md) |

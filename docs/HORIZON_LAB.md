@@ -1,9 +1,11 @@
 # HORIZON — Coastline Atelier
 
-[Open HORIZON Lab](../demos/horizon-lab/index.html) through local HTTP or the
+[Open Scenery Atelier](../demos/horizon-lab/scenery.html) through local HTTP or the
 packaged site. This is **HORIZON-001**, the first of three reviewed parts of the
 planned v2.9.0 milestone. It authors a real lit 3D scene and an original vehicle
-visual rig. It does not yet simulate driving or provide a completed racing game.
+visual rig. The car stays still here: camera controls orbit a visual study. To drive, open
+[HORIZON Race Foundry](../demos/horizon-lab/index.html), the main HORIZON entry,
+then press **Start race** and use W/up to accelerate.
 
 ## Make your first scene
 
@@ -97,7 +99,7 @@ Serve the repository with a standard-library HTTP server:
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open `/demos/horizon-lab/index.html`. Native modules need HTTP(S), so a double-click
+Open `/demos/horizon-lab/scenery.html`. Native modules need HTTP(S), so a double-click
 on the HTML file is not equivalent. The packaged site also works at `/VANILLAJS/`.
 After its integrity-verified worker installs on HTTPS or loopback, a subsequent
 visit can author and export with networking disabled. A fresh browser still needs
@@ -107,8 +109,9 @@ Export contains **inert scene settings**, not a complete game, JavaScript, engin
 sources or a runnable standalone bundle. A consumer imports the public scenery
 and renderer modules from an immutable reviewed engine release, preserves its
 Apache-2.0 licence/notices and supplies its own application/ownership lifecycle.
-HORIZON-002 adds vehicle simulation in a later PR; HORIZON-003 adds the complete
-Racing Creator Tools and playable polished showcase. Games2 adoption is separate.
+[Vehicle Dynamics](HORIZON_DRIVING.md) supplies the focused driving experiment;
+[Race Foundry](HORIZON_RACING.md) supplies the complete race authoring and portable
+game workflow. Games2 adoption is separate.
 
 [Creator Hub](../demos/creator-hub/index.html) ·
 [Existing Track Foundry](RACING_002B.md) ·

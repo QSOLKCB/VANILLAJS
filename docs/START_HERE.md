@@ -30,7 +30,7 @@ for the supported platform-game rules. This is separate from the Workbench scene
 format. [Understand the export](GAME_MAKER_EXPORT.md) before sharing your files.
 
 For 3D scenery and vehicle appearance, open
-[HORIZON Lab](../demos/horizon-lab/index.html) and its [tutorial](HORIZON_LAB.md).
+[Scenery Atelier](../demos/horizon-lab/scenery.html) and its [tutorial](HORIZON_LAB.md).
 This first HORIZON workshop teaches lit environments, road shape and visual rigs.
 Next, [HORIZON Driving](../demos/horizon-lab/drive.html) lets you drive and tune
 four-wheel dynamics: follow the [driving tutorial](HORIZON_DRIVING.md). The existing

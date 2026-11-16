@@ -241,6 +241,10 @@ of GPU pixels; report approximation/error bounds and timestep sensitivity.
 
 ### HORIZON-003 — Creator tools, showcase and polish (current candidate)
 
+The main [HORIZON entry](../demos/horizon-lab/index.html) opens the playable race.
+The [Scenery Atelier](../demos/horizon-lab/scenery.html) and
+[Vehicle Dynamics](../demos/horizon-lab/drive.html) remain specialist tools.
+
 The current [Race Foundry](HORIZON_RACING.md) implements this gate as a separate
 `qsol.vanillajs.horizon-race.v1` creator workflow linked from the existing Track
 Foundry. It combines route-knot editing, three vehicle classes, complete

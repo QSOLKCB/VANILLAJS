@@ -30,10 +30,12 @@ async function fixture(){
   await put('demos/4x-game-lab/voidward/js/start.js','export const game = true;\n');
   await put('demos/4x-game-lab/voidward/mods/frontier/rules.txt','data only\n');
   for(const lab of labs){
-    const start=['pursuit-lab','skyguard-lab'].includes(lab)?'js/start.js':'start.js';
+    const start=['pursuit-lab','skyguard-lab'].includes(lab)?'js/start.js':lab==='horizon-lab'?'race-start.js':'start.js';
     await put('demos/'+lab+'/index.html','<script type="module" src="./'+start+'"></script>\n');
     await put('demos/'+lab+'/'+start,'import "'+(start.startsWith('js/')?'../../../':'../../')+'modules/core/index.js";\n');
   }
+  await put('demos/horizon-lab/scenery.html','<script type="module" src="./start.js"></script>\n');
+  await put('demos/horizon-lab/start.js',"import '../../modules/core/index.js';\n");
   await put('demos/horizon-lab/drive.html','<script type="module" src="./drive-start.js"></script>\n');
   await put('demos/horizon-lab/drive-start.js',"import '../../modules/core/index.js';\n");
   await put('demos/horizon-lab/race.html','<script type="module" src="./race-start.js"></script>\n');
@@ -55,11 +57,11 @@ async function fixture(){
   return {root,files,inputs,tree,htmlSources,receipt:{results:{editor:{inputs}}}};
 }
 
-test('known runtime copies and thirteen exact entry rewrites bind to original Git source',async()=>{
+test('known runtime copies and fourteen exact entry rewrites bind to original Git source',async()=>{
   const f=await fixture();
   try{
     assert.equal(sourceBoundToTree(f.receipt,f.tree,f.htmlSources),true);
-    assert.equal(provenanceHTMLRecords(f.receipt).length,13);
+    assert.equal(provenanceHTMLRecords(f.receipt).length,14);
     assert.equal(sourceBoundToTree(f.receipt,f.tree),false,'HTML bytes are required, not a claimed source hash');
     const entries=new Map(f.tree.tree.map(e=>[e.path,e.sha]));
     const mutate=[
@@ -76,6 +78,8 @@ test('known runtime copies and thirteen exact entry rewrites bind to original Gi
       i=>{i.runtime.find(r=>r.path==='demos/horizon-lab/drive.html').sha256=hash('forged drive HTML');},
       i=>{i.runtime=i.runtime.filter(r=>!r.path.includes('/runtime-')||!r.path.endsWith('/drive-start.js'));},
       i=>{i.runtime.find(r=>r.path==='demos/horizon-lab/race.html').sha256=hash('forged race HTML');},
+      i=>{i.runtime.find(r=>r.path==='demos/horizon-lab/scenery.html').sha256=hash('forged scenery HTML');},
+      i=>{i.runtime.find(r=>r.path==='demos/horizon-lab/index.html').sha256=hash('forged canonical race HTML');},
       i=>{i.runtime=i.runtime.filter(r=>!r.path.includes('/runtime-')||!r.path.endsWith('/race-start.js'));},
       i=>{i.packageProvenance.packages[0].html[0].sourcePath='README.md';},
       i=>{i.shared=i.shared.filter(r=>r.path!=='scripts/build.js');},

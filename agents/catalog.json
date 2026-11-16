@@ -58,6 +58,7 @@
       "title": "Author scenery, tune vehicles and export a playable scenic race",
       "entryPoints": [
         "demos/horizon-lab/index.html",
+        "demos/horizon-lab/scenery.html",
         "modules/render-lit/index.js",
         "modules/scenic3d/index.js",
         "demos/horizon-lab/drive.html",

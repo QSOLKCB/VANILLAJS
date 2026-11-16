@@ -8,7 +8,7 @@ remain separate gates. Games2 is unmodified.
 
 ## Delivered composition
 
-[Race Foundry](../demos/horizon-lab/race.html) combines the existing public
+[Race Foundry](../demos/horizon-lab/index.html) combines the existing public
 [vehicle3d](VEHICLE3D_API.md), [scenic3d](SCENIC3D_API.md) and
 [render-lit](RENDER_LIT_API.md) contracts with new pure
 [vehicle-audio](VEHICLE_AUDIO_API.md). Both vehicles move through actual world-space
@@ -23,7 +23,10 @@ work; no new donor code, external engines or runtime dependencies are introduced
 
 [Creator walkthrough](HORIZON_RACING.md) covers route editing, vehicle classes, sound
 parameters, test driving, retained history, strict imports and the complete race ZIP.
-The original visual atelier and driving study remain independently usable.
+The main HORIZON `index.html` opens this playable race. `race.html` remains a
+compatible race entry; the original visual atelier lives at `scenery.html`, and
+`drive.html` remains the specialist vehicle study. Both tools stay independently
+usable.
 
 ## Formats and compatibility
 
@@ -114,8 +117,9 @@ The package includes `project.json` for reimport, while its runtime reads genera
 `project-data.js`; changing JSON after extraction does not silently alter the game.
 Reimport, validate and export again after edits. `README.txt` explains local serving.
 
-All three HORIZON pages share one content-derived immutable module namespace.
-Browser provenance verifies all three exact HTML rewrites and their source files;
+All four HORIZON page URLs share one content-derived immutable module namespace.
+Browser provenance verifies the race, compatible race URL, scenery and driving
+HTML rewrites and their source files;
 missing/forged members fail closed. Frozen evidence, reviewed-main witness authority,
 manual full-browser override and owner-only hardware policy are unchanged.
 

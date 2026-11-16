@@ -878,7 +878,8 @@ samples of the same road triangles used for rendering. Geometry uses metres,
 +Y up/-Z forward. Explicit road surface IDs and a separate terrain heightfield
 avoid conflating bridge decks with ground underneath them.
 
-[HORIZON Lab](HORIZON_LAB.md) consumes these APIs for actual visual authoring.
+[Scenery Atelier](HORIZON_LAB.md) consumes these APIs for actual visual authoring
+at `demos/horizon-lab/scenery.html`. The main HORIZON `index.html` opens the race.
 Its project export is inert configuration, not a complete race. HORIZON-001
 is merged; [Race Foundry](HORIZON_RACING.md) provides the separate complete race workflow.
 [Compatibility and review gates](HORIZON_001.md).

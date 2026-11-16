@@ -1,6 +1,6 @@
 # Make a scenic race with HORIZON
 
-Open [Race Foundry](../demos/horizon-lab/race.html) from the Creator Hub or the
+Open [Race Foundry](../demos/horizon-lab/index.html) from the Creator Hub or the
 existing Racing Lab's Track Foundry. Serve the repository or built `dist` directory
 through HTTP; native modules cannot start reliably from a double-clicked file.
 
@@ -9,8 +9,11 @@ node scripts/build.js
 python3 -m http.server 8000 --bind 127.0.0.1 --directory dist
 ```
 
-Open `http://127.0.0.1:8000/demos/horizon-lab/race.html`.
-No package installation, account or remote artwork is required.
+Open `http://127.0.0.1:8000/demos/horizon-lab/index.html`.
+No package installation, account or remote artwork is required. The main
+`index.html` opens the playable race; `race.html` remains a compatible race URL.
+The separate [Scenery Atelier](../demos/horizon-lab/scenery.html) is a static
+visual-authoring workshop whose camera tour does not drive the car.
 
 ## Drive the original route
 

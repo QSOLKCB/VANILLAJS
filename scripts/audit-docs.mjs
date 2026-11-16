@@ -33,14 +33,17 @@ for(const [archive,original]of [['README_HISTORY.md','README.md'],['ROADMAP_HIST
   assert.equal(createHash('sha256').update(bytes).digest('hex'),archiveHashes[original],'historical archive changed');
   for(const m of bytes.toString().matchAll(/!?\[[^\]]*\]\(([^\s)]+)(?:\s+"[^"]*")?\)/g))await link(archive,m[1],false);
 }
-for(const path of ['demos/tutorial-lab/index.html','demos/creator-hub/index.html','demos/sprite-foundry/index.html','demos/weapon-feel-lab/index.html','demos/narrative-foundry/index.html','demos/game-maker-lab/index.html','demos/horizon-lab/index.html','demos/horizon-lab/drive.html','demos/horizon-lab/race.html']){
+for(const path of ['demos/tutorial-lab/index.html','demos/creator-hub/index.html','demos/sprite-foundry/index.html','demos/weapon-feel-lab/index.html','demos/narrative-foundry/index.html','demos/game-maker-lab/index.html','demos/horizon-lab/index.html','demos/horizon-lab/drive.html','demos/horizon-lab/race.html','demos/horizon-lab/scenery.html']){
   const html=await readFile(resolve(root,path),'utf8');
   for(const m of html.matchAll(/(?:href|src)="([^"]+)"/g))await link(path,m[1]);
 }
 const hub=await readFile(resolve(root,'demos/creator-hub/index.html'),'utf8');
 assert.ok(hub.includes('../tutorial-lab/index.html'),'hub must reach tutorial');
 for(const lab of ['sprite-foundry','weapon-feel-lab','narrative-foundry','game-maker-lab','horizon-lab'])assert.ok(hub.includes('../'+lab+'/index.html'),'hub must reach '+lab);
-assert.ok(hub.includes('../horizon-lab/race.html'),'hub must reach racing creator tools');
+assert.ok(hub.includes('../horizon-lab/index.html'),'hub must reach the primary playable HORIZON entry');
+assert.ok(hub.includes('../horizon-lab/scenery.html'),'hub must reach the preserved scenery workshop');
+const horizon=await readFile(resolve(root,'demos/horizon-lab/index.html'),'utf8');
+assert.ok(horizon.includes('id="race-canvas"')&&horizon.includes('id="race-start"')&&horizon.includes('src="./race-start.js"'),'primary HORIZON entry must mount the real playable race');
 const catalogue=JSON.parse(await readFile(resolve(root,'MODULES.json'),'utf8'));
 // v2.8.0: 67/48; merged HORIZON-001: 69/49; HORIZON-002: 70/50; HORIZON-003 adds vehicle-audio and its race recipe.
 assert.equal(Object.keys(catalogue.modules).length,71);assert.equal(Object.keys(catalogue.recipes).length,51);assert.equal(Object.keys(catalogue.experiments).length,2);
