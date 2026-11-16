@@ -11,7 +11,7 @@ byte-identical. The subsequent evidence commit changes only this evidence folder
 
 | Command | Result | Record |
 | --- | --- | --- |
-| `node --test tests/*.test.js` | 1134/1134 PASS, including the 16 Python capsule cases invoked by the Node gate | [Full output](node-tests.log) |
+| `node --test tests/*.test.js` | 1134/1134 PASS, including the 16 Python capsule cases invoked by the Node gate | [Full output](node-tests.log.gz) |
 | `node scripts/check.js` | PASS: 483 JS files, 70 module contracts, two research experiments; source/provenance checks and 690 local documentation links | [Output](source-check.log) |
 | `node scripts/build.js` | PASS: 934 files; final source bytes built immediately before implementation commit | [Package identities](identities.json) |
 | `node scripts/verify-offline.js` | PASS: every packaged file hash and the worker verified | [Output](offline.log) |
@@ -100,12 +100,18 @@ Inspected final packaged screenshots:
 - [Ramp airborne state](horizon-drive-ramp.png).
 - [320px touch layout](horizon-drive-mobile.png).
 
+Full TAP logs use deterministic gzip to preserve their original bytes, including
+whitespace in exception output. Read them with `gzip -dc <filename.log.gz>`.
+
 ## Failed attempts and corrections
 
+- The final branch-wide diff check identified trailing whitespace in verbatim
+  TAP failure output. Archived the unmodified TAP bytes with deterministic gzip;
+  the branch-wide diff check then passed. Runtime and tests were unchanged.
 - Initial full Node run: 1133/1134 passed. The synthetic capsule build fixture
   lacked `drive.html` / `drive-start.js`. Added those two fixture entries, kept all
   assertions and reran the complete suite: 1134/1134 passed.
-  [Original failure log](node-tests-attempt-1.log).
+  [Original failure log](node-tests-attempt-1.log.gz).
 - A combined `worlds,research,donor` browser process received SIGTERM / exit 143
   without an assertion error after multiple lab PASS messages. Its incomplete
   output is [preserved](browser-combined-terminated.log). Completion is recorded
