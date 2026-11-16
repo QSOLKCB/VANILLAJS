@@ -1,0 +1,30 @@
+{
+  "home": {
+    "fingerprint": "70284f10b6032b374ed1a6aca81bb33bd69c972866f9438d9ab5645387c0061c",
+    "issues": []
+  },
+  "render": {
+    "fingerprint": "00ab939be7ae1a6f5d47228569f41bc9395a17230660ec16ac41728e47c19ce8",
+    "issues": []
+  },
+  "play": {
+    "fingerprint": "0861ff09e99df45ae06092eeb08898e6fd9bdd7317ecaaa137a6191e4caad3f8",
+    "issues": []
+  },
+  "worlds": {
+    "fingerprint": "d35e5abc02c06c98d293bfcc75bf0cbb7ce821ac3f4602422d2ef7fe0e26166f",
+    "issues": []
+  },
+  "research": {
+    "fingerprint": "40974870fb5bc2000ef4cae44be98f5cf44a1c4378e1108a9dac74517617d379",
+    "issues": []
+  },
+  "donor": {
+    "fingerprint": "7c56ab8a3e7e8f27158a37da40daaa24355232107e4c82561fd0a742c5b39e9b",
+    "issues": []
+  },
+  "editor": {
+    "fingerprint": "ae1904458d849b44c4a78cb46a9c6499a5fe74127fb0934dbe12a36440727fea",
+    "issues": []
+  }
+}

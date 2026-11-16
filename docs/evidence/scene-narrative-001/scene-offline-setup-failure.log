@@ -1,0 +1,15 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.reload: net::ERR_INTERNET_DISCONNECTED
+Call log:
+[2m  - waiting for navigation until "load"[22m
+
+    at Module.checkSceneComposition (/home/trent/vanillajs-scene-narrative-foundry/scripts/browser-scene-composition.js:41:54)
+    at async file:///tmp/scene-composition-focused.mjs:9:5 {
+  log: [ '  - waiting for navigation until "load"' ],
+  name: 'Error'
+}
+
+Node.js v22.18.0

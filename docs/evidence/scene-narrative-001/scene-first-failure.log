@@ -1,0 +1,48 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+locator.fill: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#sc-prefab-id')[22m
+[2m    - locator resolved to <input value="lantern" id="sc-prefab-id"/>[22m
+[2m    - fill("beacon")[22m
+[2m  - attempting fill action[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m      - waiting 100ms[22m
+[2m    60 × waiting for element to be visible, enabled and editable[22m
+[2m       - element is not visible[22m
+[2m     - retrying fill action[22m
+[2m       - waiting 500ms[22m
+
+    at fill (/home/trent/vanillajs-scene-narrative-foundry/scripts/browser-scene-composition.js:9:55)
+    at Module.checkSceneComposition (/home/trent/vanillajs-scene-narrative-foundry/scripts/browser-scene-composition.js:21:11)
+    at async file:///tmp/scene-composition-focused.mjs:9:5 {
+  log: [
+    "  - waiting for locator('#sc-prefab-id')",
+    '    - locator resolved to <input value="lantern" id="sc-prefab-id"/>',
+    '    - fill("beacon")',
+    '  - attempting fill action',
+    '    2 × waiting for element to be visible, enabled and editable',
+    '      - element is not visible',
+    '    - retrying fill action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and editable',
+    '      - element is not visible',
+    '    - retrying fill action',
+    '      - waiting 100ms',
+    '    60 × waiting for element to be visible, enabled and editable',
+    '       - element is not visible',
+    '     - retrying fill action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v22.18.0
