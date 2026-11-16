@@ -11,7 +11,7 @@ export class DemoPlayer {
   load(source){
     const project=validateDemo(source),world=new DemoWorld(project),transport=new SampleAudioTransport(project.audio);
     // Validate/allocate before stopping the old production. Invalid imports are inert.
-    const old=this.transport;this.project=project;this.world=world;this.transport=transport;this.gate.invalidate();if(old)void old.dispose();
+    const old=this.transport;transport.mute(old?.muted??false);this.project=project;this.world=world;this.transport=transport;this.gate.invalidate();if(old)void old.dispose();
   }
   draw(sample=this.transport.sample,{forceFresh=false}={}){
     const rect=this.canvas.getBoundingClientRect(),dpr=Math.min(globalThis.devicePixelRatio||1,2)*(this.quality==='low'?.65:1),width=Math.max(1,Math.floor(rect.width*dpr)),height=Math.max(1,Math.floor(rect.height*dpr));

@@ -1,0 +1,26 @@
+{
+  "reviewedHead": "19eeef201a129b94d48ad337bfb0e19670337576",
+  "fixes": [
+    {
+      "thread": "PRRT_kwDOVgIUW863vVQO",
+      "url": "https://github.com/QSOLKCB/VANILLAJS/pull/97#discussion_r4580856321",
+      "finding": "Valid project import reset mute",
+      "fix": "Carry the old transport mute preference into the candidate before swapping",
+      "test": "Import while muted, assert transport mute, UI state and zero live gain"
+    },
+    {
+      "thread": "PRRT_kwDOVgIUW863vVQQ",
+      "url": "https://github.com/QSOLKCB/VANILLAJS/pull/97#discussion_r4580856324",
+      "finding": "Persisted pagehide permanently disposed rendering",
+      "fix": "Pause persisted pages and restart rendering on persisted pageshow",
+      "test": "Controlled persisted pagehide/pageshow then visible seek and resumed audio; no native BFCache hit claim"
+    },
+    {
+      "thread": "PRRT_kwDOVgIUW863vVQU",
+      "url": "https://github.com/QSOLKCB/VANILLAJS/pull/97#discussion_r4580856328",
+      "finding": "0.14 seconds multiplied to a noninteger sample after committing history",
+      "fix": "Validate the rounded sample before history commit and use it for drawing",
+      "test": "Apply a visible edit at 0.14 seconds, reject 61 seconds without changing the accepted project"
+    }
+  ]
+}

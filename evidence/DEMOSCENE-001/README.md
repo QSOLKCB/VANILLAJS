@@ -83,8 +83,8 @@ No prerecorded frames, downloaded music or replacement renderer are involved.
 
 [byte-budget.json](byte-budget.json) inventories the full native production,
 including required runtime, embedded shaders, HTML, styles, data, licences and
-identity receipt. At this snapshot: **212,672 uncompressed bytes**, **57,209 gzip-9
-container bytes**, **45,533 Brotli-11 container bytes**. The separate inert source
+identity receipt. At this snapshot: **212,945 uncompressed bytes**, **57,282 gzip-9
+container bytes**, **45,635 Brotli-11 container bytes**. The separate inert source
 description is 6,215 bytes. Compression observations name their container format
 and are not self-contained executable entries. No 4K/64K pass is claimed. The
 diagnostic report itself is not part of the runtime inventory. WAV export is
@@ -108,3 +108,16 @@ score preparation and automation, not a rendering-performance benchmark. The ini
 PR snapshot `0c217bc1d26fe0a9edd4d888f4ce42e9ff5abfc3` passed all eight hosted
 workflows; the PR checks identify the status of subsequent commits. Frozen RTX/formal archives
 and the browser witness reuse policy remain unchanged. Games2 is clean and unchanged.
+
+## Final review regressions
+
+Review of commit `19eeef201a129b94d48ad337bfb0e19670337576` found three UI lifecycle
+issues. The subsequent targeted browser run verifies their corrections:
+
+- A valid import retains mute and a zero gain; the visible mute state agrees with playback.
+- Persisted pagehide pauses without destroying the renderer; persisted pageshow resumes rendering and requires an explicit play gesture. Playwright disables BFCache by default, so this is a controlled PageTransitionEvent lifecycle fixture, not a claimed native cache hit.
+- A valid 0.14-second editor time rounds to integer sample 6,720 before drawing an accepted edit. Out-of-range preview times reject before history or the active preview changes.
+
+[review-fixes.json](review-fixes.json) records the original findings and the
+regression paths. The full WAV and all authored scene/camera identities are
+unchanged; source receipts and the byte inventory were regenerated for these fixes.

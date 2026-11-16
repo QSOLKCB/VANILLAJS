@@ -1,13 +1,13 @@
-✔ exact 60 second timeline, 3000 frames and all act boundaries (2.714616ms)
-✔ absolute key interpolation, score cue ordering and cue channel (1.559968ms)
-✔ full-minute PCM is exact across irregular chunk partitions and WAV boundaries (1916.579216ms)
-✔ schema roundtrip, immutable snapshots, identity and atomic registry activation (15.031045ms)
-✔ reject hostile/unknown/project budgets before activation (31.196739ms)
-✔ seeded worlds, out-of-order sampling and retained/fresh geometry parity (132.476529ms)
-✔ effects and glyph geometry are bounded, original and deterministic (21.395595ms)
-✔ Workbench primitive, imported mesh and prefab bridge preserve provenance and FX history (14.335828ms)
-✔ audio pause/seek/restart/mute and pending resume cancellation own every node (1270.621829ms)
-✔ portable generator produces repeatable complete runtime, receipts and no overwrite (3539.985269ms)
+✔ exact 60 second timeline, 3000 frames and all act boundaries (3.111492ms)
+✔ absolute key interpolation, score cue ordering and cue channel (1.708641ms)
+✔ full-minute PCM is exact across irregular chunk partitions and WAV boundaries (1323.133468ms)
+✔ schema roundtrip, immutable snapshots, identity and atomic registry activation (7.989242ms)
+✔ reject hostile/unknown/project budgets before activation (14.425536ms)
+✔ seeded worlds, out-of-order sampling and retained/fresh geometry parity (106.179179ms)
+✔ effects and glyph geometry are bounded, original and deterministic (26.792675ms)
+✔ Workbench primitive, imported mesh and prefab bridge preserve provenance and FX history (15.82987ms)
+✔ audio pause/seek/restart/mute and pending resume cancellation own every node (926.791519ms)
+✔ portable generator produces repeatable complete runtime, receipts and no overwrite (2818.020642ms)
 ℹ tests 10
 ℹ suites 0
 ℹ pass 10
@@ -15,4 +15,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 7137.853867
+ℹ duration_ms 5371.466605

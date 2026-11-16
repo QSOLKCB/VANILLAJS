@@ -31,7 +31,8 @@ document.addEventListener('fullscreenchange',()=>{$('exit-fullscreen').hidden=!d
 document.addEventListener('visibilitychange',()=>{if(document.hidden){player.transport.pause();status('Paused while the page is hidden');}});
 $('screen').addEventListener('webglcontextlost',event=>{event.preventDefault();cancelAnimationFrame(frameId);player.transport.pause();status('Graphics context lost · playback paused');});
 $('screen').addEventListener('webglcontextrestored',action(()=>{player.restore();render();status('Graphics restored · press play to continue');}));
-window.addEventListener('pagehide',()=>{disposed=true;cancelAnimationFrame(frameId);void player.dispose();});
+window.addEventListener('pagehide',event=>{cancelAnimationFrame(frameId);frameId=0;player.transport.pause();if(!event.persisted){disposed=true;void player.dispose();}});
+window.addEventListener('pageshow',event=>{if(event.persisted&&!disposed){player.gate.invalidate();render();status('Restored from browser history · press play to continue');}});
 $('project-export').onclick=()=>download('machine-remembers.demoscene.json',player.project.bytes);
 $('score-export').onclick=()=>download('machine-remembers.score.json',JSON.stringify({profile:player.project.settings.audioIdentity,sampleRate:48000,frames:2880000,phrases:Array.from({length:8},(_,i)=>player.project.audio.score(i))},null,2));
 $('wav-export').onclick=action(()=>{status('Rendering all 2,880,000 samples…');download('machine-remembers-60s.wav',player.project.audio.wav(),'audio/wav');status('Full 60 second PCM16 mono WAV exported');});

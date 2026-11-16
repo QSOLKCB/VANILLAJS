@@ -8,7 +8,7 @@
   "source": {
     "kind": "qsol.vanillajs.demoscene-build-receipt.v1",
     "seed": 1983,
-    "sourceIdentity": "9f35859378266212ae5c253a85ff87681f507c1dec5dff2cee11a0f8529eb5d6",
+    "sourceIdentity": "73321068b1d22c007e95a825e9a43ed2cd015f2e17825df25270046980d79ba2",
     "files": [
       {
         "path": "api/demoscene/transport.js",
@@ -16,7 +16,7 @@
       },
       {
         "path": "demos/demoscene-lab/app.js",
-        "sha256": "47cf01f2ac41d12df4d8485d1ba4c239809c017094fe56d5ba44ebcc19a1311e"
+        "sha256": "73f2c2afd67c75eef64fc26b22e8d688cdc1cdfc67c8fc38fdff540be67c63ba"
       },
       {
         "path": "demos/demoscene-lab/index.html",
@@ -36,7 +36,7 @@
       },
       {
         "path": "demos/demoscene-lab/player.js",
-        "sha256": "80a882e5fcb7920987640b854f939f6dd391656e3b2de44620053b64f2dd9ec8"
+        "sha256": "9880b22157ecbe76f174f0e8180d9b6b321fd9bf18e0d3f601563ae9e43d0e59"
       },
       {
         "path": "demos/demoscene-lab/preset.js",
@@ -205,8 +205,8 @@
       },
       {
         "path": "demos/demoscene-lab/app.js",
-        "bytes": 7028,
-        "sha256": "47cf01f2ac41d12df4d8485d1ba4c239809c017094fe56d5ba44ebcc19a1311e"
+        "bytes": 7267,
+        "sha256": "73f2c2afd67c75eef64fc26b22e8d688cdc1cdfc67c8fc38fdff540be67c63ba"
       },
       {
         "path": "demos/demoscene-lab/index.html",
@@ -230,8 +230,8 @@
       },
       {
         "path": "demos/demoscene-lab/player.js",
-        "bytes": 2377,
-        "sha256": "80a882e5fcb7920987640b854f939f6dd391656e3b2de44620053b64f2dd9ec8"
+        "bytes": 2411,
+        "sha256": "9880b22157ecbe76f174f0e8180d9b6b321fd9bf18e0d3f601563ae9e43d0e59"
       },
       {
         "path": "demos/demoscene-lab/preset.js",
@@ -271,7 +271,7 @@
       {
         "path": "identity.json",
         "bytes": 4593,
-        "sha256": "5077db9e47a2341d54da45203cacf4e582cf7642014985fc9e52bb958c67ef1f"
+        "sha256": "7ab139c4dfe81481865540ad01bb183bbf2b120274bef5b93f6ecf3ace3add4d"
       },
       {
         "path": "index.html",
@@ -344,10 +344,10 @@
         "sha256": "72932ec52202f8604a581118d0d6a6e8f34a097ad47540e021af9a2fdab59f67"
       }
     ],
-    "totalUncompressedBytes": 212672,
-    "containerBytes": 213615,
-    "gzip9Bytes": 57209,
-    "brotli11Bytes": 45533,
+    "totalUncompressedBytes": 212945,
+    "containerBytes": 213888,
+    "gzip9Bytes": 57282,
+    "brotli11Bytes": 45635,
     "compression": "Sorted paths, u32LE path-byte length + u32LE data-byte length + UTF-8 path + raw bytes per file. gzip level 9; Brotli quality 11. Measured sizes are not executable competition entries.",
     "challenge64K": {
       "limit": 65536,

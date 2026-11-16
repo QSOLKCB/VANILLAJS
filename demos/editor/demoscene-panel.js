@@ -2,6 +2,7 @@
 import {machineRemembers} from '../demoscene-lab/preset.js';
 import {DemoPlayer} from '../demoscene-lab/player.js';
 import {validateDemo,DEMO_EFFECTS} from '../../modules/mod-demo/index.js';
+import {demoSample} from '../../modules/demo-timeline/index.js';
 import {demoDraft,commitDemo,travelDemo,addSelectedDemo,editDemoNode,captureDemoKey,editDemoData} from './demoscene-workflow.js';
 export function mountDemoscenePanel(host,{getScene,getLibrary,getSelection,isPlaying}){
   host.innerHTML=`<details id="visual-fx"><summary>Demoscene / Visual FX</summary><p>Use the hierarchy, transform inspector and Asset Foundry above. Selected objects and visible descendants become an inert audiovisual composition. Flat materials only; existing scene formats stay compatible.</p>
@@ -14,9 +15,9 @@ export function mountDemoscenePanel(host,{getScene,getLibrary,getSelection,isPla
   const status=s=>$('status').textContent=s;
   function sync(){const disabled=isPlaying();if(disabled&&!lastPlaying){generation++;player?.transport.pause();}lastPlaying=disabled;for(const c of host.querySelectorAll('button,input,select'))c.disabled=disabled;$('add').disabled=disabled||!getSelection();$('undo').disabled=disabled||!history.past.length;$('redo').disabled=disabled||!history.future.length;}
   function display(){const chosen=$('node').value;$('node').replaceChildren(...history.present.nodes.map(n=>{const o=document.createElement('option');o.value=n.id;o.textContent=n.id+' / '+n.name;return o;}));if(history.present.nodes.some(n=>n.id===chosen))$('node').value=chosen;sync();}
-  function accept(project,message){history=commitDemo(history,project);if(player){player.load(history.present);player.draw(Number($('time').value)*48000);}display();status(message);}
+  function accept(project,message){const at=sample();history=commitDemo(history,project);if(player){player.load(history.present);player.draw(at);}display();status(message);}
   const run=fn=>async()=>{if(isPlaying())return;try{await fn();}catch(error){status('Rejected: '+error.message);}sync();};
-  const sample=()=>Math.round(Number($('time').value)*48000);
+  const sample=()=>demoSample(Math.round(Number($('time').value)*48000));
   $('add').onclick=run(()=>accept(addSelectedDemo(history.present,getScene(),getLibrary(),getSelection(),{effect:$('effect').value,copies:Number($('copies').value)}),'Selected geometry and declared provenance captured. Export to keep this sidecar.'));
   $('effect-apply').onclick=run(()=>accept(editDemoNode(history.present,$('node').value,{effect:$('effect').value,copies:Number($('copies').value)}),'Effect applied'));
   $('key').onclick=run(()=>accept(captureDemoKey(history.present,$('node').value,getScene(),getSelection(),sample()),'Inspector transform captured at sample '+sample()));
