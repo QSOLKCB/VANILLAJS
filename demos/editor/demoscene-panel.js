@@ -48,7 +48,7 @@ export function mountDemoscenePanel(host,{getScene,getLibrary,getSelection,isPla
   function preview(){player??=new DemoPlayer($('preview'),history.present);return player;}
   function tick(){if(!player)return;player.draw();previewState();if(player.transport.playing)raf=requestAnimationFrame(tick);}
   $('preview-play').onclick=run(async()=>{
-    const at=sample();pausePreview();const token=generation,p=preview(),transport=p.transport;
+    const at=sample();pausePreview();const token=generation,p=preview(),transport=p.transport;sync();
     await transport.seek(at);if(token!==generation||isPlaying()||document.hidden)return;
     await transport.play();if(token!==generation)return;
     tick();status('Previewing the same effects used by the production');

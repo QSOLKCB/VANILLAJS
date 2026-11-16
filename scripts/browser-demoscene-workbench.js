@@ -36,6 +36,18 @@ export async function verifyDemosceneWorkbench(page,base){
   await set('#fx-time','18');await click('key','sample 864000');
   const key=(await entry('node-0')).keys.at(-1);
   assert.equal(key.position[0],3);assert.equal(key.rotation[1],Math.PI/2);assert.equal(key.scale[0],1.5);assert.deepEqual((await entry('node-0')).color,[1,0,0]);
+  // Delay a real AudioContext resume: Pause must win even while Play is pending.
+  await page.evaluate(()=>{
+    const original=AudioContext.prototype.resume;
+    AudioContext.prototype.resume=function(){
+      const resumed=original.call(this);window.__fxResumeWaiting=true;
+      return Promise.all([resumed,new Promise(resolve=>{window.__fxReleaseResume=()=>{AudioContext.prototype.resume=original;resolve();};})]);
+    };
+  });
+  await click('preview-play');await page.waitForFunction(()=>window.__fxResumeWaiting);
+  await click('preview-stop','Preview paused.');await page.evaluate(()=>window.__fxReleaseResume());
+  await page.waitForTimeout(120);assert.match(await page.locator('#fx-preview-state').textContent(),/^Preview paused/);
+  assert.match(await page.locator('#fx-status').textContent(),/^Preview paused\./);
   await click('preview-seek','Absolute-time preview at sample 864000');
   assert.equal(await page.locator('#fx-preview-state').textContent(),'Preview paused at 18.00 seconds');
   await page.screenshot({path:'browser-artifacts/demoscene-workbench.png',fullPage:true});
@@ -55,18 +67,6 @@ export async function verifyDemosceneWorkbench(page,base){
   await page.waitForFunction(()=>{const match=/^Preview playing at ([0-9.]+)/.exec(document.querySelector('#fx-preview-state').textContent);return match&&Number(match[1])>18.1;});
   await click('preview-stop','Preview paused.');const paused=await page.locator('#fx-preview-state').textContent();
   await page.waitForTimeout(120);assert.equal(await page.locator('#fx-preview-state').textContent(),paused);
-  // Delay a real AudioContext resume: Pause must win even while Play is pending.
-  await page.evaluate(()=>{
-    const original=AudioContext.prototype.resume;
-    AudioContext.prototype.resume=function(){
-      const resumed=original.call(this);window.__fxResumeWaiting=true;
-      return Promise.all([resumed,new Promise(resolve=>{window.__fxReleaseResume=()=>{AudioContext.prototype.resume=original;resolve();};})]);
-    };
-  });
-  await click('preview-play');await page.waitForFunction(()=>window.__fxResumeWaiting);
-  await click('preview-stop','Preview paused.');await page.evaluate(()=>window.__fxReleaseResume());
-  await page.waitForTimeout(120);assert.match(await page.locator('#fx-preview-state').textContent(),/^Preview paused/);
-  assert.match(await page.locator('#fx-status').textContent(),/^Preview paused\./);
   await click('preview-play','Previewing the same effects');await page.locator('#play').click();
   assert.match(await page.locator('#fx-preview-state').textContent(),/^Preview paused/);await click('edit','Visual FX editing ready');
   const event=page.waitForEvent('download');await click('export','Validated project exported');const fx=await readFile(await (await event).path());
