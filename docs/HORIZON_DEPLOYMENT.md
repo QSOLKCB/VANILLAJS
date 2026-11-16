@@ -37,10 +37,36 @@ failed run reported unprotected-main authority and executed all seven suites;
 no new reusable witness or weaker cache policy is implied by this correction.
 
 The formal source audit also pins the historical hosted workflow. It now accepts
-only this exact timeout/comment substitution against the original Git blob and
-its independently checked SHA-256. Negative controls reject any other command,
+only this exact timeout/comment substitution and the historical-source preparation
+below against the original Git blob and its independently checked SHA-256.
+Negative controls reject any other command,
 action, permission, branch-condition or budget change. Mathematical sources,
 proofs, fixtures and archived execution evidence remain unchanged.
+
+## PR #109 shallow-checkout correction
+
+[Run 43958284878](https://github.com/QSOLKCB/VANILLAJS/actions/runs/43958284878)
+failed one of 1,171 Node tests before reaching Chromium. Checkout fetched only the
+PR merge commit (`fetch-depth: 1`), so the new historical admission test could not
+read the older baseline. The file was not missing from the historical revision.
+
+A disposable depth-one checkout reproduced the same Git error. Fetching only
+`ce7e38eb3c7412407a3ba2bc472120b589e6eb9e` with `--no-tags --depth=1` restored the
+admission tests while preserving HEAD and the shallow history boundary. The
+workflow now performs that exact fetch immediately after checkout and runs
+`python3 scripts/verify_alien_math_006.py --pins-only` before the Node suite.
+That verifies the current source manifest and historical source bytes; it does
+not claim to execute Lean proofs.
+
+Historical workflow Git blob: `544edab10a462991540b6192acf21b244e75bd42`.
+Historical workflow SHA-256:
+`dee8b35061e6768a76aad700e30486f1d13a4cfcfcdaaef16f1dcf5ef7f0f4b9`.
+The audit still reads the immutable baseline rather than HEAD. A small local Git
+fixture tests missing history, exact shallow fetch, wrong/changed historical
+source, and unchanged HEAD/history depth without a network dependency. Exact
+workflow admission also rejects an omitted, altered or misplaced preparation
+step. Only the active workflow/verifier/test manifest hashes are regenerated;
+frozen proofs, fixtures and execution records are retained.
 
 ## Checking the deployment
 

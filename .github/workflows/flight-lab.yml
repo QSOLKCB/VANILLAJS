@@ -24,6 +24,10 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Fetch exact ALIEN-MATH-006 historical baseline
+        run: |
+          git fetch --no-tags --depth=1 origin ce7e38eb3c7412407a3ba2bc472120b589e6eb9e
+          python3 scripts/verify_alien_math_006.py --pins-only
       - name: Verify frozen RTX5060TI-001 archival evidence (offline)
         run: |
           python3 scripts/verify-rtx-receipt.py
