@@ -28,6 +28,7 @@ EXTRA = (
     'package.json', 'index.html', 'experiments/arch-omi/index.js',
     'experiments/e8-geometry/index.js', 'scripts/build.js', 'scripts/pursuit-package.mjs',
     'scripts/fps-source-identity.mjs', 'scripts/game-maker-runtime.mjs',
+    'scripts/horizon-race-runtime.mjs',
     'scripts/service-worker.template.js', 'scripts/verify-offline.js',
     'scripts/alien_math_bundle.py', 'tests/test_alien_math_bundle.py',
     'tests/alien-math-final.test.js', 'docs/ALIEN_MATH_FINAL.md',

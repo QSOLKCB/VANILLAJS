@@ -55,14 +55,19 @@
     },
     {
       "id": "horizon",
-      "title": "Author lit scenery and tune world-space vehicle dynamics",
+      "title": "Author scenery, tune vehicles and export a playable scenic race",
       "entryPoints": [
         "demos/horizon-lab/index.html",
         "modules/render-lit/index.js",
         "modules/scenic3d/index.js",
         "demos/horizon-lab/drive.html",
         "modules/vehicle3d/index.js",
-        "demos/horizon-lab/drive-world.js"
+        "demos/horizon-lab/drive-world.js",
+        "demos/horizon-lab/race.html",
+        "demos/horizon-lab/race-project.js",
+        "demos/horizon-lab/race-model.js",
+        "demos/horizon-lab/race-export.js",
+        "modules/vehicle-audio/index.js"
       ],
       "modules": [
         "render-lit",
@@ -71,7 +76,8 @@
         "terrain",
         "vehicle3d",
         "collision",
-        "time"
+        "time",
+        "vehicle-audio"
       ],
       "examples": [
         "demos/horizon-lab/index.html"
@@ -83,7 +89,10 @@
         "docs/SCENIC3D_API.md",
         "docs/HORIZON_002.md",
         "docs/VEHICLE3D_API.md",
-        "docs/HORIZON_DRIVING.md"
+        "docs/HORIZON_DRIVING.md",
+        "docs/HORIZON_003.md",
+        "docs/HORIZON_RACING.md",
+        "docs/VEHICLE_AUDIO_API.md"
       ],
       "validation": [
         "node --test tests/*.test.js",
@@ -95,13 +104,15 @@
         "node scripts/browser-check.js"
       ],
       "limitations": [
-        "HORIZON-001 rendering is merged; HORIZON-002 vehicle dynamics is this candidate. HORIZON-003 complete racing tools/showcase remains proposed.",
-        "Scenery/project exports are inert data, not complete runnable games or a migration of qsol.vanillajs.track.v1.",
+        "HORIZON-001 and HORIZON-002 are merged. HORIZON-003 is the final v2.9.0 candidate; publication requires owner approval.",
+        "Scenery/drive JSON exports are inert studies. Race Foundry can also export its fixed original single-route game with local runtime, not arbitrary scripts or a migration of qsol.vanillajs.track.v1.",
         "Road surface samples refer to rendered triangles and explicit surface IDs; terrain alone cannot describe bridges/tunnels.",
         "Glass uses a documented approximate material; contact patches are not general scene shadows or photorealism.",
         "GPU pixel output and Float64/Float32 geometry are separate from exact numerical proof contracts.",
         "Vehicle dynamics uses a bounded approximate rigid-body and tyre model; trusted game code supplies surface queries and static barriers. Imported vehicle data cannot select callbacks.",
-        "Vehicle sidecars do not include a world, executable rules or a complete game. Keep lab-authored routes and surface adapters outside the core."
+        "Vehicle sidecars do not include a world, executable rules or a complete game. Keep lab-authored routes and surface adapters outside the core.",
+        "A validated route still needs gameplay testing for finishability and balance. The rival uses vehicle physics; car-to-car collisions and multiplayer are unsupported.",
+        "Exact same-runtime PCM depends on the same profile and telemetry sample schedule; browser output and cross-engine Float64 identity are not promised."
       ],
       "experimental": true
     },

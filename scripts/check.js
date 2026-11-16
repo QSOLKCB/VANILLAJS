@@ -3,9 +3,11 @@ import {resolve,dirname,relative} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import assert from 'node:assert/strict';
 import {verifyGameMakerRuntime} from './game-maker-runtime.mjs';
+import {verifyHorizonRaceRuntime} from './horizon-race-runtime.mjs';
 import {verifyFPSSource} from './fps-source-identity.mjs';
 await verifyFPSSource();
 await verifyGameMakerRuntime();
+await verifyHorizonRaceRuntime();
 const root=resolve(import.meta.dirname,'..');
 async function walk(dir){
   const files=[];for(const entry of await readdir(dir,{withFileTypes:true})){

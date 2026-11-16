@@ -105,28 +105,31 @@ test('Block Arena startup and transitive shared-module changes produce isolated 
   }finally{await rm(root,{recursive:true,force:true});}
 });
 
-test('HORIZON binds both entry pages to one complete immutable graph',async()=>{
+test('HORIZON binds all three entry pages to one complete immutable graph',async()=>{
   const root=await mkdtemp(join(tmpdir(),'horizon-package-')),base='demos/horizon-lab';
   const files={
     [base+'/index.html']:'<script type="module" src="./start.js"></script>',
     [base+'/drive.html']:'<script type="module" src="./drive-start.js"></script>',
+    [base+'/race.html']:'<script type="module" src="./race-start.js"></script>',
+    [base+'/race-start.js']:"import '../../modules/vehicle3d/index.js';",
     [base+'/start.js']:"import '../../modules/scenic3d/index.js';",
     [base+'/drive-start.js']:"import '../../modules/vehicle3d/index.js';",
     'modules/scenic3d/index.js':'export const geometry=1;',
     'modules/vehicle3d/index.js':'export const physics=1;'
   };
-  const restorePages=async()=>{for(const path of [base+'/index.html',base+'/drive.html'])await writeFile(join(root,path),files[path]);};
+  const restorePages=async()=>{for(const path of [base+'/index.html',base+'/drive.html',base+'/race.html'])await writeFile(join(root,path),files[path]);};
   try{
     for(const [path,source]of Object.entries(files)){await mkdir(dirname(join(root,path)),{recursive:true});await writeFile(join(root,path),source);}
-    const first=await packageLabRuntime(root,'horizon-lab');assert.equal(first.files.length,4);
-    for(const [page,start]of [['index.html','start.js'],['drive.html','drive-start.js']])
+    const first=await packageLabRuntime(root,'horizon-lab');assert.equal(first.files.length,5);
+    for(const [page,start]of [['index.html','start.js'],['drive.html','drive-start.js'],['race.html','race-start.js']])
       assert.equal(await readFile(join(root,base,page),'utf8'),'<script type="module" src="./runtime-'+first.version+'/'+base+'/'+start+'"></script>');
     await restorePages();await writeFile(join(root,'modules/vehicle3d/index.js'),'export const physics=2;');
     const changed=await packageLabRuntime(root,'horizon-lab');assert.notEqual(changed.version,first.version);
     assert.equal(await readFile(join(root,base,'runtime-'+first.version,'modules/vehicle3d/index.js'),'utf8'),files['modules/vehicle3d/index.js']);
-    // Both the original authoring page and the driving page advance together.
+    // All three pages advance together, including the race player.
     assert.ok((await readFile(join(root,base,'index.html'),'utf8')).includes(changed.version));
     assert.ok((await readFile(join(root,base,'drive.html'),'utf8')).includes(changed.version));
+    assert.ok((await readFile(join(root,base,'race.html'),'utf8')).includes(changed.version));
   }finally{await rm(root,{recursive:true,force:true});}
 });
 

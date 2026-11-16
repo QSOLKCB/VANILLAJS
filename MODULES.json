@@ -624,6 +624,13 @@
       "status": "experimental",
       "description": "Bounded fixed-step world-space vehicle dynamics, torque/gears, four-wheel suspension and friction with explicit surface and swept barrier contracts",
       "demo": "demos/horizon-lab/drive.html"
+    },
+    "vehicle-audio": {
+      "entry": "modules/vehicle-audio/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded original engine, exhaust and tyre PCM synthesis from explicit vehicle telemetry and versioned sound profiles"
     }
   },
   "recipes": {
@@ -1200,6 +1207,19 @@
         "collision"
       ],
       "description": "Drive and tune a four-wheel vehicle on original test environments; export validated vehicle data"
+    },
+    "horizon-race": {
+      "entry": "demos/horizon-lab/race.html",
+      "modules": [
+        "vehicle3d",
+        "vehicle-audio",
+        "scenic3d",
+        "render-lit",
+        "math",
+        "time",
+        "collision"
+      ],
+      "description": "Author elevated scenic routes, tune vehicles and sound, race a physical rival, and export a complete original offline race"
     }
   },
   "experiments": {

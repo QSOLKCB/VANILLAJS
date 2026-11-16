@@ -10,17 +10,18 @@ Historical package/catalogue `1.0.0` metadata is not a release counter.
 
 HORIZON-001 was merged in [PR #105](https://github.com/QSOLKCB/VANILLAJS/pull/105).
 **Reviewed main for HORIZON-002:** `69dd325243633f66844a5ef85d87ab24e8677a63`.
-The current PR implements **HORIZON-002**, the second independently reviewed
-v2.9.0 change. [Vehicle contracts and evidence](HORIZON_002.md) cover its dynamics
-and drivable tuning experiment. HORIZON-003 complete racing creator tools/showcase
-remains **proposed, not available**. v2.9.0 is not release-ready after this PR.
+HORIZON-002 was merged in [PR #107](https://github.com/QSOLKCB/VANILLAJS/pull/107).
+**Reviewed main for HORIZON-003:** `718afebb7146424ed8718f80a488c3b76eea1c85`.
+The current PR implements **HORIZON-003**, the final separately reviewed candidate:
+[creator tools, race and portable export](HORIZON_003.md). v2.9.0 publication still
+requires owner review and explicit release approval.
 
 | Release | Milestone | Dependency and review gate |
 | --- | --- | --- |
 | v2.6.0 | SPRITE-FEEL-001 — Game Feel & Sprite Foundry | Published after owner review, PR #101 merge and release |
 | v2.7.0 | SCENE-NARRATIVE-001 — Scene & Narrative Foundry | Published after owner review, PR #102 merge and release |
 | v2.8.0 | GAME-MAKER-001 — Game Maker API | Published after owner review, PR #103 merge and release |
-| v2.9.0 | HORIZON-3D-001 — 3D Racing Foundry | HORIZON-001 merged; HORIZON-002 candidate; HORIZON-003 awaits review |
+| v2.9.0 | HORIZON-3D-001 — 3D Racing Foundry | HORIZON-001 and HORIZON-002 merged; HORIZON-003 candidate awaits review |
 
 Games2 is a future consumer and remains unmodified throughout this programme.
 The owner decides when another game begins. No automatic code copying, mutable
@@ -212,7 +213,7 @@ compression, body pitch/roll, brake lights and paint/material options. Visual
 rig state consumes simulation output and cannot feed cosmetic motion back into it.
 Imported geometry must obey reviewed asset limits and source/licence obligations.
 
-### HORIZON-002 — Vehicle dynamics and simulation (current candidate)
+### HORIZON-002 — Vehicle dynamics and simulation (merged PR #107)
 
 Keep `road-arcade` unchanged for current consumers. A separately versioned
 world-space vehicle contract uses SI mass/inertia approximations, pose/velocity,
@@ -238,7 +239,21 @@ jump/landing and high-speed barriers. Include negative controls for tunnelling,
 energy growth and invalid states. Compare numerical trajectories independently
 of GPU pixels; report approximation/error bounds and timestep sensitivity.
 
-### HORIZON-003 — Creator tools, showcase and polish
+### HORIZON-003 — Creator tools, showcase and polish (current candidate)
+
+The current [Race Foundry](HORIZON_RACING.md) implements this gate as a separate
+`qsol.vanillajs.horizon-race.v1` creator workflow linked from the existing Track
+Foundry. It combines route-knot editing, three vehicle classes, complete
+vehicle/sound recipes, retained history and a portable single-route game. Its
+Sunward Run uses real vehicle3d state for the player and a non-contact pace rival,
+with ordered gates, simulation time, recovery penalties and a finish result.
+The experimental `vehicle-audio` API is the new reusable module; race rules and
+named content remain lab-owned. [Contracts and limits](HORIZON_003.md) distinguish
+implemented behavior from arbitrary game compilation, dynamic car collisions,
+a detailed cockpit interior or a guarantee that every accepted edit is raceable.
+
+The requirements below remain the review checklist; execution evidence must
+identify which checks were actually run against the final candidate.
 
 Extend the existing Track Foundry with elevation/banking, scenery, material/
 environment presets and surface classifications. Vehicle Foundry authors original
@@ -279,16 +294,16 @@ execution. Only reviewed-main authority may permit browser receipt reuse.
 
 ## Games2 readiness
 
-This table separates published baseline capabilities from the current rendering
-candidate and remaining HORIZON work. Adoption still requires an immutable
+This table separates published baseline capabilities from the reviewed HORIZON
+primitives and final racing candidate. Adoption still requires an immutable
 owner-approved release and game-specific validation; no row permits editing Games2.
 
 | Consumer genre | Published v2.8.0 baseline | Current candidate / remaining work |
 | --- | --- | --- |
 | Strike Pixel and other FPS | character, weapons, combat3d, weapon-feel, sprite2d | Optional lit visuals; integration stays game-owned |
-| Arcade platformers | Game Maker API, tilemap, sprite2d, motion2d, combat2d, audio2d | No new platformer contract in HORIZON-001 |
+| Arcade platformers | Game Maker API, tilemap, sprite2d, motion2d, combat2d, audio2d | No new platformer contract in HORIZON |
 | Tactical/adventure | scene-graph, narrative, navigation, tilemap | Optional lit scene presentation |
-| Racing | road-arcade, existing Track Foundry, exact-circuit | HORIZON-001 visuals/contact surface seam; dynamics and playable racing remain 002/003 |
+| Racing | road-arcade, existing Track Foundry, exact-circuit | Merged scenic3d/render-lit/vehicle3d; candidate vehicle-audio and complete single-route race authoring/export |
 | RTS/strategy | navigation/flow fields, tilemap, scene-graph, narrative | Optional static lit environments |
 | Space | flight, orbital-physics, scene-graph, rendering/audio | Optional lit materials; ship systems remain game-owned |
 | Intros/cinematics | demo-scene, demo-timeline, soundtrack, scene tracks | Optional lit environment/vehicle presentation |

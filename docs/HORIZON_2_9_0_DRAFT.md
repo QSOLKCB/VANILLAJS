@@ -1,55 +1,98 @@
 # v2.9.0 — HORIZON 3D Racing Foundry
 
-**Partial draft for owner review. v2.9.0 is not ready for publication.**
-HORIZON-001 is merged in PR #105. HORIZON-002 is the current second candidate;
-HORIZON-003 still requires a separate implementation and review.
+**Full milestone draft for owner review; v2.9.0 is not published.**
+HORIZON-001 was merged in [PR #105](https://github.com/QSOLKCB/VANILLAJS/pull/105)
+and HORIZON-002 in [PR #107](https://github.com/QSOLKCB/VANILLAJS/pull/107).
+HORIZON-003 is the final implementation candidate. Its complete verification,
+owner review, merge and release approval remain separate gates. The current
+published baseline is v2.8.0; these notes describe the proposed v2.9.0 release.
 
-## HORIZON-001 merged additions
+HORIZON connects original 3D scenery, world-space vehicle dynamics and creator
+tools in one offline racing workflow. Make an elevated road, tune the car and
+its sound, race a physical rival, then keep an editable recipe or export the
+complete supported race.
 
-- Optional native WebGL1 lit rendering with mesh normals, directional/ambient
-  lighting, procedural texture patterns, approximate roughness/vehicle finishes,
-  glass tint, sky/atmosphere, fog and bounded contact-shadow patches.
-- Validated original scenery recipes: terrain, elevated/banked road surfaces,
-  roadside objects, trees, buildings and bridge/tunnel geometry. Static batches
-  and low/high profiles have explicit resource budgets.
-- Original detailed procedural vehicles with separate visual rig inputs for
-  steering, wheel spin, suspension, body pitch/roll and brake lights.
-- HORIZON Lab: inspect and author an original scenic environment, tune materials
-  and visual settings, preview cameras, keep accepted history and exchange inert
-  project data. The camera tour is not a driving simulation.
-- Creator/API guides, agent catalogue integration, geometry/contact references,
-  native Chromium rendering/lifecycle/offline tests and source-bound evidence.
+## Make the road and the car
 
-These remain experimental APIs. Material/glass/shadow effects are documented
-approximations. Exact numerical mathematics, existing renderer/callers, Racing
-Lab, Track Foundry v1 and other authoring formats remain compatible.
-No external engine, runtime package, downloaded asset, account or cloud service
-is introduced. Games2 remains unchanged.
+- Optional native WebGL1 lit rendering adds mesh normals, directional/ambient
+  lighting, procedural materials, approximate roughness and vehicle finishes,
+  glass tint, sky, fog and bounded contact-shadow patches. Existing rendering
+  entry points remain compatible.
+- Original scenery recipes generate terrain, trees, roadside buildings,
+  bridges, tunnels and elevated/banked road geometry. Static batches and
+  low/high profiles have explicit resource budgets.
+- Original sport, touring and utility vehicles have distinct proportions,
+  detailed body silhouettes, windows, lights, individual wheels, steering,
+  wheel rotation, suspension response and brake-light feedback.
+- [Scenery Atelier](HORIZON_LAB.md) remains the focused environment/appearance
+  tool. Its camera tour and JSON study are not a driving simulation or game.
 
-## HORIZON-002 candidate additions
+## Drive through the actual world
 
-- New pure `vehicle3d` API for bounded world-space vehicle state and explicit
-  fixed steps: torque curves, gearbox/drivetrain, steering, tyre friction,
-  four-wheel spring/damper suspension, elevation, banking and jumping/landing.
-- Explicit static barrier sweeps, paused recovery, strict inert vehicle recipes
-  and separate presentation. Existing road-local arcade handling remains intact.
-- HORIZON Driving: steer an original test vehicle, compare handling and surface
-  settings, inspect wheel contacts/loads and powertrain diagnostics, then export
-  a reusable vehicle recipe. The named courses remain lab-owned.
-- Independent numerical reference scenarios, actual packaged browser interactions,
-  recovery/offline checks and a shared immutable namespace for both HORIZON pages.
+- The pure [vehicle3d API](VEHICLE3D_API.md) advances explicit vehicle state
+  with fixed steps, torque curves, forward/reverse gearing, driven-wheel
+  configuration, steering, tyre grip, four-wheel spring/damper suspension,
+  elevation, banking and jumping/landing.
+- Static barrier sweeps, explicit recovery and strict vehicle data remain
+  separate from camera, wheel presentation and audio. Existing road-local
+  arcade handling remains intact.
+- [Vehicle Dynamics](HORIZON_DRIVING.md) provides handling, ramp and coastal
+  experiments with wheel contacts/loads and powertrain diagnostics. Exported
+  vehicle recipes can be reused with a consuming game's own world and rules.
 
-The model is an inspectable approximation, not a full tyre or real-vehicle simulator.
-See [contracts and execution record](HORIZON_002.md).
+## Author and keep a complete race
 
-## Required before the complete v2.9.0 release
+- [Race Foundry](HORIZON_RACING.md) joins route and vehicle authoring with the
+  original **Cape Aster — Sunward Run**: approximately 509 m of elevated,
+  banked coastal road, a bridge, a tunnel, eight ordered gates and a finish.
+- The cyan rival drives a separate vehicle through the same physics using
+  throttle, steering and braking. It is a non-contact pace opponent. The
+  player wins or loses according to finish time, including recovery penalties.
+- Chase, bonnet and cockpit-style cameras accompany speed, gear/RPM, race time,
+  route and checkpoint HUDs. Keyboard and pointer/touch controls support pause,
+  restart, recovery and explicit resumption after focus/graphics loss.
+- The creator desk edits road positions/elevation/bank, surfaces, environment,
+  vehicle classes, paint/materials, mass, torque/gears, suspension, grip,
+  cameras and sound. Accepted history supports undo/redo; rejected imports
+  preserve the accepted project. Authored routes still require test-driving.
+- The new experimental [vehicle-audio API](VEHICLE_AUDIO_API.md) creates original
+  engine, exhaust, tyre/brake and gear-change PCM from explicit telemetry,
+  seeded noise and owned sample state. The browser adapter owns optional,
+  gesture-started playback and cancels sound on pause or failure.
+- Export an inert race recipe, a reusable vehicle recipe, or a **complete
+  playable race ZIP**. The ZIP includes the accepted project, native local
+  runtime, procedural art/audio, controls/HUD, source hashes, licences/notices
+  and a scoped SHA-256 offline worker. Extract and serve it through local HTTP;
+  later offline visits work after successful installation. No account, package
+  installation, CDN or downloaded asset is required.
 
-**HORIZON-003** must deliver Track/Vehicle Foundries, original vehicle audio,
-a complete scenic playable race with rival and finish, camera choices, measured
-budgets, recovery, offline packaging and polish.
+## Compatibility and limits
 
-HORIZON-002 and HORIZON-003 require their own owner review. The remaining features
-must not appear as delivered release notes before implementation and verification.
-See [the full programme](ENGINE_EXPANSION_001.md).
+The candidate catalogue contains **71 experimental modules, 51 recipes and two
+research experiments**. Release publication does not make these APIs stable.
+
+`qsol.vanillajs.track.v1`, the original HORIZON visual/driving studies, Mod SDK
+formats, Game Maker exports and current engine callers remain compatible.
+The new `qsol.vanillajs.horizon-race.v1` sidecar does not migrate old track data.
+Exact maths, proofs and historical evidence remain unchanged. Package/catalogue
+`1.0.0` metadata retains its historical purpose.
+
+Vehicle dynamics, materials, glass and shadows are documented approximations.
+Cars can overlap; decorative buildings, trees and tunnel walls are not colliders.
+Cockpit-style is a driving viewpoint, not a detailed interior. The race export
+supports this single-route game, not arbitrary scripts, multiplayer, an authoring
+editor or saved race progress. Geometry and source PCM identity are distinct
+from GPU pixels, cross-engine floating-point identity and device audio output.
+No unmeasured physical GPU, phone or controller performance is claimed.
+
+[HORIZON-001](HORIZON_001.md), [HORIZON-002](HORIZON_002.md) and
+[HORIZON-003](HORIZON_003.md) document contracts, verification boundaries and
+execution records. The final candidate must pass Node, package, offline and
+actual Chromium gameplay/export checks before release approval; screenshots
+supplement those checks.
+
+Games2 is unchanged. A later Games2 PR must choose an owner-approved immutable
+release, retain provenance and run its own game and packaging checks. No
+cross-repository copying, merge, tag or release occurs automatically.
 
 **Build the engine. Prove the physics. Make the tools. Teach the creator.**

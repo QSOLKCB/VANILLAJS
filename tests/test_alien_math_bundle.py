@@ -68,6 +68,11 @@ class CapsuleTests(unittest.TestCase):
             'demos/horizon-lab/start.js': 'export const fixture=true;\n',
             'demos/horizon-lab/drive.html': '<script type="module" src="./drive-start.js"></script>',
             'demos/horizon-lab/drive-start.js': 'export const drivingFixture=true;\n',
+            'demos/horizon-lab/race.html': '<script type="module" src="./race-start.js"></script>',
+            'demos/horizon-lab/race-start.js': 'export const raceFixture=true;\n',
+            'demos/horizon-lab/race-player.js': 'export const fixture=true;\n',
+            'demos/horizon-lab/race-portable-shell.txt': '<link rel="stylesheet" href="./demos/horizon-lab/race.css"><script type="module" src="./game-start.js"></script><script type="module" src="./offline/register.js"></script>',
+            'demos/horizon-lab/race.css': 'body{margin:0}\n',
             'demos/game-maker-lab/index.html': '<script type="module" src="./start.js"></script>',
             'demos/game-maker-lab/start.js': 'export const fixture=true;\n',
             'demos/game-maker-lab/portable.js': 'export const fixture=true;\n',
@@ -87,7 +92,7 @@ class CapsuleTests(unittest.TestCase):
         }
         build_sources = ['scripts/build.js', 'scripts/pursuit-package.mjs', 'scripts/fps-source-identity.mjs',
                          'scripts/browser-dependencies.mjs', 'scripts/service-worker.template.js',
-                         'scripts/verify-offline.js', 'scripts/game-maker-runtime.mjs']
+                         'scripts/verify-offline.js', 'scripts/game-maker-runtime.mjs', 'scripts/horizon-race-runtime.mjs']
         # Derive the browser source fixture from the real capsule allowlist.
         # An omitted new import must fail inside the extracted package, rather
         # than pass merely because the developer checkout contains that file.
@@ -105,6 +110,7 @@ class CapsuleTests(unittest.TestCase):
             target.write_text(text)
         subprocess.run(['node', 'scripts/fps-source-identity.mjs', '--write'], cwd=cls.root, check=True, stdout=subprocess.DEVNULL)
         subprocess.run(['node', 'scripts/game-maker-runtime.mjs', '--write'], cwd=cls.root, check=True, stdout=subprocess.DEVNULL)
+        subprocess.run(['node', 'scripts/horizon-race-runtime.mjs', '--write'], cwd=cls.root, check=True, stdout=subprocess.DEVNULL)
         (cls.root / Path(bundle.FORMAL).parent).mkdir(parents=True)
         formal = {'baseline': cls.base, 'files': {'modules/kernel/index.js': bundle.sha((cls.root / 'modules/kernel/index.js').read_bytes())}}
         (cls.root / bundle.FORMAL).write_bytes(bundle.canonical(formal))

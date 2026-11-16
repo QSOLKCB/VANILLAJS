@@ -9,7 +9,8 @@ import {resolve,extname,sep} from 'node:path';
 
 const labs=new Map([['sprite-foundry','sprite-foundry'],['weapon-feel-lab','weapon-feel'],['narrative-foundry','narrative-foundry'],['game-maker-lab','game-maker-lab'],['horizon-lab','horizon-lab']]);
 export const checkHorizonStartup=(browser,base)=>checkFoundryStartup(browser,base,'horizon-lab');
-export const checkHorizonDriveStartup=(browser,base)=>checkFoundryStartup(browser,base,'horizon-lab',true);
+export const checkHorizonDriveStartup=(browser,base)=>checkFoundryStartup(browser,base,'horizon-lab','drive');
+export const checkHorizonRaceStartup=(browser,base)=>checkFoundryStartup(browser,base,'horizon-lab','race');
 export const checkGameMakerStartup=(browser,base)=>checkFoundryStartup(browser,base,'game-maker-lab');
 export const checkSpriteStartup=(browser,base)=>checkFoundryStartup(browser,base,'sprite-foundry');
 export const checkNarrativeStartup=(browser,base)=>checkFoundryStartup(browser,base,'narrative-foundry');
@@ -17,11 +18,11 @@ export const checkWeaponFeelStartup=(browser,base)=>checkFoundryStartup(browser,
 async function ready(page,value){
   await page.waitForFunction(expected=>document.documentElement.dataset.labReady===expected,value);
 }
-export async function checkFoundryStartup(browser,base,lab,driving=false){
+export async function checkFoundryStartup(browser,base,lab,mode=null){
   assert.ok(labs.has(lab),'unknown foundry startup fixture');
-  assert.ok(!driving||lab==='horizon-lab','unknown driving startup fixture');
-  const entry=driving?'drive.html':'index.html',app=driving?'drive-app.js':'app.js';
-  const expected=driving?'horizon-drive':labs.get(lab),failed=await browser.newContext({serviceWorkers:'block'});
+  assert.ok(mode===null||(lab==='horizon-lab'&&['drive','race'].includes(mode)),'unknown HORIZON startup fixture');
+  const entry=mode?mode+'.html':'index.html',app=mode?mode+'-app.js':'app.js';
+  const expected=mode?'horizon-'+mode:labs.get(lab),failed=await browser.newContext({serviceWorkers:'block'});
   try{
     const page=await failed.newPage(),pattern='**/demos/'+lab+'/'+app;
     await failed.route(pattern,route=>route.abort());
@@ -49,6 +50,7 @@ export async function checkFoundryStartup(browser,base,lab,driving=false){
     ['modules/render-lit/index.js',poisoned],
     ['modules/scenic3d/index.js',poisoned],
     ['modules/vehicle3d/index.js',poisoned],
+    ['modules/vehicle-audio/index.js',poisoned],
     ['api/game-maker/index.js',poisoned]
   ]);
   const entries=[...old].map(([path,text])=>({path,bytes:Buffer.byteLength(text),

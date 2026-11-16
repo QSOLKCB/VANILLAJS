@@ -27,7 +27,7 @@ separate decisions; no automatic tagging, publishing or deployment is authorised
 | v2.6.0 | **SPRITE-FEEL-001 — Game Feel & Sprite Foundry** | Published; owner merged PR #101 and released v2.6.0 |
 | v2.7.0 | **SCENE-NARRATIVE-001 — Scene & Narrative Foundry** | Published; owner merged PR #102 and released v2.7.0 |
 | v2.8.0 | **GAME-MAKER-001 — Game Maker API** | Published; owner merged PR #103 and released v2.8.0 |
-| v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | HORIZON-001 merged; HORIZON-002 current candidate; HORIZON-003 follows review |
+| v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | HORIZON-001 and HORIZON-002 merged; HORIZON-003 final candidate, pending owner review |
 
 [Detailed contracts, dependencies and acceptance gates](docs/ENGINE_EXPANSION_001.md)
 distinguish existing primitives from future APIs. Every milestone needs a
@@ -86,13 +86,14 @@ numerical proofs and historical evidence remain.
 1. **HORIZON-001 (merged PR #105):** optional compatible native rendering/materials, lit geometry,
    procedural scenery, elevated/banked roads, original detailed vehicles, static
    batching and bounded low/high visual profiles. [Contracts and evidence](docs/HORIZON_001.md).
-2. **HORIZON-002 (current candidate):** world-space SI vehicle dynamics, torque/gears, driven wheels,
+2. **HORIZON-002 (merged PR #107):** world-space SI vehicle dynamics, torque/gears, driven wheels,
    steering/grip/slip, four-wheel contact, suspension, elevation/banking,
    jump/landing and collision recovery with independent numerical reference cases.
    [Driving workflow and contracts](docs/HORIZON_002.md).
-3. **HORIZON-003:** Track/Vehicle Foundries, data validation and retained history,
+3. **HORIZON-003 (current candidate):** Track/Vehicle Foundries, data validation and retained history,
    original engine/tyre sound, scenic playable showcase with rival, camera choices,
    checkpoints/finish, full lifecycle, polish and verified offline export.
+   [Creator workflow and completion evidence](docs/HORIZON_003.md).
 
 Preserve current arcade handling and `qsol.vanillajs.track.v1`; elevated roads
 require a versioned sidecar or separately reviewed migration. Real world-space
@@ -142,7 +143,7 @@ This engine programme neither changes Games2 nor decides when its next game star
 | Priority | Existing foundation | Candidate extension requiring review |
 | --- | --- | --- |
 | 1: FPS and arcade | Character/collision, combat2d/3d, mod adapters, navigation | Tactical AI, weapon/physics variants, platforming and side-scrolling systems |
-| 2: Worlds and vehicles | Terrain, cuboid streaming, road-arcade, exact circuits | Destruction, procedural environments, racing handling and richer track authoring |
+| 2: Worlds and vehicles | Terrain, cuboid streaming, road-arcade, exact circuits; merged scenic3d/vehicle3d | Destruction, richer dynamic collisions and later route-authoring extensions beyond the HORIZON candidate |
 | 3: Strategy | Navigation/flow fields, demo-owned RTS and VOIDWARD | Formations/unit behaviour, territorial and turn-based simulation |
 | 4: Mechs and space | Flight, ballistics, orbital physics, space demonstrations | Mech combat, fleet combat and ship systems |
 | 5: Persistent worlds | Existing bounded primitives and game-owned saves | Survival, crafting and world streaming policy |

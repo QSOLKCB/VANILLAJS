@@ -880,7 +880,7 @@ avoid conflating bridge decks with ground underneath them.
 
 [HORIZON Lab](HORIZON_LAB.md) consumes these APIs for actual visual authoring.
 Its project export is inert configuration, not a complete race. HORIZON-001
-is merged; the complete racing creation workflow remains HORIZON-003.
+is merged; [Race Foundry](HORIZON_RACING.md) provides the separate complete race workflow.
 [Compatibility and review gates](HORIZON_001.md).
 
 ## HORIZON-002 vehicle dynamics
@@ -891,3 +891,15 @@ suspension, torque/gearing, tyre friction, braking and swept barrier response.
 The caller supplies trusted surface queries and owns scheduling, inputs, rendering
 and game rules. The [driving tutorial](HORIZON_DRIVING.md) uses these contracts in
 a real tuning experiment. Existing road-arcade and track formats are unchanged.
+
+## HORIZON-003 vehicle sound and race composition
+
+The pure [vehicle-audio API](VEHICLE_AUDIO_API.md) synthesizes original engine,
+exhaust, tyre and gear feedback from explicit telemetry. Versioned profiles,
+seeded noise and owned sample state permit same-runtime comparisons independent
+of Web Audio. It has no DOM, device, clock or vehicle-simulation dependency.
+
+[Race Foundry](HORIZON_RACING.md) composes vehicle3d, scenic3d, render-lit and
+vehicle-audio. Route/rival rules and named content are lab-owned. The separate
+`qsol.vanillajs.horizon-race.v1` format does not replace Track Foundry v1, visual
+studies, vehicle recipes or driving studies. [Compatibility/export boundaries](HORIZON_003.md).

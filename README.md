@@ -55,18 +55,20 @@ not imply API stability.
 
 The published v2.8.0 baseline has **67 experimental modules, 48 recipes and two
 research experiments**. Merged HORIZON-001 adds lit rendering and scenery.
-This HORIZON-002 candidate adds vehicle dynamics: **70 modules, 50 recipes**,
+Merged HORIZON-002 adds vehicle dynamics. This final HORIZON candidate adds
+vehicle audio and racing authoring: **71 modules, 51 recipes**,
 with research unchanged.
 [MODULES.json](MODULES.json) is authoritative. Its `release` and the private
 `package.json` version retain historical `1.0.0` metadata, not GitHub release numbers.
 
-**HORIZON-002 — second of three v2.9.0 PRs:** drive, tune and inspect a real
-world-space four-wheel vehicle in [HORIZON Driving](demos/horizon-lab/drive.html).
-Compare torque/gearing, steering/grip and suspension; export a reusable vehicle
-recipe. [HORIZON Lab](demos/horizon-lab/index.html) retains scenery and appearance
-authoring from merged PR #105. The complete scenic race and polished creator
-tools remain HORIZON-003; v2.9.0 is not yet release-ready.
-[Contracts and verification](docs/HORIZON_002.md) · [Programme](docs/ENGINE_EXPANSION_001.md).
+**HORIZON-003 — final v2.9.0 candidate:** [Race Foundry](demos/horizon-lab/race.html)
+combines elevated route editing, vehicle and sound tuning, retained history and
+an original scenic race against a physics-driven rival. Drive through ordered
+checkpoints, switch cameras and export the complete local race package.
+[Vehicle Dynamics](demos/horizon-lab/drive.html) and the
+[Scenery Atelier](demos/horizon-lab/index.html) remain specialist tools.
+v2.9.0 awaits owner review and release approval.
+[Creator tutorial](docs/HORIZON_RACING.md) · [Contracts and verification](docs/HORIZON_003.md) · [Programme](docs/ENGINE_EXPANSION_001.md).
 
 ## Run the labs
 
@@ -99,6 +101,7 @@ contracts, even when the demonstrations are playable.
 
 | Build or investigate | Working entry point | Guide |
 | --- | --- | --- |
+| Build, race and export a scenic 3D route | [HORIZON Race Foundry](demos/horizon-lab/race.html) | [Author your first race](docs/HORIZON_RACING.md) |
 | World-space driving, gearing and suspension | [HORIZON Driving](demos/horizon-lab/drive.html) | [Tune and test a vehicle](docs/HORIZON_DRIVING.md) |
 | Lit 3D scenery, roads and vehicle visuals | [HORIZON Lab](demos/horizon-lab/index.html) | [Rendering and environment tutorial](docs/HORIZON_LAB.md) |
 | Build a complete small 2D game | [Game Maker Lab](demos/game-maker-lab/index.html) | [Create, play and export](docs/GAME_MAKER_LAB.md) |
@@ -210,7 +213,7 @@ module's linked specialist guide before calling an API.
 | Exact simulation | `integer-math`, `integer-vector`, `integer-time`, `integer-physics`, `integer-engine`, `integer-replay` |
 | ALIEN MATH authoring | `exact-rational`, `exact-interval`, `exact-geometry`, `rational-q16`, `exact-d4`, `exact-graph`, `exact-course`, `exact-circuit` |
 | Arcade and FPS | `motion2d`, `combat2d`, `combat3d`, `mod-arcade`, `mod-fps` |
-| Lit 3D meshes, scenery and vehicle dynamics | `render-lit`, `scenic3d`, `vehicle3d` |
+| Lit 3D meshes, scenery, vehicles and engine sound | `render-lit`, `scenic3d`, `vehicle3d`, `vehicle-audio` |
 | Tile worlds and body collision | `tilemap`, `motion2d` |
 | Scene composition and narrative | `scene-graph`, `narrative` |
 | Sprites and game feel | `sprite2d`, `weapon-feel` |

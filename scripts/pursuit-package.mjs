@@ -12,7 +12,7 @@ export async function packageLabRuntime(root,lab){
   const startup=startups[lab],base='demos/'+lab,entry=base+'/'+startup;
   // The two HORIZON pages share one immutable dependency closure. This is an
   // explicit allowlist, never discovery of arbitrary runnable HTML files.
-  const pages=[{html:base+'/index.html',startup},...(lab==='horizon-lab'?[{html:base+'/drive.html',startup:'drive-start.js'}]:[])];
+  const pages=[{html:base+'/index.html',startup},...(lab==='horizon-lab'?[{html:base+'/drive.html',startup:'drive-start.js'},{html:base+'/race.html',startup:'race-start.js'}]:[])];
   const files=new Map(),pending=pages.map(page=>base+'/'+page.startup);let size=0;
   while(pending.length){
     const path=pending.pop();if(files.has(path))continue;
