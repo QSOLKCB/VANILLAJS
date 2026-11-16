@@ -1,17 +1,18 @@
 # VANILLAJS roadmap
 
-## Published baseline — v2.6.0, The Game Feel & Sprite Foundry
+## Published baseline — v2.7.0, Scene & Narrative Foundry
 
-[v2.6.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.6.0) was published on
-16 November 2026 from `7f2d5e62bb64aaf8c6ef7af8df678da9fe38412d`, after
-[PR #101](https://github.com/QSOLKCB/VANILLAJS/pull/101) was reviewed and merged.
-It adds Sprite Foundry, a reusable weapon-feel adapter, the playable Weapon Feel
-Lab and their verified creator workflows. This is the reviewed base for v2.7.0.
+[v2.7.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.7.0) was published on
+16 November 2026 from `70e63b902834ae31b994ea40ae584bd93892e6bf`, after
+[PR #102](https://github.com/QSOLKCB/VANILLAJS/pull/102) was reviewed and merged.
+It adds pure scene composition and narrative APIs, Workbench sidecar authoring
+and Narrative Foundry. This is the reviewed base for v2.8.0.
 
-The published baseline has 64 experimental modules, 45 recipes and two research
+The published baseline has 66 experimental modules, 47 recipes and two research
 experiments; [MODULES.json](MODULES.json) describes the current tree. Publication
 does not imply stability. Historical `1.0.0` metadata is unchanged. The preceding
-[v2.5.0 Creator Gateway](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0),
+[v2.6.0 Sprite/Game Feel](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.6.0)
+and [v2.5.0 Creator Gateway](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.5.0),
 existing engine/labs, Workbench/Asset Foundry, maths and offline contracts remain.
 Browser reuse retains its [source-bound authority rules](docs/BROWSER_CACHE.md).
 
@@ -25,8 +26,8 @@ separate decisions; no automatic tagging, publishing or deployment is authorised
 | Release | Milestone | Status and dependency |
 | --- | --- | --- |
 | v2.6.0 | **SPRITE-FEEL-001 — Game Feel & Sprite Foundry** | Published; owner merged PR #101 and released v2.6.0 |
-| v2.7.0 | **SCENE-NARRATIVE-001 — Scene & Narrative Foundry** | Current implementation candidate; v2.6.0 owner gate satisfied; v2.7.0 review/release pending |
-| v2.8.0 | **GAME-MAKER-001 — Game Maker API** | Proposed; consumes reviewed scene/resource contracts after v2.7.0 |
+| v2.7.0 | **SCENE-NARRATIVE-001 — Scene & Narrative Foundry** | Published; owner merged PR #102 and released v2.7.0 |
+| v2.8.0 | **GAME-MAKER-001 — Game Maker API** | Current implementation candidate; v2.7.0 gate satisfied; owner review/release pending |
 | v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | Proposed; three separately reviewed implementation PRs after preceding milestones |
 
 [Detailed contracts, dependencies and acceptance gates](docs/ENGINE_EXPANSION_001.md)
@@ -54,31 +55,32 @@ or complete engine is copied. Sprite alpha/animation integration must preserve
 the current Asset Foundry project schema; source RGBA equality does not imply
 browser-encoded PNG byte equality.
 
-### v2.7.0 — Scene & Narrative Foundry (current candidate)
+### v2.7.0 — Scene & Narrative Foundry (published)
 
 [Milestone contracts, creator workflows and evidence](docs/SCENE_NARRATIVE_001.md).
 
-Extend the existing bounded Workbench hierarchy/components rather than replace
-them. Add reviewed local/world transforms, reusable components, camera/light
-metadata, tracks, nested prefabs, explicit resource disposal and compatible
-versioned export/import. Migration is an explicit tested change.
+The published scene-graph API adds local/world affine transforms, camera/light
+metadata, tracks and nested prefabs. Workbench authoring uses a separate validated
+sidecar and explicitly owned preview; existing scene/project formats remain.
 
-Add a pure data-only branching narrative system and authoring lab with original
-dialogue/choices, typed conditions/effects, objectives/events, reachability and
-ending checks, bounded cycles, deterministic choice traversal and saved state.
-Stories cannot execute code or HTML. Demonstrate a scene event and full roundtrip.
+The published narrative API and lab provide original dialogue/choices, typed
+conditions/effects, objectives/events, structural reachability/ending checks, bounded
+cycles and replay-validated progress. Stories cannot execute code or HTML.
 
-### v2.8.0 — Game Maker API
+### v2.8.0 — Game Maker API (current candidate)
 
-Provide a small explicitly owned facade over existing rendering, input, clocks
-and audio, plus sprite/tilemap drawing and bounded particles. Tilemaps need
-visual/collision layers, atlas references, spawn/trigger markers, camera follow,
-optional parallax, editing and strict validation. Document pixel-row to +Y-up
-integer-subunit conversion and test body collision rather than assume it.
+[Milestone contracts, creator workflow and verification](docs/GAME_MAKER_001.md).
 
-Game Maker Lab must teach an actual playable game from an empty scene through
-movement, interaction, sound, win/lose, restart and independently runnable export.
-Keep resource disposal explicit and expose real contracts through the agent catalogue.
+The candidate adds an owned drawing/input/clock/audio facade, bounded layered
+tilemaps and integer whole-body sweeps composed with existing motion laws. Game
+Maker Lab teaches actual playable platform rules from an empty map through sprite,
+level and interaction authoring to win/lose/restart and a complete offline ZIP.
+
+The public-module Ember Relay example can be copied independently. Native runtime
+packaging, source hashes, explicit resource disposal, creator guides and the agent
+catalogue define what is reusable versus game-owned. Exports support these original
+example rules, not arbitrary scripts or every Workbench project. Publication awaits
+owner review; existing schemas, numerical proofs and historical evidence remain.
 
 ### v2.9.0 — HORIZON, three PRs
 

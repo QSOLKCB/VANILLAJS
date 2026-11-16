@@ -1,0 +1,23 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 2558310509
+- 302398202
+
+    at checkGameMakerAPI (file:///home/trent/vanillajs-game-maker-api/scripts/browser-game-maker-api.js:78:12)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:453:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+    at async file:///tmp/game-maker-api-browser.mjs:15:5 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 2558310509,
+  expected: 302398202,
+  operator: 'strictEqual'
+}
+
+Node.js v22.18.0

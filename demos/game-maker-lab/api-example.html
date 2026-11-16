@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ember Relay · public Game Maker API example</title>
+  <style>
+    :root{color-scheme:dark;font:16px/1.5 system-ui;background:#102430;color:#f0eed3}
+    body{max-width:48rem;margin:3rem auto;padding:0 1rem}a{color:#8fd3ae}button{font:inherit;padding:.6rem 1rem;background:#234a51;color:inherit;border:1px solid #8fd3ae;border-radius:.3rem;cursor:pointer}button:focus-visible,canvas:focus-visible{outline:3px solid #f5be50;outline-offset:3px}nav{display:flex;gap:.5rem;flex-wrap:wrap}canvas{display:block;width:100%;height:auto;margin:1rem 0;border:1px solid #426970;image-rendering:pixelated}code{color:#f5be50}h1{line-height:1.15}small{display:block;margin-top:2rem}
+  </style>
+</head>
+<body>
+  <a href="./index.html">← Game Maker Lab</a>
+  <h1>Ember Relay</h1>
+  <p>A small playable example using public engine APIs. Move with A/D or ←/→,
+    jump with Space, collect the floating ember, then reach the green gate.</p>
+  <nav aria-label="Example controls">
+    <button id="example-play" type="button">Play</button>
+    <button id="example-pause" type="button">Pause</button>
+    <button id="example-restart" type="button">Restart</button>
+    <button id="example-dispose" type="button">Stop &amp; release resources</button>
+  </nav>
+  <canvas id="example-canvas" width="384" height="192" tabindex="0" aria-label="Ember Relay game. A and D move; Space jumps."></canvas>
+  <p id="example-status" role="status" aria-live="polite">Ready. Press Play.</p>
+  <small>Original Apache-2.0 example. Inspect <a href="./api-example.js">api-example.js</a>.
+    It imports only public API/modules; no lab game runtime or framework.
+    Copy the documented folders and serve them with a local HTTP server.
+    <a href="../../docs/GAME_MAKER_API.md">API and ownership guide</a>.</small>
+  <script type="module" src="./api-example.js"></script>
+</body>
+</html>

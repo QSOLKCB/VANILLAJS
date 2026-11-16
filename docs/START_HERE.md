@@ -20,3 +20,11 @@ The [Creator Guide](CREATOR_GUIDE.md) explains more tools. The
 [API](API.md) and [architecture](ARCHITECTURE.md) are the advanced layer.
 [Agents start here](AGENT_GUIDE.md); people do not need to read engineering policy
 before trying the lesson.
+
+## Make a small complete 2D game
+
+When you are ready for sprites, levels and game rules, open [Game Maker Lab](../demos/game-maker-lab/index.html).
+Its [guided tutorial](GAME_MAKER_LAB.md) starts with an empty map or a playable
+original example. Paint, place a player/exit, test and download a complete ZIP
+for the supported platform-game rules. This is separate from the Workbench scene
+format. [Understand the export](GAME_MAKER_EXPORT.md) before sharing your files.

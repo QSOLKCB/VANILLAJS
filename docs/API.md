@@ -832,7 +832,7 @@ project formats and track formats remain unchanged. The
 [milestone contract](SPRITE_FEEL_001.md) records identity boundaries and checks;
 future [programme APIs](ENGINE_EXPANSION_001.md) are proposals.
 
-## v2.7.0 candidate additions
+## v2.7.0 additions
 
 `scene-graph` supplies bounded hierarchical scene data, affine transforms,
 components, keyframed sampling and nested prefab expansion.
@@ -846,3 +846,20 @@ Events are application-owned mappings, never executable content. Neither module
 changes existing public signatures or Workbench/Mod SDK schemas.
 
 [Compatibility and verification](SCENE_NARRATIVE_001.md).
+
+## v2.8.0 candidate additions
+
+The [Game Maker facade](GAME_MAKER_API.md) at `api/game-maker/index.js` owns one
+supplied Canvas2D surface, asset caches, fixed clock, buffered input snapshots,
+particles and bounded existing audio playback. It installs no input listeners or
+animation loop; the caller owns devices and elapsed time. Existing public module
+signatures/defaults remain unchanged.
+
+The pure [tilemap API](TILEMAP_API.md) adds validated layered worlds, Sprite
+Foundry tileset frames, separate collision, markers, camera follow and integer
+body sweeps composed with `motion2d`. One tile is 256 subunits; rows grow downward
+while world Y grows upward. It is not a slopes or dynamic-rigid-body solver.
+
+[Game Maker Lab](GAME_MAKER_LAB.md) consumes both APIs. Its [ZIP export](GAME_MAKER_EXPORT.md)
+contains the original example rules and complete native runtime, rather than
+claiming to compile arbitrary game scripts.

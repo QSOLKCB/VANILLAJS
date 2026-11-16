@@ -1,0 +1,133 @@
+{
+  "schema": "qsol.game-maker.export-cancellation.v1",
+  "baseSourceSHA": "ab0510d053f1c3140001e748e453f7a186c4f4c1",
+  "candidateSourceSHA": "63fc732ee3e103dffaf1a9d5d8f50401b8da65c9",
+  "sourceNote": "Only the lab app, its browser regression and exact live cache pins changed. Runtime/harness frozen before verification; profile pins finalized separately. Subsequent evidence-only commit changes no tested source or packaged file.",
+  "environment": {
+    "node": "v22.18.0",
+    "python": "3.14.4",
+    "platform": "linux",
+    "arch": "x64",
+    "playwright": "1.64.0",
+    "chromium": "158.0.8127.18",
+    "graphics": "headless Chromium, --use-angle=swiftshader --enable-unsafe-swiftshader",
+    "browserProvisioning": "Pre-existing external installation; no install or owner-only runner dispatch",
+    "authority": "Local execution only; not a reusable trusted-main CI witness"
+  },
+  "checks": {
+    "nodeTests": {
+      "passed": 1060,
+      "failed": 0
+    },
+    "editorChromium": {
+      "exitCode": 0,
+      "command": "node scripts/browser-check.js --suites=editor"
+    },
+    "sourceCheck": {
+      "exitCode": 0,
+      "command": "node scripts/check.js"
+    },
+    "build": {
+      "exitCode": 0,
+      "command": "node scripts/build.js"
+    },
+    "offline": {
+      "exitCode": 0,
+      "command": "node scripts/verify-offline.js"
+    },
+    "cacheTests": {
+      "passed": 27,
+      "failed": 0,
+      "command": "node --test tests/browser-cache-profile.test.js tests/browser-package-provenance.test.js tests/browser-receipt-codec.test.js tests/browser-suite-cache.test.js"
+    },
+    "cacheClosures": {
+      "groups": 7,
+      "issues": 0,
+      "authority": "local-untrusted only"
+    },
+    "diffCheck": {
+      "exitCode": 0,
+      "command": "git diff --check"
+    },
+    "postEvidencePackageParity": {
+      "exitCode": 0,
+      "manifestAndOfflineOutputByteIdentical": true
+    }
+  },
+  "package": {
+    "kind": "qsol.vanillajs.offline-package.v1",
+    "verified": 887,
+    "bytes": 5909519,
+    "workerSha256": "7f604cbdfbb03ddcb2d82510caa4509aef88132178c2e4204f90216c63dccf7c",
+    "manifestSHA256": "2acd566a5ced2f054bc0cfa50c0ff1425282d14fca228c3fe5a68941fb783986"
+  },
+  "source": [
+    {
+      "path": "demos/game-maker-lab/app.js",
+      "gitBlob": "fbffb216432c77dcccf7f7f4f77edd95fd0583fd",
+      "sha256": "e17fa7aeb0854fab48d1eb30ab7c17b2511f183764f1cfc178f1d8a1a4e2d038"
+    },
+    {
+      "path": "scripts/browser-cache-profile.json",
+      "gitBlob": "241b05bb97839da16ce2241ee2b46eb4e6730181",
+      "sha256": "b58dafadb1f5146f593b76a7937f4c65d76bf75334d33c800bb238e1d9b577d6"
+    },
+    {
+      "path": "scripts/browser-game-maker.js",
+      "gitBlob": "98bd8770bc1fa1f8cdeb713b7d3d3b764577551e",
+      "sha256": "ebe852066e959ede9f43f22f78fad4bcca85df4aa35b09e9c0cae3c747afa5e8"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "browser.log",
+      "bytes": 2603,
+      "sha256": "7ae78c8cff4f20734f8fd4c69c1da29ddd31fedc6c5224e7db52bad77ffe8c68"
+    },
+    {
+      "path": "build.log",
+      "bytes": 57,
+      "sha256": "03745a00e46f819e465c8dd0f3f8548655db4cab12eefda21581e4166c1a1ba6"
+    },
+    {
+      "path": "cache-tests.tap",
+      "bytes": 6605,
+      "sha256": "aa1771cc4cc0441dc2240d4b2c0a6d9e16da52251a376383f944a33b4bd83aa8"
+    },
+    {
+      "path": "node.tap.gz",
+      "bytes": 49407,
+      "sha256": "1abf44df3b56a8f4df5eae0dce5d8c95b500ba6752a4fcb358d182f266da5472"
+    },
+    {
+      "path": "offline.json",
+      "bytes": 158,
+      "sha256": "f6efa0aa9d9d529dc1a7f5024e64932743e92845f53bbca0a029a865ac7f1a75"
+    },
+    {
+      "path": "package-manifest.json",
+      "bytes": 173603,
+      "sha256": "2acd566a5ced2f054bc0cfa50c0ff1425282d14fca228c3fe5a68941fb783986"
+    },
+    {
+      "path": "reproduction.log",
+      "bytes": 586,
+      "sha256": "c1650259317b258018aab3d4aa714f769cc2d989f593286251bcd04b821ee402"
+    },
+    {
+      "path": "source-check.log",
+      "bytes": 736,
+      "sha256": "3d16f62eae8ba5533a9fe9ef4e11a7f7a4100b8a1097792ed0fdc07024ec0503"
+    },
+    {
+      "path": "source-profiles.json.gz",
+      "bytes": 532770,
+      "sha256": "a5e4a7ac26dbe8e6dcca42ae8fb1f1993dc8663f43b4942a554b18566f101e32"
+    },
+    {
+      "path": "test-cleanup-failure.log",
+      "bytes": 2322,
+      "sha256": "308e15a914de0a103bf42500bd52003815303ff02a74e1bcc10c933f117b9619"
+    }
+  ]
+}

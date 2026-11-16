@@ -1,23 +1,23 @@
 # ENGINE-EXPANSION-001 — Build the Engine First
 
-**Published baseline:** [v2.6.0 — The Game Feel & Sprite Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.6.0).
-**Reviewed main for v2.7.0:** `7f2d5e62bb64aaf8c6ef7af8df678da9fe38412d`.
-Owner review/merge of PR #101 and publication of v2.6.0 satisfy the previous gate.
-That release contains 64 experimental modules, 45 recipes and two experiments.
+**Published baseline:** [v2.7.0 — Scene & Narrative Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.7.0).
+**Reviewed main for v2.8.0:** `70e63b902834ae31b994ea40ae584bd93892e6bf`.
+Owner review/merge of PR #102 and publication of v2.7.0 satisfy the previous gate.
+That release contains 66 experimental modules, 47 recipes and two experiments.
 The programme originally began at `433f8c87a74ed145a612510ee388a7aacc1280f6`,
 after v2.5.0 (`32b4fb1ca80e854297998aa00f87a8f012398b89`, 62 modules/43 recipes).
 Historical package/catalogue `1.0.0` metadata is not a release counter.
 
-The current PR implements only **v2.7.0**. Its public contracts are described in
-[Scene Composition](SCENE_COMPOSITION.md), [Narrative API](NARRATIVE_API.md) and
-[the milestone record](SCENE_NARRATIVE_001.md). v2.8.0–v2.9.0 contracts below remain
-**proposed designs, not available APIs**. Each needs separate implementation and review.
+The current PR implements only **v2.8.0**. Its contracts are described in
+[Game Maker API](GAME_MAKER_API.md), [Tilemap API](TILEMAP_API.md) and
+[the milestone record](GAME_MAKER_001.md). HORIZON v2.9.0 below remains a
+**proposed design, not an available API**, with three separate implementation PRs.
 
 | Release | Milestone | Dependency and review gate |
 | --- | --- | --- |
 | v2.6.0 | SPRITE-FEEL-001 — Game Feel & Sprite Foundry | Published after owner review, PR #101 merge and release |
-| v2.7.0 | SCENE-NARRATIVE-001 — Scene & Narrative Foundry | Current candidate; owner review, merge and release pending |
-| v2.8.0 | GAME-MAKER-001 — Game Maker API | Later task after owner-reviewed v2.7.0 merge/release; consumes scene/resource contracts |
+| v2.7.0 | SCENE-NARRATIVE-001 — Scene & Narrative Foundry | Published after owner review, PR #102 merge and release |
+| v2.8.0 | GAME-MAKER-001 — Game Maker API | Current candidate after v2.7.0 owner gate; v2.8.0 review/merge/release pending |
 | v2.9.0 | HORIZON-3D-001 — 3D Racing Foundry | Earlier milestones reviewed/released; three separately reviewed HORIZON implementation PRs |
 
 Games2 is a future consumer and remains unmodified throughout this programme.
@@ -79,7 +79,7 @@ tests, actual packaged Chromium editing/play, offline startup and old-worker
 recovery. Creator Hub/catalogue links and tutorials must lead to the real labs.
 Only executed results against the candidate count; this roadmap is not evidence.
 
-## v2.7.0 — Scene & Narrative Foundry (current candidate)
+## v2.7.0 — Scene & Narrative Foundry (published)
 
 ### Scene composition
 
@@ -135,48 +135,51 @@ actual tests from claims. Future consumer seams include tactical mission dialogu
 RPG campaigns, space missions, investigation clues, RTS briefings, survival quests
 and branching endings. Those games and their fiction remain outside VANILLAJS.
 
-## v2.8.0 — Game Maker API (proposed)
+## v2.8.0 — Game Maker API (current candidate)
 
-Offer an explicitly owned facade over existing drawing, asset, input, clock and
-audio facilities. Initial design operations are surface creation, rectangles/
-circles/lines/sprites/text/tile layers, bounded particles, camera transform,
-validated local asset admission, supplied input sampling, fixed-step advance,
-sound playback, pause/reset and disposal. These are planned operations, not
-imports available in v2.6.0.
-
-Each instance must own its resources; no required mutable global engine, hidden
-animation loop or network loader. Existing native rendering paths remain the
-backends. Drawing works from immutable snapshots and camera state; input adapters
-and user-gesture audio activation are explicit. Disposal must release listeners,
-buffers, voices and owned URLs. Two instances must coexist and reset independently.
+The implemented [Game Maker facade](GAME_MAKER_API.md) owns a supplied native
+Canvas2D surface, local sprite/tile assets, buffered input, fixed clock, seeded
+particles and existing procedural sound playback. It draws rectangles, circles,
+lines, text, sprites and tile layers with explicit camera transforms. The caller
+owns listeners, animation scheduling and the optional AudioContext. Instances
+can coexist, pause, reset and dispose independently; there is no hidden global
+engine or network asset loader.
 
 ### Tilemaps and portable game workflow
 
-A proposed tilemap envelope references a local Sprite Foundry atlas, bounded
-integer dimensions, visual layer cells, collision layer cells, marked spawns/
-triggers, camera-follow settings and optional parallax. Reject unknown versions,
-invalid atlas references, duplicate IDs, malformed arrays and resource budgets
-before accepting a map. Palette/tileset edits retain history and preserve source
-provenance.
+The [tilemap module](TILEMAP_API.md) admits `qsol.vanillajs.tilemap.v1`: an embedded
+validated Sprite Foundry tileset, up to four visual/parallax layers, a separate
+collision grid, spawns/triggers and camera settings. Maps are bounded to 64×64
+cells. Invalid fields, atlas indices, marker positions and resource budgets reject
+before replacement. The Lab edits palette and tile pixels with the existing
+Sprite Foundry format rather than introducing a second asset schema.
 
-Define the conversion once: authored tile columns/rows are integers; pixel rows
-grow downward, while authoritative motion/combat uses +Y up at 256 subunits per
-game unit. Select an integer subunit tile size and explicit origin, bounds,
-rounding and boundary rules. Test overlap and motion through complete collision
-cells. The existing point endpoint callback cannot be advertised as a swept
-body/tile solver without implementing the missing clearance/sweep behaviour.
-Keep combat hurtboxes/projectile sweeps consistent with rendered tile geometry.
+One tile is one game unit, or 256 integer subunits. Pixel rows grow downward;
+world +Y grows upward from the bottom-left. Full-body axis-aligned sweeps resolve
+X then Y against complete tile intervals, composing existing `motion2d` motor
+laws without changing its historical point collider. No slopes, rotated bodies
+or general dynamic-body collision are implied. `combat2d` shares the scale;
+attack/hurtbox integration and game rules remain the consumer's responsibility.
 
-Game Maker Lab must move from an empty scene through sprite import/creation,
-tile editing, player movement/collision, interaction, sound, win/lose and restart
-to a genuinely playable portable export. Export must include only the actual
-validated runtime/module dependency closure, assets, licences and notices.
-Provide a copyable public-module example that runs in an independent folder.
-Tests must launch that export offline under a nested path; do not equate scene
-JSON with a complete game or widen the current Workbench exporter claim.
+[Game Maker Lab](GAME_MAKER_LAB.md) starts from a blank stage or original playable
+Signal Garden. It supports sprite creation/import, tile/palette/collision/marker
+editing, camera/parallax, actual movement and interactions, optional original
+sound, win/lose/restart, undo/redo and validated project roundtrip. The copyable
+[Ember Relay example](../demos/game-maker-lab/api-example.html) uses only public
+APIs/modules and game-owned JavaScript.
 
-The agent catalogue must name real entry files, schemas, modules, commands,
-ownership boundaries and limits, checked against `MODULES.json`.
+The [portable ZIP](GAME_MAKER_EXPORT.md) contains the exact trusted native-module
+closure, authored data, supported original rules, licences/notices, hashes and
+scoped offline worker. Its source text archive is generated and verified against
+the actual runtime; imported projects cannot select executable content. This is
+not a universal game compiler or a change to Workbench export claims. Browser
+verification runs the downloaded ZIP beneath a nested URL, plays it offline and
+checks that damaged package bytes cannot install successfully.
+
+The declarative agent workflow references real files, supported schemas, modules,
+ownership boundaries and tests, validated against `MODULES.json`.
+[Milestone contracts and execution evidence](GAME_MAKER_001.md) distinguish the
+candidate's actual behavior from the later HORIZON proposals.
 
 ## v2.9.0 — HORIZON, 3D Racing Foundry (proposed)
 

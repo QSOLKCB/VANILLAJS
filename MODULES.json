@@ -581,6 +581,17 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Inert branching-story graphs, typed conditions/effects, objective state, deterministic choice traversal and replay-validated saves"
+    },
+    "tilemap": {
+      "entry": "modules/tilemap/index.js",
+      "depends": [
+        "motion2d",
+        "sprite2d"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded layered tile worlds, sprite atlases, integer body sweeps, markers and camera follow",
+      "demo": "demos/game-maker-lab/index.html"
     }
   },
   "recipes": {
@@ -1123,6 +1134,18 @@
         "render-webgl"
       ],
       "description": "Author branching stories, edit conditions, preview original outcomes and scene events, export story and progress"
+    },
+    "game-maker": {
+      "entry": "demos/game-maker-lab/index.html",
+      "modules": [
+        "tilemap",
+        "sprite2d",
+        "motion2d",
+        "input",
+        "time",
+        "audio2d"
+      ],
+      "description": "Author an original 2D platform game with the owned Game Maker facade and export its complete offline package"
     }
   },
   "experiments": {

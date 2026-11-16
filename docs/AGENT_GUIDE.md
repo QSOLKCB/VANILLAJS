@@ -123,3 +123,24 @@ Read [Narrative API](NARRATIVE_API.md) before authoring story variables, effects
 or saves. Keep event-to-scene mappings in the consuming app and treat imported
 text as inert data. The [milestone boundaries](SCENE_NARRATIVE_001.md) distinguish
 implemented APIs from proposed Game Maker/HORIZON work and future Games2 adoption.
+
+## Build a first game with the Game Maker API
+
+Use the `game-maker` workflow in [the catalogue](../agents/catalog.json). Start
+with [Game Maker Lab](GAME_MAKER_LAB.md), [the public facade](GAME_MAKER_API.md) and
+[the tilemap contract](TILEMAP_API.md). `api/game-maker/index.js` handles owned
+drawing/input/clock/audio; `modules/tilemap/index.js` owns reusable tile data and
+body collision. `demos/game-maker-lab/game.js` owns the example's collectibles,
+hazards and exit rules; an independent game owns its own rules and fiction.
+
+Preserve the conversion between integer 256-subunit, +Y-up coordinates and downward tile rows. Use supplied
+input snapshots and fixed steps; dispose the facade and caller-owned listeners.
+Imports are data only. The [portable exporter](GAME_MAKER_EXPORT.md) accepts the
+example envelope, not scripts or arbitrary module paths. When its trusted runtime
+closure changes, regenerate/review the archive before the required checks.
+
+Run `tests/game-maker.test.js`, `tests/tilemap.test.js`,
+`tests/game-maker-lab.test.js` and `tests/game-maker-export.test.js`, then all
+required checks and packaged browser interactions. Test the downloaded ZIP under
+a nested HTTP prefix and offline. Games2 adoption requires a separate owner-reviewed
+PR and immutable release provenance; never modify it during this engine milestone.

@@ -1,0 +1,569 @@
+{
+  "schema": "qsol.game-maker.execution.v1",
+  "recordedUTC": "2026-11-16T14:36:38.383199+00:00",
+  "baseSourceSHA": "70e63b902834ae31b994ea40ae584bd93892e6bf",
+  "candidateSourceSHA": "f02e0b70ad9f3b47d4c4261618da8be3e838a506",
+  "sourceNote": "Implementation source was frozen before required checks and full Chromium. Live cache pins were finalized and separately tested during Chromium, without changing package/harness bytes. The candidate commit contains an evidence README placeholder; subsequent evidence-only commits add records and change no packaged file, harness or policy.",
+  "environment": {
+    "node": "v22.18.0",
+    "python": "3.14.4",
+    "platform": "linux",
+    "arch": "x64",
+    "playwright": "1.64.0",
+    "chromium": "158.0.8127.18",
+    "graphics": "headless Chromium, --use-angle=swiftshader --enable-unsafe-swiftshader",
+    "browserProvisioning": "Pre-existing external installation; no install or owner-only runner dispatch",
+    "authority": "Local execution only; not a reusable trusted-main CI witness"
+  },
+  "package": {
+    "kind": "qsol.vanillajs.offline-package.v1",
+    "verified": 887,
+    "bytes": 5908667,
+    "workerSha256": "02ebcaf1fc191541b18ec4d098fab437db44e74b7fc9c88c46aa5822582f0894",
+    "manifestSHA256": "a78031bc281df032e0fe19563999e7c15eb49a26b992dfe6433e2544fef2aa0b",
+    "manifest": "package-manifest.json"
+  },
+  "results": [
+    {
+      "command": "node --test tests/*.test.js",
+      "exitCode": 0,
+      "tests": 1060,
+      "passed": 1060,
+      "failed": 0,
+      "log": "node.tap"
+    },
+    {
+      "command": "node scripts/check.js",
+      "exitCode": 0,
+      "javascriptFiles": 459,
+      "moduleContracts": 67,
+      "researchExperiments": 2,
+      "documentationLinks": 601,
+      "sourceImports": 126,
+      "agentWorkflows": 11,
+      "log": "source-check.log"
+    },
+    {
+      "command": "node scripts/build.js",
+      "exitCode": 0,
+      "log": "build.log"
+    },
+    {
+      "command": "node scripts/verify-offline.js",
+      "exitCode": 0,
+      "log": "offline.json"
+    },
+    {
+      "command": "node scripts/browser-check.js",
+      "environmentVariables": [
+        "NODE_PATH=/home/trent/.local/share/qsol/browser-tools/node_modules",
+        "PLAYWRIGHT_CHROMIUM_EXECUTABLE=/home/trent/.cache/ms-playwright/chromium_headless_shell-1254/chrome-headless-shell-linux64/chrome-headless-shell"
+      ],
+      "exitCode": 0,
+      "groups": [
+        "home",
+        "render",
+        "play",
+        "worlds",
+        "research",
+        "donor",
+        "editor"
+      ],
+      "log": "browser.log"
+    },
+    {
+      "command": "node --test tests/browser-cache-profile.test.js tests/browser-package-provenance.test.js tests/browser-receipt-codec.test.js tests/browser-suite-cache.test.js",
+      "exitCode": 0,
+      "log": "cache-tests.tap"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    {
+      "command": "sourceProfile with explicit local-untrusted environment",
+      "groups": 7,
+      "unresolvedIssues": 0,
+      "log": "cache-closures.json"
+    },
+    {
+      "command": "post-evidence rebuild and offline verification; compare manifest and offline output",
+      "exitCode": 0,
+      "byteIdenticalPackage": true,
+      "log": "evidence-package-parity.log"
+    }
+  ],
+  "preserved": {
+    "existingModules": {
+      "baseFilesChecked": 70,
+      "unchanged": true,
+      "baseInventorySHA256": "4912652654a215c8f11aaf0c4ef058df953cab3a3af69c211b141c463a839f03"
+    },
+    "existingAPIs": {
+      "baseFilesChecked": 9,
+      "unchanged": true,
+      "baseInventorySHA256": "081b4d32fd427e7f31db403377288b1c9c0dc5fa4d018769500c32fd6434aab0"
+    },
+    "formalProofs": {
+      "baseFilesChecked": 6,
+      "unchanged": true,
+      "baseInventorySHA256": "d52d94478d342a82f2b99f09938dad083fb925d0146c7bd62f89304cae4fbc2d"
+    },
+    "researchHistory": {
+      "baseFilesChecked": 6,
+      "unchanged": true,
+      "baseInventorySHA256": "bad8baa53ae32d89005a6d9126271ac5abaa9bcf8b1d5ee25911b91e4229290d"
+    },
+    "existingExecutionEvidence": {
+      "baseFilesChecked": 56,
+      "unchanged": true,
+      "baseInventorySHA256": "19016b6777f48bcbc7d7c3e1879f962843b8d6ac58eb8eef3fbee7d68ae8d063"
+    },
+    "workflows": {
+      "baseFilesChecked": 24,
+      "unchanged": true,
+      "baseInventorySHA256": "4c1af405342a422062e5a1d52b60cc88e2d53a0ee86149f41bc161f1e760a307"
+    },
+    "policyAndMetadata": {
+      "baseFilesChecked": 10,
+      "unchanged": true,
+      "baseInventorySHA256": "91a4bacce60659a38d3baa153b653515741d5b53fe33898c804d34e9618af4d6"
+    },
+    "existingCatalogueEntries": {
+      "unchanged": true,
+      "modules": 66,
+      "recipes": 47,
+      "experiments": 2
+    }
+  },
+  "changedSourceFiles": [
+    {
+      "path": "MODULES.json",
+      "bytes": 36765,
+      "sha256": "a7fd5a81b1e5e5138f52b8869328f8cba324ce1003e338821698b3305f642104",
+      "gitBlob": "5d30a56d4169f06b52c147dfc9d9ae095c5c29ab"
+    },
+    {
+      "path": "README.md",
+      "bytes": 22403,
+      "sha256": "6f53711b8d555b79e7ba109719a160607f24a10b07695a033774dfabdfb7c00c",
+      "gitBlob": "ad7e6a4e236f2fe0293085e982c3c9b268dd5dd4"
+    },
+    {
+      "path": "ROADMAP.md",
+      "bytes": 10189,
+      "sha256": "4556def8b96fc8eba0277ef3dc8b49d1500ba0541de11fc1a810ecbe4d3efce6",
+      "gitBlob": "24365caf3fe98d14daf9d5909c5ac13785513123"
+    },
+    {
+      "path": "agents/catalog.json",
+      "bytes": 13282,
+      "sha256": "14e7e12ec0822aed4aedd77801ff408a93e073196b4a8e10164525526140c1a1",
+      "gitBlob": "fa11b0631664213cccbf22296af8c132d4564e8c"
+    },
+    {
+      "path": "agents/catalog.schema.json",
+      "bytes": 5280,
+      "sha256": "9aaff246e280647a74e6a62eb4ef57f640fdb2417f68437291f9d0f41b7a03d5",
+      "gitBlob": "fefd7fc988be67b334dfb7f982558f09125884bb"
+    },
+    {
+      "path": "api/game-maker/index.js",
+      "bytes": 14468,
+      "sha256": "1142b1af9d65a576616819fe0093d9ea6eba31a0fe6d406c6cf5bc7d1bc4c159",
+      "gitBlob": "eff59c350493b648fa71fd2bc91026109df509a4"
+    },
+    {
+      "path": "demos/creator-hub/index.html",
+      "bytes": 10930,
+      "sha256": "877540ae52fe49e826b497b06bf2168da3f00cdb5b8600a65c45a1686824ee23",
+      "gitBlob": "f03a3efb808102eb67c380772db77d08ce60fb2d"
+    },
+    {
+      "path": "demos/game-maker-lab/api-example.html",
+      "bytes": 1996,
+      "sha256": "48ca4b9513438dc8c61d67bf61c0bbe568b14f5fa9904b59aafad52c59dc746a",
+      "gitBlob": "0073bd7096bc9e6a5e59d8e84b7799f483aa7cc5"
+    },
+    {
+      "path": "demos/game-maker-lab/api-example.js",
+      "bytes": 5160,
+      "sha256": "8908e5366eb74980eca923704c37f4ab40789c1f3a79970f380ebda5c73f40a2",
+      "gitBlob": "bdcf149fddffa2d767f610325f6b6384f33c5d61"
+    },
+    {
+      "path": "demos/game-maker-lab/app.js",
+      "bytes": 18411,
+      "sha256": "b76168a5e30633193eed72469a50017a3ed844d0bea020c588c1a28d3622b1f3",
+      "gitBlob": "db707cdb9a990ee31e739b4c01e52c39d168a8b5"
+    },
+    {
+      "path": "demos/game-maker-lab/export.js",
+      "bytes": 6930,
+      "sha256": "0d0cbae953cf74cf008cd68d5dc89eb10aea8ad9153eb7506ae7e51585143b08",
+      "gitBlob": "6e95894eb95c47738876ac75f8147fb82e1a5127"
+    },
+    {
+      "path": "demos/game-maker-lab/game.js",
+      "bytes": 5562,
+      "sha256": "f8dac11c3903d90cfe51c0002ceb6cb5ecfe10a0023db862163992fd5b542827",
+      "gitBlob": "a3c231523f23ee6766daee5ce7d080632c2fb029"
+    },
+    {
+      "path": "demos/game-maker-lab/index.html",
+      "bytes": 8704,
+      "sha256": "fb91c29127db4296ddda3ec73d586976e3d45b7f52804882bdc040a6fca80fc5",
+      "gitBlob": "d7f7d63d8ab861065a05e2498b568e0b2eb82270"
+    },
+    {
+      "path": "demos/game-maker-lab/player.js",
+      "bytes": 10634,
+      "sha256": "52a8acd71d30d0664b006180c0722267059df9e4822c1ac22544aff5904f80e0",
+      "gitBlob": "e7b8220e396851c8770a781c7320248ddf3e5d6f"
+    },
+    {
+      "path": "demos/game-maker-lab/portable-runtime.js",
+      "bytes": 128992,
+      "sha256": "a2b4c57c86df202a9f041d2b2ecdc7d1e6b63fe677514fdcd15f1a91c1fc5c3b",
+      "gitBlob": "3c1636476714b378d93e6b96429f35dacf3c727b"
+    },
+    {
+      "path": "demos/game-maker-lab/portable-shell.txt",
+      "bytes": 1577,
+      "sha256": "435006bfb8d244f0a85bbd64b44f2b451a4e57e10fd7cdb074f6ffa9554a8c50",
+      "gitBlob": "4ae225debf08a7f98e0353bf92f2934bd7a27f44"
+    },
+    {
+      "path": "demos/game-maker-lab/portable.js",
+      "bytes": 1750,
+      "sha256": "29e489a336a56ab0f996b5a82765a16b861f445d5550495fb9335ddc2dbf3384",
+      "gitBlob": "f0b5398f730b3b4d2ce07fa0404ec655a8845fa1"
+    },
+    {
+      "path": "demos/game-maker-lab/start.js",
+      "bytes": 781,
+      "sha256": "b6ed9deb9344498b86a1e1f0aad273720e9d4943e4ac6e50d9e62cd529437b38",
+      "gitBlob": "0f12ee3241ab4fe9618f0bf42d2dff2aa4574517"
+    },
+    {
+      "path": "demos/game-maker-lab/starter.js",
+      "bytes": 2273,
+      "sha256": "7a2fbae57726aacfb356f8eb376e30c9fa8599787c1eaf0fabfd9d8bcdd03c6c",
+      "gitBlob": "5ec94fa37f9a729fa7653a2e27db4b0e80fdcbab"
+    },
+    {
+      "path": "demos/game-maker-lab/style.css",
+      "bytes": 8283,
+      "sha256": "21c50c17ea2d266ae33cfdea0ffc9775fda06062f6a9b0bb7f01d0d22ff8df84",
+      "gitBlob": "bfdfdb74259bb407044e4f51f098b1420bd8df0e"
+    },
+    {
+      "path": "docs/AGENT_GUIDE.md",
+      "bytes": 9740,
+      "sha256": "786d05ec3a2e8a42b7dc1c315dc4b8286342b79e39a7bdba63041384cd9899f5",
+      "gitBlob": "629b9816149af164c5c32e79aa7c5f19cb6ce659"
+    },
+    {
+      "path": "docs/API.md",
+      "bytes": 51985,
+      "sha256": "b3af92bdccfdd8ed7cf31cfc56737a9ff1c7d99664f3131f726dba3688c77786",
+      "gitBlob": "2f23fb0ab863da122bea7cd8f1e60670442e4f75"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "bytes": 22019,
+      "sha256": "5492a8f03af2986e08a4ff2c03e1b2bc2b9a9d440bf745f559db8b6355fd3f9a",
+      "gitBlob": "6360a6423c61b25a3be440a084e3b10ea3603bb3"
+    },
+    {
+      "path": "docs/ENGINE_EXPANSION_001.md",
+      "bytes": 20487,
+      "sha256": "bfb336e65afc174fd86464e6d818cf0f11ce169e211e9e3e5685c8b2d3a0a813",
+      "gitBlob": "41f3a157842fbdcd2a652635403972906eff2bf6"
+    },
+    {
+      "path": "docs/GAME_MAKER_001.md",
+      "bytes": 6802,
+      "sha256": "157bae75400189b60a274a2aa6b546b79c99b7afd580017d25ad8fe06114a8eb",
+      "gitBlob": "2b29be6936eb6ceacbdeada006012a9a88c4d4e7"
+    },
+    {
+      "path": "docs/GAME_MAKER_2_8_0_DRAFT.md",
+      "bytes": 2054,
+      "sha256": "56f9798e23969d6b988ef3f44b5f44c40d87264e0f9df9d30b2616d1196ab32f",
+      "gitBlob": "16d2def9892ad9069a4c3173db74257879b1a3e8"
+    },
+    {
+      "path": "docs/GAME_MAKER_API.md",
+      "bytes": 12894,
+      "sha256": "f45e88714733bf88aa653bda1c8dd1efea85d3ce88c585086b12875ee570f351",
+      "gitBlob": "4c1cf26277c56694ffb5876299fcf9d5a2035397"
+    },
+    {
+      "path": "docs/GAME_MAKER_EXPORT.md",
+      "bytes": 4403,
+      "sha256": "d518dee5fedf8100e443a147789491fcb5489c8b4d9221bec4792d6dae84fc31",
+      "gitBlob": "661e8593bc883773975630ecc6bf8687673acc8b"
+    },
+    {
+      "path": "docs/GAME_MAKER_LAB.md",
+      "bytes": 9076,
+      "sha256": "1143fd4154ed572b6f9da3b6762f1ac3c770fea298c193f329551da899e73de9",
+      "gitBlob": "647b9f8749b4d64c0616f4b6d9c89146a82f493d"
+    },
+    {
+      "path": "docs/START_HERE.md",
+      "bytes": 1790,
+      "sha256": "e49f9aa0ebb7f35bf6fcfee1e61e3110be3863236b5d7966bf441845e3350d33",
+      "gitBlob": "8469a49bd728c36d8c3b42a6ad56ca74491f8153"
+    },
+    {
+      "path": "docs/TILEMAP_API.md",
+      "bytes": 9171,
+      "sha256": "b417a9ccfbdd5cd09f4915d2ebabaf94a0355d301424e953768e92478edec049",
+      "gitBlob": "cb4b84d31cbbdf1c9861c68422aef01f0d65f331"
+    },
+    {
+      "path": "docs/evidence/game-maker-001/README.md",
+      "bytes": 92,
+      "sha256": "db8f6e794ded453b8ce2d2e0c478f92d6843bdc470b959d9507e10d33b2043e1",
+      "gitBlob": "941f5f6ca357fddd893f63c44f2d34be3afc3bf8"
+    },
+    {
+      "path": "index.html",
+      "bytes": 11757,
+      "sha256": "5661a6457e335af4aad7a9c4306d12e4e304454934fd23ca1b344f0385a080b4",
+      "gitBlob": "5022d4e7e7a495aa8d21a73dfc901eabb6ec3b22"
+    },
+    {
+      "path": "modules/tilemap/index.js",
+      "bytes": 11713,
+      "sha256": "6b7ee93efff8c2b14d5d3a53d09d7a2c64e61b37939a272d8e679e47ff4f38a2",
+      "gitBlob": "8a1999ad7c90dad3104f376f97c49a53eca2d680"
+    },
+    {
+      "path": "scripts/alien_math_bundle.py",
+      "bytes": 14341,
+      "sha256": "7b788e495a2e044baafc2935d3c0f390edb2ccd7c7d61d244ac9796fe7b16cf1",
+      "gitBlob": "ba4dd994e13b1daf364ae91387fd10d0255256c3"
+    },
+    {
+      "path": "scripts/audit-docs.mjs",
+      "bytes": 6303,
+      "sha256": "5d06eb4047118b37cccda53189f431caf87b9a066e3a758014e64a3b5e01d3d8",
+      "gitBlob": "acd0c47d4c59d9f8a16fb0a01b1ef419e3de7fdf"
+    },
+    {
+      "path": "scripts/browser-cache-profile.json",
+      "bytes": 150080,
+      "sha256": "b38d5729a756b0ceb6ebcaff63dcdaeff53a37f4cb4e78ddb4def39a2f75cb65",
+      "gitBlob": "94ba354c45805df5e8beaca41ef9adc7b9318509"
+    },
+    {
+      "path": "scripts/browser-check.js",
+      "bytes": 11145,
+      "sha256": "cac28bd0e11c99e89ab3c8456db94275e17f05891cc4258b7cca2e344ade2049",
+      "gitBlob": "0a9e97c1e4ef57577b9447c9171cef1d66f6d80c"
+    },
+    {
+      "path": "scripts/browser-game-maker-api.js",
+      "bytes": 12153,
+      "sha256": "aa83bdc9d6c3d3d54ac1be56a9cb0af8f1e07d1e122acc06e0152b12b6e32386",
+      "gitBlob": "92f2a06417a0355e7adc2346e96e553151905041"
+    },
+    {
+      "path": "scripts/browser-game-maker.js",
+      "bytes": 18968,
+      "sha256": "0443d81e38c58b8e63f7c85c04c6961e09d5209dc1fe4cc92096056b559e5d38",
+      "gitBlob": "6b3cb5a3689686ef312138cff90228dd61ca02b8"
+    },
+    {
+      "path": "scripts/browser-package-provenance.mjs",
+      "bytes": 8749,
+      "sha256": "9238ac8e2abfdc63674fc45d7d4f219716e10031805c6ec35289dbed37e43367",
+      "gitBlob": "c89813c81501fc90eb2be9a637fb142b04544323"
+    },
+    {
+      "path": "scripts/build.js",
+      "bytes": 3674,
+      "sha256": "b864bcbd030497749751b8821616f56ab53fa82a749a82c308566298111cce18",
+      "gitBlob": "e68d294cc5941abb57bf7f6b3dcab3356b4c8558"
+    },
+    {
+      "path": "scripts/check.js",
+      "bytes": 3191,
+      "sha256": "4701615439c83037ed9def452244447aa6573d2c38e2bb61b824bb96e9868dbf",
+      "gitBlob": "f283ad78ff8928ce6ad49bf6a9478441d095be0d"
+    },
+    {
+      "path": "scripts/export-game-maker.mjs",
+      "bytes": 1394,
+      "sha256": "26b2f465842f71c8c1ee1a46b1e177ecdfee9d0a01ac595b232ae1daa272f189",
+      "gitBlob": "283763eaaf3cf159398a447a36ee9d5ebd5a670b"
+    },
+    {
+      "path": "scripts/foundry-startup-check.mjs",
+      "bytes": 5298,
+      "sha256": "9cec10417695a5db929fa71e08d9e119b03036cbf1a6f0af6727e6d5ecf61293",
+      "gitBlob": "56bee98b2f8043dfd2140549906f63b59d7d7ff1"
+    },
+    {
+      "path": "scripts/game-maker-runtime.mjs",
+      "bytes": 4264,
+      "sha256": "e3f7b3e4413df3ce7e288b522eba91d3c6e96c882aa35ef971718557b98871ad",
+      "gitBlob": "3780c59187fc3cb73a06047395d7c7543c5feca3"
+    },
+    {
+      "path": "scripts/pursuit-package.mjs",
+      "bytes": 4622,
+      "sha256": "d28ab83daea4d35dfa7d65dc0546c6c41a0641d61c66fe8e385f491ddef07d3b",
+      "gitBlob": "072728abc6457b73284829ddb76e698614ebeeaf"
+    },
+    {
+      "path": "tests/browser-package-provenance.test.js",
+      "bytes": 7010,
+      "sha256": "3b174a37dc9a8a26e5d4f9d62d24b914c73fad05cb84ea46de5a857202498ef9",
+      "gitBlob": "6117a5a3dfe93d19b83bb28fa9db5529df90ec1c"
+    },
+    {
+      "path": "tests/creator-gateway.test.js",
+      "bytes": 3566,
+      "sha256": "c02906d93d8aa509db8e59b3242ac6ebaa6b1e363002bda858bc6758458fec6a",
+      "gitBlob": "a8a23b9901b1732f97d1f4aedeae824f31bba085"
+    },
+    {
+      "path": "tests/game-maker-export.test.js",
+      "bytes": 7717,
+      "sha256": "6238114566f8fbdaebe1597269255bab2fc758d64114ef257859bdd8ad2245a7",
+      "gitBlob": "d0662eb834720436e133226173d9e1a0fea7b1e0"
+    },
+    {
+      "path": "tests/game-maker-lab.test.js",
+      "bytes": 4826,
+      "sha256": "c16437c0316730ef2cbb3df55ac0a54527076b508c1a6ccda9fcc3635b479b15",
+      "gitBlob": "b85d033c54fa84be16e33295d8e5403f7e651dc1"
+    },
+    {
+      "path": "tests/game-maker.test.js",
+      "bytes": 12527,
+      "sha256": "58ebc7e13aaad2efe61c8d91d69aafcf76584d04e4029bcbdb4e0255f01d91b9",
+      "gitBlob": "426d87b44e9ed32eec124b79aa67ba5f3d93dbb2"
+    },
+    {
+      "path": "tests/test_alien_math_bundle.py",
+      "bytes": 14843,
+      "sha256": "d71559c9919001f380819078b05a36ec80345eb4cc89a9d15672fdb65cf099c9",
+      "gitBlob": "98487ebb9d209c2493817640bcd8ea9d9d47d617"
+    },
+    {
+      "path": "tests/tilemap.test.js",
+      "bytes": 12137,
+      "sha256": "40e5c5be78c73589e33d51be3fc0a55502d0bd2a13c95cd616025245b023a4fe",
+      "gitBlob": "764a8ce31b2b070b5f9a4dd7c1b052e83ddfb787"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "api-first-failure.log",
+      "bytes": 692,
+      "sha256": "4e7d52ce9462aff2ea4276a05c7f105a8af7ce89e61476c6571b83701efd900c"
+    },
+    {
+      "path": "api-focused.log",
+      "bytes": 331,
+      "sha256": "8da9020464cabdbea297e0956130133da5069c33d9f8f308ae676a96651bee53"
+    },
+    {
+      "path": "api-pixel-diagnostic.log",
+      "bytes": 2226,
+      "sha256": "c374ef6c77747bb503dc905eb212485374d5e4a8604def97734e0f92aaf0cc0b"
+    },
+    {
+      "path": "browser.log",
+      "bytes": 10538,
+      "sha256": "492c4e52fe92590c94cfbf807966690373945b880a35cda04406aaeda777a205"
+    },
+    {
+      "path": "build.log",
+      "bytes": 57,
+      "sha256": "03745a00e46f819e465c8dd0f3f8548655db4cab12eefda21581e4166c1a1ba6"
+    },
+    {
+      "path": "cache-closures.json",
+      "bytes": 2982145,
+      "sha256": "5b2aefe5ca05b6ecd38bf81fe32776a0a06e1c3e19d69eba38634ee3d01eb0d7"
+    },
+    {
+      "path": "cache-tests.tap",
+      "bytes": 6603,
+      "sha256": "db7289c1c5ad85c1ab2ea11b3331e4b77779363bd6d47db7ce954af0435545df"
+    },
+    {
+      "path": "catalogue-first-failure.log",
+      "bytes": 460,
+      "sha256": "242f09311a261b3e850e009d7ac14b96a89c67fcab54e3de08b94860a5d66746"
+    },
+    {
+      "path": "export-stale-archive-failure.tap",
+      "bytes": 8166,
+      "sha256": "e01625656bb6fb5d3ed534c752df9cf54bb5ef95fcba9c372b67d0d68fc5f9d1"
+    },
+    {
+      "path": "game-maker-desktop.png",
+      "bytes": 286663,
+      "sha256": "8e7ee19c413f911fba193c57ebe5c7bb9894a3a1c339a2f072f77ada6c0293ce"
+    },
+    {
+      "path": "game-maker-mobile.png",
+      "bytes": 237987,
+      "sha256": "f5d9929e25b3d6c538459452d91eaf14f922c37c7a7f8b247f11867d7de5f1a9"
+    },
+    {
+      "path": "lab-focused.log",
+      "bytes": 288,
+      "sha256": "bb71c67b96851d0a87bec6ffb34975323544897e88bf048d382c55758563ac3e"
+    },
+    {
+      "path": "node-first-failure.tap",
+      "bytes": 235918,
+      "sha256": "f6120a031f0714762a0c72ab13d1d534b9b1fbad1f03a34590158ebe9e93e1ed"
+    },
+    {
+      "path": "node.tap",
+      "bytes": 235440,
+      "sha256": "956787cdd452cd20cd2bd9aadbaed9a7d83216d792f5e1e6c95692648dc60afc"
+    },
+    {
+      "path": "offline.json",
+      "bytes": 158,
+      "sha256": "e15b911cc3312bd62b2a55391c3cfa9324de835cb310b4e442b112128742496b"
+    },
+    {
+      "path": "package-manifest.json",
+      "bytes": 173603,
+      "sha256": "a78031bc281df032e0fe19563999e7c15eb49a26b992dfe6433e2544fef2aa0b"
+    },
+    {
+      "path": "source-check.log",
+      "bytes": 736,
+      "sha256": "3d16f62eae8ba5533a9fe9ef4e11a7f7a4100b8a1097792ed0fdc07024ec0503"
+    },
+    {
+      "path": "evidence-package-parity.log",
+      "bytes": 258,
+      "sha256": "5da6485cb0465022cbec007e61a2cdd4e207751a88fa856e86988510eb34ea05"
+    }
+  ],
+  "limitations": [
+    "Experimental APIs; owner review and release pending",
+    "Bounded axis-aligned X-then-Y tile sweeps; no slopes, rotated bodies, moving platform solver or general physics",
+    "Structural map validation does not prove reachability or balance",
+    "Portable export supports the original example rules; no arbitrary script/compiler or Workbench schema conversion",
+    "Integer simulation identity is separate from Float64 cosmetic particles, Canvas rasterization, text metrics and encoded images",
+    "Persisted navigation and Canvas lifecycle regressions use explicitly dispatched events; not a claim of native Canvas context-loss or physical-device tests",
+    "Software WebGL and touch emulation only; no physical RTX/mobile/controller execution",
+    "Firefox/Safari not executed",
+    "No benchmark/performance improvement claim",
+    "No Games2 adoption or modification"
+  ]
+}
