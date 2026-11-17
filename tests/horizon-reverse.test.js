@@ -29,7 +29,7 @@ test('reverse uses the native gearbox delay and ratio, then physically moves bac
   const recipe=vehiclePreset(),model=createVehicle(recipe);let state=model.spawn(),elapsed=0;
   const initial=state.position.slice(),request=directionalDriveControls(state,{reverse:1});assert.deepEqual(request,{throttle:0,brake:1,steer:0,gear:-1});
   state=model.step(state,request,world);assert.equal(state.gear,-1);assert.ok(state.shiftRemaining>0);elapsed+=VEHICLE_STEP;
-  while(state.shiftRemaining>0){const control=directionalDriveControls(state,{reverse:1});assert.equal(control.throttle,0);assert.equal(control.brake,1);state=model.step(state,control,world);elapsed+=VEHICLE_STEP;}
+  while(state.shiftRemaining>0){const control=directionalDriveControls(state,{reverse:1});assert.equal(control.throttle,1);assert.equal(control.brake,0,'native gearbox suspends torque without artificial service braking');state=model.step(state,control,world);elapsed+=VEHICLE_STEP;}
   assert.ok(elapsed>=recipe.gearbox.shiftTime&&elapsed<=recipe.gearbox.shiftTime+2*VEHICLE_STEP);
   let spinAdvance=0;
   for(let i=0;i<360;i++){const previous=state,control=directionalDriveControls(state,{reverse:1});assert.equal(control.throttle,1);state=model.step(state,control,world);spinAdvance+=wrap(state.wheelSpin-previous.wheelSpin);}
@@ -37,6 +37,23 @@ test('reverse uses the native gearbox delay and ratio, then physically moves bac
   assert.equal(vehiclePose(state,recipe).wheelSpin,state.wheelSpin);assert.equal(state.needsRecovery,false);
   const sound=vehicleSoundControls(state,directionalDriveControls(state,{reverse:1}),recipe.mass);assert.equal(sound.gear,-1);assert.equal(sound.throttle,1);assert.equal(sound.rpm,state.rpm);assert.equal(sound.speed,magnitude(state));
   const reduced=structuredClone(recipe);reduced.gearbox.reverseRatio=1;const slow=createVehicle(reduced),slowState=drive(slow,slow.spawn(),{reverse:1},360);assert.ok(magnitude(state)>magnitude(slowState)*1.5,'actual reverseRatio changes force and speed');
+});
+
+test('automatic upshifts keep native forward acceleration without spurious braking',()=>{
+  const model=createVehicle(),raw={throttle:1};let player=model.spawn(),native=model.spawn(),upshifts=0,shiftTicks=0;
+  for(let tick=0;tick<2400;tick++){
+    const adapted=directionalDriveControls(player,raw);
+    assert.deepEqual(adapted,{throttle:1,brake:0,steer:0},'forward shift never applies service brakes');
+    if(player.shiftRemaining>0)shiftTicks++;
+    const previousGear=player.gear;
+    player=model.step(player,adapted,world);
+    native=model.step(native,raw,world);
+    if(player.gear>previousGear)upshifts++;
+  }
+  assert.ok(upshifts>0,'exercise at least one automatic forward upshift');
+  assert.ok(shiftTicks>0,'exercise nonzero shift delay');
+  assert.deepEqual(player,native,'full-throttle forward drive must match the same native vehicle model');
+  assert.ok(Math.hypot(...player.velocity)>1);
 });
 
 test('both direction changes brake to near zero without overriding automatic forward ratios',()=>{
@@ -59,7 +76,7 @@ test('reverse steering follows native dynamics and wheel/sound state while caden
   const state=run(30);assert.deepEqual(run(60),state);assert.deepEqual(run(144),state);assert.ok(Math.abs(state.position[0])>5);assert.ok(state.position[2]>10);
   const forward=drive(model,model.spawn(),{throttle:1,steer:.35},480);assert.ok(state.orientation[1]*forward.orientation[1]<0,'yaw response reverses with direction of travel');
   // Explicit engine requests independently reproduce the adapter's reverse case.
-  let reference=model.spawn();for(let i=0;i<480;i++){const shifting=i===0||reference.shiftRemaining>0;reference=model.step(reference,{throttle:shifting?0:1,brake:shifting?1:0,steer:.35,...(i===0?{gear:-1}:{})},world);}
+  let reference=model.spawn();for(let i=0;i<480;i++){const directionRequest=i===0;reference=model.step(reference,{throttle:directionRequest?0:1,brake:directionRequest?1:0,steer:.35,...(directionRequest?{gear:-1}:{})},world);}
   assert.deepEqual(state,reference);
 });
 

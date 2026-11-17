@@ -23,7 +23,9 @@ export function directionalDriveControls(state,intent){
     if(Math.hypot(...state.velocity)<=DIRECTION_CHANGE_SPEED)output.gear=wanted;
     return output;
   }
-  if(state.shiftRemaining>0){output.brake=1;return output;}
+  // vehicle3d already suspends torque during native gear changes. Braking here
+  // would also penalize ordinary automatic forward upshifts against the rival.
+  // Only opposing direction/gear or wrong-way travel warrants service braking.
   // Gear can be retained while coasting in the opposite direction on a slope.
   const forward=rotate(state.orientation,[0,0,-1]),signedSpeed=state.velocity.reduce((sum,n,i)=>sum+n*forward[i],0);
   if(signedSpeed*wanted< -DIRECTION_CHANGE_SPEED){output.brake=1;return output;}
