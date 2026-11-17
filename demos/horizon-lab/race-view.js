@@ -86,12 +86,20 @@ export class RaceView{
         draw(this.carMap.get(part.part.id),part.part.wheel===null?rig.body:rig.wheels[part.part.wheel],material,state.position);
       }
     }
-    for(let i=0;i<this.checkpoints.length;i++){
-      const gate=this.checkpoints[i],next=session.progress.checkpointIndex,color=i<next?[.25,.45,.36]:i===next?[1,.52,.12]:[.76,.83,.76],material={color,roughness:.4,metalness:.2,emission:i===next?.28:0};
+    // A completed gate was still drawn behind the car, where its overhead
+    // checkerboard crossbar could intersect the chase camera and appear to be
+    // a solid wall. Retain the mesh; draw only unfinished checkpoint gates.
+    const next=session.progress.checkpointIndex;
+    if(!Number.isSafeInteger(next)||next<0||next>this.checkpoints.length)
+      throw RangeError('Invalid checkpoint render progress');
+    this.visibleGates=this.checkpoints.length-next;
+    for(let i=next;i<this.checkpoints.length;i++){
+      const gate=this.checkpoints[i],color=i===next?[1,.52,.12]:[.76,.83,.76],
+        material={color,roughness:.4,metalness:.2,emission:i===next?.28:0};
       draw(this.gateRows[i],identity,material,gate.position);
     }
     transparent.sort((a,b)=>Math.hypot(...b.at.map((x,i)=>x-camera.position[i]))-Math.hypot(...a.at.map((x,i)=>x-camera.position[i])));for(const {row,transform,material} of transparent)this.renderer.draw(row.handle,{matrix:transform,material});this.frames++;this.lastCamera=camera;
   }
-  snapshot(){return {frames:this.frames,camera:this.lastCamera,cameraMode:this.mode,graphics:this.renderer?.stats()??null,world:this.world.stats};}
+  snapshot(){return {frames:this.frames,camera:this.lastCamera,cameraMode:this.mode,visibleGates:this.visibleGates??this.checkpoints.length,graphics:this.renderer?.stats()??null,world:this.world.stats};}
   dispose(){this.renderer?.dispose();this.renderer=null;}
 }

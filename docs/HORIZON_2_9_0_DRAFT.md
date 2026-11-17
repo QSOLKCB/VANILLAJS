@@ -96,6 +96,16 @@ The underlying `vehicle3d` solver, scenery contact triangles and accepted
 project formats are unchanged. A separate PR and verified post-merge test
 remain required before the v2.9.0 tag.
 
+## HORIZON-007 — Checkpoint camera clarity
+
+Owner testing exposed a giant green-and-black strip across the chase camera.
+It was the already-completed checkpoint crossbar, still rendered behind the
+car even after the crossing was accepted. Completed gates now stop drawing;
+future gates retain their original appearance and all meshes remain available
+for restart/replay. Checkpoint rules, collision physics and car handling are
+unchanged. This presentation-only correction prevents a nonphysical overhead
+banner from looking like an invisible wall.
+
 ## Compatibility and limits
 
 The candidate catalogue contains **71 experimental modules, 51 recipes and two

@@ -12,11 +12,14 @@ async function pixels(page){return page.evaluate(()=>{dispatchEvent(new Event('r
 export async function driveRaceWithKeyboard(page){
   await page.clock.install();await page.clock.pauseAt(new Date(Date.now()+1000));await page.locator('#race-start').click();const held=new Set(),started=Date.now();let s;
   try{for(let i=0;i<1000;i++){
-    s=await snapshot(page);if(s.phase==='finished')break;assert.equal(s.running,true,'race remains running');assert.equal(s.player.needsRecovery,false,'real course requires no recovery');
+    s=await snapshot(page);
+    assert.equal(s.view.visibleGates,s.checkpointCount-s.progress.checkpointIndex,
+      'passed checkpoint crossbars must not block the chase camera');
+    if(s.phase==='finished')break;assert.equal(s.running,true,'race remains running');assert.equal(s.player.needsRecovery,false,'real course requires no recovery');
     const a=s.drivingAdvice,wanted=new Set();if(a.throttle>.2)wanted.add('KeyW');if(a.brake>.2)wanted.add('KeyS');if(a.steer>.045)wanted.add('KeyD');else if(a.steer<-.045)wanted.add('KeyA');
     for(const key of held)if(!wanted.has(key)){await page.keyboard.up(key);held.delete(key);}for(const key of wanted)if(!held.has(key)){await page.keyboard.down(key);held.add(key);}await page.clock.runFor(67);
   }}finally{for(const key of held)await page.keyboard.up(key);await page.clock.resume();}
-  s=await snapshot(page);assert.equal(s.phase,'finished','ordered finish reached through real keyboard driving');assert.equal(s.progress.checkpointIndex,s.checkpointCount);assert.equal(s.progress.recoveries,0);assert.ok(s.rivalProgress.distance>200,'rival actually drives the same world');assert.ok(s.time>30&&s.time<65);return {time:s.time,result:s.result,checkpoints:s.checkpointCount,position:s.player.position,rivalDistance:s.rivalProgress.distance,wallMilliseconds:Date.now()-started,graphics:s.view.graphics};
+  s=await snapshot(page);assert.equal(s.view.visibleGates,0,'no checkpoint decorations remain after the finish');assert.equal(s.phase,'finished','ordered finish reached through real keyboard driving');assert.equal(s.progress.checkpointIndex,s.checkpointCount);assert.equal(s.progress.recoveries,0);assert.ok(s.rivalProgress.distance>200,'rival actually drives the same world');assert.ok(s.time>30&&s.time<65);return {time:s.time,result:s.result,checkpoints:s.checkpointCount,position:s.player.position,rivalDistance:s.rivalProgress.distance,wallMilliseconds:Date.now()-started,graphics:s.view.graphics};
 }
 /** Real authoring, key/touch handlers, gear telemetry and physics; no hidden setters. */
 export async function checkHorizonReverse(browser,base){
