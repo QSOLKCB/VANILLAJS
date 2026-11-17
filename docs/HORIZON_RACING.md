@@ -39,6 +39,8 @@ it never negates velocity or moves the rendered car independently. Reverse uses
 the configured reverse ratio, and automatic forward shifts do not cancel it.
 Holding both direction controls, or holding Space, applies the brake instead.
 
+**Course assist: ON/OFF** (ON by default) applies bounded route steering and corner-speed braking through ordinary `vehicle3d` input. Switch it OFF for direct unassisted controls. No route, world pose or physical state is secretly modified. Excessive high-speed digital steering can otherwise saturate tyre grip and produce sudden slides.
+
 The five touch buttons provide left, right, **Brake / reverse**, independent
 **Brake** and **Forward** actions. The gear display shows **R** in reverse, while
 engine audio and wheel rotation follow actual vehicle telemetry. Pause, focus
@@ -46,8 +48,7 @@ loss or a hidden page clears driving requests. Release held keys and press again
 after resuming; an old held reverse key cannot restart driving by itself.
 
 Follow the amber checkpoint gates in order and race the turquoise rival to the
-finish. The rival steers a real vehicle through the same physics; it is a
-non-contact pace opponent, so cars can overlap. Brake before corners. **Recover**
+finish. The rival steers a real vehicle through the same physics. Player and rival now have bounded same-level oriented-chassis contact with symmetric momentum response; cars no longer ghost through each other. Brake before corners. **Recover**
 returns you just beyond the last accepted gate (or to the start before any gate)
 and adds the displayed time penalty: four seconds in the supplied recipe.
 Recovery does not award skipped gates. Passing a checkpoint backwards does not
