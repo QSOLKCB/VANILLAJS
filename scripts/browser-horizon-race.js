@@ -57,6 +57,34 @@ export async function checkHorizonReverse(browser,base){
     return {initial,keyboard:{position:reversed.player.position,gear:reversed.player.gear,wheelSpin:reversed.player.wheelSpin,audioGear:reversed.audio.stream.gear},forward:{position:forward.player.position,gear:forward.player.gear},touch:{position:touched.player.position,gear:touched.player.gear,steering:touched.player.steering},checkpointIndex:touched.progress.checkpointIndex};
   }finally{await context.close();}
 }
+async function checkHorizonSafetyRecovery(browser,base){
+  const context=await browser.newContext({viewport:{width:800,height:900}}),page=await context.newPage(),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  try{
+    await page.goto(base+'demos/horizon-lab/index.html');await ready(page);
+    const project=JSON.parse((await snapshot(page)).project);
+    project.scenery.profile='low';project.race.countdownSeconds=0;
+    await page.getByText('Inspect or edit race JSON',{exact:true}).click();
+    await page.locator('#race-json').fill(JSON.stringify(project));await page.locator('#race-apply-json').click();
+    await page.clock.install();await page.clock.pauseAt(new Date(Date.now()+1000));
+    await page.locator('#race-start').click();await page.keyboard.down('KeyW');await page.clock.runFor(11500);
+    const recovered=await snapshot(page);
+    assert.equal(recovered.running,false,'physics inversion must pause after safe respawn');
+    assert.equal(recovered.player.needsRecovery,false,'cannot leave the player inverted after safety recovery');
+    assert.equal(recovered.progress.recoveries,1,'exactly one recovery per incident');
+    assert.equal(recovered.progress.penaltySeconds,project.race.recoveryPenaltySeconds);
+    assert.match(await page.locator('#race-banner').textContent(),/CAR RECOVERED/);
+    assert.equal(await page.locator('#race-start').isEnabled(),true);
+    assert.equal(await page.locator('#race-recover').isDisabled(),true,'no duplicate safety penalty');
+    await page.keyboard.up('KeyW');await page.locator('#race-start').click();
+    await page.keyboard.down('KeyW');await page.clock.runFor(600);
+    const resumed=await snapshot(page);assert.equal(resumed.running,true);
+    assert.equal(resumed.progress.recoveries,1);
+    await page.keyboard.up('KeyW');await page.keyboard.press('Escape');
+    assert.deepEqual(errors,[]);
+    return {recovered:recovered.player.position,penalty:recovered.progress.penaltySeconds,resumedTick:resumed.ticks};
+  }finally{await context.close();}
+}
 export async function checkHorizonRace(browser,base){
   const context=await browser.newContext({viewport:{width:1440,height:1100},hasTouch:true}),page=await context.newPage(),errors=[],evidence={scope:'Packaged native Chromium/SwiftShader, actual DOM input handlers and fixed-step vehicle physics; no physical GPU, mobile or controller claim.'};page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(20000);await mkdir('browser-artifacts',{recursive:true});
   try{
@@ -101,6 +129,7 @@ export async function checkHorizonRace(browser,base){
   const unavailable=await browser.newContext(),noAudio=await unavailable.newPage();try{await noAudio.addInitScript(()=>{globalThis.AudioContext=class {constructor(){throw Error('Test device unavailable');}};});await noAudio.goto(base+'demos/horizon-lab/index.html');await ready(noAudio);await noAudio.locator('#race-sound').click();assert.equal((await snapshot(noAudio)).audio.enabled,false);assert.match(await noAudio.locator('#race-status').textContent(),/Audio unavailable/);await noAudio.locator('#race-start').click();await ticks(noAudio,15);assert.equal((await snapshot(noAudio)).running,true);await noAudio.keyboard.press('Escape');}finally{await unavailable.close();}
   // A delayed older native resume must not stop a newer successful gesture.
   const delayed=await browser.newContext(),late=await delayed.newPage();try{await late.addInitScript(()=>{const Native=AudioContext;let first=true;globalThis.AudioContext=class extends Native{resume(){const result=super.resume();if(!first)return result;first=false;return new Promise(resolve=>{globalThis.releaseOldRaceResume=()=>result.then(resolve);});}};});await late.goto(base+'demos/horizon-lab/index.html');await ready(late);await late.locator('#race-sound').click();assert.equal((await snapshot(late)).audio.enabled,true);await late.locator('#race-pause').evaluate(b=>b.click());await late.evaluate(()=>dispatchEvent(new Event('blur')));await late.locator('#race-start').click();await ticks(late,20);assert.equal((await snapshot(late)).audio.active,true);await late.evaluate(()=>releaseOldRaceResume());await ticks(late,10);assert.equal((await snapshot(late)).audio.active,true,'stale native resume cannot cancel newer audio');assert.ok((await snapshot(late)).audio.started>0);await late.keyboard.press('Escape');assert.equal((await snapshot(late)).audio.voices,0);}finally{await delayed.close();}
-  evidence.reverse=await checkHorizonReverse(browser,base);await writeFile('browser-artifacts/horizon-race-diagnostics.json',JSON.stringify(evidence,null,2)+'\n');
-  console.log('HORIZON race: real keyboard/touch reverse, safe direction changes and cancellation, canonical index car movement, scenery/return navigation, race alias, actual keyboard course completion, rival/checkpoints/finish, three cameras/classes, course/vehicle/audio editing, strict rollback/history/export cancellation, sound lifecycle, 320px touch, native context recovery, graphics fallback and offline startup PASS');
+  evidence.reverse=await checkHorizonReverse(browser,base);
+  evidence.failSafe=await checkHorizonSafetyRecovery(browser,base);await writeFile('browser-artifacts/horizon-race-diagnostics.json',JSON.stringify(evidence,null,2)+'\n');
+  console.log('HORIZON race: bridge guardrails and recoverable rollover, real keyboard/touch reverse, safe direction changes and cancellation, canonical index car movement, scenery/return navigation, race alias, actual keyboard course completion, rival/checkpoints/finish, three cameras/classes, course/vehicle/audio editing, strict rollback/history/export cancellation, sound lifecycle, 320px touch, native context recovery, graphics fallback and offline startup PASS');
 }

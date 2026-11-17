@@ -4,6 +4,7 @@ import {rotate} from '../../modules/math/index.js';
 import {createVehicle,VEHICLE_STEP} from '../../modules/vehicle3d/index.js';
 import {validateRaceProject} from './race-project.js';
 import {createDriveWorld} from './drive-world.js';
+import {bridgeGuardrails,bridgePhysics} from './race-guardrails.js';
 import {createRaceCheckpoints,crossesRaceCheckpoint,locateOnRoad,raceRoadStatus} from './race-course.js';
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const clone=value=>structuredClone(value);
@@ -25,7 +26,7 @@ export function createRaceSession(value){return new RaceSession(value);}
 class RaceSession{
   #player;#rival;#car;#rivalCar;#playerProgress;#rivalProgress;#ticks=0;#countdownTicks=0;#phase='ready';#rivalStuck=0;#result=null;
   constructor(value){
-    this.project=freeze(validateRaceProject(value));this.world=createDriveWorld(this.project.scenery,this.project.surfaces,'coast');this.road=this.world.scenic.road;this.rows=this.road.stations();this.checkpoints=freeze(createRaceCheckpoints(this.road,this.project.race.checkpointCount));this.#car=createVehicle(this.project.vehicle);this.#rivalCar=createVehicle(this.project.vehicle);this.reset();
+    this.project=freeze(validateRaceProject(value));this.world=createDriveWorld(this.project.scenery,this.project.surfaces,'coast');this.road=this.world.scenic.road;this.rows=this.road.stations();this.bridgeRails=bridgeGuardrails(this.road);this.checkpoints=freeze(createRaceCheckpoints(this.road,this.project.race.checkpointCount));this.#car=createVehicle(this.project.vehicle);this.#rivalCar=createVehicle(this.project.vehicle);this.reset();
   }
   get player(){return this.#player;}get rival(){return this.#rival;}get phase(){return this.#phase;}get countdown(){return this.#countdownTicks/240;}get time(){return this.#ticks/240;}get result(){return this.#result;}get progress(){return {...this.#playerProgress};}get rivalProgress(){return {...this.#rivalProgress};}
   reset(){this.#player=freeze(spawnAt(this.#car,this.road,12,-2));this.#rival=freeze(spawnAt(this.#rivalCar,this.road,12,2));this.#playerProgress=progress(-2);this.#rivalProgress=progress(2);this.#ticks=0;this.#countdownTicks=Math.round(this.project.race.countdownSeconds*240);this.#phase='ready';this.#rivalStuck=0;this.#result=null;return this.snapshot();}
@@ -50,12 +51,12 @@ class RaceSession{
     const quanta=Math.round(dt*240);
     // Countdown settles suspension under brakes; commands have no launch advantage.
     if(this.#phase==='countdown'){
-      const player=this.#car.step(this.#player,{brake:1},this.world.physics,dt),rival=this.#rivalCar.step(this.#rival,{brake:1},this.world.physics,dt);
+      const player=this.#car.step(this.#player,{brake:1},bridgePhysics(this.world.physics,this.bridgeRails,this.#player.position),dt),rival=this.#rivalCar.step(this.#rival,{brake:1},bridgePhysics(this.world.physics,this.bridgeRails,this.#rival.position),dt);
       this.#player=freeze(player);this.#rival=freeze(rival);this.#countdownTicks=Math.max(0,this.#countdownTicks-quanta);if(!this.#countdownTicks)this.#phase='running';return this.#phase;
     }
     const before=this.#player,rivalBefore=this.#rival,rivalInput=this.#rivalProgress.finished?{brake:1}:raceDriverInput(this.road,rivalBefore,this.#rivalCar.recipe,{speed:this.project.race.rivalSpeed,lateral:2,rows:this.rows});
     // Both transitions complete before replacing accepted state.
-    const player=this.#car.step(before,this.#playerProgress.finished?{brake:1}:input,this.world.physics,dt),rival=this.#rivalCar.step(rivalBefore,rivalInput,this.world.physics,dt);
+    const player=this.#car.step(before,this.#playerProgress.finished?{brake:1}:input,bridgePhysics(this.world.physics,this.bridgeRails,before.position),dt),rival=this.#rivalCar.step(rivalBefore,rivalInput,bridgePhysics(this.world.physics,this.bridgeRails,rivalBefore.position),dt);
     this.#player=freeze(player);this.#rival=freeze(rival);this.#ticks+=quanta;
     if(!this.#playerProgress.finished)this.#advanceProgress(this.#playerProgress,before,player,dt);
     if(!this.#rivalProgress.finished)this.#advanceProgress(this.#rivalProgress,rivalBefore,rival,dt);
