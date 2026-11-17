@@ -9,7 +9,7 @@ function triangles(batch){const rows=new Map(),v=batch.vertices;for(let i=0;i<v.
 function mergeTriangles(batches){const counts=new Map();for(const batch of batches)for(const [key,n] of triangles(batch))counts.set(key,(counts.get(key)??0)+n);return counts;}
 
 test('tile grid is deterministic, conservative and bit-identical to full original low-profile scenery',()=>{
-  const project=starterRaceProject();project.scenery.profile='low';const race=createRaceSession(project),original=race.world.batches;
+  const project=structuredClone(starterRaceProject());project.scenery.profile='low';const race=createRaceSession(project),original=race.world.batches;
   const before=race.world.physics.sampleSurface(0,0,2000),parts=partitionRaceWorld(original),again=partitionRaceWorld(original);
   assert.deepEqual(parts,again);assert.ok(parts.length>original.length,'world has retained terrain and foliage tiles');
   assert.ok(parts.length<=original.length+30,'bounded 4x4 grids cannot exhaust low-profile mesh budget');
