@@ -4,9 +4,9 @@
 HORIZON-001 was merged in [PR #105](https://github.com/QSOLKCB/VANILLAJS/pull/105)
 and HORIZON-002 in [PR #107](https://github.com/QSOLKCB/VANILLAJS/pull/107).
 HORIZON-003 was merged in [PR #108](https://github.com/QSOLKCB/VANILLAJS/pull/108).
-HORIZON-004 is the final visual and driving polish candidate. Its verification,
-owner review, merge and release approval remain separate gates. The current
-published baseline is v2.8.0; these notes describe the proposed v2.9.0 release.
+HORIZON-004 through HORIZON-010 have since merged. The latest published
+release is v2.8.0. The acceptance table below distinguishes evidence on the
+merged HORIZON revision from the final release decision.
 
 HORIZON connects original 3D scenery, world-space vehicle dynamics and creator
 tools in one offline racing workflow. Make an elevated road, tune the car and
@@ -78,12 +78,10 @@ complete supported race.
 
 ## HORIZON-005 — Guardrails and recoverable driving
 
-After repeated owner reproductions of a bridge-area rollover, the final
-pre-release correction adds bounded game-owned bridge guardrails and
+After repeated owner reproductions of a bridge-area rollover, HORIZON-005 added bounded game-owned bridge guardrails and
 automatic once-per-incident checkpoint recovery with the authored
 penalty. The original vehicle solver and rendered road-contact
-geometry remain unchanged. Separate review/CI and owner acceptance
-are required before tagging v2.9.0.
+geometry remain unchanged. The fix merged in PR #112.
 
 ## HORIZON-006 — Playable arcade handling and real rival contact
 
@@ -93,8 +91,7 @@ bounded speed-sensitive steering guidance and corner braking through normal
 vehicle inputs; OFF retains direct unassisted physics. A deterministic paired
 contact approximation prevents same-level car overlap and exchanges momentum.
 The underlying `vehicle3d` solver, scenery contact triangles and accepted
-project formats are unchanged. A separate PR and verified post-merge test
-remain required before the v2.9.0 tag.
+project formats are unchanged. PR #113 merged these changes.
 
 ## HORIZON-007 — Checkpoint camera clarity
 
@@ -105,6 +102,34 @@ future gates retain their original appearance and all meshes remain available
 for restart/replay. Checkpoint rules, collision physics and car handling are
 unchanged. This presentation-only correction prevents a nonphysical overhead
 banner from looking like an invisible wall.
+
+## HORIZON-008 through 010 — recovery and roadside visibility
+
+- Reversing beyond Cape Aster’s start or falling beneath terrain triggers one
+  checkpoint recovery. The Vehicle Dynamics workshop gained brake-to-reverse
+  controls. [HORIZON-008](HORIZON_008.md) · [PR #116](https://github.com/QSOLKCB/VANILLAJS/pull/116)
+- The renderer groups opaque terrain and foliage into fixed tiles. Conservative
+  frustum checks skip invisible geometry. The browser comparison checks complete
+  RGBA readbacks with culling enabled and disabled. [HORIZON-009](HORIZON_009.md) · [PR #117](https://github.com/QSOLKCB/VANILLAJS/pull/117)
+- Retained posts, reflectors and outside-bend chevrons mark the route. Profile
+  budgets bound their geometry. Bridge and tunnel interiors stay clear.
+  [HORIZON-010](HORIZON_010.md) · [PR #118](https://github.com/QSOLKCB/VANILLAJS/pull/118)
+
+## Release acceptance
+
+The latest HORIZON gameplay revision checked for this draft is
+`4159295f8e552f31ac562c121af947e49f8e68a5`, the merge of #118.
+The table identifies what can be carried forward and what must be measured
+on the exact revision selected for publication.
+
+| Check | Evidence and remaining action |
+| --- | --- |
+| Hosted verification and deploy | Flight Lab verification and Pages deployment succeeded on the #118 merge. Confirm both jobs again on the final merged SHA. [Run 44088584410](https://github.com/QSOLKCB/VANILLAJS/actions/runs/44088584410) |
+| Browser endurance | The 1,000-cycle racing, combat, creator and visual groups passed on that SHA. Check the final revision’s run. [Run 44088584320](https://github.com/QSOLKCB/VANILLAJS/actions/runs/44088584320) |
+| Physical GPU | Pending. Compare baseline `6e4831d61f284ba6b92c33ecf598897c46eb1204` and the final candidate on the same device. Record the driver, browser, both quality profiles, frame distributions, draw and vertex counts, GL status and matched screenshots. Review p95 against 16.67 ms and investigate repeatable regressions. [Measurement contract](HORIZON_010.md) |
+| Owner drive on deployed main | Pending. In a fresh session, verify forward → brake → reverse → forward, same-level rival contact, bridge/tunnel travel and recovery. Complete all eight ordered checkpoints and reach the finish. [Race Foundry](https://qsolkcb.github.io/VANILLAJS/demos/horizon-lab/index.html) |
+| Owner portable-race check | Pending. Export the playable ZIP from that deployment. Extract and serve on localhost, allow offline installation to finish, disconnect, reload, drive and restart. [Creator instructions](HORIZON_RACING.md) |
+| Publication | After acceptance, the owner tags the selected SHA as v2.9.0 and publishes the GitHub Release. Record its URL and commit before starting [Demoscene #104](https://github.com/QSOLKCB/VANILLAJS/issues/104) or [video export #106](https://github.com/QSOLKCB/VANILLAJS/issues/106). |
 
 ## Compatibility and limits
 

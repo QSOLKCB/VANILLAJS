@@ -1,8 +1,9 @@
 # HORIZON — Coastline Atelier
 
 [Open Scenery Atelier](../demos/horizon-lab/scenery.html) through local HTTP or the
-packaged site. This workshop began with **HORIZON-001**; **HORIZON-004** adds visual
-polish as the final pre-release quality gate for the planned v2.9.0 milestone.
+packaged site. This workshop began with **HORIZON-001**; **HORIZON-004** added the
+curved vehicle bodywork and material polish. The [v2.9.0 release draft](HORIZON_2_9_0_DRAFT.md)
+covers the subsequent racing changes.
 It authors a real lit 3D scene and an original vehicle visual rig. The car stays
 still here: camera controls orbit a visual study. To drive, open
 [HORIZON Race Foundry](../demos/horizon-lab/index.html), the main HORIZON entry,

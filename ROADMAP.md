@@ -27,7 +27,7 @@ separate decisions; no automatic tagging, publishing or deployment is authorised
 | v2.6.0 | **SPRITE-FEEL-001 — Game Feel & Sprite Foundry** | Published; owner merged PR #101 and released v2.6.0 |
 | v2.7.0 | **SCENE-NARRATIVE-001 — Scene & Narrative Foundry** | Published; owner merged PR #102 and released v2.7.0 |
 | v2.8.0 | **GAME-MAKER-001 — Game Maker API** | Published; owner merged PR #103 and released v2.8.0 |
-| v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | HORIZON-001/002/003 merged; HORIZON-004 visual/driving polish is the final pre-release review gate |
+| v2.9.0 | **HORIZON-3D-001 — 3D Racing Foundry** | HORIZON-001 through 010 merged. Physical-GPU comparison, owner play-through and publication pending |
 
 [Detailed contracts, dependencies and acceptance gates](docs/ENGINE_EXPANSION_001.md)
 distinguish existing primitives from future APIs. Every milestone needs a
@@ -94,18 +94,25 @@ numerical proofs and historical evidence remain.
    original engine/tyre sound, scenic playable showcase with rival, camera choices,
    checkpoints/finish, full lifecycle, polish and verified offline export.
    [Creator workflow and completion evidence](docs/HORIZON_003.md).
-4. **HORIZON-004 (current candidate):** curved procedural automotive geometry,
+4. **HORIZON-004 (merged PR #110):** curved procedural automotive geometry,
    material/environment polish, safe real reverse driving, camera/HUD improvements
-   and matching visual/resource evidence. [Final pre-release gate](docs/HORIZON_004.md).
+   and matching visual/resource evidence. [Visual and driving polish](docs/HORIZON_004.md).
+5. **HORIZON-005 through 008 (merged PRs #112, #113, #114 and #116):**
+   bridge rails and recovery, assisted steering, rival contact, completed-gate
+   visibility, start-boundary and terrain recovery, and reverse in Vehicle Dynamics.
+6. **HORIZON-009 and 010 (merged PRs #117 and #118):** conservative visibility
+   culling and retained roadside details. [Visibility](docs/HORIZON_009.md) and
+   [graphics budgets and hardware measurement](docs/HORIZON_010.md).
 
 Preserve current arcade handling and `qsol.vanillajs.track.v1`; elevated roads
 require a versioned sidecar or separately reviewed migration. Real world-space
 steering must not be disguised lane motion. Review screenshots and measured
 budgets on identified hardware; GPU images never substitute for numerical tests.
-Publish v2.9.0 only after HORIZON-004 is reviewed, merged, tested and explicitly
-approved. The owner must verify the deployed main racing showcase, forward/brake/
-reverse transitions, eight checkpoints and the supported offline race export.
-No v2.9.0 tag is created by this implementation.
+The [v2.9.0 release handoff](docs/HORIZON_2_9_0_DRAFT.md#release-acceptance)
+records the exact source, hosted checks and remaining device and driving checks.
+The owner tags and publishes the accepted main revision. Publication opens
+the implementation gate for [THE MACHINE DREAMS (#104)](https://github.com/QSOLKCB/VANILLAJS/issues/104)
+and its [1080p exporter (#106)](https://github.com/QSOLKCB/VANILLAJS/issues/106).
 
 ## Games2 → VANILLAJS Integration Programme
 

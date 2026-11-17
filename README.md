@@ -61,17 +61,18 @@ with research unchanged.
 [MODULES.json](MODULES.json) is authoritative. Its `release` and the private
 `package.json` version retain historical `1.0.0` metadata, not GitHub release numbers.
 
-**HORIZON-004 — final v2.9.0 polish candidate:** [Race Foundry](demos/horizon-lab/index.html)
+**HORIZON Racing Foundry — merged through HORIZON-010, awaiting v2.9.0:** [Race Foundry](demos/horizon-lab/index.html)
 combines elevated route editing, vehicle and sound tuning, retained history and
 an original scenic race against a physics-driven rival. Drive through ordered
 checkpoints, switch cameras and export the complete local race package.
 [Vehicle Dynamics](demos/horizon-lab/drive.html) and the
 [Scenery Atelier](demos/horizon-lab/scenery.html) remain specialist tools.
-v2.9.0 awaits owner review and release approval.
-Curved automotive bodywork, smoother terrain/materials and safe keyboard/touch
-reverse driving complete the final pre-release quality gate. No v2.9.0 tag yet.
+Course assist helps you brake into corners. Cars exchange momentum on contact,
+bridge rails constrain the wheelside corridor, and recovery returns you to the
+last accepted gate. Completed gates clear from view. The two detail profiles
+now draw retained roadside posts, reflectors and signs.
 
-[Creator tutorial](docs/HORIZON_RACING.md) · [Polish and verification](docs/HORIZON_004.md) · [Programme](docs/ENGINE_EXPANSION_001.md).
+[Creator tutorial](docs/HORIZON_RACING.md) · [v2.9.0 release notes and acceptance](docs/HORIZON_2_9_0_DRAFT.md) · [Programme](docs/ENGINE_EXPANSION_001.md).
 
 ## Run the labs
 
