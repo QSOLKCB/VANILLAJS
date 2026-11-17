@@ -2,6 +2,7 @@
 import {LitRenderer,LIT_PROFILES,litNormalMatrix} from '../../modules/render-lit/index.js';
 import {buildVehicleVisual,vehicleDraws} from '../../modules/scenic3d/index.js';
 import {rotate,quatMultiply} from '../../modules/math/index.js';
+import {partitionRaceWorld,raceTileVisible} from './race-visibility.js';
 const identity=new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]);
 const add=(a,b,s=1)=>a.map((x,i)=>x+b[i]*s);
 const center=values=>{const c=[0,0,0],n=values.length/11;for(let i=0;i<values.length;i+=11)for(let j=0;j<3;j++)c[j]+=values[i+j]/n;return c;};
@@ -61,23 +62,38 @@ export function raceGateMesh(gate){
 }
 const palettes={coast:{top:[.12,.36,.57],bottom:[.84,.85,.73],fog:[.65,.78,.76]},alpine:{top:[.14,.29,.47],bottom:[.81,.85,.90],fog:[.62,.71,.78]},dusk:{top:[.13,.10,.25],bottom:[.91,.50,.32],fog:[.48,.34,.43]}};
 export class RaceView{
-  constructor(canvas,project,world,checkpoints){this.canvas=canvas;this.renderer=null;this.rows=[];this.carRows=[];this.gateRows=[];this.cameraFilter=new RaceCameraFilter();this.frames=0;this.replace(project,world,checkpoints);}
+  constructor(canvas,project,world,checkpoints){this.canvas=canvas;this.renderer=null;this.rows=[];this.carRows=[];this.gateRows=[];this.cameraFilter=new RaceCameraFilter();this.frames=0;this.visibilityEnabled=true;this.replace(project,world,checkpoints);}
   replace(project,world,checkpoints){
     const worldKey=JSON.stringify(project.scenery),carKey=JSON.stringify([project.appearance,project.scenery.profile]),gateKey=JSON.stringify(checkpoints),changed=worldKey!==this.worldKey,carsChanged=carKey!==this.carKey,gatesChanged=gateKey!==this.gateKey;let renew=!this.renderer||this.project?.scenery.profile!==project.scenery.profile;
     const visual=renew||carsChanged?buildVehicleVisual(project.appearance.classId,{profile:project.scenery.profile,paint:project.appearance.paint}):this.visual,gateBatches=renew||gatesChanged?checkpoints.map(gate=>({id:gate.id,vertices:raceGateMesh(gate)})):this.gateRows;
-    if(!renew){const staged=[...(changed?world.batches:[]),...(carsChanged?visual.parts:[]),...(gatesChanged?gateBatches:[])],held=this.renderer.stats(),limits=LIT_PROFILES[project.scenery.profile];renew=held.vertices+staged.reduce((n,row)=>n+row.vertices.length/11,0)>limits.maxVertices||held.meshes+staged.length>limits.maxMeshes;}
+    // Tile only static opaque presentation meshes, never the contact world.
+    let preparedWorld=renew||changed?partitionRaceWorld(world.batches):null;
+    if(!renew){const staged=[...(changed?preparedWorld:[]),...(carsChanged?visual.parts:[]),...(gatesChanged?gateBatches:[])],held=this.renderer.stats(),limits=LIT_PROFILES[project.scenery.profile];renew=held.vertices+staged.reduce((n,row)=>n+row.vertices.length/11,0)>limits.maxVertices||held.meshes+staged.length>limits.maxMeshes;}
+    if(renew&&!preparedWorld)preparedWorld=partitionRaceWorld(world.batches);
     let renderer=this.renderer,rows=this.rows,carRows=this.carRows,gateRows=this.gateRows;const created=[];
     const mesh=batch=>{const row={...batch,handle:renderer.mesh(batch.vertices),center:center(batch.vertices)};created.push(row);return row;};
-    try{if(renew)renderer=new LitRenderer(this.canvas,{profile:project.scenery.profile,pixelRatio:Math.min(globalThis.devicePixelRatio||1,2)});if(renew||changed)rows=world.batches.map(mesh);if(renew||carsChanged)carRows=visual.parts.map(mesh);if(renew||gatesChanged)gateRows=gateBatches.map(mesh);}
+    try{if(renew)renderer=new LitRenderer(this.canvas,{profile:project.scenery.profile,pixelRatio:Math.min(globalThis.devicePixelRatio||1,2)});if(renew||changed)rows=preparedWorld.map(mesh);if(renew||carsChanged)carRows=visual.parts.map(mesh);if(renew||gatesChanged)gateRows=gateBatches.map(mesh);}
     catch(error){for(const row of created)renderer?.deleteMesh(row.handle);if(renew&&renderer!==this.renderer)renderer?.dispose();throw error;}
     if(renew)this.renderer?.dispose();else{if(changed)for(const row of this.rows)renderer.deleteMesh(row.handle);if(carsChanged)for(const row of this.carRows)renderer.deleteMesh(row.handle);if(gatesChanged)for(const row of this.gateRows)renderer.deleteMesh(row.handle);}
-    this.cameraFilter.reset();this.recoveries=null;Object.assign(this,{renderer,rows,carRows,gateRows,visual,world,project,checkpoints,worldKey,carKey,gateKey,carMap:new Map(carRows.map(row=>[row.id,row])),mode:project.camera.mode});
+    this.cameraFilter.reset();this.recoveries=null;this.lastVisibility=null;Object.assign(this,{renderer,rows,carRows,gateRows,visual,world,project,checkpoints,worldKey,carKey,gateKey,carMap:new Map(carRows.map(row=>[row.id,row])),mode:project.camera.mode});
   }
   draw(session){
     if(!this.renderer||this.renderer.lost)return;if(this.recoveries!==session.progress.recoveries){this.cameraFilter.reset();this.recoveries=session.progress.recoveries;}const p=this.project,palette=palettes[p.scenery.environment],camera=this.cameraFilter.sample(session.player,p.camera,this.mode),transparent=[];
     this.renderer.begin(camera.position,orientation(camera.position,camera.target),{fov:p.camera.fov,near:.08,far:2000,ambient:.4,sunDirection:[-.4,.8,.35],sunColor:[1,.94,.81],skyTop:palette.top,skyBottom:palette.bottom,fogColor:palette.fog,fogDensity:.0016,exposure:1});
     const draw=(row,transform,material,at=row.center)=>{if((material.opacity??1)<1)transparent.push({row,transform,material,at});else this.renderer.draw(row.handle,{matrix:transform,material});};
-    for(const row of this.rows)draw(row,identity,row.material);
+    let totalTiles=0,visibleTiles=0,culledVertices=0;
+    const aspect=this.canvas.width/this.canvas.height;
+    for(const row of this.rows){
+      if(row.visibilityBounds){
+        totalTiles++;
+        if(this.visibilityEnabled&&!raceTileVisible(row.visibilityBounds,camera,p.camera.fov,aspect)){
+          culledVertices+=row.vertices.length/11;continue;
+        }
+        visibleTiles++;
+      }
+      draw(row,identity,row.material);
+    }
+    this.lastVisibility={enabled:this.visibilityEnabled,totalTiles,visibleTiles,culledTiles:totalTiles-visibleTiles,culledVertices};
     for(const [state,rival] of [[session.player,false],[session.rival,true]]){
       const rig=raceRig(state,p.vehicle,this.visual.dimensions);
       for(const part of vehicleDraws(this.visual,{brake:state.brake??0})){
@@ -100,6 +116,6 @@ export class RaceView{
     }
     transparent.sort((a,b)=>Math.hypot(...b.at.map((x,i)=>x-camera.position[i]))-Math.hypot(...a.at.map((x,i)=>x-camera.position[i])));for(const {row,transform,material} of transparent)this.renderer.draw(row.handle,{matrix:transform,material});this.frames++;this.lastCamera=camera;
   }
-  snapshot(){return {frames:this.frames,camera:this.lastCamera,cameraMode:this.mode,visibleGates:this.visibleGates??this.checkpoints.length,graphics:this.renderer?.stats()??null,world:this.world.stats};}
+  snapshot(){return {frames:this.frames,camera:this.lastCamera,cameraMode:this.mode,visibleGates:this.visibleGates??this.checkpoints.length,graphics:this.renderer?.stats()??null,visibility:this.lastVisibility,world:this.world.stats};}
   dispose(){this.renderer?.dispose();this.renderer=null;}
 }
