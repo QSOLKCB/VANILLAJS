@@ -106,6 +106,62 @@ async function checkHorizonSafetyRecovery(browser,base){
       resumedTick:resumed.ticks,reverseSafety:below.player.position};
   }finally{await context.close();}
 }
+// HORIZON-009: actual WebGL1 full-buffer parity against the same retained
+// tiles with culling disabled, plus paired synchronized-readback timings.
+// SwiftShader timings are diagnostic, not claims about the owner's RTX GPU.
+async function checkHorizonVisibility(browser,base){
+  const context=await browser.newContext({viewport:{width:1024,height:768},deviceScaleFactor:1,serviceWorkers:'block'}),page=await context.newPage(),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  try{
+    await page.goto(base+'demos/horizon-lab/index.html');await ready(page);
+    const results=await page.evaluate(async()=>{
+      const [{RaceView},{starterRaceProject},{createRaceSession}]=await Promise.all([
+        import('./race-view.js'),import('./race-project.js'),import('./race-model.js')]);
+      const rows=[];
+      for(const profile of ['high','low']){
+        const project=structuredClone(starterRaceProject());project.scenery.profile=profile;
+        const session=createRaceSession(project),canvas=document.createElement('canvas');
+        canvas.style.cssText='position:fixed;left:-600px;top:0;width:480px;height:270px';
+        document.body.append(canvas);
+        let view;
+        try{
+          view=new RaceView(canvas,project,session.world,session.checkpoints);
+          const gl=canvas.getContext('webgl'),pixel=new Uint8Array(4);
+          const read=()=>{const bytes=new Uint8Array(canvas.width*canvas.height*4);
+            gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,bytes);return bytes;};
+          const measure=enabled=>{
+            view.visibilityEnabled=enabled;
+            for(let i=0;i<2;i++){view.draw(session);gl.readPixels(0,0,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);}
+            const samples=[];for(let i=0;i<8;i++){
+              const a=performance.now();view.draw(session);gl.readPixels(0,0,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);samples.push(performance.now()-a);
+            }
+            const sorted=[...samples].sort((a,b)=>a-b);
+            return {medianMs:sorted[4],p95Ms:sorted[7],samples};
+          };
+          for(const mode of ['chase','bonnet','cockpit']){
+            view.mode=mode;view.cameraFilter.reset();
+            const baseline=measure(false);view.draw(session);const before=read();
+            const candidate=measure(true);view.draw(session);const after=read(),stats=view.snapshot().visibility;
+            let different=0;for(let i=0;i<before.length;i++)if(before[i]!==after[i])different++;
+            rows.push({profile,mode,baseline,candidate,different,bytes:before.length,stats,
+              width:canvas.width,height:canvas.height,error:gl.getError()});
+          }
+        }finally{view?.dispose();canvas.remove();}
+      }
+      return rows;
+    });
+    for(const row of results){
+      assert.equal(row.error,0,row.profile+' '+row.mode+' WebGL error');
+      assert.equal(row.different,0,row.profile+' '+row.mode+' conservative tiles must preserve every rendered RGBA byte');
+      assert.ok(row.stats.totalTiles>=8,'static scene must actually be tiled');
+      assert.ok(row.stats.visibleTiles<=row.stats.totalTiles&&row.stats.culledTiles===row.stats.totalTiles-row.stats.visibleTiles);
+      assert.ok(row.baseline.samples.every(Number.isFinite)&&row.candidate.samples.every(Number.isFinite));
+    }
+    assert.ok(results.some(row=>row.stats.culledTiles>0&&row.stats.culledVertices>0),'some retained world triangles must actually be rejected');
+    assert.deepEqual(errors,[]);
+    return {scope:'Actual WebGL1 SwiftShader full RGBA parity; synchronized readback medians/p95 diagnostic only, not 60 FPS hardware qualification',rows:results};
+  }finally{await context.close();}
+}
 export async function checkHorizonRace(browser,base){
   const context=await browser.newContext({viewport:{width:1440,height:1100},hasTouch:true}),page=await context.newPage(),errors=[],evidence={scope:'Packaged native Chromium/SwiftShader, actual DOM input handlers and fixed-step vehicle physics; no physical GPU, mobile or controller claim.'};page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(20000);await mkdir('browser-artifacts',{recursive:true});
   try{
@@ -157,6 +213,7 @@ export async function checkHorizonRace(browser,base){
   const unavailable=await browser.newContext(),noAudio=await unavailable.newPage();try{await noAudio.addInitScript(()=>{globalThis.AudioContext=class {constructor(){throw Error('Test device unavailable');}};});await noAudio.goto(base+'demos/horizon-lab/index.html');await ready(noAudio);await noAudio.locator('#race-sound').click();assert.equal((await snapshot(noAudio)).audio.enabled,false);assert.match(await noAudio.locator('#race-status').textContent(),/Audio unavailable/);await noAudio.locator('#race-start').click();await ticks(noAudio,15);assert.equal((await snapshot(noAudio)).running,true);await noAudio.keyboard.press('Escape');}finally{await unavailable.close();}
   // A delayed older native resume must not stop a newer successful gesture.
   const delayed=await browser.newContext(),late=await delayed.newPage();try{await late.addInitScript(()=>{const Native=AudioContext;let first=true;globalThis.AudioContext=class extends Native{resume(){const result=super.resume();if(!first)return result;first=false;return new Promise(resolve=>{globalThis.releaseOldRaceResume=()=>result.then(resolve);});}};});await late.goto(base+'demos/horizon-lab/index.html');await ready(late);await late.locator('#race-sound').click();assert.equal((await snapshot(late)).audio.enabled,true);await late.locator('#race-pause').evaluate(b=>b.click());await late.evaluate(()=>dispatchEvent(new Event('blur')));await late.locator('#race-start').click();await ticks(late,20);assert.equal((await snapshot(late)).audio.active,true);await late.evaluate(()=>releaseOldRaceResume());await ticks(late,10);assert.equal((await snapshot(late)).audio.active,true,'stale native resume cannot cancel newer audio');assert.ok((await snapshot(late)).audio.started>0);await late.keyboard.press('Escape');assert.equal((await snapshot(late)).audio.voices,0);}finally{await delayed.close();}
+  evidence.visibility=await checkHorizonVisibility(browser,base);
   evidence.reverse=await checkHorizonReverse(browser,base);
   evidence.failSafe=await checkHorizonSafetyRecovery(browser,base);await writeFile('browser-artifacts/horizon-race-diagnostics.json',JSON.stringify(evidence,null,2)+'\n');
   console.log('HORIZON race: bridge guardrails and recoverable rollover, real keyboard/touch reverse, safe direction changes and cancellation, canonical index car movement, scenery/return navigation, race alias, actual keyboard course completion, rival/checkpoints/finish, three cameras/classes, course/vehicle/audio editing, strict rollback/history/export cancellation, sound lifecycle, 320px touch, native context recovery, graphics fallback and offline startup PASS');
