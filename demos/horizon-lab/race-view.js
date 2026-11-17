@@ -82,7 +82,7 @@ export class RaceView{
     this.renderer.begin(camera.position,orientation(camera.position,camera.target),{fov:p.camera.fov,near:.08,far:2000,ambient:.4,sunDirection:[-.4,.8,.35],sunColor:[1,.94,.81],skyTop:palette.top,skyBottom:palette.bottom,fogColor:palette.fog,fogDensity:.0016,exposure:1});
     const draw=(row,transform,material,at=row.center)=>{if((material.opacity??1)<1)transparent.push({row,transform,material,at});else this.renderer.draw(row.handle,{matrix:transform,material});};
     let totalTiles=0,visibleTiles=0,culledVertices=0;
-    const aspect=this.canvas.width/this.canvas.height;
+    const aspect=this.canvas?.width>0&&this.canvas?.height>0?this.canvas.width/this.canvas.height:1;
     for(const row of this.rows){
       if(row.visibilityBounds){
         totalTiles++;
