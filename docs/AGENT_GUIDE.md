@@ -180,7 +180,8 @@ Preserve current
 Racing Lab and Track Foundry v1, all existing rendering callers and frozen
 verification evidence. Games2 remains unchanged and adoption remains separate.
 
-HORIZON-004 is the final pre-release visual/driving polish gate for v2.9.0. Preserve
+HORIZON-004 introduced visual and driving polish. HORIZON-005 through 010
+are merged. See the [v2.9.0 acceptance record](HORIZON_2_9_0_DRAFT.md#release-acceptance). Preserve
 existing recipe versions, vehicle dimensions and exact road/terrain contact
 triangles while improving decorative geometry. Smooth visual normals, analytic
 paint/glass reflections and decorative tunnel fixtures do not add physics or
