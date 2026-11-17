@@ -42,7 +42,8 @@ test('actual 24 m/s bridge edge contact is bounded and does not produce a rollov
   }
 });
 test('32-knot long bridges select only nearby collision barriers without changing the authored road',()=>{
-  const p=starterRaceProject();p.scenery.road=Array.from({length:32},(_,i)=>({
+  // starterRaceProject() is deliberately deeply frozen; edit an owned fixture only.
+  const p=structuredClone(starterRaceProject());p.scenery.road=Array.from({length:32},(_,i)=>({
     id:'long-'+i,x:0,y:4,z:-25*i,width:16,bank:0,structure:'bridge',surface:'asphalt'}));
   const road=new ScenicRoad(p.scenery),rails=bridgeGuardrails(road);
   assert.ok(rails.length>64);
