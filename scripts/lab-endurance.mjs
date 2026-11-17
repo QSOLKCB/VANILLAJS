@@ -99,8 +99,8 @@ async function realGameplaySample(lab,page){
   }
   if(lab==='weapon-feel'){
     await page.locator('#run').click();
-    await page.waitForFunction(()=>weaponFeelLab.snapshot().timer.tick>2);
-    const tick=await page.evaluate(()=>weaponFeelLab.snapshot().timer.tick);
+    await page.waitForFunction(()=>weaponFeelLab.snapshot().tick>2);
+    const tick=await page.evaluate(()=>weaponFeelLab.snapshot().tick);
     await page.locator('#pause').click();
     return {rangeTicks:tick};
   }
@@ -152,8 +152,8 @@ async function oneCycle(page,lab,index,seed){
       click('run');if(!weaponFeelLab.running())fail('range did not start');
       click('pause');if(weaponFeelLab.running())fail('range did not pause');
       state=weaponFeelLab.snapshot();
-      if(!Number.isSafeInteger(state.timer.tick)||state.timer.tick<0)fail('bad range tick');
-      tag='weapon-feel/'+state.timer.tick;
+      if(!Number.isSafeInteger(state.tick)||state.tick<0)fail('bad range tick');
+      tag='weapon-feel/'+state.tick;
     }else if(lab==='sprite-foundry'){
       const el=$('seed');if(!el)fail('seed field missing');
       el.value=String(seed);el.dispatchEvent(new Event('input',{bubbles:true}));
