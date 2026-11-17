@@ -76,6 +76,15 @@ complete supported race.
   later offline visits work after successful installation. No account, package
   installation, CDN or downloaded asset is required.
 
+## HORIZON-005 — Guardrails and recoverable driving
+
+After repeated owner reproductions of a bridge-area rollover, the final
+pre-release correction adds bounded game-owned bridge guardrails and
+automatic once-per-incident checkpoint recovery with the authored
+penalty. The original vehicle solver and rendered road-contact
+geometry remain unchanged. Separate review/CI and owner acceptance
+are required before tagging v2.9.0.
+
 ## Compatibility and limits
 
 The candidate catalogue contains **71 experimental modules, 51 recipes and two
