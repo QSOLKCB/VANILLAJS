@@ -551,7 +551,7 @@
     "demos/horizon-lab/race-model.js": "25bcdaa88ef80a5095564671fcdc60cc795e6673df5e38d03e6d81996691dd3d",
     "demos/horizon-lab/race-player.js": "760b71bcd0b876971a45c8c6f14aa720e7bcfe14b1c2e81986af8dbf347b306b",
     "demos/horizon-lab/race-project.js": "cadb20c8c77b1747f1cc29633f113027ceb6625bb6f6bf0bdd74d61f9fa3b26c",
-    "demos/horizon-lab/race-runtime.js": "3878855d0896d4a96c9ae1b585ca68e4d5b4744bead92dcdad945b8eeff80336",
+    "demos/horizon-lab/race-runtime.js": "67f083de5ec3101705ac619d5375d12e287af664920b6f5ee0a6b5974ed4eec4",
     "demos/horizon-lab/race-shell.js": "2fbf9aef70f7fc5fd5b7ba540fb72a31f78fdf42fe1052898d4c8b3f6cfa3a59",
     "demos/horizon-lab/race-start.js": "30f8cbd27a368d524867100d7c2d8e10181c5fd0765ca1dc84ab169bb45f0335",
     "demos/horizon-lab/race-view.js": "e2a4d2a54ce6e56d26025f7cd7affa5ab0859c2b169976c729b950475fbcd219",
@@ -715,7 +715,7 @@
     "demos/horizon-lab/runtime-876a1997ecb33d275f8029e2774dde9f07d2bf50d9ea6b8dcaebccc0a8f6c176/demos/horizon-lab/race-assist.js": "f8ced1f41c9517f0903c1c50d7687e6182299bc154a85e484ad2357d4fbb9dd7",
     "demos/horizon-lab/runtime-876a1997ecb33d275f8029e2774dde9f07d2bf50d9ea6b8dcaebccc0a8f6c176/demos/horizon-lab/race-contact.js": "f8c3ecfa3aadaf54c754c7e89462e0a791387bf72cd01b6adc1891966a74a75f",
     "demos/horizon-lab/race-visibility.js": "bef81ba881613286927547ba3a73b70f5bc7d2322948ba7082b8a6700ce86148",
-    "demos/horizon-lab/race-road-details.js": "1f9b1932617f081548eea11009a45ad427c31248279602009ec494b2a0b5cab7"
+    "demos/horizon-lab/race-road-details.js": "26a6fa37494cff3f575d369b62cc61f042acb57e40d9c99646cfe71af15d17db"
   },
   "opaqueHarness": {
     "scripts/browser-creator.js": {

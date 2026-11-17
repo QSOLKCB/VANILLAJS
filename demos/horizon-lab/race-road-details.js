@@ -2,6 +2,7 @@
 // HORIZON-010: deterministic, presentation-only roadside details.
 // Integer-metre scheduling and stable chunk order; native road/contact is immutable.
 import {raceBatchBounds} from './race-visibility.js';
+import {ScenicRoad} from '../../modules/scenic3d/index.js';
 
 const STEP=Object.freeze({low:48,high:24}),CHUNK_METRES=240,MAX_VERTICES=20000,MAX_BATCHES=48;
 const kinds=['posts','reflectors','signs','ink'];
@@ -46,8 +47,11 @@ function signQuad(out,origin,right,back,coords,color,depth=.06){
  * vertices participate in physical support, barrier or checkpoint tests.
  */
 export function createRaceRoadDetails(road,profile='high',environment='coast'){
-  if(!road||typeof road.sample!=='function'||typeof road.stations!=='function'||
-    !Number.isFinite(road.length)||road.length<0||road.length>2400||!Object.hasOwn(STEP,profile)||!Object.hasOwn(themes,environment))
+  // ScenicRoad has already validated the authored knot/grade budget. Its
+  // sampled *3D* spline can legitimately exceed the 2400 m horizontal-knot
+  // limit; do not impose a second, incompatible length admission rule here.
+  if(!(road instanceof ScenicRoad)||!Number.isFinite(road.length)||road.length<=0||
+    !Object.hasOwn(STEP,profile)||!Object.hasOwn(themes,environment))
     throw TypeError('Accepted roadside world and graphics profile required');
   const rows=road.stations(),theme=themes[environment],groups=new Map();
   if(!Array.isArray(rows)||rows.length<2)return {batches:[],postPairs:0,warningSigns:0,vertices:0};
@@ -83,7 +87,9 @@ export function createRaceRoadDetails(road,profile='high',environment='coast'){
       next=road.sample(Math.min(road.length,distance+10),0).position,
       v=sub(point.position,prior),w=sub(next,point.position),turn=Math.atan2(v[0]*w[2]-v[2]*w[0],v[0]*w[0]+v[2]*w[2]);
     if(Math.abs(turn)<.03)continue;
-    const outside=turn>0?1:-1,edge=road.sample(distance,outside*edgeOffset).position,
+    // Positive signed curvature bends right: the outer shoulder is left.
+    // Keep chevron ink direction tied to 'turn', not the placement side.
+    const outside=turn>0?-1:1,edge=road.sample(distance,outside*edgeOffset).position,
       origin=add(edge,right,outside*(width/2+3.8-edgeOffset)),posts=values('posts',chunk);
     // Sign backplate, mount, and high-contrast chevron are two retained
     // material batches rather than thousands of per-object GPU draws.

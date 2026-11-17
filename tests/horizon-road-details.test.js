@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {createRaceRoadDetails} from '../demos/horizon-lab/race-road-details.js';
 import {starterRaceProject} from '../demos/horizon-lab/race-project.js';
 import {createRaceSession} from '../demos/horizon-lab/race-model.js';
+import {locateOnRoad} from '../demos/horizon-lab/race-course.js';
 import {validateLitMaterial} from '../modules/render-lit/index.js';
 
 test('roadside details are deterministic, bounded and never enter native physics',()=>{
@@ -35,6 +36,55 @@ test('roadside details are deterministic, bounded and never enter native physics
       for(let c=6;c<=8;c++)assert.ok(b.vertices[i+c]>=0&&b.vertices[i+c]<=1);
     }
   }
+});
+
+test('a validated 2400 m horizontal course may have a longer graded 3D spline',()=>{
+  const project=structuredClone(starterRaceProject());
+  project.scenery.road=Array.from({length:13},(_,i)=>({
+    id:'graded-'+i,x:-1200+i*200,y:i*10,z:0,width:10,bank:0,
+    structure:'ground',surface:'asphalt'
+  }));
+  const race=createRaceSession(project),snapshot=race.snapshot(),
+    originalSupport=race.world.physics.sampleSurface(0,0,2000);
+  assert.ok(race.road.length>2400,'the admitted 3D spline is longer than the horizontal knot limit');
+  for(const profile of ['low','high']){
+    const details=createRaceRoadDetails(race.road,profile,'coast');
+    assert.ok(details.postPairs>0&&details.vertices>0);
+    assert.ok(details.vertices<=20000&&details.batches.length<=48);
+    assert.deepEqual(details,createRaceRoadDetails(race.road,profile,'coast'));
+  }
+  assert.deepEqual(race.snapshot(),snapshot,'decorative placement never alters the race');
+  assert.deepEqual(race.world.physics.sampleSurface(0,0,2000),originalSupport);
+});
+
+test('bend-warning boards stand on the outer shoulder for both turn signs',()=>{
+  const observed=new Set();
+  for(const mirrored of [false,true]){
+    const project=structuredClone(starterRaceProject());
+    if(mirrored)for(const knot of project.scenery.road)knot.x=-knot.x;
+    const race=createRaceSession(project),details=createRaceRoadDetails(race.road,'high','coast');
+    const panels=details.batches.filter(batch=>batch.detailKind==='signs');
+    assert.ok(panels.length>0,'the actual course must produce warning signs');
+    for(const panel of panels)for(let start=0;start<panel.vertices.length;start+=66){
+      const vertices=panel.vertices,center=[0,1,2].map(axis=>{
+        let sum=0;for(let v=0;v<6;v++)sum+=vertices[start+v*11+axis];return sum/6;
+      });
+      const location=locateOnRoad(race.road,center,race.rows),distance=location.distance;
+      const prev=race.road.sample(Math.max(0,distance-10),0).position,
+        mid=race.road.sample(distance,0).position,
+        next=race.road.sample(Math.min(race.road.length,distance+10),0).position,
+        a=[mid[0]-prev[0],mid[2]-prev[2]],b=[next[0]-mid[0],next[2]-mid[2]],
+        turn=a[0]*b[1]-a[1]*b[0];
+      assert.ok(Math.abs(turn)>1e-7,'a sign must correspond to a genuine bend');
+      assert.equal(Math.sign(location.lateral),-Math.sign(turn),
+        'the sign must be outside the bend rather than on its inside shoulder');
+      assert.ok(Math.abs(location.lateral)>location.width/2,
+        'the sign must clear the authored road edge');
+      observed.add(Math.sign(turn));
+    }
+  }
+  assert.deepEqual([...observed].sort((a,b)=>a-b),[-1,1],
+    'mirroring the road must exercise both left-hand and right-hand bends');
 });
 
 test('decorative rendering preserves scene/world identity for each environment and profile',()=>{

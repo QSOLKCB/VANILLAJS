@@ -17,7 +17,8 @@ renderer and exact native physics.
   bounded emissive material. Coastal, alpine and dusk scenes use
   different vertex colours.
 - At deterministically sampled bends, the generated course can show
-  orange-and-dark direction chevrons mounted beyond the road edge.
+  orange-and-dark direction chevrons mounted beyond the road edge on the
+  **outer shoulder** (opposite the signed turning direction).
   Sign admission uses the actual local route tangent and signed
   change in heading, with 72 m spacing. Bridge and tunnel interiors
   do **not** sprout roadside installations.
@@ -26,7 +27,9 @@ renderer and exact native physics.
   240-m chunks, then ordered by `posts`, `reflectors`, `signs`,
   `ink`. Each chunk/material is a **retained mesh**, not a draw per
   post. No textures, GPU extensions, runtime dependencies or
-  network assets are required.
+  network assets are required. A validated `ScenicRoad` has no second
+  2400 m length limit: its 3D spline can exceed the 2400 m
+  **horizontal** knot budget; independent vertex/mesh budgets remain enforced.
 - Cosmetic source arrays are independent of the authoritative road,
   `sampleSurface`, vehicle collision, recovery logic and ordered
   checkpoints. Scene edits use the same transactional renderer
