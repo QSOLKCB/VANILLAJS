@@ -4,7 +4,7 @@ import {rotate} from '../../modules/math/index.js';
 import {createVehicle,VEHICLE_STEP} from '../../modules/vehicle3d/index.js';
 import {validateRaceProject} from './race-project.js';
 import {createDriveWorld} from './drive-world.js';
-import {bridgeGuardrails,bridgePhysics} from './race-guardrails.js';
+import {bridgeGuardrails,stepBridgeVehicle} from './race-guardrails.js';
 import {resolveRaceContact} from './race-contact.js';
 import {createRaceCheckpoints,crossesRaceCheckpoint,locateOnRoad,raceRoadStatus} from './race-course.js';
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -85,13 +85,13 @@ class RaceSession{
     const quanta=Math.round(dt*240);
     // Countdown settles suspension under brakes; commands have no launch advantage.
     if(this.#phase==='countdown'){
-      const player=this.#car.step(this.#player,{brake:1},bridgePhysics(this.world.physics,this.bridgeRails,this.#player.position),dt),rival=this.#rivalCar.step(this.#rival,{brake:1},bridgePhysics(this.world.physics,this.bridgeRails,this.#rival.position),dt);
+      const player=stepBridgeVehicle(this.#car,this.#player,{brake:1},this.world.physics,this.bridgeRails,dt),rival=stepBridgeVehicle(this.#rivalCar,this.#rival,{brake:1},this.world.physics,this.bridgeRails,dt);
       this.#player=freeze(player);this.#rival=freeze(rival);this.#countdownTicks=Math.max(0,this.#countdownTicks-quanta);if(!this.#countdownTicks)this.#phase='running';return this.#phase;
     }
     const before=this.#player,rivalBefore=this.#rival,rivalInput=this.#rivalProgress.finished?{brake:1}:raceDriverInput(this.road,rivalBefore,this.#rivalCar.recipe,{speed:this.project.race.rivalSpeed,lateral:2,rows:this.rows});
     // Both transitions complete before replacing accepted state.
-    const advancedPlayer=this.#car.step(before,this.#playerProgress.finished?{brake:1}:input,bridgePhysics(this.world.physics,this.bridgeRails,before.position),dt),
-          advancedRival=this.#rivalCar.step(rivalBefore,rivalInput,bridgePhysics(this.world.physics,this.bridgeRails,rivalBefore.position),dt),
+    const advancedPlayer=stepBridgeVehicle(this.#car,before,this.#playerProgress.finished?{brake:1}:input,this.world.physics,this.bridgeRails,dt),
+          advancedRival=stepBridgeVehicle(this.#rivalCar,rivalBefore,rivalInput,this.world.physics,this.bridgeRails,dt),
           {player,rival}=resolveRaceContact(advancedPlayer,advancedRival,this.project.vehicle);
     this.#player=freeze(player);this.#rival=freeze(rival);this.#ticks+=quanta;
     if(!this.#playerProgress.finished)this.#advanceProgress(this.#playerProgress,before,player,dt);
