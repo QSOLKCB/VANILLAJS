@@ -256,9 +256,38 @@ async function main(){
           if(i<3)record.sample.push(w);
           record.last.push(w);if(record.last.length>8)record.last.shift();
           if(i===0||i+1===plan.iterations){
+            // A real, synchronous canvas probe proves that the browser page
+            // and rendering context still respond after the interaction.
+            // Playwright screenshots may wait for a frame that the deliberate
+            // virtual clock has paused; they are optional evidence, not a
+            // substitute for a successful frame/state probe.
+            const pixels=await page.evaluate(()=>{
+              const c=document.querySelector('canvas');
+              if(!c||c.width<=0||c.height<=0)throw Error('No drawable canvas');
+              const gl=c.getContext('webgl')||c.getContext('webgl2'),rgba=new Uint8Array(4);
+              if(gl){
+                gl.readPixels(0,0,1,1,gl.RGBA,gl.UNSIGNED_BYTE,rgba);
+                const error=gl.getError();
+                if(error!==gl.NO_ERROR)throw Error('WebGL error '+error);
+              }else{
+                const ctx=c.getContext('2d');if(!ctx)throw Error('No graphics context');
+                rgba.set(ctx.getImageData(0,0,1,1).data);
+              }
+              return {width:c.width,height:c.height,rgba:[...rgba],renderer:gl?'webgl':'canvas2d'};
+            });
+            (record.pixelProbes??=[]).push({at:i+1,...pixels});
             const image=join(out,plan.group+'-'+lab+'-'+(i===0?'first':'last')+'.png');
-            await page.screenshot({path:image,fullPage:false,timeout:10000});
-            (record.screenshots??=[]).push(image);
+            try{
+              await page.screenshot({path:image,fullPage:false,timeout:2500,animations:'disabled'});
+              (record.screenshots??=[]).push(image);
+            }catch(error){
+              // The page must still answer a fresh liveness query. A hung
+              // renderer or crashed browser remains a real test failure.
+              assert.equal(await page.evaluate(()=>document.readyState),'complete');
+              (record.screenshotWarnings??=[]).push({
+                at:i+1,reason:String(error?.message??error).slice(0,320)
+              });
+            }
           }
           if((i+1)%250===0||i+1===plan.iterations){
             record.digestSHA256=hash.copy().digest('hex');
