@@ -79,7 +79,13 @@ seed and per-iteration rolling SHA-256, package manifest SHA-256,
 observed Chromium version, first/last samples, elapsed wall time and
 PASS/FAIL. On failure, report the first failing lab and iteration,
 a bounded error trace and a screenshot if browser capture is possible.
-Results are uploaded even when an execution fails.
+Results are uploaded even when an execution fails. Each lab also records
+mandatory synchronous canvas/WebGL pixel probes at the first and last
+accepted cycle. Playwright PNG screenshots are **best-effort** supporting
+artifacts: a virtual-clock pause can prevent a compositor screenshot even
+when the lab state and canvas remain responsive. Such a timeout is
+recorded, and a fresh page-liveness check is required before continuing;
+a failed pixel probe or unresponsive page still fails the entire job.
 
 The digest establishes reproducible iteration inputs/observations in the
 same environment; it is **not a claim of byte-identical GPU screenshots**
