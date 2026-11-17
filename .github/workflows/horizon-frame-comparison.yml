@@ -1,0 +1,44 @@
+name: HORIZON paired frame diagnostic
+on:
+  pull_request:
+    paths:
+      - scripts/compare-horizon-frames.mjs
+      - scripts/horizon-frame-workload.mjs
+      - .github/workflows/horizon-frame-comparison.yml
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Fetch HORIZON-009 comparison source
+        run: git fetch --no-tags --depth=1 origin 6e4831d61f284ba6b92c33ecf598897c46eb1204
+      - name: Configure hosted browser
+        run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
+      - uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        id: browser
+        with:
+          path: ${{ runner.temp }}/flight-browser
+          key: flight-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24.04-node22-playwright1.64.0-only-shell-v1
+      - name: Provision pinned software browser on hosted cache miss
+        if: steps.browser.outputs.cache-hit != 'true'
+        run: |
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --prefix "$RUNNER_TEMP/flight-browser" --ignore-scripts --no-save --package-lock=false --no-audit --no-fund playwright@1.64.0
+          node "$RUNNER_TEMP/flight-browser/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Compare packaged renderers in SwiftShader
+        env:
+          NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
+        run: node scripts/compare-horizon-frames.mjs "$GITHUB_SHA" "$RUNNER_TEMP/frame-comparison" diagnostic
+      - name: Keep measured rows and screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: horizon-frame-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/frame-comparison
