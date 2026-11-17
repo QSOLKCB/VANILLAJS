@@ -1,37 +1,65 @@
 // SPDX-License-Identifier: Apache-2.0
-// Race-owned guardrails: never modify vehicle3d or ScenicRoad's physical surface.
 import {ScenicRoad} from '../../modules/scenic3d/index.js';
-const THICKNESS=.12,RANGE=10,NATIVE_LIMIT=64;
-/** Author rails from the exact road-edge stations used to draw bridge guardrails. */
+import {add,cross,dot,length,normalize,rotate,scale,subtract} from '../../modules/math/index.js';
+import {moveAndSlideAABB} from '../../modules/collision/index.js';
+
+// Bound each visible rail strip in its own frame. A world-axis bounding box
+// is useful for rejecting distant cars but fills part of a diagonal lane.
 export function bridgeGuardrails(road){
   if(!(road instanceof ScenicRoad))throw TypeError('ScenicRoad required');
-  const rows=road.stations(),result=[];
+  const rows=road.stations(),rails=[];
   for(let i=0;i<rows.length-1;i++){
-    const a=rows[i],b=rows[i+1];if(a.structure!=='bridge')continue;
+    if(rows[i].structure!=='bridge')continue;
     for(const side of ['left','right']){
-      const p=a[side],q=b[side];
-      result.push({id:'bridge-rail-'+i+'-'+side,
-        min:[Math.min(p[0],q[0])-THICKNESS,Math.min(p[1],q[1])+.25,Math.min(p[2],q[2])-THICKNESS],
-        max:[Math.max(p[0],q[0])+THICKNESS,Math.max(p[1],q[1])+1.30,Math.max(p[2],q[2])+THICKNESS]});
+      const a=rows[i][side],b=rows[i+1][side],edge=subtract(b,a);
+      const along=Math.hypot(edge[0],edge[2])>1e-9?normalize(edge):[0,0,-1];
+      const across=normalize(cross(along,[0,1,0])),up=cross(across,along);
+      const center=add(scale(add(a,b),.5),[0,.48,0]);
+      const half=[.06,.49,length(edge)/2+.075];
+      const axes=[across,up,along];
+      const bounds=half.map((_,k)=>axes.reduce((sum,axis,j)=>sum+Math.abs(axis[k])*half[j],0));
+      rails.push({id:'bridge-rail-'+i+'-'+side,center,axes,box:{min:scale(half,-1),max:half},
+        min:subtract(center,bounds),max:add(center,bounds)});
     }
   }
-  return result;
+  return rails;
 }
-/** Bind a bounded, nearest-first subset of rails to one vehicle's next step.
- * Prevents >64-AABB overload on long courses. Explicit vehicle3d sweeps,
- * no ghost lane motion, no mutation of canonical surface geometry or state. */
-export function bridgePhysics(physics,rails,position){
-  if(!physics||typeof physics.sampleSurface!=='function'||!Array.isArray(physics.barriers)||
-     !Array.isArray(rails)||!Array.isArray(position)||position.length!==3||
-     !position.every(Number.isFinite)||physics.barriers.length>NATIVE_LIMIT)
-    throw TypeError('Valid physics, guardrails and position required');
-  const near=[];
-  for(let i=0;i<rails.length;i++){
-    const box=rails[i],dx=Math.max(box.min[0]-position[0],0,position[0]-box.max[0]),
-          dz=Math.max(box.min[2]-position[2],0,position[2]-box.max[2]),distance=Math.hypot(dx,dz);
-    if(distance<=RANGE)near.push({box,i,distance});
+
+function halfAxes(chassis,orientation){
+  return [[chassis.width/2,0,0],[0,chassis.height/2,0],[0,0,chassis.length/2]]
+    .map(axis=>rotate(orientation,axis));
+}
+const extent=(body,axis)=>body.reduce((sum,v)=>sum+Math.abs(dot(v,axis)),0);
+
+// The native vehicle step owns suspension, propulsion and workshop barriers.
+// Sweep its proposed displacement in the local frame of nearby bridge strips.
+// The moving box conservatively encloses the chassis at both tick endpoints.
+export function stepBridgeVehicle(car,before,input,world,rails,dt){
+  const next=car.step(before,input,world,dt),chassis=car.recipe.chassis;
+  const radius=Math.hypot(chassis.width,chassis.height,chassis.length)/2;
+  let startBody,endBody;
+  for(const rail of rails){
+    if(rail.min.some((min,k)=>Math.max(before.position[k],next.position[k])+radius<min ||
+      Math.min(before.position[k],next.position[k])-radius>rail.max[k]))continue;
+    startBody??=halfAxes(chassis,before.orientation);
+    endBody??=halfAxes(chassis,next.orientation);
+    const start=subtract(before.position,rail.center),travel=subtract(next.position,before.position);
+    const local=rail.axes.map(axis=>dot(start,axis)),delta=rail.axes.map(axis=>dot(travel,axis));
+    const half=rail.axes.map(axis=>Math.max(extent(startBody,axis),extent(endBody,axis)));
+    const moved=moveAndSlideAABB(local,delta,1,half,[rail.box]);
+    if(!moved.contacts.length)continue;
+    const correction=subtract(moved.position,add(local,delta));
+    const offset=rail.axes.reduce((sum,axis,j)=>add(sum,scale(axis,correction[j])),[0,0,0]);
+    next.position=add(next.position,offset);
+    for(const wheel of next.wheels){
+      wheel.position=add(wheel.position,offset);
+      wheel.contactPoint=add(wheel.contactPoint,offset);
+    }
+    for(const {normal} of moved.contacts){
+      const j=normal.findIndex(component=>component!==0),axis=scale(rail.axes[j],normal[j]);
+      next.velocity=subtract(next.velocity,scale(axis,Math.min(0,dot(next.velocity,axis))));
+    }
+    if(next.contacts.length<64)next.contacts.push(rail.id);
   }
-  near.sort((a,b)=>a.distance-b.distance||a.i-b.i);
-  return {sampleSurface:physics.sampleSurface,barriers:physics.barriers.concat(
-    near.slice(0,NATIVE_LIMIT-physics.barriers.length).map(x=>x.box))};
+  return next;
 }

@@ -88,3 +88,22 @@ test('digital corrections remain bounded under course assist and the rival drive
   assert.ok(s.rivalProgress.distance>200);
   assert.ok(Number.isFinite(maxSlip));
 });
+
+test('a held steering key through the first gate keeps the assisted car on the road',()=>{
+  const p=starterRaceProject();
+  for(const direction of [-1,1]){
+    const race=createRaceSession(p);
+    race.start();
+    let maxOutward=0;
+    for(let tick=0;tick<3200&&race.progress.checkpointIndex<3;tick++){
+      const distance=race.progress.distance;
+      const steer=distance>=66&&distance<128?direction:0;
+      race.step(raceAssistInput(race.road,race.player,p.vehicle,{throttle:1,steer},race.rows));
+      maxOutward=Math.max(maxOutward,(race.progress.lateral+2)*direction);
+      assert.equal(race.progress.offRoad,false);
+      assert.equal(race.player.needsRecovery,false);
+    }
+    assert.ok(maxOutward>1,'the steering key still changes the driving line');
+    assert.equal(race.progress.checkpointIndex,3);
+  }
+});
