@@ -19,5 +19,5 @@ export function raceAssistInput(road,state,recipe,intent,rows=road.stations()){
         manual=Math.abs(intent.steer??0)>.01;
   const steer=(manual?(.65*intent.steer+.35*guide.steer):guide.steer)*limit;
   return {...intent,throttle:Math.min(intent.throttle,guide.throttle),
-    brake:Math.max(intent.brake,guide.brake),steer:clamp(steer,-1,1)};
+    brake:Math.max(intent.brake??0,guide.brake),steer:clamp(steer,-1,1)};
 }
