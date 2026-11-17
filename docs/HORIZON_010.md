@@ -104,3 +104,39 @@ node scripts/capture-horizon-polish.mjs --dist=/path/to/candidate/dist --out=/ne
 This is an additive HORIZON Racing Foundry visual-phase PR.
 No merge, release, production deployment or assertion of GPU
 performance before owner review and fully green evidence.
+
+## Run the paired frame comparison
+
+On the selected physical GPU, use a clean working session with Node 22 or later,
+an externally provisioned Playwright and headed Chromium. Keep the benchmark
+window visible. From a checkout containing the HORIZON-009 baseline and the
+reviewed candidate Git objects, run the following. Supply a new output
+directory for each run. If needed, set `NODE_PATH` to the existing Playwright
+module directory's parent and `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to Chromium.
+
+```sh
+node scripts/compare-horizon-frames.mjs "$(git rev-parse HEAD)" ../horizon-frames-01 hardware
+```
+
+The command builds and verifies each exact revision in its own temporary
+worktree. The same Chromium process loads both content-addressed Racing Foundry
+runtimes at 1280×720 and DPR 1. Each quality profile covers parked, moving,
+bridge, tunnel and reverse-boundary recovery scenes. The moving fixtures drive
+the two-car model at 120 Hz. Each frame advances two simulation steps. The parked
+and recovered poses stay fixed. Start/end states, final camera, canvas dimensions
+and project settings must agree across revisions.
+
+The JSON retains individual samples, p1/p50/p95, browser and driver data,
+actual draw and vertex counts, GL status, source and manifest hashes and
+a PNG hash for each view. Work time includes simulation, WebGL submission
+and a synchronous pixel readback. Animation-frame intervals separately
+report browser scheduling. These are controlled renderer comparisons at the
+recorded canvas resolution. Full lab play also includes input, HUD and audio.
+
+Hardware mode samples 120 frames after 12 warm-up frames per case. A work-time
+p95 over 16.67 ms exits with a failure and preserves the measurements. Review
+the raw frame intervals and slower paired results. Repeat on the same device
+to distinguish a reproducible regression from run-to-run variation. Owner
+driving and performance acceptance are recorded separately. For a short
+SwiftShader smoke run, substitute `diagnostic` for `hardware`. Its receipt
+is labelled DIAGNOSTIC regardless of timing.
