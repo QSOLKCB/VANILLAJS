@@ -84,7 +84,8 @@ test('portable shell and stylesheet cannot introduce undeclared or remote runtim
   const temp=await mkdtemp(join(tmpdir(),'horizon-race-shell-'));
   try{
     const fixture={'demos/horizon-lab/race-player.js':'export const example=1;',
-      'demos/horizon-lab/race-portable-shell.txt':'<link rel="stylesheet" href="./demos/horizon-lab/race.css"><script type="module" src="./game-start.js"></script><script type="module" src="./offline/register.js"></script>',
+      'demos/horizon-lab/race-portable-shell.txt':'<link rel="stylesheet" href="./demos/horizon-lab/race.css"><script type="module" src="./game-start.js"></script><script type="module" src="./offline/register.js"></script><script src="./demos/horizon-lab/race-launch.js"></script>',
+      'demos/horizon-lab/race-launch.js':'// fixture',
       'demos/horizon-lab/race.css':'body{margin:0}',LICENSE:'fixture',NOTICE:'fixture','offline/register.js':'// fixture',
       'scripts/service-worker.template.js':'// fixture'};
     for(const [path,text] of Object.entries(fixture)){await mkdir(dirname(join(temp,path)),{recursive:true});await writeFile(join(temp,path),text);}

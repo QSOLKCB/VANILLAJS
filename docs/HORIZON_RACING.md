@@ -1,8 +1,6 @@
 # Make a scenic race with HORIZON
 
-Open [Race Foundry](../demos/horizon-lab/index.html) from the Creator Hub or the
-existing Racing Lab's Track Foundry. Serve the repository or built `dist` directory
-through HTTP; native modules cannot start reliably from a double-clicked file.
+Open [Race Foundry](../demos/horizon-lab/index.html) from the Creator Hub or the existing Racing Lab’s Track Foundry. For a first launch without internet, extract the source ZIP and double-click `demos/horizon-lab/index.html`. Keep the extracted folder together. To use the HTTP build instead:
 
 ```sh
 node scripts/build.js
@@ -115,7 +113,7 @@ It excludes the authoring interface, external assets, multiplayer and saved prog
 is the editable copy to reimport; the runtime uses the validated data embedded
 during export, so editing that JSON in the extracted folder does not update the game.
 Apply changes in Race Foundry and export again.
-Extract everything into a new directory and serve that folder:
+Extract everything into a new directory and double-click its top-level `index.html`. Both cars, cameras and controls work directly from disk. The exported race includes its accepted project and all executable modules. A local HTTP server is also supported:
 
 ```sh
 python3 -m http.server 8000 --bind 127.0.0.1
