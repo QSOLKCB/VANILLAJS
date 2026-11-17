@@ -162,6 +162,54 @@ async function checkHorizonVisibility(browser,base){
     return {scope:'Actual WebGL1 SwiftShader full RGBA parity; synchronized readback medians/p95 diagnostic only, not 60 FPS hardware qualification',rows:results};
   }finally{await context.close();}
 }
+// HORIZON-010: actual rendered appearance must change, while the exact
+// accepted vehicle, road sampler, shaders, and draw-time resources stay put.
+async function checkHorizonRoadDetails(browser,base){
+  const context=await browser.newContext({viewport:{width:1024,height:768},deviceScaleFactor:1,serviceWorkers:'block'}),page=await context.newPage(),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  try{
+    await page.goto(base+'demos/horizon-lab/index.html');await ready(page);
+    const rows=await page.evaluate(async()=>{
+      const [{RaceView},{starterRaceProject},{createRaceSession}]=await Promise.all([
+        import('./race-view.js'),import('./race-project.js'),import('./race-model.js')]);
+      const evidence=[];
+      for(const profile of ['low','high']){
+        const project=structuredClone(starterRaceProject());project.scenery.profile=profile;
+        const session=createRaceSession(project),unchanged=JSON.stringify(session.snapshot()),canvas=document.createElement('canvas');
+        canvas.style.cssText='position:fixed;left:-900px;top:0;width:640px;height:360px';document.body.append(canvas);
+        let view;
+        try{
+          view=new RaceView(canvas,project,session.world,session.checkpoints);
+          const gl=canvas.getContext('webgl'),read=()=>{
+            const result=new Uint8Array(canvas.width*canvas.height*4);
+            gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,result);
+            return result;
+          };
+          view.detailsEnabled=false;view.draw(session);const baseline=read(),baseStats=view.snapshot().graphics;
+          view.detailsEnabled=true;view.draw(session);const enhanced=read(),candidate=view.snapshot();
+          let differingPixels=0;
+          for(let i=0;i<baseline.length;i+=4)
+            if(baseline[i]!==enhanced[i]||baseline[i+1]!==enhanced[i+1]||
+              baseline[i+2]!==enhanced[i+2]||baseline[i+3]!==enhanced[i+3])differingPixels++;
+          evidence.push({profile,differingPixels,baseDraws:baseStats.frameDraws,enhancedDraws:candidate.graphics.frameDraws,
+            uploads:baseStats.uploads,enhancedUploads:candidate.graphics.uploads,details:candidate.details,
+            nativeStateUnchanged:unchanged===JSON.stringify(session.snapshot()),error:gl.getError()});
+        }finally{view?.dispose();canvas.remove();}
+      }
+      return evidence;
+    });
+    for(const row of rows){
+      assert.equal(row.error,0,'real WebGL1 roadside graphics must not set a GL error');
+      assert.ok(row.details.postPairs>0&&row.details.vertices>0);
+      assert.ok(row.details.drawCalls>0,'new retained scene needs visible draws');
+      assert.ok(row.enhancedDraws>row.baseDraws,'new detail meshes must render in the accepted scene');
+      assert.equal(row.uploads,row.enhancedUploads,'presentation toggling cannot upload geometry per frame');
+      assert.equal(row.nativeStateUnchanged,true,'cosmetics cannot mutate the race simulation');
+    }
+    assert.ok(rows.some(row=>row.differingPixels>0),'new visual features must change real RGBA scene pixels');
+    assert.deepEqual(errors,[]);return {scope:'Original WebGL1 SwiftShader; actual full-RGBA visual change and exact native state preservation, no physical-GPU FPS claim',rows};
+  }finally{await context.close();}
+}
 export async function checkHorizonRace(browser,base){
   const context=await browser.newContext({viewport:{width:1440,height:1100},hasTouch:true}),page=await context.newPage(),errors=[],evidence={scope:'Packaged native Chromium/SwiftShader, actual DOM input handlers and fixed-step vehicle physics; no physical GPU, mobile or controller claim.'};page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(20000);await mkdir('browser-artifacts',{recursive:true});
   try{
@@ -214,6 +262,7 @@ export async function checkHorizonRace(browser,base){
   // A delayed older native resume must not stop a newer successful gesture.
   const delayed=await browser.newContext(),late=await delayed.newPage();try{await late.addInitScript(()=>{const Native=AudioContext;let first=true;globalThis.AudioContext=class extends Native{resume(){const result=super.resume();if(!first)return result;first=false;return new Promise(resolve=>{globalThis.releaseOldRaceResume=()=>result.then(resolve);});}};});await late.goto(base+'demos/horizon-lab/index.html');await ready(late);await late.locator('#race-sound').click();assert.equal((await snapshot(late)).audio.enabled,true);await late.locator('#race-pause').evaluate(b=>b.click());await late.evaluate(()=>dispatchEvent(new Event('blur')));await late.locator('#race-start').click();await ticks(late,20);assert.equal((await snapshot(late)).audio.active,true);await late.evaluate(()=>releaseOldRaceResume());await ticks(late,10);assert.equal((await snapshot(late)).audio.active,true,'stale native resume cannot cancel newer audio');assert.ok((await snapshot(late)).audio.started>0);await late.keyboard.press('Escape');assert.equal((await snapshot(late)).audio.voices,0);}finally{await delayed.close();}
   evidence.visibility=await checkHorizonVisibility(browser,base);
+  evidence.roadDetails=await checkHorizonRoadDetails(browser,base);
   evidence.reverse=await checkHorizonReverse(browser,base);
   evidence.failSafe=await checkHorizonSafetyRecovery(browser,base);await writeFile('browser-artifacts/horizon-race-diagnostics.json',JSON.stringify(evidence,null,2)+'\n');
   console.log('HORIZON race: bridge guardrails and recoverable rollover, real keyboard/touch reverse, safe direction changes and cancellation, canonical index car movement, scenery/return navigation, race alias, actual keyboard course completion, rival/checkpoints/finish, three cameras/classes, course/vehicle/audio editing, strict rollback/history/export cancellation, sound lifecycle, 320px touch, native context recovery, graphics fallback and offline startup PASS');
