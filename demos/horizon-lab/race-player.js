@@ -33,7 +33,7 @@ export function mountRacePlayer(value,{root=document,onChange=()=>{}}={}){
   function clear(){input.cancel();physicalInput={throttle:0,brake:0,steer:0};for(const [id,button] of pointers)if(button.hasPointerCapture(id))button.releasePointerCapture(id);pointers.clear();}
   function paint(){if(view&&!lost)try{view.draw(session);}catch(error){running=false;clock.setPaused(true);clear();audio.stop();view?.dispose();view=null;graphicsFailure(error);}hud();}
   function pause(message){running=false;audioTicket++;cancelAnimationFrame(frame);clock.setPaused(true);last=null;clear();audio.stop();paint();if(message)status(message);}
-  function advance(dt){physicalInput=session.phase==='countdown'?{throttle:0,brake:1,steer:0}:input.readVehicle(session.player);if(courseAssist&&session.phase==='running')physicalInput=raceAssistInput(session.road,session.player,project.vehicle,physicalInput,session.rows);session.step(physicalInput,dt);ticks++;const safety=session.phase==='running'?raceWorldSafety(session):null;
+  function advance(dt){physicalInput=session.phase==='countdown'?{throttle:0,brake:1,steer:0}:input.readVehicle(session.player);if(courseAssist&&session.phase==='running')physicalInput=raceAssistInput(session.road,session.player,project.vehicle,physicalInput,session.rows);session.step(physicalInput,dt);ticks++;const safety=session.phase==='running'&&session.progress.offRoad?raceWorldSafety(session):null;
     if(session.player.needsRecovery||safety){
       // Fail closed and reset to the accepted checkpoint once, before rendering
       // an overturned vehicle. Pause cancels held inputs; a fresh press resumes.
