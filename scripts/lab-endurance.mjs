@@ -255,6 +255,11 @@ async function main(){
           record.completed++;
           if(i<3)record.sample.push(w);
           record.last.push(w);if(record.last.length>8)record.last.shift();
+          if(i===0||i+1===plan.iterations){
+            const image=join(out,plan.group+'-'+lab+'-'+(i===0?'first':'last')+'.png');
+            await page.screenshot({path:image,fullPage:false,timeout:10000});
+            (record.screenshots??=[]).push(image);
+          }
           if((i+1)%250===0||i+1===plan.iterations){
             record.digestSHA256=hash.copy().digest('hex');
             record.elapsedMs=Math.round(performance.now()-started);
@@ -269,6 +274,8 @@ async function main(){
         await save(report);
       }catch(error){
         record.status='FAIL';record.error=String(error?.stack??error);
+        record.failedIteration=record.completed;
+        record.failedSeed=record.completed<plan.iterations?iterationSeed(plan.seed,record.completed):null;
         record.faults=faults.slice(-12);
         record.elapsedMs=Math.round(performance.now()-started);
         if(page&&!page.isClosed()){
