@@ -100,6 +100,22 @@ test('race view retains one mesh per gate across redraws and snaps short-distanc
   view.replace(project,world,checkpoints);assert.equal(view.gateRows.length,checkpoints.length);assert.equal(view.carRows.length,13);assert.equal(handles.size,13+checkpoints.length);const uploads=calls.uploads,gateHandles=view.gateRows.map(row=>row.handle);
   const model=createVehicle(project.vehicle),player=model.spawn({position:[0,8,-20]}),rival=model.spawn({position:[2,8,-22]}),session={player:frozen(player),rival:frozen(rival),progress:{checkpointIndex:0,recoveries:0}},before=structuredClone(session);view.draw(session);
   assert.equal(calls.draws.length,26+checkpoints.length);for(const handle of gateHandles)assert.equal(calls.draws.filter(value=>value===handle).length,1,'each decorated gate consumes one draw');
+  assert.equal(view.snapshot().visibleGates,checkpoints.length);
+  // Owner's apparent invisible wall: a completed overhead crossbar was still
+  // drawn when the chase camera had moved beneath/behind the first gate.
+  const passed={...session,progress:{checkpointIndex:1,recoveries:0}};
+  view.draw(passed);
+  assert.equal(view.snapshot().visibleGates,checkpoints.length-1);
+  assert.equal(calls.draws.length,26+checkpoints.length-1);
+  assert.equal(calls.draws.includes(gateHandles[0]),false,'completed gate cannot cover the camera');
+  for(const handle of gateHandles.slice(1))assert.equal(calls.draws.filter(value=>value===handle).length,1,'remaining gates stay visible');
+  const finished={...session,progress:{checkpointIndex:checkpoints.length,recoveries:0}};
+  view.draw(finished);
+  assert.equal(view.snapshot().visibleGates,0);
+  assert.equal(calls.draws.length,26,'no completed gate drawn after finish');
+  assert.ok(gateHandles.every(handle=>!calls.draws.includes(handle)));
+  view.draw(session);assert.equal(view.snapshot().visibleGates,checkpoints.length,'reset/replay restores the first gate');
+  assert.equal(calls.uploads,uploads,'checkpoint progress must not reupload retained geometry');
   const moving={...session,player:frozen({...structuredClone(player),tick:24,position:[0,8.3,-21]})};view.draw(moving);const paused=structuredClone(view.lastCamera);for(let i=0;i<5;i++){view.draw(moving);assert.deepEqual(view.lastCamera,paused);}assert.equal(calls.uploads,uploads);assert.deepEqual(session,before);
   const recovered={...moving,player:frozen({...structuredClone(player),tick:24}),progress:{checkpointIndex:0,recoveries:1}};assert.ok(Math.hypot(...sub(recovered.player.position,moving.player.position))<5);view.draw(recovered);assert.deepEqual(view.lastCamera,raceCamera(recovered.player,project.camera),'same-tick near recovery snaps without waiting for physics');view.draw(recovered);assert.deepEqual(view.lastCamera,raceCamera(recovered.player,project.camera));
   view.replace(project,world,checkpoints);assert.equal(calls.uploads,uploads);assert.deepEqual(view.gateRows.map(row=>row.handle),gateHandles,'unchanged authoring replacement reuses accepted meshes');
