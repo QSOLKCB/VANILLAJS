@@ -21,8 +21,10 @@ The game owns the fail-safe, not the generic `vehicle3d` solver.
 - `raceWorldSafety` observes the accepted vehicle state and queries
   `world.physics.sampleSurface`, which admits the exact displayed
   Float32 road/terrain triangles. It detects traversal behind the
-  starting boundary while off-road, a true under-terrain COM position,
-  and a bounded out-of-world fall.
+  starting boundary while off-road **and nearest to the start of the route**,
+  a true under-terrain COM position, and a bounded out-of-world fall.
+  The infinite starting plane is not applied to later course segments
+  that loop back behind it; those segments cannot incur a false penalty.
 - Terrain tests peel away higher road layers, so passing legitimately
   below a high bridge while **above the lower terrain** is not called
   underground. All successful checks are observational: no hidden

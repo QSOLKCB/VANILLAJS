@@ -37,7 +37,11 @@ export function raceWorldSafety(session,which='player'){
   if(!(len>0))throw RangeError('Degenerate start tangent');
   const behind=((x-first.center[0])*dx+(z-first.center[2])*dz)/len;
   const progress=which==='player'?session.progress:session.rivalProgress;
-  if(behind< -1&&progress.offRoad)return 'BEHIND_START';
+  // The start plane is not a global boundary: creator routes can loop back
+  // across it. Only a vehicle whose nearest route station is at the start
+  // has actually reversed out of the starting segment.
+  if(behind< -1&&progress.offRoad&&locateOnRoad(session.road,s.position,rows).distance<=rows[1].distance)
+    return 'BEHIND_START';
   // Road over terrain: peel away higher asphalt layers until the actual
   // triangulated terrain is found. A bridge underpass is not an anomaly.
   let ceiling=2000;
