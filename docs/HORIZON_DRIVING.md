@@ -16,8 +16,10 @@ There are no accounts, downloaded assets or package-install requirements.
 
 1. Leave the **Handling ground** and **Arcade** settings selected. The original
    study begins paused on a broad, flat pad.
-2. Choose **Start driving**. Hold W or ↑ to accelerate. A/D or ←/→ steer. S, ↓
-   or Space brakes; releasing throttle lets the drivetrain and drag slow the car.
+2. Choose **Start driving**. Hold W or ↑ to accelerate. A/D or ←/→ steer.
+   S/↓ brakes forward travel, then requests real reverse below 0.5 m/s.
+   Hold it to drive backwards. W/↑ transitions safely back to forward;
+   Space is an independent brake. There is also a Brake / reverse touch button.
 3. Make a gentle right turn. The car travels through world coordinates; it does
    not follow the painted line automatically. Watch position and steering change.
 4. Choose **Pause**, or press Escape. Continuous simulation and drawing stop.

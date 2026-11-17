@@ -23,6 +23,17 @@ test('driving input cancels held keys, ignores repeat-to-resume and combines ind
 test('driving input does not consume held controls while paused or interpret unrelated keys',()=>{
   const input=new DriveInput();assert.equal(input.keyDown('KeyP',false,true),false);input.keyDown('ArrowUp',false,false);input.cancel();input.keyDown('ArrowUp',true,true);assert.equal(input.read().throttle,0);input.keyUp('ArrowUp');input.keyDown('ArrowUp',false,true);assert.equal(input.read().throttle,1);input.keyDown('Space',false,true);assert.equal(input.read().brake,1);
 });
+test('Vehicle Dynamics workshop maps reverse into native gearbox, with an independent brake',()=>{
+  const input=new DriveInput({directional:true}),p=starterDriveProject(),
+    w=createDriveWorld(p.scenery,p.surfaces,p.course),car=createVehicle(p.vehicle);
+  let state=car.spawn({position:[0,4.703441176470588,-8]});
+  input.keyDown('KeyS',false,true);assert.equal(input.read().reverse,1);
+  for(let i=0;i<360;i++)state=car.step(state,input.readVehicle(state),w.physics);
+  assert.equal(state.gear,-1);assert.ok(state.position[2]>-7);
+  input.keyUp('KeyS');input.keyDown('Space',false,true);
+  assert.equal(input.readVehicle(state).brake,1);
+  input.cancel();assert.equal(input.read().reverse,0);
+});
 test('the drive trial advances identical physics at 30, 60 and 144 Hz presentation cadences',()=>{
   const p=starterDriveProject(),world=createDriveWorld(p.scenery,p.surfaces,p.course),model=createVehicle(p.vehicle);
   const run=hz=>{const clock=new FixedClock({step:VEHICLE_STEP,maxFrame:.1,maxSteps:12});let state=model.spawn({position:[0,4.703441176470588,-8]});for(let i=0;i<hz*3;i++)clock.advance(1/hz,dt=>{state=model.step(state,{throttle:1,steer:clock.ticks>=180?.15:0},world.physics,dt);});return {state,ticks:clock.ticks};};

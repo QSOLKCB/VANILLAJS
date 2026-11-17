@@ -89,8 +89,21 @@ async function checkHorizonSafetyRecovery(browser,base){
     const resumed=await snapshot(page);assert.equal(resumed.running,true);
     assert.equal(resumed.progress.recoveries,1);
     await page.keyboard.up('KeyW');await page.keyboard.press('Escape');
+    // Owner's reproduction: reverse beyond the initial road, fall, then
+    // drive under terrain. This must recover BEFORE under-map travel.
+    await page.locator('#race-restart').click();await page.locator('#race-start').click();
+    await page.keyboard.down('KeyS');await page.clock.runFor(5700);await page.keyboard.up('KeyS');
+    const below=await snapshot(page);
+    assert.equal(below.running,false,'reverse beyond start invokes safety pause');
+    assert.equal(below.progress.recoveries,1,'single penalty for this incident');
+    assert.equal(below.progress.checkpointIndex,0,'backwards movement cannot win a gate');
+    assert.equal(below.progress.penaltySeconds,project.race.recoveryPenaltySeconds);
+    assert.equal(below.player.gear,1,'recovery restores forward gear');
+    assert.equal(below.player.needsRecovery,false);
+    assert.match(await page.locator('#race-status').textContent(),/BEHIND_START/);
     assert.deepEqual(errors,[]);
-    return {recovered:recovered.player.position,penalty:recovered.progress.penaltySeconds,resumedTick:resumed.ticks};
+    return {recovered:recovered.player.position,penalty:recovered.progress.penaltySeconds,
+      resumedTick:resumed.ticks,reverseSafety:below.player.position};
   }finally{await context.close();}
 }
 export async function checkHorizonRace(browser,base){

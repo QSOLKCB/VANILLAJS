@@ -3,7 +3,7 @@
 import {FixedClock} from '../../modules/time/index.js';
 import {VEHICLE_STEP} from '../../modules/vehicle3d/index.js';
 import {serializeRaceProject} from './race-project.js';
-import {createRaceSession,raceDriverInput} from './race-model.js';
+import {createRaceSession,raceDriverInput,raceWorldSafety} from './race-model.js';
 import {RaceView} from './race-view.js';
 import {DriveInput} from './drive-input.js';
 import {raceAssistInput} from './race-assist.js';
@@ -33,10 +33,11 @@ export function mountRacePlayer(value,{root=document,onChange=()=>{}}={}){
   function clear(){input.cancel();physicalInput={throttle:0,brake:0,steer:0};for(const [id,button] of pointers)if(button.hasPointerCapture(id))button.releasePointerCapture(id);pointers.clear();}
   function paint(){if(view&&!lost)try{view.draw(session);}catch(error){running=false;clock.setPaused(true);clear();audio.stop();view?.dispose();view=null;graphicsFailure(error);}hud();}
   function pause(message){running=false;audioTicket++;cancelAnimationFrame(frame);clock.setPaused(true);last=null;clear();audio.stop();paint();if(message)status(message);}
-  function advance(dt){physicalInput=session.phase==='countdown'?{throttle:0,brake:1,steer:0}:input.readVehicle(session.player);if(courseAssist&&session.phase==='running')physicalInput=raceAssistInput(session.road,session.player,project.vehicle,physicalInput,session.rows);session.step(physicalInput,dt);ticks++;if(session.player.needsRecovery){
+  function advance(dt){physicalInput=session.phase==='countdown'?{throttle:0,brake:1,steer:0}:input.readVehicle(session.player);if(courseAssist&&session.phase==='running')physicalInput=raceAssistInput(session.road,session.player,project.vehicle,physicalInput,session.rows);session.step(physicalInput,dt);ticks++;const safety=session.phase==='running'&&session.progress.offRoad?raceWorldSafety(session):null;
+    if(session.player.needsRecovery||safety){
       // Fail closed and reset to the accepted checkpoint once, before rendering
       // an overturned vehicle. Pause cancels held inputs; a fresh press resumes.
-      if(session.recover()){safetyRecovered=true;pause('Vehicle overturned or left safe support. Recovered at the last checkpoint (+'+project.race.recoveryPenaltySeconds+'s). Release controls and resume.');}
+      if(session.recover()){safetyRecovered=true;pause('Unsafe driving state ('+(safety??'rollover')+'). Recovered at the last checkpoint (+'+project.race.recoveryPenaltySeconds+'s). Release controls and resume.');}
       else pause('Vehicle requires recovery. Restart to continue.');
       return;
     }if(session.phase==='finished')pause((session.result==='win'?'You reached the finish ahead of the rival.':'Race complete.')+' Time '+timeText(session.progress.finishTime)+'. Restart to try a different line.');}

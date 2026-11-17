@@ -6,7 +6,7 @@ import {createDriveWorld,createCourseScenery} from './drive-world.js';
 import {DriveView} from './drive-view.js';
 import {DriveInput} from './drive-input.js';
 const get=id=>document.getElementById(id),copy=value=>JSON.parse(JSON.stringify(value)),canvas=get('scene');
-const clock=new FixedClock({step:VEHICLE_STEP,maxFrame:.1,maxSteps:12}),input=new DriveInput();
+const clock=new FixedClock({step:VEHICLE_STEP,maxFrame:.1,maxSteps:12}),input=new DriveInput({directional:true});
 let project=starterDriveProject(),model,world,state,view=null,running=false,lost=false,disposed=false,frame=0,last=null,generation=0,pendingGear=null,ticks=0,barrierCount=0,history=[serializeDriveProject(project)],cursor=0;
 const status=(message,error=false)=>{get('status').textContent=message;get('status').classList.toggle('error',error);};
 function spawnPose(w,r){const p=w.spawn,offset=r.wheel.radius+r.suspension.restLength-r.mass*9.81/(4*r.suspension.spring);return {position:[p.position[0],p.position[1]+offset,p.position[2]],yaw:p.yaw,pitch:p.pitch,roll:p.roll};}
@@ -21,7 +21,7 @@ for(const name of wheelNames){const row=document.createElement('tr');for(let i=0
 function hud(){
   get('mode').textContent=lost?'GRAPHICS LOST':running?'DRIVING':'PAUSED';get('drive').textContent=ticks?'Resume driving':'Start driving';get('drive').disabled=running||lost||!view||state.needsRecovery;get('pause').disabled=!running;get('retry-graphics').disabled=lost;
   get('study-name').textContent=project.name.toUpperCase();get('course-title').textContent=({pad:'The handling ground',ramp:'The launch & landing strip',coast:'Aster Coast — the high road'})[project.course];
-  get('speed').textContent=String(Math.round(Math.hypot(...state.velocity)*3.6));get('gear-rpm').textContent=(state.gear<0?'R':state.gear===0?'N':state.gear)+' · '+Math.round(state.rpm)+' RPM';
+  get('speed').textContent=String(Math.round(Math.hypot(...state.velocity)*3.6));get('gear-rpm').textContent=(state.gear<0?'R':state.gear===0?'N':state.gear)+' · '+Math.round(state.rpm)+' RPM';if(document.activeElement!==get('gear'))get('gear').value=String(state.gear);
   get('contact-caption').textContent=state.wheels.filter(w=>w.grounded).length+'/4 contacts · '+(state.needsRecovery?'return to start required':running?'live physics':'paused');
   get('stat-ticks').textContent=String(ticks);get('stat-steer').textContent=(state.steering*180/Math.PI).toFixed(1)+'°';get('stat-shift').textContent=state.shiftRemaining.toFixed(2)+' s';get('stat-position').textContent=state.position.map(x=>x.toFixed(2)).join(', ');get('stat-collisions').textContent=String(barrierCount);get('stat-uploads').textContent=String(view?.snapshot().graphics?.uploads??'—');
   for(let i=0;i<4;i++){const w=state.wheels[i],cells=get('wheel-rows').children[i].children;cells[1].textContent=w.grounded?'GROUND':'AIR';cells[1].title=w.surfaceId??'No support surface';cells[2].textContent=w.compression.toFixed(3);cells[3].textContent=w.load.toFixed(0);cells[4].textContent=w.slip.toFixed(2);}
@@ -30,9 +30,9 @@ function hud(){
 }
 function clear(){input.cancel();pendingGear=null;for(const button of document.querySelectorAll('[data-drive]'))for(const id of activePointers.keys())if(button.hasPointerCapture(id))button.releasePointerCapture(id);activePointers.clear();}
 function pause(message){running=false;cancelAnimationFrame(frame);clock.setPaused(true);last=null;clear();paint();if(message)status(message);}
-function advance(dt){const controls=input.read();if(pendingGear!==null){controls.gear=pendingGear;pendingGear=null;}state=model.step(state,controls,world.physics,dt);ticks++;if(state.contacts.length)barrierCount++;if(state.needsRecovery){pause('The bounded simulation stopped. Return to start to recover.');}}
+function advance(dt){const controls=input.readVehicle(state);if(pendingGear!==null){controls.gear=pendingGear;pendingGear=null;}state=model.step(state,controls,world.physics,dt);ticks++;if(state.contacts.length)barrierCount++;if(state.needsRecovery){pause('The bounded simulation stopped. Return to start to recover.');}}
 function animate(now){if(!running||disposed)return;const elapsed=last===null?0:Math.max(0,(now-last)/1000);last=now;try{clock.advance(elapsed,advance);}catch(error){pause('Simulation paused; accepted data retained: '+error.message);status('Simulation paused: '+error.message,true);}paint();if(running)frame=requestAnimationFrame(animate);}
-function start(){if(running||lost||!view||state.needsRecovery)return;clear();running=true;clock.setPaused(false);last=null;canvas.scrollIntoView({block:'center',behavior:'instant'});canvas.focus({preventScroll:true});status('Driving. Try a steady turn, release throttle, then brake. Escape pauses.');hud();frame=requestAnimationFrame(animate);}
+function start(){if(running||lost||!view||state.needsRecovery)return;clear();running=true;clock.setPaused(false);last=null;canvas.scrollIntoView({block:'center',behavior:'instant'});canvas.focus({preventScroll:true});status('Driving. S/Down brakes then reverses at low speed; W/Up returns forward; Space brakes independently. Escape pauses.');hud();frame=requestAnimationFrame(animate);}
 function refresh(){
   const r=project.vehicle;get('name').value=project.name;get('course').value=project.course;get('quality').value=project.scenery.profile;
   for(const [id,value] of Object.entries({mass:r.mass,grip:r.tyres.grip,'engine-brake':r.engine.engineBrake,'final-drive':r.gearbox.finalDrive,steering:r.steering.maxAngle,'speed-reduction':r.steering.speedReduction,spring:r.suspension.spring,damper:r.suspension.damper,...project.surfaces}))get(id).value=String(value);
