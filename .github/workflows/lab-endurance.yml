@@ -1,0 +1,73 @@
+name: Lab Endurance — 1000 Playwright cycles per lab
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'Replayable uint32 seed for 1000 browser cycles per lab'
+        type: string
+        required: false
+        default: '7337'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  headless-endurance:
+    name: 1000 cycles / ${{ matrix.group }} labs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [racing, combat, creator, visual]
+    concurrency:
+      group: lab-endurance-${{ github.ref }}-${{ matrix.group }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Verify strict endurance inventory and negative controls
+        run: node --test tests/lab-endurance-plan.test.js
+      - name: Build complete original offline package (existing gates remain separate)
+        run: |
+          node scripts/check.js
+          node scripts/build.js
+          node scripts/verify-offline.js
+      - name: Configure isolated pinned Chromium
+        run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
+      - name: Restore existing pinned headless browser cache
+        id: playwright-tooling
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ runner.temp }}/flight-browser
+          key: flight-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24.04-node22-playwright1.64.0-only-shell-v1
+      - name: Install Playwright 1.64.0 outside repo on cache miss (no apt)
+        if: steps.playwright-tooling.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install \
+            --prefix "$RUNNER_TEMP/flight-browser" \
+            --ignore-scripts --no-save --package-lock=false --no-audit --no-fund \
+            playwright@1.64.0
+          node "$RUNNER_TEMP/flight-browser/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Prove the exact pinned Playwright / Chromium shell launches
+        run: node scripts/flight-browser-preflight.mjs
+      - name: Run 1000 actual browser interaction cycles per selected lab
+        env:
+          NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
+          LAB_ENDURANCE_SEED: ${{ inputs.seed || '7337' }}
+        run: |
+          node scripts/lab-endurance.mjs \
+            "--group=${{ matrix.group }}" --iterations=1000 "--seed=$LAB_ENDURANCE_SEED"
+      - name: Preserve bounded evidence and first-failure screenshot
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: lab-endurance-${{ matrix.group }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: browser-artifacts/lab-endurance/
+          if-no-files-found: warn
+          retention-days: 14
