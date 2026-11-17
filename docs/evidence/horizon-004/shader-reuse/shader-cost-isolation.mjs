@@ -1,0 +1,28 @@
+import {chromium} from '/home/trent/.local/share/qsol/browser-tools/node_modules/playwright/index.mjs';
+import {createServer} from 'node:http';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {resolve,sep,extname} from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+const root='/home/trent/vanillajs-horizon-004',base='f263d43627970d8c3cfb2d54eed8fdeed2e7c457',out=process.argv[2];assert.ok(out,'New empty output directory required');await mkdir(out);
+const paths=['modules/render-lit/index.js','modules/scenic3d/index.js'];
+const old=Object.fromEntries(paths.map(path=>[path,execFileSync('git',['show',base+':'+path],{cwd:root,encoding:'utf8'})]));
+const fresh=Object.fromEntries(await Promise.all(paths.map(async path=>[path,await readFile(resolve(root,path),'utf8')])));
+const hashes=Object.fromEntries(paths.map(path=>[path,{before:createHash('sha256').update(old[path]).digest('hex'),candidate:createHash('sha256').update(fresh[path]).digest('hex')}]));
+const shader=fresh[paths[0]],oldShader=old[paths[0]];
+const smoothStart=shader.indexOf('float softNoise('),smoothEnd=shader.indexOf('\nvec3 reflectedEnvironment',smoothStart);
+const vectorShader=shader.slice(0,smoothStart)+`float softNoise(vec2 p){vec2 a=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);vec4 q=fract(mod(vec4(a,a+1.0),127.0)*vec4(0.173,0.237,0.173,0.237));vec4 h=fract((q.xzxz+0.37)*(q.yyww+0.61)*31.7);vec4 g=fract(h*17.3);return mix(mix(g.x,g.y,f.x),mix(g.z,g.w,f.x),f.y);}`+shader.slice(smoothEnd);
+const noNoise=shader.slice(0,shader.indexOf('  vec2 tex=texcoord*patternScale;'))+'  float variation=1.0;\n'+shader.slice(shader.indexOf('  base*=variation;'));
+const lightStart='  vec3 halfDirection=',lightEnd='  if(pattern>4.5)';
+const oldLighting=shader.slice(0,shader.indexOf(lightStart))+oldShader.slice(oldShader.indexOf(lightStart),oldShader.indexOf(lightEnd))+shader.slice(shader.indexOf(lightEnd));
+const variants={baseline:{renderer:oldShader,geometry:fresh[paths[1]]},current:{renderer:shader,geometry:fresh[paths[1]]},vector:{renderer:vectorShader,geometry:fresh[paths[1]]},noNoiseDiagnostic:{renderer:noNoise,geometry:fresh[paths[1]]},oldLightingDiagnostic:{renderer:oldLighting,geometry:fresh[paths[1]]}};
+for(const [name,v] of Object.entries(variants))await writeFile(resolve(out,name+'-renderer.js'),v.renderer);
+
+const server=createServer(async(req,res)=>{try{const path=decodeURIComponent(new URL(req.url,'http://localhost').pathname),parts=path.split('/'),variant=variants[parts[1]],local=parts.slice(2).join('/');if(!variant)throw Error('variant');let bytes,type;
+if(local==='index.html'){bytes='<!doctype html><html><body style="margin:0"><canvas id="scene" style="width:992px;height:838px"></canvas></body></html>';type='text/html';}
+else{const file=resolve(root,local);if(!file.startsWith(root+sep))throw Error('path');bytes=local===paths[0]?variant.renderer:local===paths[1]?variant.geometry:await readFile(file);type=({'.js':'text/javascript','.css':'text/css','.json':'application/json','.html':'text/html'})[extname(file)]||'application/octet-stream';}
+res.writeHead(200,{'content-type':type});res.end(bytes);}catch{res.writeHead(404);res.end();}});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+const browser=await chromium.launch({headless:true,executablePath:'/home/trent/.cache/ms-playwright/chromium_headless_shell-1254/chrome-headless-shell-linux64/chrome-headless-shell',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const result={kind:'disposable source-tree shader/geometry isolation; not packaged acceptance',base,hashes,environment:'Chromium SwiftShader; real wall-clock draw plus one-pixel synchronous readback, not physical GPU FPS',runs:{}};
+try{for(const profile of ['high','low'])for(const variant of Object.keys(variants)){const page=await browser.newPage({viewport:{width:992,height:838},deviceScaleFactor:1});try{await page.goto(`http://127.0.0.1:${server.address().port}/${variant}/index.html`);const row=await page.evaluate(async({variant,profile})=>{const {HorizonView}=await import('./demos/horizon-lab/view.js'),{starterHorizonProject}=await import('./demos/horizon-lab/project.js');const project=structuredClone(starterHorizonProject());project.scenery.profile=profile;const view=new HorizonView(document.querySelector('canvas'),project),gl=view.renderer.gl,pixel=new Uint8Array(4),samples=[];for(let i=0;i<22;i++){const start=performance.now();view.draw();gl.readPixels(0,0,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);if(i>=4)samples.push(performance.now()-start);}const sorted=[...samples].sort((a,b)=>a-b);const pixels=new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4);view.draw();gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,pixels);const pixelHash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',pixels))).map(v=>v.toString(16).padStart(2,'0')).join('');return {variant,profile,pixelHash,median:sorted[Math.floor(sorted.length/2)],p95:sorted[Math.ceil(sorted.length*.95)-1],samples,stats:view.snapshot(),canvas:{width:gl.drawingBufferWidth,height:gl.drawingBufferHeight},error:gl.getError()};},{variant,profile});assert.equal(row.error,0);await page.locator('canvas').screenshot({path:resolve(out,variant+'-'+profile+'.png')});result.runs[variant+'-'+profile]=row;console.log(variant,profile,row.median,row.stats.graphics.vertices,row.pixelHash);}finally{await page.close();}}await writeFile(resolve(out,'results.json'),JSON.stringify(result,null,2)+'\n');}finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

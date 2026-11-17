@@ -1,0 +1,10 @@
+.github/workflows: 24 historical files; zero tracked changes vs f263d43627970d8c3cfb2d54eed8fdeed2e7c457
+evidence: 807 historical files; zero tracked changes vs f263d43627970d8c3cfb2d54eed8fdeed2e7c457
+docs/evidence: 229 historical files; zero tracked changes vs f263d43627970d8c3cfb2d54eed8fdeed2e7c457
+New verification/evidence files: 15, all in docs/evidence/horizon-004/
+Flight workflow exact bytes preserved; 35-minute verify timeout, reviewed-main staging/deployment, verify dependency, permissions, action pins and environment unchanged
+Reviewed/current flight workflow SHA-256: e6a1e69f4b44c06c23deeeb4126af32b18ff6e26efbef0a7dee89599ac80e9c7
+ALIEN-MATH-006 historical commit available locally: ce7e38eb3c7412407a3ba2bc472120b589e6eb9e
+Historical workflow Git blob: 544edab10a462991540b6192acf21b244e75bd42
+Historical workflow SHA-256: dee8b35061e6768a76aad700e30486f1d13a4cfcfcdaaef16f1dcf5ef7f0f4b9
+No browser, network dispatch, build, source edit or pin refresh performed by this audit.

@@ -1,0 +1,22 @@
+{
+  "url": "https://qsolkcb.github.io/VANILLAJS/demos/horizon-lab/index.html",
+  "entry": "Make the road.\nOwn the drive.",
+  "start": "Resume race ↗",
+  "before": [
+    -2.303497234280458,
+    4.589422202265761,
+    -11.94008519488485
+  ],
+  "after": [
+    -2.3421778016836123,
+    4.575985427029726,
+    -13.23791598306728
+  ],
+  "velocity": [
+    -0.08993644552461927,
+    -0.030539756831855086,
+    -3.0138218766668716
+  ],
+  "browser": "158.0.8127.18",
+  "scope": "Published reviewed-main acceptance; fresh context, real keyboard and physics, SwiftShader"
+}

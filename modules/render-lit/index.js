@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// HORIZON-001: optional native WebGL1 materials. Existing Renderer is unchanged.
+// HORIZON-004: optional native WebGL1 materials. Existing Renderer is unchanged.
 import {perspective,viewMatrix,multiplyMatrices,rotate} from '../math/index.js';
 
 export const LIT_VERTEX_FLOATS=11;
@@ -70,31 +70,61 @@ precision mediump float;
 const fragment=precision+`varying vec3 world;varying vec3 surfaceNormal;varying vec3 tint;varying vec2 texcoord;
 uniform vec3 eye;uniform vec3 sunDirection;uniform vec3 sunColor;uniform vec3 skyTop;uniform vec3 skyBottom;uniform vec3 fogColor;
 uniform vec3 baseColor;uniform float ambient;uniform float roughness;uniform float metalness;uniform float opacity;uniform float emission;uniform float pattern;uniform float patternScale;uniform float fogDensity;uniform float exposure;uniform float detail;
-float grain(vec2 p){p=mod(floor(p),128.0);return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+// Bounded arithmetic, including mediump fallback: no large sine hash products.
+float grain(vec2 p){vec2 q=fract(mod(p,127.0)*vec2(0.173,0.237));float h=fract((q.x+0.37)*(q.y+0.61)*31.7);return fract(h*17.3);}
+// Four corners share the same two lattice coordinates on each axis.
+float softNoise(vec2 p){vec2 a=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);vec4 q=fract(mod(vec4(a,a+1.0),127.0)*vec4(0.173,0.237,0.173,0.237));vec4 h=fract((q.xzxz+0.37)*(q.yyww+0.61)*31.7);vec4 g=fract(h*17.3);return mix(mix(g.x,g.y,f.x),mix(g.z,g.w,f.x),f.y);}
+vec3 reflectedEnvironment(vec3 direction,float finish){
+  float height=direction.y;vec3 sky=mix(skyBottom,skyTop,smoothstep(0.03,0.85,height));
+  vec3 ground=skyBottom*vec3(0.22,0.25,0.23);
+  vec3 environment=mix(ground,sky,smoothstep(-0.18,0.06,height));
+  // A broad analytic horizon reflection reveals curvature without scene textures.
+  float horizon=1.0-smoothstep(0.0,0.22,abs(height));
+  return environment+skyBottom*horizon*0.16*finish;
+}
 void main(){
   vec3 n=normalize(surfaceNormal);vec3 delta=eye-world;float distanceToEye=length(delta);vec3 v=normalize(delta+vec3(0.00001));
   vec3 light=normalize(sunDirection);float diffuse=max(dot(n,light),0.0);vec3 base=tint*baseColor;
   vec2 tex=texcoord*patternScale;float variation=1.0;
-  if(pattern>0.5&&pattern<1.5){variation=0.82+0.18*grain(tex*48.0);if(detail>0.5)variation*=0.94+0.06*grain(tex*173.0);}
-  if(pattern>1.5&&pattern<2.5){float mortar=step(0.055,fract(tex.x))*step(0.07,fract(tex.y));variation=mix(0.57,0.85+0.15*grain(tex*6.0),mortar);}
-  if(pattern>2.5&&pattern<3.5)variation=0.76+0.24*grain(tex*25.0);
+  if(pattern>0.5&&pattern<1.5){
+    variation=0.92+0.08*softNoise(tex*2.7);
+    if(detail>0.5)variation+=(grain(floor(tex*113.0))-0.5)*0.035*(1.0-smoothstep(8.0,55.0,distanceToEye));
+  }
+  if(pattern>1.5&&pattern<2.5){
+    vec2 brick=tex;brick.x+=floor(brick.y)*0.5;vec2 edge=min(fract(brick),1.0-fract(brick));
+    float mortar=smoothstep(0.015,0.055,min(edge.x,edge.y));variation=mix(0.72,0.92+0.08*softNoise(tex*3.0),mortar);
+  }
+  if(pattern>2.5&&pattern<3.5){
+    float field=softNoise(tex*0.55);variation=0.86+0.20*field;
+    if(detail>0.5)variation+=(softNoise(tex*3.7+vec2(17.2,9.4))-0.5)*0.055;
+    // Continuous earth/vegetation tones, with a subtle dry tint on steep slopes.
+    base*=mix(vec3(0.91,0.97,0.88),vec3(1.07,1.025,0.94),field);
+    base=mix(base,base*vec3(1.11,0.91,0.82),smoothstep(0.35,0.8,1.0-abs(n.y))*0.28);
+  }
   base*=variation;
   vec3 halfDirection=normalize(light+v+vec3(0.00001));float power=mix(160.0,4.0,roughness*roughness);
   float spec=pow(max(dot(n,halfDirection),0.0),power)*diffuse*(1.0-roughness*0.65);
   float fresnel=pow(1.0-max(dot(n,v),0.0),5.0);
-  vec3 reflected=reflect(-v,n);vec3 environment=mix(skyBottom,skyTop,smoothstep(-0.15,0.8,reflected.y));
-  vec3 finish=mix(vec3(0.04),base,metalness);
-  vec3 rgb=base*(ambient+diffuse*sunColor*(1.0-metalness*0.45))+spec*sunColor*mix(vec3(0.4),base,metalness);
-  rgb+=environment*finish*(0.18+fresnel*(1.0-roughness*0.6));rgb+=base*emission;
+  vec3 reflected=reflect(-v,n);vec3 environment=reflectedEnvironment(reflected,1.0-roughness);
+  vec3 finish=mix(vec3(0.04),base,metalness);finish=mix(finish,vec3(1.0),fresnel);
+  vec3 ambientLight=ambient*mix(vec3(0.72,0.70,0.66),vec3(1.02,1.04,1.08),n.y*0.5+0.5);
+  vec3 rgb=base*(ambientLight+diffuse*sunColor*(1.0-metalness*0.50))+spec*sunColor*mix(vec3(0.4),base,metalness);
+  rgb+=environment*finish*(0.25+(1.0-roughness)*0.42);
+  if(roughness<0.6&&pattern<0.5){
+    float coat=(1.0-roughness)*(1.0-roughness);
+    rgb+=environment*(0.025+0.18*fresnel)*coat;
+    if(detail>0.5)rgb+=sunColor*pow(max(dot(n,halfDirection),0.0),192.0)*diffuse*coat*0.15;
+  }
+  rgb+=base*emission;
   float alpha=opacity;
-  if(pattern>3.5&&pattern<4.5){rgb=mix(base*(ambient+diffuse*0.4),environment,0.35+0.55*fresnel)+spec*sunColor;alpha=opacity+(1.0-opacity)*fresnel*0.45;}
+  if(pattern>3.5&&pattern<4.5){rgb=mix(base*(ambientLight+diffuse*0.25),environment,0.46+0.48*fresnel)+spec*sunColor;alpha=opacity+(1.0-opacity)*fresnel*0.45;}
   if(pattern>4.5){float radius=length((texcoord-vec2(0.5))*2.0);alpha*=1.0-smoothstep(0.15,1.0,radius);rgb=base;}
   float fogAmount=1.0-exp(-distanceToEye*fogDensity);rgb=mix(rgb,fogColor,fogAmount);
   gl_FragColor=vec4(clamp(rgb*exposure,0.0,1.0),alpha);
 }`;
 const skyVertex=`attribute vec2 position;varying vec2 screen;void main(){screen=position;gl_Position=vec4(position,0.999,1.0);}`;
 const skyFragment=precision+`varying vec2 screen;uniform vec3 right;uniform vec3 up;uniform vec3 back;uniform float aspect;uniform float tangent;uniform vec3 skyTop;uniform vec3 skyBottom;uniform vec3 sunDirection;uniform vec3 sunColor;uniform float exposure;
-void main(){vec3 direction=normalize(right*screen.x*aspect*tangent+up*screen.y*tangent-back);float height=smoothstep(-0.12,0.75,direction.y);vec3 sky=mix(skyBottom,skyTop,height);float sun=max(dot(direction,normalize(sunDirection)),0.0);sky+=sunColor*(pow(sun,64.0)*0.12+smoothstep(0.9992,0.9997,sun)*0.9);gl_FragColor=vec4(clamp(sky*exposure,0.0,1.0),1.0);}`;
+void main(){vec3 direction=normalize(right*screen.x*aspect*tangent+up*screen.y*tangent-back);float height=smoothstep(-0.08,0.78,direction.y);vec3 sky=mix(skyBottom,skyTop,height);float sun=max(dot(direction,normalize(sunDirection)),0.0);float haze=pow(sun,12.0)*0.045*(1.0-height);sky+=sunColor*(haze+pow(sun,64.0)*0.10+smoothstep(0.9992,0.9997,sun)*0.9);gl_FragColor=vec4(clamp(sky*exposure,0.0,1.0),1.0);}`;
 function program(gl,vsSource,fsSource){
   let vs=null,fs=null,p=null;
   const shader=(type,source)=>{const s=gl.createShader(type);if(!s)throw Error('Shader allocation failed');try{gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error('Shader compile failed: '+gl.getShaderInfoLog(s));return s;}catch(error){gl.deleteShader(s);throw error;}};

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import {LitRenderer} from '../../modules/render-lit/index.js';
+import {LitRenderer,LIT_PROFILES} from '../../modules/render-lit/index.js';
 import {buildScenicWorld,buildVehicleVisual,vehicleDraws,createRoadShadow} from '../../modules/scenic3d/index.js';
 import {quatMultiply} from '../../modules/math/index.js';
 const identity=new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]);
@@ -14,15 +14,18 @@ export class HorizonView{
   constructor(canvas,project){this.canvas=canvas;this.renderer=null;this.worldRows=[];this.carRows=[];this.shadow=null;this.world=null;this.vehicle=null;this.project=null;this.frames=0;this.preparations=0;this.mode='hero';this.orbit=0;this.tilt=0;this.zoom=1;this.replace(project);}
   replace(project){
     const sceneryKey=JSON.stringify(project.scenery),vehicleKey=JSON.stringify([project.vehicle.classId,project.vehicle.paint,project.scenery.profile]);
-    const newWorld=sceneryKey!==this.sceneryKey,newCar=vehicleKey!==this.vehicleKey,newRenderer=!this.renderer||this.project?.scenery.profile!==project.scenery.profile;
+    const newWorld=sceneryKey!==this.sceneryKey,newCar=vehicleKey!==this.vehicleKey;let newRenderer=!this.renderer||this.project?.scenery.profile!==project.scenery.profile;
     const world=newWorld?buildScenicWorld(project.scenery):this.world,vehicle=newCar?buildVehicleVisual(project.vehicle.classId,{paint:project.vehicle.paint,profile:project.scenery.profile}):this.vehicle;
+    const shadowBatch=newWorld||newRenderer?{id:'vehicle-contact-shadow',material:{color:[.035,.045,.05],roughness:1,metalness:0,opacity:.55,emission:0,pattern:'shadow',patternScale:1},vertices:createRoadShadow(world.road,{distance:carDistance(world.road),width:3.4,length:6,offset:.035})}:this.shadow;
+    // Keep accepted resources alive until the complete replacement succeeds. If
+    // both versions exceed one renderer's staging budget, own a new renderer.
+    if(!newRenderer){const staged=[...(newWorld?[...world.batches,shadowBatch]:[]),...(newCar?vehicle.parts:[])],held=this.renderer.stats(),limits=LIT_PROFILES[project.scenery.profile];newRenderer=held.vertices+staged.reduce((n,row)=>n+row.vertices.length/11,0)>limits.maxVertices||held.meshes+staged.length>limits.maxMeshes;}
     let renderer=this.renderer,worldRows=this.worldRows,carRows=this.carRows,shadow=this.shadow;const created=[];
     const mesh=batch=>{const row={...batch,handle:renderer.mesh(batch.vertices),center:center(batch.vertices)};created.push(row);return row;};
     try{
       if(newRenderer)renderer=new LitRenderer(this.canvas,{profile:project.scenery.profile,pixelRatio:Math.min(globalThis.devicePixelRatio||1,2)});
       if(newWorld||newRenderer){
-        worldRows=world.batches.map(mesh);const sample=world.road.sample(carDistance(world.road));
-        shadow=mesh({id:'vehicle-contact-shadow',material:{color:[.035,.045,.05],roughness:1,metalness:0,opacity:.55,emission:0,pattern:'shadow',patternScale:1},vertices:createRoadShadow(world.road,{distance:sample.distance,width:3.4,length:6,offset:.035})});
+        worldRows=world.batches.map(mesh);shadow=mesh(shadowBatch);
       }
       if(newCar||newRenderer)carRows=vehicle.parts.map(mesh);
     }catch(error){for(const row of created)renderer?.deleteMesh(row.handle);if(newRenderer&&renderer!==this.renderer)renderer?.dispose();throw error;}

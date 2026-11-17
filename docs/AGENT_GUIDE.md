@@ -180,6 +180,27 @@ Preserve current
 Racing Lab and Track Foundry v1, all existing rendering callers and frozen
 verification evidence. Games2 remains unchanged and adoption remains separate.
 
+HORIZON-004 is the final pre-release visual/driving polish gate for v2.9.0. Preserve
+existing recipe versions, vehicle dimensions and exact road/terrain contact
+triangles while improving decorative geometry. Smooth visual normals, analytic
+paint/glass reflections and decorative tunnel fixtures do not add physics or
+scene-aware lighting. Keep profile vertex/storage/draw budgets explicit; verify
+actual matched-camera images and native pixels separately from numerical tests.
+
+Race Foundry opts into the demo-owned `DriveInput({directional:true})` in
+`demos/horizon-lab/drive-input.js`. S/down or the Brake / reverse touch control
+brakes to at most 0.5 m/s total speed before requesting `gear:-1`; W/up safely
+requests first gear for forward travel. Both wait for the real gearbox shift
+delay. Space remains independent braking, and five touch buttons expose both
+directions, braking and steering. `directionalDriveControls` translates bounded
+intent to existing `vehicle3d` inputs; it is not a public engine export. Never
+replace the gearbox with velocity sign changes or renderer movement. Preserve
+the default Vehicle Dynamics Workshop's manual input contract, free automatic
+forward shifts, telemetry-driven wheels/audio, HUD R and fresh-input cancellation.
+Run `tests/horizon-reverse.test.js` and packaged race/portable tests after changing
+these adapters, including safe return to forward driving and reverse checkpoint
+rejection.
+
 Run the vehicle, independent reference, render/scenery/lab tests and required
 repository checks. Preserve positive-right steering and world -Z forward, explicit
 COM/visual-origin conversion, terrain/bridge separation and fixed-step input

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import {LitRenderer} from '../../modules/render-lit/index.js';
+import {LitRenderer,LIT_PROFILES} from '../../modules/render-lit/index.js';
 import {buildVehicleVisual,vehicleDraws} from '../../modules/scenic3d/index.js';
 import {rotate,quatMultiply} from '../../modules/math/index.js';
 const identity=new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]);
@@ -11,13 +11,15 @@ const palettes={coast:{top:[.16,.40,.57],bottom:[.80,.85,.75],fog:[.64,.76,.75]}
 export class DriveView{
   constructor(canvas,project,world){this.canvas=canvas;this.renderer=null;this.rows=[];this.carRows=[];this.mode='chase';this.frames=0;this.replace(project,world);}
   replace(project,world){
-    const worldKey=JSON.stringify([project.scenery,project.course]),changed=worldKey!==this.worldKey,renew=!this.renderer||this.project?.scenery.profile!==project.scenery.profile;
-    let renderer=this.renderer,rows=this.rows,carRows=this.carRows,visual=this.visual;const created=[];
+    const worldKey=JSON.stringify([project.scenery,project.course]),changed=worldKey!==this.worldKey;let renew=!this.renderer||this.project?.scenery.profile!==project.scenery.profile;
+    const visual=renew?buildVehicleVisual('sport',{profile:project.scenery.profile,paint:[.88,.33,.13]}):this.visual;
+    if(!renew&&changed){const held=this.renderer.stats(),limits=LIT_PROFILES[project.scenery.profile];renew=held.vertices+world.batches.reduce((n,row)=>n+row.vertices.length/11,0)>limits.maxVertices||held.meshes+world.batches.length>limits.maxMeshes;}
+    let renderer=this.renderer,rows=this.rows,carRows=this.carRows;const created=[];
     const mesh=batch=>{const row={...batch,handle:renderer.mesh(batch.vertices),center:center(batch.vertices)};created.push(row);return row;};
     try{
       if(renew)renderer=new LitRenderer(this.canvas,{profile:project.scenery.profile,pixelRatio:Math.min(globalThis.devicePixelRatio||1,2)});
       if(renew||changed)rows=world.batches.map(mesh);
-      if(renew){visual=buildVehicleVisual('sport',{profile:project.scenery.profile,paint:[.88,.33,.13]});carRows=visual.parts.map(mesh);}
+      if(renew)carRows=visual.parts.map(mesh);
     }catch(error){for(const row of created)renderer?.deleteMesh(row.handle);if(renew&&renderer!==this.renderer)renderer?.dispose();throw error;}
     if(renew)this.renderer?.dispose();else if(changed)for(const row of this.rows)renderer.deleteMesh(row.handle);
     Object.assign(this,{renderer,rows,carRows,visual,world,project,worldKey,carMap:new Map(carRows.map(row=>[row.id,row]))});

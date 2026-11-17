@@ -1,0 +1,769 @@
+{
+  "kind": "disposable source-tree shader/geometry isolation; not packaged acceptance",
+  "base": "f263d43627970d8c3cfb2d54eed8fdeed2e7c457",
+  "hashes": {
+    "modules/render-lit/index.js": {
+      "before": "a6aa9266f3195e082ea0248321c44d759abaf60155dd81256d0f51091bfb8863",
+      "candidate": "864663e095d298e456dabb2b5ab4e1a874822cb2b7cf0c5758d903577cf0ec76"
+    },
+    "modules/scenic3d/index.js": {
+      "before": "ff7a8193648e807a72c4017d4b1f129f77d4e731646e0d29928e6db603d649c1",
+      "candidate": "dfed00913da27f97806c39ddc5d472de1d9382994fed51101048b24d0775a30e"
+    }
+  },
+  "environment": "Chromium SwiftShader; real wall-clock draw plus one-pixel synchronous readback, not physical GPU FPS",
+  "runs": {
+    "before-high": {
+      "variant": "before",
+      "profile": "high",
+      "median": 29.599999994039536,
+      "p95": 31.099999994039536,
+      "samples": [
+        29.100000008940697,
+        30.700000002980232,
+        30.200000002980232,
+        29.599999994039536,
+        30.400000005960464,
+        31.099999994039536,
+        31.099999994039536,
+        28.200000002980232,
+        28.5,
+        28.299999997019768,
+        29.099999994039536,
+        27.100000008940697,
+        27.700000002980232,
+        28.399999991059303,
+        30,
+        28.200000002980232,
+        29.900000005960464,
+        31.099999994039536
+      ],
+      "stats": {
+        "frames": 22,
+        "preparations": 1,
+        "cameraMode": "hero",
+        "camera": {
+          "position": [
+            -0.11263228028464844,
+            9.616104970772561,
+            -63.01479816343726
+          ],
+          "target": [
+            -4.626433483156315,
+            6.96610497077256,
+            -55.69457967619562
+          ]
+        },
+        "road": {
+          "distance": 56.32726451387862,
+          "lateral": 0,
+          "surfaceId": "span-1",
+          "surface": "asphalt",
+          "structure": "ground",
+          "segment": 1,
+          "triangle": 0,
+          "position": [
+            -4.626433483156315,
+            6.11610497077256,
+            -55.69457967619562
+          ],
+          "normal": [
+            -0.030474667552229443,
+            0.9967521076018983,
+            0.07454213995288106
+          ],
+          "yaw": 0.2974486603848161,
+          "pitch": 0.06245900213685864,
+          "roll": 0.051005505970157135
+        },
+        "world": {
+          "vertices": 43104,
+          "batches": 11,
+          "roadTriangles": 192,
+          "terrainCells": 3136,
+          "trees": 83
+        },
+        "vehicle": {
+          "vertices": 3222,
+          "parts": 13
+        },
+        "graphics": {
+          "frames": 22,
+          "frameDraws": 25,
+          "totalDraws": 550,
+          "uploads": 25,
+          "skippedIdentical": 0,
+          "vertices": 46374,
+          "bytes": 2040456,
+          "meshes": 25,
+          "profile": "high",
+          "lost": false,
+          "disposed": false
+        }
+      },
+      "canvas": {
+        "width": 992,
+        "height": 838
+      },
+      "error": 0
+    },
+    "shaderOnly-high": {
+      "variant": "shaderOnly",
+      "profile": "high",
+      "median": 51.70000000298023,
+      "p95": 55.80000001192093,
+      "samples": [
+        55.80000001192093,
+        50.69999998807907,
+        54.1000000089407,
+        52.29999999701977,
+        52,
+        52.29999999701977,
+        50.20000000298023,
+        51,
+        51.70000000298023,
+        52.8999999910593,
+        54.20000000298023,
+        48.400000005960464,
+        51.29999999701977,
+        50.900000005960464,
+        50,
+        50,
+        48.599999994039536,
+        52.5
+      ],
+      "stats": {
+        "frames": 22,
+        "preparations": 1,
+        "cameraMode": "hero",
+        "camera": {
+          "position": [
+            -0.11263228028464844,
+            9.616104970772561,
+            -63.01479816343726
+          ],
+          "target": [
+            -4.626433483156315,
+            6.96610497077256,
+            -55.69457967619562
+          ]
+        },
+        "road": {
+          "distance": 56.32726451387862,
+          "lateral": 0,
+          "surfaceId": "span-1",
+          "surface": "asphalt",
+          "structure": "ground",
+          "segment": 1,
+          "triangle": 0,
+          "position": [
+            -4.626433483156315,
+            6.11610497077256,
+            -55.69457967619562
+          ],
+          "normal": [
+            -0.030474667552229443,
+            0.9967521076018983,
+            0.07454213995288106
+          ],
+          "yaw": 0.2974486603848161,
+          "pitch": 0.06245900213685864,
+          "roll": 0.051005505970157135
+        },
+        "world": {
+          "vertices": 43104,
+          "batches": 11,
+          "roadTriangles": 192,
+          "terrainCells": 3136,
+          "trees": 83
+        },
+        "vehicle": {
+          "vertices": 3222,
+          "parts": 13
+        },
+        "graphics": {
+          "frames": 22,
+          "frameDraws": 25,
+          "totalDraws": 550,
+          "uploads": 25,
+          "skippedIdentical": 0,
+          "vertices": 46374,
+          "bytes": 2040456,
+          "meshes": 25,
+          "profile": "high",
+          "lost": false,
+          "disposed": false
+        }
+      },
+      "canvas": {
+        "width": 992,
+        "height": 838
+      },
+      "error": 0
+    },
+    "geometryOnly-high": {
+      "variant": "geometryOnly",
+      "profile": "high",
+      "median": 34.5,
+      "p95": 36.29999999701977,
+      "samples": [
+        34.599999994039536,
+        34.20000000298023,
+        31.400000005960464,
+        33.8999999910593,
+        34.1000000089407,
+        33.29999999701977,
+        36,
+        35.5,
+        34.70000000298023,
+        34.599999994039536,
+        33.70000000298023,
+        28.299999997019768,
+        36.29999999701977,
+        34,
+        34.70000000298023,
+        35.29999999701977,
+        34.5,
+        31.700000002980232
+      ],
+      "stats": {
+        "frames": 22,
+        "preparations": 1,
+        "cameraMode": "hero",
+        "camera": {
+          "position": [
+            -0.11263228028464844,
+            9.616104970772561,
+            -63.01479816343726
+          ],
+          "target": [
+            -4.626433483156315,
+            6.96610497077256,
+            -55.69457967619562
+          ]
+        },
+        "road": {
+          "distance": 56.32726451387862,
+          "lateral": 0,
+          "surfaceId": "span-1",
+          "surface": "asphalt",
+          "structure": "ground",
+          "segment": 1,
+          "triangle": 0,
+          "position": [
+            -4.626433483156315,
+            6.11610497077256,
+            -55.69457967619562
+          ],
+          "normal": [
+            -0.030474667552229443,
+            0.9967521076018983,
+            0.07454213995288106
+          ],
+          "yaw": 0.2974486603848161,
+          "pitch": 0.06245900213685864,
+          "roll": 0.051005505970157135
+        },
+        "world": {
+          "vertices": 77934,
+          "batches": 11,
+          "roadTriangles": 192,
+          "terrainCells": 3136,
+          "trees": 81
+        },
+        "vehicle": {
+          "vertices": 27618,
+          "parts": 13
+        },
+        "graphics": {
+          "frames": 22,
+          "frameDraws": 25,
+          "totalDraws": 550,
+          "uploads": 25,
+          "skippedIdentical": 0,
+          "vertices": 105600,
+          "bytes": 4646400,
+          "meshes": 25,
+          "profile": "high",
+          "lost": false,
+          "disposed": false
+        }
+      },
+      "canvas": {
+        "width": 992,
+        "height": 838
+      },
+      "error": 0
+    },
+    "both-high": {
+      "variant": "both",
+      "profile": "high",
+      "median": 51.1000000089407,
+      "p95": 59.70000000298023,
+      "samples": [
+        41.69999998807907,
+        41.1000000089407,
+        42.099999994039536,
+        42,
+        56,
+        54.900000005960464,
+        53.5,
+        41.900000005960464,
+        41.3999999910593,
+        51.1000000089407,
+        48.20000000298023,
+        47.69999998807907,
+        55,
+        55.400000005960464,
+        59.70000000298023,
+        46.20000000298023,
+        57,
+        57.400000005960464
+      ],
+      "stats": {
+        "frames": 22,
+        "preparations": 1,
+        "cameraMode": "hero",
+        "camera": {
+          "position": [
+            -0.11263228028464844,
+            9.616104970772561,
+            -63.01479816343726
+          ],
+          "target": [
+            -4.626433483156315,
+            6.96610497077256,
+            -55.69457967619562
+          ]
+        },
+        "road": {
+          "distance": 56.32726451387862,
+          "lateral": 0,
+          "surfaceId": "span-1",
+          "surface": "asphalt",
+          "structure": "ground",
+          "segment": 1,
+          "triangle": 0,
+          "position": [
+            -4.626433483156315,
+            6.11610497077256,
+            -55.69457967619562
+          ],
+          "normal": [
+            -0.030474667552229443,
+            0.9967521076018983,
+            0.07454213995288106
+          ],
+          "yaw": 0.2974486603848161,
+          "pitch": 0.06245900213685864,
+          "roll": 0.051005505970157135
+        },
+        "world": {
+          "vertices": 77934,
+          "batches": 11,
+          "roadTriangles": 192,
+          "terrainCells": 3136,
+          "trees": 81
+        },
+        "vehicle": {
+          "vertices": 27618,
+          "parts": 13
+        },
+        "graphics": {
+          "frames": 22,
+          "frameDraws": 25,
+          "totalDraws": 550,
+          "uploads": 25,
+          "skippedIdentical": 0,
+          "vertices": 105600,
+          "bytes": 4646400,
+          "meshes": 25,
+          "profile": "high",
+          "lost": false,
+          "disposed": false
+        }
+      },
+      "canvas": {
+        "width": 992,
+        "height": 838
+      },
+      "error": 0
+    },
+    "before-low": {
+      "variant": "before",
+      "profile": "low",
+      "median": 12.5,
+      "p95": 15.5,
+      "samples": [
+        13.899999991059303,
+        12.100000008940697,
+        11.5,
+        12.699999988079071,
+        12.100000008940697,
+        12.299999997019768,
+        15.5,
+        14.599999994039536,
+        12.600000008940697,
+        12.5,
+        13.099999994039536,
+        12.200000002980232,
+        11.400000005960464,
+        12,
+        12.599999994039536,
+        11.200000002980232,
+        13.5,
+        11.5
+      ],
+      "stats": {
+        "frames": 22,
+        "preparations": 1,
+        "cameraMode": "hero",
+        "camera": {
+          "position": [
+            -0.11263228028464844,
+            9.616104970772561,
+            -63.01479816343726
+          ],
+          "target": [
+            -4.626433483156315,
+            6.96610497077256,
+            -55.69457967619562
+          ]
+        },
+        "road": {
+          "distance": 56.32726451387862,
+          "lateral": 0,
+          "surfaceId": "span-1",
+          "surface": "asphalt",
+          "structure": "ground",
+          "segment": 1,
+          "triangle": 0,
+          "position": [
+            -4.626433483156315,
+            6.11610497077256,
+            -55.69457967619562
+          ],
+          "normal": [
+            -0.030474667552229443,
+            0.9967521076018983,
+            0.07454213995288106
+          ],
+          "yaw": 0.2974486603848161,
+          "pitch": 0.06245900213685864,
+          "roll": 0.051005505970157135
+        },
+        "world": {
+          "vertices": 30030,
+          "batches": 11,
+          "roadTriangles": 192,
+          "terrainCells": 3136,
+          "trees": 29
+        },
+        "vehicle": {
+          "vertices": 2070,
+          "parts": 13
+        },
+        "graphics": {
+          "frames": 22,
+          "frameDraws": 25,
+          "totalDraws": 550,
+          "uploads": 25,
+          "skippedIdentical": 0,
+          "vertices": 32148,
+          "bytes": 1414512,
+          "meshes": 25,
+          "profile": "low",
+          "lost": false,
+          "disposed": false
+        }
+      },
+      "canvas": {
+        "width": 694,
+        "height": 586
+      },
+      "error": 0
+    },
+    "shaderOnly-low": {
+      "variant": "shaderOnly",
+      "profile": "low",
+      "median": 26,
+      "p95": 27.700000002980232,
+      "samples": [
+        18.799999997019768,
+        24.5,
+        23.400000005960464,
+        26,
+        24.599999994039536,
+        25.400000005960464,
+        23.900000005960464,
+        26.399999991059303,
+        25.900000005960464,
+        27.700000002980232,
+        26.5,
+        26.69999998807907,
+        27.700000002980232,
+        26.5,
+        26.700000002980232,
+        27,
+        24.700000002980232,
+        25
+      ],
+      "stats": {
+        "frames": 22,
+        "preparations": 1,
+        "cameraMode": "hero",
+        "camera": {
+          "position": [
+            -0.11263228028464844,
+            9.616104970772561,
+            -63.01479816343726
+          ],
+          "target": [
+            -4.626433483156315,
+            6.96610497077256,
+            -55.69457967619562
+          ]
+        },
+        "road": {
+          "distance": 56.32726451387862,
+          "lateral": 0,
+          "surfaceId": "span-1",
+          "surface": "asphalt",
+          "structure": "ground",
+          "segment": 1,
+          "triangle": 0,
+          "position": [
+            -4.626433483156315,
+            6.11610497077256,
+            -55.69457967619562
+          ],
+          "normal": [
+            -0.030474667552229443,
+            0.9967521076018983,
+            0.07454213995288106
+          ],
+          "yaw": 0.2974486603848161,
+          "pitch": 0.06245900213685864,
+          "roll": 0.051005505970157135
+        },
+        "world": {
+          "vertices": 30030,
+          "batches": 11,
+          "roadTriangles": 192,
+          "terrainCells": 3136,
+          "trees": 29
+        },
+        "vehicle": {
+          "vertices": 2070,
+          "parts": 13
+        },
+        "graphics": {
+          "frames": 22,
+          "frameDraws": 25,
+          "totalDraws": 550,
+          "uploads": 25,
+          "skippedIdentical": 0,
+          "vertices": 32148,
+          "bytes": 1414512,
+          "meshes": 25,
+          "profile": "low",
+          "lost": false,
+          "disposed": false
+        }
+      },
+      "canvas": {
+        "width": 694,
+        "height": 586
+      },
+      "error": 0
+    },
+    "geometryOnly-low": {
+      "variant": "geometryOnly",
+      "profile": "low",
+      "median": 17.399999991059303,
+      "p95": 18.5,
+      "samples": [
+        17.400000005960464,
+        16.899999991059303,
+        16.600000008940697,
+        15.5,
+        17.399999991059303,
+        17.700000002980232,
+        18.299999997019768,
+        17.5,
+        17.799999997019768,
+        17.599999994039536,
+        18.5,
+        18.400000005960464,
+        14,
+        15.400000005960464,
+        15.699999988079071,
+        13.5,
+        16.700000002980232,
+        16.599999994039536
+      ],
+      "stats": {
+        "frames": 22,
+        "preparations": 1,
+        "cameraMode": "hero",
+        "camera": {
+          "position": [
+            -0.11263228028464844,
+            9.616104970772561,
+            -63.01479816343726
+          ],
+          "target": [
+            -4.626433483156315,
+            6.96610497077256,
+            -55.69457967619562
+          ]
+        },
+        "road": {
+          "distance": 56.32726451387862,
+          "lateral": 0,
+          "surfaceId": "span-1",
+          "surface": "asphalt",
+          "structure": "ground",
+          "segment": 1,
+          "triangle": 0,
+          "position": [
+            -4.626433483156315,
+            6.11610497077256,
+            -55.69457967619562
+          ],
+          "normal": [
+            -0.030474667552229443,
+            0.9967521076018983,
+            0.07454213995288106
+          ],
+          "yaw": 0.2974486603848161,
+          "pitch": 0.06245900213685864,
+          "roll": 0.051005505970157135
+        },
+        "world": {
+          "vertices": 38610,
+          "batches": 11,
+          "roadTriangles": 192,
+          "terrainCells": 3136,
+          "trees": 30
+        },
+        "vehicle": {
+          "vertices": 20394,
+          "parts": 13
+        },
+        "graphics": {
+          "frames": 22,
+          "frameDraws": 25,
+          "totalDraws": 550,
+          "uploads": 25,
+          "skippedIdentical": 0,
+          "vertices": 59052,
+          "bytes": 2598288,
+          "meshes": 25,
+          "profile": "low",
+          "lost": false,
+          "disposed": false
+        }
+      },
+      "canvas": {
+        "width": 694,
+        "height": 586
+      },
+      "error": 0
+    },
+    "both-low": {
+      "variant": "both",
+      "profile": "low",
+      "median": 24.099999994039536,
+      "p95": 28.80000001192093,
+      "samples": [
+        20.900000005960464,
+        22.099999994039536,
+        23.700000002980232,
+        23.799999997019768,
+        23,
+        23.200000002980232,
+        21.099999994039536,
+        26.799999997019768,
+        27.900000005960464,
+        23.799999997019768,
+        21.200000002980232,
+        24.099999994039536,
+        28.400000005960464,
+        28.700000002980232,
+        27.69999998807907,
+        28.200000002980232,
+        28.299999997019768,
+        28.80000001192093
+      ],
+      "stats": {
+        "frames": 22,
+        "preparations": 1,
+        "cameraMode": "hero",
+        "camera": {
+          "position": [
+            -0.11263228028464844,
+            9.616104970772561,
+            -63.01479816343726
+          ],
+          "target": [
+            -4.626433483156315,
+            6.96610497077256,
+            -55.69457967619562
+          ]
+        },
+        "road": {
+          "distance": 56.32726451387862,
+          "lateral": 0,
+          "surfaceId": "span-1",
+          "surface": "asphalt",
+          "structure": "ground",
+          "segment": 1,
+          "triangle": 0,
+          "position": [
+            -4.626433483156315,
+            6.11610497077256,
+            -55.69457967619562
+          ],
+          "normal": [
+            -0.030474667552229443,
+            0.9967521076018983,
+            0.07454213995288106
+          ],
+          "yaw": 0.2974486603848161,
+          "pitch": 0.06245900213685864,
+          "roll": 0.051005505970157135
+        },
+        "world": {
+          "vertices": 38610,
+          "batches": 11,
+          "roadTriangles": 192,
+          "terrainCells": 3136,
+          "trees": 30
+        },
+        "vehicle": {
+          "vertices": 20394,
+          "parts": 13
+        },
+        "graphics": {
+          "frames": 22,
+          "frameDraws": 25,
+          "totalDraws": 550,
+          "uploads": 25,
+          "skippedIdentical": 0,
+          "vertices": 59052,
+          "bytes": 2598288,
+          "meshes": 25,
+          "profile": "low",
+          "lost": false,
+          "disposed": false
+        }
+      },
+      "canvas": {
+        "width": 694,
+        "height": 586
+      },
+      "error": 0
+    }
+  }
+}
