@@ -82,7 +82,7 @@ export function createRaceRoadDetails(road,profile='high',environment='coast'){
     const prior=road.sample(Math.max(0,distance-10),0).position,
       next=road.sample(Math.min(road.length,distance+10),0).position,
       v=sub(point.position,prior),w=sub(next,point.position),turn=Math.atan2(v[0]*w[2]-v[2]*w[0],v[0]*w[0]+v[2]*w[2]);
-    if(Math.abs(turn)<.055)continue;
+    if(Math.abs(turn)<.03)continue;
     const outside=turn>0?1:-1,edge=road.sample(distance,outside*edgeOffset).position,
       origin=add(edge,right,outside*(width/2+3.8-edgeOffset)),posts=values('posts',chunk);
     // Sign backplate, mount, and high-contrast chevron are two retained
