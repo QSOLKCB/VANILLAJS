@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // Verify bytes downloaded through the actual authoring UI, including nested offline startup.
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {readFile,mkdtemp,mkdir,rm,writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {createServer} from 'node:http';
-import {extname} from 'node:path';
+import {dirname,extname,join,resolve} from 'node:path';
 import {parseRaceProject} from '../demos/horizon-lab/race-project.js';
 import {driveRaceWithKeyboard} from './browser-horizon-race.js';
 function unzip(raw){
@@ -15,7 +17,66 @@ function unzip(raw){
   }
   assert.equal(raw.readUInt32LE(at),0x02014b50);assert.ok(files.size>20);return files;
 }
+// Fresh, disconnected Chromium with its default local-file permissions.
+async function checkDirectFile(browser, filename, {author = false, expected} = {}) {
+  const context = await browser.newContext({offline:true, viewport:{width:900,height:800}});
+  try {
+    const page = await context.newPage(), errors = [], network = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('request', req => { if (/^https?:/.test(req.url())) network.push(req.url()); });
+    await page.goto(pathToFileURL(filename).href);
+    await page.waitForFunction(() => document.documentElement.dataset.labReady === 'horizon-race');
+    const snapshot = () => page.evaluate(() => __horizonRace.snapshot());
+    const initial = await snapshot();
+    assert.ok(initial.view.graphics.frameDraws > 10 && !initial.view.graphics.lost);
+    if (expected) assert.deepEqual(parseRaceProject(initial.project),expected);
+    await page.locator('button[data-camera="bonnet"]').click();
+    assert.equal((await snapshot()).view.cameraMode,'bonnet');
+    await page.locator('button[data-camera="chase"]').click();
+    await page.locator('#race-start').click();
+    await page.keyboard.down('KeyW');
+    await page.waitForFunction(() => {
+      const s = __horizonRace.snapshot();
+      return s.player.position[2] < -17 && s.rivalProgress.distance > 13;
+    });
+    await page.keyboard.up('KeyW');
+    await page.locator('#race-pause').click();
+    assert.equal((await snapshot()).running,false);
+    await page.locator('#race-canvas').screenshot({path:'browser-artifacts/horizon-file-'+(author?'foundry':'portable')+'.png'});
+    await page.locator('#race-restart').click();
+    assert.equal((await snapshot()).ticks,0);
+    let download;
+    if (author) {
+      await page.locator('#race-name').fill('Cape Aster local drive');
+      await page.locator('#race-apply').click();
+      const pending = page.waitForEvent('download');
+      await page.locator('#race-export-game').click();
+      download = unzip(await readFile(await (await pending).path()));
+    }
+    assert.deepEqual(errors,[]);
+    assert.deepEqual(network,[]);
+    return download;
+  } finally { await context.close(); }
+}
+
+async function checkFileRoundTrip(browser) {
+  const source = resolve(import.meta.dirname,'../demos/horizon-lab/index.html');
+  const downloaded = await checkDirectFile(browser,source,{author:true});
+  const folder = await mkdtemp(join(tmpdir(),'HORIZON local race '));
+  try {
+    for (const [path,bytes] of downloaded) {
+      const target = join(folder,path);
+      await mkdir(dirname(target),{recursive:true});
+      await writeFile(target,bytes);
+    }
+    const expected = parseRaceProject(downloaded.get('project.json').toString());
+    assert.equal(expected.name,'Cape Aster local drive');
+    await checkDirectFile(browser,join(folder,'index.html'),{expected});
+  } finally { await rm(folder,{recursive:true,force:true}); }
+  console.log('HORIZON offline file URLs: fresh source ZIP entry, keyboard driving, camera, authoring, UI export and extracted file restart PASS');
+}
 export async function checkHorizonExport(browser,base){
+  await checkFileRoundTrip(browser);
   const author=await browser.newContext(),page=await author.newPage();let files,expected;
   try{
     await page.goto(base+'demos/horizon-lab/race.html');await page.waitForFunction(()=>document.documentElement.dataset.labReady==='horizon-race');

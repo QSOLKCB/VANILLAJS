@@ -17,7 +17,7 @@ export function resolveLocal(from,spec){
 // Comments and string/template bodies are skipped. Any escape in an import
 // specifier, interpolated template containing import/eval, or escaped identifier
 // is unsupported and cannot qualify for reuse. Regex ambiguity over-invalidates.
-export function jsDependencies(source){
+export function jsDependencies(source, onSpecifier){
   const tokens=[],issues=[];let i=0;
   if(source.length>2**20)return {imports:[],issues:['source exceeds analyzer budget']};
   while(i<source.length){
@@ -38,7 +38,7 @@ export function jsDependencies(source){
       while(i<source.length&&source[i]!==quote){if(source[i]==='\\'){escaped=true;i+=2;}else i++;}
       const value=source.slice(start,i);if(i===source.length)issues.push('unterminated literal');i++;
       if(quote==='`'&&value.includes('${')&&/\b(import|eval|Function|fetch|Worker)\b/.test(value))issues.push('dynamic code in template');
-      tokens.push({type:quote==='`'?'template':'string',value,escaped});continue;
+      tokens.push({type:quote==='`'?'template':'string',value,escaped,start,end:i-1});continue;
     }
     if(c==='\\'){issues.push('escaped executable identifier');i++;continue;}
     const word=/^[A-Za-z_$][\w$]*/.exec(source.slice(i));
@@ -63,7 +63,7 @@ export function jsDependencies(source){
       }
       if(!spec&&t.value==='import')issues.push('unrecognized import');
     }
-    if(spec){if(spec.type!=='string'||spec.escaped)issues.push('unsupported import specifier');else imports.push(spec.value);}
+    if(spec){if(spec.type!=='string'||spec.escaped)issues.push('unsupported import specifier');else {imports.push(spec.value);onSpecifier?.(spec.value,spec.start,spec.end);}}
   }
   return {imports:[...new Set(imports)].sort(),issues:[...new Set(issues)].sort()};
 }

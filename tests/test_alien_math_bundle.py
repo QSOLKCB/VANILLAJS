@@ -72,7 +72,8 @@ class CapsuleTests(unittest.TestCase):
             'demos/horizon-lab/race.html': '<script type="module" src="./race-start.js"></script>',
             'demos/horizon-lab/race-start.js': 'export const raceFixture=true;\n',
             'demos/horizon-lab/race-player.js': 'export const fixture=true;\n',
-            'demos/horizon-lab/race-portable-shell.txt': '<link rel="stylesheet" href="./demos/horizon-lab/race.css"><script type="module" src="./game-start.js"></script><script type="module" src="./offline/register.js"></script>',
+            'demos/horizon-lab/race-portable-shell.txt': '<link rel="stylesheet" href="./demos/horizon-lab/race.css"><script type="module" src="./game-start.js"></script><script type="module" src="./offline/register.js"></script><script src="./demos/horizon-lab/race-launch.js"></script>',
+            'demos/horizon-lab/race-launch.js': '// fixture',
             'demos/horizon-lab/race.css': 'body{margin:0}\n',
             'demos/game-maker-lab/index.html': '<script type="module" src="./start.js"></script>',
             'demos/game-maker-lab/start.js': 'export const fixture=true;\n',
@@ -91,7 +92,7 @@ class CapsuleTests(unittest.TestCase):
             'experiments/arch-omi/index.js': 'export const fixture=true;\n',
             'experiments/e8-geometry/index.js': 'export const fixture=true;\n',
         }
-        build_sources = ['scripts/build.js', 'scripts/pursuit-package.mjs', 'scripts/fps-source-identity.mjs',
+        build_sources = ['demos/horizon-lab/race-file-source.js', 'scripts/build.js', 'scripts/pursuit-package.mjs', 'scripts/fps-source-identity.mjs',
                          'scripts/browser-dependencies.mjs', 'scripts/service-worker.template.js',
                          'scripts/verify-offline.js', 'scripts/game-maker-runtime.mjs', 'scripts/horizon-race-runtime.mjs']
         # Derive the browser source fixture from the real capsule allowlist.
