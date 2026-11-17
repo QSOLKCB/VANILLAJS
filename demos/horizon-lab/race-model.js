@@ -23,6 +23,35 @@ function spawnAt(car,road,distance,lateral){
   return car.spawn({position:[p.position[0],p.position[1]+height,p.position[2]],yaw:p.yaw,pitch:p.pitch,roll:p.roll});
 }
 function progress(lateral){return {checkpointIndex:0,finished:false,finishTime:null,penaltySeconds:0,recoveries:0,distance:12,fraction:0,lateral,offRoad:false};}
+/** Game-owned fall/terrain admission against the *rendered* triangle sampler.
+ * Native vehicle3d and legitimate underpasses remain unchanged.
+ */
+export function raceWorldSafety(session,which='player'){
+  if(!session||!['player','rival'].includes(which))throw TypeError('Accepted race and driver required');
+  const s=session[which],world=session.world,rows=session.rows;
+  if(!s||!Array.isArray(s.position)||s.position.length!==3||!s.position.every(Number.isFinite)||
+    !world?.physics||typeof world.physics.sampleSurface!=='function'||!Array.isArray(rows)||rows.length<2)
+    throw TypeError('Finite race state and triangulated world required');
+  const [x,y,z]=s.position,first=rows[0],second=rows[1],
+    dx=second.center[0]-first.center[0],dz=second.center[2]-first.center[2],len=Math.hypot(dx,dz);
+  if(!(len>0))throw RangeError('Degenerate start tangent');
+  const behind=((x-first.center[0])*dx+(z-first.center[2])*dz)/len;
+  const progress=which==='player'?session.progress:session.rivalProgress;
+  if(behind< -1&&progress.offRoad)return 'BEHIND_START';
+  // Road over terrain: peel away higher asphalt layers until the actual
+  // triangulated terrain is found. A bridge underpass is not an anomaly.
+  let ceiling=2000;
+  for(let i=0;i<6;i++){
+    const hit=world.physics.sampleSurface(x,z,ceiling);
+    if(!hit)break;
+    if(hit.surfaceId.startsWith('terrain:'))
+      return y<hit.height-.3?'UNDER_TERRAIN':null;
+    ceiling=hit.height-.02;
+    if(ceiling< -2000)break;
+  }
+  if(y<Math.min(...rows.map(row=>row.center[1]))-40)return 'OUT_OF_WORLD';
+  return null;
+}
 export function createRaceSession(value){return new RaceSession(value);}
 class RaceSession{
   #player;#rival;#car;#rivalCar;#playerProgress;#rivalProgress;#ticks=0;#countdownTicks=0;#phase='ready';#rivalStuck=0;#result=null;
