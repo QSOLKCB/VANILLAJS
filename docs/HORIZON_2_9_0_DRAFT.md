@@ -51,7 +51,7 @@ complete supported race.
   original **Cape Aster — Sunward Run**: approximately 509 m of elevated,
   banked coastal road, a bridge, a tunnel, eight ordered gates and a finish.
 - The cyan rival drives a separate vehicle through the same physics using
-  throttle, steering and braking. It is a non-contact pace opponent. The
+  throttle, steering and braking. Player and rival now collide through a bounded game-owned chassis contact solver. The
   player wins or loses according to finish time, including recovery penalties.
 - Chase, bonnet and cockpit-style cameras accompany speed, gear/RPM, race time,
   route and checkpoint HUDs. Keyboard and pointer/touch controls support pause,
@@ -85,6 +85,17 @@ penalty. The original vehicle solver and rendered road-contact
 geometry remain unchanged. Separate review/CI and owner acceptance
 are required before tagging v2.9.0.
 
+## HORIZON-006 — Playable arcade handling and real rival contact
+
+After owner testing revealed sudden high-speed slides and a ghost rival,
+the race adds a switchable **Course assist** (enabled by default). It provides
+bounded speed-sensitive steering guidance and corner braking through normal
+vehicle inputs; OFF retains direct unassisted physics. A deterministic paired
+contact approximation prevents same-level car overlap and exchanges momentum.
+The underlying `vehicle3d` solver, scenery contact triangles and accepted
+project formats are unchanged. A separate PR and verified post-merge test
+remain required before the v2.9.0 tag.
+
 ## Compatibility and limits
 
 The candidate catalogue contains **71 experimental modules, 51 recipes and two
@@ -97,7 +108,7 @@ Exact maths, proofs and historical evidence remain unchanged. Package/catalogue
 `1.0.0` metadata retains its historical purpose.
 
 Vehicle dynamics, materials, glass and shadows are documented approximations.
-Cars can overlap; decorative buildings, trees and tunnel walls are not colliders.
+Cars exchange bounded approximate collision impulses; decorative buildings, trees and tunnel walls remain non-colliding.
 Cockpit-style is a driving viewpoint, not a detailed interior. The race export
 supports this single-route game, not arbitrary scripts, multiplayer, an authoring
 editor or saved race progress. Geometry and source PCM identity are distinct

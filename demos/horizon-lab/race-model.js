@@ -5,6 +5,7 @@ import {createVehicle,VEHICLE_STEP} from '../../modules/vehicle3d/index.js';
 import {validateRaceProject} from './race-project.js';
 import {createDriveWorld} from './drive-world.js';
 import {bridgeGuardrails,bridgePhysics} from './race-guardrails.js';
+import {resolveRaceContact} from './race-contact.js';
 import {createRaceCheckpoints,crossesRaceCheckpoint,locateOnRoad,raceRoadStatus} from './race-course.js';
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const clone=value=>structuredClone(value);
@@ -56,7 +57,9 @@ class RaceSession{
     }
     const before=this.#player,rivalBefore=this.#rival,rivalInput=this.#rivalProgress.finished?{brake:1}:raceDriverInput(this.road,rivalBefore,this.#rivalCar.recipe,{speed:this.project.race.rivalSpeed,lateral:2,rows:this.rows});
     // Both transitions complete before replacing accepted state.
-    const player=this.#car.step(before,this.#playerProgress.finished?{brake:1}:input,bridgePhysics(this.world.physics,this.bridgeRails,before.position),dt),rival=this.#rivalCar.step(rivalBefore,rivalInput,bridgePhysics(this.world.physics,this.bridgeRails,rivalBefore.position),dt);
+    const advancedPlayer=this.#car.step(before,this.#playerProgress.finished?{brake:1}:input,bridgePhysics(this.world.physics,this.bridgeRails,before.position),dt),
+          advancedRival=this.#rivalCar.step(rivalBefore,rivalInput,bridgePhysics(this.world.physics,this.bridgeRails,rivalBefore.position),dt),
+          {player,rival}=resolveRaceContact(advancedPlayer,advancedRival,this.project.vehicle);
     this.#player=freeze(player);this.#rival=freeze(rival);this.#ticks+=quanta;
     if(!this.#playerProgress.finished)this.#advanceProgress(this.#playerProgress,before,player,dt);
     if(!this.#rivalProgress.finished)this.#advanceProgress(this.#rivalProgress,rivalBefore,rival,dt);
