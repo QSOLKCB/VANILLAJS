@@ -808,7 +808,7 @@
       "reason": "Local upgrade server combines the bound historical audio fixture and worker template with current package bytes; browser fetch only compares same-origin cached source."
     },
     "scripts/browser-voidward.js": {
-      "sha256": "5e18cf02ad0fad8fadc5f22125211f48b9aef953eb273f76ec4f947249384c80",
+      "sha256": "9f6c76a88cd48b5a54b1711dbef313eb5e010ef1332dcb0ff9923691b9617b9c",
       "roots": [
         "demos/4x-game-lab/voidward/js/render.js",
         "demos/4x-game-lab/voidward/js/core.js",
