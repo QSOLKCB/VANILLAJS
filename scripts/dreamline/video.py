@@ -189,12 +189,15 @@ def export(source, destination, short):
         authorised=source!='--fixture' and hashfile(Path(source))==media_identity['hashes']['edit.json']
         credits=['-metadata','title=THE MACHINE DREAMS — THE DREAMLINE','-metadata','artist=Trent Slade (QSOL-IMC)',
                  '-metadata','comment=MACHINE DREAMS — Trent Slade (QSOL-IMC). CC BY 4.0 https://creativecommons.org/licenses/by/4.0/ . Instrumental arrangement and synthesis: QSOL-IMC / VANILLAJS. Original recording produced with Mureka assistance.'] if authorised else []
+        # Compare content motion entering libx264, after conversion to the
+        # deliverable's legal-range 8-bit luma and subsampled chroma.
+        video_filter='scale=in_range=full:out_range=tv,format=yuv420p'
         encode=FF+['-f','image2pipe','-framerate','30','-c:v','mjpeg','-threads','2','-i','pipe:0',
                    '-protocol_whitelist','file,pipe','-i',str(wav),'-map','0:v:0','-map','1:a:0',
-                   '-vf','scale=in_range=full:out_range=tv,format=yuv420p','-color_range','tv',
+                   '-vf',video_filter,'-color_range','tv',
                    '-c:v','libx264','-preset','veryfast','-threads','2','-crf','17','-pix_fmt','yuv420p',
                    '-c:a','aac','-b:a','192k','-movflags','+faststart',*credits,'-n',str(film),
-                   '-map','0:v:0','-vf','scale=64:36:flags=area','-pix_fmt','gray','-threads','1','-f','rawvideo',str(motion)]
+                   '-map','0:v:0','-vf',video_filter+',scale=64:36:flags=area','-pix_fmt','gray','-threads','1','-f','rawvideo',str(motion)]
         # A bounded host lifetime also bounds native Skia caches independently of JS GC.
         total=len(samples(short))
         with sp.Popen(encode,stdin=sp.PIPE) as encoder:
