@@ -9,7 +9,9 @@ try{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('http://127.0.0.1:8765/demos/dreamline/index.html');
   await page.evaluate(()=>navigator.serviceWorker.ready);
-  await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
+  // The versioned worker deliberately lets an existing tab finish on its original version.
+  await page.reload();
+  assert.ok(await page.evaluate(()=>!!navigator.serviceWorker.controller));
   await context.setOffline(true);await page.reload();
   await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('MACHINE DREAMS'));
   const pcm=await page.evaluate(async()=>{

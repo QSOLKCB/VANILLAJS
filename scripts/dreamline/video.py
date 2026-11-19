@@ -185,11 +185,15 @@ def export(source, destination, short):
             wav=tmp/'short.wav'
         mode='fixture' if short else 'full'
         motion=tmp/'motion.gray'
+        media_identity=json.loads((ROOT/'assets/dreamline/provenance.json').read_text())
+        authorised=source!='--fixture' and hashfile(Path(source))==media_identity['hashes']['edit.json']
+        credits=['-metadata','title=THE MACHINE DREAMS — THE DREAMLINE','-metadata','artist=Trent Slade (QSOL-IMC)',
+                 '-metadata','comment=MACHINE DREAMS — Trent Slade (QSOL-IMC). CC BY 4.0 https://creativecommons.org/licenses/by/4.0/ . Instrumental arrangement and synthesis: QSOL-IMC / VANILLAJS. Original recording produced with Mureka assistance.'] if authorised else []
         encode=FF+['-f','image2pipe','-framerate','30','-c:v','mjpeg','-threads','2','-i','pipe:0',
                    '-protocol_whitelist','file,pipe','-i',str(wav),'-map','0:v:0','-map','1:a:0',
                    '-vf','scale=in_range=full:out_range=tv,format=yuv420p','-color_range','tv',
                    '-c:v','libx264','-preset','veryfast','-threads','2','-crf','17','-pix_fmt','yuv420p',
-                   '-c:a','aac','-b:a','192k','-movflags','+faststart','-n',str(film),
+                   '-c:a','aac','-b:a','192k','-movflags','+faststart',*credits,'-n',str(film),
                    '-map','0:v:0','-vf','scale=64:36:flags=area','-pix_fmt','gray','-threads','1','-f','rawvideo',str(motion)]
         # A bounded host lifetime also bounds native Skia caches independently of JS GC.
         total=len(samples(short))
