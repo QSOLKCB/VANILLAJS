@@ -5,6 +5,7 @@ import json
 import math
 from pathlib import Path
 import signal
+import struct
 import subprocess
 import sys
 import tempfile
@@ -77,7 +78,31 @@ class VideoTests(unittest.TestCase):
         self.assertLess(len(pcm), (96000+1024)*4)
         receipt = json.loads((self.package/'verification.json').read_text())
         self.assertEqual(receipt['outputSHA256'], digest(self.movie.read_bytes()))
-        self.assertEqual(self.check_movie(self.movie)['decodedFrames'], 60)
+        verified = self.check_movie(self.movie)
+        self.assertEqual(verified['decodedFrames'], 60)
+        self.assertEqual(verified['decoderSeekFrameIndices'],
+                         [start+delta for start in range(0, 60, 12) for delta in (0, 3, 7)])
+
+    def test_incorrect_mp4_sync_index(self):
+        # This controlled AVC fixture has real sync samples at 1 and 37.
+        # Rebuild a predictable closed GOP so different encoders exercise the
+        # same corrupted index. Alter the index only, preserving every packet.
+        source = self.root/'fixed-gop.mp4'
+        ffmpeg('-i', self.movie, '-c:v', 'libx264', '-crf', '14', '-g', '36',
+               '-keyint_min', '36', '-sc_threshold', '0', '-threads', '1',
+               '-pix_fmt', 'yuv420p', '-c:a', 'copy', '-movflags', '+faststart', source)
+        data = bytearray(source.read_bytes())
+        offset = data.index(b'stss')
+        self.assertEqual(struct.unpack_from('>III', data, offset+8), (2, 1, 37))
+        struct.pack_into('>I', data, offset+16, 18)
+        broken = self.root/'incorrect-sync.mp4'
+        broken.write_bytes(data)
+        def sequential(path):
+            return ffmpeg('-i', path, '-map', '0:v:0', '-pix_fmt', 'rgb24',
+                          '-fps_mode', 'passthrough', '-f', 'rawvideo', 'pipe:1')
+        self.assertEqual(sequential(broken), sequential(source))
+        with self.assertRaisesRegex(ValueError, 'decoder seek differs'):
+            self.check_movie(broken)
 
     def test_missing_streams(self):
         for stream in ('v', 'a'):

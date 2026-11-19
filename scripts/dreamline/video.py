@@ -79,17 +79,28 @@ def verify(movie, wav, refs, probes, short=False):
     decoded=sp.check_output(FF+['-threads','2','-i',str(movie),'-map','0:v:0','-vf','scale=32:18:flags=area',
                                 '-fps_mode','passthrough','-pix_fmt','rgb24','-f','rawvideo','pipe:1'])
     require(len(decoded)==len(ref),'decoded frame count')
-    probe_idx=0; errors=[]; previous=None; static_run=0
+    probe_frames={cut+offset for cut in CUTS for offset in (0,3,7)}
+    decoder_seeks=[]; errors=[]; previous=None; static_run=0
     for i,frame in enumerate(frames):
         start=i*THUMB_BYTES
         actual=decoded[start:start+THUMB_BYTES];expected=ref[start:start+THUMB_BYTES]
         error=sum(abs(a-b) for a,b in zip(actual,expected))/THUMB_BYTES
         require(error<=12,'wrong scene at frame %d: %.3f'%(frame,error))
         errors.append(error)
-        if frame in {c+j for c in CUTS for j in (0,3,7)}:
+        if frame in probe_frames:
+            probe_idx=len(decoder_seeks)
             other=independent[probe_idx*THUMB_BYTES:(probe_idx+1)*THUMB_BYTES]
             require(other==expected and max(actual)-min(actual)>22,'blank or unreproducible act probe')
-            probe_idx+=1
+            # Input-side accurate seek starts a fresh decoder at its indexed
+            # keyframe. The compact fixture has its own contiguous film PTS.
+            # Floor in microseconds so rounding never selects the next PTS.
+            position_us=i*1_000_000//30
+            sought=sp.check_output(FF+['-ss',str(position_us)+'us','-threads','2',
+                                       '-i',str(movie),'-map','0:v:0','-frames:v','1',
+                                       '-vf','scale=32:18:flags=area','-pix_fmt','rgb24',
+                                       '-f','rawvideo','pipe:1'])
+            require(sought==actual,'decoder seek differs at encoded frame '+str(i))
+            decoder_seeks.append(i)
         static_run=static_run+1 if actual==previous else 0
         if 60<frame<2630:
             require(static_run<30,'frozen film at frame '+str(frame))
@@ -148,7 +159,8 @@ def verify(movie, wav, refs, probes, short=False):
         sq+=noise;signal_energy+=energy
     require(signal_energy>0 and sq<signal_energy*.07,'audio identity')
     return {'decodedFrames':len(frames),'decodedStereoFrames':len(pcm)//4,'compositionFrames':len(original)//4,
-            'nativeSize':[width,height],'independentSeekProbes':probe_idx,'maxThumbnailMAE':max(errors),
+            'nativeSize':[width,height],'independentSeekProbes':len(decoder_seeks),
+            'decoderSeekFrameIndices':decoder_seeks,'maxThumbnailMAE':max(errors),
             'meanThumbnailMAE':statistics.mean(errors),'audioSNRdB':10*math.log10(signal_energy/max(1,sq))}
 
 
