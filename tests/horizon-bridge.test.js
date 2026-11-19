@@ -36,12 +36,10 @@ test('actual glancing 24 m/s bridge edge contact is bounded and does not produce
     let state=spawnOnRoad(car,road,p.vehicle,165,lane,24,-Math.sign(lane)*outwardAngle),hit=false;
     for(let i=0;i<210;i++){
       state=stepBridgeVehicle(car,state,{throttle:1},w.physics,rails);
-      hit ||= state.contacts.some(id=>id.startsWith('bridge-rail-'));
+      hit ||= state.contacts.some(id=>id.startsWith('bridge-rail-')||id.startsWith('bridge-post-'));
       assert.equal(state.needsRecovery,false,'contact must not freeze chassis');
     }
-    // An offset vehicle can now legitimately pass through the open air
-    // between the two rendered bars; absence of contact is not a failure.
-    assert.equal(typeof hit,'boolean');
+    if(outwardAngle)assert.ok(hit,'visible bridge rail or post must stop actual outward contact');
   }
 });
 test('32-knot long bridges select only nearby collision barriers without changing the authored road',()=>{

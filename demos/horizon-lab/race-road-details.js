@@ -94,7 +94,7 @@ export function createRaceRoadDetails(road,profile='high',environment='coast'){
     // Sign backplate, mount, and high-contrast chevron are two retained
     // material batches rather than thousands of per-object GPU draws.
     box(posts,add(origin,[0,.90,0]),[.14,1.8,.14],theme.post);
-    signQuad(values('signs',chunk),add(origin,[0,1.45,0]),right,back,[[-.76,-.36],[.76,-.36],[.76,.36],[-.76,.36]],theme.sign,.075);
+    signQuad(values('signs',chunk),add(origin,[0,1.45,0]),right,back,[[-.76,-.36],[.76,-.36],[.76,.36],[-.76,.36]],theme.sign,.05);
     const ink=values('ink',chunk),anchor=add(origin,[0,1.45,0]),dir=turn>0?1:-1;
     const stroke=(y1,y2)=>signQuad(ink,anchor,right,back,[[dir*-.25,y1-.10],[dir*.35,y2-.10],[dir*.35,y2+.10],[dir*-.25,y1+.10]],theme.ink,.075);
     stroke(.19,0);stroke(-.19,0);

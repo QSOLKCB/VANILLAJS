@@ -86,19 +86,18 @@ test('I: corrupt, oversized, wrong digest or wrong ZIP membership never authenti
   assert.throws(()=>unpackArtifact(Buffer.alloc(1048577),'sha256:'+'0'.repeat(64)));
 });
 test('trust audit fails closed on absent protection, unreadable API or no required review',async()=>{
-  assert.equal((await auditAuthority(async()=>({protected:false}))).ok,false,
-    'unprotected main with no GitHub branch identity cannot qualify');
-  const ownerMain=await auditAuthority(async path=>{
-    if(path.endsWith('/branches/main'))return {name:'main',protected:false,commit:{sha:'a'.repeat(40)}};
-    throw Error('no protection endpoint in owner-main fallback');
-  });
-  assert.equal(ownerMain.ok,true);
-  assert.match(ownerMain.reason,/lower review assurance/);
-  assert.notEqual(ownerMain.policyDigest,(await auditAuthority(async path=>{
+  assert.equal((await auditAuthority(async()=>({protected:false}))).ok,false);
+  assert.equal((await auditAuthority(async path=>{
+    if(path.endsWith('/branches/main'))
+      return {name:'main',protected:false,commit:{sha:'a'.repeat(40)}};
+    throw Error('unprotected main must fail before looking for receipts');
+  })).ok,false,'success on unprotected main cannot establish approved review');
+  assert.equal((await auditAuthority(async path=>{
     if(path.endsWith('/branches/main'))return {name:'main',protected:true};
-    if(path.endsWith('/rules/branches/main'))return [{type:'pull_request',parameters:{required_approving_review_count:1}}];
+    if(path.endsWith('/rules/branches/main'))
+      return [{type:'pull_request',parameters:{required_approving_review_count:1}}];
     throw Error('classic unavailable');
-  })).policyDigest);
+  })).ok,true);
   assert.equal((await auditAuthority(async()=>{throw Error('401');})).ok,false);
   assert.equal((await auditAuthority(async()=>({protected:true}))).ok,false);
   const policy={repository:'QSOLKCB/VANILLAJS',workflow:'.github/workflows/flight-lab.yml'};
