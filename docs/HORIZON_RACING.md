@@ -45,6 +45,12 @@ engine audio and wheel rotation follow actual vehicle telemetry. Pause, focus
 loss or a hidden page clears driving requests. Release held keys and press again
 after resuming; an old held reverse key cannot restart driving by itself.
 
+The original bridge's physics uses only its two visible horizontal metal bars
+and the actual alternate upright posts; the spaces between the bars are
+**not** a continuous invisible collision slab. The roadside white marker
+bollards and chevrons are cosmetic, correctly planted at the road edge, and
+never enter vehicle contact physics.
+
 Follow the amber checkpoint gates in order and race the turquoise rival to the
 finish. The rival steers a real vehicle through the same physics. Player and rival now have bounded same-level oriented-chassis contact with symmetric momentum response; cars no longer ghost through each other. Brake before corners. **Recover**
 returns you just beyond the last accepted gate (or to the start before any gate)

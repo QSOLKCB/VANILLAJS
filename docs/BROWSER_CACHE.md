@@ -5,23 +5,34 @@ package, harness, contract, policy and environment identities match. It does not
 cache Node tests or replace the browser tooling preflight. The Playwright download
 cache and trusted verification receipts are separate mechanisms.
 
-## Current activation state
+## Activation requires independently reviewed main
 
-At the Creator Gateway audit on 16 November 2026, GitHub reported `main` as
-unprotected. That blocks trusted receipt production and reuse. Local browser
-passes and PR passes are useful validation, but cannot qualify as trusted main
-executions. This change does not alter repository protection settings, create
-qualification receipts or claim measured CI savings.
+On 19 November 2026, main run 44453001792 **executed seven browser suites
+and reused none**. The live profile already requires just **one** matching
+successful reviewed-main execution; its failure to reuse was not a threshold
+problem. GitHub reported main **unprotected**, so the source-authority gate
+correctly rejected receipt publication. Worlds and editor also reported
+unreviewed or falsely resolved dependencies.
 
-Activation requires owner-managed protection of `main` with at least one required
-PR approval, followed by one successful main workflow execution of the matching
-inputs. A later matching run can reuse that result. The owner explicitly selected
-this one-run qualification policy during Creator Gateway review. A protection-
-policy change invalidates receipts authenticated under the previous policy.
+**Do not treat a green direct-push main run as reviewed evidence.** The
+repository's `AGENTS.md` requires source-bound PASS witnesses from reviewed main.
+This implementation preserves fail-closed protection checks. To enable caching,
+the owner must protect `main`, require pull requests and at least one approval,
+and ensure the GitHub Actions reader can inspect the applicable rules. The first
+successful, independently reviewed main execution under that authority produces
+the reusable receipt. The **next unchanged** run may reuse it; previous runs
+without qualifying immutable receipts cannot be backfilled.
 
-The authority check must be able to read the relevant GitHub protection/rules
-settings. Missing permissions, unavailable metadata or missing required approvals
-force execution; they are not reasons to weaken the trust gate.
+This PR repairs the verified dependency classification: literal page-side
+HORIZON imports are bound to their real browser source paths; the dependency
+scanner's own regex is reviewed as Node-only code. Exact generated JS copies
+inherit original executable pins only after the complete output namespace has
+been independently rebuilt and byte-verified. This prevents repeated false
+unreviewed-input decisions once reviewed-main authority is activated.
+
+No protection settings, approvals, or releases are modified here. Unknown,
+changed, failed, PR-only, cancelled, or expired evidence still requires the
+real browser suites.
 
 ## What remains mandatory
 
@@ -104,7 +115,7 @@ main workflow also deploys GitHub Pages after verification; dispatch is therefor
 an owner-controlled operation, not a read-only inspection. No workflow is
 triggered automatically by this guide.
 
-Only actual successful executions on verified protected `main` can publish the
+Only actual successful executions on independently reviewed, protected `main` can publish the
 immutable `ci-invariant-main-<run>-<attempt>` artifact. A reuse result is not another
 execution. PRs, forks, failed runs and local files cannot manufacture qualification.
 Receipt authentication checks GitHub run metadata, archive digest and size,
@@ -143,7 +154,7 @@ importer invalidates its audit and requires review before reuse.
 
 | Diagnostic | Meaning and action |
 | --- | --- |
-| Main is not protected / required PR approval cannot be established | Owner reviews protection and read access; suites continue executing. |
+| Main not protected or review rules inaccessible | No receipt publication or reuse. Owner enables required PR approval and read access. |
 | Qualification 0/1 | No authenticated successful main execution matches every input. |
 | Unsupported dependency analysis | Inspect the listed source/resource; review and explicitly model it, or continue real execution. |
 | Package inventory/digest mismatch | Rebuild from current source and investigate changed or stale package files. |

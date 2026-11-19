@@ -56,7 +56,9 @@ export function protectionAccepted(branch,rules,classic){
 export async function auditAuthority(api){
   try{
     const branch=await api('repos/QSOLKCB/VANILLAJS/branches/main');
-    if(branch.protected!==true)return {ok:false,reason:'main is not protected; no reusable receipt authority'};
+    // A passing direct-push run proves execution, not independent review.
+    // AGENTS.md requires reviewed main; reject reuse without branch protection.
+    if(branch?.protected!==true)return {ok:false,reason:'main is not protected; no reusable receipt authority'};
     let rules=null,classic=null;try{rules=await api('repos/QSOLKCB/VANILLAJS/rules/branches/main');}catch{}
     try{classic=await api('repos/QSOLKCB/VANILLAJS/branches/main/protection');}catch{}
     if(!protectionAccepted(branch,rules,classic))return {ok:false,reason:'required PR approval controls cannot be established'};

@@ -87,6 +87,17 @@ test('I: corrupt, oversized, wrong digest or wrong ZIP membership never authenti
 });
 test('trust audit fails closed on absent protection, unreadable API or no required review',async()=>{
   assert.equal((await auditAuthority(async()=>({protected:false}))).ok,false);
+  assert.equal((await auditAuthority(async path=>{
+    if(path.endsWith('/branches/main'))
+      return {name:'main',protected:false,commit:{sha:'a'.repeat(40)}};
+    throw Error('unprotected main must fail before looking for receipts');
+  })).ok,false,'success on unprotected main cannot establish approved review');
+  assert.equal((await auditAuthority(async path=>{
+    if(path.endsWith('/rules/branches/main'))
+      return [{type:'pull_request',parameters:{required_approving_review_count:1}}];
+    if(path.endsWith('/branches/main'))return {name:'main',protected:true};
+    throw Error('classic unavailable');
+  })).ok,true);
   assert.equal((await auditAuthority(async()=>{throw Error('401');})).ok,false);
   assert.equal((await auditAuthority(async()=>({protected:true}))).ok,false);
   const policy={repository:'QSOLKCB/VANILLAJS',workflow:'.github/workflows/flight-lab.yml'};
