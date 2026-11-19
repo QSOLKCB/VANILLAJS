@@ -161,8 +161,49 @@ try {
     await page.screenshot({path:path.join(out,'created-universe.png'),fullPage:true});
   });
   await check('legacy-save-migration',async()=>{
-    for(const id of ['frontier','machine-dawn']){const fixture=await fs.readFile(path.join(root,'tests/fixtures',`voidward-v1-${id}.json`),'utf8'),old=JSON.parse(fixture);await close();await upload('#save-file',fixture);await page.waitForFunction(({id,turn})=>globalThis.__voidward?.pack.meta.id===id&&globalThis.__voidward.state.version===2&&globalThis.__voidward.state.turn===turn,{id,turn:old.state.turn});assert.equal((await snapshot()).state.turn,old.state.turn);const migrated=(await snapshot()).state;await page.reload();await page.waitForFunction(({id,turn})=>globalThis.__voidward?.pack.meta.id===id&&globalThis.__voidward.state.version===2&&globalThis.__voidward.state.turn===turn,{id,turn:old.state.turn},{timeout:SAVE_RESTORE_TIMEOUT_MS});assert.deepEqual((await snapshot()).state,migrated);}
-    const before=JSON.stringify((await snapshot()).state);await upload('#save-file','{"kind":"wrong"}');await page.waitForFunction(()=>document.querySelector('#toast').classList.contains('error'));assert.equal(JSON.stringify((await snapshot()).state),before);
+    // Isolate this persistence contract from earlier campaigns' many autosaves.
+    // A shared multi-campaign browser profile can exhaust its localStorage
+    // quota without invalidating the in-memory import, then reload a different
+    // campaign. Exercise actual browser persistence in a clean context instead.
+    const originalPage=page;
+    const legacyContext=await browser.newContext({
+      viewport:{width:1440,height:1000},reducedMotion:'reduce',
+      acceptDownloads:true,serviceWorkers:'block'
+    });
+    try{
+      page=await legacyContext.newPage();observe(page);
+      await page.goto(url);
+      await page.waitForFunction(()=>globalThis.__voidward?.state);
+      for(const id of ['frontier','machine-dawn']){
+        const fixture=await fs.readFile(path.join(root,'tests/fixtures',`voidward-v1-${id}.json`),'utf8'),
+          old=JSON.parse(fixture);
+        await close();await upload('#save-file',fixture);
+        await page.waitForFunction(({id,turn})=>globalThis.__voidward?.pack.meta.id===id&&globalThis.__voidward.state.version===2&&globalThis.__voidward.state.turn===turn,{id,turn:old.state.turn});
+        const migrated=await snapshot();
+        assert.equal(migrated.state.turn,old.state.turn);
+        // Import success in memory is not a persistence witness. Verify the
+        // exact autosave and active-slot pointer before reloading this document.
+        const stored=await page.evaluate(()=>{
+          const key=localStorage.getItem('vanillajs.voidward.active.v1');
+          return {key,text:key?localStorage.getItem(key):null};
+        });
+        assert.ok(stored.key&&stored.text,`No persistent autosave for migrated ${id}`);
+        const saved=decodeSaveEnvelope(stored.text);
+        assert.equal(saved.extension,old.extension,'native source identity persisted');
+        assert.deepEqual(saved.pack,migrated.pack.raw,'import must persist its exact pack');
+        assert.deepEqual(saved.state,migrated.state,'import must persist every migrated state field');
+        await page.reload();await page.waitForFunction(({id,turn})=>globalThis.__voidward?.pack.meta.id===id&&globalThis.__voidward.state.version===2&&globalThis.__voidward.state.turn===turn,{id,turn:old.state.turn},{timeout:SAVE_RESTORE_TIMEOUT_MS});
+        assert.deepEqual((await snapshot()).state,migrated.state);
+        assert.deepEqual((await snapshot()).pack.raw,migrated.pack.raw);
+      }
+      const before=JSON.stringify((await snapshot()).state);
+      await upload('#save-file','{"kind":"wrong"}');
+      await page.waitForFunction(()=>document.querySelector('#toast').classList.contains('error'));
+      assert.equal(JSON.stringify((await snapshot()).state),before);
+    }finally{
+      page=originalPage;
+      await legacyContext.close();
+    }
   });
   await check('large-save-roundtrip',async()=>{
     await close();const fixture=largeSaveFixture,timings=receipt.largeSave={status:'RUNNING',fixtureBytes:Buffer.byteLength(fixture.text,'utf8'),workload:'Generated validated synthetic boundary fixture with populated report history; not a played campaign; no turns simulated in browser',timingMeaning:'Single Node monotonic wall-time sample per UI transfer, including Playwright protocol, import completion or download/read; not pure simulation time'};

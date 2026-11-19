@@ -178,3 +178,26 @@ are sanitized excerpts, not byte-identical raw diagnostic files. Screenshots and
 creator artifacts retain their original bytes; the
 [artifact inventory](evidence/voidward/artifact-inventory.json) records hashes.
 Detailed raw workstation metadata stays local.
+
+## Post-merge VOIDWARD legacy-save browser fixture isolation (2026-11-19)
+
+The first HORIZON v2.9.0 post-merge Flight Lab run, 44462829442, failed in
+`worlds/verifyVoidwardLab` during the 30-second post-reload wait for a
+legacy `frontier` or `machine-dawn` save. The log proves a missing expected
+restored state at that wait; it does **not** prove which storage condition caused
+it. All earlier phases in the shared VOIDWARD browser test had produced many
+campaign autosaves, making cross-test storage pressure a potential confounder.
+
+The migration fixture now uses a new isolated Chromium browser context with
+clean localStorage. Both original v1 saves are imported through the real UI,
+verified as migrated v2 states, and compared byte-for-byte in decoded persisted
+save envelopes (including source identity, complete pack and full state) **before**
+reloading. It then confirms the same full state and pack after reload. Rejected
+imports still must preserve the accepted campaign. The original browser page
+and its independent later scenarios remain intact. Service worker coverage is
+provided by the separate required VOIDWARD offline check; it is disabled only
+in the isolated persistence-focused context.
+
+This does not increase timeouts, disable browser tests, publish a cache witness,
+change game code or weaken rejection rules. Unknown persistence failures still
+fail the run with a more specific assertion instead of only a timeout.

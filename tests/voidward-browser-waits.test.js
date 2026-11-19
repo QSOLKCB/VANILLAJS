@@ -28,3 +28,20 @@ test('legacy save reload waits for the expected campaign and turn with a boot al
   assert.match(source,/globalThis\.__voidward\?\.pack\.meta\.id===id&&globalThis\.__voidward\.state\.version===2&&globalThis\.__voidward\.state\.turn===turn/);
   assert.match(source,/await page\.reload\(\);await page\.waitForFunction\(\(\{id,turn\}\)=>[\s\S]*?\{timeout:SAVE_RESTORE_TIMEOUT_MS\}\)/);
 });
+
+test('legacy import runs in isolated Chromium storage and verifies the actual persisted state',async()=>{
+  const source=await readFile(new URL('../scripts/browser-voidward.js',import.meta.url),'utf8');
+  const start=source.indexOf("await check('legacy-save-migration'");
+  const end=source.indexOf("await check('large-save-roundtrip'",start);
+  assert.ok(start>=0&&end>start);
+  const migration=source.slice(start,end);
+  assert.match(migration,/const legacyContext=await browser\.newContext\(/);
+  assert.match(migration,/page=await legacyContext\.newPage\(\)/);
+  assert.match(migration,/localStorage\.getItem\('vanillajs\.voidward\.active\.v1'\)/);
+  assert.match(migration,/assert\.deepEqual\(saved\.state,migrated\.state/);
+  assert.match(migration,/assert\.deepEqual\(saved\.pack,migrated\.pack\.raw/);
+  assert.match(migration,/page=originalPage/);
+  assert.match(migration,/await legacyContext\.close\(\)/);
+  assert.doesNotMatch(migration,/localStorage\.clear\(/,'other campaign slots must not be wiped');
+  assert.doesNotMatch(migration,/\.catch\(\(\)=>\{\}\)/,'reload failures cannot be silenced');
+});
