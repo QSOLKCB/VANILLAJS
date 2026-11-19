@@ -10,7 +10,7 @@ const $=id=>document.getElementById(id);
 const retro=$('retro-view'),three=$('three-view');
 const ctx=retro.getContext('2d'),keys=new Set(),clock=new FixedClock({step:STEP,maxSteps:8});
 const names={retro:['Retro Tour / Horizon Drift','Three highway stages. Dodge AI traffic, bank through the curves and ration the nitro.'],
-  tour:['Scenic Tour / Sunset Junction','Four original highway stages with three fork choices. Choose the left or right route by lane position at each junction.'],
+  tour:['Scenic Tour / Sunset Junction','Four original highway stages with three fork choices. Avoid solid traffic and choose the left or right route at each junction.'],
   circuit:['Circuit Race / Vector Ring','Three laps through eight ordered gates. Trade racing lines with four AI opponents.'],
   sprint:['Coastal Sprint / Sapphire Run','Race a 3.6 km winding 3D road through original seaside, canyon and highland scenery. Survive traffic and road shoulders.'],
   derby:['Demolition / Impact Arena','Disable four rival cars by ramming them before your vehicle runs out of structural health.'],
@@ -88,7 +88,7 @@ function select(mode){
     mode==='ball'?'WASD drive, Shift boost, Space jump, X drift, F flip. Hit the ball towards the far goal.':
     mode==='tour'?'W accelerate, A/D steer, Shift boost. Move LEFT or RIGHT before each stage end to choose the next route.':
     mode==='sprint'?'W accelerate, A/D steer, Shift boost. Follow the coastal road, pass rivals and avoid the verge.':
-    mode==='retro'?'W accelerate, A/D steer, Shift boost. Pass traffic without contact.':
+    mode==='retro'?'W accelerate, A/D steer, Shift boost. Brake or change lanes to avoid solid rivals.':
     'WASD or arrows to drive, Shift to boost, X to drift, Space to jump, F to flip.';
   showOverlay(names[mode][0].toUpperCase(),names[mode][1],'START ENGINE ↗');
   if(!rasterMode(mode)){
@@ -125,12 +125,53 @@ function polygon(c,color,points){
   for(const point of points.slice(1))c.lineTo(point[0],point[1]);
   c.closePath();c.fill();
 }
-function drawCar(c,x,y,scale,color){
+// Original sprite-style rear-quarter art. Three silhouettes share the same
+// physical hitbox; the added details are bounded Canvas 2D operations only.
+function drawCar(c,x,y,scale,color,model=0,health=100){
   c.save();c.translate(x,y);c.scale(scale,scale);
-  c.fillStyle='#0d1b23';c.fillRect(-17,-12,9,19);c.fillRect(8,-12,9,19);
-  polygon(c,color,[[-14,-22],[14,-22],[19,13],[14,20],[-14,20],[-19,13]]);
-  polygon(c,'#152b3c',[[-10,-10],[10,-10],[12,6],[-12,6]]);
-  c.fillStyle='#ffdf8d';c.fillRect(-13,-21,7,3);c.fillRect(6,-21,7,3);
+  c.fillStyle='#03091588';c.beginPath();c.ellipse(0,20,23,7,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#0a121d';
+  for(const side of [-1,1]){
+    c.fillRect(side<0?-21:14,-12,7,13);
+    c.fillRect(side<0?-22:15,8,7,12);
+  }
+  // Distinct coupe, grand-tourer and rally hatch profiles.
+  const rear=model===2?21:19,shoulder=model===1?20:18,roof=model===2?13:11;
+  polygon(c,'#0a1520',[[-16,-24],[16,-24],[shoulder+2,14],[15,rear+3],
+    [-15,rear+3],[-shoulder-2,14]]);
+  polygon(c,color,[[-14,-22],[14,-22],[shoulder,10],[15,rear],
+    [-15,rear],[-shoulder,10]]);
+  polygon(c,'#ffffff22',[[-13,-21],[-9,-20],[-12,11],[-16,12]]);
+  polygon(c,'#06121d66',[[13,-21],[15,10],[12,17],[9,14]]);
+  // Windscreen, roof, rear glazing and A/C pillars are legible at close range.
+  polygon(c,'#102b3e',[[-roof,-12],[roof,-12],[roof+1,-4],[-roof-1,-4]]);
+  polygon(c,'#527a8b',[[-roof+2,-11],[roof-2,-11],[roof-1,-8],[-roof+1,-8]]);
+  polygon(c,model===1?'#244556':'#173448',
+    [[-roof-1,-3],[roof+1,-3],[roof+3,9],[-roof-3,9]]);
+  polygon(c,'#9fc7d466',[[-roof+1,-2],[-roof+4,-2],[-roof+3,7],[-roof+1,7]]);
+  c.fillStyle='#0b1d2c';c.fillRect(-17,11,34,3);
+  c.fillStyle='#ff4b68';c.fillRect(-15,13,8,4);c.fillRect(7,13,8,4);
+  c.fillStyle='#ffd7ae';c.fillRect(-13,14,4,1);c.fillRect(9,14,4,1);
+  c.fillStyle='#112330';c.fillRect(-11,18,22,3);
+  c.fillStyle='#cbd8d4';c.fillRect(-5,18,10,2);
+  c.fillStyle='#172632';c.fillRect(-20,1,4,6);c.fillRect(16,1,4,6);
+  if(model===0){
+    // Coupe: aerodynamic spoiler and twin exhausts.
+    polygon(c,'#111c2b',[[-20,13],[20,13],[18,16],[-18,16]]);
+    c.fillStyle='#aeb9b8';c.fillRect(-13,21,5,2);c.fillRect(8,21,5,2);
+  }else if(model===1){
+    // Grand tourer: contrasting bonnet stripe and broad chrome trim.
+    c.fillStyle='#e0dabb88';c.fillRect(-2,-21,4,17);
+    c.fillStyle='#d2dfda';c.fillRect(-17,17,34,2);
+  }else{
+    // Rally hatch: tall rear roof and contrasting center panel.
+    polygon(c,'#d1e8d044',[[-4,-19],[4,-19],[6,8],[-6,8]]);
+    c.fillStyle='#ffe8a8';c.fillRect(-18,8,4,3);c.fillRect(14,8,4,3);
+  }
+  if(health<50){
+    c.strokeStyle='#f9ecdcaa';c.lineWidth=1;
+    c.beginPath();c.moveTo(-9,-3);c.lineTo(-2,3);c.lineTo(-6,7);c.stroke();
+  }
   c.restore();
 }
 function retroRender(){
@@ -181,9 +222,13 @@ function retroRender(){
   for(const b of opponents){
     const gap=b.s-world.distance;if(gap<0||gap>350)continue;
     const t=Math.max(0,Math.min(1,1-gap/350)),p=road(t),scale=.2+1.65*t;
-    drawCar(ctx,p.mid+b.x*p.half*.15,p.y,scale,['#ffc569','#f76e8e','#80c5fa'][b.color]);
+    // The road reaches the near clipping edge, but rival sprites should
+    // approach the player's rear bumper rather than disappear off-canvas.
+    const spriteY=horizon+Math.pow(t,1.52)*(h*.80-horizon);
+    drawCar(ctx,p.mid+b.x*p.half*.15,spriteY,scale,
+      ['#ffc569','#f76e8e','#80c5fa','#d9b5ff','#f0a778'][b.id%5],b.id%3);
   }
-  drawCar(ctx,w/2,h*.88,2.25,'#50ecda');
+  drawCar(ctx,w/2,h*.88,2.25,'#50ecda',0,world.player.health);
   ctx.fillStyle='#fef9dd';ctx.font='bold 12px monospace';
   if(world.mode==='tour'){
     const next=(world.player.lap+1)*1200-world.distance;
