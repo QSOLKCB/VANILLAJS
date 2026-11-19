@@ -15,10 +15,13 @@ class BoundaryTests(unittest.TestCase):
         current=(ROOT/v.FLIGHT_WORKFLOW).read_bytes()
         self.assertEqual(v.sha(baseline),v.FLIGHT_BASE_SHA256)
         self.assertTrue(v.verify_workflow_budget_revision(baseline,current))
+        previous=current.replace(v.FLIGHT_NEW_BUDGET,v.FLIGHT_PREVIOUS_BUDGET,1)
+        self.assertEqual(v.sha(previous),v.FLIGHT_PREVIOUS_SHA256)
         preparation=v.FLIGHT_BASELINE_PREPARATION
         node_step=b'      - run: node --test tests/*.test.js\n'
         cases={
-            'different budget':current.replace(b'timeout-minutes: 35',b'timeout-minutes: 36',1),
+            'different budget':current.replace(b'timeout-minutes: 45',b'timeout-minutes: 46',1),
+            'old 35-minute budget':current.replace(v.FLIGHT_NEW_BUDGET,v.FLIGHT_PREVIOUS_BUDGET,1),
             'permission':current.replace(b'contents: read',b'contents: write',1),
             'verification bypass':current.replace(b'run: node scripts/check.js',b'run: true',1),
             'action source':current.replace(b'actions/checkout@11d5960a326750d5838078e36cf38b85af677262',b'actions/checkout@main',1),

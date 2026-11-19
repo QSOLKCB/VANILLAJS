@@ -80,6 +80,17 @@ claim**. The old Q16 allowlist remains unchanged. `sorryAx`, custom axioms,
 records or unexpected audit output cause failure. Executable `lean --run` output
 is finite evaluation evidence, not a kernel theorem about JavaScript.
 
+## Hosted workflow timeout revision
+
+Flight Lab run 44190272172 was cancelled near the final browser check at the
+previous 35-minute whole-job limit. The reviewed 45-minute budget adds bounded
+headroom without skipping any test or changing deployment's verification gate.
+The source verifier now reconstructs and hashes both the original 20-minute
+workflow and the authorised 35-minute predecessor before admitting the exact
+35-to-45-minute budget/comment substitution. The active source manifest pins
+the new workflow and verifier; old Git history and mathematical fixtures remain
+unchanged.
+
 ## Source pins and provenance
 
 `formal/alien-math-006/manifest.json` binds every declared input by SHA-256:
