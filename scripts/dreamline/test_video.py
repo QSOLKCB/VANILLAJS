@@ -104,6 +104,11 @@ class VideoTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'decoder seek differs'):
             self.check_movie(broken)
 
+    def test_punctuated_local_movie_path(self):
+        movie = self.root/"Act 3 – Trent's copy (1) #4.mp4"
+        movie.hardlink_to(self.movie)
+        self.assertEqual(self.check_movie(movie)['decodedFrames'], 60)
+
     def test_missing_streams(self):
         for stream in ('v', 'a'):
             with self.subTest(stream=stream):
@@ -172,7 +177,7 @@ class VideoTests(unittest.TestCase):
 
     def test_encoder_failure_cleans_staging(self):
         out = self.root/'encoder-failure'
-        with patch.object(video, 'FF', [sys.executable, '-c', 'raise SystemExit(73)']):
+        with patch.object(video, 'FF_ARGS', ['-invalid-dreamline-test-encoder-option']):
             with self.assertRaises((subprocess.CalledProcessError, ValueError, BrokenPipeError)):
                 video.export('--fixture', out, True)
         self.assertFalse(out.exists())

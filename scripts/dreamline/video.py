@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 CUTS = (240, 660, 1200, 1830, 2460)
 THUMB_BYTES = 32 * 18 * 3
-FF = ['ffmpeg', '-hide_banner', '-nostdin', '-loglevel', 'error', '-xerror', '-protocol_whitelist', 'file,pipe']
+FF_ARGS = ['-hide_banner', '-nostdin', '-loglevel', 'error', '-xerror', '-protocol_whitelist', 'file,pipe']
 
 
 def require(condition, message):
@@ -30,8 +30,13 @@ def require(condition, message):
         raise ValueError(message)
 
 
-def capture(args):
-    return sp.check_output(args, cwd=ROOT).decode().strip()
+def decode(options):
+    return sp.check_output(['ffmpeg', *FF_ARGS, *options])
+
+
+def probe(options):
+    return sp.check_output(['ffprobe', '-v', 'error', '-protocol_whitelist', 'file,pipe',
+                            *options], text=True).strip()
 
 
 def hashfile(path):
@@ -43,8 +48,9 @@ def samples(short):
     return [start+i for start in CUTS for i in range(12)] if short else range(2700)
 
 
-def render_cmd(mode, source, refs):
-    return ['node', str(HERE/'render.mjs'), mode, source, str(refs)]
+def render(mode, source, refs, *, frame_range=(), output=None):
+    sp.run(['node', str(HERE/'render.mjs'), mode, source, str(refs), *frame_range],
+           cwd=ROOT, stdout=output, check=True)
 
 
 def verify(movie, wav, refs, probes, short=False):
@@ -54,8 +60,7 @@ def verify(movie, wav, refs, probes, short=False):
     width, height = (320,180) if short else (1920,1080)
     frames = samples(short)
     seconds = len(frames)/30
-    meta = json.loads(capture(['ffprobe','-v','error','-protocol_whitelist','file,pipe',
-                               '-show_streams','-of','json',str(movie)]))['streams']
+    meta = json.loads(probe(['-show_streams','-of','json',str(movie)]))['streams']
     require(len(meta)==2, 'expected two streams')
     video = next((s for s in meta if s['codec_type']=='video'),{})
     audio = next((s for s in meta if s['codec_type']=='audio'),{})
@@ -69,14 +74,14 @@ def verify(movie, wav, refs, probes, short=False):
                 'incorrect stream start/duration')
     # Check presentation timestamps independently of the declared average rate.
     from fractions import Fraction
-    ts=capture(['ffprobe','-v','error','-protocol_whitelist','file,pipe','-select_streams','v:0',
+    ts=probe(['-select_streams','v:0',
                 '-show_entries','frame=best_effort_timestamp','-of','csv=p=0',str(movie)])
     ticks=[int(s.split(',')[0]) for s in ts.splitlines() if s.strip(', ')]
     base=Fraction(video['time_base'])
     require(len(ticks)==len(frames) and all(t*base==Fraction(i,30) for i,t in enumerate(ticks)),'frame timestamps')
     ref=Path(refs).read_bytes(); independent=Path(probes).read_bytes()
     require(len(ref)==len(frames)*THUMB_BYTES and len(independent)==15*THUMB_BYTES,'reference dimensions')
-    decoded=sp.check_output(FF+['-threads','2','-i',str(movie),'-map','0:v:0','-vf','scale=32:18:flags=area',
+    decoded=decode(['-threads','2','-i',str(movie),'-map','0:v:0','-vf','scale=32:18:flags=area',
                                 '-fps_mode','passthrough','-pix_fmt','rgb24','-f','rawvideo','pipe:1'])
     require(len(decoded)==len(ref),'decoded frame count')
     probe_frames={cut+offset for cut in CUTS for offset in (0,3,7)}
@@ -95,7 +100,7 @@ def verify(movie, wav, refs, probes, short=False):
             # keyframe. The compact fixture has its own contiguous film PTS.
             # Floor in microseconds so rounding never selects the next PTS.
             position_us=i*1_000_000//30
-            sought=sp.check_output(FF+['-ss',str(position_us)+'us','-threads','2',
+            sought=decode(['-ss',str(position_us)+'us','-threads','2',
                                        '-i',str(movie),'-map','0:v:0','-frames:v','1',
                                        '-vf','scale=32:18:flags=area','-pix_fmt','rgb24',
                                        '-f','rawvideo','pipe:1'])
@@ -107,7 +112,7 @@ def verify(movie, wav, refs, probes, short=False):
         previous=actual
     motion=Path(refs).with_name('motion.gray').read_bytes()
     scale=64*36
-    observed=sp.check_output(FF+['-threads','2','-i',str(movie),'-map','0:v:0','-vf','scale=64:36:flags=area',
+    observed=decode(['-threads','2','-i',str(movie),'-map','0:v:0','-vf','scale=64:36:flags=area',
                                  '-fps_mode','passthrough','-pix_fmt','gray','-f','rawvideo','pipe:1'])
     require(len(motion)==len(observed)==len(frames)*scale,'motion reference dimensions')
     # Compare decoded temporal changes against pre-encoder thumbnails from the
@@ -141,7 +146,7 @@ def verify(movie, wav, refs, probes, short=False):
                     'picture timing mismatch at frame %d (better source frame %d)'%(frame,frames[j]))
     # AAC priming is removed by the MP4 edit list. A decoder can retain at most
     # one partial AAC block after the declared sample count.
-    pcm=sp.check_output(FF+['-i',str(movie),'-map','0:a:0','-f','s16le','pipe:1'])
+    pcm=decode(['-i',str(movie),'-map','0:a:0','-f','s16le','pipe:1'])
     with wave.open(str(wav),'rb') as w:
         require((w.getnchannels(),w.getsampwidth(),w.getframerate(),w.getnframes())==
                 (2,2,48000,len(frames)*1600),'reference PCM shape')
@@ -183,12 +188,13 @@ def export(source, destination, short):
         if source=='--production':
             # Fixed code and fixed local module URL, never user-supplied JS.
             code="import {productionScore} from './demos/dreamline/production.js';console.log(JSON.stringify(productionScore));"
-            (tmp/'score.json').write_text(capture(['node','--input-type=module','-e',code])+'\n')
+            score_text=sp.check_output(['node','--input-type=module','-e',code],cwd=ROOT,text=True)
+            (tmp/'score.json').write_text(score_text.strip()+'\n')
             source=str(tmp/'score.json')
         elif source!='--fixture':
             shutil.copyfile(source,tmp/'score.json');source=str(tmp/'score.json')
         wav=tmp/'edit.wav';film=tmp/'film.mp4';refs=tmp/'frames.rgb';probes=tmp/'seeks.rgb'
-        receipt=json.loads(capture(['node',str(HERE/'pcm.mjs'),source,str(wav)]))
+        receipt=json.loads(sp.check_output(['node',str(HERE/'pcm.mjs'),source,str(wav)],cwd=ROOT,text=True))
         if short:
             with wave.open(str(wav),'rb') as original, wave.open(str(tmp/'short.wav'),'wb') as clipped:
                 clipped.setparams(original.getparams())
@@ -204,7 +210,7 @@ def export(source, destination, short):
         # Compare content motion entering libx264, after conversion to the
         # deliverable's legal-range 8-bit luma and subsampled chroma.
         video_filter='scale=in_range=full:out_range=tv,format=yuv420p'
-        encode=FF+['-f','image2pipe','-framerate','30','-c:v','mjpeg','-threads','2','-i','pipe:0',
+        encode=['-f','image2pipe','-framerate','30','-c:v','mjpeg','-threads','2','-i','pipe:0',
                    '-protocol_whitelist','file,pipe','-i',str(wav),'-map','0:v:0','-map','1:a:0',
                    '-vf',video_filter,'-color_range','tv',
                    '-c:v','libx264','-preset','veryfast','-threads','2','-crf','17','-pix_fmt','yuv420p',
@@ -212,13 +218,13 @@ def export(source, destination, short):
                    '-map','0:v:0','-vf',video_filter+',scale=64:36:flags=area','-pix_fmt','gray','-threads','1','-f','rawvideo',str(motion)]
         # A bounded host lifetime also bounds native Skia caches independently of JS GC.
         total=len(samples(short))
-        with sp.Popen(encode,stdin=sp.PIPE) as encoder:
+        with sp.Popen(['ffmpeg', *FF_ARGS, *encode],stdin=sp.PIPE) as encoder:
             try:
                 with refs.open('xb') as combined:
                     for begin in range(0,total,120):
                         part=tmp/'chunk.rgb'
-                        cmd=render_cmd(mode,source,part)+[str(begin),str(min(total,begin+120))]
-                        sp.run(cmd,cwd=ROOT,stdout=encoder.stdin,check=True)
+                        render(mode,source,part,frame_range=(str(begin),str(min(total,begin+120))),
+                               output=encoder.stdin)
                         with part.open('rb') as stream:
                             shutil.copyfileobj(stream,combined)
                         part.unlink()
@@ -226,7 +232,7 @@ def export(source, destination, short):
                 encoder.stdin.close()
                 if encoder.poll() is None and sys.exc_info()[0]:encoder.terminate()
             require(encoder.wait()==0,'encoder failed')
-        sp.run(render_cmd('fixture-probes' if short else 'probes',source,probes),cwd=ROOT,check=True)
+        render('fixture-probes' if short else 'probes',source,probes)
         result=verify(film,wav,refs,probes,short)
         identity={'result':result,'profile':mode,'frameRule':'sample=1600*n; end exclusive; AAC edit list start=0',
                   'childCpuSeconds':round(resource.getrusage(resource.RUSAGE_CHILDREN).ru_utime+resource.getrusage(resource.RUSAGE_CHILDREN).ru_stime,3),
@@ -236,10 +242,11 @@ def export(source, destination, short):
                      'Audio-To-Video':'6cd8839764b4926de4bcc71463014886bcdf1aa2'},
                   'secondsElapsed':round(time.monotonic()-started,3),'score':receipt,
                   'scoreFileSHA256':hashfile(Path(source)) if source!='--fixture' else None,
-                  'node':capture(['node','-v']),'python':sys.version,'ffmpeg':capture(['ffmpeg','-version']),
-                  'ffprobe':capture(['ffprobe','-version']).splitlines()[0],
-                  'skiaCanvas':capture(['node','-p',"require('@napi-rs/canvas/package.json').version"]),
-                  'sourceCommit':capture(['git','rev-parse','HEAD']),
+                  'node':sp.check_output(['node','-v'],cwd=ROOT,text=True).strip(),'python':sys.version,
+                  'ffmpeg':sp.check_output(['ffmpeg','-version'],cwd=ROOT,text=True).strip(),
+                  'ffprobe':sp.check_output(['ffprobe','-version'],cwd=ROOT,text=True).strip().splitlines()[0],
+                  'skiaCanvas':sp.check_output(['node','-p',"require('@napi-rs/canvas/package.json').version"],cwd=ROOT,text=True).strip(),
+                  'sourceCommit':sp.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                   'donor':'6cd8839764b4926de4bcc71463014886bcdf1aa2',
                   'inputs':{str(p.relative_to(ROOT)):hashfile(p) for p in sorted([
                       *HERE.glob('*.py'),*HERE.glob('*.mjs'),*(ROOT/'demos/dreamline').glob('*.js')])},
