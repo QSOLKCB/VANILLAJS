@@ -121,7 +121,7 @@
     "scripts/fps-upgrade-check.mjs": "829d6408944ac25d03db13ff8b17c6eb9e6e28b9ca635c3b5f88a874e529473b",
     "scripts/browser-arcade-combat.js": "14cdca2f7861f7c3f679da0e018e71732a9c6c075c6d39f15419a1f0c0003da6",
     "scripts/arcade-upgrade-check.mjs": "15f891011d95a20e31bea3a798c9de9bef141ac482d1fae964b2d77dbd5f2a28",
-    "scripts/browser-voidward.js": "9f6c76a88cd48b5a54b1711dbef313eb5e010ef1332dcb0ff9923691b9617b9c",
+    "scripts/browser-voidward.js": "9559487074cb862f3445d87eb91e46e5a762649208680ebb187b12995e950cfd",
     "tests/voidward-save-fixtures.js": "d79c082ebfe196a5e6d1b73d59f8fec8c44113f57b8005296928d24f7e57b4a7",
     "scripts/browser-4x.js": "267596c99dfa5f7c2f82bff1533848900f923824ec92e42e17ae6e3fefba312a",
     "scripts/browser-2d.js": "e63c4e84fc8f360fff5af349daceed6b44946d0fa697d6122aed69937eca423b",
@@ -808,7 +808,7 @@
       "reason": "Local upgrade server combines the bound historical audio fixture and worker template with current package bytes; browser fetch only compares same-origin cached source."
     },
     "scripts/browser-voidward.js": {
-      "sha256": "9f6c76a88cd48b5a54b1711dbef313eb5e010ef1332dcb0ff9923691b9617b9c",
+      "sha256": "9559487074cb862f3445d87eb91e46e5a762649208680ebb187b12995e950cfd",
       "roots": [
         "demos/4x-game-lab/voidward/js/render.js",
         "demos/4x-game-lab/voidward/js/core.js",

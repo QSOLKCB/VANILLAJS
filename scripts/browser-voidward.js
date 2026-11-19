@@ -67,6 +67,35 @@ async function traceMap(campaign) {
   finally{clearTimeout(completionTimer);if(started)await cdp?.send('Tracing.end').catch(()=>{});if(stream)await cdp?.send('IO.close',{handle:stream}).catch(()=>{});await cdp?.detach().catch(()=>{});}
   return result;
 }
+// Read-only, bounded snapshot: an offline startup failure must retain the
+// original assertion and record whether its worker, cache or JS boot is missing.
+async function inspectOfflineBoot() {
+  if(!page||page.isClosed())return{status:'PAGE_CLOSED'};
+  let timer;
+  const sample=page.evaluate(async()=>{
+    const [registration,cacheNames]=await Promise.all([
+      navigator.serviceWorker.getRegistration(),caches.keys()
+    ]);
+    const worker=registration?.active;
+    return{
+      readyState:document.readyState,
+      appLoading:!!document.querySelector('#app .loading'),
+      hookReady:!!globalThis.__voidward?.state,
+      turn:globalThis.__voidward?.state?.turn??null,
+      controllerPath:navigator.serviceWorker.controller?
+        new URL(navigator.serviceWorker.controller.scriptURL).pathname:null,
+      activeWorkerPath:worker?new URL(worker.scriptURL).pathname:null,
+      activeWorkerState:worker?.state??null,
+      cacheCount:cacheNames.length,
+      cacheNames:cacheNames.filter(name=>name.startsWith('qsol-vanillajs:')).slice(0,8)
+    };
+  }).catch(error=>({status:'INSPECTION_ERROR',message:String(error.message).slice(0,256)}));
+  try{
+    return await Promise.race([
+      sample,new Promise(resolve=>{timer=setTimeout(()=>resolve({status:'INSPECTION_TIMEOUT',afterMs:2000}),2000);})
+    ]);
+  }finally{clearTimeout(timer);}
+}
 async function check(name,fn){current=name;const start=Date.now();checks[name]={status:'RUNNING'};await fn();checks[name]={status:'PASS',elapsedMs:Date.now()-start};await fs.writeFile(path.join(out,'progress.json'),JSON.stringify(receipt,null,2));}
 async function launch(id,player=0){await close();await nav('Campaign workshop').click();await action('campaign-prompt',`[data-pack="${id}"]`).click();await page.waitForFunction(({id,player})=>document.querySelector('#dialog').open&&document.querySelector('#new-pack')?.value===id&&[...document.querySelector('#new-player').options].some(o=>o.value===String(player)),{id,player});await page.locator('#new-player').selectOption(String(player));await page.locator('#new-seed').fill('2401');await action('launch').click();await page.waitForFunction(({id,player})=>globalThis.__voidward?.pack.meta.id===id&&globalThis.__voidward.state.player===player&&globalThis.__voidward.state.turn===1&&!document.querySelector('#dialog').open,{id,player});}
 async function end(){const before=(await snapshot()).state.turn;await action('end').click();await page.waitForFunction(n=>globalThis.__voidward.state.turn===n+1,before);}
@@ -259,7 +288,72 @@ try {
     const touch=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true,reducedMotion:'reduce'});try{const phone=await touch.newPage();observe(phone);await phone.goto(url);await phone.waitForFunction(()=>globalThis.__voidward?.state);await phone.locator('[data-action="colonize"]').first().tap();assert.equal(await phone.evaluate(()=>globalThis.__voidward.state.planets.filter(p=>p.owner===0).length),2);await phone.locator('[data-action="end"]').tap();assert.equal(await phone.evaluate(()=>globalThis.__voidward.state.turn),2);}finally{await touch.close();}await page.setViewportSize({width:1440,height:1000});
   });
   await check('offline',async()=>{
-    await page.evaluate(async()=>{await navigator.serviceWorker.ready;if(!navigator.serviceWorker.controller)await new Promise(resolve=>navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}));});const before=(await snapshot()).state.turn;await context.setOffline(true);try{await page.reload();await page.waitForFunction(()=>globalThis.__voidward?.state);assert.equal((await snapshot()).state.turn,before);await end();}finally{await context.setOffline(false);}
+    // Hosted-only failures previously left the loading shell visible. Observe
+    // the original 12s readiness gate, not a substituted sleep or retry.
+    const started=Date.now(),diagnostics={
+      kind:'qsol.voidward.offline-boot-diagnostics.v1',
+      status:'RUNNING',phase:'worker-ready',events:[],discardedEvents:0
+    };
+    const pathOnly=raw=>{try{
+      const target=new URL(raw);
+      return target.origin===new URL(url).origin?target.pathname:'EXTERNAL';
+    }catch{return 'INVALID_URL';}};
+    const record=(kind,data={})=>{
+      if(diagnostics.events.length===96){diagnostics.events.shift();diagnostics.discardedEvents++;}
+      diagnostics.events.push({elapsedMs:Date.now()-started,kind,...data});
+    };
+    const onRequest=request=>record('request',{path:pathOnly(request.url()),type:request.resourceType()});
+    const onResponse=response=>record('response',{path:pathOnly(response.url()),
+      status:response.status(),fromServiceWorker:response.fromServiceWorker()});
+    const onFailed=request=>record('requestfailed',{path:pathOnly(request.url()),
+      error:String(request.failure()||'UNKNOWN').slice(0,256)});
+    const onConsole=message=>{if(message.type()==='error')
+      record('console-error',{message:message.text().slice(0,256)});};
+    const onPageError=error=>record('pageerror',{message:String(error.message).slice(0,256)});
+    const handlers=[['request',onRequest],['response',onResponse],
+      ['requestfailed',onFailed],['console',onConsole],['pageerror',onPageError]];
+    for(const [kind,handler]of handlers)page.on(kind,handler);
+    let failure;
+    try{
+      await page.evaluate(async()=>{
+        await navigator.serviceWorker.ready;
+        if(!navigator.serviceWorker.controller)
+          await new Promise(resolve=>navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}));
+      });
+      diagnostics.before=await inspectOfflineBoot();
+      const before=(await snapshot()).state.turn;
+      diagnostics.expectedTurn=before;
+      diagnostics.phase='offline-reload';
+      await context.setOffline(true);
+      try{
+        await page.reload();
+        diagnostics.phase='boot-state-wait';
+        await page.waitForFunction(()=>globalThis.__voidward?.state);
+        assert.equal((await snapshot()).state.turn,before);
+        diagnostics.phase='offline-end-turn';
+        await end();
+      }catch(error){
+        diagnostics.atFailure=await inspectOfflineBoot();
+        throw error;
+      }finally{await context.setOffline(false);}
+      diagnostics.after=await inspectOfflineBoot();
+      diagnostics.status='PASS';
+    }catch(error){
+      failure=error;diagnostics.status='FAIL';
+      diagnostics.error={phase:diagnostics.phase,message:String(error.message).slice(0,512)};
+      if(!diagnostics.atFailure)diagnostics.atFailure=await inspectOfflineBoot();
+      console.error('VOIDWARD offline boot diagnostic: '+JSON.stringify({
+        error:diagnostics.error,atFailure:diagnostics.atFailure,
+        lastEvents:diagnostics.events.slice(-16)
+      }));
+    }finally{
+      for(const [kind,handler]of handlers)page.off(kind,handler);
+      diagnostics.elapsedMs=Date.now()-started;
+      try{await fs.writeFile(path.join(out,'offline-diagnostics.json'),JSON.stringify(diagnostics,null,2));}
+      catch(error){console.error('VOIDWARD offline diagnostic write failed:',error);
+        if(!failure)failure=error;}
+    }
+    if(failure)throw failure;
   });
   await check('render-parity-performance',async()=>{
     receipt.performance=[];
