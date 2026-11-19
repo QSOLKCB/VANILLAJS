@@ -38,16 +38,20 @@ NEW_FILES=[FORMAL+n+'.lean' for n in ['AlienMath006','Audit','Bridge']]+[
  'tests/fixtures/alien-math-006-input.json','tests/fixtures/alien-math-006-oracle.json',
  'docs/ALIEN_MATH_006.md','.github/workflows/alien-math-formal.yml','scripts/browser-reuse-policy.json']
 FILES=sorted(BASELINE_FILES+NEW_FILES)
-# The live hosted-job budget may advance without rewriting its frozen witness.
-# This exact, independently pinned baseline-to-current substitution permits only
-# the reviewed 20 -> 35 minute budget/comment and a narrow historical fetch before
-# admission tests. Every other action, command, condition and permission must match.
+# Retain exact witnesses for the frozen 20-minute phase-005 source and
+# the previously reviewed 35-minute phase-006 workflow. Only an exact
+# 35 -> 45 minute budget/comment substitution is authorised after that.
+# Every other action, command, condition and permission must match.
 FLIGHT_WORKFLOW='.github/workflows/flight-lab.yml'
 FLIGHT_BASE_SHA256='dee8b35061e6768a76aad700e30486f1d13a4cfcfcdaaef16f1dcf5ef7f0f4b9'
 FLIGHT_OLD_BUDGET=b'    timeout-minutes: 20 # cold-cache and complete browser-suite margin; not permission to skip checks\n'
-FLIGHT_NEW_BUDGET=(b'    # HORIZON extends the full software-rendered suite beyond the former 20-minute\n'
-                   b'    # whole-job limit. Keep every gate and allow time for cold tooling and uploads.\n'
-                   b'    timeout-minutes: 35\n')
+FLIGHT_PREVIOUS_SHA256='e6a1e69f4b44c06c23deeeb4126af32b18ff6e26efbef0a7dee89599ac80e9c7'
+FLIGHT_PREVIOUS_BUDGET=(b'    # HORIZON extends the full software-rendered suite beyond the former 20-minute\n'
+                        b'    # whole-job limit. Keep every gate and allow time for cold tooling and uploads.\n'
+                        b'    timeout-minutes: 35\n')
+FLIGHT_NEW_BUDGET=(b'    # Run 44190272172 reached the final SubHunt browser check but hit the 35-minute\n'
+                   b'    # job limit. Keep every gate: allow full-suite, cold-tooling and upload headroom.\n'
+                   b'    timeout-minutes: 45\n')
 FLIGHT_CHECKOUT=b'      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4\n'
 FLIGHT_BASELINE_PREPARATION=(b'      - name: Fetch exact ALIEN-MATH-006 historical baseline\n'
     b'        run: |\n'
@@ -81,10 +85,15 @@ def verify_workflow_budget_revision(baseline,current):
     if sha(baseline)!=FLIGHT_BASE_SHA256:raise ValueError('frozen workflow witness mismatch')
     if baseline.count(FLIGHT_OLD_BUDGET)!=1:raise ValueError('frozen workflow budget is ambiguous')
     if baseline.count(FLIGHT_CHECKOUT)!=1:raise ValueError('frozen workflow checkout is ambiguous')
-    expected=baseline.replace(FLIGHT_OLD_BUDGET,FLIGHT_NEW_BUDGET,1)
-    expected=expected.replace(FLIGHT_CHECKOUT,FLIGHT_CHECKOUT+FLIGHT_BASELINE_PREPARATION,1)
+    previous=baseline.replace(FLIGHT_OLD_BUDGET,FLIGHT_PREVIOUS_BUDGET,1)
+    previous=previous.replace(FLIGHT_CHECKOUT,FLIGHT_CHECKOUT+FLIGHT_BASELINE_PREPARATION,1)
+    if sha(previous)!=FLIGHT_PREVIOUS_SHA256:
+        raise ValueError('previous approved workflow witness mismatch')
+    if previous.count(FLIGHT_PREVIOUS_BUDGET)!=1:
+        raise ValueError('previous approved workflow budget is ambiguous')
+    expected=previous.replace(FLIGHT_PREVIOUS_BUDGET,FLIGHT_NEW_BUDGET,1)
     if current!=expected:
-        raise ValueError('unreviewed workflow change outside exact timeout and historical-fetch revision')
+        raise ValueError('unreviewed workflow change outside exact 20-to-35-to-45 budget revision')
     return True
 
 def verify_baseline(root,manifest):

@@ -19,9 +19,9 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    # HORIZON extends the full software-rendered suite beyond the former 20-minute
-    # whole-job limit. Keep every gate and allow time for cold tooling and uploads.
-    timeout-minutes: 35
+    # Run 44190272172 reached the final SubHunt browser check but hit the 35-minute
+    # job limit. Keep every gate: allow full-suite, cold-tooling and upload headroom.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Fetch exact ALIEN-MATH-006 historical baseline
