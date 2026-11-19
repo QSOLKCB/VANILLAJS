@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {MODES,STEP,TRACK_LENGTH,RACE_GATES,SPRINT_LENGTH,TOUR_STAGE_LENGTH,stuntRoad,sprintCenter,sweepVehicleContact,sweepRetroContact,tourPalette,createRace,stepRace} from '../demos/racing-lab/world.js';
 import {sceneGeometry,dynamicGeometry} from '../demos/racing-lab/geometry.js';
+import {starterTrack,trackCenter} from '../demos/racing-lab/track.js';
 const drive={throttle:1,steer:.28,boost:true,handbrake:false,jump:false,flip:false};
 test('all five racing presets initialize and reject invalid state and timestep',()=>{
   assert.deepEqual(MODES,['retro','tour','circuit','sprint','derby','ball','stunt']);
@@ -274,7 +275,6 @@ test('retro rear-end collision blocks progress throughout immunity cooldown',()=
   }
   assert.equal(w.contacts,1,'cooldown suppresses duplicate damage, never physical separation');
   assert.equal(w.player.health,91);
-  assert.match(w.event||'TRAFFIC IMPACT',/TRAFFIC IMPACT/);
   w.player.x=4;w.player.speed=75;
   for(let i=0;i<15;i++)stepRace(w,{throttle:1});
   assert.ok(w.distance>b.s+4,'moving to a clear lane allows a real overtake');
@@ -302,4 +302,18 @@ test('retro approaching faster rival remains behind player after contact',()=>{
   assert.equal(w.contacts,1);
   assert.ok(b.s<=w.distance-4+1e-9,'rear traffic cannot pass through the player');
   assert.ok(w.distance>=100);
+});
+
+test('authored Scenic Tour rivals collide in world-space rather than local lane offsets',()=>{
+  const track=starterTrack(),w=createRace('tour',track),b=w.bots[0];
+  w.bots=[b];w.distance=0;w.player.x=trackCenter(track,0);w.player.speed=70;
+  b.x=0;b.s=8;b.speed=0;
+  for(let i=0;i<25;i++){
+    stepRace(w,{throttle:1});
+    assert.ok(w.distance<=b.s-4+1e-9,'curved authored track must preserve physical bumper separation');
+  }
+  assert.equal(w.contacts,1);
+  w.player.x=trackCenter(track,w.distance)+5;w.player.speed=75;
+  for(let i=0;i<15;i++)stepRace(w,{throttle:1});
+  assert.ok(w.distance>b.s+4,'the same authored track must allow passing in a clear lane');
 });

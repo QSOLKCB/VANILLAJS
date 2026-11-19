@@ -222,7 +222,10 @@ function retroRender(){
   for(const b of opponents){
     const gap=b.s-world.distance;if(gap<0||gap>350)continue;
     const t=Math.max(0,Math.min(1,1-gap/350)),p=road(t),scale=.2+1.65*t;
-    drawCar(ctx,p.mid+b.x*p.half*.15,p.y,scale,
+    // The road reaches the near clipping edge, but rival sprites should
+    // approach the player's rear bumper rather than disappear off-canvas.
+    const spriteY=horizon+Math.pow(t,1.52)*(h*.80-horizon);
+    drawCar(ctx,p.mid+b.x*p.half*.15,spriteY,scale,
       ['#ffc569','#f76e8e','#80c5fa','#d9b5ff','#f0a778'][b.id%5],b.id%3);
   }
   drawCar(ctx,w/2,h*.88,2.25,'#50ecda',0,world.player.health);

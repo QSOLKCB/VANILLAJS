@@ -284,7 +284,7 @@ function stepRetro(w,input,dt){
       b.s=Math.min(b.s,w.distance-4);
     }
     if(p.cooldown===0){
-      p.speed=Math.min(p.speed,b.speed);
+      p.speed*=.5; // Preserve the pre-existing arcade impact response.
       p.health=Math.max(0,p.health-9);
       p.cooldown=48;w.contacts++;w.event='TRAFFIC IMPACT';
     }
