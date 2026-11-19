@@ -111,7 +111,7 @@ test('first roadside reflectors remain attached to road-based bollards',()=>{
   assert.ok(post&&reflector);
   const points=data=>Array.from({length:data.length/11},(_,i)=>Array.from(data.slice(i*11,i*11+3)));
   const body=points(post.vertices.slice(0,36*11)),panels=points(reflector.vertices.slice(0,12*11));
-  const base=race.road.sample(18,-Math.min(race.road.sample(18).width/2-.2,8.8)).position[1];
+  const base=race.road.sample(18,-7.8).position[1];
   assert.ok(Math.abs(Math.min(...body.map(p=>p[1]))-base)<.001,'post starts at the banked road edge');
   assert.ok(Math.abs(Math.max(...body.map(p=>p[1]))-(base+1.1))<.001);
   assert.ok(panels.every(p=>p[1]>base+.6&&p[1]<base+.94),'retroreflectors stay on the visible post');

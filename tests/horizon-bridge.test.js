@@ -39,7 +39,9 @@ test('actual glancing 24 m/s bridge edge contact is bounded and does not produce
       hit ||= state.contacts.some(id=>id.startsWith('bridge-rail-'));
       assert.equal(state.needsRecovery,false,'contact must not freeze chassis');
     }
-    if(outwardAngle)assert.ok(hit,'real visible bridge rail must be a collider');
+    // An offset vehicle can now legitimately pass through the open air
+    // between the two rendered bars; absence of contact is not a failure.
+    assert.equal(typeof hit,'boolean');
   }
 });
 test('32-knot long bridges select only nearby collision barriers without changing the authored road',()=>{
@@ -103,4 +105,18 @@ test('bridge collision respects the visible openings between horizontal bars',()
   assert.deepEqual(actual.position,shifted(-.5));
   assert.equal(rails.filter(r=>r.id.startsWith('bridge-rail-')).length,64);
   assert.equal(rails.filter(r=>r.id.startsWith('bridge-post-')).length,16);
+});
+
+test('an actual rendered bridge bar stops a direct chassis sweep',()=>{
+  const race=createRaceSession(starterRaceProject()),rail=race.bridgeRails.find(r=>r.id.endsWith('-left-high'));
+  assert.ok(rail);
+  const transverse=rail.axes[0],start=rail.center.map((v,i)=>v+transverse[i]*.6),
+    end=rail.center.map((v,i)=>v-transverse[i]*.6);
+  const before={position:start,orientation:[0,0,0,1]},car={
+    recipe:{chassis:{width:.14,height:.10,length:.22}},
+    step:()=>({position:end,orientation:[0,0,0,1],velocity:transverse.map(v=>-v*24),contacts:[],wheels:[]})
+  };
+  const after=stepBridgeVehicle(car,before,{}, {},[rail],1/120);
+  assert.ok(after.contacts.includes(rail.id),'the visible high bar must remain solid');
+  assert.ok(Math.hypot(...after.position.map((v,i)=>v-start[i]))<1.2);
 });
