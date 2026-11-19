@@ -14,12 +14,22 @@ export function bridgeGuardrails(road){
       const a=rows[i][side],b=rows[i+1][side],edge=subtract(b,a);
       const along=Math.hypot(edge[0],edge[2])>1e-9?normalize(edge):[0,0,-1];
       const across=normalize(cross(along,[0,1,0])),up=cross(across,along);
-      const center=add(scale(add(a,b),.5),[0,.48,0]);
-      const half=[.06,.49,length(edge)/2+.075];
       const axes=[across,up,along];
-      const bounds=half.map((_,k)=>axes.reduce((sum,axis,j)=>sum+Math.abs(axis[k])*half[j],0));
-      rails.push({id:'bridge-rail-'+i+'-'+side,center,axes,box:{min:scale(half,-1),max:half},
-        min:subtract(center,bounds),max:add(center,bounds)});
+      const addBox=(id,center,half,frame=axes)=>{
+        const bounds=half.map((_,k)=>frame.reduce((sum,axis,j)=>sum+Math.abs(axis[k])*half[j],0));
+        rails.push({id,center,axes:frame,box:{min:scale(half,-1),max:half},
+          min:subtract(center,bounds),max:add(center,bounds)});
+      };
+      // Scenic3d renders two open horizontal bars (.42m and .92m high),
+      // not a solid ~1m wall. The old continuous collision slab blocked
+      // empty space beneath and between those visible bars.
+      for(const [band,height] of [['low',.42],['high',.92]])
+        addBox('bridge-rail-'+i+'-'+side+'-'+band,
+          add(scale(add(a,b),.5),[0,height,0]),[.05,.045,length(edge)/2+.075]);
+      // Only alternate authored stations contain a visible vertical post;
+      // match the world-axis post mesh rather than filling every gap.
+      if(i%2===0)addBox('bridge-post-'+i+'-'+side,add(a,[0,.44,0]),
+        [.06,.475,.06],[[1,0,0],[0,1,0],[0,0,1]]);
     }
   }
   return rails;

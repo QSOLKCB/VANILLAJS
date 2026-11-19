@@ -74,12 +74,12 @@ export function createRaceRoadDetails(road,profile='high',environment='coast'){
       const edge=road.sample(distance,side*edgeOffset).position,
         origin=add(edge,right,side*(width/2+2.1-edgeOffset)),
         posts=values('posts',chunk),reflectors=values('reflectors',chunk);
-      // Short roadside bollards with two retroreflective faces. The body
-      // starts below the road edge; both panels face approaching traffic.
-      box(posts,add(origin,[0,.20,0]),[.13,1.65,.13],theme.post);
-      const x=.115*side,anchor=add(origin,right,x);
-      signQuad(reflectors,anchor,right,back,[[-.095,.77],[.095,.77],[.095,1.10],[-.095,1.10]],theme.reflector,.10);
-      signQuad(reflectors,anchor,right,back,[[.095,.77],[-.095,.77],[-.095,1.10],[.095,1.10]],theme.reflector,-.10);
+      // Short vertical edge bollard rooted at the actual banked road edge.
+      // Two opposed narrow retroreflectors stay flush with its front/back
+      // faces; no floating fins or buried 0.6m-long poles.
+      box(posts,add(origin,[0,.55,0]),[.15,1.10,.15],theme.post);
+      signQuad(reflectors,origin,right,back,[[-.065,.62],[.065,.62],[.065,.92],[-.065,.92]],theme.reflector,.076);
+      signQuad(reflectors,origin,right,back,[[.065,.62],[-.065,.62],[-.065,.92],[.065,.92]],theme.reflector,-.076);
     }
     postPairs++;
     if(distance-previousSign<72||distance<45||distance>road.length-40)continue;
@@ -93,9 +93,9 @@ export function createRaceRoadDetails(road,profile='high',environment='coast'){
       origin=add(edge,right,outside*(width/2+3.8-edgeOffset)),posts=values('posts',chunk);
     // Sign backplate, mount, and high-contrast chevron are two retained
     // material batches rather than thousands of per-object GPU draws.
-    box(posts,add(origin,[0,.65,0]),[.12,2.1,.12],theme.post);
-    signQuad(values('signs',chunk),add(origin,[0,1.55,0]),right,back,[[-.76,-.40],[.76,-.40],[.76,.40],[-.76,.40]],theme.sign,.05);
-    const ink=values('ink',chunk),anchor=add(origin,[0,1.55,0]),dir=turn>0?1:-1;
+    box(posts,add(origin,[0,.90,0]),[.14,1.8,.14],theme.post);
+    signQuad(values('signs',chunk),add(origin,[0,1.45,0]),right,back,[[-.76,-.36],[.76,-.36],[.76,.36],[-.76,.36]],theme.sign,.075);
+    const ink=values('ink',chunk),anchor=add(origin,[0,1.45,0]),dir=turn>0?1:-1;
     const stroke=(y1,y2)=>signQuad(ink,anchor,right,back,[[dir*-.25,y1-.10],[dir*.35,y2-.10],[dir*.35,y2+.10],[dir*-.25,y1+.10]],theme.ink,.075);
     stroke(.19,0);stroke(-.19,0);
     warningSigns++;previousSign=distance;

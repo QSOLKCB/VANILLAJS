@@ -19,7 +19,7 @@ function spawnOnRoad(car,road,recipe,distance,lateral,speed,headingOffset=0){
 test('bridge collision follows visible edges and leaves the ordinary racing lanes clear',()=>{
   const p=starterRaceProject(),w=createDriveWorld(p.scenery,p.surfaces,'coast'),
     road=w.scenic.road,rails=bridgeGuardrails(road),car=createVehicle(p.vehicle);
-  assert.equal(rails.length,32);assert.equal(w.physics.barriers.length,1,'legacy world is preserved');
+  assert.equal(rails.length,80,'two visible bars and alternate vertical posts are the only barriers');assert.equal(w.physics.barriers.length,1,'legacy world is preserved');
   for(const lane of [-2,2]){
     let state=spawnOnRoad(car,road,p.vehicle,165,lane,24);
     for(let i=0;i<90;i++){
@@ -85,4 +85,22 @@ test('rail sweeps leave a vehicle travelling beneath the bridge alone',()=>{
   const state=car.spawn({position:[point.position[0],point.position[1]-5,point.position[2]],yaw:point.yaw,velocity:[0,0,-17]});
   assert.deepEqual(stepBridgeVehicle(car,state,{},race.world.physics,race.bridgeRails),
     car.step(state,{},race.world.physics));
+});
+
+test('bridge collision respects the visible openings between horizontal bars',()=>{
+  const p=starterRaceProject(),road=new ScenicRoad(p.scenery),rails=bridgeGuardrails(road);
+  const bar=rails.find(r=>r.id.startsWith('bridge-rail-')&&r.id.endsWith('-left-low')&&Number(r.id.split('-')[2])%2===1);
+  assert.ok(bar,'fixture needs a segment with no vertical post');
+  const high=rails.find(r=>r.id===bar.id.replace('-low','-high'));
+  assert.ok(high);
+  const gap=bar.center.map((v,k)=>(v+high.center[k])/2),axis=bar.axes[0];
+  const shifted=side=>gap.map((v,k)=>v+axis[k]*side);
+  const before={position:shifted(.5),orientation:[0,0,0,1]},
+    car={recipe:{chassis:{width:.14,height:.10,length:.24}},step:()=>({
+      position:shifted(-.5),orientation:[0,0,0,1],velocity:axis.map(v=>-v),contacts:[],wheels:[]})};
+  const actual=stepBridgeVehicle(car,before,{}, {},rails,1/120);
+  assert.deepEqual(actual.contacts,[],'no invisible solid slab in the visual gap');
+  assert.deepEqual(actual.position,shifted(-.5));
+  assert.equal(rails.filter(r=>r.id.startsWith('bridge-rail-')).length,64);
+  assert.equal(rails.filter(r=>r.id.startsWith('bridge-post-')).length,16);
 });
