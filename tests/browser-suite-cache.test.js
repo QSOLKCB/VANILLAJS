@@ -125,7 +125,7 @@ test('complete hosted browser verification has headroom and a failure cannot sta
   const deploy=yaml.split('\n  deploy:\n')[1];
   assert.ok(verify&&deploy,'verification and deployment remain separate jobs');
   const timeout=Number(verify.match(/^    timeout-minutes: (\d+)/m)?.[1]);
-  assert.ok(timeout>=35&&timeout<=45,'full hosted verification needs bounded cold-cache and upload headroom');
+  assert.ok(timeout>=45&&timeout<=50,'full hosted verification needs at least 45 minutes for the complete cold-cache browser suite and uploads');
   assert.match(verify,/run: node scripts\/browser-suite-cache\.mjs execute/);
   assert.doesNotMatch(yaml,/continue-on-error:/,'verification failures must fail the job');
   assert.match(verify,/- name: Publish immutable real executions on verified main only\n        if: github\.ref == 'refs\/heads\/main' && github\.event_name != 'pull_request' && env\.BROWSER_PUBLISH_EXECUTION == 'true'\n/);
