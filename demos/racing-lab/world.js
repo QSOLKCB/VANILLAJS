@@ -218,6 +218,28 @@ function updateBall(w,dt){
     }else {b.z=clamp(b.z,-58,58);b.vz*=-.8;}
   }
 }
+// Swept rectangle in lane-metres (x) and track-progress metres (s).
+// Retro graphics are perspective-only; this is the authoritative contact space.
+// Unlike damage-only overlap, it detects a complete high-speed pass in one tick.
+export function sweepRetroContact(startA,endA,startB,endB,halfWidth=1.8,halfLength=4){
+  const values=[startA?.x,startA?.s,endA?.x,endA?.s,
+    startB?.x,startB?.s,endB?.x,endB?.s,halfWidth,halfLength];
+  if(!values.every(Number.isFinite)||halfWidth<=0||halfLength<=0)
+    throw new RangeError('invalid retro traffic sweep');
+  const axes=[
+    [startA.x-startB.x,(endA.x-startA.x)-(endB.x-startB.x),halfWidth],
+    [startA.s-startB.s,(endA.s-startA.s)-(endB.s-startB.s),halfLength]
+  ];
+  let enter=0,exit=1;
+  for(const [at,delta,limit] of axes){
+    if(delta===0){if(Math.abs(at)>limit)return null;continue;}
+    const first=(-limit-at)/delta,last=(limit-at)/delta;
+    enter=Math.max(enter,Math.min(first,last));
+    exit=Math.min(exit,Math.max(first,last));
+    if(enter>exit)return null;
+  }
+  return {time:enter,playerBehind:startA.s<=startB.s};
+}
 function stepRetro(w,input,dt){
   const p=w.player,boosting=Boolean(input.boost)&&p.boost>0;
   // Accumulated nitro speed survives the next tick; it decays after release.
@@ -226,6 +248,7 @@ function stepRetro(w,input,dt){
     (Math.abs(bounded(input.throttle))<.01?p.speed*.35*dt:0),0,speedLimit);
   if(boosting){p.speed=Math.min(90,p.speed+35*dt);p.boost=Math.max(0,p.boost-20*dt);}
   else p.boost=Math.min(100,p.boost+8*dt);
+  const startX=p.x;
   p.x+=bounded(input.steer)*(3.5+p.speed*.08)*dt;
   const center=w.track&&w.mode==='tour'?trackCenter(w.track,w.distance,w.route):0;
   const width=w.track&&w.mode==='tour'?trackHalfWidth(w.track,w.distance):5.6;
@@ -236,15 +259,39 @@ function stepRetro(w,input,dt){
   }
   const before=w.distance;
   w.distance+=p.speed*dt;
-  for(const b of w.bots){
+  // Advance all rivals first. Do not recycle cars before the swept-contact
+  // check: otherwise a very fast player could tunnel past the despawn plane.
+  const traffic=w.bots.map(b=>{
+    const startS=b.s;
+    const startBotX=w.track&&w.mode==='tour'?trackCenter(w.track,startS,w.route)+b.x:b.x;
     b.s+=b.speed*dt;
-    if(b.s<w.distance-20){b.s=w.distance+240+(b.id*83)%360;b.x=[-3,2.9,0,-1.5,3.1][b.id];}
-    const botX=w.track&&w.mode==='tour'?trackCenter(w.track,b.s,w.route)+b.x:b.x;
-    if(before<=b.s+4&&w.distance>=b.s-4&&Math.abs(p.x-botX)<1.8&&
-       !p.cooldown){
-      p.speed*=.5;p.health=Math.max(0,p.health-9);
+    const endBotX=w.track&&w.mode==='tour'?trackCenter(w.track,b.s,w.route)+b.x:b.x;
+    return {b,start:{x:startBotX,s:startS},end:{x:endBotX,s:b.s}};
+  });
+  // Closest rival first, stable by source ID. Cooldown suppresses repeat DAMAGE,
+  // never physical solidity; holding the accelerator cannot phase through a car.
+  for(const {b,start,end} of traffic.sort((a,b)=>a.end.s-b.end.s||a.b.id-b.b.id)){
+    const hit=sweepRetroContact({x:startX,s:before},{x:p.x,s:w.distance},start,end);
+    if(!hit)continue;
+    if(hit.playerBehind){
+      // Clamp the player behind the rear bumper, preserving monotonic progress.
+      // An already-overlapping fixture at s=0 instead nudges the rival ahead.
+      const bumper=b.s-4;
+      if(bumper<before){w.distance=before;b.s=before+4;}
+      else w.distance=Math.min(w.distance,bumper);
+    }else{
+      // A faster rival from behind cannot pass through the player's car either.
+      b.s=Math.min(b.s,w.distance-4);
+    }
+    if(p.cooldown===0){
+      p.speed=Math.min(p.speed,b.speed);
+      p.health=Math.max(0,p.health-9);
       p.cooldown=48;w.contacts++;w.event='TRAFFIC IMPACT';
     }
+  }
+  for(const b of w.bots)if(b.s<w.distance-20){
+    b.s=w.distance+240+(b.id*83)%360;
+    b.x=[-3,2.9,0,-1.5,3.1][b.id];
   }
   if(w.mode==='tour'){
     const stage=Math.min(TOUR_STAGES,Math.floor(w.distance/TOUR_STAGE_LENGTH));

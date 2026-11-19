@@ -23,7 +23,7 @@
   <canvas id="three-view" aria-label="3D vehicle racing and stunt simulator" tabindex="0" hidden></canvas>
   <div class="in-game"><span id="status">READY</span><span id="live-event" aria-live="polite">CHOOSE A MODE</span></div>
   <div class="curtain" id="curtain"><div class="curtain-inner"><span class="eyebrow">QSOL-IMC // VEHICLE PHYSICS</span>
-  <h2 id="overlay-title">RETRO TOUR</h2><p id="overlay-copy">Chase the horizon, overtake five rivals and survive three stages of arcade traffic.</p>
+  <h2 id="overlay-title">RETRO TOUR</h2><p id="overlay-copy">Chase the horizon, dodge physical traffic and survive three stages of arcade racing.</p>
   <button class="primary" id="launch">START ENGINE ↗</button><small>WASD / ARROWS drive · SHIFT boost · SPACE jump in 3D · X drift · F flip</small></div></div>
   <div id="error" role="alert" hidden></div>
 </div>
@@ -39,7 +39,7 @@
 </section>
 <section class="lower">
 <article><span class="eyebrow">RACE DIRECTOR</span><h2 id="mode-title">Retro Tour / Horizon Drift</h2><p id="mode-note">A classic-style raster highway with curvature, passing traffic, road shoulders and arcade boost.</p><p class="small" id="hint">Hold W or ↑ to accelerate, A/D to steer, Shift to boost. Race distance is measured in simulated metres.</p></article>
-<article><span class="eyebrow">PHYSICS DESK</span><h2>Make the car misbehave.</h2><p>Native 2D Canvas and original low-poly WebGL. Scenic route forks, a 3.6 km point-to-point 3D road, 60 Hz fixed simulation, fast-pass collision detection, traction loss, impact damage, nitro, airborne flips and respawns. No external assets.</p><p class="small">Float64 demo logic is not a proof of cross-browser bit-for-bit replay. Exact Q16.16 circuits remain in the separate Circuit Builder.</p></article>
+<article><span class="eyebrow">PHYSICS DESK</span><h2>Make the car misbehave.</h2><p>Native 2D Canvas and original low-poly WebGL. Scenic route forks, a 3.6 km point-to-point 3D road, 60 Hz fixed simulation, swept car-to-car contact and separation, traction loss, impact damage, nitro, airborne flips and respawns. No external assets.</p><p class="small">Float64 demo logic is not a proof of cross-browser bit-for-bit replay. Exact Q16.16 circuits remain in the separate Circuit Builder.</p></article>
 </section>
 <details class="controls"><summary>Controls / touch / operating notes</summary>
 <p><kbd>W</kbd>/<kbd>↑</kbd> accelerator · <kbd>S</kbd>/<kbd>↓</kbd> reverse / brake · <kbd>A D</kbd>/<kbd>← →</kbd> steering · <kbd>Shift</kbd> boost · <kbd>X</kbd> handbrake / drift · <kbd>Space</kbd> jump · <kbd>F</kbd> aerial barrel roll · <kbd>Esc</kbd> pause. Scenic Tour chooses a left or right fork from your lane position at each 1,200 m stage end. Coastal Sprint follows an original 3.6 km winding road. Skyline Stunt has two laps and real gaps. Demolition requires four knockouts. Car Football is first to five goals. Controls cancel on blur, page hide or pause.</p>

@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {MODES,STEP,TRACK_LENGTH,RACE_GATES,SPRINT_LENGTH,TOUR_STAGE_LENGTH,stuntRoad,sprintCenter,sweepVehicleContact,tourPalette,createRace,stepRace} from '../demos/racing-lab/world.js';
+import {MODES,STEP,TRACK_LENGTH,RACE_GATES,SPRINT_LENGTH,TOUR_STAGE_LENGTH,stuntRoad,sprintCenter,sweepVehicleContact,sweepRetroContact,tourPalette,createRace,stepRace} from '../demos/racing-lab/world.js';
 import {sceneGeometry,dynamicGeometry} from '../demos/racing-lab/geometry.js';
 const drive={throttle:1,steer:.28,boost:true,handbrake:false,jump:false,flip:false};
 test('all five racing presets initialize and reject invalid state and timestep',()=>{
@@ -252,4 +252,54 @@ test('homepage gives Racing and FPS distinct links and keeps both visible in nar
   assert.equal((home.match(/class="fps-link"/g)||[]).length,1,'FPS browser selector must match one link');
   assert.match(css,/@media\(max-width:780px\)[^\n]*\.masthead nav a\.racing-link\{display:inline;/,
     'the Racing Lab entry must stay visible in compact navigation');
+});
+
+test('retro traffic sweep detects tunnelling, lane clearance, and side approaches',()=>{
+  const at={x:0,s:0},past={x:0,s:20},car={x:0,s:10};
+  const hit=sweepRetroContact(at,past,car,car);
+  assert.ok(hit&&hit.time>.2&&hit.time<.4&&hit.playerBehind);
+  assert.equal(sweepRetroContact({x:2.1,s:0},{x:2.1,s:20},car,car),null);
+  const sideways=sweepRetroContact({x:5,s:0},{x:0,s:20},car,car);
+  assert.ok(sideways&&sideways.time>hit.time,'entering another lane partway through a pass still collides');
+  assert.throws(()=>sweepRetroContact(at,{x:NaN,s:20},car,car),RangeError);
+  assert.throws(()=>sweepRetroContact(at,past,car,car,0),RangeError);
+});
+test('retro rear-end collision blocks progress throughout immunity cooldown',()=>{
+  const w=createRace('retro'),b=w.bots[0];
+  w.bots=[b];b.x=0;b.s=8;b.speed=0;w.player.x=0;w.player.speed=72;
+  for(let i=0;i<25;i++){
+    stepRace(w,{throttle:1});
+    assert.ok(w.distance<=b.s-4+1e-9,'player may not drive through the stationary rival');
+    assert.ok(w.distance>=0,'distance is monotonic and never rewinds before start');
+  }
+  assert.equal(w.contacts,1,'cooldown suppresses duplicate damage, never physical separation');
+  assert.equal(w.player.health,91);
+  assert.match(w.event||'TRAFFIC IMPACT',/TRAFFIC IMPACT/);
+  w.player.x=4;w.player.speed=75;
+  for(let i=0;i<15;i++)stepRace(w,{throttle:1});
+  assert.ok(w.distance>b.s+4,'moving to a clear lane allows a real overtake');
+});
+test('retro high-speed sweep prevents complete crossing in a single large accepted tick',()=>{
+  const w=createRace('retro'),b=w.bots[0];w.bots=[b];
+  b.x=0;b.s=10;b.speed=0;w.player.x=0;w.player.speed=1000;
+  stepRace(w,{throttle:1},1/30);
+  assert.equal(w.contacts,1,'swept traffic encounter must register');
+  assert.ok(w.distance<=b.s-4+1e-9,'fast pass must not tunnel through rival or recycle it');
+});
+test('retro clean lane passes without damage or unnecessary braking',()=>{
+  const w=createRace('retro'),b=w.bots[0];w.bots=[b];
+  b.x=0;b.s=8;b.speed=0;w.player.x=4;w.player.speed=70;
+  for(let i=0;i<20;i++)stepRace(w,{throttle:1});
+  assert.ok(w.distance>b.s+4);
+  assert.equal(w.contacts,0);
+  assert.equal(w.player.health,100);
+});
+test('retro approaching faster rival remains behind player after contact',()=>{
+  const w=createRace('retro'),b=w.bots[0];w.bots=[b];
+  w.distance=100;w.player.x=0;w.player.speed=0;
+  b.x=0;b.s=95.9;b.speed=90;
+  stepRace(w,{},1/30);
+  assert.equal(w.contacts,1);
+  assert.ok(b.s<=w.distance-4+1e-9,'rear traffic cannot pass through the player');
+  assert.ok(w.distance>=100);
 });
