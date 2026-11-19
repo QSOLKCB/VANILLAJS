@@ -93,9 +93,9 @@ test('trust audit fails closed on absent protection, unreadable API or no requir
     throw Error('unprotected main must fail before looking for receipts');
   })).ok,false,'success on unprotected main cannot establish approved review');
   assert.equal((await auditAuthority(async path=>{
-    if(path.endsWith('/branches/main'))return {name:'main',protected:true};
     if(path.endsWith('/rules/branches/main'))
       return [{type:'pull_request',parameters:{required_approving_review_count:1}}];
+    if(path.endsWith('/branches/main'))return {name:'main',protected:true};
     throw Error('classic unavailable');
   })).ok,true);
   assert.equal((await auditAuthority(async()=>{throw Error('401');})).ok,false);
