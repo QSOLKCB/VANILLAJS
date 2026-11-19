@@ -1,0 +1,191 @@
+{
+  "sourceSHA256": "42ad828d63ba927bd1ff4339c81b298f7567baafbaaf4d426f836fee7c437b4e",
+  "python": "3.12.14",
+  "ppq": 480,
+  "tempo": [
+    [
+      0,
+      109
+    ]
+  ],
+  "meter": [
+    [
+      0,
+      [
+        4,
+        4
+      ]
+    ],
+    [
+      168960,
+      [
+        2,
+        4
+      ]
+    ],
+    [
+      169920,
+      [
+        4,
+        4
+      ]
+    ]
+  ],
+  "measureStarts": [
+    0,
+    1920,
+    3840,
+    5760,
+    7680,
+    9600,
+    11520,
+    13440,
+    15360,
+    17280,
+    19200,
+    21120,
+    23040,
+    24960,
+    26880,
+    28800,
+    30720,
+    32640,
+    34560,
+    36480,
+    38400,
+    40320,
+    42240,
+    44160,
+    46080,
+    48000,
+    49920,
+    51840,
+    53760,
+    55680,
+    57600,
+    59520,
+    61440,
+    63360,
+    65280,
+    67200,
+    69120,
+    71040,
+    72960,
+    74880,
+    76800,
+    78720,
+    80640,
+    82560,
+    84480,
+    86400,
+    88320,
+    90240,
+    92160,
+    94080,
+    96000,
+    97920,
+    99840,
+    101760,
+    103680,
+    105600,
+    107520,
+    109440,
+    111360,
+    113280,
+    115200,
+    117120,
+    119040,
+    120960,
+    122880,
+    124800,
+    126720,
+    128640,
+    130560,
+    132480,
+    134400,
+    136320,
+    138240,
+    140160,
+    142080,
+    144000,
+    145920,
+    147840,
+    149760,
+    151680,
+    153600,
+    155520,
+    157440,
+    159360,
+    161280,
+    163200,
+    165120,
+    167040,
+    168960,
+    169920,
+    171840,
+    173760,
+    175680,
+    177600,
+    179520,
+    181440,
+    183360,
+    185280,
+    187200
+  ],
+  "sectionsTicks": [
+    [
+      0,
+      69120
+    ],
+    [
+      181440,
+      189120
+    ]
+  ],
+  "sectionsSourceSamples": [
+    [
+      0,
+      3804771
+    ],
+    [
+      9987523,
+      10410275
+    ]
+  ],
+  "hashes": {
+    "full.mid": "0dbca50179c1b662a7515d83091b973f39fa71e62300ceaf232f19e590e58d7d",
+    "full.json": "da03207a249b508c585dceafc903e622b96cea30e5827b2da45c19081282a3af",
+    "edit.json": "3e0466a36eb511a52d47f163cf9acb43fc4f23ddda5cae60502554d694e1edd7"
+  },
+  "fullPCM": {
+    "node": "v24.22.3",
+    "frames": 10410275,
+    "source": "42ad828d63ba927bd1ff4339c81b298f7567baafbaaf4d426f836fee7c437b4e",
+    "pcm16le": "432ca7e230f29826a40b2917f7bfbe7681c759c22ca2c9207591a1dd0887653c",
+    "wav": "8b8fef8a17770aa7017c309cdbf926810b4817f770a5d76e04b664e42ad45c22"
+  },
+  "editPCM": {
+    "node": "v24.22.3",
+    "frames": 4320000,
+    "source": "42ad828d63ba927bd1ff4339c81b298f7567baafbaaf4d426f836fee7c437b4e",
+    "pcm16le": "82a2683b79ef7631876276acf3079eb8467356a8479ae92e79b592515dc5dab9",
+    "wav": "3381e9aa7ec86c8ca9e639fe93bdcf16ab5bbaf346bc3c9bdba0b4a597b2f4c8"
+  },
+  "track": "MACHINE DREAMS \u2014 Trent Slade (QSOL-IMC)",
+  "arrangement": "QSOL-IMC / VANILLAJS",
+  "license": "CC-BY-4.0",
+  "rights": {
+    "authorisation": "2026-11-19",
+    "certificateDate": "2025-08-17",
+    "paidSubscription": "confirmed by creator",
+    "source": "Authorised MusicXML and Mureka-assisted reference recording",
+    "excluded": [
+      "original recording",
+      "notation",
+      "MusicXML",
+      "lyrics",
+      "certificate"
+    ]
+  },
+  "referenceRecordingSHA256": "06991f8fc4cb8cb7e9ede68a4b65cd85a7dddec23b96d8ae64e21767052970e6"
+}
