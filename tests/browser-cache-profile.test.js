@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {applyLiveProfile,LIVE_PROFILE} from '../scripts/browser-cache-profile.mjs';
 import {hash,identity,closures} from '../scripts/browser-dependencies.mjs';
 import {decide} from '../scripts/browser-receipt-authority.mjs';
-import {executionPlan,REQUIRED_PASSES,SUITES} from '../scripts/browser-suite-cache.mjs';
+import {executionPlan,inheritVerifiedCopyAudits,REQUIRED_PASSES,SUITES} from '../scripts/browser-suite-cache.mjs';
 const root=new URL('../',import.meta.url);
 const baseBytes=await readFile(new URL('scripts/browser-reuse-policy.json',root),'utf8');
 const live=JSON.parse(await readFile(new URL(LIVE_PROFILE,root),'utf8'));
@@ -94,4 +94,18 @@ test('an active editor import of a dormant builder copy invalidates its reviewed
   assert.deepEqual(compute().issues,[]);
   sources[start]="import './"+copy.slice('demos/editor/'.length)+"';";
   assert.ok(compute().issues.includes('unreviewed executable closure: '+start));
+});
+
+test('only exact audited sources seed generated runtime copies',()=>{
+  const original='demos/horizon-lab/race-model.js',digest=hash('approved code'),
+    source={[original]:'approved code'},path='demos/horizon-lab/runtime-'+('a'.repeat(64))+'/'+original,
+    policy={auditedRuntime:{[original]:digest}};
+  source[path]=source[original];
+  const inputs={policy,files:[{path}],sources:source,
+    packageProvenance:{packages:[{lab:'horizon-lab',version:'a'.repeat(64)}]}};
+  inheritVerifiedCopyAudits(inputs);assert.equal(policy.auditedRuntime[path],digest);
+  delete policy.auditedRuntime[path];source[path]='changed generated copy';
+  inheritVerifiedCopyAudits(inputs);assert.equal(policy.auditedRuntime[path],undefined);
+  source[path]=source[original];policy.auditedRuntime[original]=hash('stale approved source');
+  inheritVerifiedCopyAudits(inputs);assert.equal(policy.auditedRuntime[path],undefined);
 });

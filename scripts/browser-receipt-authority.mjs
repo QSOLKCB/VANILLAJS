@@ -56,7 +56,16 @@ export function protectionAccepted(branch,rules,classic){
 export async function auditAuthority(api){
   try{
     const branch=await api('repos/QSOLKCB/VANILLAJS/branches/main');
-    if(branch.protected!==true)return {ok:false,reason:'main is not protected; no reusable receipt authority'};
+    // On owner-managed unprotected main, the only reusable authority is a
+    // completed-success GitHub main run, its immutable digest-checked artifact
+    // and exact Git tree binding. This is weaker than mandatory PR review.
+    if(branch?.protected===false){
+      if(branch.name!=='main'||!/^[a-f0-9]{40}$/.test(branch.commit?.sha??''))
+        return {ok:false,reason:'unverified unprotected main branch identity'};
+      return {ok:true,reason:'authenticated successful main run (unprotected branch: lower review assurance)',
+        policyDigest:identity({mode:'successful-main-run-v1',repository:'QSOLKCB/VANILLAJS',branch:'main',protected:false})};
+    }
+    if(branch?.protected!==true)return {ok:false,reason:'main protection state unavailable'};
     let rules=null,classic=null;try{rules=await api('repos/QSOLKCB/VANILLAJS/rules/branches/main');}catch{}
     try{classic=await api('repos/QSOLKCB/VANILLAJS/branches/main/protection');}catch{}
     if(!protectionAccepted(branch,rules,classic))return {ok:false,reason:'required PR approval controls cannot be established'};

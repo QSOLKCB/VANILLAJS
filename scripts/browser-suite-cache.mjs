@@ -74,8 +74,28 @@ export async function profileInputs({environment}={}){
   for(const row of provenance.sources)if(!extra.shared.some(existing=>existing.path===row.path))extra.shared.push(row);
   return {files,sources,policy,extra,environment:env,packageProvenance:provenance.metadata};
 }
+/** The package-provenance gate independently rebuilt and byte-verified every
+ * generated namespace. A copy inherits an audited source pin only if its
+ * underlying original JS matches exactly. Unknown copies remain unreviewed. */
+export function inheritVerifiedCopyAudits(inputs){
+  const {policy,files,sources,packageProvenance}=inputs;
+  for(const pkg of packageProvenance.packages){
+    const prefix='demos/'+pkg.lab+'/runtime-'+pkg.version+'/';
+    for(const file of files){
+      if(!file.path.startsWith(prefix)||!file.path.endsWith('.js'))continue;
+      const original=file.path.slice(prefix.length),source=sources[original],copy=sources[file.path];
+      if(typeof source!=='string'||typeof copy!=='string')continue;
+      const digest=hash(source);
+      if(hash(copy)===digest&&policy.auditedRuntime[original]===digest)
+        policy.auditedRuntime[file.path]=digest;
+    }
+  }
+}
+
 export async function sourceProfile(options){
-  const inputs=await profileInputs(options),profiles=closures(inputs);
+  const inputs=await profileInputs(options);
+  inheritVerifiedCopyAudits(inputs);
+  const profiles=closures(inputs);
   for(const profile of Object.values(profiles)){profile.inputs.packageProvenance=inputs.packageProvenance;profile.fingerprint=identity(profile.inputs);}
   return {policy:inputs.policy,profiles};
 }

@@ -115,7 +115,7 @@
     "scripts/editor-startup-check.mjs": "0d52da51d68b0ef6dca5f5258f1f248ff6c826139e4f3b752be039b501253a36",
     "scripts/demoscene-upgrade-check.mjs": "c86f63584ceab1867e8a0c4ab1b162da4729c8f8792f361e4a84de9fe8fe5f09",
     "scripts/demoscene-package.mjs": "dfb305399080e70c059727fb088849dc1c68a2ca26788d7ca067d75b0f8ed5c3",
-    "scripts/browser-dependencies.mjs": "5e8d5388cd2a21934c035229929300ec1501a9654244814e31a237a3dbffa921",
+    "scripts/browser-dependencies.mjs": "0d7b95f30017874304d58750a40ffc8de5d80610b34cd639ffd3c46fbc7219ab",
     "scripts/browser-demoscene-workbench.js": "95f9ffa660b69e3afd98ab4243f70e99a8b98104806bfc3a7f9447da82e000d9",
     "scripts/browser-block-arena.js": "a0235174dcd46d07ef262c2c527397a3cc23536a7e873cdc27b0d821da4476de",
     "scripts/fps-upgrade-check.mjs": "829d6408944ac25d03db13ff8b17c6eb9e6e28b9ca635c3b5f88a874e529473b",
@@ -779,9 +779,13 @@
       "reason": "Local upgrade server combines the bound historical audio fixture and worker template with current package bytes; browser fetch only compares same-origin cached source."
     },
     "scripts/browser-dependencies.mjs": {
-      "sha256": "5e8d5388cd2a21934c035229929300ec1501a9654244814e31a237a3dbffa921",
+      "sha256": "0d7b95f30017874304d58750a40ffc8de5d80610b34cd639ffd3c46fbc7219ab",
       "roots": [],
-      "reason": "The bounded dependency scanner contains import/resource words in its own regex patterns; its only real imports are node:crypto and node:path, and this exact helper is bound as shared source."
+      "reason": "The parser source contains a regex testing the words import/eval/Function/fetch. Treating its regex text as executing browser code is a false positive. Its only actual imports are built-in Node crypto and path; any source change revokes this review.",
+      "imports": [
+        "node:crypto",
+        "node:path"
+      ]
     },
     "scripts/browser-block-arena.js": {
       "sha256": "a0235174dcd46d07ef262c2c527397a3cc23536a7e873cdc27b0d821da4476de",
@@ -1103,6 +1107,28 @@
         "demos/horizon-lab/race-file-source.js"
       ],
       "reason": "The loopback server serves only entries extracted from the actual UI-downloaded ZIP under fixed /creator/exports/sunward/. Every manifest member is hash checked, race data is strictly admitted and the generated runtime is source-checked. A deliberate project.json corruption tests worker installation rejection. Runtime data cannot select executable instructions or arbitrary URLs. Fresh disconnected file contexts load the source index and extracted UI ZIP from the filesystem and exercise camera, drive, pause, authoring and restart."
+    },
+    "scripts/browser-horizon-race.js": {
+      "sha256": "9faf70f0d155c739c9432582aa668a079f2b8a42823d2409d0cde42f5d9b6fdd",
+      "roots": [
+        "demos/horizon-lab/race-view.js",
+        "demos/horizon-lab/race-project.js",
+        "demos/horizon-lab/race-model.js"
+      ],
+      "reason": "Three literal dynamic imports run inside Playwright page.evaluate in HORIZON's browser document, not the scripts/ directory. This review binds those exact browser modules and the harness's ordinary Node imports.",
+      "imports": [
+        "node:assert/strict",
+        "node:fs/promises",
+        "../demos/horizon-lab/race-project.js",
+        "./race-view.js",
+        "./race-project.js",
+        "./race-model.js"
+      ],
+      "browserImports": {
+        "./race-view.js": "demos/horizon-lab/race-view.js",
+        "./race-project.js": "demos/horizon-lab/race-project.js",
+        "./race-model.js": "demos/horizon-lab/race-model.js"
+      }
     }
   },
   "opaqueRuntime": {

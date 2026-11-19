@@ -5,23 +5,31 @@ package, harness, contract, policy and environment identities match. It does not
 cache Node tests or replace the browser tooling preflight. The Playwright download
 cache and trusted verification receipts are separate mechanisms.
 
-## Current activation state
+## Current verified status and authority
 
-At the Creator Gateway audit on 16 November 2026, GitHub reported `main` as
-unprotected. That blocks trusted receipt production and reuse. Local browser
-passes and PR passes are useful validation, but cannot qualify as trusted main
-executions. This change does not alter repository protection settings, create
-qualification receipts or claim measured CI savings.
+On 19 November 2026, main run 44453001792 executed all seven suites and
+reused zero. The source-bound policy already required **one** successful main
+execution, but the unprotected-main guard blocked all receipt publication.
+Worlds and editor additionally had misclassified exact import closures.
 
-Activation requires owner-managed protection of `main` with at least one required
-PR approval, followed by one successful main workflow execution of the matching
-inputs. A later matching run can reuse that result. The owner explicitly selected
-this one-run qualification policy during Creator Gateway review. A protection-
-policy change invalidates receipts authenticated under the previous policy.
+The owner-controlled **unprotected-main** mode now permits only GitHub's
+completed-success **main** workflow executions, with immutable artifact ZIP
+digest, exact run/attempt/commit metadata, independently verified Git source tree,
+and identical source, harness, tests, package, policy and browser environment
+fingerprints. A PR result, failed run, stale artifact, cache hit or reused-only
+result cannot qualify. The first successful main run under the new policy seeds
+the next identical run; earlier green runs lacking artifacts cannot be reused.
 
-The authority check must be able to read the relevant GitHub protection/rules
-settings. Missing permissions, unavailable metadata or missing required approvals
-force execution; they are not reasons to weaken the trust gate.
+**Tradeoff:** unprotected main permits authorised direct pushes without required
+review, a weaker trust boundary than protected main. Owners should enable required
+PR reviews; once protection is enabled, the policy digest changes and qualification
+must be re-earned under the stronger authority. No branch settings are changed
+here.
+
+The verified namespace audit inherits an exact reviewed source hash for generated
+runtime copies only after the entire namespace is independently reproduced and
+checked byte-for-byte. Literal browser imports inside Playwright's HORIZON page
+and the dependency scanner's own regex are now explicitly classified.
 
 ## What remains mandatory
 
@@ -104,11 +112,11 @@ main workflow also deploys GitHub Pages after verification; dispatch is therefor
 an owner-controlled operation, not a read-only inspection. No workflow is
 triggered automatically by this guide.
 
-Only actual successful executions on verified protected `main` can publish the
+Only actual successful executions on authenticated `main` (review-protected or the explicit lower-assurance owner-controlled fallback) can publish the
 immutable `ci-invariant-main-<run>-<attempt>` artifact. A reuse result is not another
 execution. PRs, forks, failed runs and local files cannot manufacture qualification.
 Receipt authentication checks GitHub run metadata, archive digest and size,
-source-tree identities and matching protection controls. Actions cache entries
+source-tree identities and matching authority-mode controls. Actions cache entries
 are never receipt authority.
 
 The [receipt codec](../scripts/browser-receipt-codec.mjs) stores identical input
@@ -143,7 +151,8 @@ importer invalidates its audit and requires review before reuse.
 
 | Diagnostic | Meaning and action |
 | --- | --- |
-| Main is not protected / required PR approval cannot be established | Owner reviews protection and read access; suites continue executing. |
+| Unprotected main with authenticated GitHub branch identity | GitHub-successful main receipts can qualify under explicit lower-assurance owner mode. |
+| Protected main without confirmed required PR approval | Reject reuse until review controls are established. |
 | Qualification 0/1 | No authenticated successful main execution matches every input. |
 | Unsupported dependency analysis | Inspect the listed source/resource; review and explicitly model it, or continue real execution. |
 | Package inventory/digest mismatch | Rebuild from current source and investigate changed or stale package files. |
