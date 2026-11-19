@@ -40,7 +40,9 @@ Holding both direction controls, or holding Space, applies the brake instead.
 **Course assist: ON/OFF** (ON by default) applies bounded route steering and corner-speed braking through ordinary `vehicle3d` input. Switch it OFF for direct unassisted controls. No route, world pose or physical state is secretly modified. Excessive high-speed digital steering can otherwise saturate tyre grip and produce sudden slides.
 
 The five touch buttons provide left, right, **Brake / reverse**, independent
-**Brake** and **Forward** actions. The gear display shows **R** in reverse, while
+**Brake** and **Forward** actions. A cancelled multi-touch gesture releases all
+held driving buttons even if the browser omits an individual captured-pointer
+cancellation. A fresh press is required to resume that input. The gear display shows **R** in reverse, while
 engine audio and wheel rotation follow actual vehicle telemetry. Pause, focus
 loss or a hidden page clears driving requests. Release held keys and press again
 after resuming; an old held reverse key cannot restart driving by itself.
