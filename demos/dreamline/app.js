@@ -23,7 +23,7 @@ function install(next){
   const pcm=synthesize(next),newFilm=createFilm(canvas,road,next,pcm);
   transport?.dispose();film?.dispose();film=newFilm;score=next;transport=new DreamTransport(pcm);
   transport.mute(el('mute').getAttribute('aria-pressed')==='true');
-  message(score.source==='original-test-fixture'?'Original engineering fixture · Load the authorised score in Creator controls.':(score.source===productionScore.source?'MACHINE DREAMS — Trent Slade (QSOL-IMC) · CC BY 4.0':'Local instrumental arrangement')+' · Source '+score.source.slice(0,12));loop();
+  message(score.source==='original-test-fixture'?'Original engineering fixture · Load the authorised score in Creator controls.':(score===productionScore?'MACHINE DREAMS — Trent Slade (QSOL-IMC) · CC BY 4.0':'Local instrumental arrangement')+' · Source '+score.source.slice(0,12));loop();
 }
 async function play(){try{await transport.play(el('silent').checked);}catch(e){transport.pause();message('Audio unavailable. Continuing with silent playback.');el('silent').checked=true;await transport.play(true);}loop();}
 el('play').onclick=()=>{if(transport.running){transport.pause();loop();}else void play();};
