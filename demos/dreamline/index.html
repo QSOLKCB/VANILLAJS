@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a1518"><title>The Machine Dreams — The Dreamline</title><link rel="stylesheet" href="style.css"></head>
+<body><header><a href="../../index.html">VΛNILLΛJS</a><a href="../editor/index.html#visual-fx">Visual Workbench ↗</a></header><main>
+<p class="kicker">QSOL-IMC / DEMOSCENE-002</p><h1>The Machine Dreams<span>The Dreamline</span></h1>
+<p class="subtitle">From Worlds to Imagination</p>
+<section class="screen" aria-label="Film"><canvas id="film" width="960" height="540" aria-label="The Dreamline procedural film"></canvas></section>
+<canvas id="road" aria-hidden="true"></canvas>
+<div class="controls"><button id="play">Play</button><button id="restart">Restart</button><button id="mute" aria-pressed="false">Mute</button><button id="full">Fullscreen</button>
+<label>Seek <input id="seek" type="range" min="0" max="4320000" step="1" value="0"></label><output id="clock">0.00 / 90 s</output></div>
+<p id="status" role="status">Preparing physical camera take…</p>
+<details id="creator"><summary>Creator controls</summary><div class="controls">
+<label>Trace <input id="trace" type="color" value="#79ffe0"></label><label>Metal <input id="metal" type="color" value="#d49056"></label>
+<label>Detail <select id="detail"><option>cinematic</option><option>reduced</option></select></label>
+<label>Motion <select id="motion"><option>full</option><option>reduced</option></select></label>
+<label><input id="silent" type="checkbox"> No-audio playback</label></div>
+<div class="controls"><button id="save">Save project</button><label>Open project <input id="project" type="file" accept=".json"></label>
+<label>Load local 90-second score <input id="score" type="file" accept=".json"></label></div>
+<a href="../../docs/DREAMLINE.md">Creator guide and credits ↗</a><p>MACHINE DREAMS — Trent Slade (QSOL-IMC). Instrumental arrangement and synthesis by QSOL-IMC / VANILLAJS. Original recording produced with Mureka assistance. <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></details></main>
+<script type="module" src="app.js"></script><script type="module" src="../../offline/register.js"></script></body></html>

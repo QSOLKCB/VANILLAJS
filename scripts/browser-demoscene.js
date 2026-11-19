@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 import assert from 'node:assert/strict';
+import {verifyDreamline} from './browser-dreamline.js';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {machineRemembers} from '../demos/demoscene-lab/preset.js';
@@ -10,6 +11,7 @@ import {createServer} from 'node:http';
 import {portableDemo} from './demoscene-package.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 export async function verifyDemoscene(browser,base){
+  await verifyDreamline(browser,base);
   const context=await browser.newContext({viewport:{width:1440,height:1100}}),page=await context.newPage(),errors=[],external=[];
   page.setDefaultTimeout(30000);page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!r.url().startsWith(new URL(base).origin)&&!r.url().startsWith('blob:')&&!r.url().startsWith('data:'))external.push(r.url());});
   const wait=()=>page.waitForFunction(()=>document.documentElement.dataset.labReady==='demoscene');
