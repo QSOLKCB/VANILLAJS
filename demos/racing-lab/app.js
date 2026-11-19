@@ -2,9 +2,10 @@
 import {FixedClock} from '../../modules/time/index.js';
 import {Renderer} from '../../modules/render-webgl/index.js';
 import {quatMultiply} from '../../modules/math/index.js';
-import {createRace,stepRace,retroCurve,tourPalette,TOUR_STAGES,SPRINT_LENGTH,STEP} from './world.js';
+import {TOUR_PROFILES,createRace,stepRace,retroCurve,tourPalette,TOUR_STAGES,SPRINT_LENGTH,STEP} from './world.js';
 import {sceneGeometry,dynamicGeometry} from './geometry.js';
 import {trackCenter,trackHalfWidth,environmentTheme,TRACK_TOTAL_LENGTH,chooseTourFork} from './track.js';
+import {runReceipt} from './run.js';
 import {setupTrackFoundry} from './track-editor.js';
 const $=id=>document.getElementById(id);
 const retro=$('retro-view'),three=$('three-view');
@@ -47,7 +48,16 @@ function audio(event){
   }catch{/* Sound is strictly optional; gameplay never depends on a device. */}
 }
 function updateHud(){
-  const p=world.player;
+  const p=world.player,touring=rasterMode(world.mode);
+  $('difficulty-label').hidden=!touring;
+  $('difficulty').disabled=running||world.tick>0;
+  const recovering=touring&&p.cooldown>0&&!world.finished;
+  $('impact').hidden=!recovering;
+  if(recovering){
+    const profile=TOUR_PROFILES[world.difficulty];
+    $('impact-loss').textContent='Impact · −'+profile.damage+' HP';
+    $('recovery').max=profile.cooldown;$('recovery').value=profile.cooldown-p.cooldown;
+  }
   $('speed').innerHTML=Math.round(Math.abs(p.speed)*3.6)+' <small>km/h</small>';
   $('lap').textContent=world.mode==='retro'?p.lap+' / 3':
     world.mode==='tour'?p.lap+' / '+TOUR_STAGES:
@@ -77,7 +87,8 @@ function pause(reason){
   $('pause').textContent='RESUME';updateHud();
 }
 function select(mode){
-  pause();paused=false;world=createRace(mode,authoredTrack&&supportsTrack(mode)?authoredTrack:null);
+  pause();paused=false;world=createRace(mode,authoredTrack&&supportsTrack(mode)?authoredTrack:null,
+    rasterMode(mode)?$('difficulty').value:'classic');
   replay=[];clock.reset();clock.setPaused(true);
   $('error').hidden=true;
   for(const b of document.querySelectorAll('[data-mode]'))
@@ -110,11 +121,7 @@ function launch(){
   safeFocus();if(!raf)raf=requestAnimationFrame(frame);updateHud();
 }
 function download(){
-  const receipt={schemaVersion:1,kind:'qsol.vanillajs.racing.run.v1',
-    mode:world.mode,step:STEP,inputs:replay,
-    observation:{tick:world.tick,elapsed:world.elapsed,result:world.result,
-      position:{x:world.player.x,y:world.player.y,z:world.player.z},
-      health:world.player.health,contacts:world.contacts,score:world.score}};
+  const receipt=runReceipt(world,replay);
   const url=URL.createObjectURL(new Blob([JSON.stringify(receipt,null,2)+'\n'],
     {type:'application/json'}));
   const a=document.createElement('a');a.download='racing-'+world.mode+'-run.json';a.href=url;a.click();
@@ -277,6 +284,7 @@ for(const button of document.querySelectorAll('[data-mode]'))
   button.addEventListener('click',()=>select(button.dataset.mode));
 $('launch').addEventListener('click',launch);
 $('pause').addEventListener('click',()=>running?pause('Your car, rivals and the clock are frozen.'):launch());
+$('difficulty').addEventListener('change',()=>{if(!running&&world.tick===0)select(world.mode);});
 $('reset').addEventListener('click',()=>select(world.mode));
 $('export').addEventListener('click',download);
 $('eco').addEventListener('change',render);

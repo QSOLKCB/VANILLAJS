@@ -25,6 +25,7 @@
   <div class="curtain" id="curtain"><div class="curtain-inner"><span class="eyebrow">QSOL-IMC // VEHICLE PHYSICS</span>
   <h2 id="overlay-title">RETRO TOUR</h2><p id="overlay-copy">Chase the horizon, dodge physical traffic and survive three stages of arcade racing.</p>
   <button class="primary" id="launch">START ENGINE ↗</button><small>WASD / ARROWS drive · SHIFT boost · SPACE jump in 3D · X drift · F flip</small></div></div>
+  <div id="impact" hidden><strong id="impact-loss"></strong><label>Recovering <progress id="recovery" max="48" value="0"></progress></label></div>
   <div id="error" role="alert" hidden></div>
 </div>
 <div class="hud">
@@ -35,6 +36,7 @@
 <div><span>RESULT</span><strong id="score">0</strong></div>
 </div>
 <div class="toolbar"><div><button id="pause">PAUSE</button><button id="reset">RESET ↺</button><button id="export">DOWNLOAD RUN JSON ↓</button></div>
+<label id="difficulty-label">Tour difficulty · before start <select id="difficulty"><option value="arcade">Arcade · forgiving</option><option value="classic" selected>Classic · v2.9 rules</option><option value="challenge">Challenge · heavier impacts</option></select></label>
 <label><input id="eco" type="checkbox"> ECO RENDER</label><label><input id="sound" type="checkbox"> SOUND FX</label></div>
 </section>
 <section class="lower">

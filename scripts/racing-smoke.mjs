@@ -21,6 +21,48 @@ const server=createServer(async(req,res)=>{
   }catch{res.writeHead(404);res.end();}
 });
 await new Promise(done=>server.listen(0,'127.0.0.1',done));
+async function witnessArcadeImpact(browser,url){
+  const context=await browser.newContext({viewport:{width:1280,height:850},acceptDownloads:true});
+  try{
+    const page=await context.newPage(),errors=[];
+    page.on('pageerror',error=>errors.push(error.message));
+    await page.clock.install();
+    await page.goto(url);
+    await page.waitForFunction(()=>document.documentElement.dataset.racingReady==='ready');
+    await page.locator('#difficulty').selectOption('arcade');
+    await page.locator('#launch').click();
+    await page.keyboard.down('w');
+    await page.keyboard.down('Shift');
+    // Drive the actual browser animation callback in bounded 100 ms steps.
+    // FixedClock admits six 60 Hz ticks per step; CI paint cadence is incidental.
+    for(let step=0;step<150&&!await page.locator('#impact').isVisible();step++)
+      await page.clock.fastForward(100);
+    const impactShown=await page.locator('#impact').isVisible();
+    if(!impactShown){
+      const pending=page.waitForEvent('download');await page.locator('#export').click();
+      const run=JSON.parse(await readFile(await (await pending).path(),'utf8'));
+      throw Error('Arcade impact absent: '+JSON.stringify({observed:run.observation,lastInput:run.inputs.at(-1),
+        focus:await page.evaluate(()=>document.activeElement?.id),status:await page.locator('#status').innerText(),errors}));
+    }
+    assert.equal(await page.locator('#impact-loss').textContent(),'Impact · −5 HP');
+    assert.equal(await page.locator('#recovery').getAttribute('max'),'72');
+    await page.screenshot({path:'browser-artifacts/racing-arcade-impact.png'});
+    await page.keyboard.up('Shift');
+    await page.keyboard.up('w');
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#status').textContent(),'PAUSED');
+    const saved=page.waitForEvent('download');await page.locator('#export').click();
+    const arcade=JSON.parse(await readFile(await (await saved).path(),'utf8'));
+    assert.equal(arcade.schemaVersion,2);assert.equal(arcade.difficulty,'arcade');
+    const {replayTourRun}=await import('../demos/racing-lab/run.js');
+    const reproduced=replayTourRun(arcade);assert.equal(reproduced.tick,arcade.observation.tick);
+    assert.equal(reproduced.contacts,arcade.observation.contacts);
+    assert.ok(reproduced.contacts>0);
+    assert.deepEqual(errors,[]);
+  }finally{
+    await context.close();
+  }
+}
 let browser;
 try{
   browser=await chromium.launch({args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
@@ -52,13 +94,23 @@ try{
   assert.ok(nonBlack>100,'retro Canvas must have actual drawn pixels');
   await mkdir('browser-artifacts',{recursive:true});
   await page.screenshot({path:'browser-artifacts/racing-retro.png',fullPage:true});
+  assert.equal(await page.locator('#difficulty').inputValue(),'classic');
+  await page.locator('#difficulty').selectOption('arcade');
   await page.locator('#launch').click();
+  assert.ok(await page.locator('#difficulty').isDisabled());
   await page.keyboard.down('w');
   await page.waitForFunction(()=>parseFloat(document.querySelector('#speed').textContent)>10);
   await page.keyboard.up('w');
   await page.keyboard.press('Escape');
   assert.equal(await page.locator('#status').textContent(),'PAUSED');
+  const saved=page.waitForEvent('download');await page.locator('#export').click();
+  const arcade=JSON.parse(await readFile(await (await saved).path(),'utf8'));
+  assert.equal(arcade.schemaVersion,2);assert.equal(arcade.difficulty,'arcade');
+  const {replayTourRun}=await import('../demos/racing-lab/run.js');
+  const reproduced=replayTourRun(arcade);assert.equal(reproduced.tick,arcade.observation.tick);
+  await page.locator('#reset').click();await page.locator('#difficulty').selectOption('challenge');
   await page.locator('[data-mode="circuit"]').click();
+  assert.equal(await page.locator('#difficulty-label').isVisible(),false);
   assert.equal(await page.locator('#error').isVisible(),false);
   assert.equal(await page.locator('#status').textContent(),'READY');
   await page.locator('#launch').click();
@@ -223,6 +275,7 @@ try{
     'mobile view must fit 390 CSS pixels without horizontal page overflow');
   await page.screenshot({path:'browser-artifacts/racing-mobile.png',fullPage:true});
   assert.deepEqual(errors,[]);
+  await witnessArcadeImpact(browser,page.url());
   console.log('RACING-002B packaged Chromium PASS: seven modes, Track Foundry author/export/reject/re-import/apply/clear, native Canvas/WebGL, pause, evidence and responsive layout.');
 }finally{
   await browser?.close();

@@ -317,3 +317,66 @@ test('authored Scenic Tour rivals collide in world-space rather than local lane 
   for(let i=0;i<15;i++)stepRace(w,{throttle:1});
   assert.ok(w.distance>b.s+4,'the same authored track must allow passing in a clear lane');
 });
+
+import {TOUR_PROFILES} from '../demos/racing-lab/world.js';
+import {runReceipt,replayTourRun} from '../demos/racing-lab/run.js';
+// Run-length encoding of all 863 inputs in the owner's v2.9 crash test.
+// Receipt SHA-256 ee27b537b2e7b9ea5625b106a71bf39124c70b4d328ab910c08db9b41bb225fe.
+const crashInputs=[[3,0,0,false],[35,1,0,false],[223,1,0,true],[11,1,1,true],
+  [5,1,0,true],[1,1,1,true],[99,1,0,true],[193,1,0,false],[126,1,0,true],[167,1,0,false]]
+  .flatMap(([count,throttle,steer,boost])=>Array.from({length:count},()=>({throttle,steer,boost,handbrake:false,jump:false,flip:false})));
+test('owner crash tape preserves Classic; selected profiles replay the actual input history',()=>{
+  for(const [difficulty,tick,contacts,health] of [['arcade',863,8,60],['classic',863,12,0],['challenge',713,10,0]]){
+    const world=createRace('retro',null,difficulty);
+    for(const input of crashInputs)stepRace(world,input);
+    assert.deepEqual([world.tick,world.contacts,world.player.health],[tick,contacts,health]);
+    assert.equal(world.finished,health===0);
+    const receipt=JSON.parse(JSON.stringify(runReceipt(world,crashInputs.slice(0,tick))));
+    assert.equal(receipt.schemaVersion,difficulty==='classic'?1:2);
+    assert.deepEqual(replayTourRun(receipt),world);
+    if(difficulty==='classic')assert.equal(Math.floor(world.distance),648);
+    assert.throws(()=>replayTourRun({...receipt,inputs:receipt.inputs.slice(1)}));
+  }
+});
+test('difficulty changes damage only; bumper, cooldown expiry and clear-lane nitro remain physical',()=>{
+  for(const [difficulty,profile] of Object.entries(TOUR_PROFILES)){
+    for(const mode of ['retro','tour']){
+      const track=mode==='tour'?starterTrack():null;
+      const w=createRace(mode,track,difficulty),b=w.bots[0];w.bots=[b];b.s=4;b.x=0;b.speed=0;
+      w.player.speed=72;
+      stepRace(w,{throttle:1,boost:true},1/30);
+      assert.equal(w.contacts,1);assert.equal(w.player.health,100-profile.damage);
+      for(let i=0;i<profile.cooldown-1;i++){
+        stepRace(w,{throttle:1,boost:true});assert.ok(w.distance<=b.s-4+1e-9);
+      }
+      assert.equal(w.contacts,1);stepRace(w,{throttle:1,boost:true});assert.equal(w.contacts,2);
+      assert.ok(w.player.boost<100);const before=w.player.x;
+      stepRace(w,{throttle:1,steer:1,boost:true});assert.ok(w.player.x>before);
+      const fast=createRace(mode,track,difficulty),bot=fast.bots[0];fast.bots=[bot];
+      bot.x=0;bot.s=4.5;bot.speed=0;fast.player.speed=1000;
+      stepRace(fast,{throttle:1,boost:true},1/30);assert.ok(fast.distance<=bot.s-4);
+      const clean=createRace('retro',null,difficulty);
+      while(!clean.finished&&clean.tick<3000)stepRace(clean,{throttle:1,boost:true,steer:Math.max(-1,Math.min(1,(5.25-clean.player.x)*2))});
+      assert.deepEqual([clean.tick,clean.contacts,clean.result],[2454,0,'RETRO TOUR COMPLETED']);
+    }
+  }
+});
+test('authored touring receipts bind the track and preserve its fork decisions',()=>{
+  for(const difficulty of Object.keys(TOUR_PROFILES)){
+    const w=createRace('tour',starterTrack(),difficulty),inputs=[];
+    for(let i=0;i<1400&&!w.finished;i++){
+      const lane=trackCenter(w.track,w.distance,w.route)+4.9;
+      const input={throttle:1,steer:Math.max(-1,Math.min(1,(lane-w.player.x)*2)),boost:true};
+      inputs.push(input);stepRace(w,input);
+    }
+    const receipt=JSON.parse(JSON.stringify(runReceipt(w,inputs)));
+    assert.equal(receipt.schemaVersion,2);assert.deepEqual(replayTourRun(receipt),w);
+    assert.ok(w.route.length>=1);assert.throws(()=>replayTourRun({...receipt,difficulty:'invalid'}));
+    assert.throws(()=>replayTourRun({...receipt,firstTick:1}));
+  }
+  for(const mode of ['circuit','sprint','ball','derby','stunt']){
+    assert.deepEqual(createRace(mode),createRace(mode,null,'classic'));
+    assert.throws(()=>createRace(mode,null,'arcade'));
+  }
+  assert.throws(()=>createRace('retro',null,'__proto__'));
+});
