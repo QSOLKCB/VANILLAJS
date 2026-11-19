@@ -201,3 +201,13 @@ in the isolated persistence-focused context.
 This does not increase timeouts, disable browser tests, publish a cache witness,
 change game code or weaken rejection rules. Unknown persistence failures still
 fail the run with a more specific assertion instead of only a timeout.
+
+## Hosted offline bootstrap diagnostics for PR #127 (2026-11-19)
+
+Local owner reproduction on the exact PR head `353776466e457de1e660427112a5400f3cdf15b6` passed 1,247/1,247 Node tests and the full shared Chromium browser dispatcher. VOIDWARD completed all 15 checks; its offline check passed in 177 ms in the full-suite run. Separate pinned Playwright 1.64.0 / Chromium 156.0.8078.4 executions passed at nominal speed, at 6x CPU throttling (634 ms offline), and at 10x CPU throttling (986 ms offline). Throttling page execution is **not** a complete emulation of hosted-runner scheduling or service-worker contention.
+
+The hosted run 44472385630 failed during VOIDWARD's existing 12-second offline boot wait with the visible loading shell still present. This establishes an unreproduced hosted/browser-lifecycle issue; it does not establish a slow game simulation, missing asset, or worker defect.
+
+The browser harness now writes `browser-artifacts/voidward/offline-diagnostics.json` after every attempted offline verification, including on failure. It records the pre-reload worker controller, active worker, cache namespaces and expected turn; an at-failure read-only boot snapshot; and a bounded last-96-event trace of same-origin request paths, status codes, service-worker response attribution, failed requests, browser console errors and uncaught page exceptions. A diagnostic read times out after two seconds and reports that limitation rather than substituting a PASS or mutating the browser cache. GitHub's existing unconditional `flight-lab-evidence` artifact upload retains the file.
+
+The original 12-second Playwright readiness timeout, real offline network state, active save assertion, end-turn assertion, existing HTTP/page-error checks, and failure exit status remain unchanged. No application runtime or service worker is modified, and no reused PASS is promoted as evidence.

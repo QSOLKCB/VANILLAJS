@@ -45,3 +45,27 @@ test('legacy import runs in isolated Chromium storage and verifies the actual pe
   assert.doesNotMatch(migration,/localStorage\.clear\(/,'other campaign slots must not be wiped');
   assert.doesNotMatch(migration,/\.catch\(\(\)=>\{\}\)/,'reload failures cannot be silenced');
 });
+
+test('offline hosted-runner diagnostics preserve real reload gate and bounded causal evidence',async()=>{
+  const source=await readFile(new URL('../scripts/browser-voidward.js',import.meta.url),'utf8');
+  const start=source.indexOf("await check('offline'");
+  const end=source.indexOf("await check('render-parity-performance'",start);
+  assert.ok(start>=0&&end>start);
+  const offline=source.slice(start,end);
+  assert.match(source,/page\.setDefaultTimeout\(12000\)/,'the original Chromium readiness timeout must remain');
+  assert.match(offline,/await page\.reload\(\)/);
+  assert.match(offline,/await page\.waitForFunction\(\(\)=>globalThis\.__voidward\?\.state\)/);
+  assert.match(offline,/await context\.setOffline\(true\)/);
+  assert.match(offline,/await context\.setOffline\(false\)/);
+  for(const signal of ['requestfailed','console','pageerror','response'])
+    assert.ok(offline.includes(signal),'capture '+signal);
+  assert.match(offline,/diagnostics\.events\.length===96/,'bounded event ring');
+  assert.match(offline,/diagnostics\.atFailure=await inspectOfflineBoot\(\)/);
+  assert.match(offline,/offline-diagnostics\.json/,'failure and pass receipts must be preserved');
+  assert.match(offline,/if\(failure\)throw failure/,'preserve the original failure');
+  assert.doesNotMatch(offline,/setDefaultTimeout|waitForTimeout|\.catch\(\(\)=>\{\}\)/,'do not relax the timeout or swallow failures');
+  const inspect=source.slice(source.indexOf('async function inspectOfflineBoot()'),source.indexOf('async function check(name,fn)'));
+  assert.match(inspect,/caches\.keys\(\)/);
+  assert.match(inspect,/navigator\.serviceWorker\.getRegistration\(\)/);
+  assert.doesNotMatch(inspect,/caches\.delete\(|caches\.open\(|localStorage\.clear\(|serviceWorker\.register\(/,'diagnostics must remain read-only');
+});

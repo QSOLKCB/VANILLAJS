@@ -55,6 +55,13 @@ export function mountRacePlayer(value,{root=document,onChange=()=>{}}={}){
     const release=event=>{input.release(event.pointerId);pointers.delete(event.pointerId);if(button.hasPointerCapture(event.pointerId))button.releasePointerCapture(event.pointerId);hud();};for(const type of ['pointerup','pointercancel','lostpointercapture'])listen(button,type,release);
     listen(button,'keydown',event=>{if(!['Space','Enter'].includes(event.code)||event.repeat||!running)return;event.preventDefault();input.press('key:'+button.dataset.drive,button.dataset.drive,true);hud();});listen(button,'keyup',event=>{if(['Space','Enter'].includes(event.code)){event.preventDefault();input.release('key:'+button.dataset.drive);hud();}});listen(button,'blur',()=>{input.release('key:'+button.dataset.drive);hud();});
   }
+  // A multi-touch cancellation is a device-level abort. Some Chromium/OS
+  // paths deliver touchcancel without a matching captured pointercancel for
+  // every pressed button. Fail closed for the *whole* touch gesture.
+  // Ordinary pointerup remains independently owned by its original button.
+  const cancelTouch=()=>{if(!pointers.size)return;clear();hud();};
+  listen(window,'pointercancel',event=>{if(event.pointerType==='touch')cancelTouch();});
+  listen(window,'touchcancel',cancelTouch);
   listen(window,'keydown',event=>{if(event.code==='Escape'){event.preventDefault();pause('Race paused.');return;}if(event.target!==canvas)return;if(input.keyDown(event.code,event.repeat,running)){event.preventDefault();hud();}});listen(window,'keyup',event=>{input.keyUp(event.code);hud();});
   listen(canvas,'blur',event=>{clear();if(running&&!event.relatedTarget?.closest('#race-player'))pause('Race paused after driving focus loss. Release held controls, then resume.');else hud();});
   listen(window,'blur',()=>pause('Race paused after focus loss. Release held controls, then resume.'));listen(document,'visibilitychange',()=>{if(document.hidden)pause();});listen(window,'resize',paint);
