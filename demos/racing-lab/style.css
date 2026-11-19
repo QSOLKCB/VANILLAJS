@@ -64,3 +64,7 @@ footer{padding:22px 5vw;color:#91b2bf;border-top:1px solid var(--line);font:10px
 @media(max-width:700px){.foundry-setup{grid-template-columns:1fr}.foundry{padding:14px}
 .track-row{grid-template-columns:60px repeat(3,minmax(0,1fr));gap:5px}
 .track-row label{font-size:9px}.track-row input{padding:6px}.track-gates{grid-template-columns:repeat(2,1fr)}}
+
+#impact{position:absolute;left:1rem;bottom:1rem;color:#fff4df;background:#35232bed;border-left:3px solid #ffae77;padding:.4rem .7rem;pointer-events:none;font:600 .9rem system-ui}
+#impact label{display:block;font:normal .75rem system-ui}#recovery{width:5rem;height:.45rem;accent-color:#ffae77}
+#difficulty{font:inherit;color:#e6f3f7;background:#162c3b;padding:.35rem;border:1px solid #335465}

@@ -63,7 +63,15 @@ export function stuntRoad(s){
   return 2;
 }
 export function retroCurve(s){return Math.sin(s/190)*2.7+Math.sin(s/490)*2;}
-export function createRace(mode='retro',track=null){
+export const TOUR_PROFILES=Object.freeze({
+  arcade:Object.freeze({damage:5,cooldown:72}),
+  classic:Object.freeze({damage:9,cooldown:48}),
+  challenge:Object.freeze({damage:11,cooldown:42})
+});
+export function createRace(mode='retro',track=null,difficulty='classic'){
+  const touring=mode==='retro'||mode==='tour';
+  if(typeof difficulty!=='string'||!Object.hasOwn(TOUR_PROFILES,difficulty)||(!touring&&difficulty!=='classic'))
+    throw new RangeError('Unknown or inapplicable tour difficulty');
   if(!MODES.includes(mode))throw new RangeError('unknown racing mode');
   if(track!==null&&!['tour','sprint','circuit'].includes(mode))
     throw new RangeError('authored tracks are supported by tour, sprint and circuit');
@@ -96,7 +104,7 @@ export function createRace(mode='retro',track=null){
   const arenaLimit=mode==='circuit'&&course?
     Math.max(63,...course.gates.map(g=>
       Math.max(Math.abs(g.x),Math.abs(g.z))+course.sections[0].width+4)):63;
-  return {mode,tick:0,elapsed:0,player:p,bots,finished:false,
+  return {mode,...(touring?{difficulty}:{}),tick:0,elapsed:0,player:p,bots,finished:false,
     result:'',event:'',score:[0,0],distance:0,contacts:0,
     ball:{x:0,y:1.3,z:0,vx:0,vz:0,vy:0},retroLap:0,route:[],track:course,
     arenaLimit};
@@ -285,8 +293,9 @@ function stepRetro(w,input,dt){
     }
     if(p.cooldown===0){
       p.speed*=.5; // Preserve the pre-existing arcade impact response.
-      p.health=Math.max(0,p.health-9);
-      p.cooldown=48;w.contacts++;w.event='TRAFFIC IMPACT';
+      const profile=TOUR_PROFILES[w.difficulty??'classic'];
+      p.health=Math.max(0,p.health-profile.damage);
+      p.cooldown=profile.cooldown;w.contacts++;w.event='TRAFFIC IMPACT';
     }
   }
   for(const b of w.bots)if(b.s<w.distance-20){
