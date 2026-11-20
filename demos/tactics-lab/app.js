@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // TACTICS-001 Squadline. Rendering and camera mode never advance a turn.
 // All threat observations and real cover checks come from native SENSE-001.
-import {createOperation,OPERATION} from './scenario.js';
+import {createOperation,OPERATION,createRelayStatus,advanceRelayStatus} from './scenario.js';
 import {createTacticsState,inspectTactics,planTacticalOrders,queryTacticalCover,
   stepTactics,TACTICS_LIMITS} from '../../modules/tactics/index.js';
 
@@ -9,7 +9,7 @@ const $=id=>document.getElementById(id),ctx=$('field').getContext('2d');
 if(!ctx)throw Error('Canvas2D unavailable');
 const {world}=createOperation(),W=$('field').width,H=$('field').height,
   size=34,left=(W-world.width*size)/2,top=(H-world.height*size)/2;
-let state=createTacticsState(world),history=[],journal=[],queue=new Map(),view='tactical',
+let state=createTacticsState(world),relay=createRelayStatus(),history=[],journal=[],queue=new Map(),view='tactical',
   selected='alpha-lead',message='Queue one order per allied unit and execute the turn.';
 const xpx=x=>left+(x+.5)*size,zpx=z=>top+(z+.5)*size;
 const report=()=>inspectTactics(world,state);
@@ -106,10 +106,10 @@ function redraw(){
   const observer=report(),focus=observer.units.find(u=>u.id===selected),
     covered=queryTacticalCover(world,state,selected);
   $('turn').textContent=String(state.turn).padStart(2,'0');
-  $('phase').textContent=state.phase.toUpperCase();
-  $('relay').textContent='RELAY '+state.progress+' / 2';
+  $('phase').textContent=relay.phase.toUpperCase();
+  $('relay').textContent='RELAY '+relay.progress+' / 2';
   $('status').textContent=message;
-  $('execute').disabled=state.phase!=='active';
+  $('execute').disabled=relay.phase!=='active';
   $('undo').disabled=!history.length;
   const queued=$('queued');queued.replaceChildren();
   if(queue.size)for(const cmd of [...queue.values()].sort((a,b)=>a.unitId.localeCompare(b.unitId))){
@@ -141,6 +141,7 @@ function capture(){
     to:o.to?[...o.to]:null}))};
 }
 function execute(){
+  if(relay.phase!=='active')return;
   const commands=[...queue.values()].map(o=>({...o,to:o.to?[...o.to]:null}));
   try{
     const result=stepTactics(world,state,commands);
@@ -148,9 +149,11 @@ function execute(){
       message='Order rejected atomically: '+result.reason+' (no turn consumed).';
       redraw();return;
     }
-    history.push(state);journal.push(commands);state=result.state;queue.clear();
-    message=state.phase==='secured'?'Quiet Relay secured. Operation complete.':
-      state.phase==='exhausted'?'Operational turn limit reached.':
+    const nextRelay=advanceRelayStatus(relay,result.state);
+    history.push({state,relay});journal.push(commands);
+    state=result.state;relay=nextRelay;queue.clear();
+    message=relay.phase==='secured'?'Quiet Relay secured. Operation complete.':
+      relay.phase==='exhausted'?'Operational turn limit reached.':
       'Turn '+state.turn+' executed · '+state.events.length+' recorded decisions.';
     redraw();
   }catch(error){message='Order rejected: '+error.message;redraw();}
@@ -183,23 +186,28 @@ $('suggest').addEventListener('click',()=>{
 $('execute').addEventListener('click',execute);
 $('undo').addEventListener('click',()=>{
   if(!history.length)return;
-  state=history.pop();journal.pop();queue.clear();
+  const previous=history.pop();state=previous.state;relay=previous.relay;
+  journal.pop();queue.clear();
   message='Last accepted turn undone. Authoritative world restored.';redraw();
 });
 $('replay').addEventListener('click',()=>{
   try{
-    let source=createTacticsState(world);
+    let source=createTacticsState(world),referenceRelay=createRelayStatus();
     for(const orders of journal){
       const result=stepTactics(world,source,orders);
       if(!result.accepted)throw Error('journal contains a rejected command');
       source=result.state;
+      referenceRelay=advanceRelayStatus(referenceRelay,source);
     }
-    if(JSON.stringify(source)!==JSON.stringify(state))throw Error('deterministic state mismatch');
+    if(JSON.stringify(source)!==JSON.stringify(state)||
+      JSON.stringify(referenceRelay)!==JSON.stringify(relay))
+      throw Error('deterministic state or relay policy mismatch');
     message='REPLAY PASS · '+journal.length+' accepted turns reproduced exactly.';redraw();
   }catch(error){message='REPLAY FAILED: '+error.message;redraw();}
 });
 $('reset').addEventListener('click',()=>{
-  state=createTacticsState(world);history=[];journal=[];queue.clear();
+  state=createTacticsState(world);relay=createRelayStatus();
+  history=[];journal=[];queue.clear();
   selected='alpha-lead';$('unit').value=selected;
   message='Original deterministic squad scenario restored.';redraw();
 });
@@ -229,7 +237,7 @@ $('field').addEventListener('keydown',event=>{
 redraw();
 document.documentElement.dataset.tacticsReady='ready';
 Object.defineProperty(globalThis,'__tacticsLab',{value:Object.freeze({
-  snapshot:()=>({turn:state.turn,phase:state.phase,progress:state.progress,
+  snapshot:()=>({turn:state.turn,phase:relay.phase,progress:relay.progress,
     units:state.units.map(u=>({...u,cell:[...u.cell],heading:[...u.heading]})),
     events:state.events.map(e=>({...e})),view,
     selected,queued:[...queue.values()].map(o=>({...o})),
