@@ -274,7 +274,47 @@ export async function checkHorizonRace(browser,base){
     // omits captured pointercancel, a touchcancel event must retire *both*
     // held buttons. The real CDP stream is still cancelled afterwards.
     await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:t.x+t.width/2,y:t.y+t.height/2,id:3},{x:l.x+l.width/2,y:l.y+l.height/2,id:4}]});assert.deepEqual((await snapshot(page)).inputs.input,{throttle:1,brake:0,steer:-1,reverse:0});await page.evaluate(()=>window.dispatchEvent(new Event('touchcancel',{bubbles:true})));assert.deepEqual((await snapshot(page)).inputs.input,{throttle:0,brake:0,steer:0,reverse:0});await client.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});assert.deepEqual((await snapshot(page)).inputs.input,{throttle:0,brake:0,steer:0,reverse:0});await client.detach();await page.keyboard.press('Escape');await page.screenshot({path:'browser-artifacts/horizon-race-mobile.png',fullPage:true});
-    await page.waitForFunction(async scope=>(await navigator.serviceWorker.getRegistrations()).some(r=>r.scope===scope&&r.active?.state==='activated'),base,{timeout:45000});await context.setOffline(true);const offline=await context.newPage();offline.on('pageerror',e=>errors.push(e.message));const response=await offline.goto(base+'demos/horizon-lab/index.html');assert.equal(response.fromServiceWorker(),true);await ready(offline);await offline.locator('#race-start').click();await offline.keyboard.down('KeyW');await ticks(offline,425);await offline.keyboard.up('KeyW');await offline.keyboard.press('Escape');assert.ok(speed(await snapshot(offline))>1);evidence.offline={fromServiceWorker:response.fromServiceWorker(),position:(await snapshot(offline)).player.position};await offline.locator('#race-recover').click();const backStart=(await snapshot(offline)).player.position.slice();await offline.locator('#race-start').click();await offline.keyboard.down('ArrowDown');await ticks(offline,180);await offline.keyboard.up('ArrowDown');await offline.keyboard.press('Escape');const back=await snapshot(offline);assert.equal(back.player.gear,-1);assert.ok(back.player.position[2]>backStart[2]+1,'offline player physically reverses');evidence.offline.reversePosition=back.player.position;assert.deepEqual(errors,[]);
+    await page.waitForFunction(async scope=>(await navigator.serviceWorker.getRegistrations()).some(r=>r.scope===scope&&r.active?.state==='activated'),base,{timeout:45000});await context.setOffline(true);
+    const offline=await context.newPage();
+    offline.on('pageerror',e=>errors.push(e.message));
+    const response=await offline.goto(base+'demos/horizon-lab/index.html');
+    assert.equal(response.fromServiceWorker(),true);
+    await ready(offline);
+    // The offline tab is independent from the preceding 320px touch scenario.
+    // Advance actual requestAnimationFrame/FixedClock callbacks using Playwright's
+    // owned virtual clock, as the other HORIZON driving tests already do. Waiting
+    // for 425 real-time ticks could stall for 30s if hosted Chromium throttled.
+    // Keep the genuine offline service worker, keyboard handlers and physics.
+    await offline.bringToFront();
+    await offline.clock.install();
+    await offline.clock.pauseAt(new Date(Date.now()+1000));
+    await offline.locator('#race-start').click();
+    await offline.keyboard.down('KeyW');
+    await offline.clock.runFor(5000); // 3s countdown + 2s real physical driving
+    const forwardOffline=await snapshot(offline);
+    assert.equal(forwardOffline.phase,'running','offline countdown completed');
+    assert.equal(forwardOffline.running,true,'offline race still running');
+    assert.equal(forwardOffline.inputs.input.throttle,1,'offline W key is physically held');
+    assert.ok(forwardOffline.physicalInput.throttle>0,'offline physical throttle applied');
+    assert.ok(speed(forwardOffline)>1,'offline vehicle must physically accelerate');
+    await offline.keyboard.up('KeyW');
+    await offline.keyboard.press('Escape');
+    evidence.offline={fromServiceWorker:response.fromServiceWorker(),position:forwardOffline.player.position,
+      ticks:forwardOffline.ticks,speed:speed(forwardOffline)};
+    await offline.locator('#race-recover').click();
+    const backStart=(await snapshot(offline)).player.position.slice();
+    await offline.locator('#race-start').click();
+    await offline.keyboard.down('ArrowDown');
+    await offline.clock.runFor(2000); // authentic reverse gear transition after recovery
+    const backMoving=await snapshot(offline);
+    assert.equal(backMoving.running,true,'offline reverse test still advancing');
+    await offline.keyboard.up('ArrowDown');
+    await offline.keyboard.press('Escape');
+    const back=await snapshot(offline);
+    assert.equal(back.player.gear,-1);
+    assert.ok(back.player.position[2]>backStart[2]+1,'offline player physically reverses');
+    evidence.offline.reversePosition=back.player.position;
+    assert.deepEqual(errors,[]);
   }finally{await context.close();}
   const fallback=await browser.newContext(),p=await fallback.newPage();try{await p.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type==='webgl'?null:original.call(this,type,...args);};});await p.goto(base+'demos/horizon-lab/index.html');await ready(p);assert.equal(await p.locator('#race-graphics-error').isVisible(),true);assert.equal(await p.locator('#race-start').isDisabled(),true);await p.locator('#race-name').fill('Editable without graphics');await p.locator('#race-apply').click();assert.equal(JSON.parse((await snapshot(p)).project).name,'Editable without graphics');const download=p.waitForEvent('download');await p.locator('#race-export-project').click();await download;}finally{await fallback.close();}
   // Device rejection is independent of graphics and does not prevent driving.
