@@ -184,7 +184,9 @@ function update(dt){
   const head=mouse.consume();mouseYaw=clamp(mouseYaw+head.yaw,-1.4,1.4);
   mousePitch=clamp(mousePitch+head.pitch,-1.1,1.1);
   if(actions.consume('fire'))shot();
-  const launchRequested=missileRequested||actions.consume('missile');
+  // Consume both edges even if the UI button was pressed on this tick.
+  // A short-circuit here could re-fire a stale M-key edge on a later tick.
+  const keyLaunch=actions.consume('missile'),launchRequested=missileRequested||keyLaunch;
   missileRequested=false;
   if(launchRequested)fireMissile();
   const delta=-cmd.thrust[2]; // W = +1, S = -1
