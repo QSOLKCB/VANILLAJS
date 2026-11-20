@@ -683,6 +683,18 @@
       "status": "experimental",
       "description": "Apache-2.0 DabbleCAD-attributed bounded +Y-up lathe meshes, CAD presets, deterministic OBJ and native XYZ/RGB streams",
       "demo": "demos/editor/index.html"
+    },
+    "world-vis": {
+      "entry": "modules/world-vis/index.js",
+      "depends": [
+        "geometry",
+        "math",
+        "render-lit"
+      ],
+      "environment": "pure-js with opt-in native LitRenderer adapter",
+      "status": "experimental",
+      "description": "WORLD-VIS-001: immutable HORIZON-compatible static batch snapshot, conservative six-plane visibility, bounded whole-triangle LOD and retained GPU buffer planning",
+      "demo": "demos/world-vis-lab/index.html"
     }
   },
   "recipes": {
