@@ -23,6 +23,8 @@ working scene, change one thing, test it, and keep the files you create.
 
 **COCKPIT-002 candidate:** [TOO CLOSE FOR GUNS — SWITCHING TO MISSILES!](demos/cockpit-physics-lab/index.html) upgrades the same cockpit with four game-owned, fixed-tick homing missiles, physical lock/cooldown/impact tests, and a preserved F-key gunsight. [Implementation and limits](docs/COCKPIT_PHYSICS_001.md). This is an experimental review branch, not a tagged release.
 
+**Proposed next-engine roadmap:** [OSS-GAME-REUSE-001 — source-pinned eight-collection audit and VANILLAJS milestones](docs/OSS_GAME_REUSE_2026_ROADMAP.md). It prioritises shared visibility/perception, guided combat integration and retained-world LOD, with explicit code-vs-asset licensing gates. No third-party code has been imported.
+
 ## Welcome to the foundry
 
 **VANILLAJS = engine, physics, Game Labs, mods, tools and education.**
