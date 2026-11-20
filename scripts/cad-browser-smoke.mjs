@@ -14,6 +14,12 @@ const sha=data=>createHash('sha256').update(data).digest('hex');
 const server=createServer(async(req,res)=>{
   try{
     const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname).replace(/^\/+/,'');
+    // Manifest is self-describing and intentionally cannot list itself.
+    // Serve exact hashed-on-disk manifest bytes for the editor's existing
+    // optional offline registration, without broadening the asset allowlist.
+    if(pathname==='manifest.json'){
+      res.setHeader('content-type','application/json');res.end(manifest);return;
+    }
     if(!allowed.has(pathname)){res.writeHead(404);res.end('not in package');return;}
     const bytes=await readFile(join(dist,pathname));
     res.setHeader('content-type',pathname.endsWith('.js')?'text/javascript':
