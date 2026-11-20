@@ -695,6 +695,17 @@
       "status": "experimental",
       "description": "WORLD-VIS-001: immutable HORIZON-compatible static batch snapshot, conservative six-plane visibility, bounded whole-triangle LOD and retained GPU buffer planning",
       "demo": "demos/world-vis-lab/index.html"
+    },
+    "tactics": {
+      "entry": "modules/tactics/index.js",
+      "depends": [
+        "sensing",
+        "navigation"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "TACTICS-001: finite squad orders, deterministic SENSE-linked physical cover and suppression policy, bounded NavigationGrid/A* turn decisions",
+      "demo": "demos/tactics-lab/index.html"
     }
   },
   "recipes": {
