@@ -2,7 +2,7 @@
 // The browser/camera only renders evidence produced by authoritative modules.
 import {replayExamples,BASE_BUILD} from './scenarios.js';
 import {sealReplayReceipt,verifyReplayReceipt,exportReplayReceipt,importReplayReceipt,
- auditReplayPresentation,sampleReplayPresentation} from '../../modules/replay-audit/index.js';
+ auditReplayPresentation,sampleReplayPresentation,REPLAY_PLAN_FORMAT} from '../../modules/replay-audit/index.js';
 const $=id=>document.getElementById(id),ctx=$('field').getContext('2d');
 const examples=replayExamples();
 let receipt=null,verification=null,parity=null,displayAudit=null,
@@ -48,6 +48,12 @@ function paint(){
   verified:verification?.match??null,parity:parity?.checks??null},null,2):'No receipt recorded.';
 }
 const chosen=()=>examples[$('model').value];
+// A verified imported receipt is the active evidence, not the starter fixture
+// associated with its model name. Record always starts a fresh selected fixture.
+const activePlan=()=>receipt?{
+ format:REPLAY_PLAN_FORMAT,build:receipt.build,kind:receipt.kind,
+ model:receipt.model,frames:receipt.frames
+}:chosen();
 $('model').addEventListener('change',()=>{receipt=null;verification=null;parity=null;
  displayAudit=null;renderedSamples=Object.create(null);
  message='Model changed; record new evidence.';paint();});
@@ -57,7 +63,7 @@ $('render-rate').addEventListener('change',async()=>{
  renderedSamples=Object.create(null);displayAudit=null;
  message='SAMPLING '+rate+' Hz virtual presentation';paint();
  try{
-  const sample=await sampleReplayPresentation(chosen(),rate,{present:drawCadenceSample});
+  const sample=await sampleReplayPresentation(activePlan(),rate,{present:drawCadenceSample});
   const observed=observedPresentation()[String(rate)];
   if(observed?.frames!==sample.displaySamples||observed.lastTick!==receipt.ticks)
    throw Error('actual Canvas draws and accepted tick count diverged');
@@ -82,7 +88,7 @@ $('verify').addEventListener('click',async()=>{
 $('compare').addEventListener('click',async()=>{
  try{
   renderedSamples=Object.create(null);displayAudit=null;
-  parity=await auditReplayPresentation(chosen(),[30,60,144],{present:drawCadenceSample});
+  parity=await auditReplayPresentation(activePlan(),[30,60,144],{present:drawCadenceSample});
   if(parity.checks.some(x=>{
    const observed=observedPresentation()[String(x.renderHz)];
    return !observed||observed.frames!==x.displaySamples||

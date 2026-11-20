@@ -170,7 +170,7 @@ export async function verifyReplayReceipt(input,{expectedBuild}={}){
   kind:independent.kind,mode:independent.mode,finalSha256:independent.finalSha256});
 }
 export function exportReplayReceipt(receipt){
- if(!sealed.has(receipt))throw TypeError('only locally executed receipts are exportable');
+ if(!sealed.has(receipt))throw TypeError('only locally executed or independently verified receipts are exportable');
  const text=json(receipt);
  if(utf8.encode(text).length>REPLAY_LIMITS.receiptBytes)throw RangeError('export byte budget');
  return text;
@@ -180,7 +180,11 @@ export async function importReplayReceipt(text,{expectedBuild}={}){
   throw RangeError('bounded receipt text required');
  const r=inert(JSON.parse(text)),check=await verifyReplayReceipt(r,{expectedBuild});
  if(!check.match)throw Error('replay event/final-state evidence mismatch');
- return deepFreeze(r);
+ // Full local re-execution has authenticated every command, event and state
+ // hash. Admit only this owned, frozen result to the export capability set.
+ // Forged/unverified records never acquire this capability.
+ deepFreeze(r);sealed.add(r);
+ return r;
 }
 /** Deterministic *virtual* presentation clock: authoritative ticks are
  * interleaved with real read-only display samples, not just counted afterward.

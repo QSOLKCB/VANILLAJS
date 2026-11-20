@@ -77,11 +77,45 @@ try{
  await page.locator('#import').setInputFiles({name:'valid.json',mimeType:'application/json',buffer:bytes});
  await page.waitForFunction(()=>__replayAudit.snapshot().message.startsWith('IMPORTED'),undefined,{timeout:20000});
  assert.equal((await snap()).kind,'fps');
- const forged=structuredClone(saved);forged.trace[0].stateSha256='0'.repeat(64);
+ // Non-fixture six-tick receipt: the current FPS example contains five ticks.
+ // It must be possible to audit and re-export the actual imported command tape.
+ const extended=await page.evaluate(async()=>{
+  const {replayExamples}=await import('/demos/replay-audit-lab/scenarios.js');
+  const {sealReplayReceipt,exportReplayReceipt}=await import('/modules/replay-audit/index.js');
+  const source=replayExamples().fps;source.frames.push([]);
+  const receipt=await sealReplayReceipt(source);
+  return exportReplayReceipt(receipt);
+ });
+ await page.locator('#import').setInputFiles({name:'six-tick.json',
+  mimeType:'application/json',buffer:Buffer.from(extended)});
+ await page.waitForFunction(()=>__replayAudit.snapshot().message.startsWith('IMPORTED')&&
+  __replayAudit.snapshot().ticks===6,undefined,{timeout:20000});
+ assert.equal((await snap()).ticks,6);
+ await page.locator('#compare').click();
+ await page.waitForFunction(()=>__replayAudit.snapshot().parity?.every(c=>c.consumedTicks===6)===true,
+  undefined,{timeout:20000});
+ const extendedParity=(await snap()).parity;
+ assert.deepEqual(extendedParity.map(c=>c.renderHz),[30,60,144]);
+ assert.ok(extendedParity.every(c=>c.consumedTicks===6&&c.sameAuthoritativeTrace));
+ for(const rate of ['30','144']){
+  await page.locator('#render-rate').selectOption(rate);
+  await page.waitForFunction(r=>__replayAudit.snapshot().presentation.audit?.renderHz===Number(r)&&
+   __replayAudit.snapshot().presentation.draws[r]?.lastTick===6,rate,{timeout:20000});
+  assert.match((await snap()).message,/CADENCE EXERCISED/);
+ }
+ const [again]=await Promise.all([page.waitForEvent('download'),page.locator('#export').click()]);
+ const exportedAgain=await readFile(await again.path());
+ assert.equal(exportedAgain.toString('utf8'),extended,'import-export must preserve all receipt bytes');
+ assert.match((await snap()).message,/Exported/);
+ const forged=JSON.parse(extended);forged.trace[0].stateSha256='0'.repeat(64);
  await page.locator('#import').setInputFiles({name:'forged.json',mimeType:'application/json',
   buffer:Buffer.from(JSON.stringify(forged))});
  await page.waitForFunction(()=>__replayAudit.snapshot().message.startsWith('IMPORT REJECTED'),undefined,{timeout:20000});
  assert.equal((await snap()).kind,'fps');
+ assert.equal((await snap()).ticks,6,'rejected import must preserve non-fixture accepted tape');
+ const [afterReject]=await Promise.all([page.waitForEvent('download'),page.locator('#export').click()]);
+ assert.equal((await readFile(await afterReject.path())).toString('utf8'),extended,
+  'rejected forged import may not replace accepted export capability');
  assert.deepEqual(errors,[]);
  const png=await page.locator('#field').screenshot();assert.ok(png.length>2000);
  await mkdir(join(root,'browser-artifacts'),{recursive:true});
@@ -91,7 +125,8 @@ try{
   manifestSha256:hash(manifest),screenSha256:hash(png),receiptSha256:hash(bytes),
   models:cases,parity,checks:['actual FPS hits','real TRAJECTORY-001 actor impact',
    'Vehicle3D and integer simulation','three interleaved 30/60/144 Hz Canvas sampling paths',
-   'selector driven real Canvas frames','full export/import verification',
+   'selector driven real Canvas frames','non-fixture six-tick imported cadence parity',
+   'byte-identical verified import then re-export','full export/import verification',
    'tamper fails closed','zero JS and network errors']};
  await writeFile(join(root,'browser-artifacts/replay-audit-001.json'),JSON.stringify(evidence,null,2)+'\n');
  console.log(JSON.stringify(evidence));

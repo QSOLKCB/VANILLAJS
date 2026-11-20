@@ -12,8 +12,32 @@ test('actual FPS authoritative damage and independent replay receipt',async()=>{
  assert.deepEqual(source,before);
  assert.deepEqual(await sealReplayReceipt(source),r);
  assert.equal((await verifyReplayReceipt(r,{expectedBuild:BASE_BUILD})).match,true);
- assert.deepEqual(await importReplayReceipt(exportReplayReceipt(r),{expectedBuild:BASE_BUILD}),r);
+ const accepted=await importReplayReceipt(exportReplayReceipt(r),{expectedBuild:BASE_BUILD});
+ assert.deepEqual(accepted,r);
+ assert.equal(exportReplayReceipt(accepted),exportReplayReceipt(r),
+  'independently re-executed imported receipt must retain export eligibility');
 });
+
+test('verified imported six-tick command tape is exportable with byte identity and rate parity',async()=>{
+ const fixture=samples().fps,source=clone(fixture);
+ source.frames.push([]); // Deliberately not the five-tick browser fixture
+ const sealed=await sealReplayReceipt(source);
+ const original=exportReplayReceipt(sealed);
+ const verified=await importReplayReceipt(original,{expectedBuild:BASE_BUILD});
+ assert.equal(verified.ticks,6);
+ assert.equal(Object.isFrozen(verified),true);
+ assert.equal(exportReplayReceipt(verified),original,'export after verified import is byte-identical');
+ const active={format:source.format,build:verified.build,kind:verified.kind,
+  model:verified.model,frames:verified.frames};
+ const cadence=await auditReplayPresentation(active);
+ assert.equal(cadence.ticks,6);
+ assert.ok(cadence.checks.every(check=>check.consumedTicks===6&&check.sameAuthoritativeTrace));
+ const modified=clone(verified);modified.trace[0].stateSha256='0'.repeat(64);
+ await assert.rejects(importReplayReceipt(JSON.stringify(modified),{expectedBuild:BASE_BUILD}),/mismatch/);
+ assert.throws(()=>exportReplayReceipt(modified),/locally executed/);
+ assert.equal(exportReplayReceipt(verified),original,'failed import does not revoke accepted evidence');
+});
+
 test('real guided contact and full terminal-tape gate',async()=>{
  const p=samples().air,r=await sealReplayReceipt(p);
  assert.equal(r.tickRate,120);assert.equal(r.ticks,17);
