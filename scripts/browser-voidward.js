@@ -299,14 +299,20 @@ try {
       return target.origin===new URL(url).origin?target.pathname:'EXTERNAL';
     }catch{return 'INVALID_URL';}};
     const record=(kind,data={})=>{
+      const event={elapsedMs:Date.now()-started,kind,...data};
+      if(diagnostics.firstEvents.length<32)diagnostics.firstEvents.push(event);
       if(diagnostics.events.length===96){diagnostics.events.shift();diagnostics.discardedEvents++;}
-      diagnostics.events.push({elapsedMs:Date.now()-started,kind,...data});
+      diagnostics.events.push(event);
     };
     const onRequest=request=>record('request',{path:pathOnly(request.url()),type:request.resourceType()});
     const onResponse=response=>record('response',{path:pathOnly(response.url()),
       status:response.status(),fromServiceWorker:response.fromServiceWorker()});
-    const onFailed=request=>record('requestfailed',{path:pathOnly(request.url()),
-      error:String(request.failure()||'UNKNOWN').slice(0,256)});
+    const onFailed=request=>{
+      const failure=request.failure();
+      record('requestfailed',{path:pathOnly(request.url()),urlHasSearch:new URL(request.url()).search.length>0,
+        errorText:typeof failure==='string'?failure.slice(0,256):
+          String(failure?.errorText??JSON.stringify(failure)??'UNKNOWN').slice(0,256)});
+    };
     const onConsole=message=>{if(message.type()==='error')
       record('console-error',{message:message.text().slice(0,256)});};
     const onPageError=error=>record('pageerror',{message:String(error.message).slice(0,256)});
@@ -321,6 +327,21 @@ try {
           await new Promise(resolve=>navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}));
       });
       diagnostics.before=await inspectOfflineBoot();
+      // The installed worker promises a complete immutable package. Check its
+      // *actual* CacheStorage membership before disconnecting: a cache miss
+      // must not be mistaken for a Chromium timing failure or hidden by retry.
+      const manifest=JSON.parse(await fs.readFile(path.join(root,'dist/manifest.json'),'utf8'));
+      diagnostics.cacheAdmission=await page.evaluate(paths=>caches.keys().then(async names=>{
+        const name=names.find(n=>n.startsWith('qsol-vanillajs:'));
+        if(!name)return {found:false,expected:paths.length,present:0,missing:paths.slice(0,24)};
+        const cache=await caches.open(name),stored=new Set((await cache.keys()).map(r=>r.url));
+        const base=new URL('/VANILLAJS/',location.origin);
+        const missing=paths.filter(p=>!stored.has(new URL(p,base).href));
+        return {found:true,expected:paths.length,present:paths.length-missing.length,
+          missing:missing.slice(0,32),missingCount:missing.length};
+      }),manifest.files.filter(f=>f.path!=='service-worker.js').map(f=>f.path));
+      assert.equal(diagnostics.cacheAdmission.missingCount,0,
+        'active offline worker cache must contain every sealed package asset');
       const before=(await snapshot()).state.turn;
       diagnostics.expectedTurn=before;
       diagnostics.phase='offline-reload';
@@ -344,6 +365,9 @@ try {
       if(!diagnostics.atFailure)diagnostics.atFailure=await inspectOfflineBoot();
       console.error('VOIDWARD offline boot diagnostic: '+JSON.stringify({
         error:diagnostics.error,atFailure:diagnostics.atFailure,
+        cacheAdmission:diagnostics.cacheAdmission,
+        firstEvents:diagnostics.firstEvents.slice(0,24),
+        firstFailures:diagnostics.events.filter(e=>e.kind==='requestfailed'||e.status>=400).slice(0,12),
         lastEvents:diagnostics.events.slice(-16)
       }));
     }finally{
