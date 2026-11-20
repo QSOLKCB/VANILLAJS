@@ -731,6 +731,20 @@
       "status": "experimental",
       "demo": "demos/trajectory-lab/index.html",
       "description": "TRAJECTORY-001: physical LOS-locked fixed-tick guidance, lead prediction and swept moving-AABB contact; no weapon damage"
+    },
+    "replay-audit": {
+      "entry": "modules/replay-audit/index.js",
+      "depends": [
+        "combat3d",
+        "vehicle3d",
+        "trajectory",
+        "integer-engine",
+        "integer-replay"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/replay-audit-lab/index.html",
+      "description": "REPLAY-AUDIT-001: source-pinned FPS/air/racing/integer complete command tapes, independently reexecuted per-tick SHA-256 event/state receipts and rendering-cadence parity"
     }
   },
   "recipes": {
