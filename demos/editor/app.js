@@ -9,6 +9,7 @@ import {mountDemoscenePanel} from './demoscene-panel.js';
 import {parseExactPosition,previewQ16Position,transformExactPositionXY,snapEditorDelta,formatPositionNumber} from './authoring-math.js';
 import {SceneMeshes} from './scene-meshes.js';
 import {mountCADProfileWorkshop} from './cad-profile-workshop.js';
+import {mountGeometryForge} from './geometry-forge.js';
 import {createCADPrimitive,cadMeshOBJ} from '../../modules/cad-geometry/index.js';
 import {OptionalRenderer} from '../../modules/render-optional/index.js';
 import {graphicsControls} from '../gpu-lab/controls.js';
@@ -28,7 +29,7 @@ import {createAssetLibrary,validateAssetLibrary,addMeshAsset,addTextureAsset,
 
 const $=id=>document.getElementById(id),canvas=$('view');
 let importGeneration=0,cadGeneration=0;
-let campaignPanel=null,demoscenePanel=null,compositionPanel=null,cadProfilePanel=null;
+let campaignPanel=null,demoscenePanel=null,compositionPanel=null,cadProfilePanel=null,geometryForgePanel=null;
 let checksScene=null,creatorChecks=null,lastPlayedScene=null,lastSavedScene=null,lastSavedLibrary=null,lastSavedGPU=false;
 let history=makeHistory(createForgeScene()),selected='entity-3',draft=null,
   library=createAssetLibrary(),chosenAsset=null,
@@ -102,6 +103,7 @@ function syncEditor(){
   scheduleRecovery();
   syncAssets();
   cadProfilePanel?.sync();
+  geometryForgePanel?.sync();
   if(!selected){requestFrame();return;}
   const e=byId.get(selected);
   if(exactEntity!==e.id||exactPosition!==JSON.stringify(e.position)){readExactPosition();}
@@ -920,6 +922,45 @@ try{
   console.error('CAD profile workshop startup failed',error);
 }
 Object.defineProperty(window,'__editorCadProfile',{get:()=>cadProfilePanel?.snapshot()??null});
+// CAD-003 keeps extrusion geometry and topology inspection separate from the
+// authoritative scene and the existing strict asset/project validators.
+try{
+  geometryForgePanel=mountGeometryForge($('geometry-forge-workshop'),{
+    isPlaying:()=>playing,
+    readAsset:()=>{
+      const id=library.placements.find(p=>p.entityId===selected)?.meshId,
+        asset=library.assets.find(a=>a.id===id)??activeAsset();
+      if(!asset)throw TypeError('select an existing mesh first');
+      return asset;
+    },
+    onCommit:async({model,height,name,sourceName})=>{
+      if(playing)return {accepted:false};
+      const generation=importGeneration,request=++cadGeneration,
+        scene=editScene(),previousLibrary=library,
+        source=cadMeshOBJ(model),bytes=new TextEncoder().encode(source),
+        sourceSha256=await digestSource(bytes);
+      if(playing||generation!==importGeneration||request!==cadGeneration||
+        scene!==editScene()||previousLibrary!==library)return {accepted:false};
+      const id='entity-'+scene.nextId,
+        added=addEntity(scene,{name}),
+        positioned=updateEntity(added,id,{position:[0,height/2,0],scale:[1,1,1]});
+      const result=addMeshAsset(prunePlacements(scene,previousLibrary),{
+        name,sourceName,sourceSha256,license:'Apache-2.0',text:source
+      });
+      const placed=setPlacement(positioned,result.library,id,result.id);
+      library=placed;chosenAsset=result.id;
+      applyScene(positioned,id);
+      inform('Geometry Forge solid added · '+result.id);
+      return {accepted:true,assetId:result.id};
+    }
+  });
+  document.documentElement.dataset.geometryForgeReady='ready';
+}catch(error){
+  document.documentElement.dataset.geometryForgeReady='failed';
+  startupFailure($('geometry-forge-workshop'),'Geometry Forge',error);
+  console.error('Geometry Forge initialization failed',error);
+}
+Object.defineProperty(window,'__editorGeometryForge',{get:()=>geometryForgePanel?.snapshot()??null});
 try{initGraphics();syncEditor();requestFrame();document.documentElement.dataset.editorReady='ready';inform('Editor ready.');}
 catch(error){inform('WebGL unavailable: '+error.message,true);
   document.documentElement.dataset.editorReady='unavailable';syncEditor();}

@@ -99,6 +99,35 @@
     <button id="cad-profile-commit" type="button">Generate CAD profile variant</button>
     <p class="asset-note" id="cad-profile-status" role="status" aria-live="polite"></p>
   </section>
+  <section class="cad-authoring geometry-forge-panel" id="geometry-forge-workshop"
+      aria-label="CAD-003 Geometry Forge">
+    <div class="asset-header"><small>CAD-003 · GEOMETRY FORGE</small></div>
+    <p class="asset-note">Create bounded, original game-world structures. The side walls, top/bottom caps and optional bevel form a validated closed mesh.</p>
+    <label>Structure<select id="forge-kind">
+      <option value="wall">Wall / barricade</option>
+      <option value="platform">Floor / platform</option>
+      <option value="tower">Hexagonal tower</option>
+      <option value="wedge">Wedge / corner</option>
+    </select></label>
+    <div class="forge-dimensions">
+      <label>Width (m)<input id="forge-width" type="number" min="0.2" max="8" step="0.1" value="2"></label>
+      <label>Depth (m)<input id="forge-depth" type="number" min="0.2" max="8" step="0.1" value="2"></label>
+      <label>Height (m)<input id="forge-height" type="number" min="0.2" max="10" step="0.1" value="2"></label>
+      <label>Chamfer (m)<input id="forge-bevel" type="number" min="0" max="1" step="0.05" value="0.2"></label>
+    </div>
+    <label class="forge-check"><input id="forge-custom" type="checkbox"> Author custom convex footprint</label>
+    <label id="forge-outline-label" hidden>Ordered CCW X,Z vertices; semicolons separate points
+      <textarea id="forge-outline" rows="3" hidden spellcheck="false">-1,-1; 1,-1; 1,1; -1,1</textarea>
+    </label>
+    <canvas id="forge-footprint-canvas" width="320" height="260"
+      aria-label="Read-only geometric footprint and chamfer preview. Positive X is right; positive Z is down."></canvas>
+    <p class="asset-note" id="forge-diagnostics">Preview geometry and topology</p>
+    <button id="forge-commit" type="button">Generate &amp; Place Forge Solid</button>
+    <button id="forge-inspect" type="button">Inspect selected mesh topology</button>
+    <p class="asset-note" id="forge-inspection" aria-live="polite"></p>
+    <p class="asset-note" id="forge-status" role="status" aria-live="polite"></p>
+    <p class="asset-note">Native +Y-up SI geometry; Mesh Renderer uses the existing WebGL/Asset Foundry pipeline. Collisions remain authored AABBs. <a href="../../docs/CAD_003.md">Geometry contract &amp; evidence</a>.</p>
+  </section>
   <label>Find assets<input id="asset-search" type="search" placeholder="Name, kind or ID…" autocomplete="off"></label>
   <label>Asset library<select id="asset-list" size="5" aria-label="Project assets"></select></label>
   <div class="asset-buttons">
