@@ -342,7 +342,18 @@ function convexFootprint(source){
       c=points[(i+2)%points.length],
       ab=[b[0]-a[0],b[1]-a[1]],bc=[c[0]-b[0],c[1]-b[1]],
       bend=ab[0]*bc[1]-ab[1]*bc[0];
-    if(Math.hypot(...ab)<.01||bend<.0001)throw RangeError('footprint must be strictly convex without tiny edges');
+    if(Math.hypot(...ab)<.01||bend<.0001)
+      throw RangeError('footprint must be strictly convex without tiny edges');
+    // Local positive turns do NOT imply global convexity or simplicity.
+    // E.g. a pentagram has consistent local winding but edges cross.
+    // A strictly convex CCW polygon puts every non-endpoint vertex to
+    // the interior (left) of EVERY directed supporting edge.
+    for(let j=0;j<points.length;j++){
+      if(j===i||j===(i+1)%points.length)continue;
+      const p=points[j],halfPlane=ab[0]*(p[1]-a[1])-ab[1]*(p[0]-a[0]);
+      if(halfPlane<.0001)
+        throw RangeError('footprint must be simple and globally strictly convex');
+    }
   }
   return points;
 }
