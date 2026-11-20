@@ -10,7 +10,7 @@ import {parseExactPosition,previewQ16Position,transformExactPositionXY,snapEdito
 import {SceneMeshes} from './scene-meshes.js';
 import {mountCADProfileWorkshop} from './cad-profile-workshop.js';
 import {mountGeometryForge} from './geometry-forge.js';
-import {createCADPrimitive,cadMeshOBJ} from '../../modules/cad-geometry/index.js';
+import {createCADPrimitive,createForgePreset,cadMeshOBJ} from '../../modules/cad-geometry/index.js';
 import {OptionalRenderer} from '../../modules/render-optional/index.js';
 import {graphicsControls} from '../gpu-lab/controls.js';
 import {exportGame} from './game-export.js';
@@ -952,6 +952,37 @@ try{
       applyScene(positioned,id);
       inform('Geometry Forge solid added · '+result.id);
       return {accepted:true,assetId:result.id};
+    },
+    onCompound:async({plan})=>{
+      if(playing)return {accepted:false};
+      const generation=importGeneration,request=++cadGeneration,
+        initialScene=editScene(),initialLibrary=library;
+      // Compute and hash every source before touching editor state. The
+      // staged asset+scene edits below are committed exactly once.
+      const prepared=await Promise.all(plan.map(async row=>{
+        const model=createForgePreset({kind:row.kind,width:row.width,
+          depth:row.depth,height:row.height,bevel:row.bevel});
+        const source=cadMeshOBJ(model);
+        return {row,source,sourceSha256:await digestSource(new TextEncoder().encode(source))};
+      }));
+      if(playing||generation!==importGeneration||request!==cadGeneration||
+        initialScene!==editScene()||initialLibrary!==library)return {accepted:false};
+      let nextScene=initialScene,nextLibrary=prunePlacements(initialScene,initialLibrary),last=null;
+      for(const {row,source,sourceSha256} of prepared){
+        const name='Forge '+row.name,id='entity-'+nextScene.nextId;
+        nextScene=addEntity(nextScene,{name});
+        nextScene=updateEntity(nextScene,id,{position:[...row.position],scale:[1,1,1]});
+        const record=addMeshAsset(nextLibrary,{name,sourceName:'cad-forge.obj',
+          sourceSha256,license:'Apache-2.0',text:source});
+        nextLibrary=setPlacement(nextScene,record.library,id,record.id);
+        last={id,assetId:record.id};
+      }
+      if(playing||generation!==importGeneration||request!==cadGeneration||
+        initialScene!==editScene()||initialLibrary!==library)return {accepted:false};
+      library=nextLibrary;chosenAsset=last.assetId;
+      applyScene(nextScene,last.id); // one history commit: one Undo removes all six
+      inform('Geometry Forge demo compound assembled · '+prepared.length+' solids');
+      return {accepted:true,count:prepared.length};
     }
   });
   document.documentElement.dataset.geometryForgeReady='ready';
