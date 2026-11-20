@@ -41,7 +41,7 @@ try{
   await page.goto(origin+'/demos/editor/index.html',{waitUntil:'load'});
   await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready'&&
     document.documentElement.dataset.cadProfileReady==='ready',undefined,{timeout:30000});
-  const snap=()=>page.evaluate(()=>__editorCadProfile.snapshot());
+  const snap=()=>page.evaluate(()=>__editorCadProfile);
   const countBefore=Number(await page.locator('#count').textContent());
   await page.locator('#cad-kind').selectOption('urn');
   await page.locator('#cad-radius').fill('1.1');
