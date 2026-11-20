@@ -116,6 +116,96 @@ try{
  const [afterReject]=await Promise.all([page.waitForEvent('download'),page.locator('#export').click()]);
  assert.equal((await readFile(await afterReject.path())).toString('utf8'),extended,
   'rejected forged import may not replace accepted export capability');
+ // Deterministic in-flight race: block the next *real* Web Crypto digest
+ // inside the audit, change evidence, then release the original digest.
+ // This does not stub or weaken any source/hash computation.
+ const holdNextDigest=async()=>page.evaluate(()=>{
+  const native=SubtleCrypto.prototype.digest;
+  globalThis.__auditBlockHeld=false;
+  globalThis.__auditRelease=null;
+  let trapped=false;
+  SubtleCrypto.prototype.digest=function(...args){
+   if(!trapped&&__replayAudit.snapshot().presentation.pendingJobs>0){
+    trapped=true;
+    const owner=this;
+    globalThis.__auditBlockHeld=true;
+    return new Promise((resolve,reject)=>{
+     globalThis.__auditRelease=()=>{
+      SubtleCrypto.prototype.digest=native;
+      Promise.resolve(native.apply(owner,args)).then(resolve,reject);
+     };
+    });
+   }
+   return native.apply(this,args);
+  };
+ });
+ const releaseDigest=()=>page.evaluate(()=>__auditRelease());
+ const assertNoStale=async(messagePattern)=>{
+  await page.waitForFunction(()=>__replayAudit.snapshot().presentation.pendingJobs===0,
+   undefined,{timeout:20000});
+  const state=await snap();
+  assert.equal(state.parity,null,'stale parity must not commit');
+  assert.equal(state.presentation.audit,null,'stale presentation status must not commit');
+  assert.deepEqual(state.presentation.draws,{},'stale renderer must not repaint');
+  assert.match(state.message,messagePattern);
+  return state;
+ };
+ // P2 reproducer: compare 60-tick racing fixture then switch to FPS.
+ await page.locator('#model').selectOption('racing');
+ await page.locator('#record').click();
+ await page.waitForFunction(()=>__replayAudit.snapshot().kind==='racing'&&
+  __replayAudit.snapshot().message.startsWith('RECORDED'),undefined,{timeout:20000});
+ await holdNextDigest();
+ await page.locator('#compare').click();
+ await page.waitForFunction(()=>__auditBlockHeld===true,undefined,{timeout:20000});
+ await page.locator('#model').selectOption('fps');
+ const afterSwitch=await snap();
+ assert.equal(afterSwitch.kind,null);assert.equal(afterSwitch.ticks,0);
+ await releaseDigest();
+ await assertNoStale(/^Model changed/);
+ assert.equal((await snap()).kind,null);
+ // A new Record invalidates the old Compare before it can publish PASS.
+ await page.locator('#model').selectOption('racing');
+ await page.locator('#record').click();
+ await page.waitForFunction(()=>__replayAudit.snapshot().kind==='racing'&&
+  __replayAudit.snapshot().message.startsWith('RECORDED'),undefined,{timeout:20000});
+ await holdNextDigest();
+ await page.locator('#compare').click();
+ await page.waitForFunction(()=>__auditBlockHeld===true,undefined,{timeout:20000});
+ await page.locator('#record').click();
+ await page.waitForFunction(()=>__replayAudit.snapshot().kind==='racing'&&
+  __replayAudit.snapshot().message.startsWith('RECORDED'),undefined,{timeout:20000});
+ await releaseDigest();
+ const recordedAfterRace=await assertNoStale(/^RECORDED/);
+ assert.equal(recordedAfterRace.ticks,60);
+ // Successful Import also supersedes an older racing audit atomically.
+ await holdNextDigest();
+ await page.locator('#compare').click();
+ await page.waitForFunction(()=>__auditBlockHeld===true,undefined,{timeout:20000});
+ await page.locator('#import').setInputFiles({name:'new-fps-receipt.json',
+  mimeType:'application/json',buffer:Buffer.from(extended)});
+ await page.waitForFunction(()=>__replayAudit.snapshot().kind==='fps'&&
+  __replayAudit.snapshot().ticks===6&&
+  __replayAudit.snapshot().message.startsWith('IMPORTED'),undefined,{timeout:20000});
+ await releaseDigest();
+ const importedAfterRace=await assertNoStale(/^IMPORTED/);
+ assert.equal(importedAfterRace.kind,'fps');assert.equal(importedAfterRace.ticks,6);
+ assert.equal(importedAfterRace.verified,true);
+ // The rate selector has the same generation lease as the Compare action.
+ await page.locator('#model').selectOption('racing');
+ await page.locator('#record').click();
+ await page.waitForFunction(()=>__replayAudit.snapshot().kind==='racing'&&
+  __replayAudit.snapshot().message.startsWith('RECORDED'),undefined,{timeout:20000});
+ await page.locator('#render-rate').selectOption('30');
+ await page.waitForFunction(()=>__replayAudit.snapshot().presentation.audit?.renderHz===30,
+  undefined,{timeout:20000});
+ await holdNextDigest();
+ await page.locator('#render-rate').selectOption('144');
+ await page.waitForFunction(()=>__auditBlockHeld===true,undefined,{timeout:20000});
+ await page.locator('#model').selectOption('fps');
+ await releaseDigest();
+ await assertNoStale(/^Model changed/);
+ assert.equal((await snap()).ticks,0);
  assert.deepEqual(errors,[]);
  const png=await page.locator('#field').screenshot();assert.ok(png.length>2000);
  await mkdir(join(root,'browser-artifacts'),{recursive:true});
@@ -127,7 +217,10 @@ try{
    'Vehicle3D and integer simulation','three interleaved 30/60/144 Hz Canvas sampling paths',
    'selector driven real Canvas frames','non-fixture six-tick imported cadence parity',
    'byte-identical verified import then re-export','full export/import verification',
-   'tamper fails closed','zero JS and network errors']};
+   'tamper fails closed','stale Compare discarded after model change',
+   'stale Compare discarded after Record and verified Import',
+   'stale rate selector discarded after model change',
+   'zero JS and network errors']};
  await writeFile(join(root,'browser-artifacts/replay-audit-001.json'),JSON.stringify(evidence,null,2)+'\n');
  console.log(JSON.stringify(evidence));
  await context.close();

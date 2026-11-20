@@ -38,3 +38,20 @@ node scripts/verify-offline.js
 The unfiltered, isolated Chromium workflow must execute the actual complete offline package, independently verify cross-model records, drive the three distinct Canvas2D sample schedules and selector, **await asynchronous tamper-verifier completion**, download/reimport and reject tampering, check JavaScript/network errors, and retain screenshot, manifest SHA-256 and execution receipts. Existing simulation contracts and published historical evidence are preserved. Merge/release require independent exact-head review and owner authorization.
 
 The packaged Chromium regression also imports a validated six-tick FPS receipt (distinct from the five-tick default), verifies six-tick 30/60/144 Hz sampling, confirms exact export byte identity and tests that a subsequent forged import cannot replace the accepted export.
+
+## Async evidence-generation safety
+
+The Evidence Chamber assigns a monotonically increasing generation to every
+evidence-changing action. Starting Compare or a cadence sample captures its own
+generation and a private local drawing ledger; changes to the selected model,
+recorded tape, imported receipt, verification, or displayed rate invalidate
+prior work. Asynchronous rendering callbacks check the generation before every
+Canvas2D draw. Completed replays with stale generations cannot publish parity,
+status text, sampled frames or evidence from a prior model.
+
+The packaged Chromium test deliberately suspends one genuine Web Crypto digest,
+changes the active model, records again, imports a distinct source and changes
+the presentation selector, then resumes the original digest. Every stale audit
+must leave the newest accepted evidence and displayed status untouched. The
+test does not mock the physics engine or claim that the underlying bounded
+simulation computations can be cancelled mid-digest.
