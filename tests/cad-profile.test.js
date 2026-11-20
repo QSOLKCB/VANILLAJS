@@ -85,8 +85,11 @@ test('reject authored rings collapsing at OBJ six-decimal Y precision before gen
   assert.deepEqual(original.profile,[[1,0],[1,.1],[1,1]]);
   assert.equal(cadMeshOBJ(cadProfileMesh(original)),before);
   const tiny=cadProfileDraft({profile:[[1,0],[1,.000001],[1,1]],segments:8});
+  // Insertion already rounds the midpoint before constructing a draft.
+  // Its legacy strict-increase guard therefore rejects equal ring heights
+  // before the added OBJ precision admission check.
   assert.throws(()=>cadProfileInsert(tiny,{after:0}),
-    /elevations collapse at six-decimal OBJ precision/);
+    /height must increase/);
   assert.equal(tiny.profile.length,3);
 });
 test('recover edit-friendly rings from existing CAD-001 and CAD-002 project meshes',()=>{
