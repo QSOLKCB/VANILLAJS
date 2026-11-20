@@ -11,7 +11,17 @@ import {createCampaign,editSetting,exportPack,readRows,writeRows} from '../demos
 import {createLargeSaveFixture} from '../tests/voidward-save-fixtures.js';
 import {decodeSaveEnvelope} from '../demos/4x-game-lab/voidward/js/save-codec.js';
 
-export async function verifyVoidwardLab(browser, base, options={}) {
+/** Isolate the heavyweight VOIDWARD source-packaged browser from the shared
+ * Chromium process used by preceding WebGL, editor and 4X suites. Both online
+ * and offline phases still exercise the same real worker and 12s cold boot gate.
+ */
+export async function verifyVoidwardLab(callerBrowser, base, options={}) {
+const browser=await callerBrowser.browserType().launch({
+  ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?
+    {executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{}),
+  headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']
+});
+try{
 const root=path.resolve(import.meta.dirname,'..');
 const stage=path.join(root,'dist/demos/4x-game-lab/voidward');
 const out=path.resolve(options.out||'browser-artifacts/voidward');
@@ -421,4 +431,7 @@ try {
   finally{await context?.close().catch(()=>{});}
 }
 return receipt;
+}finally{
+  await browser.close();
+}
 }
