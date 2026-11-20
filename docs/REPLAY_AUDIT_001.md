@@ -1,0 +1,57 @@
+# REPLAY-AUDIT-001 — Cross-Lab Receipts (P6)
+
+**Experimental scope:** source-bound, bounded replay for FPS, air combat, racing and integer simulation. Original Apache-2.0 implementation based on VANILLAJS main at `e9121ea7297b0aeca1da131b695e7c3371a98745`. This is a software replay protocol, not an independently certified proof, authoritative server, network stack, or new physics implementation.
+
+## Authority and input admission
+
+- `createReplayPlan` accepts exact inert `qsol.vanillajs.replay-audit.plan.v1` records (`format,build,kind,model,frames`) with explicit lowercase 40-hex Git SHA build pins. The consumer must independently confirm its checked-out source matches the pin; a caller-supplied string cannot attest what executable ran.
+- FPS calls the real `Combat3D` step for actor/weapon/timer and hit events at 60 simulation ticks/s; fixed tick-start poses are part of the source model, and frame commands carry actor ID, weapon ID, muzzle, direction, fire and reload.
+- Air calls TRAJECTORY-001's actual SENSE-linked lock and guided swept contact at 120 ticks/s. One empty command list denotes one accepted tick; trailing ticks after terminal hit/expiry reject, rather than creating a partial PASS.
+- Racing uses `createVehicle().spawn/step` at 120 ticks/s and a deliberately scoped, trusted flat-surface adapter with source-controlled height/friction. This does not claim to replay arbitrary HORIZON courses, scene graphs, or camera state. Extending to a complex race world requires a separately reviewed matching world authority.
+- Integer calls the existing `integer-replay` preflight and real `IntegerEngine` to execute the accepted integer body tape. The integer model is **integer-exact**; floating models are only **same-runtime deterministic**, not cross-browser bit-identical.
+- Strict data fields; 1–128 admitted frames; 128 KiB source bound, 256 KiB complete receipt bound, no sparse arrays, executable accessors, nonfinite numbers, unknown model input, ambient clocks, renderer callbacks, network imports or game-owned damage assumptions.
+
+## Receipt verification and trust boundary
+
+`sealReplayReceipt(plan)` admits every command before simulation, executes the actual engine, and returns `qsol.vanillajs.replay-audit.receipt.v1`. The receipt includes build/model/tape source, mode, simulation tick rate, tick count, each tick's authoritative events and SHA-256 state digest, and complete source/trace/final SHA-256 digests.
+
+`verifyReplayReceipt(receipt,{expectedBuild})` requires the independently known exact build pin, source schema and complete tape. It **re-executes** the model and compares every event and state checksum, returning `match` and `complete`. It never trusts or accepts a user-supplied `PASS` marker. Malformed/stale/truncated input throws, while structurally valid altered evidence yields `match:false`.
+
+`exportReplayReceipt` accepts only locally executed **or fully re-verified, owned** receipts. `importReplayReceipt` independently re-executes every tick before freezing and admitting the imported object for export, preserving byte-identical import → export round trips. Unverified or tampered objects are never granted this capability; a failed import cannot replace previously accepted evidence in the lab.
+
+**Integrity is not provenance attestation.** SHA-256 is a deterministic comparator, not a signature or proof that claimed source bytes, external licensing, runtime, hardware or review were authentic. A malicious actor can rehash forged records; verification relies on the independent trusted engine and pinned checkout.
+
+`sampleReplayPresentation(plan,renderHz,{present})` interleaves **actual fixed simulation steps and read-only presentation samples** under a deterministic virtual clock (integer accumulation, 30/60/144 sample boundaries). A trusted host-only callback is invoked and awaited for every sampled display frame; callbacks are never fields of imported data and do not receive mutable engine state. Each frame carries the observed accepted tick count, advanced-tick count and a state hash; 144 Hz sampling of 120 Hz physics necessarily includes zero-tick display frames. `auditReplayPresentation(plan,[30,60,144],{present})` exercises all three distinct schedules and compares the entire interleaved authoritative tick/event trace and final hash to an independently sealed baseline. The Evidence Chamber **actually draws every delivered frame on Canvas2D**, and both Compare and its selector build their plan from the active imported or recorded receipt's exact build, kind, model and frames—not a built-in fixture with the same model name. The per-rate audited frame count must match the observed Canvas redraw count. These are deterministic virtual cadence tests, **not hardware-paced 30/60/144 Hz measurements**. Integer mode uses a display-only convention of 60 logical ticks per virtual second; it does not assign an actual temporal tick rate to IntegerEngine. The optional CI-only workload separately measures repeated full-tape host CPU execution and outputs source-identified minimum/median/maximum diagnostic timings; these timings are machine-specific, not native physical-GPU FPS claims.
+
+## Evidence Chamber and quality gates
+
+The original [Evidence Chamber](../demos/replay-audit-lab/index.html) offers FPS, guided-air, flat racing and integer fixtures. Its interactive controls record, verify, export, import, deliberately corrupt a receipt, and compare presentation rates. Canvas rendering is read-only; all event authority remains with the native engines. Example records pin the reviewed baseline SHA as **declared provenance**, not proof of the new PR checkout.
+
+~~~sh
+node --test tests/replay-audit.test.js tests/integer-replay.test.js tests/combat3d.test.js tests/trajectory.test.js tests/vehicle3d.test.js
+node scripts/replay-audit-workload.mjs --check
+node scripts/check.js
+node scripts/build.js
+node scripts/verify-offline.js
+~~~
+
+The unfiltered, isolated Chromium workflow must execute the actual complete offline package, independently verify cross-model records, drive the three distinct Canvas2D sample schedules and selector, **await asynchronous tamper-verifier completion**, download/reimport and reject tampering, check JavaScript/network errors, and retain screenshot, manifest SHA-256 and execution receipts. Existing simulation contracts and published historical evidence are preserved. Merge/release require independent exact-head review and owner authorization.
+
+The packaged Chromium regression also imports a validated six-tick FPS receipt (distinct from the five-tick default), verifies six-tick 30/60/144 Hz sampling, confirms exact export byte identity and tests that a subsequent forged import cannot replace the accepted export.
+
+## Async evidence-generation safety
+
+The Evidence Chamber assigns a monotonically increasing generation to every
+evidence-changing action. Starting Compare or a cadence sample captures its own
+generation and a private local drawing ledger; changes to the selected model,
+recorded tape, imported receipt, verification, or displayed rate invalidate
+prior work. Asynchronous rendering callbacks check the generation before every
+Canvas2D draw. Completed replays with stale generations cannot publish parity,
+status text, sampled frames or evidence from a prior model.
+
+The packaged Chromium test deliberately suspends one genuine Web Crypto digest,
+changes the active model, records again, imports a distinct source and changes
+the presentation selector, then resumes the original digest. Every stale audit
+must leave the newest accepted evidence and displayed status untouched. The
+test does not mock the physics engine or claim that the underlying bounded
+simulation computations can be cancelled mid-digest.

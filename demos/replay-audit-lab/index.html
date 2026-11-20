@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#091420"><title>REPLAY-AUDIT-001 — Evidence Chamber</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#081723;color:#edf8ff;font:16px system-ui}
+header,main{max-width:1140px;margin:auto;padding:20px 26px}a{color:#84e8d8}
+h1{font-size:clamp(2rem,5vw,3.8rem);letter-spacing:-.04em;margin:15px 0}
+p{color:#b8d2db;max-width:78ch}.panel{background:#0e2734;border:1px solid #315564;border-radius:8px;padding:16px}
+main{display:grid;gap:16px}.controls{display:flex;flex-wrap:wrap;align-items:end;gap:10px}
+label{display:grid;gap:4px;color:#acc5cf}select,button,.file{font:inherit;background:#183745;color:#f0fbff;border:1px solid #5d9ca1;border-radius:6px;padding:10px}
+button{cursor:pointer}#field{display:block;width:100%;max-height:320px;background:#061520;border:1px solid #3f6c78}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}pre{min-height:120px;overflow:auto;white-space:pre-wrap;font-size:12px;line-height:1.5}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+</style></head><body>
+<header><a href="../../index.html">VANILLAJS</a> / REPLAY-AUDIT-001 / <a href="../../docs/REPLAY_AUDIT_001.md">CONTRACT</a></header>
+<main><div><h1>THE EVIDENCE CHAMBER</h1><p>Run actual FPS, guided missile, racing or integer simulation ticks. Record source-bound commands and events, independently replay all accepted ticks, and deliberately tamper with the evidence. Rendering is read-only.</p></div>
+<div class="panel controls">
+<label>Model<select id="model"><option value="fps">FPS · Combat3D</option><option value="air">Air · Guided projectile</option>
+<option value="racing">Racing · Vehicle3D</option><option value="integer">Exact integer engine</option></select></label>
+<label>Presentation<select id="render-rate"><option value="30">30 Hz</option><option value="60" selected>60 Hz</option><option value="144">144 Hz</option></select></label>
+<button id="record">Record full replay</button><button id="verify">Independently verify</button>
+<button id="compare">Compare 30/60/144</button><button id="tamper">Tamper negative control</button>
+<button id="export">Export receipt</button><label>Import receipt<input id="import" type="file" accept=".json,application/json"></label>
+</div>
+<section class="panel"><h2>Actual authoritative event trace</h2><canvas id="field" width="1000" height="300" aria-label="Read-only source-pinned tick and event graph"></canvas></section>
+<div class="cols"><section class="panel"><h2>Verification</h2><pre id="status" role="status">Ready for a complete replay.</pre></section>
+<section class="panel"><h2>Receipt metadata</h2><pre id="receipt">No receipt recorded.</pre></section></div>
+<p>SHA-256 is an integrity comparison, not independent checkout attestation. Floating physics is same-runtime only; the integer engine is exact under its published contract. No internet, external game code or renderer-input authority.</p>
+</main><script type="module" src="./app.js"></script></body></html>

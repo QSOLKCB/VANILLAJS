@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Adapted from QSOLKCB/4XGAMES PR #2, commit 030859385ac8929e066702ef8af0518663480653.
-// Uses the caller's isolated Chromium instance; never launches a desktop.
+// Uses a dedicated Chromium process with the trusted caller's exact launch
+// configuration (owner Chrome/GPU vs pinned hosted-CI SwiftShader).
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -11,7 +12,23 @@ import {createCampaign,editSetting,exportPack,readRows,writeRows} from '../demos
 import {createLargeSaveFixture} from '../tests/voidward-save-fixtures.js';
 import {decodeSaveEnvelope} from '../demos/4x-game-lab/voidward/js/save-codec.js';
 
-export async function verifyVoidwardLab(browser, base, options={}) {
+/** Isolate the heavyweight VOIDWARD source-packaged browser from the shared
+ * Chromium process used by preceding WebGL, editor and 4X suites. Both online
+ * and offline phases still exercise the same real worker and 12s cold boot gate.
+ */
+// Hosted CI is intentionally headless with software rendering. Owner-run
+// capture explicitly supplies its own trusted launchOptions instead, preserving
+// headed Chrome, its executable, hardware renderer and all launch flags.
+export function voidwardLaunchOptions(options={}){
+  return options.launchOptions??{
+    ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?
+      {executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{}),
+    headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']
+  };
+}
+export async function verifyVoidwardLab(callerBrowser, base, options={}) {
+const browser=await callerBrowser.browserType().launch(voidwardLaunchOptions(options));
+try{
 const root=path.resolve(import.meta.dirname,'..');
 const stage=path.join(root,'dist/demos/4x-game-lab/voidward');
 const out=path.resolve(options.out||'browser-artifacts/voidward');
@@ -292,21 +309,27 @@ try {
     // the original 12s readiness gate, not a substituted sleep or retry.
     const started=Date.now(),diagnostics={
       kind:'qsol.voidward.offline-boot-diagnostics.v1',
-      status:'RUNNING',phase:'worker-ready',events:[],discardedEvents:0
+      status:'RUNNING',phase:'worker-ready',events:[],firstEvents:[],discardedEvents:0
     };
     const pathOnly=raw=>{try{
       const target=new URL(raw);
       return target.origin===new URL(url).origin?target.pathname:'EXTERNAL';
     }catch{return 'INVALID_URL';}};
     const record=(kind,data={})=>{
+      const event={elapsedMs:Date.now()-started,kind,...data};
+      if(diagnostics.firstEvents.length<32)diagnostics.firstEvents.push(event);
       if(diagnostics.events.length===96){diagnostics.events.shift();diagnostics.discardedEvents++;}
-      diagnostics.events.push({elapsedMs:Date.now()-started,kind,...data});
+      diagnostics.events.push(event);
     };
     const onRequest=request=>record('request',{path:pathOnly(request.url()),type:request.resourceType()});
     const onResponse=response=>record('response',{path:pathOnly(response.url()),
       status:response.status(),fromServiceWorker:response.fromServiceWorker()});
-    const onFailed=request=>record('requestfailed',{path:pathOnly(request.url()),
-      error:String(request.failure()||'UNKNOWN').slice(0,256)});
+    const onFailed=request=>{
+      const failure=request.failure();
+      record('requestfailed',{path:pathOnly(request.url()),urlHasSearch:new URL(request.url()).search.length>0,
+        errorText:typeof failure==='string'?failure.slice(0,256):
+          String(failure?.errorText??JSON.stringify(failure)??'UNKNOWN').slice(0,256)});
+    };
     const onConsole=message=>{if(message.type()==='error')
       record('console-error',{message:message.text().slice(0,256)});};
     const onPageError=error=>record('pageerror',{message:String(error.message).slice(0,256)});
@@ -321,6 +344,21 @@ try {
           await new Promise(resolve=>navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}));
       });
       diagnostics.before=await inspectOfflineBoot();
+      // The installed worker promises a complete immutable package. Check its
+      // *actual* CacheStorage membership before disconnecting: a cache miss
+      // must not be mistaken for a Chromium timing failure or hidden by retry.
+      const manifest=JSON.parse(await fs.readFile(path.join(root,'dist/manifest.json'),'utf8'));
+      diagnostics.cacheAdmission=await page.evaluate(paths=>caches.keys().then(async names=>{
+        const name=names.find(n=>n.startsWith('qsol-vanillajs:'));
+        if(!name)return {found:false,expected:paths.length,present:0,missing:paths.slice(0,24)};
+        const cache=await caches.open(name),stored=new Set((await cache.keys()).map(r=>r.url));
+        const base=new URL('/VANILLAJS/',location.origin);
+        const missing=paths.filter(p=>!stored.has(new URL(p,base).href));
+        return {found:true,expected:paths.length,present:paths.length-missing.length,
+          missing:missing.slice(0,32),missingCount:missing.length};
+      }),manifest.files.filter(f=>f.path!=='service-worker.js').map(f=>f.path));
+      assert.equal(diagnostics.cacheAdmission.missingCount,0,
+        'active offline worker cache must contain every sealed package asset');
       const before=(await snapshot()).state.turn;
       diagnostics.expectedTurn=before;
       diagnostics.phase='offline-reload';
@@ -344,6 +382,9 @@ try {
       if(!diagnostics.atFailure)diagnostics.atFailure=await inspectOfflineBoot();
       console.error('VOIDWARD offline boot diagnostic: '+JSON.stringify({
         error:diagnostics.error,atFailure:diagnostics.atFailure,
+        cacheAdmission:diagnostics.cacheAdmission,
+        firstEvents:diagnostics.firstEvents.slice(0,24),
+        firstFailures:diagnostics.events.filter(e=>e.kind==='requestfailed'||e.status>=400).slice(0,12),
         lastEvents:diagnostics.events.slice(-16)
       }));
     }finally{
@@ -397,4 +438,7 @@ try {
   finally{await context?.close().catch(()=>{});}
 }
 return receipt;
+}finally{
+  await browser.close();
+}
 }

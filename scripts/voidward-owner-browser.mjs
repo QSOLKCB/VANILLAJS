@@ -23,11 +23,16 @@ const server=createServer(async(req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const base=`http://127.0.0.1:${server.address().port}/VANILLAJS/`;
+// Reuse the identical owner-selected launch settings for the separately
+// isolated VOIDWARD tracing process. Hosted CI supplies no owner override.
+const browserLaunch={headless:false,
+  executablePath:process.env.BROWSER_EXECUTABLE||'/usr/bin/google-chrome',
+  args:['--no-sandbox'],timeout:30000};
 const receipt={kind:'qsol.vanillajs.voidward-owner.v1',status:'RUNNING',baseline,environment:{platform:process.platform,arch:process.arch,node:process.version},input:'Playwright controls only its dedicated browser; no OS keyboard/mouse injection',checks:[],hardware:{status:'UNVERIFIED'},limitations:['Touch is emulated; no physical phone was used.','Audio signal and controls are checked; human listening is not assessed.']};
 let browser;
 async function check(name,fn){const t=performance.now();console.log('START '+name);const result=await fn();receipt.checks.push({name,status:'PASS',elapsedMs:performance.now()-t,...(result?{result}:{})});await writeFile(resolve(out,'owner-result.json'),JSON.stringify(receipt,null,2));console.log('PASS '+name);}
 try{
-  browser=await chromium.launch({headless:false,executablePath:process.env.BROWSER_EXECUTABLE||'/usr/bin/google-chrome',args:['--no-sandbox'],timeout:30000});
+  browser=await chromium.launch(browserLaunch);
   receipt.environment.browser=browser.version();
   const cdp=await browser.newBrowserCDPSession();
   try{
@@ -43,7 +48,7 @@ try{
     try{await page.goto(base+'demos/editor/index.html');await page.locator('#view').waitFor();await page.screenshot({path:resolve(out,'editor-baseline.png'),fullPage:true});}finally{await page.close();}
   }else{
     await check('existing-visual-editor',async()=>{const {verifyEditor}=await import('./browser-editor.js');await verifyEditor(browser,base);});
-    await check('voidward-campaigns',async()=>{const {verifyVoidwardLab}=await import('./browser-voidward.js');return await verifyVoidwardLab(browser,base,{out:resolve(out,'campaigns'),traceGPU:true});});
+    await check('voidward-campaigns',async()=>{const {verifyVoidwardLab}=await import('./browser-voidward.js');return await verifyVoidwardLab(browser,base,{out:resolve(out,'campaigns'),traceGPU:true,launchOptions:browserLaunch});});
     await check('editor-campaign-bridge',async()=>{const {verifyEditor4X}=await import('./browser-editor-4x.js');return await verifyEditor4X(browser,base);});
   }
   assert.ok(receipt.checks.length);receipt.status='PASS';
