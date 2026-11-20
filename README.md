@@ -15,6 +15,8 @@ working scene, change one thing, test it, and keep the files you create.
 [Interactive Tutorial Lab](demos/tutorial-lab/index.html) ·
 [Build with AI](#build-with-an-ai-agent) · [Modules](#modules)
 
+**Under review:** [CHIP-AUDIO-001 — SID-style ADSR × Paula mixer](docs/CHIP_AUDIO_API.md) is an opt-in, deterministic four-channel 8-bit PCM stereo synthesizer and [offline listening lab](demos/chip-audio-lab/index.html). No existing sound module or game is modified.
+
 ## Welcome to the foundry
 
 **VANILLAJS = engine, physics, Game Labs, mods, tools and education.**

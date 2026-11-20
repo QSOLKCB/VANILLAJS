@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VANILLAJS | ADSR × Paula Audio Lab</title>
+<style>
+:root{color-scheme:dark;font:16px system-ui;background:#101823;color:#e7ede4}
+body{max-width:960px;margin:2rem auto;padding:0 1rem}h1{font-size:1.7rem}
+p{max-width:75ch;line-height:1.5;color:#c4ced0}
+.controls{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;padding:1rem;background:#1b2c39;border:1px solid #48596a;border-radius:.5rem}
+button,select{font:inherit;background:#223f4c;color:#fff;border:1px solid #92bec6;border-radius:.25rem;padding:.5rem .85rem}
+button:hover{background:#325568}button:focus-visible,select:focus-visible{outline:2px solid #f5db93;outline-offset:2px}
+label{display:flex;align-items:center;gap:.45rem}a{color:#aadad6}
+canvas{display:block;box-sizing:border-box;width:100%;height:auto;max-height:240px;background:#131e2b;border:1px solid #455f6e;margin-top:1rem}
+#status{font-weight:600;color:#f1dfa0}small{color:#bcd2d0}
+</style></head><body>
+<p><a href="../../index.html">VANILLAJS</a> / Game Labs</p>
+<h1>CHIP-AUDIO-001: SID ADSR × Paula mixer</h1>
+<p>Four signed 8-bit sample voices, 0–64 volume, C64-inspired ADSR and Amiga-inspired hard-panned stereo. The test signal is an original generated phrase. Not a hardware-accurate SID or Paula emulator.</p>
+<div class="controls">
+<label>Clock <select id="clock"><option value="pal">Paula PAL</option><option value="ntsc">Paula NTSC</option></select></label>
+<label><input id="filter" type="checkbox"> Approximate LED low-pass</label>
+<button id="play" type="button">Play original test phrase</button>
+<button id="save" type="button">Save stereo WAV</button>
+</div>
+<canvas id="signal" width="960" height="210" role="img" aria-label="Stereo waveform of the rendered test phrase"></canvas>
+<p id="status" role="status" aria-live="polite">Ready. Playback requires a click.</p>
+<p><small>Four-channel PCM remains internal; the resulting export is 48 kHz, stereo PCM16LE WAV. All sound bytes are created locally. No downloaded samples, tracker modules or copyrighted tunes.</small></p>
+<script type="module" src="./start.js"></script>
+</body></html>
