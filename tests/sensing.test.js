@@ -26,7 +26,7 @@ test('closed wall surfaces, inside observer and coincident blocker ties',()=>{
   const rows=querySight(world,observer([0,1,0]),{range:100,fov:Math.PI*2});
   assert.equal(find(rows,'front').occluderId,'a-wall');
   assert.equal(find(rows,'at-edge').occluderId,'a-wall');
-  assert.equal(querySight(world,observer([0,1,-1.5]))[0].reason,'occluded');
+  assert.equal(querySight(world,observer([0,1,-1.5]),{fov:Math.PI*2})[0].reason,'occluded');
   const onBoundary=createSightWorld({blockers:[block('wall',[-1,0,-1],[1,2,1])],
     targets:[target('point',[1,1,1])]});
   assert.equal(querySight(onBoundary,observer([1,1,1]))[0].reason,'occluded');
