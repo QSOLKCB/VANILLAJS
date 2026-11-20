@@ -54,14 +54,14 @@ try{
   await page.keyboard.press('KeyF');
   // Await actual fixed-tick input consumption, not an arbitrary 80 ms wall clock.
   await page.waitForFunction(()=>document.getElementById('last-shot')?.textContent?.startsWith('SHOT 1'),
-    null,null,{timeout:10000});
+    null,{timeout:10000});
   assert.match(await page.locator('#last-shot').textContent(),/SHOT 1/);
   await page.keyboard.press('KeyM');
-  await page.waitForFunction(()=>document.querySelector('#missile-ammo')?.textContent==='3 / 4',null,{timeout:5000});
+  await page.waitForFunction(()=>document.querySelector('#missile-ammo')?.textContent==='3 / 4',{timeout:5000});
   assert.match(await page.locator('#last-shot').textContent(),/MISSILE 1 AWAY|MISSILE 1 IMPACT/);
   // A launched missile is not an immediate raycast hit. A later tick must
   // advance it through the physical test sphere.
-  await page.waitForFunction(()=>document.querySelector('#missile-hits')?.textContent==='1',null,{timeout:10000});
+  await page.waitForFunction(()=>document.querySelector('#missile-hits')?.textContent==='1',{timeout:10000});
   await page.locator('#view').selectOption('chase');
   await page.waitForTimeout(100);
   assert.equal(await page.locator('#view').inputValue(),'chase');
@@ -70,7 +70,7 @@ try{
   await page.waitForTimeout(180);
   assert.match(await page.locator('#aero').textContent(),/INERTIAL/);
   await page.keyboard.press('KeyM');
-  await page.waitForFunction(()=>document.querySelector('#missile-ammo')?.textContent==='3 / 4',null,{timeout:5000});
+  await page.waitForFunction(()=>document.querySelector('#missile-ammo')?.textContent==='3 / 4',{timeout:5000});
   await page.locator('#craft').selectOption('car');
   await page.getByRole('button',{name:'Launch'}).click();
   await page.keyboard.down('KeyW');await page.waitForTimeout(650);await page.keyboard.up('KeyW');
