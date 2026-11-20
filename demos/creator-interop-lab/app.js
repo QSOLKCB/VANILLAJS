@@ -17,33 +17,46 @@ function initial(){return createCreatorProject({format:CREATOR_FORMAT,version:1,
  {id:'bravo-1',team:'bravo',cell:[9,8],heading:[-1,0]}],
  objective:[10,5],seed:7}});}
 let project=initial(),tool='prop',message='Select a tool and edit the grid. All state changes validate first.';
-const left=120,top=60,cell=40,coord=(x,z)=>[(x+.5)*2,1,-(z+.5)*2];
+let selectedAssetId=project.assets[0]?.id??null;
+const left=120,top=60,cell=40;
+const metresOf=p=>p.tactical?.cellMetres??2;
+const coord=(x,z,metres)=>[(x+.5)*metres,1,-(z+.5)*metres];
 function render(){
+ const metres=metresOf(project),meshSelector=$('mesh-asset');
+ if(!project.assets.some(a=>a.id===selectedAssetId))selectedAssetId=project.assets[0]?.id??null;
+ meshSelector.replaceChildren(...project.assets.map(a=>{
+  const option=document.createElement('option');option.value=a.id;option.textContent=a.id+' ('+a.dimension+')';
+  return option;
+ }));
+ meshSelector.disabled=selectedAssetId===null;
+ if(selectedAssetId!==null)meshSelector.value=selectedAssetId;
  if(project.tactical===null&&(tool==='alpha'||tool==='bravo'))tool='prop';
+ if(tool==='prop'&&selectedAssetId===null)tool='target';
  for(const button of document.querySelectorAll('[data-tool]')){
-  button.disabled=project.tactical===null&&(button.dataset.tool==='alpha'||button.dataset.tool==='bravo');
+  button.disabled=(project.tactical===null&&(button.dataset.tool==='alpha'||button.dataset.tool==='bravo'))||
+   (button.dataset.tool==='prop'&&selectedAssetId===null);
   button.setAttribute('aria-pressed',String(button.dataset.tool===tool));
  }
  ctx.clearRect(0,0,720,540);ctx.fillStyle='#102b3b';ctx.fillRect(left,top,480,400);
  for(let z=0;z<10;z++)for(let x=0;x<12;x++){
   ctx.strokeStyle='#294b59';ctx.strokeRect(left+x*cell,top+z*cell,cell,cell);
  }
- const place=(p,color,label)=>{const x=left+p[0]/2*cell,z=top+(-p[2])/2*cell;
+ const place=(p,color,label)=>{const x=left+p[0]/metres*cell,z=top+(-p[2])/metres*cell;
   ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,z,12,0,Math.PI*2);ctx.fill();ctx.fillStyle='#05212b';
   ctx.font='bold 12px system-ui';ctx.fillText(label,x-9,z+4);};
  for(const z of project.zones){ctx.fillStyle=z.kind==='occluder'?'#997b55':'#357b78';
-  const x=left+z.min[0]/2*cell,y=top+(-z.max[2])/2*cell;
-  ctx.fillRect(x,y,(z.max[0]-z.min[0])/2*cell,(z.max[2]-z.min[2])/2*cell);}
+  const x=left+z.min[0]/metres*cell,y=top+(-z.max[2])/metres*cell;
+  ctx.fillRect(x,y,(z.max[0]-z.min[0])/metres*cell,(z.max[2]-z.min[2])/metres*cell);}
  for(const p of project.placements)place(p.position,
   p.kind==='target'?'#f9bd73':p.kind==='vehicle'?'#a5caff':'#8edbb2',
   p.kind==='target'?'T':p.kind==='vehicle'?'V':p.assetId?.startsWith('cad-')?'C':'P');
- for(const u of project.tactical?.units??[])place(coord(...u.cell),u.team==='alpha'?'#83e5ff':'#ef8c9c',u.team==='alpha'?'A':'B');
+ for(const u of project.tactical?.units??[])place(coord(...u.cell,metres),u.team==='alpha'?'#83e5ff':'#ef8c9c',u.team==='alpha'?'A':'B');
  const targets=project.placements.filter(p=>p.kind==='target').length;
  const reports=querySight(createCreatorSightWorld(project),
   {position:[3,1,-3],direction:[1,0,-1]},{range:100,fov:Math.PI*2});
  const block=reports.filter(r=>r.reason==='occluded').length;
  const tactics=project.tactical===null?null:createCreatorTacticsWorld(project);
- $('receipt').textContent=JSON.stringify({message,tool,assets:project.assets.length,
+ $('receipt').textContent=JSON.stringify({message,tool,metresPerCell:metres,selectedAssetId,assets:project.assets.length,
   placements:project.placements.length,zones:project.zones.length,
   targets,occluded:block,hasTactical:tactics!==null,tacticalUnits:tactics?.unitCount??0,
   cover:tactics?.coverCount??0,objective:tactics?.objective??null,
@@ -58,10 +71,10 @@ function edit(x,z){
   const used=new Set([
    ...draft.assets.map(a=>a.id),...draft.placements.map(a=>a.id),...draft.zones.map(a=>a.id),
    ...(draft.tactical?.cover??[]).map(a=>a.id),...(draft.tactical?.units??[]).map(a=>a.id)]);
-  const position=coord(x,z);
+  const metres=metresOf(draft),position=coord(x,z,metres);
   if(tool==='wall'){
    draft.zones.push({id:nextId('wall',used),kind:'occluder',
-    min:[x*2,0,-(z+1)*2],max:[(x+1)*2,3,-z*2]});
+    min:[x*metres,0,-(z+1)*metres],max:[(x+1)*metres,3,-z*metres]});
    if(draft.tactical)draft.tactical.cover.push({id:nextId('cover',used),x,z,w:1,h:1,height:3});
   }else if(tool==='cad'){
    const assetId=nextId('cad',used);
@@ -74,12 +87,15 @@ function edit(x,z){
    draft.tactical.units.push({id:nextId(tool,used),team:tool,cell:[x,z],
     heading:tool==='alpha'?[1,0]:[-1,0]});
   }else draft.placements.push({id:nextId(tool,used),kind:tool,
-   assetId:tool==='prop'?'mesh-1':null,position});
+   assetId:tool==='prop'?selectedAssetId:null,position});
   const proposed=createCreatorProject(draft);project=proposed;
   message='Accepted '+tool+' at '+x+','+z+'.';}
  catch(e){message='Rejected without mutation: '+e.message;}
  render();
 }
+$('mesh-asset').addEventListener('change',event=>{
+ selectedAssetId=event.target.value;render();
+});
 $('field').addEventListener('click',e=>{
  const box=$('field').getBoundingClientRect(),px=(e.clientX-box.left)*720/box.width,py=(e.clientY-box.top)*540/box.height;
  const x=Math.floor((px-left)/cell),z=Math.floor((py-top)/cell);

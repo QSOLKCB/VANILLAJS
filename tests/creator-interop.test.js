@@ -5,7 +5,7 @@ import {createSceneGraph} from '../modules/scene-graph/index.js';
 import {querySight} from '../modules/sensing/index.js';
 import {createTacticsState} from '../modules/tactics/index.js';
 import {CREATOR_FORMAT,createCreatorProject,creatorCADAsset,createCreatorSightWorld,createCreatorTacticsWorld,
- sealCreatorPackage,creatorPackageJSON,openCreatorPackage} from '../modules/creator-interop/index.js';
+ sealCreatorPackage,creatorPackageJSON,openCreatorPackage,CREATOR_LIMITS,CREATOR_PACKAGE} from '../modules/creator-interop/index.js';
 const p=()=>({format:CREATOR_FORMAT,version:1,name:'Workshop',scene:createSceneGraph('Workshop'),
  assets:[{id:'mesh-1',dimension:'2d',vertices:[[0,0,0],[1,0,0],[0,1,0]],
  triangles:[[0,1,2]],origin:'original',license:'Apache-2.0',sourceRef:'original:qsol'}],
@@ -73,4 +73,13 @@ test('real CAD-003 tower geometry becomes a distinct portable indexed asset',()=
  assert.equal(project.assets.length,2);
  assert.throws(()=>creatorCADAsset({id:'bad',kind:'tower',options:{width:2,depth:2,height:3,
    get bevel(){throw Error('not executable');}}}),/non-executable/);
+});
+
+test('exact 256 KiB serialized package boundary never appends unbudgeted bytes',()=>{
+ const mock={format:CREATOR_PACKAGE,project:{padding:''},hashes:[],sha256:'a'.repeat(64)};
+ mock.project.padding='x'.repeat(CREATOR_LIMITS.bytes-Buffer.byteLength(JSON.stringify(mock)));
+ const serialized=creatorPackageJSON(mock);
+ assert.equal(Buffer.byteLength(serialized),CREATOR_LIMITS.bytes);
+ assert.equal(serialized.endsWith('\\n'),false);
+ assert.throws(()=>creatorPackageJSON({...mock,project:{padding:mock.project.padding+'x'}}),/byte limit/);
 });

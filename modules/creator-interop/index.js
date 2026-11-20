@@ -159,7 +159,7 @@ export function creatorPackageJSON(pkg){
   record(pkg,['format','project','hashes','sha256'],'creator package');
   const payload=JSON.stringify(pkg);
   if(ENCODER.encode(payload).length>CREATOR_LIMITS.bytes)throw RangeError('creator package exceeds byte limit');
-  return payload+'\n';
+  return payload;
 }
 /** Import is all-or-nothing; no state is committed until both hashes pass. */
 export async function openCreatorPackage(textValue){
