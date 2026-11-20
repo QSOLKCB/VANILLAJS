@@ -11,7 +11,7 @@ import {parseOBJ,createAssetLibrary,addMeshAsset,setPlacement,
 import {createForgeScene,addEntity,updateEntity,sceneWorld,makeHistory,
   commitHistory,undoHistory,redoHistory} from '../demos/editor/model.js';
 import {createSceneVertices,sceneResourceBudget} from '../demos/editor/viewport.js';
-import {parseForgeFootprint} from '../demos/editor/geometry-forge.js';
+import {parseForgeFootprint,forgeCompoundPlan} from '../demos/editor/geometry-forge.js';
 const digest=s=>createHash('sha256').update(s).digest('hex');
 const cube=(bevel=0)=>createForgeExtrusion({footprint:[[-1,-1],[1,-1],[1,1],[-1,1]],
   height:2,bevel});
@@ -153,6 +153,23 @@ test('strict inert custom polygon parser refuses scripts, giant strings and hidd
   assert.throws(()=>parseForgeFootprint(null));
   const huge=Array(14).fill('0,0').join(';');
   assert.throws(()=>parseForgeFootprint(huge));
+});
+test('original six-piece industrial compound fits bounds and topology budget',()=>{
+  const plan=forgeCompoundPlan();
+  assert.equal(plan.length,6);
+  assert.ok(Object.isFrozen(plan)&&plan.every(Object.isFrozen));
+  const names=new Set(plan.map(x=>x.name));
+  assert.equal(names.size,6);
+  let vertexCount=0;
+  for(const row of plan){
+    const options={kind:row.kind,width:row.width,depth:row.depth,
+      height:row.height,bevel:row.bevel};
+    const mesh=createForgePreset(options),diag=good(mesh);
+    close(diag.volume,forgeVolumeReference(forgePresetFootprint(options)));
+    vertexCount+=mesh.vertexCount;
+    assert.equal(row.position[1],row.height/2);
+  }
+  assert.ok(vertexCount<6*FORGE_LIMITS.meshVertices);
 });
 test('seeded 144 varied convex footprints preserve Euler, native/OBJ volume parity',()=>{
   let state=303;const rnd=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/2**32;};

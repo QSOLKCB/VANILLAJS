@@ -107,25 +107,62 @@ try{
   await page.locator('#forge-inspect').click();
   assert.match(await page.locator('#forge-inspection').textContent(),/CLOSED/);
   assert.match(await page.locator('#forge-inspection').textContent(),/winding errors 0/);
+  // Real one-click six-structure industrial environment, atomic scene history.
+  await page.locator('#forge-compound').click();
+  await page.waitForFunction(n=>Number(document.getElementById('count').textContent)===n,
+    base+8,{timeout:15000});
+  assert.equal(await page.locator('#asset-count').textContent(),'8 assets');
+  assert.equal(await page.locator('#object-name').inputValue(),'Forge Loading Platform');
+  await page.locator('#forge-inspect').click();
+  assert.match(await page.locator('#forge-inspection').textContent(),/CLOSED/);
+  const compoundDownload=page.waitForEvent('download');
+  await page.locator('#asset-save-project').click();
+  const compoundFile=await compoundDownload,compoundBytes=await readFile(await compoundFile.path());
+  const compound=JSON.parse(compoundBytes.toString('utf8'));
+  assert.equal(compound.library.assets.length,8);
+  assert.equal(compound.library.placements.length,8);
+  assert.equal(compound.scene.objects.length,base+8);
+  assert.deepEqual(compound.scene.objects.slice(-6).map(x=>x.name),[
+    'Forge West Watchtower','Forge East Watchtower','Forge Front Barricade',
+    'Forge West Deflector','Forge East Deflector','Forge Loading Platform'
+  ]);
+  for(const asset of compound.library.assets.slice(-6)){
+    assert.equal(asset.license,'Apache-2.0');
+    assert.equal(asset.sourceName,'cad-forge.obj');
+    assert.match(asset.sourceSha256,/^[0-9a-f]{64}$/);
+  }
+  await page.locator('#undo').click();
+  assert.equal(Number(await page.locator('#count').textContent()),base+2,
+    'one Undo must remove all six generated structures');
+  await page.locator('#redo').click();
+  assert.equal(Number(await page.locator('#count').textContent()),base+8);
+  await page.locator('#asset-open-project').setInputFiles({
+    name:'geometry-forge-compound.vproject.json',
+    mimeType:'application/json',buffer:compoundBytes
+  });
+  await page.waitForFunction(()=>document.querySelector('#status')?.textContent?.startsWith(
+    'Loaded local asset project'),undefined,{timeout:10000});
+  assert.equal(Number(await page.locator('#count').textContent()),base+8);
   // A concave input must be rejected before creating any asset or object.
   await page.locator('#forge-outline').fill('-2,-2;2,-2;0,0;2,2;-2,2');
   assert.equal((await snap()).valid,false);
   assert.match(await page.locator('#forge-status').textContent(),/Forge rejected/);
   await page.locator('#forge-commit').click();
-  assert.equal(Number(await page.locator('#count').textContent()),base+2);
-  assert.equal(await page.locator('#asset-count').textContent(),'2 assets');
+  assert.equal(Number(await page.locator('#count').textContent()),base+8);
+  assert.equal(await page.locator('#asset-count').textContent(),'8 assets');
   assert.deepEqual(errors,[],'zero exceptions, HTTP failures or external requests');
   await mkdir(join(root,'browser-artifacts'),{recursive:true});
   await writeFile(join(root,'browser-artifacts/cad-003-forge.png'),preview);
   const receipt={kind:'qsol.vanillajs.cad-003.browser.v1',status:'PASS',
     testedMergeCheckout:process.env.GITHUB_SHA??null,chromium:browser.version(),
     packageSHA256:sha(manifest),previewSHA256:sha(preview),
-    projectSHA256:sha(bytes),assets:project.library.assets.map(a=>a.sourceSha256),
+    projectSHA256:sha(compoundBytes),assets:compound.library.assets.map(a=>a.sourceSha256),
     checks:['native editor and Geometry Forge startup','closed topology and reference volume',
       'original industrial tower with true bevel','non-authoritative Canvas2D preview',
       'real WebGL scene mutation on Generate','selected mesh topology inspection',
       'custom numeric convex polygon and second mesh','Apache-2.0 SHA-256 sources',
-      'project save/reopen','scene undo/redo','concave input fail-closed',
+      'project save/reopen','scene undo/redo','six-structure compound one-undo atomicity',
+      'compound project source provenance and reimport','concave input fail-closed',
       'zero browser exceptions and external network']};
   await writeFile(join(root,'browser-artifacts/cad-003-acceptance.json'),
     JSON.stringify(receipt,null,2)+'\n');
