@@ -13,10 +13,13 @@ const field=(seed=17)=>({width:8,height:8,cellMetres:2,seed,objective:[6,6],
     {id:'alpha-a',team:'alpha',cell:[1,2],heading:[1,0]},
     {id:'bravo-a',team:'bravo',cell:[6,2],heading:[-1,0]}
   ]});
-const openField=(seed=17)=>({width:8,height:8,cellMetres:2,seed,objective:[2,2],
-  cover:[],units:[
+const openField=(seed=17)=>({width:12,height:12,cellMetres:2,seed,objective:[2,2],
+  // A real bulkhead prevents the distant defender from spotting the relay
+  // during the two-turn secure fixture; absence of cover would allow a
+  // legitimate SENSE-driven suppression to interrupt progress.
+  cover:[{id:'relay-bulkhead',x:6,z:3,w:1,h:7,height:3}],units:[
     {id:'alpha-a',team:'alpha',cell:[2,3],heading:[0,-1]},
-    {id:'bravo-a',team:'bravo',cell:[7,7],heading:[-1,0]}
+    {id:'bravo-a',team:'bravo',cell:[11,11],heading:[-1,0]}
   ]});
 test('data-only bounded scenario and independent SENSE-001 parity',()=>{
   const {world,state}=createOperation(),map=OPERATION;
