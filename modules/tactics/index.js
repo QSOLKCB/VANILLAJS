@@ -6,7 +6,7 @@ import {createSightWorld,querySight} from '../sensing/index.js';
 import {NavigationGrid,findPath} from '../navigation/index.js';
 
 export const TACTICS_LIMITS=Object.freeze({
-  width:32,height:24,cover:24,units:12,turns:64,searchCells:768,
+  width:32,height:24,cover:24,units:12,searchCells:768,
   coverSteps:5,cellMetres:4,sightRange:40
 });
 const data=new WeakMap(),states=new WeakMap(),ID=/^[a-z][a-z0-9-]{0,31}$/;
@@ -156,7 +156,7 @@ export function createTacticsWorld(input){
 }
 export function createTacticsState(world){
   const w=worldInfo(world);
-  const state=freeze({turn:0,phase:'active',progress:0,
+  const state=freeze({turn:0,
     units:w.units.map(u=>({...u,cell:[...u.cell],heading:[...u.heading]})),
     events:[]});
   states.set(state,world);
@@ -173,7 +173,7 @@ export function inspectTactics(world,state,{backend='indexed'}={}){
       reports:sight.map(s=>({id:s.id,visible:s.visible,reason:s.reason,
         occluderId:s.occluderId,distance:s.distance}))};
   });
-  return freeze({turn:state.turn,phase:state.phase,progress:state.progress,units:seen});
+  return freeze({turn:state.turn,units:seen});
 }
 function route(w,units,u,goal){
   const occupied=units.filter(x=>x.id!==u.id).map(x=>[...x.cell]),
@@ -279,24 +279,42 @@ function apply(w,units,command,events){
 export function planTacticalOrders(world,state,team='bravo'){
   const w=check(world,state);
   if(!['alpha','bravo'].includes(team))throw TypeError('unknown team');
-  const orders=[];
-  for(const unit of state.units.filter(u=>u.team===team)){
-    const visible=viewOf(w,state.units,unit.id,'indexed').filter(s=>s.visible);
+  // The planning copy mirrors the actual stable unit-ID execution order.
+  // Preflight each proposal against occupancy and bounded A*; suggestions
+  // must never deadlock a turn just because an ally holds the objective.
+  // This never edits an authoritative world/state or commits any command.
+  const shadow=state.units.map(u=>({...u,cell:[...u.cell],heading:[...u.heading]})),
+    orders=[];
+  const hold=id=>({unitId:id,action:'hold',to:null,targetId:null});
+  for(const unit of shadow.filter(u=>u.team===team)){
+    const visible=viewOf(w,shadow,unit.id,'indexed').filter(s=>s.visible);
+    let proposal=hold(unit.id);
     if(unit.suppression>0){
-      orders.push({unitId:unit.id,action:'retreat',to:null,targetId:null});
+      proposal={unitId:unit.id,action:'retreat',to:null,targetId:null};
     }else if(visible.length){
       // Seed only breaks equal-distance contact ties; positions and SENSE
       // ordering remain stable and reproduce from the same world seed.
-      const range=visible[0].distance;
-      const tied=visible.filter(v=>Math.abs(v.distance-range)<=1e-9);
-      const target=tied[(w.seed+state.turn)%tied.length];
-      orders.push({unitId:unit.id,action:'suppress',to:null,targetId:target.id});
+      const distance=visible[0].distance,
+        tied=visible.filter(v=>Math.abs(v.distance-distance)<=1e-9),
+        target=tied[(w.seed+state.turn)%tied.length];
+      proposal={unitId:unit.id,action:'suppress',to:null,targetId:target.id};
     }else if(key(unit.cell)!==key(w.objective)&&
       (team==='alpha'||manhattan(unit.cell,w.objective)>3)){
-      orders.push({unitId:unit.id,action:'move',to:[...w.objective],targetId:null});
-    }else{
-      orders.push({unitId:unit.id,action:'hold',to:null,targetId:null});
+      // An occupied objective is not a valid A* goal, and proposed moves
+      // must be checked against preceding predicted squad moves as well.
+      const occupied=shadow.some(other=>other.id!==unit.id&&
+        key(other.cell)===key(w.objective));
+      if(!occupied){
+        const found=route(w,shadow,unit,w.objective);
+        if(found.status==='found'&&found.path.length>1)
+          proposal={unitId:unit.id,action:'move',to:[...w.objective],targetId:null};
+      }
     }
+    // Simulate on the private planning copy to avoid two units reserving the
+    // same next cell; the actual turn will recompute authoritative AI after
+    // all accepted allied commands.
+    if(!apply(w,shadow,proposal,[]))proposal=hold(unit.id);
+    orders.push(proposal);
   }
   return freeze(orders);
 }
@@ -313,7 +331,8 @@ export function stepTactics(world,state,orders){
     if(seen.has(item.unitId))throw TypeError('duplicate unit order');
     seen.add(item.unitId);checked.push(item);
   }
-  if(state.phase!=='active')return Object.freeze({state,accepted:false,reason:'phase-ended'});
+  // Phase, victory, mission clock and objectives belong to consumers. This
+  // pure module never ends a game's campaign or imposes a turn cap.
   const units=state.units.map(u=>({...u,cell:[...u.cell],heading:[...u.heading]})),
     events=[];
   // Validated, sorted player commands. Omitted actors explicitly hold.
@@ -325,7 +344,7 @@ export function stepTactics(world,state,orders){
         o.action==='suppress'?'target-not-visible':'unreachable'});
   }
   // Recompute opposing decisions AFTER player orders, from true SENSE rays.
-  const interim=freeze({turn:state.turn,phase:state.phase,progress:state.progress,
+  const interim=freeze({turn:state.turn,
     units:units.map(u=>({...u,cell:[...u.cell],heading:[...u.heading]})),events:[]});
   states.set(interim,world);
   const opponent=planTacticalOrders(world,interim,'bravo');
@@ -335,12 +354,7 @@ export function stepTactics(world,state,orders){
     }
   }
   for(const u of units)u.suppression=Math.max(0,u.suppression-1);
-  const held=units.some(u=>u.team==='alpha'&&key(u.cell)===key(w.objective)&&u.suppression===0),
-    contested=units.some(u=>u.team==='bravo'&&key(u.cell)===key(w.objective)),
-    progress=held&&!contested?Math.min(2,state.progress+1):0,
-    turn=state.turn+1,phase=progress>=2?'secured':
-      turn>=TACTICS_LIMITS.turns?'exhausted':'active';
-  const result=freeze({turn,phase,progress,units,events});
+  const result=freeze({turn:state.turn+1,units,events});
   states.set(result,world);
-  return Object.freeze({state:result,accepted:true,reason:phase});
+  return Object.freeze({state:result,accepted:true,reason:'turn-accepted'});
 }
