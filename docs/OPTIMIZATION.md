@@ -111,3 +111,7 @@ CPU-first renderer, explicit player opt-in, editor project setting and playable
 HTML export, exact-math preparation, resource limits, and local test commands.
 The project v2 envelope preserves graphics policy; legacy v1 projects still load.
 Existing WebGL APIs remain supported.
+
+## FPS Lab — observable headless graphics trade-offs
+
+[The FPS-LAB-OPT-001 benchmark contract](FPS_LAB_OPT_001.md) introduces source-bound paired headless Chromium measurements for the *existing* full and reduced resolution rendering profiles in Footwork and Tracking Range. It collects raw RAF intervals, JS callback cost and render-surface dimensions, with the software-rendering/native-GPU evidence boundary made explicit. It does not change the renderer, publish automatic performance rankings or claim native-GPU speedups. Observed multiobjective profiles may later be reviewed through QSOLKCB/OPT's OPT-PARETO-001 finite-ledger reference.
