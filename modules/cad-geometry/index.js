@@ -194,8 +194,9 @@ export function cadProfileMesh(draft){
   return revolveProfile({profile:d.profile.map(p=>[...p]),segments:d.segments});
 }
 /** Edit a single dimension; cannot reorder rings or create degenerate slivers. */
-export function cadProfileMove(draft,{index,radius,y,snap=0}){
-  const d=checkedDraft(draft);
+export function cadProfileMove(draft,change){
+  plain(change,['index','radius','y','snap'],'CAD ring edit');
+  const {index,radius,y,snap=0}=change,d=checkedDraft(draft);
   if(!Number.isSafeInteger(index)||index<0||index>=d.profile.length)
     throw RangeError('profile point index outside bounds');
   const r=snapNumber(finite(radius,0,CAD_LIMITS.radius,'radius'),snap),
@@ -203,8 +204,9 @@ export function cadProfileMove(draft,{index,radius,y,snap=0}){
   const profile=d.profile.map((p,i)=>i===index?[r,yPosition]:[...p]);
   return cadProfileDraft({profile,segments:d.segments});
 }
-export function cadProfileInsert(draft,{after}){
-  const d=checkedDraft(draft);
+export function cadProfileInsert(draft,change){
+  plain(change,['after'],'CAD ring insertion');
+  const {after}=change,d=checkedDraft(draft);
   if(!Number.isSafeInteger(after)||after<0||after>=d.profile.length-1||
     d.profile.length>=CAD_LIMITS.profiles)throw RangeError('profile insertion exceeds bounds');
   const a=d.profile[after],b=d.profile[after+1];
@@ -213,8 +215,9 @@ export function cadProfileInsert(draft,{after}){
   const profile=d.profile.map(p=>[...p]);profile.splice(after+1,0,mid);
   return cadProfileDraft({profile,segments:d.segments});
 }
-export function cadProfileRemove(draft,{index}){
-  const d=checkedDraft(draft);
+export function cadProfileRemove(draft,change){
+  plain(change,['index'],'CAD ring removal');
+  const {index}=change,d=checkedDraft(draft);
   if(!Number.isSafeInteger(index)||index<0||index>=d.profile.length||
     d.profile.length<=2)throw RangeError('profile needs at least two points');
   return cadProfileDraft({profile:d.profile.filter((_,i)=>i!==index).map(p=>[...p]),
@@ -266,8 +269,9 @@ export function cadProfileRecover(asset){
   throw TypeError('mesh is not a recognisable native CAD surface');
 }
 /** Non-authoritative preview transform, never changes geometry or game state. */
-export function cadProfileScreen(draft,{width,height,zoom=1,panX=0,panY=0}){
-  const d=checkedDraft(draft);
+export function cadProfileScreen(draft,options){
+  plain(options,['width','height','zoom','panX','panY'],'CAD preview options');
+  const {width,height,zoom=1,panX=0,panY=0}=options,d=checkedDraft(draft);
   finite(width,160,1600,'preview width');finite(height,160,1200,'preview height');
   finite(zoom,.5,2,'preview zoom');finite(panX,-100,100,'pan X');finite(panY,-100,100,'pan Y');
   const scale=Math.min((width-60)/5,(height-40)/12)*zoom,
@@ -277,7 +281,9 @@ export function cadProfileScreen(draft,{width,height,zoom=1,panX=0,panY=0}){
       x:centerX+p[0]*scale,y:centerY-p[1]*scale
     })))});
 }
-export function cadProfileUnproject(screen,{x,y}){
+export function cadProfileUnproject(screen,point){
+  plain(point,['x','y'],'CAD pointer');
+  const {x,y}=point;
   if(!screen||!Array.isArray(screen.handles)||!Number.isFinite(screen.scale)||
       screen.scale<=0||!Number.isFinite(screen.centerX)||!Number.isFinite(screen.centerY))
     throw TypeError('CAD preview screen required');
