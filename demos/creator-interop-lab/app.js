@@ -19,6 +19,11 @@ function initial(){return createCreatorProject({format:CREATOR_FORMAT,version:1,
 let project=initial(),tool='prop',message='Select a tool and edit the grid. All state changes validate first.';
 const left=120,top=60,cell=40,coord=(x,z)=>[(x+.5)*2,1,-(z+.5)*2];
 function render(){
+ if(project.tactical===null&&(tool==='alpha'||tool==='bravo'))tool='prop';
+ for(const button of document.querySelectorAll('[data-tool]')){
+  button.disabled=project.tactical===null&&(button.dataset.tool==='alpha'||button.dataset.tool==='bravo');
+  button.setAttribute('aria-pressed',String(button.dataset.tool===tool));
+ }
  ctx.clearRect(0,0,720,540);ctx.fillStyle='#102b3b';ctx.fillRect(left,top,480,400);
  for(let z=0;z<10;z++)for(let x=0;x<12;x++){
   ctx.strokeStyle='#294b59';ctx.strokeRect(left+x*cell,top+z*cell,cell,cell);
@@ -32,41 +37,45 @@ function render(){
  for(const p of project.placements)place(p.position,
   p.kind==='target'?'#f9bd73':p.kind==='vehicle'?'#a5caff':'#8edbb2',
   p.kind==='target'?'T':p.kind==='vehicle'?'V':p.assetId?.startsWith('cad-')?'C':'P');
- for(const u of project.tactical.units)place(coord(...u.cell),u.team==='alpha'?'#83e5ff':'#ef8c9c',u.team==='alpha'?'A':'B');
+ for(const u of project.tactical?.units??[])place(coord(...u.cell),u.team==='alpha'?'#83e5ff':'#ef8c9c',u.team==='alpha'?'A':'B');
  const targets=project.placements.filter(p=>p.kind==='target').length;
  const reports=querySight(createCreatorSightWorld(project),
   {position:[3,1,-3],direction:[1,0,-1]},{range:100,fov:Math.PI*2});
  const block=reports.filter(r=>r.reason==='occluded').length;
- const tactics=createCreatorTacticsWorld(project);
+ const tactics=project.tactical===null?null:createCreatorTacticsWorld(project);
  $('receipt').textContent=JSON.stringify({message,tool,assets:project.assets.length,
   placements:project.placements.length,zones:project.zones.length,
-  targets,occluded:block,tacticalUnits:tactics.unitCount,cover:tactics.coverCount,
-  objective:tactics.objective,perception:reports.map(r=>({id:r.id,reason:r.reason,occluderId:r.occluderId}))},null,2);
+  targets,occluded:block,hasTactical:tactics!==null,tacticalUnits:tactics?.unitCount??0,
+  cover:tactics?.coverCount??0,objective:tactics?.objective??null,
+  perception:reports.map(r=>({id:r.id,reason:r.reason,occluderId:r.occluderId}))},null,2);
 }
 function nextId(prefix,used){
  let i=1;while(used.has(prefix+'-'+i))i++;return prefix+'-'+i;
 }
 function edit(x,z){
- const draft=structuredClone(project),used=new Set([
- ...draft.assets.map(a=>a.id),...draft.placements.map(a=>a.id),...draft.zones.map(a=>a.id),
- ...draft.tactical.cover.map(a=>a.id),...draft.tactical.units.map(a=>a.id)]);
- const position=coord(x,z);
- if(tool==='wall'){
-  draft.zones.push({id:nextId('wall',used),kind:'occluder',
-   min:[x*2,0,-(z+1)*2],max:[(x+1)*2,3,-z*2]});
-  draft.tactical.cover.push({id:nextId('cover',used),x,z,w:1,h:1,height:3});
- }else if(tool==='cad'){
-  const assetId=nextId('cad',used);
-  draft.assets.push(creatorCADAsset({id:assetId,kind:'tower',
-   options:{width:2,depth:2,height:3,bevel:.1}}));
-  used.add(assetId);
-  draft.placements.push({id:nextId('prop',used),kind:'prop',assetId,position});
- }else if(tool==='alpha'||tool==='bravo'){
-  draft.tactical.units.push({id:nextId(tool,used),team:tool,cell:[x,z],
-   heading:tool==='alpha'?[1,0]:[-1,0]});
- }else draft.placements.push({id:nextId(tool,used),kind:tool,
-  assetId:tool==='prop'?'mesh-1':null,position});
- try{const proposed=createCreatorProject(draft);project=proposed;
+ const draft=structuredClone(project);
+ try{
+  const used=new Set([
+   ...draft.assets.map(a=>a.id),...draft.placements.map(a=>a.id),...draft.zones.map(a=>a.id),
+   ...(draft.tactical?.cover??[]).map(a=>a.id),...(draft.tactical?.units??[]).map(a=>a.id)]);
+  const position=coord(x,z);
+  if(tool==='wall'){
+   draft.zones.push({id:nextId('wall',used),kind:'occluder',
+    min:[x*2,0,-(z+1)*2],max:[(x+1)*2,3,-z*2]});
+   if(draft.tactical)draft.tactical.cover.push({id:nextId('cover',used),x,z,w:1,h:1,height:3});
+  }else if(tool==='cad'){
+   const assetId=nextId('cad',used);
+   draft.assets.push(creatorCADAsset({id:assetId,kind:'tower',
+    options:{width:2,depth:2,height:3,bevel:.1}}));
+   used.add(assetId);
+   draft.placements.push({id:nextId('prop',used),kind:'prop',assetId,position});
+  }else if(tool==='alpha'||tool==='bravo'){
+   if(!draft.tactical)throw TypeError('project has no tactical scenario');
+   draft.tactical.units.push({id:nextId(tool,used),team:tool,cell:[x,z],
+    heading:tool==='alpha'?[1,0]:[-1,0]});
+  }else draft.placements.push({id:nextId(tool,used),kind:tool,
+   assetId:tool==='prop'?'mesh-1':null,position});
+  const proposed=createCreatorProject(draft);project=proposed;
   message='Accepted '+tool+' at '+x+','+z+'.';}
  catch(e){message='Rejected without mutation: '+e.message;}
  render();
@@ -92,7 +101,7 @@ $('import').addEventListener('change',async e=>{
  try{const file=e.target.files?.[0];if(!file)return;
   if(file.size>262144)throw RangeError('file exceeds 256 KiB');
   const imported=await openCreatorPackage(await file.text());
-  // Only replace after the entire import, source receipts and tactical rules validate.
+  // Only replace after the entire import and every available sidecar validate.
   project=imported;message='Imported verified inert world. No code executed.';}
  catch(error){message='Import rejected without mutation: '+error.message;}
  e.target.value='';render();

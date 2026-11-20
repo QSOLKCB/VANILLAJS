@@ -719,6 +719,18 @@
       "status": "experimental",
       "demo": "demos/creator-interop-lab/index.html",
       "description": "CREATOR-INTEROP-001: validated bounded authoring, original mesh and placement records, physical LOS/tactical adapters and SHA-256 sealed offline data packages"
+    },
+    "trajectory": {
+      "entry": "modules/trajectory/index.js",
+      "depends": [
+        "sensing",
+        "lead-solver",
+        "collision"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/trajectory-lab/index.html",
+      "description": "TRAJECTORY-001: physical LOS-locked fixed-tick guidance, lead prediction and swept moving-AABB contact; no weapon damage"
     }
   },
   "recipes": {

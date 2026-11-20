@@ -72,6 +72,22 @@ try{
    .message.startsWith('Import rejected'),undefined,{timeout:20000});
  assert.match((await report()).message,/Import rejected without mutation/);
  assert.equal((await report()).zones,2);
+ const nonTactical=await page.evaluate(async project=>{
+  const creator=await import('/modules/creator-interop/index.js');
+  return creator.creatorPackageJSON(await creator.sealCreatorPackage({...project,tactical:null}));
+ },parsed.project);
+ await page.locator('#import').setInputFiles({name:'non-tactical.json',mimeType:'application/json',
+   buffer:Buffer.from(nonTactical)});
+ await page.waitForFunction(()=>JSON.parse(document.querySelector('#receipt').textContent)
+   .message.startsWith('Imported '),undefined,{timeout:20000});
+ const withoutTactics=await report();assert.equal(withoutTactics.hasTactical,false);
+ assert.equal(withoutTactics.tacticalUnits,0);assert.equal(withoutTactics.cover,0);
+ assert.equal(await page.locator('[data-tool="alpha"]').isDisabled(),true);
+ await page.locator('[data-tool="wall"]').click();
+ await choose(2,8);
+ const nonTacticalEdit=await report();assert.match(nonTacticalEdit.message,/Accepted wall/);
+ assert.equal(nonTacticalEdit.zones,parsed.project.zones.length+1);
+ assert.equal(nonTacticalEdit.cover,0);
  const png=await canvas.screenshot();assert.ok(png.length>3000);
  assert.deepEqual(errors,[],'zero errors and external requests');
  await mkdir(join(root,'browser-artifacts'),{recursive:true});
@@ -81,7 +97,8 @@ try{
   authoredPackageSHA256:sha(payload),screenshotSHA256:sha(png),
   checks:['packaged World Foundry','real edit changes physical zone and tactical cover together',
    'new target placement','SHA256 sealed download','reset then reimport exact objects',
-   'tamper rejected atomically','zero network/runtime errors']};
+   'tamper rejected atomically','non-tactical import remains editable without phantom cover',
+   'zero network/runtime errors']};
  await writeFile(join(root,'browser-artifacts/creator-interop-001.json'),JSON.stringify(receipt,null,2)+'\n');
  console.log(JSON.stringify(receipt));
  await context.close();

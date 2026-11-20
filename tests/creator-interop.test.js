@@ -23,6 +23,14 @@ test('strict native scene, SENSE occlusion and tactical adapter are real engine 
  assert.equal(report[0].reason,'occluded');assert.equal(report[0].occluderId,'wall-1');
  assert.equal(createTacticsState(createCreatorTacticsWorld(project)).turn,0);
 });
+test('optional tactical sidecar remains optional at the creator boundary',()=>{
+ const project=createCreatorProject({...p(),tactical:null});
+ assert.equal(project.tactical,null);
+ const report=querySight(createCreatorSightWorld(project),
+  {position:[0,1,-2],direction:[1,0,0]},{range:30,fov:Math.PI});
+ assert.equal(report.length,1);
+ assert.throws(()=>createCreatorTacticsWorld(project),/no tactical scenario/);
+});
 test('reproducible offline SHA256 package and exact import round trip',async()=>{
  const source=p(),before=structuredClone(source);
  const one=await sealCreatorPackage(source),two=await sealCreatorPackage(source);
