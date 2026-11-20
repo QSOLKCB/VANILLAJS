@@ -94,10 +94,13 @@ canvas.addEventListener('webglcontextrestored',()=>{
 });
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)request();});
 window.addEventListener('resize',request);
-window.addEventListener('pagehide',()=>{
-  disposed=true;if(frameId)cancelAnimationFrame(frameId);
+window.addEventListener('pagehide',event=>{
+  cancelAnimationFrame(frameId);frameId=0;
+  if(event.persisted)return;
+  disposed=true;
   retained?.dispose();renderer?.dispose();
 });
+window.addEventListener('pageshow',event=>{if(event.persisted)request();});
 try{
   study=createWorldVisStudy();
   createGraphics();ready=true;request();
