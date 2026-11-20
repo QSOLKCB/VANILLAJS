@@ -51,7 +51,7 @@ test('stale, forged, truncated and altered receipts never pass',async()=>{
  assert.notEqual(updated.sourceSha256,r.sourceSha256);
 });
 test('reject invalid late commands, executable inputs, sparse tape and cross-model data',async()=>{
- const p=samples().fps;let f=clone(p);f.frames.at(-1)=[{...f.frames[0][0],actor:'missing'}];
+ const p=samples().fps;let f=clone(p);f.frames[f.frames.length-1]=[{...f.frames[0][0],actor:'missing'}];
  assert.throws(()=>createReplayPlan(f),/unknown/);
  f=clone(p);f.frames[0]=Array(2);assert.throws(()=>createReplayPlan(f),/dense/);
  f=clone(p);Object.defineProperty(f.model,'actors',{enumerable:true,get(){throw Error('BAD');}});
