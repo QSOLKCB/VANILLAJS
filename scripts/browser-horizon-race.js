@@ -235,7 +235,23 @@ export async function checkHorizonRace(browser,base){
     assert.equal(s.running,false);assert.equal(s.phase,'ready');assert.equal(s.view.graphics.profile,'high');const initial=await pixels(page);assert.ok(initial.lit>10000&&initial.colors>12);assert.equal(initial.error,0);const initialPosition=s.player.position.slice(),uploads=s.view.graphics.uploads;evidence.entry=page.url();evidence.high=s.view.graphics;await page.screenshot({path:'browser-artifacts/horizon-race-desktop.png',fullPage:true});
     // Every advertised camera changes the actual renderer pose and pixels.
     const cameraPositions=new Set(),cameraPixels=new Set();for(const mode of ['bonnet','cockpit','chase']){await page.locator('button[data-camera="'+mode+'"]').click();assert.equal((await snapshot(page)).view.cameraMode,mode);const image=await pixels(page);assert.equal(image.error,0);cameraPositions.add(JSON.stringify((await snapshot(page)).view.camera.position));cameraPixels.add(image.hash);}assert.equal(cameraPositions.size,3);assert.equal(cameraPixels.size,3);
-    await page.locator('#race-sound').click();assert.equal((await snapshot(page)).audio.enabled,true);await page.locator('#race-start').click();await page.keyboard.down('KeyW');await ticks(page,430);await page.keyboard.up('KeyW');let moving=await snapshot(page);assert.ok(speed(moving)>2);assert.ok(Math.hypot(...moving.player.position.map((n,i)=>n-initialPosition[i]))>.4,'W must move the car in world space at the public index URL');assert.ok(moving.audio.started>0);assert.ok(moving.audio.voices<=moving.audio.maxVoices);assert.equal(moving.view.graphics.uploads,uploads);await page.locator('#race-canvas').screenshot({path:'browser-artifacts/horizon-race-at-speed.png'});await page.keyboard.press('Escape');s=await snapshot(page);assert.equal(s.audio.voices,0);assert.equal(s.inputs.input.throttle,0);await page.waitForTimeout(150);assert.equal((await snapshot(page)).ticks,s.ticks);assert.equal((await snapshot(page)).view.frames,s.view.frames);
+    await page.locator('#race-sound').click();assert.equal((await snapshot(page)).audio.enabled,true);await page.locator('#race-start').click();await page.keyboard.down('KeyW');
+    // This starter race has an authoritative three-second countdown (360 x 1/120 s).
+    // 430 total ticks left only ~0.58 s to accelerate and intermittently failed
+    // the physical >2 m/s threshold on otherwise valid Chromium runs.
+    // Require a full two seconds AFTER the countdown instead; no speed threshold
+    // or vehicle physics contract is relaxed, and sample while W is still held.
+    await ticks(page,360);
+    let beforeMotion=await snapshot(page);
+    assert.equal(beforeMotion.phase,'running','countdown must finish before acceleration checks');
+    assert.equal(beforeMotion.inputs.input.throttle,1,'actual KeyW must remain accepted after countdown');
+    await ticks(page,240);
+    let moving=await snapshot(page);
+    assert.equal(moving.running,true,'the racing session must still be advancing');
+    assert.ok(moving.physicalInput.throttle>0,'physical vehicle throttle must be applied');
+    assert.ok(moving.player.gear>0,'vehicle must have an engaged forward gear');
+    assert.ok(speed(moving)>2,'the car must accelerate past 2 m/s after two full driving seconds');
+    await page.keyboard.up('KeyW');assert.ok(Math.hypot(...moving.player.position.map((n,i)=>n-initialPosition[i]))>.4,'W must move the car in world space at the public index URL');assert.ok(moving.audio.started>0);assert.ok(moving.audio.voices<=moving.audio.maxVoices);assert.equal(moving.view.graphics.uploads,uploads);await page.locator('#race-canvas').screenshot({path:'browser-artifacts/horizon-race-at-speed.png'});await page.keyboard.press('Escape');s=await snapshot(page);assert.equal(s.audio.voices,0);assert.equal(s.inputs.input.throttle,0);await page.waitForTimeout(150);assert.equal((await snapshot(page)).ticks,s.ticks);assert.equal((await snapshot(page)).view.frames,s.view.frames);
     // Focus loss cancels held controls and audio; resuming requires fresh input.
     await page.locator('#race-start').click();await page.keyboard.down('KeyW');await ticks(page,15);await page.evaluate(()=>dispatchEvent(new Event('blur')));assert.equal((await snapshot(page)).running,false);assert.equal((await snapshot(page)).audio.voices,0);await page.locator('#race-start').click();await page.keyboard.down('KeyW');assert.equal((await snapshot(page)).inputs.input.throttle,0);await page.keyboard.up('KeyW');await page.keyboard.down('KeyW');await ticks(page,15);assert.equal((await snapshot(page)).inputs.input.throttle,1);await page.keyboard.up('KeyW');await page.keyboard.press('Escape');await page.locator('#race-restart').click();assert.equal((await snapshot(page)).phase,'ready');
     // Existing independent route-input reference is explicitly unassisted.
