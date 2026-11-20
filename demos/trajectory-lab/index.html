@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRAJECTORY-001 · Guidance &amp; Contact Lab</title>
+<style>
+body{margin:0;background:#081722;color:#e8f5ff;font:16px system-ui}header,main{max-width:1000px;margin:auto;padding:20px}
+a{color:#7cefd9}button{background:#1b7894;color:white;border:1px solid #68ddda;border-radius:6px;padding:12px;margin:5px;cursor:pointer}
+canvas{width:100%;background:#091c2d;border:1px solid #397b90;max-height:600px}
+#receipt{white-space:pre-wrap;background:#102c3a;padding:14px;overflow-wrap:anywhere}
+</style></head><body><header><a href="../../index.html">VANILLAJS</a> / TRAJECTORY-001 <a href="../../docs/TRAJECTORY_001.md">Contract</a></header>
+<main><h1>Guidance &amp; Contact Lab</h1><p>Physical LOS lock, bounded turning and swept actor/wall contacts. Nothing rendered here can create a hit.</p>
+<button id="launch">Acquire lock &amp; launch</button><button id="step">Advance 60 fixed ticks</button>
+<button id="reset">Reset</button><canvas id="field" width="900" height="480" aria-label="Trajectory world, moving aircraft and missile"></canvas>
+<h2>Deterministic receipt</h2><pre id="receipt" role="status"></pre></main><script type="module" src="./app.js"></script></body></html>
