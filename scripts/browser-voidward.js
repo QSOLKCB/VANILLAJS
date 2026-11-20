@@ -292,7 +292,7 @@ try {
     // the original 12s readiness gate, not a substituted sleep or retry.
     const started=Date.now(),diagnostics={
       kind:'qsol.voidward.offline-boot-diagnostics.v1',
-      status:'RUNNING',phase:'worker-ready',events:[],discardedEvents:0
+      status:'RUNNING',phase:'worker-ready',events:[],firstEvents:[],discardedEvents:0
     };
     const pathOnly=raw=>{try{
       const target=new URL(raw);
