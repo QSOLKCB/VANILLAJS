@@ -54,11 +54,18 @@ try{
  await page.locator('#reset').click();
  assert.equal((await report()).zones,1);
  await page.locator('#import').setInputFiles({name:'world.json',mimeType:'application/json',buffer:payload});
- const restored=await report();assert.equal(restored.zones,2);
+ await page.waitForFunction(()=>{
+  const result=JSON.parse(document.querySelector('#receipt').textContent);
+  return result.message.startsWith('Imported ')||result.message.startsWith('Import rejected');
+ },undefined,{timeout:20000});
+ const restored=await report();assert.match(restored.message,/^Imported verified inert world/);
+ assert.equal(restored.zones,2);
  assert.equal(restored.cover,2);assert.equal(restored.placements,authored.placements);
  const corrupt=JSON.parse(payload);corrupt.project.placements[0].position=[17,1,-17];
  await page.locator('#import').setInputFiles({name:'tampered.json',mimeType:'application/json',
    buffer:Buffer.from(JSON.stringify(corrupt))});
+ await page.waitForFunction(()=>JSON.parse(document.querySelector('#receipt').textContent)
+   .message.startsWith('Import rejected'),undefined,{timeout:20000});
  assert.match((await report()).message,/Import rejected without mutation/);
  assert.equal((await report()).zones,2);
  const png=await canvas.screenshot();assert.ok(png.length>3000);
