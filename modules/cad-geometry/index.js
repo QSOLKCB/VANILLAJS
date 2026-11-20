@@ -151,3 +151,165 @@ export function cadColorStream(value,color){
   }
   return out;
 }
+
+
+// CAD-002 — editable *owned* radial sketches. A revision creates a new mesh
+// asset; existing game, collider and importer authority is never overwritten.
+// No UI, clock, external runtime, code execution or mutable shared caches.
+const drafts=new WeakSet();
+export const CAD_SNAP_STEPS=Object.freeze([0,.025,.05,.1,.25]);
+export function cadProfileDraft(options){
+  plain(options,['profile','segments'],'CAD profile');
+  const profile=Object.freeze(dense(options.profile,2,CAD_LIMITS.profiles,'profile').map(pair));
+  if(profile.at(-1)[1]-profile[0][1]>CAD_LIMITS.height)
+    throw RangeError('profile height exceeds 10 metre authoring limit');
+  // Keep the established CAD-001 domain/ordering validator first, including
+  // its specific rejection for non-increasing authored elevations.
+  const model=revolveProfile({profile,segments:options.segments});
+  // The strict OBJ writer then rounds every elevation to six decimal places.
+  // Distinct accepted Y values can collapse at that export boundary, creating
+  // degenerate triangles and preventing later profile recovery.
+  // Mirror cadMeshOBJ's numberText(), including canonical signed zero.
+  for(let i=1;i<profile.length;i++){
+    if(Number(numberText(profile[i-1][1]))>=Number(numberText(profile[i][1])))
+      throw RangeError('adjacent CAD ring elevations collapse at six-decimal OBJ precision');
+  }
+  // Recovery reads each radius from the vertex at theta=0, where x=radius.
+  for(const [radius] of profile){
+    if(radius>0&&numberText(radius)==='0')
+      throw RangeError('positive CAD ring radius collapses to the axis at six-decimal OBJ precision');
+  }
+  const out=Object.freeze({profile,segments:options.segments,
+    triangles:model.triangleCount,vertices:model.vertexCount});
+  drafts.add(out);
+  return out;
+}
+function checkedDraft(draft){
+  if(!drafts.has(draft))throw TypeError('owned CAD profile required');
+  return draft;
+}
+function snapNumber(value,step){
+  if(!CAD_SNAP_STEPS.includes(step))throw RangeError('unsupported CAD snap step');
+  return step===0?value:Number((Math.round(value/step)*step).toFixed(6));
+}
+/** 3 presets retain CAD-001 geometry identity, with no independent template. */
+export function cadProfilePreset(options){
+  const primitive=createCADPrimitive(options);
+  const {kind,radius,height,segments}=primitive;
+  const profile=kind==='column'?[[radius,-height/2],[radius,height/2]]:
+    kind==='cone'?[[radius,-height/2],[0,height/2]]:
+    [[radius*.57,-height/2],[radius*.66,height*.14-height/2],
+      [radius,height*.48-height/2],[radius*.79,height*.78-height/2],
+      [radius*.74,height/2]];
+  return cadProfileDraft({profile,segments});
+}
+export function cadProfileMesh(draft){
+  const d=checkedDraft(draft);
+  return revolveProfile({profile:d.profile.map(p=>[...p]),segments:d.segments});
+}
+/** Edit a single dimension; cannot reorder rings or create degenerate slivers. */
+export function cadProfileMove(draft,change){
+  plain(change,['index','radius','y','snap'],'CAD ring edit');
+  const {index,radius,y,snap=0}=change,d=checkedDraft(draft);
+  if(!Number.isSafeInteger(index)||index<0||index>=d.profile.length)
+    throw RangeError('profile point index outside bounds');
+  const r=snapNumber(finite(radius,0,CAD_LIMITS.radius,'radius'),snap),
+    yPosition=snapNumber(finite(y,-CAD_LIMITS.height,CAD_LIMITS.height,'height'),snap);
+  const profile=d.profile.map((p,i)=>i===index?[r,yPosition]:[...p]);
+  return cadProfileDraft({profile,segments:d.segments});
+}
+export function cadProfileInsert(draft,change){
+  plain(change,['after'],'CAD ring insertion');
+  const {after}=change,d=checkedDraft(draft);
+  if(!Number.isSafeInteger(after)||after<0||after>=d.profile.length-1||
+    d.profile.length>=CAD_LIMITS.profiles)throw RangeError('profile insertion exceeds bounds');
+  const a=d.profile[after],b=d.profile[after+1];
+  const mid=[Number(((a[0]+b[0])/2).toFixed(6)),
+    Number(((a[1]+b[1])/2).toFixed(6))];
+  const profile=d.profile.map(p=>[...p]);profile.splice(after+1,0,mid);
+  return cadProfileDraft({profile,segments:d.segments});
+}
+export function cadProfileRemove(draft,change){
+  plain(change,['index'],'CAD ring removal');
+  const {index}=change,d=checkedDraft(draft);
+  if(!Number.isSafeInteger(index)||index<0||index>=d.profile.length||
+    d.profile.length<=2)throw RangeError('profile needs at least two points');
+  return cadProfileDraft({profile:d.profile.filter((_,i)=>i!==index).map(p=>[...p]),
+    segments:d.segments});
+}
+export function cadProfileSegments(draft,segments){
+  const d=checkedDraft(draft);
+  return cadProfileDraft({profile:d.profile.map(p=>[...p]),segments});
+}
+/**
+ * Recover the editable rings from an existing strict CAD-001/002 mesh asset.
+ * The original scene/project format is unchanged; immutable OBJ triangles
+ * contain the ring positions. Recognition rejects a mismatching geometry and
+ * does not blindly trust sourceName. Importers, physics and files stay inert.
+ */
+export function cadProfileRecover(asset){
+  plain(asset,['id','kind','name','license','sourceName','sourceSha256','vertices'],'CAD mesh asset');
+  if(asset.kind!=='mesh'||asset.license!=='Apache-2.0'||
+    !/^cad-(?:urn|column|cone|profile)\.obj$/.test(asset.sourceName))
+    throw TypeError('select an Apache-2.0 generated CAD mesh asset');
+  const vertices=dense(asset.vertices,15,CAD_LIMITS.vertices*5,'mesh vertices');
+  if(vertices.length%15!==0)throw TypeError('CAD triangles required');
+  const rings=new Map();
+  for(let i=0;i<vertices.length;i+=5){
+    const x=finite(vertices[i],-100,100,'mesh x'),
+      y=finite(vertices[i+1],-CAD_LIMITS.height,CAD_LIMITS.height,'mesh y'),
+      z=finite(vertices[i+2],-100,100,'mesh z');
+    finite(vertices[i+3],-100,100,'u');finite(vertices[i+4],-100,100,'v');
+    // theta=0 is present on every authored ring, including zero-radius tips.
+    if(Math.abs(z)<1e-9&&x>=0)
+      rings.set(y,Math.max(rings.get(y)??0,x));
+  }
+  const profile=[...rings].sort((a,b)=>a[0]-b[0]).map(([y,r])=>[r,y]);
+  if(profile.length<2||profile.length>CAD_LIMITS.profiles)throw TypeError('not a bounded CAD radial profile');
+  for(let segments=3;segments<=CAD_LIMITS.segments;segments++){
+    let draft;
+    try{draft=cadProfileDraft({profile,segments});}catch{continue;}
+    const rebuilt=cadProfileMesh(draft).vertices;
+    if(rebuilt.length!==vertices.length)continue;
+    // OBJ rounds every XYZ/UV number to six decimals. XYZ and U stay within
+    // one last-place step on reconstruction, but V=(y-y0)/(yN-y0) divides
+    // separately rounded ring heights. With each endpoint perturbed by up
+    // to half a unit, worst-case normalisation error is bounded by
+    // 2e-6/(height-1e-6). Keep strict XYZ/U parity, apply only that derived
+    // rounding envelope to V, never unconditionally accept arbitrary UVs.
+    const height=profile.at(-1)[1]-profile[0][1];
+    const vTolerance=1.000001e-6+
+      2.000001e-6/Math.max(height-1e-6,Number.MIN_VALUE);
+    let same=true;
+    for(let i=0;i<rebuilt.length;i++){
+      const rounded=Number(numberText(rebuilt[i])),
+        tolerance=i%5===4?vTolerance:1.000001e-6;
+      if(Math.abs(rounded-vertices[i])>tolerance){same=false;break;}
+    }
+    if(same)return draft;
+  }
+  throw TypeError('mesh is not a recognisable native CAD surface');
+}
+/** Non-authoritative preview transform, never changes geometry or game state. */
+export function cadProfileScreen(draft,options){
+  plain(options,['width','height','zoom','panX','panY'],'CAD preview options');
+  const {width,height,zoom=1,panX=0,panY=0}=options,d=checkedDraft(draft);
+  finite(width,160,1600,'preview width');finite(height,160,1200,'preview height');
+  finite(zoom,.5,2,'preview zoom');finite(panX,-100,100,'pan X');finite(panY,-100,100,'pan Y');
+  const scale=Math.min((width-60)/5,(height-40)/12)*zoom,
+    centerX=40+panX,centerY=height/2+panY;
+  return Object.freeze({width,height,zoom,panX,panY,scale,centerX,centerY,
+    handles:Object.freeze(d.profile.map(p=>Object.freeze({
+      x:centerX+p[0]*scale,y:centerY-p[1]*scale
+    })))});
+}
+export function cadProfileUnproject(screen,point){
+  plain(point,['x','y'],'CAD pointer');
+  const {x,y}=point;
+  if(!screen||!Array.isArray(screen.handles)||!Number.isFinite(screen.scale)||
+      screen.scale<=0||!Number.isFinite(screen.centerX)||!Number.isFinite(screen.centerY))
+    throw TypeError('CAD preview screen required');
+  finite(x,-500,2000,'screen x');finite(y,-500,2000,'screen y');
+  return Object.freeze({radius:(x-screen.centerX)/screen.scale,
+    y:(screen.centerY-y)/screen.scale});
+}

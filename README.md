@@ -27,6 +27,8 @@ working scene, change one thing, test it, and keep the files you create.
 
 **SENSE-001 implementation candidate:** [Shadowline Tactics](demos/sensing-lab/index.html) is an original turn-based infiltration game powered by a [pure visibility/perception API](docs/SENSING_API.md). Static AABB cover, immutable guard detection, fixed turns, a 38-step real-command training route and grounded/FPS/radar views share one authoritative world. No external runtime code or assets imported.
 
+**CAD-002 review candidate:** [Editable radial profiles](docs/CAD_002.md) extend the [Visual Editor](demos/editor/index.html) with draggable Canvas2D ring handles, dimension snapping, preview-only pan/zoom, and the ability to reopen an existing CAD-001/002 mesh as an editable sketch. Generate a new immutable mesh variant via the standard offline SHA-256 Asset Foundry path; older meshes, source-bound histories and gameplay collision remain unchanged.
+
 **CAD-001 review candidate:** [Apache-2.0 DabbleCAD-attributed Parametric Foundry](docs/CAD_001.md) provides a pure native **+Y-up lathe and primitive geometry module** with a new *Generate & Place CAD* tool inside the [Visual Editor](demos/editor/index.html). Creates bounded columns, cones and urns, attaches strict SHA-256-provenanced OBJ assets, renders them through existing WebGL and saves them in standard offline projects. No Three.js, Electron, Manifold or downloaded runtime assets.
 
 ## Welcome to the foundry
