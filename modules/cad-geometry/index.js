@@ -432,7 +432,7 @@ export function createForgeExtrusion(options){
   return result;
 }
 /** Original industrial presets; all feed the same validated convex polygon API. */
-export function createForgePreset(options){
+export function forgePresetFootprint(options){
   plain(options,['kind','width','depth','height','bevel'],'forge preset');
   const kind=options.kind;
   if(!['wall','platform','tower','wedge'].includes(kind))throw RangeError('unknown Geometry Forge shape');
@@ -447,7 +447,12 @@ export function createForgePreset(options){
     const a=i*2*Math.PI/6;return [x*Math.cos(a),z*Math.sin(a)];
   });
   else footprint=[[-x,-z],[x,-z],[x,z],[-x,z]];
-  return createForgeExtrusion({footprint,height,bevel});
+  const validated=forgeRings({footprint,height,bevel});
+  return Object.freeze({footprint:Object.freeze(validated.footprint),
+    height:validated.height,bevel:validated.bevel});
+}
+export function createForgePreset(options){
+  return createForgeExtrusion(forgePresetFootprint(options));
 }
 /** Explicitly diagnostic: signed tetrahedral volume plus edge incidence.
  * Accepts source-owned meshes or dense xyzuv triangle arrays from Asset Foundry.
