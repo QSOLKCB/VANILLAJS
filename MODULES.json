@@ -675,6 +675,14 @@
       "status": "experimental",
       "demo": "demos/sensing-lab/index.html",
       "description": "Immutable bounded static-AABB world perception: exact closed LOS occlusion, FOV/range, owned deterministic target ordering, indexed/serial parity"
+    },
+    "cad-geometry": {
+      "entry": "modules/cad-geometry/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Apache-2.0 DabbleCAD-attributed bounded +Y-up lathe meshes, CAD presets, deterministic OBJ and native XYZ/RGB streams",
+      "demo": "demos/editor/index.html"
     }
   },
   "recipes": {

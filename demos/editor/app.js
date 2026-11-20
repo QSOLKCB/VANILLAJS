@@ -8,6 +8,7 @@ import {mountSceneComposition} from './scene-composition-panel.js';
 import {mountDemoscenePanel} from './demoscene-panel.js';
 import {parseExactPosition,previewQ16Position,transformExactPositionXY,snapEditorDelta,formatPositionNumber} from './authoring-math.js';
 import {SceneMeshes} from './scene-meshes.js';
+import {createCADPrimitive,cadMeshOBJ} from '../../modules/cad-geometry/index.js';
 import {OptionalRenderer} from '../../modules/render-optional/index.js';
 import {graphicsControls} from '../gpu-lab/controls.js';
 import {exportGame} from './game-export.js';
@@ -25,7 +26,7 @@ import {createAssetLibrary,validateAssetLibrary,addMeshAsset,addTextureAsset,
   parseProject,serializeProject,MAX_PROJECT_BYTES} from './asset-foundry.js';
 
 const $=id=>document.getElementById(id),canvas=$('view');
-let importGeneration=0;
+let importGeneration=0,cadGeneration=0;
 let campaignPanel=null,demoscenePanel=null,compositionPanel=null;
 let checksScene=null,creatorChecks=null,lastPlayedScene=null,lastSavedScene=null,lastSavedLibrary=null,lastSavedGPU=false;
 let history=makeHistory(createForgeScene()),selected='entity-3',draft=null,
@@ -202,6 +203,45 @@ async function importPngFile(file,generation){
     assetUpdated('Imported canonical opaque PNG texels · '+file.name);
   }finally{image.close();}
 }
+// CAD-001: the Apache-2.0 DabbleCAD-inspired native geometry uses exactly the
+// same strict OBJ admission, SHA-256 provenance, placements and edit history.
+$('cad-create').addEventListener('click',async()=>{
+  if(playing)return;
+  const generation=importGeneration,request=++cadGeneration,
+    scene=editScene(),sourceLibrary=library;
+  try{
+    const shape=createCADPrimitive({
+      kind:$('cad-kind').value,
+      radius:Number($('cad-radius').value),
+      height:Number($('cad-height').value),
+      segments:Number($('cad-segments').value)
+    });
+    const text=cadMeshOBJ(shape),bytes=new TextEncoder().encode(text),
+      sourceSha256=await digestSource(bytes);
+    // Never commit a stale hash after another edit, new project, play
+    // transition or a newer generation request.
+    if(generation!==importGeneration||request!==cadGeneration||
+      playing||scene!==editScene()||sourceLibrary!==library)return;
+    const name='CAD '+shape.kind[0].toUpperCase()+shape.kind.slice(1),
+      id='entity-'+scene.nextId,
+      added=addEntity(scene,{name}),
+      positioned=updateEntity(added,id,{position:[0,shape.height/2,0],scale:[1,1,1]});
+    const result=addMeshAsset(prunePlacements(scene,library),{
+      name,sourceName:'cad-'+shape.kind+'.obj',sourceSha256,
+      license:'Apache-2.0',text
+    });
+    const placed=setPlacement(positioned,result.library,id,result.id);
+    // Both candidate states have passed all the established model validators.
+    library=placed;chosenAsset=result.id;
+    applyScene(positioned,id);
+    $('cad-status').textContent='Generated '+name+' · '+shape.triangleCount+
+      ' triangles · '+sourceSha256.slice(0,12)+'…';
+    inform('CAD geometry generated and placed · '+result.id);
+  }catch(error){
+    $('cad-status').textContent='CAD rejected: '+error.message;
+    inform('CAD rejected: '+error.message,true);
+  }
+});
 for(const [element,run]of [['asset-obj',importObjFile],['asset-png',importPngFile]]){
   $(element).addEventListener('change',async event=>{
     if(playing)return;

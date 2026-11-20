@@ -50,6 +50,21 @@
     <label class="import">Import OBJ<input id="asset-obj" type="file" accept=".obj,text/plain"></label>
     <label class="import">Import PNG<input id="asset-png" type="file" accept="image/png,.png"></label>
   </div>
+  <section class="cad-authoring" aria-label="CAD Primitives" id="cad-authoring">
+    <div class="asset-header"><small>CAD-001 · PARAMETRIC PRIMITIVES</small></div>
+    <label>Shape<select id="cad-kind"><option value="column">Column / cylinder</option>
+      <option value="cone">Cone</option><option value="urn">Urn silhouette</option></select></label>
+    <div class="cad-dimensions">
+      <label>Radius (m)<input id="cad-radius" type="number" min="0.1" max="5" step="0.05" value="0.8"></label>
+      <label>Height (m)<input id="cad-height" type="number" min="0.2" max="10" step="0.1" value="2"></label>
+      <label>Facets<input id="cad-segments" type="number" min="3" max="24" step="1" value="16"></label>
+    </div>
+    <button id="cad-create" type="button">Generate &amp; Place CAD</button>
+    <p class="asset-note" id="cad-status" role="status" aria-live="polite">
+      Original Apache-2.0 shapes; DabbleCAD-attributed lathe math.
+      Uses existing mesh assets and native WebGL, no third-party runtime.
+    </p>
+  </section>
   <label>Find assets<input id="asset-search" type="search" placeholder="Name, kind or ID…" autocomplete="off"></label>
   <label>Asset library<select id="asset-list" size="5" aria-label="Project assets"></select></label>
   <div class="asset-buttons">
