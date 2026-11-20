@@ -632,6 +632,13 @@
       "status": "experimental",
       "description": "Bounded original engine, exhaust and tyre PCM synthesis from explicit vehicle telemetry and versioned sound profiles"
     },
+    "chip-audio": {
+      "entry": "modules/chip-audio/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Four-channel signed 8-bit Paula-style hard-panned stereo PCM with SID-inspired ADSR envelopes, volume and bounded deterministic WAV"
+    },
     "projection25d": {
       "entry": "modules/projection25d/index.js",
       "depends": [],
