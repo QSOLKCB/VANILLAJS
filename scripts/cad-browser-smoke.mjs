@@ -31,6 +31,8 @@ try{
   await context.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());
   const page=await context.newPage();
   page.on('pageerror',error=>failures.push(error.message));
+  page.on('response',response=>{if(response.status()>=400)
+    failures.push('HTTP '+response.status()+' '+response.url());});
   page.on('console',entry=>{if(entry.type()==='error')failures.push(entry.text());});
   await page.goto(origin+'/demos/editor/index.html',{waitUntil:'load'});
   await page.waitForFunction(()=>document.documentElement.dataset.editorReady==='ready',undefined,{timeout:30000});
