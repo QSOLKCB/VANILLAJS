@@ -3,7 +3,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createTacticsWorld,createTacticsState,inspectTactics,queryTacticalCover,
   planTacticalOrders,stepTactics,TACTICS_LIMITS} from '../modules/tactics/index.js';
-import {createOperation,OPERATION} from '../demos/tactics-lab/scenario.js';
+import {createOperation,OPERATION,createRelayStatus,advanceRelayStatus}
+  from '../demos/tactics-lab/scenario.js';
 import {createSightWorld,querySight} from '../modules/sensing/index.js';
 import {NavigationGrid,findPath} from '../modules/navigation/index.js';
 const issue=(unitId,action='hold',to=null,targetId=null)=>({unitId,action,to,targetId});
@@ -25,7 +26,10 @@ test('data-only bounded scenario and independent SENSE-001 parity',()=>{
   const {world,state}=createOperation(),map=OPERATION;
   assert.equal(world.width,26);assert.equal(world.height,18);
   assert.equal(world.unitCount,6);assert.equal(world.coverCount,10);
-  assert.equal(state.turn,0);assert.equal(state.phase,'active');assert.ok(Object.isFrozen(state));
+  assert.equal(state.turn,0);assert.equal(createRelayStatus().phase,'active');
+  assert.equal(Object.hasOwn(state,'phase'),false);
+  assert.equal(Object.hasOwn(state,'progress'),false);
+  assert.ok(Object.isFrozen(state));
   const a=inspectTactics(world,state,{backend:'indexed'}),
     b=inspectTactics(world,state,{backend:'serial'});
   assert.deepEqual(a,b);
@@ -107,14 +111,57 @@ test('bounded A* movement is exactly one cardinal tile; turn order deterministic
   const accepted=stepTactics(world,initial,[issue('alpha-a','move',[2,2])]);
   assert.equal(accepted.accepted,true);assert.equal(accepted.state.turn,1);
   assert.deepEqual(accepted.state.units.find(u=>u.id==='alpha-a').cell,[2,2]);
-  assert.equal(accepted.state.progress,1);
+  const afterFirst=advanceRelayStatus(createRelayStatus(),accepted.state,[2,2]);
+  assert.equal(afterFirst.progress,1);assert.equal(afterFirst.phase,'active');
   const next=stepTactics(world,accepted.state,[issue('alpha-a','hold')]);
   assert.equal(next.accepted,true);
-  assert.equal(next.state.phase,'secured');
-  assert.equal(next.state.progress,2);
-  assert.equal(stepTactics(world,next.state,[]).accepted,false);
+  const afterSecond=advanceRelayStatus(afterFirst,next.state,[2,2]);
+  assert.equal(afterSecond.phase,'secured');assert.equal(afterSecond.progress,2);
+  // Gameplay policy is owned by the consumer. A different title may keep
+  // running the squad engine after Quiet Relay would end.
+  assert.equal(stepTactics(world,next.state,[]).accepted,true);
+  assert.throws(()=>advanceRelayStatus(afterSecond,next.state,[2,2]),/terminal/);
   const nav=new NavigationGrid({width:8,height:8,cellSize:2});
   assert.deepEqual(findPath(nav,[2,3],[2,2],{maxExpanded:768}).path,[[2,3],[2,2]]);
+});
+test('planner never moves into an occupied relay or unreachable goal',()=>{
+  const source=openField(),frozen={
+    ...source,
+    units:[
+      {id:'alpha-a',team:'alpha',cell:[2,2],heading:[0,-1]},
+      {id:'alpha-b',team:'alpha',cell:[2,4],heading:[0,-1]},
+      {id:'bravo-a',team:'bravo',cell:[11,11],heading:[-1,0]}
+    ]
+  };
+  const world=createTacticsWorld(frozen),state=createTacticsState(world),
+    plans=planTacticalOrders(world,state,'alpha');
+  const wing=plans.find(x=>x.unitId==='alpha-b');
+  assert.equal(wing.action,'hold','do not route to ally-occupied objective');
+  assert.equal(wing.to,null);
+  const accepted=stepTactics(world,state,plans);
+  assert.equal(accepted.accepted,true);
+  assert.equal(accepted.state.turn,1);
+  // An entirely impassable bulkhead also makes a proposal HOLD instead of
+  // generating a plan that rejects the whole squad turn.
+  const blocked={
+    ...field(),
+    cover:[{id:'separating-wall',x:3,z:0,w:1,h:8,height:3}]
+  };
+  const blockedWorld=createTacticsWorld(blocked),blockedState=createTacticsState(blockedWorld),
+    suggested=planTacticalOrders(blockedWorld,blockedState,'alpha');
+  assert.equal(suggested[0].action,'hold');
+  assert.equal(stepTactics(blockedWorld,blockedState,suggested).accepted,true);
+});
+test('Quiet Relay mission timeout is a demo-only policy, never core turn state',()=>{
+  const world=createTacticsWorld(openField()),state=createTacticsState(world),
+    first=stepTactics(world,state,[issue('alpha-a','hold')]);
+  assert.equal(first.accepted,true);
+  const ended=advanceRelayStatus(createRelayStatus(),first.state,[5,5],1);
+  assert.equal(ended.phase,'exhausted');
+  assert.equal(first.state.turn,1);
+  assert.equal(Object.hasOwn(first.state,'phase'),false);
+  // Even if this game is exhausted, a different game may still advance.
+  assert.equal(stepTactics(world,first.state,[]).accepted,true);
 });
 test('deterministic seed is applied only to equal-range visible AI tie-breaks',()=>{
   const variant=seed=>({width:8,height:8,cellMetres:2,seed,objective:[6,6],cover:[],
@@ -143,7 +190,7 @@ test('two independently created worlds replay 32 turns byte-identically',()=>{
     if(!alphaA.accepted)break;
     log.push(proposed);a=alphaA.state;b=alphaB.state;
     assert.deepEqual(inspectTactics(first.world,a),inspectTactics(second.world,b));
-    if(a.phase!=='active')break;
+    // No campaign phase is imposed by the reusable squad engine.
   }
   let replay=createTacticsState(first.world);
   for(const orders of log)replay=stepTactics(first.world,replay,orders).state;
