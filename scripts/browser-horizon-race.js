@@ -235,7 +235,23 @@ export async function checkHorizonRace(browser,base){
     assert.equal(s.running,false);assert.equal(s.phase,'ready');assert.equal(s.view.graphics.profile,'high');const initial=await pixels(page);assert.ok(initial.lit>10000&&initial.colors>12);assert.equal(initial.error,0);const initialPosition=s.player.position.slice(),uploads=s.view.graphics.uploads;evidence.entry=page.url();evidence.high=s.view.graphics;await page.screenshot({path:'browser-artifacts/horizon-race-desktop.png',fullPage:true});
     // Every advertised camera changes the actual renderer pose and pixels.
     const cameraPositions=new Set(),cameraPixels=new Set();for(const mode of ['bonnet','cockpit','chase']){await page.locator('button[data-camera="'+mode+'"]').click();assert.equal((await snapshot(page)).view.cameraMode,mode);const image=await pixels(page);assert.equal(image.error,0);cameraPositions.add(JSON.stringify((await snapshot(page)).view.camera.position));cameraPixels.add(image.hash);}assert.equal(cameraPositions.size,3);assert.equal(cameraPixels.size,3);
-    await page.locator('#race-sound').click();assert.equal((await snapshot(page)).audio.enabled,true);await page.locator('#race-start').click();await page.keyboard.down('KeyW');await ticks(page,430);await page.keyboard.up('KeyW');let moving=await snapshot(page);assert.ok(speed(moving)>2);assert.ok(Math.hypot(...moving.player.position.map((n,i)=>n-initialPosition[i]))>.4,'W must move the car in world space at the public index URL');assert.ok(moving.audio.started>0);assert.ok(moving.audio.voices<=moving.audio.maxVoices);assert.equal(moving.view.graphics.uploads,uploads);await page.locator('#race-canvas').screenshot({path:'browser-artifacts/horizon-race-at-speed.png'});await page.keyboard.press('Escape');s=await snapshot(page);assert.equal(s.audio.voices,0);assert.equal(s.inputs.input.throttle,0);await page.waitForTimeout(150);assert.equal((await snapshot(page)).ticks,s.ticks);assert.equal((await snapshot(page)).view.frames,s.view.frames);
+    await page.locator('#race-sound').click();assert.equal((await snapshot(page)).audio.enabled,true);await page.locator('#race-start').click();await page.keyboard.down('KeyW');
+    // This starter race has an authoritative three-second countdown (360 x 1/120 s).
+    // 430 total ticks left only ~0.58 s to accelerate and intermittently failed
+    // the physical >2 m/s threshold on otherwise valid Chromium runs.
+    // Require a full two seconds AFTER the countdown instead; no speed threshold
+    // or vehicle physics contract is relaxed, and sample while W is still held.
+    await ticks(page,360);
+    let beforeMotion=await snapshot(page);
+    assert.equal(beforeMotion.phase,'running','countdown must finish before acceleration checks');
+    assert.equal(beforeMotion.inputs.input.throttle,1,'actual KeyW must remain accepted after countdown');
+    await ticks(page,240);
+    let moving=await snapshot(page);
+    assert.equal(moving.running,true,'the racing session must still be advancing');
+    assert.ok(moving.physicalInput.throttle>0,'physical vehicle throttle must be applied');
+    assert.ok(moving.player.gear>0,'vehicle must have an engaged forward gear');
+    assert.ok(speed(moving)>2,'the car must accelerate past 2 m/s after two full driving seconds');
+    await page.keyboard.up('KeyW');assert.ok(Math.hypot(...moving.player.position.map((n,i)=>n-initialPosition[i]))>.4,'W must move the car in world space at the public index URL');assert.ok(moving.audio.started>0);assert.ok(moving.audio.voices<=moving.audio.maxVoices);assert.equal(moving.view.graphics.uploads,uploads);await page.locator('#race-canvas').screenshot({path:'browser-artifacts/horizon-race-at-speed.png'});await page.keyboard.press('Escape');s=await snapshot(page);assert.equal(s.audio.voices,0);assert.equal(s.inputs.input.throttle,0);await page.waitForTimeout(150);assert.equal((await snapshot(page)).ticks,s.ticks);assert.equal((await snapshot(page)).view.frames,s.view.frames);
     // Focus loss cancels held controls and audio; resuming requires fresh input.
     await page.locator('#race-start').click();await page.keyboard.down('KeyW');await ticks(page,15);await page.evaluate(()=>dispatchEvent(new Event('blur')));assert.equal((await snapshot(page)).running,false);assert.equal((await snapshot(page)).audio.voices,0);await page.locator('#race-start').click();await page.keyboard.down('KeyW');assert.equal((await snapshot(page)).inputs.input.throttle,0);await page.keyboard.up('KeyW');await page.keyboard.down('KeyW');await ticks(page,15);assert.equal((await snapshot(page)).inputs.input.throttle,1);await page.keyboard.up('KeyW');await page.keyboard.press('Escape');await page.locator('#race-restart').click();assert.equal((await snapshot(page)).phase,'ready');
     // Existing independent route-input reference is explicitly unassisted.
@@ -258,7 +274,47 @@ export async function checkHorizonRace(browser,base){
     // omits captured pointercancel, a touchcancel event must retire *both*
     // held buttons. The real CDP stream is still cancelled afterwards.
     await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:t.x+t.width/2,y:t.y+t.height/2,id:3},{x:l.x+l.width/2,y:l.y+l.height/2,id:4}]});assert.deepEqual((await snapshot(page)).inputs.input,{throttle:1,brake:0,steer:-1,reverse:0});await page.evaluate(()=>window.dispatchEvent(new Event('touchcancel',{bubbles:true})));assert.deepEqual((await snapshot(page)).inputs.input,{throttle:0,brake:0,steer:0,reverse:0});await client.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});assert.deepEqual((await snapshot(page)).inputs.input,{throttle:0,brake:0,steer:0,reverse:0});await client.detach();await page.keyboard.press('Escape');await page.screenshot({path:'browser-artifacts/horizon-race-mobile.png',fullPage:true});
-    await page.waitForFunction(async scope=>(await navigator.serviceWorker.getRegistrations()).some(r=>r.scope===scope&&r.active?.state==='activated'),base,{timeout:45000});await context.setOffline(true);const offline=await context.newPage();offline.on('pageerror',e=>errors.push(e.message));const response=await offline.goto(base+'demos/horizon-lab/index.html');assert.equal(response.fromServiceWorker(),true);await ready(offline);await offline.locator('#race-start').click();await offline.keyboard.down('KeyW');await ticks(offline,425);await offline.keyboard.up('KeyW');await offline.keyboard.press('Escape');assert.ok(speed(await snapshot(offline))>1);evidence.offline={fromServiceWorker:response.fromServiceWorker(),position:(await snapshot(offline)).player.position};await offline.locator('#race-recover').click();const backStart=(await snapshot(offline)).player.position.slice();await offline.locator('#race-start').click();await offline.keyboard.down('ArrowDown');await ticks(offline,180);await offline.keyboard.up('ArrowDown');await offline.keyboard.press('Escape');const back=await snapshot(offline);assert.equal(back.player.gear,-1);assert.ok(back.player.position[2]>backStart[2]+1,'offline player physically reverses');evidence.offline.reversePosition=back.player.position;assert.deepEqual(errors,[]);
+    await page.waitForFunction(async scope=>(await navigator.serviceWorker.getRegistrations()).some(r=>r.scope===scope&&r.active?.state==='activated'),base,{timeout:45000});await context.setOffline(true);
+    const offline=await context.newPage();
+    offline.on('pageerror',e=>errors.push(e.message));
+    const response=await offline.goto(base+'demos/horizon-lab/index.html');
+    assert.equal(response.fromServiceWorker(),true);
+    await ready(offline);
+    // The offline tab is independent from the preceding 320px touch scenario.
+    // Advance actual requestAnimationFrame/FixedClock callbacks using Playwright's
+    // owned virtual clock, as the other HORIZON driving tests already do. Waiting
+    // for 425 real-time ticks could stall for 30s if hosted Chromium throttled.
+    // Keep the genuine offline service worker, keyboard handlers and physics.
+    await offline.bringToFront();
+    await offline.clock.install();
+    await offline.clock.pauseAt(new Date(Date.now()+1000));
+    await offline.locator('#race-start').click();
+    await offline.keyboard.down('KeyW');
+    await offline.clock.runFor(5000); // 3s countdown + 2s real physical driving
+    const forwardOffline=await snapshot(offline);
+    assert.equal(forwardOffline.phase,'running','offline countdown completed');
+    assert.equal(forwardOffline.running,true,'offline race still running');
+    assert.equal(forwardOffline.inputs.input.throttle,1,'offline W key is physically held');
+    assert.ok(forwardOffline.physicalInput.throttle>0,'offline physical throttle applied');
+    assert.ok(speed(forwardOffline)>1,'offline vehicle must physically accelerate');
+    await offline.keyboard.up('KeyW');
+    await offline.keyboard.press('Escape');
+    evidence.offline={fromServiceWorker:response.fromServiceWorker(),position:forwardOffline.player.position,
+      ticks:forwardOffline.ticks,speed:speed(forwardOffline)};
+    await offline.locator('#race-recover').click();
+    const backStart=(await snapshot(offline)).player.position.slice();
+    await offline.locator('#race-start').click();
+    await offline.keyboard.down('ArrowDown');
+    await offline.clock.runFor(2000); // authentic reverse gear transition after recovery
+    const backMoving=await snapshot(offline);
+    assert.equal(backMoving.running,true,'offline reverse test still advancing');
+    await offline.keyboard.up('ArrowDown');
+    await offline.keyboard.press('Escape');
+    const back=await snapshot(offline);
+    assert.equal(back.player.gear,-1);
+    assert.ok(back.player.position[2]>backStart[2]+1,'offline player physically reverses');
+    evidence.offline.reversePosition=back.player.position;
+    assert.deepEqual(errors,[]);
   }finally{await context.close();}
   const fallback=await browser.newContext(),p=await fallback.newPage();try{await p.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type==='webgl'?null:original.call(this,type,...args);};});await p.goto(base+'demos/horizon-lab/index.html');await ready(p);assert.equal(await p.locator('#race-graphics-error').isVisible(),true);assert.equal(await p.locator('#race-start').isDisabled(),true);await p.locator('#race-name').fill('Editable without graphics');await p.locator('#race-apply').click();assert.equal(JSON.parse((await snapshot(p)).project).name,'Editable without graphics');const download=p.waitForEvent('download');await p.locator('#race-export-project').click();await download;}finally{await fallback.close();}
   // Device rejection is independent of graphics and does not prevent driving.
