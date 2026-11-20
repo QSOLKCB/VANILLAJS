@@ -80,6 +80,6 @@ test('exact 256 KiB serialized package boundary never appends unbudgeted bytes',
  mock.project.padding='x'.repeat(CREATOR_LIMITS.bytes-Buffer.byteLength(JSON.stringify(mock)));
  const serialized=creatorPackageJSON(mock);
  assert.equal(Buffer.byteLength(serialized),CREATOR_LIMITS.bytes);
- assert.equal(serialized.endsWith('\\n'),false);
+ assert.equal(serialized.endsWith(String.fromCharCode(10)),false);
  assert.throws(()=>creatorPackageJSON({...mock,project:{padding:mock.project.padding+'x'}}),/byte limit/);
 });

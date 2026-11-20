@@ -88,6 +88,59 @@ try{
  const nonTacticalEdit=await report();assert.match(nonTacticalEdit.message,/Accepted wall/);
  assert.equal(nonTacticalEdit.zones,parsed.project.zones.length+1);
  assert.equal(nonTacticalEdit.cover,0);
+ // Import a valid 1-metre tactical grid and non-default asset catalogue.
+ // A physical AABB and its tactical cover must occupy precisely the same cells.
+ const scaled=await page.evaluate(async project=>{
+  const creator=await import('/modules/creator-interop/index.js');
+  const source=structuredClone(project);
+  source.assets=[{...source.assets[0],id:'custom-mesh'}];
+  source.placements=[];source.zones=[];
+  source.tactical={...source.tactical,cellMetres:1,cover:[],
+   units:[{id:'alpha-1',team:'alpha',cell:[0,0],heading:[1,0]},
+    {id:'bravo-1',team:'bravo',cell:[11,9],heading:[-1,0]}],
+   objective:[10,8]};
+  return creator.creatorPackageJSON(await creator.sealCreatorPackage(source));
+ },parsed.project);
+ await page.locator('#import').setInputFiles({name:'scaled.json',mimeType:'application/json',
+   buffer:Buffer.from(scaled)});
+ await page.waitForFunction(()=>JSON.parse(document.querySelector('#receipt').textContent)
+   .message.startsWith('Imported '),undefined,{timeout:20000});
+ const importedScaled=await report();
+ assert.equal(importedScaled.metresPerCell,1);
+ assert.equal(importedScaled.selectedAssetId,'custom-mesh');
+ assert.equal(importedScaled.cover,0);
+ await page.locator('[data-tool="wall"]').click();
+ await choose(4,2);
+ const scaledWall=await report();
+ assert.match(scaledWall.message,/Accepted wall/);
+ assert.equal(scaledWall.zones,1);assert.equal(scaledWall.cover,1);
+ await page.locator('[data-tool="prop"]').click();
+ await choose(5,4);
+ assert.match((await report()).message,/Accepted prop/);
+ const [customDownload]=await Promise.all([
+  page.waitForEvent('download'),page.locator('#export').click()]);
+ const custom=JSON.parse(await readFile(await customDownload.path()));
+ assert.deepEqual(custom.project.zones[0],
+   {id:'wall-1',kind:'occluder',min:[4,0,-3],max:[5,3,-2]});
+ assert.deepEqual(custom.project.tactical.cover[0],
+   {id:'cover-1',x:4,z:2,w:1,h:1,height:3});
+ assert.equal(custom.project.placements[0].assetId,'custom-mesh');
+ // A scene with no assets must disable Place mesh rather than guessing a seed ID.
+ const empty=await page.evaluate(async project=>{
+  const creator=await import('/modules/creator-interop/index.js');
+  return creator.creatorPackageJSON(await creator.sealCreatorPackage({
+   ...project,assets:[],placements:[],zones:[],tactical:null
+  }));
+ },parsed.project);
+ await page.locator('#import').setInputFiles({name:'empty.json',mimeType:'application/json',
+   buffer:Buffer.from(empty)});
+ await page.waitForFunction(()=>JSON.parse(document.querySelector('#receipt').textContent)
+   .message.startsWith('Imported '),undefined,{timeout:20000});
+ assert.equal((await report()).selectedAssetId,null);
+ assert.equal(await page.locator('[data-tool="prop"]').isDisabled(),true);
+ await page.locator('[data-tool="target"]').click();
+ await choose(3,4);
+ assert.match((await report()).message,/Accepted target/);
  const png=await canvas.screenshot();assert.ok(png.length>3000);
  assert.deepEqual(errors,[],'zero errors and external requests');
  await mkdir(join(root,'browser-artifacts'),{recursive:true});
@@ -98,7 +151,8 @@ try{
   checks:['packaged World Foundry','real edit changes physical zone and tactical cover together',
    'new target placement','SHA256 sealed download','reset then reimport exact objects',
    'tamper rejected atomically','non-tactical import remains editable without phantom cover',
-   'zero network/runtime errors']};
+   '1m tactical cover aligns exactly with physical AABB','imported mesh selection',
+   'no-asset project disables mesh placement','zero network/runtime errors']};
  await writeFile(join(root,'browser-artifacts/creator-interop-001.json'),JSON.stringify(receipt,null,2)+'\n');
  console.log(JSON.stringify(receipt));
  await context.close();
