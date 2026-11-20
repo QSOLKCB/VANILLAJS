@@ -6,6 +6,21 @@ import {createForgeExtrusion,forgePresetFootprint,inspectForgeTriangles,
 
 const byId=(root,id)=>root.querySelector('#'+id);
 const DECIMAL=/^-?(?:\d{1,2})(?:\.\d{1,8})?$/;
+// An original finite construction demonstration, never a loaded game map.
+// The editor transaction creates all six structures or accepts none.
+export function forgeCompoundPlan(){
+  const rows=[
+    ['West Watchtower','tower',2,2,4,.18,-4,3],
+    ['East Watchtower','tower',2,2,4,.18,4,3],
+    ['Front Barricade','wall',4,.8,1.8,.12,0,-3],
+    ['West Deflector','wedge',2,2,1.4,.1,-3,-1],
+    ['East Deflector','wedge',2,2,1.4,.1,3,-1],
+    ['Loading Platform','platform',4,3,.6,.08,0,2.5]
+  ];
+  return Object.freeze(rows.map(([name,kind,width,depth,height,bevel,x,z])=>
+    Object.freeze({name,kind,width,depth,height,bevel,
+      position:Object.freeze([x,height/2,z])})));
+}
 export function parseForgeFootprint(text){
   if(typeof text!=='string'||text.length>384)throw TypeError('bounded footprint text required');
   const rows=text.split(';').map(x=>x.trim());
@@ -18,9 +33,10 @@ export function parseForgeFootprint(text){
     return cells.map(Number);
   });
 }
-export function mountGeometryForge(root,{readAsset,isPlaying,onCommit}){
+export function mountGeometryForge(root,{readAsset,isPlaying,onCommit,onCompound}){
   if(!root||typeof readAsset!=='function'||typeof isPlaying!=='function'||
-      typeof onCommit!=='function')throw TypeError('Geometry Forge requires editor adapters');
+      typeof onCommit!=='function'||typeof onCompound!=='function')
+    throw TypeError('Geometry Forge requires editor adapters');
   const canvas=byId(root,'forge-footprint-canvas'),ctx=canvas.getContext('2d');
   if(!ctx)throw Error('Canvas2D required for the geometry workplane');
   let candidate=null,busy=false,version=0,report=null;
@@ -87,6 +103,30 @@ export function mountGeometryForge(root,{readAsset,isPlaying,onCommit}){
     'forge-custom','forge-outline']){
     $(id).addEventListener(id==='forge-outline'?'input':'change',()=>{version++;preview();});
   }
+  $('forge-compound').addEventListener('click',async()=>{
+    if(busy||isPlaying())return;
+    const ticket=++version;busy=true;sync();
+    try{
+      const plan=forgeCompoundPlan();
+      // Confirm every mesh is a closed valid solid before handing it to the
+      // editor's all-or-nothing project/asset transaction.
+      for(const entry of plan){
+        const opts={kind:entry.kind,width:entry.width,depth:entry.depth,
+          height:entry.height,bevel:entry.bevel};
+        const mesh=createForgeExtrusion(forgePresetFootprint(opts)),
+          diag=inspectForgeTriangles(mesh),ref=forgeVolumeReference(forgePresetFootprint(opts));
+        if(!diag.closed||diag.euler!==2||
+            Math.abs(diag.volume-ref)>Math.max(1e-8,ref*1e-8))
+          throw Error('compound geometry not verified');
+      }
+      const outcome=await onCompound({plan,ticket});
+      if(ticket===version)output(outcome?.accepted===false?
+        'Compound rejected: original scene or asset limit changed.':
+        'Built six independent structures in one undoable transaction.',
+      outcome?.accepted===false?'error':'ready');
+    }catch(error){if(ticket===version)output('Compound rejected: '+error.message,'error');}
+    finally{busy=false;sync();}
+  });
   $('forge-inspect').addEventListener('click',()=>{
     try{
       const asset=readAsset();
