@@ -257,12 +257,20 @@ export function cadProfileRecover(asset){
     try{draft=cadProfileDraft({profile,segments});}catch{continue;}
     const rebuilt=cadProfileMesh(draft).vertices;
     if(rebuilt.length!==vertices.length)continue;
-    // Original 6-decimal OBJ source coordinates can differ by one final
-    // quantisation unit when a recovered ring is re-triangulated.
+    // OBJ rounds every XYZ/UV number to six decimals. XYZ and U stay within
+    // one last-place step on reconstruction, but V=(y-y0)/(yN-y0) divides
+    // separately rounded ring heights. With each endpoint perturbed by up
+    // to half a unit, worst-case normalisation error is bounded by
+    // 2e-6/(height-1e-6). Keep strict XYZ/U parity, apply only that derived
+    // rounding envelope to V, never unconditionally accept arbitrary UVs.
+    const height=profile.at(-1)[1]-profile[0][1];
+    const vTolerance=1.000001e-6+
+      2.000001e-6/Math.max(height-1e-6,Number.MIN_VALUE);
     let same=true;
     for(let i=0;i<rebuilt.length;i++){
-      const rounded=Number(numberText(rebuilt[i]));
-      if(Math.abs(rounded-vertices[i])>1.000001e-6){same=false;break;}
+      const rounded=Number(numberText(rebuilt[i])),
+        tolerance=i%5===4?vTolerance:1.000001e-6;
+      if(Math.abs(rounded-vertices[i])>tolerance){same=false;break;}
     }
     if(same)return draft;
   }
