@@ -1,20 +1,20 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0c1720"><title>VANILLAJS — Cockpit & Physics Lab</title>
+<meta name="theme-color" content="#0c1720"><title>TOO CLOSE FOR GUNS — SWITCHING TO MISSILES! · VANILLAJS</title>
 <link rel="stylesheet" href="./style.css"></head>
 <body>
-<header><a href="../../index.html">VANILLAJS</a><span>EXPERIMENT / COCKPIT-001</span><a href="../../docs/COCKPIT_PHYSICS_001.md">API &amp; evidence</a></header>
+<header><a href="../../index.html">VANILLAJS</a><span>EXPERIMENT / COCKPIT-002</span><a href="../../docs/COCKPIT_PHYSICS_001.md">API &amp; evidence</a></header>
 <main>
-<section class="intro"><p class="eyebrow">SPACE · PROP FIGHTER · ROAD</p><h1>Cockpit &amp; Physics Lab</h1>
-<p>Fly an original 1940s-inspired propeller fighter, pilot a 6DOF spacecraft or drive an actual four-wheel car. The same cockpit renders their real pose and telemetry. Align the reflector-style sight against the physical gun rays—no camera tricks.</p></section>
+<section class="intro"><p class="eyebrow">COCKPIT &amp; PHYSICS LAB · SPACE · PROP FIGHTER · ROAD</p><h1>TOO CLOSE FOR GUNS — SWITCHING TO MISSILES!</h1>
+<p>Fly an original 1940s-inspired propeller fighter, pilot a 6DOF spacecraft or drive an actual four-wheel car. The same cockpit renders their real pose and telemetry. Align the reflector-style gunsight against the actual physical gun rays, then press M to launch a game-world homing missile. Yes, we deliberately reversed the famous movie line.</p></section>
 <div class="layout">
 <section class="screen" aria-label="Live 3D proving ground">
-<div class="viewport"><canvas id="scene" tabindex="0" aria-label="3D cockpit view. Start, focus canvas, use arrow keys for pitch and yaw, Q/E for roll and W/S for throttle. F runs an actual ray/target test."></canvas>
+<div class="viewport"><canvas id="scene" tabindex="0" aria-label="3D cockpit view. Start, focus canvas, use arrow keys for pitch and yaw, Q/E for roll and W/S for throttle. F runs an actual ray/target test and M launches a missile."></canvas>
 <div id="frame" aria-hidden="true"><div class="canopy"></div><div class="dashboard"></div><div class="compass"></div></div>
 <div id="sight" class="sight" aria-hidden="true"><div class="reticle"></div></div>
 <div id="left-hit" class="impact" aria-hidden="true">L</div><div id="right-hit" class="impact" aria-hidden="true">R</div>
 <div id="world-target" class="target" aria-hidden="true">◇</div>
-<div class="topbar"><strong id="status">READY</strong><span id="mode-name">PROP FIGHTER</span><span>REFLECTOR / ORIGINAL</span></div>
+<div class="topbar"><strong id="status">READY</strong><span id="mode-name">PROP FIGHTER</span><span id="missile-status">MISSILE READY</span></div>
 <div class="readout"><span id="sight-error">SIGHT TEST READY</span><span id="last-shot">NO SHOTS</span></div></div>
 <div class="instruments">
 <div><small>GROUND SPEED</small><strong id="speed">0.0 m/s</strong></div>
@@ -23,6 +23,8 @@
 <div><small>HEADING</small><strong id="heading">000°</strong></div>
 <div><small>BANK</small><strong id="bank">0.0°</strong></div>
 <div><small>AoA / G</small><strong id="aero">—</strong></div>
+<div><small>MISSILES</small><strong id="missile-ammo">4 / 4</strong></div>
+<div><small>MISSILE IMPACTS</small><strong id="missile-hits">0</strong></div>
 </div></section>
 <aside class="panel" aria-label="Cockpit and physics controls">
 <h2>Flight station</h2>
@@ -31,9 +33,9 @@
 <label>Throttle <output id="throttle-value">72%</output><input id="throttle" type="range" min="0" max="100" step="1" value="72"></label>
 <label>Gun convergence <output id="convergence-value">240 m</output><input id="convergence" type="range" min="50" max="600" step="10" value="240"></label>
 <label>Test plane <output id="distance-value">240 m</output><input id="distance" type="range" min="50" max="600" step="10" value="240"></label>
-<div class="buttons"><button id="start">Launch</button><button id="pause" disabled>Pause</button><button id="reset">Reset</button><button id="fire">Fire / test F</button></div>
+<div class="buttons"><button id="start">Launch</button><button id="pause" disabled>Pause</button><button id="reset">Reset</button><button id="fire">Guns / F</button><button id="missile" disabled>Missile / M</button></div>
 <p id="notice" role="status" aria-live="polite">Select a model and launch. No game state advances until you start.</p>
-<h3>Controls</h3><p>W/S throttle or drive; A/D strafe (space) or steer (car); arrows pitch/yaw; Q/E roll. F fires a geometry test. Click the 3D view for optional mouse head-look: turning your head moves the sight relative to the camera, <em>never</em> the guns.</p>
+<h3>Controls</h3><p>W/S throttle or drive; A/D strafe (space) or steer (car); arrows pitch/yaw; Q/E roll. F fires the original aligned gun-ray test; M launches a guided arcade missile when physically locked. Missiles work in aircraft and space modes, not cars. Click the 3D view for optional mouse head-look: turning your head moves the sight relative to the camera, <em>never</em> the guns.</p>
 <p class="small">Gunsights are approximate reflector-style art. The real Spitfire used a reflector gunsight rather than a modern flight HUD. The propeller model is an original arcade approximation, not historical aircraft flight certification. All data and textures are generated locally.</p>
 </aside></div>
 </main>

@@ -1,6 +1,6 @@
 # COCKPIT-001 — Reusable cockpit, sight alignment and physics proving ground
 
-**Status:** experimental, opt-in, source candidate. No existing FPS/Flight Lab
+**Status:** COCKPIT-001 merged. COCKPIT-002 is an opt-in experimental candidate. No existing FPS/Flight Lab
 physics, vehicle dynamics, collision, weapon timers, replay, audio or game worlds
 are changed by this work. Original pure Apache-2.0 modules; no downloaded models,
 maps, scenery, aviation manuals or third-party game engines are bundled.
@@ -139,3 +139,45 @@ simulated collimating optical surface or verified historical gun sight.
 Collision and damage are not inferred from pixels. Device input and colour
 reproduction may differ across browsers; the lab makes no 60 FPS guarantee
 until paired hardware profiling is recorded.
+
+## COCKPIT-002 — TOO CLOSE FOR GUNS — SWITCHING TO MISSILES!
+
+The lab now has its official title, while retaining the prior
+`demos/cockpit-physics-lab/` URL for compatibility. This is a deliberate
+parody of a familiar cinema line, not a reproduction of film audio or art.
+
+In **propeller fighter** and **space interceptor** modes, the M key or Missile
+button requests one of four arcade missiles. The **car** has no missile system.
+Guns remain the F button and use the exact unchanged world-space gun rays.
+A launch originates from alternating local pylons, obeys an independent
+physical forward lock (30-degree cone, maximum 2,000 m), consumes ammunition,
+starts an 0.8-second simulation-time cooldown and advances at fixed 120 Hz.
+All inputs are latched and consumed at simulation-tick boundaries.
+Pause, reset, blur and hidden-tab events cancel pending inputs or simulation.
+
+The lab-owned [missile model](../demos/cockpit-physics-lab/missiles.js) is
+independently authored, bounded and deterministic: four simultaneous projectiles
+maximum, two alternating pylon positions, eight-second lifetime, direction and
+speed advanced on physical ticks, turn-rate-limited homing toward the current
+authored target, and analytical swept segment/sphere impact (no tunnelling).
+A shot that cannot lock does **not** spend ammunition. The output includes an
+immutable event receipt, ammo/cooldown/active counts and impact/expiry totals.
+The renderer only draws coloured missile streaks from accepted snapshots.
+
+The missile model is **not** a real guided-weapon specification, certified
+aerodynamic model, missile seeker, battlefield simulation, terrain/vehicle
+collision system, or accurate 1940s military inventory. Its simplified
+homing and static training target are strictly arcade mechanics; realistic
+gunnery, moving-target guidance and full game hit resolution remain future
+independent studies. No third-party textures, movie dialogue audio, missiles
+or source code are included.
+
+Acceptance:
+- `node --test tests/cockpit-missiles.test.js` with lock, launch/cooldown,
+  swept impacts, deterministic split/repeated ticks, expiry, validation and
+  separate camera/vehicle state.
+- Existing cockpit / airframe and complete repository tests unchanged.
+- Packaged Chromium acceptance checks an actual missile launch and delayed
+  physical impact in air mode, launches in space mode and verifies the car
+  cannot equip missiles; the source-bound artifact records the exact package.
+- No hardware-FPS, historical accuracy or game-damage claims are made.

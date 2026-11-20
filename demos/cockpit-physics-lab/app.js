@@ -10,12 +10,13 @@ import {createVehicle,vehiclePreset,VEHICLE_STEP} from '../../modules/vehicle3d/
 import {createCockpitRig,sampleCockpitCamera,cockpitTelemetry,
   inspectCockpitSight,projectCockpitPoint,testCockpitTarget} from '../../modules/cockpit-rig/index.js';
 import {Renderer,boxVertices,ringVertices} from '../../modules/render-webgl/index.js';
+import {createMissileRack,missileLock,launchMissile,stepMissiles,missileSummary} from './missiles.js';
 
 const $=id=>document.getElementById(id),canvas=$('scene'),viewport=canvas.parentElement;
 const actions=new Actions(),clock=new FixedClock({step:1/120,maxFrame:.1,maxSteps:12});
-const keyboard=attachKeyboard(window,actions,{bindings:{...flightBindings,KeyF:'fire'},enabled:()=>running});
+const keyboard=attachKeyboard(window,actions,{bindings:{...flightBindings,KeyF:'fire',KeyM:'missile'},enabled:()=>running});
 let renderer=null,scenery=null,craftMesh=null,session=null,running=false,unavailable=false,paintNeeded=true;
-let lastFrame=null,lastHud=-Infinity,frameId=null,mouseYaw=0,mousePitch=0;
+let lastFrame=null,lastHud=-Infinity,frameId=null,mouseYaw=0,mousePitch=0,missileRequested=false;
 const mouse=attachMouseLook(canvas,{
   enabled:()=>running&&!unavailable,
   onUnlock:()=>pause('Mouse capture released; physics paused.'),
@@ -24,7 +25,7 @@ const mouse=attachMouseLook(canvas,{
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const displayDeg=n=>((n*180/Math.PI+360)%360).toFixed(0).padStart(3,'0')+'°';
 function notice(message){$('notice').textContent=message;}
-function resetInputs(){keyboard.clear();actions.clear();mouse.release();mouseYaw=0;mousePitch=0;}
+function resetInputs(){keyboard.clear();actions.clear();mouse.release();mouseYaw=0;mousePitch=0;missileRequested=false;}
 function rigOptions(kind){
   const air=kind==='air',car=kind==='car';
   return {
@@ -55,6 +56,11 @@ function createSession(kind){
     setup.world={sampleSurface(x,z,maxY){return maxY>=0?{height:0,normal:[0,1,0],friction:1,surfaceId:'test-asphalt'}:null;},barriers:[]};
     setup.target=[0,1,-65];setup.targetRadius=2.4;
   }
+  // Game-owned missile rack. Road vehicles intentionally cannot launch.
+  setup.missiles=kind==='car'?null:createMissileRack({
+    mounts:kind==='air'?[[-3.2,-.65,-1.8],[3.2,-.65,-1.8]]:
+      [[-2.2,-.4,-1.8],[2.2,-.4,-1.8]]
+  });
   setup.previous={position:[...setup.body.position],orientation:[...setup.body.orientation]};
   return setup;
 }
@@ -119,6 +125,7 @@ function buildScene(){
   const outer=ringVertices(session.target,session.targetRadius*1.4,[.35,.72,.7],48);
   scenery.ring=renderer.mesh(ring.concat(outer),'lines');
   craftMesh=renderer.mesh([]);
+  scenery.missileTrails=renderer.mesh([],'lines');
 }
 function reset(){
   pause('Physics reset. Choose Launch to start again.');
@@ -127,17 +134,20 @@ function reset(){
   $('throttle-value').textContent=Math.round(session.throttle*100)+'%';
   $('mode-name').textContent={air:'PROP FIGHTER',space:'SPACE INTERCEPTOR',car:'ROAD TEST COUPE'}[session.kind];
   $('last-shot').textContent='NO SHOTS';$('status').textContent='READY';$('start').disabled=false;
+  $('missile').disabled=true;
   buildScene();paintNeeded=true;notice('Original proving ground reset. Model and sight convergence are independent of rendering.');
 }
 function pause(reason='Physics paused.'){
   if(!running)return;
   running=false;clock.setPaused(true);resetInputs();lastFrame=null;paintNeeded=true;
-  $('status').textContent='PAUSED';$('pause').disabled=true;$('start').disabled=false;notice(reason);
+  $('status').textContent='PAUSED';$('pause').disabled=true;$('start').disabled=false;
+  $('missile').disabled=true;notice(reason);
 }
 function start(){
   if(unavailable)return;
   resetInputs();running=true;clock.setPaused(false);lastFrame=null;
   $('status').textContent='RUNNING';$('start').disabled=true;$('pause').disabled=false;
+  $('missile').disabled=session.kind==='car';
   canvas.focus({preventScroll:true});notice('Simulation running at fixed 120 Hz. Aim with the orange reflector sight; F tests true gun rays.');
 }
 function reloadRig(){
@@ -154,12 +164,31 @@ function shot(){
   notice(hits?('Physical intersection confirmed: '+hits+' gun rays hit the test target.'):'Missed. Adjust heading, convergence or flight path; the camera does not change the rays.');
   paintNeeded=true;
 }
+function fireMissile(){
+  if(!running||!session?.missiles)return;
+  const result=launchMissile(session.missiles,session.body,
+    {center:session.target,radius:session.targetRadius});
+  session.missiles=result.rack;
+  if(result.status==='launched'){
+    $('last-shot').textContent='MISSILE '+result.id+' AWAY';
+    notice('TOO CLOSE FOR GUNS — SWITCHING TO MISSILES!');
+  }else{
+    notice('MISSILE '+result.status.toUpperCase().replaceAll('-',' ')+
+      '. No ammunition consumed.');
+  }
+  paintNeeded=true;
+}
 function update(dt){
   const b=session.body,cmd=actions.flight();
   session.previous={position:[...b.position],orientation:[...b.orientation]};
   const head=mouse.consume();mouseYaw=clamp(mouseYaw+head.yaw,-1.4,1.4);
   mousePitch=clamp(mousePitch+head.pitch,-1.1,1.1);
   if(actions.consume('fire'))shot();
+  // Consume both edges even if the UI button was pressed on this tick.
+  // A short-circuit here could re-fire a stale M-key edge on a later tick.
+  const keyLaunch=actions.consume('missile'),launchRequested=missileRequested||keyLaunch;
+  missileRequested=false;
+  if(launchRequested)fireMissile();
   const delta=-cmd.thrust[2]; // W = +1, S = -1
   if(session.kind!=='car'){
     session.throttle=clamp(session.throttle+delta*dt*.35,0,1);
@@ -171,6 +200,20 @@ function update(dt){
     session.body=session.vehicle.step(b,{throttle,brake,steer:cmd.thrust[0]},session.world,dt);
     session.throttle=throttle;
     if(session.body.needsRecovery){pause('Vehicle needs recovery after leaving the bounded dynamics envelope. Reset the test.');}
+  }
+  // Missile state is advanced only on accepted physics ticks; never in paint().
+  if(session.missiles){
+    const advance=stepMissiles(session.missiles,
+      {center:session.target,radius:session.targetRadius},dt);
+    session.missiles=advance.rack;
+    for(const impact of advance.events){
+      if(impact.type==='hit'){
+        $('last-shot').textContent='MISSILE '+impact.id+' IMPACT';
+        notice('TARGET HIT — THIS IS DEFINITELY HOW THE MOVIE WENT.');
+      }else{
+        $('last-shot').textContent='MISSILE '+impact.id+' EXPIRED';
+      }
+    }
   }
   session.ticks++;
   if(session.kind==='air'&&session.body.position[1]<4)pause('The aircraft has approached terrain. Landing collision is intentionally not simulated; reset the test.');
@@ -206,6 +249,14 @@ function paint(alpha=1){
     renderer.draw(scenery);
     renderer.draw(scenery.ring);
     if(mode==='chase'||mode==='external'){renderer.update(craftMesh,craftGeometry(p));renderer.draw(craftMesh);}
+    // Tracers are presentation-only; physics snapshots own the trajectories.
+    const lines=[];
+    for(const missile of session.missiles?.active??[]){
+      const tail=missile.position.map((x,i)=>x-missile.direction[i]*5);
+      lines.push(...tail,1,.55,.16,...missile.position,1,.94,.48);
+    }
+    renderer.update(scenery.missileTrails,lines);
+    if(lines.length)renderer.draw(scenery.missileTrails);
   }catch(error){unavailable=true;pause('Graphics unavailable: '+error.message);notice(error.message);return;}
   viewport.classList.toggle('cockpit',mode==='cockpit');
   const viewportSize={width:canvas.clientWidth,height:canvas.clientHeight};
@@ -228,6 +279,20 @@ function paint(alpha=1){
     $('aero').textContent=deg(air.angleOfAttack)+' / '+air.loadFactor.toFixed(2)+'g'+(air.stalled?' STALL':'');
   }else if(session.kind==='car')$('aero').textContent='RPM '+Math.round(b.rpm)+' / G '+b.gear;
   else $('aero').textContent='INERTIAL / 6DOF';
+  if(session.missiles){
+    const summary=missileSummary(session.missiles);
+    const lock=missileLock(b,{center:session.target,radius:session.targetRadius});
+    $('missile-ammo').textContent=summary.ammo+' / 4';
+    $('missile-hits').textContent=String(summary.hits);
+    $('missile-status').textContent=summary.cooldownTicks>0?'COOLDOWN '+summary.cooldownTicks+' TICKS':
+      lock.locked?'MISSILE LOCK '+Math.round(lock.distance)+' m':lock.reason.toUpperCase().replaceAll('-',' ');
+    $('missile').disabled=!running||summary.ammo===0;
+  }else{
+    $('missile-ammo').textContent='N/A';
+    $('missile-hits').textContent='0';
+    $('missile-status').textContent='MISSILES OFFLINE / ROAD';
+    $('missile').disabled=true;
+  }
   $('throttle').value=Math.round(session.throttle*100);
   $('throttle-value').textContent=Math.round(session.throttle*100)+'%';
 }
@@ -242,6 +307,7 @@ function animate(time){
 }
 $('start').onclick=start;$('pause').onclick=()=>pause();$('reset').onclick=reset;
 $('fire').onclick=shot;
+$('missile').onclick=()=>{if(running&&session?.missiles)missileRequested=true;};
 $('craft').onchange=()=>{reset();};
 $('view').onchange=()=>{mouseYaw=0;mousePitch=0;paintNeeded=true;};
 $('convergence').oninput=reloadRig;
