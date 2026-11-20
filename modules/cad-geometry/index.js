@@ -87,8 +87,8 @@ export function revolveProfile(options){
       const p0=axis(r,y,a),p1=axis(r,y,b);
       const u0=[.5+Math.cos(a)*.5,.5+Math.sin(a)*.5],
         u1=[.5+Math.cos(b)*.5,.5+Math.sin(b)*.5],uc=[.5,.5];
-      if(top)triangle(out,center,p0,p1,[uc,u0,u1]);
-      else triangle(out,center,p1,p0,[uc,u1,u0]);
+      if(top)triangle(out,center,p1,p0,[uc,u1,u0]);
+      else triangle(out,center,p0,p1,[uc,u0,u1]);
     }
   }
   return mesh(out,'lathe');
@@ -115,7 +115,13 @@ export function createCADPrimitive(options){
     radius,height,segments});
   owned.add(result);return result;
 }
-const numberText=n=>Object.is(n,-0)||n===0?'0':n.toFixed(6).replace(/\.?0+$/,'');
+const numberText=n=>{
+  // Rounding tiny negative trigonometric residuals can produce a literal
+  // "-0". JSON and the project serializer canonicalise that to +0, so emit
+  // +0 at the OBJ boundary and retain byte-stable source/asset roundtrips.
+  const value=n.toFixed(6).replace(/\.?0+$/,'');
+  return value==='-0'?'0':value;
+};
 /** Portable bounded OBJ subset directly compatible with the Asset Foundry.
  * One v/vt pair per vertex; no external files, materials, normal or JS payload.
  */
