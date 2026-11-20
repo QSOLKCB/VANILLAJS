@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // CAD-001: small, native-JS parametric surfaces for editor and renderer.
 // Adapted from the surface-of-revolution concept and triangulation of
-// DabbleCAD src/renderer/core/shapes.js (DJMcNewgent, Apache-2.0)
+// DabbleCAD src/renderer/core/shapes.js (DabbleCAD — Copyright 2026 DJMcNewgent;
+// Apache License, Version 2.0; original NOTICE preserved in docs/DABBLECAD_NOTICE.md)
 // @ 9cfd20b0a973275c7f7411afb6e7c355f8a863cc.
 // Coordinates deliberately changed from DabbleCAD Z-up millimetres to
 // VANILLAJS +Y-up metres. No THREE/Manifold/WASM or donor assets imported.

@@ -247,15 +247,3 @@ E8, E8_MUSIC, OPT, ARCADE and CorpoWars3d is pinned in
 docs/DEMOSCENE_DONOR_REVIEW.md. No donor implementation or assets are copied.
 Existing local Soundtrack, audio2d, FrameGate and renderer attribution remains.
 Imported user assets retain their declared licences and source provenance.
-
-CAD-001 parametric geometry (experimental). The radial surface-of-revolution
-and triangulation approach in modules/cad-geometry/index.js was adapted from
-DJMcNewgent/DabbleCAD, src/renderer/core/shapes.js, at Git commit
-9cfd20b0a973275c7f7411afb6e7c355f8a863cc.
-DabbleCAD — Copyright 2026 DJMcNewgent. Licensed under Apache-2.0.
-Its original NOTICE confirms version 1.0.0 was released under MIT.
-The adaptation uses original +Y-up SI-metre finite geometry output and the
-existing VANILLAJS Asset Foundry, native WebGL and OBJ validation.
-No donor Three.js, Manifold, BVH/CSG, Electron or other dependency, assets,
-fonts, shaders or game-world content were copied. Source and limits:
-docs/CAD_001.md. Apache-2.0 notice/attribution is preserved.
