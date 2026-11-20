@@ -58,7 +58,9 @@ try{
   assert.equal(after.turn,1);assert.equal(after.agent.z,12);
   await page.locator('[data-action="wait"]').click();
   after=await snap();assert.equal(after.turn,2);assert.equal(after.phase,'active');
-  await page.locator('[data-action="east"]').click();
+  // The WAIT button remains keyboard-focused after a click. A subsequent
+  // real D key must still move the operative; no canvas re-focus is required.
+  await page.keyboard.press('KeyD');
   after=await snap();assert.equal(after.turn,3);assert.equal(after.agent.x,3);
   await page.locator('#undo').click();
   after=await snap();assert.equal(after.turn,2);assert.equal(after.agent.x,2);

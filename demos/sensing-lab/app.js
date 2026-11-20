@@ -190,7 +190,10 @@ $('training-step').addEventListener('click',()=>{
 const bindings={KeyW:'north',ArrowUp:'north',KeyA:'west',ArrowLeft:'west',KeyS:'south',ArrowDown:'south',
   KeyD:'east',ArrowRight:'east',Space:'wait',KeyC:'crouch'};
 window.addEventListener('keydown',event=>{
-  if(event.target?.closest?.('input,textarea,select,button'))return;
+  // Buttons retain keyboard focus after pointer interaction. WASD/arrows must
+  // still work there, while Space/Enter must keep native button activation.
+  if(event.target?.closest?.('input,textarea,select'))return;
+  if(event.target?.closest?.('button')&&['Space','Enter'].includes(event.code))return;
   if(event.code==='KeyR'){event.preventDefault();if(!event.repeat)reset();return;}
   const mode={Digit1:'fps',Digit2:'tactical',Digit3:'sensor'}[event.code];
   if(mode){event.preventDefault();view=mode;$('view').value=view;render();return;}
