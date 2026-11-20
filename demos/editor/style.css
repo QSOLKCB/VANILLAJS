@@ -153,3 +153,23 @@ input[aria-invalid=true]{border-color:#ffb6a4}.viewport-head>span{min-width:0;ov
   border-color:#9be6c7;font-weight:800;white-space:normal}
 .cad-authoring #cad-create:hover:not(:disabled){background:#a2f7d5}
 .cad-authoring #cad-status{font-size:10px;overflow-wrap:anywhere;margin:9px 0 0}
+
+/* CAD-002: small-screen-safe, original side-profile handle authoring. */
+.cad-profile-workshop{padding:9px}
+.cad-profile-workshop #cad-profile-canvas{display:block;width:100%;height:auto;
+  border:1px solid #47727a;border-radius:4px;margin:10px 0;cursor:crosshair;
+  touch-action:none;outline-offset:2px}
+.cad-profile-workshop .cad-profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cad-profile-workshop .cad-profile-actions button{padding:7px 5px;
+  white-space:normal;font-size:10px;min-height:34px}
+.cad-profile-transform{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.cad-profile-transform label{min-width:0}
+.cad-profile-points{max-height:130px;overflow:auto;display:grid;gap:3px;
+  border:1px solid #365760;border-radius:4px;padding:4px;margin:8px 0}
+.cad-profile-ring{font:10px ui-monospace,monospace!important;white-space:normal!important;
+  text-align:left;overflow-wrap:anywhere;padding:5px!important}
+.cad-profile-ring[aria-pressed=true]{background:#416351;color:#ffe1aa;border-color:#ffda97}
+.cad-profile-workshop #cad-profile-commit{width:100%;background:#8cdec0;color:#09232b;
+  font-weight:800;border-color:#92e7c3;white-space:normal}
+.cad-profile-workshop #cad-profile-commit:hover:not(:disabled){background:#a5f1d4}
+.cad-profile-workshop #cad-profile-summary{color:#e6c38e}

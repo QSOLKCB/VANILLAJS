@@ -8,6 +8,7 @@ import {mountSceneComposition} from './scene-composition-panel.js';
 import {mountDemoscenePanel} from './demoscene-panel.js';
 import {parseExactPosition,previewQ16Position,transformExactPositionXY,snapEditorDelta,formatPositionNumber} from './authoring-math.js';
 import {SceneMeshes} from './scene-meshes.js';
+import {mountCADProfileWorkshop} from './cad-profile-workshop.js';
 import {createCADPrimitive,cadMeshOBJ} from '../../modules/cad-geometry/index.js';
 import {OptionalRenderer} from '../../modules/render-optional/index.js';
 import {graphicsControls} from '../gpu-lab/controls.js';
@@ -27,7 +28,7 @@ import {createAssetLibrary,validateAssetLibrary,addMeshAsset,addTextureAsset,
 
 const $=id=>document.getElementById(id),canvas=$('view');
 let importGeneration=0,cadGeneration=0;
-let campaignPanel=null,demoscenePanel=null,compositionPanel=null;
+let campaignPanel=null,demoscenePanel=null,compositionPanel=null,cadProfilePanel=null;
 let checksScene=null,creatorChecks=null,lastPlayedScene=null,lastSavedScene=null,lastSavedLibrary=null,lastSavedGPU=false;
 let history=makeHistory(createForgeScene()),selected='entity-3',draft=null,
   library=createAssetLibrary(),chosenAsset=null,
@@ -100,6 +101,7 @@ function syncEditor(){
   compositionPanel?.sync();
   scheduleRecovery();
   syncAssets();
+  cadProfilePanel?.sync();
   if(!selected){requestFrame();return;}
   const e=byId.get(selected);
   if(exactEntity!==e.id||exactPosition!==JSON.stringify(e.position)){readExactPosition();}
@@ -877,6 +879,47 @@ Object.defineProperty(window,'__editorDemoscene',{get:()=>demoscenePanel?.snapsh
 try{compositionPanel=mountSceneComposition($('scene-composition-workshop'),{getScene:()=>editScene(),getSelection:()=>selected,isPlaying:()=>playing,stopScene:stop});document.documentElement.dataset.compositionReady='ready';}
 catch(error){document.documentElement.dataset.compositionReady='failed';startupFailure($('scene-composition-workshop'),'Scene Composition',error);console.error('Scene Composition startup failed',error);}
 Object.defineProperty(window,'__editorComposition',{get:()=>compositionPanel?.snapshot()??null});
+// CAD-002: a visual profile panel that never executes project data and uses
+// the established OBJ parser, scene model and immutable asset-history flow.
+try{
+  cadProfilePanel=mountCADProfileWorkshop($('cad-profile-workshop'),{
+    isPlaying:()=>playing,
+    readAsset:()=>{
+      const attached=library.placements.find(p=>p.entityId===selected)?.meshId;
+      const candidate=library.assets.find(a=>a.id===attached)??activeAsset();
+      if(!candidate)throw TypeError('Select a CAD mesh or its scene entity first');
+      return candidate;
+    },
+    onCommit:async ({model,draft,name,sourceName})=>{
+      if(playing)return {accepted:false};
+      const generation=importGeneration,request=++cadGeneration,
+        scene=editScene(),previousLibrary=library;
+      const text=cadMeshOBJ(model),
+        sourceSha256=await digestSource(new TextEncoder().encode(text));
+      if(playing||generation!==importGeneration||request!==cadGeneration||
+        scene!==editScene()||previousLibrary!==library)return {accepted:false};
+      const id='entity-'+scene.nextId,
+        added=addEntity(scene,{name}),
+        nextScene=updateEntity(added,id,{position:[0,-draft.profile[0][1],0],scale:[1,1,1]});
+      const result=addMeshAsset(prunePlacements(scene,previousLibrary),{
+        name,sourceName,sourceSha256,license:'Apache-2.0',text
+      });
+      const placed=setPlacement(nextScene,result.library,id,result.id);
+      // A distinct immutable CAD entity makes ordinary scene Undo/Redo restore
+      // the previous placement without changing any existing shared asset.
+      library=placed;chosenAsset=result.id;
+      applyScene(nextScene,id);
+      inform('CAD profile variant generated · '+result.id);
+      return {accepted:true,id,assetId:result.id};
+    }
+  });
+  document.documentElement.dataset.cadProfileReady='ready';
+}catch(error){
+  document.documentElement.dataset.cadProfileReady='failed';
+  startupFailure($('cad-profile-workshop'),'CAD profile workshop',error);
+  console.error('CAD profile workshop startup failed',error);
+}
+Object.defineProperty(window,'__editorCadProfile',{get:()=>cadProfilePanel?.snapshot()??null});
 try{initGraphics();syncEditor();requestFrame();document.documentElement.dataset.editorReady='ready';inform('Editor ready.');}
 catch(error){inform('WebGL unavailable: '+error.message,true);
   document.documentElement.dataset.editorReady='unavailable';syncEditor();}
