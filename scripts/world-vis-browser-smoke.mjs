@@ -100,15 +100,16 @@ try{
   // lose-context extension is present in the pinned hosted browser.
   const supportsLoss=await page.evaluate(()=>{
     const gl=document.querySelector('#world-canvas').getContext('webgl');
-    return Boolean(gl?.getExtension('WEBGL_lose_context'));
+    // WebGL implementations can return null for getExtension() *while
+    // lost*. Retain the pre-loss extension object and restore through it.
+    window.__worldVisLossExtension=gl?.getExtension('WEBGL_lose_context')??null;
+    return Boolean(window.__worldVisLossExtension);
   });
   if(supportsLoss){
-    await page.evaluate(()=>document.querySelector('#world-canvas').
-      getContext('webgl').getExtension('WEBGL_lose_context').loseContext());
+    await page.evaluate(()=>window.__worldVisLossExtension.loseContext());
     await page.waitForFunction(()=>document.querySelector('#renderer-status').
-      textContent==='CONTEXT LOST',{timeout:10000});
-    await page.evaluate(()=>document.querySelector('#world-canvas').
-      getContext('webgl').getExtension('WEBGL_lose_context').restoreContext());
+      textContent==='CONTEXT LOST',undefined,{timeout:10000});
+    await page.evaluate(()=>window.__worldVisLossExtension.restoreContext());
     await page.waitForFunction(()=>__worldVis.error===null&&
       document.querySelector('#renderer-status').textContent.startsWith('WEBGL1'),
       {timeout:20000});
