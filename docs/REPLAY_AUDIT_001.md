@@ -21,7 +21,7 @@
 
 **Integrity is not provenance attestation.** SHA-256 is a deterministic comparator, not a signature or proof that claimed source bytes, external licensing, runtime, hardware or review were authentic. A malicious actor can rehash forged records; verification relies on the independent trusted engine and pinned checkout.
 
-`auditReplayPresentation(plan,[30,60,144])` reruns the authoritative command tape separately for three visual sample rates. Render/sample cadence never enters the physics step and may yield different presentation sample counts, but accepted ticks, event trace and final-state hash must agree. No native physical-GPU FPS claim is made.
+`auditReplayPresentation(plan,[30,60,144])` reruns the authoritative command tape separately for three visual sample rates. Render/sample cadence never enters the physics step and may yield different presentation sample counts, but accepted ticks, event trace and final-state hash must agree. The optional CI-only workload separately measures repeated full-tape host CPU execution and outputs source-identified minimum/median/maximum diagnostic timings; these timings are machine-specific, not native physical-GPU FPS claims.
 
 ## Evidence Chamber and quality gates
 
@@ -29,6 +29,7 @@ The original [Evidence Chamber](../demos/replay-audit-lab/index.html) offers FPS
 
 ~~~sh
 node --test tests/replay-audit.test.js tests/integer-replay.test.js tests/combat3d.test.js tests/trajectory.test.js tests/vehicle3d.test.js
+node scripts/replay-audit-workload.mjs --check
 node scripts/check.js
 node scripts/build.js
 node scripts/verify-offline.js

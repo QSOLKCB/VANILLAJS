@@ -24,6 +24,8 @@ jobs:
           node scripts/check.js
           node scripts/build.js
           node scripts/verify-offline.js
+      - name: Reproduce complete source-bound playthrough receipts and hosted CPU observations
+        run: node scripts/replay-audit-workload.mjs --check
       - name: Set isolated pinned Playwright browser root
         run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
       - name: Restore pinned browser toolchain
@@ -52,5 +54,6 @@ jobs:
           path: |
             browser-artifacts/replay-audit-001.png
             browser-artifacts/replay-audit-001.json
+            browser-artifacts/replay-audit-workload.json
             dist/manifest.json
           if-no-files-found: warn
