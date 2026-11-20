@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Adapted from QSOLKCB/4XGAMES PR #2, commit 030859385ac8929e066702ef8af0518663480653.
-// Uses the caller's isolated Chromium instance; never launches a desktop.
+// Uses a dedicated Chromium process with the trusted caller's exact launch
+// configuration (owner Chrome/GPU vs pinned hosted-CI SwiftShader).
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -15,12 +16,18 @@ import {decodeSaveEnvelope} from '../demos/4x-game-lab/voidward/js/save-codec.js
  * Chromium process used by preceding WebGL, editor and 4X suites. Both online
  * and offline phases still exercise the same real worker and 12s cold boot gate.
  */
+// Hosted CI is intentionally headless with software rendering. Owner-run
+// capture explicitly supplies its own trusted launchOptions instead, preserving
+// headed Chrome, its executable, hardware renderer and all launch flags.
+export function voidwardLaunchOptions(options={}){
+  return options.launchOptions??{
+    ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?
+      {executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{}),
+    headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']
+  };
+}
 export async function verifyVoidwardLab(callerBrowser, base, options={}) {
-const browser=await callerBrowser.browserType().launch({
-  ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?
-    {executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{}),
-  headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']
-});
+const browser=await callerBrowser.browserType().launch(voidwardLaunchOptions(options));
 try{
 const root=path.resolve(import.meta.dirname,'..');
 const stage=path.join(root,'dist/demos/4x-game-lab/voidward');
