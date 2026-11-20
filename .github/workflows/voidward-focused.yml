@@ -1,0 +1,57 @@
+name: VOIDWARD focused packaged offline boot
+on:
+  pull_request:
+    paths:
+      - scripts/browser-voidward.js
+      - scripts/service-worker.template.js
+      - scripts/voidward-focused-ci.mjs
+      - .github/workflows/voidward-focused.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: voidward-focused-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Verify source and immutable offline package
+        run: |
+          node scripts/check.js
+          node scripts/build.js
+          node scripts/verify-offline.js
+      - name: Isolate Playwright browser tooling
+        run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
+      - name: Restore pinned Playwright toolchain
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        id: tooling
+        with:
+          path: ${{ runner.temp }}/flight-browser
+          key: flight-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24.04-node22-playwright1.64.0-only-shell-v1
+      - name: Install pinned browser only on cache miss
+        if: steps.tooling.outputs.cache-hit != 'true'
+        run: |
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --prefix "$RUNNER_TEMP/flight-browser" \
+            --ignore-scripts --no-save --package-lock=false --no-audit --no-fund playwright@1.64.0
+          node "$RUNNER_TEMP/flight-browser/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Verify actual Chromium toolchain
+        run: node scripts/flight-browser-preflight.mjs
+      - name: Run complete VOIDWARD packaged game with real offline reload
+        env:
+          NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
+        run: node scripts/voidward-focused-ci.mjs
+      - name: Preserve offline diagnostics and failure screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: voidward-focused-${{ github.run_id }}
+          path: |
+            browser-artifacts/voidward-focused/
+            dist/manifest.json
+          if-no-files-found: warn
