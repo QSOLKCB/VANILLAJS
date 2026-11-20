@@ -173,3 +173,22 @@ input[aria-invalid=true]{border-color:#ffb6a4}.viewport-head>span{min-width:0;ov
   font-weight:800;border-color:#92e7c3;white-space:normal}
 .cad-profile-workshop #cad-profile-commit:hover:not(:disabled){background:#a5f1d4}
 .cad-profile-workshop #cad-profile-summary{color:#e6c38e}
+
+/* CAD-003 Geometry Forge — bounded original native Canvas2D footprint viewer. */
+.geometry-forge-panel{border-color:#5a805e;background:linear-gradient(150deg,#203e40,#101f2e)}
+.geometry-forge-panel #forge-footprint-canvas{width:100%;height:auto;display:block;
+  border:1px solid #4a747b;border-radius:5px;margin:10px 0}
+.geometry-forge-panel .forge-dimensions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.geometry-forge-panel .forge-dimensions label{min-width:0}
+.geometry-forge-panel input:not([type=checkbox]),.geometry-forge-panel select{width:100%}
+.geometry-forge-panel .forge-check{display:flex;gap:7px;align-items:center}
+.geometry-forge-panel .forge-check input{width:auto;margin:0}
+.geometry-forge-panel textarea{display:block;width:100%;max-width:100%;resize:vertical;
+  background:#0e202b;color:#e7f5e8;border:1px solid #48756b;border-radius:4px;padding:7px;
+  font:11px/1.4 ui-monospace,monospace}
+.geometry-forge-panel button{white-space:normal;width:100%;margin:4px 0;font-size:11px}
+.geometry-forge-panel #forge-commit{color:#102a21;background:#a3e1a2;
+  border-color:#c0e6ab;font-weight:800}
+.geometry-forge-panel #forge-inspect{background:#274c57}
+.geometry-forge-panel [data-status=error]{color:#ffb7ad}
+.geometry-forge-panel [data-status=ready]{color:#c5e9b7}
