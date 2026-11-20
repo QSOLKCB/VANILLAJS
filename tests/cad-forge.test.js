@@ -73,6 +73,21 @@ test('strict XZ convexity, winding, positive volume and bevel budget fail closed
   assert.throws(()=>createForgeExtrusion({footprint:ccw,height:2,
     bevel:0,extra:()=>{throw Error('executed')}}));
 });
+test('reject a self-intersecting pentagram despite locally positive turns',()=>{
+  // Codex P2 reproduction: a 5/2 star is locally left-turning but not a
+  // simple convex face. Neither triangulation nor volume checks prove it safe.
+  const star=Array.from({length:5},(_,i)=>[
+    Math.cos(4*Math.PI*i/5),Math.sin(4*Math.PI*i/5)
+  ]);
+  assert.throws(()=>createForgeExtrusion({footprint:star,height:2,bevel:0}),
+    /simple and globally strictly convex/);
+  assert.throws(()=>createForgeExtrusion({footprint:star,height:2,bevel:.1}),
+    /simple and globally strictly convex/);
+  const bowtie=[[-1,-1],[1,1],[-1,1],[1,-1]];
+  assert.throws(()=>createForgeExtrusion({footprint:bowtie,height:2,bevel:0}));
+  const valid=[[-1,-1],[1,-1],[1,1],[-1,1]];
+  assert.equal(inspectForgeTriangles(createForgeExtrusion({footprint:valid,height:2,bevel:.2})).closed,true);
+});
 test('JSON/OBJ boundary, source provenance and native XYZ/RGB are deterministic',()=>{
   for(const kind of ['wall','platform','tower','wedge'])for(const bevel of [0,.15]){
     const a=createForgePreset({kind,width:2.5,depth:2,height:3,bevel}),

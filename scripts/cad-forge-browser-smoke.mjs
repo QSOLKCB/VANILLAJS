@@ -150,6 +150,19 @@ try{
   await page.locator('#forge-commit').click();
   assert.equal(Number(await page.locator('#count').textContent()),base+8);
   assert.equal(await page.locator('#asset-count').textContent(),'8 assets');
+  // Codex P2 exact 5/2 star: local turns all positive, but it is NOT a
+  // globally convex footprint and must be rejected before any asset commit.
+  await page.locator('#forge-outline').fill(
+    Array.from({length:5},(_,i)=>{
+      const a=4*Math.PI*i/5;
+      return Math.cos(a).toFixed(8)+','+Math.sin(a).toFixed(8);
+    }).join('; ')
+  );
+  assert.equal((await snap()).valid,false);
+  assert.match(await page.locator('#forge-status').textContent(),/globally strictly convex/);
+  await page.locator('#forge-commit').click();
+  assert.equal(Number(await page.locator('#count').textContent()),base+8);
+  assert.equal(await page.locator('#asset-count').textContent(),'8 assets');
   assert.deepEqual(errors,[],'zero exceptions, HTTP failures or external requests');
   await mkdir(join(root,'browser-artifacts'),{recursive:true});
   await writeFile(join(root,'browser-artifacts/cad-003-forge.png'),preview);
@@ -162,7 +175,7 @@ try{
       'real WebGL scene mutation on Generate','selected mesh topology inspection',
       'custom numeric convex polygon and second mesh','Apache-2.0 SHA-256 sources',
       'project save/reopen','scene undo/redo','six-structure compound one-undo atomicity',
-      'compound project source provenance and reimport','concave input fail-closed',
+      'compound project source provenance and reimport','concave and self-intersecting star input fail-closed',
       'zero browser exceptions and external network']};
   await writeFile(join(root,'browser-artifacts/cad-003-acceptance.json'),
     JSON.stringify(receipt,null,2)+'\n');
