@@ -17,16 +17,22 @@ test('visible physical boresight acquires lock; occlusion rejects with no shot',
  assert.equal(launchTrajectory(w,{...req,direction:[0,0,1]}).reason,'out-of-cone');
 });
 test('moving target uses swept actor contact and reports classification without damage',()=>{
- const w=world(),s=launchTrajectory(w,request()).state,final=advance(w,s,240);
+ const w=createTrajectoryWorld({actors:[actor('pilot',0),actor('bogey',-60,[8,0,0])],walls:[]});
+ const s=launchTrajectory(w,request()).state,final=advance(w,s,240);
  assert.equal(final.status,'hit');assert.equal(final.event.kind,'actor');
  assert.equal(final.event.id,'bogey');assert.ok(final.event.fraction>=0&&final.event.fraction<=1);
  assert.equal(stepTrajectory(w,final),final);
 });
 test('wall wins collision when it lies ahead of actor; same-time classification safe',()=>{
- const w=world([{id:'wall',box:{min:[-3,-3,-25],max:[3,3,-24]}}]);
- // Physical launch must remain valid: wall occludes only after the initial lock,
- // so use a wall outside the initial sight ray then test an actor on an unobstructed world instead.
- assert.equal(launchTrajectory(w,request()).accepted,false);
+ const w=world([{id:'wall',box:{min:[.16,-3,-25],max:[3,3,-24]}}]);
+ // The centre ray misses by .16 m; swept missile halfSize .15 m nearly touches.
+ // Increase the shot radius to .2 m: contact must be physical before the actor.
+ const r={...request(),halfSize:.2};
+ const launched=launchTrajectory(w,r);
+ assert.equal(launched.accepted,true);
+ const final=advance(w,launched.state,240);
+ assert.equal(final.status,'hit');assert.equal(final.event.kind,'wall');
+ assert.equal(final.event.id,'wall');
 });
 test('split-step equality, replay and source immutability',()=>{
  const w=world(),req=request(),before=structuredClone(req);

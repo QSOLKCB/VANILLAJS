@@ -112,7 +112,8 @@ export function stepTrajectory(world,source,ticks=1){
     const targetPosition=at(target,t);
     const lead=leadIntercept({shooterPosition:s.position,targetPosition,
       targetVelocity:target.velocity,projectileSpeed:s.speed,maxTime:20});
-    const desired=unit(sub(lead?lead.interceptPoint:targetPosition,s.position));
+    const desiredVector=sub(lead?lead.interceptPoint:targetPosition,s.position);
+    const desired=mag(desiredVector)>1e-12?unit(desiredVector):s.direction;
     const heading=turn(s.direction,desired,s.turnRate*TRAJECTORY_TICK);
     const delta=scale(heading,s.speed*TRAJECTORY_TICK);
     const wall=castSegment(s.position,delta,w.walls,{halfSize:s.halfSize});
