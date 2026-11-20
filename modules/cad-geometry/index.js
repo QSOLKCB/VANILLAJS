@@ -163,17 +163,17 @@ export function cadProfileDraft(options){
   const profile=Object.freeze(dense(options.profile,2,CAD_LIMITS.profiles,'profile').map(pair));
   if(profile.at(-1)[1]-profile[0][1]>CAD_LIMITS.height)
     throw RangeError('profile height exceeds 10 metre authoring limit');
-  // The strict OBJ writer rounds each authored elevation to six decimal
-  // places. An ordered floating-point sketch can otherwise collapse two
-  // rings onto the same Y plane on export, creating degenerate triangles
-  // and a mesh that CAD-002 cannot subsequently recover.
-  // Use the same numberText() boundary as cadMeshOBJ, including signed zero.
+  // Keep the established CAD-001 domain/ordering validator first, including
+  // its specific rejection for non-increasing authored elevations.
+  const model=revolveProfile({profile,segments:options.segments});
+  // The strict OBJ writer then rounds every elevation to six decimal places.
+  // Distinct accepted Y values can collapse at that export boundary, creating
+  // degenerate triangles and preventing later profile recovery.
+  // Mirror cadMeshOBJ's numberText(), including canonical signed zero.
   for(let i=1;i<profile.length;i++){
     if(Number(numberText(profile[i-1][1]))>=Number(numberText(profile[i][1])))
       throw RangeError('adjacent CAD ring elevations collapse at six-decimal OBJ precision');
   }
-  // The established CAD-001 generator remains the geometry authority.
-  const model=revolveProfile({profile,segments:options.segments});
   const out=Object.freeze({profile,segments:options.segments,
     triangles:model.triangleCount,vertices:model.vertexCount});
   drafts.add(out);
