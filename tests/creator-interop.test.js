@@ -39,6 +39,7 @@ test('bad asset hashes, version, malformed package and executable data reject at
  await assert.rejects(openCreatorPackage(JSON.stringify(bad)),/integrity mismatch/);
  assert.throws(()=>createCreatorProject({...seed,version:99}),/unsupported/);
  assert.throws(()=>createCreatorProject({...seed,assets:[{...seed.assets[0],vertices:[[0,0,0],[1,0,0],[0,1,2]]}]}),/2d asset/);
+ assert.throws(()=>createCreatorProject({...seed,assets:[{...seed.assets[0],vertices:[[0,0,0],[1,0,0],[2,0,0]]}]}),/nondegenerate/);
  assert.throws(()=>createCreatorProject({...seed,placements:[{...seed.placements[0],assetId:'missing'}]}),/unresolved/);
  assert.throws(()=>createCreatorProject({...seed,assets:[{...seed.assets[0],get vertices(){throw Error('unsafe');}}]}),/non-executable/);
  assert.throws(()=>createCreatorProject({...seed,zones:[{...seed.zones[0],max:[3,2,-1]}]}),/positive/);

@@ -46,6 +46,9 @@ function asset(value,ids){
   const triangles=list(a.triangles,1,CREATOR_LIMITS.triangles,'triangles').map(t=>{
     const ix=list(t,3,3,'triangle').map(n=>number(n,0,vertices.length-1,'vertex index'));
     if(ix.some(n=>!Number.isSafeInteger(n))||new Set(ix).size!==3)throw TypeError('triangle requires three distinct integer indices');
+    const [a,b,c]=ix.map(i=>vertices[i]),u=b.map((v,i)=>v-a[i]),v=c.map((x,i)=>x-a[i]);
+    const area=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+    if(Math.hypot(...area)<=1e-12)throw RangeError('triangle must have nondegenerate area');
     return ix;
   });
   return {id,dimension:a.dimension,vertices,triangles,origin:a.origin,license:a.license,sourceRef};
