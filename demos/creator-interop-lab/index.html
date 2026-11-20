@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#091c24"><title>CREATOR-INTEROP-001 — World Foundry</title>
+<style>
+:root{color-scheme:dark}body{font:16px system-ui;background:#081b26;color:#e3f6fc;margin:0}
+header,main{max-width:1100px;padding:16px 24px;margin:auto}a{color:#83dcd0}
+h1{font-size:clamp(1.7rem,4vw,3rem);margin-bottom:5px}p{max-width:70ch;color:#b6cfd5}
+button,.file{background:#153646;color:#dcfcf7;border:1px solid #4c9b9d;border-radius:5px;margin:5px 4px;padding:11px;cursor:pointer}
+button[aria-pressed=true]{background:#1a7777;outline:2px solid #b6efc8}
+.grid{display:grid;grid-template-columns:minmax(340px,2fr) minmax(270px,1fr);gap:20px}
+canvas{width:100%;background:#102637;border:1px solid #467889;cursor:crosshair}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:15px;background:#112e3b;min-height:110px}
+small{color:#9cbec7}@media(max-width:800px){.grid{grid-template-columns:1fr}}
+</style></head><body><header><a href="../../index.html">VANILLAJS</a> / CREATOR-INTEROP-001 <a href="../../docs/CREATOR_INTEROP_001.md">Contract</a></header>
+<main><h1>World Foundry</h1><p>Build original bounded content, create tactical placements and real sight-blocking geometry, then export/import a SHA-256-sealed offline package. Click a tool, then a grid cell. Invalid edits do not commit.</p>
+<div id="toolbar" aria-label="World tools"><button data-tool="prop" aria-pressed="true">Place mesh</button><button data-tool="target">Place target</button><button data-tool="vehicle">Place vehicle</button><button data-tool="wall">Place wall / cover</button><button data-tool="alpha">Add ally</button><button data-tool="bravo">Add defender</button></div>
+<button id="export">Export offline JSON</button>
+<label class="file">Import sealed JSON <input id="import" type="file" accept=".json,application/json"></label>
+<button id="reset">Reset workshop</button>
+<div class="grid"><canvas id="field" width="720" height="540" aria-label="Interactive 12 by 10 world grid"></canvas><div><h2>World authority</h2><pre id="receipt" role="status"></pre><small>Targets use SENSE-001; squad scenario uses TACTICS-001. Geometry and integrity receipts are data only. No scripts are executed from imported files.</small></div></div></main>
+<script type="module" src="./app.js"></script></body></html>
