@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b131d"><title>SENSE-001 — Shadowline Tactics · VANILLAJS</title>
+<link rel="stylesheet" href="./style.css"></head>
+<body>
+<header class="sitehead"><a href="../../index.html">VANILLA<span>JS</span> <small>QSOL-IMC</small></a>
+<span>SENSE-001 / ORIGINAL TACTICAL GAME</span>
+<a href="../../docs/SENSING_API.md">SOURCE &amp; CONTRACT</a></header>
+<main>
+<section class="intro"><div><p class="kicker">VISIBILITY / COVER / PATROLS / FIXED TURNS</p><h1>SHADOWLINE <i>TACTICS</i></h1><p>One operative. Three sentries. Retrieve the data manifest and reach the eastern extraction point. Move only when their eyes are elsewhere: walls and crates block actual 3D sight rays, not just coloured vision cones.</p></div>
+<div class="pillars"><span><strong>01</strong> GROUND / FPS</span><span><strong>02</strong> TACTICAL OVERHEAD</span><span><strong>03</strong> AIR-SPACE SENSOR</span></div></section>
+<div class="workbench">
+<section class="mission" aria-label="Live mission canvas">
+<div class="displayhead"><span><i class="live"></i><b id="phase">ACTIVE</b></span><span>TURN <b id="turn">00</b> / 80</span><span>INTEL <b id="intel">NOT ACQUIRED</b></span></div>
+<canvas id="field" width="1056" height="720" tabindex="0" role="img" aria-label="Interactive original tactical grid with moving patrols, cover and a sensor map. Use WASD or the on-screen turn controls."></canvas>
+<div class="displayfoot"><span id="tactical-status" role="status" aria-live="polite">Find a route past the security patrols.</span><span id="line-of-sight">SENSOR READY</span></div>
+</section>
+<aside class="control" aria-label="Tactical controls and sensor evidence">
+<h2>OPERATION DESK</h2>
+<label class="fieldlabel" for="view">Observation camera</label>
+<select id="view"><option value="tactical">02 — Tactical overhead (main game)</option><option value="fps">01 — Grounded first person</option><option value="sensor">03 — Air / space sensor plot</option></select>
+<p class="hint">The camera changes only presentation; guard vision, movement and detection stay authoritative.</p>
+<div class="commands" aria-label="Turn actions">
+<button data-action="north" aria-label="Move north">▲<small>W / ↑</small></button>
+<button data-action="west" aria-label="Move west">◀<small>A / ←</small></button>
+<button data-action="wait" aria-label="Wait one turn">WAIT<small>SPACE</small></button>
+<button data-action="east" aria-label="Move east">▶<small>D / →</small></button>
+<button data-action="south" aria-label="Move south">▼<small>S / ↓</small></button>
+<button id="crouch" data-action="crouch">CROUCH<small>C</small></button>
+</div>
+<div class="actions"><button id="undo">Undo turn</button><button id="reset">Reset mission</button><button id="training-step">Next training move</button></div>
+<p class="hint">Each accepted command advances one turn and all patrols. A blocked movement leaves the turn unchanged. Training moves follow a real safe route—no teleportation or scripted invulnerability.</p>
+<h3>THREAT PERCEPTION</h3>
+<div id="threats" class="threats" aria-live="polite"></div>
+<h3>OPERATIVE REPORT</h3>
+<dl class="report"><div><dt>STANCE</dt><dd id="stance">STANDING</dd></div><div><dt>POSITION</dt><dd id="position">02 / 13</dd></div><div><dt>VISIBLE GUARDS</dt><dd id="known">0 / 3</dd></div><div><dt>DETECTED</dt><dd id="detected">NO</dd></div></dl>
+</aside></div>
+<footer>Original geometry · Apache-2.0 · Reuses VANILLAJS collision + immutable AABB index · No external runtime assets · The reference route is deterministic.</footer>
+</main>
+<script type="module" src="./app.js"></script>
+</body></html>

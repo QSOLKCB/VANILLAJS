@@ -664,6 +664,17 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Bounded SI arcade lift, drag, stall and thrust integration over existing 6DOF rigid-body flight physics"
+    },
+    "sensing": {
+      "entry": "modules/sensing/index.js",
+      "depends": [
+        "collision",
+        "geometry"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/sensing-lab/index.html",
+      "description": "Immutable bounded static-AABB world perception: exact closed LOS occlusion, FOV/range, owned deterministic target ordering, indexed/serial parity"
     }
   },
   "recipes": {

@@ -25,6 +25,8 @@ working scene, change one thing, test it, and keep the files you create.
 
 **Proposed next-engine roadmap:** [OSS-GAME-REUSE-001 — source-pinned eight-collection audit and VANILLAJS milestones](docs/OSS_GAME_REUSE_2026_ROADMAP.md). It prioritises shared visibility/perception, guided combat integration and retained-world LOD, with explicit code-vs-asset licensing gates. No third-party code has been imported.
 
+**SENSE-001 implementation candidate:** [Shadowline Tactics](demos/sensing-lab/index.html) is an original turn-based infiltration game powered by a [pure visibility/perception API](docs/SENSING_API.md). Static AABB cover, immutable guard detection, fixed turns, a 38-step real-command training route and grounded/FPS/radar views share one authoritative world. No external runtime code or assets imported.
+
 ## Welcome to the foundry
 
 **VANILLAJS = engine, physics, Game Labs, mods, tools and education.**
