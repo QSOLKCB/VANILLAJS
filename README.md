@@ -15,9 +15,11 @@ working scene, change one thing, test it, and keep the files you create.
 [Interactive Tutorial Lab](demos/tutorial-lab/index.html) ·
 [Build with AI](#build-with-an-ai-agent) · [Modules](#modules)
 
-**Under review:** [CHIP-AUDIO-001 — SID-style ADSR × Paula mixer](docs/CHIP_AUDIO_API.md) is an opt-in, deterministic four-channel 8-bit PCM stereo synthesizer and [offline listening lab](demos/chip-audio-lab/index.html). No existing sound module or game is modified.
+**Merged into main:** [CHIP-AUDIO-001 — SID-style ADSR × Paula mixer](docs/CHIP_AUDIO_API.md) is an opt-in, deterministic four-channel 8-bit PCM stereo synthesizer and [offline listening lab](demos/chip-audio-lab/index.html). No existing sound module or game is modified.
 
-**Under upstream review:** [VANILLAJS-25D-001](docs/PROJECTION25D_API.md) provides experimental, opt-in pure projection geometry, an [offline 2.5D demonstration](demos/projection25d-lab/index.html) and a bounded authoring-only OBJ conversion tool. This does not alter existing simulation or HORIZON rendering.
+**Merged into main:** [VANILLAJS-25D-001](docs/PROJECTION25D_API.md) provides experimental, opt-in pure projection geometry, an [offline 2.5D demonstration](demos/projection25d-lab/index.html) and a bounded authoring-only OBJ conversion tool. This does not alter existing simulation or HORIZON rendering.
+
+**New experimental review candidate:** [COCKPIT-001 — Cockpit & Physics Lab](docs/COCKPIT_PHYSICS_001.md) pairs pure camera/sight validation with existing 6DOF flight and four-wheel vehicle physics plus a bounded arcade airframe. [Try the original Spitfire-inspired prop fighter, spacecraft and car demo](demos/cockpit-physics-lab/index.html). No existing physics or game rules are replaced.
 
 ## Welcome to the foundry
 

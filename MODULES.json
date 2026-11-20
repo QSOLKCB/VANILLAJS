@@ -645,6 +645,25 @@
       "environment": "pure-js",
       "status": "experimental",
       "description": "Owned oblique X/Z projection, visual-only height extrusions and deterministic bounded painter order"
+    },
+    "cockpit-rig": {
+      "entry": "modules/cockpit-rig/index.js",
+      "depends": [
+        "math"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Pure presentation camera modes, derived vehicle instruments, physical convergent gun rays and screen-space sight validation"
+    },
+    "airframe": {
+      "entry": "modules/airframe/index.js",
+      "depends": [
+        "math",
+        "flight"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded SI arcade lift, drag, stall and thrust integration over existing 6DOF rigid-body flight physics"
     }
   },
   "recipes": {
