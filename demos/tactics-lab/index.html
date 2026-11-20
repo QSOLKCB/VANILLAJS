@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1520"><meta name="description" content="Tactical squad command using real line of sight, cover and deterministic orders.">
+<title>TACTICS-001 — Squadline: Quiet Relay · VANILLAJS</title><link rel="stylesheet" href="./style.css"></head>
+<body><header class="sitehead"><a href="../../index.html">VANILLA<span>JS</span> <small>QSOL–IMC</small></a>
+<span>TACTICS-001 / INDEPENDENT SQUAD INTELLIGENCE</span><a href="../../docs/TACTICS_API.md">SOURCE CONTRACT</a></header>
+<main><section class="intro"><p class="kicker">FINITE ORDERS / REAL SIGHT RAYS / BOUNDED COVER SEARCH</p>
+<h1>SQUADLINE <i>QUIET RELAY</i></h1>
+<p>Lead three operatives past independently deciding sentries. Order each unit to hold, advance, suppress a <em>visible</em> contact, or retreat behind genuine cover. Secure the relay for two turns. There is no invisible targeting and no simulated weapon damage.</p>
+</section>
+<div class="workbench"><section class="battlefield">
+<div class="displayhead"><span>OPERATION QUIET RELAY</span><span>TURN <strong id="turn">00</strong> / 64</span><span id="phase">ACTIVE</span></div>
+<canvas id="field" width="1100" height="760" tabindex="0" role="img" aria-label="Tactical grid. Click an ally to select, an open cell to set a move destination, or an enemy to target suppression."></canvas>
+<div class="displayfoot"><span id="status" role="status" aria-live="polite">Select an operative, queue orders, then execute one turn.</span><span id="relay">RELAY 0 / 2</span></div>
+</section>
+<aside class="desk" aria-label="Squad command and intelligence console">
+<h2>THE OPERATION DESK</h2>
+<label>Presentation (never affects sight)<select id="view"><option value="tactical">01 — Tactical command map</option><option value="intel">02 — Line-of-sight intelligence</option><option value="cover">03 — Physical cover candidates</option></select></label>
+<label>Operative<select id="unit"></select></label>
+<label>Order<select id="action"><option value="move">MOVE — one pathfinding step</option><option value="hold">HOLD — wait one turn</option><option value="suppress">SUPPRESS — visible opponent only</option><option value="retreat">RETREAT — verified AABB cover</option></select></label>
+<div class="coordinate"><label>Destination X<input id="target-x" type="number" min="0" max="25" step="1" value="13"></label>
+<label>Destination Z<input id="target-z" type="number" min="0" max="17" step="1" value="3"></label></div>
+<label>Suppress opposing unit<select id="target-unit"></select></label>
+<div class="buttons"><button id="queue">Queue order</button><button id="suggest">Suggest squad orders</button></div>
+<button id="execute" class="primary">EXECUTE SQUAD TURN</button>
+<div class="buttons"><button id="undo">Undo turn</button><button id="replay">Verify replay</button><button id="reset">Reset</button></div>
+<p class="hint">You can queue one order per allied unit. The system fills omitted units with HOLD. Every accepted turn advances the opposing squad using the same SENSE-001 rays and bounded navigation. Invalid orders do not advance time.</p>
+<h3>ORDERS READY</h3><div id="queued" class="entries"></div>
+<h3>SELECTED OPERATIVE INTELLIGENCE</h3><div id="intel" class="entries"></div>
+<h3>VERIFIED COVER CHOICES</h3><div id="cover" class="entries"></div>
+<h3>OPPOSING INTENT (CURRENT BOARD)</h3><div id="opposing" class="entries"></div>
+<h3>TURN EVENTS</h3><div id="events" class="entries"></div>
+</aside></div>
+<footer>Original finite scenario · SENSE-001 LOS + NavigationGrid/A* · Apache-2.0 · No external runtime assets · No fictitious damage · Camera does not own perception.</footer>
+</main><script type="module" src="./app.js"></script></body></html>
