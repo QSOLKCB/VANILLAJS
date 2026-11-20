@@ -140,6 +140,7 @@ try{
   assert.match(await page.locator('#cad-profile-status').textContent(),/height must increase/);
   // Exact OBJ precision boundary: a float-distinct ring at +4e-7 of its
   // predecessor must be rejected before an asset is generated.
+  await page.locator('#cad-profile-snap').selectOption('0'); // Free, no 0.05m coarsening
   await page.locator('#cad-profile-y').fill(String(saved.profile[1][1]+.0000004));
   await page.locator('#cad-profile-y').press('Tab');
   assert.deepEqual((await snap()).profile,saved.profile);
