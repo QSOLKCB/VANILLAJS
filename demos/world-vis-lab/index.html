@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b141c"><title>WORLD-VIS-001 — The Retained World · VANILLAJS</title>
+<link rel="stylesheet" href="./style.css"></head>
+<body><header class="masthead"><a href="../../index.html">VANILLA<span>JS</span></a><span>QSOL–IMC / WORLD-VIS-001</span><a href="../../docs/WORLD_VIS_001.md">SOURCE CONTRACT</a></header>
+<main><section class="hero"><p class="eyebrow">RETAINED GEOMETRY / CAMERA VISIBILITY / CONSERVATIVE LOD</p>
+<h1>The Retained <i>World</i></h1><p>One immutable HORIZON scenic world. Three cameras. Presentation-only frustum selection and
+bounded retained GPU meshes. Turn culling on and off to inspect real draw work—without changing a single road,
+collider or replay source.</p></section>
+<div class="workspace"><section class="screen">
+<div class="screenhead"><strong id="view-caption">COAST OVERLOOK</strong><span id="renderer-status">PACKAGED WEBGL1</span></div>
+<canvas id="world-canvas" width="1000" height="625" tabindex="0" role="img"
+ aria-label="Real WebGL rendering of the original HORIZON coastal world under camera frustum and mesh LOD control."></canvas>
+<div class="screenfoot"><span id="status" role="status" aria-live="polite">Preparing native scenic geometry…</span><span id="sample">STATIC AUTHORITY</span></div>
+</section><aside class="desk"><h2>VISIBILITY CONSOLE</h2>
+<label>Viewpoint<select id="camera"><option value="overlook">01 — Coast overlook</option><option value="road">02 — Roadside</option>
+<option value="ridge">03 — Ridge</option></select></label>
+<label class="checkbox"><input id="culling" type="checkbox" checked> Conservative frustum culling</label>
+<label>Mesh fidelity<select id="lod"><option value="auto">Auto — distance-based LOD</option>
+<option value="high">Full — all source triangles</option><option value="low">Coarse — original triangle subset</option></select></label>
+<label>LOD transition <span id="lod-value">120 m</span><input id="lod-distance" type="range" min="20" max="400" step="10" value="120"></label>
+<div class="buttons"><button id="refresh">Refresh view</button><button id="reset-cache">Recreate retained meshes</button></div>
+<p class="subnote">A coarse mesh uses a stable subset of complete original triangles. It is a visual approximation,
+not an alternate collision or suspension surface. The default is source-faithful nearby and coarse at distance.</p>
+<h3>RENDER TELEMETRY</h3>
+<dl class="metrics">
+<div><dt>Original source batches</dt><dd id="source-batches">—</dd></div>
+<div><dt>Camera-visible draws</dt><dd id="visible-draws">—</dd></div>
+<div><dt>Rejected frustum batches</dt><dd id="culled">—</dd></div>
+<div><dt>Presented / original vertices</dt><dd id="vertices">—</dd></div>
+<div><dt>Resident GPU mesh bytes</dt><dd id="resident">—</dd></div>
+<div><dt>Retained uploads / deletes</dt><dd id="uploads">—</dd></div>
+<div><dt>Draw calls this frame</dt><dd id="draws">—</dd></div>
+<div><dt>Original road sample at 40 m</dt><dd id="road-source">—</dd></div>
+</dl>
+<h3>INDEPENDENT CAMERA QUERIES</h3><div id="comparison" class="comparison" aria-label="Visibility from three cameras"></div>
+<p class="subnote">No runtime network requests or third-party assets. Hosted Chromium/SwiftShader checks correctness;
+native RTX p50/p95 performance requires paired local hardware evidence.</p>
+</aside></div><footer>VANILLAJS / ENGINE REUSE ROADMAP P3 · STATIC WORLD RETAINED · PHYSICS UNCHANGED · APACHE-2.0</footer>
+</main><script type="module" src="./app.js"></script></body></html>

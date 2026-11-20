@@ -1,0 +1,63 @@
+name: WORLD-VIS-001 packaged HORIZON Chromium
+on:
+  # Deliberately unfiltered: changes to shared input, rendering, physics,
+  # maths, packaging or browser tooling must rerun CAD editor acceptance.
+  pull_request: {}
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: world-vis-browser-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Verify attributed CAD geometry and editor asset contracts
+        run: |
+          node --test tests/world-vis.test.js tests/geometry-layer2.test.js tests/horizon-visibility.test.js tests/render-lit.test.js
+      - name: Build and verify complete offline browser package
+        run: |
+          node scripts/check.js
+          node scripts/build.js
+          node scripts/verify-offline.js
+      - name: Use isolated pinned Playwright browser root
+        run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
+      - name: Restore shared pinned hosted browser tooling
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        id: tooling
+        with:
+          path: ${{ runner.temp }}/flight-browser
+          key: flight-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24.04-node22-playwright1.64.0-only-shell-v1
+      - name: Install isolated pinned Playwright only on cache miss
+        if: steps.tooling.outputs.cache-hit != 'true'
+        run: |
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install \
+            --prefix "$RUNNER_TEMP/flight-browser" \
+            --ignore-scripts --no-save --package-lock=false --no-audit --no-fund \
+            playwright@1.64.0
+          node "$RUNNER_TEMP/flight-browser/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Verify exact hosted browser toolchain
+        run: node scripts/flight-browser-preflight.mjs
+      - name: Verify HORIZON visible-tile pixel parity, resident LOD and camera recovery
+        env:
+          NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
+        run: node scripts/world-vis-browser-smoke.mjs
+      - name: Retain screenshot, acceptance receipt and exact package manifest
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: world-vis-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            browser-artifacts/world-vis-001-horizon.png
+            browser-artifacts/world-vis-001-acceptance.json
+            dist/manifest.json
+          if-no-files-found: warn
+          retention-days: 14
