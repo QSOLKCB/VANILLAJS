@@ -62,6 +62,33 @@ test('ring insertion/removal, facet edits and canonical finite bounds',()=>{
     /height must increase/);
   assert.throws(()=>cadProfileMove(a,{index:222,radius:1,y:0}));
 });
+test('reject authored rings collapsing at OBJ six-decimal Y precision before generation',()=>{
+  // Exact Codex P2: float-distinct heights become zero after cadMeshOBJ.
+  assert.throws(()=>cadProfileDraft({profile:[[1,0],[1,.0000004],[1,1]],segments:8}),
+    /elevations collapse at six-decimal OBJ precision/);
+  assert.throws(()=>cadProfileDraft({profile:[[1,-.0000004],[1,0],[1,1]],segments:8}),
+    /elevations collapse at six-decimal OBJ precision/);
+  // A real six-decimal step remains admissible and its OBJ preserves
+  // distinct Y planes through the unchanged parser.
+  const accepted=cadProfileDraft({profile:[[1,0],[1,.0000006],[1,1]],segments:8});
+  const parsed=parseOBJ(cadMeshOBJ(cadProfileMesh(accepted)));
+  const elevations=new Set();
+  for(let i=0;i<parsed.length;i+=5)elevations.add(parsed[i+1]);
+  assert.deepEqual([...elevations].sort((a,b)=>a-b),[0,.000001,1]);
+  assert.equal(cadProfileRecover(asset(cadProfileMesh(accepted))).profile.length,3);
+  // Invalid interactive edits are atomic: the input draft and mesh remain
+  // unchanged, even when insertion rounds to a neighbouring elevation.
+  const original=cadProfileDraft({profile:[[1,0],[1,.1],[1,1]],segments:8});
+  const before=cadMeshOBJ(cadProfileMesh(original));
+  assert.throws(()=>cadProfileMove(original,{index:1,radius:1,y:.0000004,snap:0}),
+    /elevations collapse at six-decimal OBJ precision/);
+  assert.deepEqual(original.profile,[[1,0],[1,.1],[1,1]]);
+  assert.equal(cadMeshOBJ(cadProfileMesh(original)),before);
+  const tiny=cadProfileDraft({profile:[[1,0],[1,.000001],[1,1]],segments:8});
+  assert.throws(()=>cadProfileInsert(tiny,{after:0}),
+    /elevations collapse at six-decimal OBJ precision/);
+  assert.equal(tiny.profile.length,3);
+});
 test('recover edit-friendly rings from existing CAD-001 and CAD-002 project meshes',()=>{
   for(const kind of ['urn','column','cone'])for(const segments of [3,9,16,24]){
     const primitive=createCADPrimitive({kind,radius:.8,height:2.3,segments}),
