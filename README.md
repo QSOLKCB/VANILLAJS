@@ -19,7 +19,9 @@ working scene, change one thing, test it, and keep the files you create.
 
 **Merged into main:** [VANILLAJS-25D-001](docs/PROJECTION25D_API.md) provides experimental, opt-in pure projection geometry, an [offline 2.5D demonstration](demos/projection25d-lab/index.html) and a bounded authoring-only OBJ conversion tool. This does not alter existing simulation or HORIZON rendering.
 
-**New experimental review candidate:** [COCKPIT-001 — Cockpit & Physics Lab](docs/COCKPIT_PHYSICS_001.md) pairs pure camera/sight validation with existing 6DOF flight and four-wheel vehicle physics plus a bounded arcade airframe. [Try the original Spitfire-inspired prop fighter, spacecraft and car demo](demos/cockpit-physics-lab/index.html). No existing physics or game rules are replaced.
+**Merged:** [COCKPIT-001 — Cockpit & Physics Lab](docs/COCKPIT_PHYSICS_001.md) pairs pure camera/sight validation with existing 6DOF flight and four-wheel vehicle physics plus a bounded arcade airframe. [Try the original Spitfire-inspired prop fighter, spacecraft and car demo](demos/cockpit-physics-lab/index.html). No existing physics or game rules are replaced.
+
+**COCKPIT-002 candidate:** [TOO CLOSE FOR GUNS — SWITCHING TO MISSILES!](demos/cockpit-physics-lab/index.html) upgrades the same cockpit with four game-owned, fixed-tick homing missiles, physical lock/cooldown/impact tests, and a preserved F-key gunsight. [Implementation and limits](docs/COCKPIT_PHYSICS_001.md). This is an experimental review branch, not a tagged release.
 
 ## Welcome to the foundry
 
