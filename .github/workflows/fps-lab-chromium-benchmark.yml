@@ -1,0 +1,75 @@
+name: FPS Lab - paired headless Chromium observations
+on:
+  pull_request:
+    paths:
+      - 'scripts/fps-lab-chromium-benchmark.mjs'
+      - '.github/workflows/fps-lab-chromium-benchmark.yml'
+      - 'demos/fps-lab/**'
+      - 'modules/render-webgl/**'
+      - 'scripts/build.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  headless-fps-lab:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Confirm exact source checkout and build offline package
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          node scripts/check.js
+          node scripts/build.js
+          node scripts/verify-offline.js
+      - name: Install isolated pinned Chromium test tooling on hosted runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PLAYWRIGHT_BROWSERS_PATH="$RUNNER_TEMP/fps-browser/browsers"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" >> "$GITHUB_ENV"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install \
+            --prefix "$RUNNER_TEMP/fps-browser" \
+            --ignore-scripts --no-save --package-lock=false --no-audit --no-fund \
+            playwright@1.64.0
+          node "$RUNNER_TEMP/fps-browser/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Observe both FPS Lab workloads and render resolution profiles
+        env:
+          NODE_PATH: ${{ runner.temp }}/fps-browser/node_modules
+        run: |
+          node scripts/fps-lab-chromium-benchmark.mjs
+          sha256sum -c fps-lab-chromium.SHA256SUMS
+      - name: Summarise headless observations without GPU claims
+        if: success()
+        run: |
+          python3 - <<'PY'
+          import json, os
+          report=json.load(open('fps-lab-chromium-observations.json',encoding='utf-8'))
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as f:
+              f.write('## FPS Lab — exploratory headless software-rendering observations\n\n')
+              f.write('| Scene | Pass | Profile | Render pixels | p50 RAF ms | p95 RAF ms | p95 JS callback ms |\n')
+              f.write('|---|---:|---|---:|---:|---:|---:|\n')
+              for c in report['observations']:
+                  f.write(f"| {c['scene']} | {c['pass']} | {c['profile']} | "
+                          f"{c['renderPixels']} | {c['frameIntervalMs']['p50']:.2f} | "
+                          f"{c['frameIntervalMs']['p95']:.2f} | "
+                          f"{c['jsAnimationCallbackMs']['p95']:.2f} |\n")
+              f.write('\nNo native GPU FPS, perceptual quality, or engine speedup is claimed.\n')
+          PY
+      - name: Preserve source-bound raw samples and screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: fps-lab-chromium-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            fps-lab-chromium-observations.json
+            fps-lab-chromium.SHA256SUMS
+            browser-artifacts/fps-benchmark-*.png
+            dist/manifest.json
+          retention-days: 14
+          if-no-files-found: warn
