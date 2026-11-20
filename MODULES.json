@@ -707,6 +707,19 @@
       "description": "TACTICS-001: finite squad orders, deterministic SENSE-linked physical cover and suppression policy, bounded NavigationGrid/A* turn decisions",
       "demo": "demos/tactics-lab/index.html"
     },
+    "creator-interop": {
+      "entry": "modules/creator-interop/index.js",
+      "depends": [
+        "scene-graph",
+        "sensing",
+        "tactics",
+        "cad-geometry"
+      ],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/creator-interop-lab/index.html",
+      "description": "CREATOR-INTEROP-001: validated bounded authoring, original mesh and placement records, physical LOS/tactical adapters and SHA-256 sealed offline data packages"
+    },
     "trajectory": {
       "entry": "modules/trajectory/index.js",
       "depends": [
