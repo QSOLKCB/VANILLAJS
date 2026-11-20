@@ -182,18 +182,66 @@ export async function importReplayReceipt(text,{expectedBuild}={}){
  if(!check.match)throw Error('replay event/final-state evidence mismatch');
  return deepFreeze(r);
 }
-/** Display rate does not feed physics: independent identical command execution. */
-export async function auditReplayPresentation(source,rates=[30,60,144]){
+/** Deterministic *virtual* presentation clock: authoritative ticks are
+ * interleaved with real read-only display samples, not just counted afterward.
+ * Integer models use 60 logical display ticks/second by convention, with no
+ * assertion of a physical integer-engine tick frequency.
+ * A trusted host-only present callback receives frozen metadata, never engine
+ * state, and cannot be supplied inside inert source/receipt data.
+ */
+export async function sampleReplayPresentation(source,renderHz,{present}={}){
+ const plan=createReplayPlan(source);
+ if(![30,60,144].includes(renderHz))throw RangeError('presentation rate must be 30, 60 or 144 Hz');
+ if(present!==undefined&&typeof present!=='function')throw TypeError('present must be a trusted host function');
+ const engine=runner(plan),physicsHz=engine.tickRate??60,trace=[],samples=[];
+ let accumulator=0,accepted=0,eventCount=0,frame=0;
+ const maxFrames=REPLAY_LIMITS.frames*3;
+ while(accepted<plan.frames.length){
+  if(++frame>maxFrames)throw RangeError('presentation frame budget exceeded');
+  accumulator+=physicsHz;
+  let advanced=0;
+  while(accumulator>=renderHz&&accepted<plan.frames.length){
+   const result=engine.step(plan.frames[accepted]);
+   eventCount+=result.events.length;
+   if(eventCount>REPLAY_LIMITS.events)throw RangeError('cadenced event budget exceeded');
+   trace.push({tick:accepted+1,events:inert(result.events),
+    stateSha256:await digest(inert(result.state))});
+   accepted++;advanced++;accumulator-=renderHz;
+  }
+  const stateSha256=await digest(inert(engine.final()));
+  if(accepted>0&&stateSha256!==trace[accepted-1].stateSha256)
+   throw Error('presentation sampled non-authoritative state');
+  const sample=deepFreeze({renderHz,frame,acceptedTicks:accepted,advancedTicks:advanced,
+   stateSha256,eventCount});
+  samples.push(sample);
+  if(present)await present(sample);
+ }
+ return deepFreeze({kind:plan.kind,renderHz,physicsHz,
+  rateIsDisplayConvention:engine.tickRate===null,consumedTicks:accepted,
+  displaySamples:samples.length,nonAdvancingFrames:samples.filter(s=>s.advancedTicks===0).length,
+  lastPresentedTick:samples.at(-1).acceptedTicks,
+  sampleSha256:await digest(samples),traceSha256:await digest(trace),
+  finalSha256:await digest(inert(engine.final())),samples});
+}
+/** Independent authoritative baseline vs 30/60/144 Hz tick/sample schedules.
+ * Read-only presentation can fail this gate, but cannot author physics input.
+ */
+export async function auditReplayPresentation(source,rates=[30,60,144],options={}){
  const plan=createReplayPlan(source);
  if(!Array.isArray(rates)||rates.length!==3||rates.join(',')!=='30,60,144')
   throw TypeError('rates must be [30,60,144]');
  const baseline=await sealReplayReceipt(plan),checks=[];
  for(const rate of rates){
-  const r=await sealReplayReceipt(plan);
-  const same=r.ticks===baseline.ticks&&r.traceSha256===baseline.traceSha256&&r.finalSha256===baseline.finalSha256;
-  if(!same)throw Error('presentation cadence changed authoritative simulation');
-  checks.push({renderHz:rate,displaySamples:r.tickRate===null?0:Math.ceil(r.ticks*rate/r.tickRate),
-   consumedTicks:r.ticks,sameAuthoritativeTrace:same});
+  const sample=await sampleReplayPresentation(plan,rate,options);
+  const same=sample.consumedTicks===baseline.ticks&&
+   sample.traceSha256===baseline.traceSha256&&
+   sample.finalSha256===baseline.finalSha256&&
+   sample.lastPresentedTick===baseline.ticks;
+  if(!same)throw Error('cadenced presentation altered physics or event trace');
+  checks.push({renderHz:rate,displaySamples:sample.displaySamples,
+   nonAdvancingFrames:sample.nonAdvancingFrames,lastPresentedTick:sample.lastPresentedTick,
+   sampleSha256:sample.sampleSha256,
+   consumedTicks:sample.consumedTicks,sameAuthoritativeTrace:true});
  }
  return deepFreeze({kind:baseline.kind,ticks:baseline.ticks,mode:baseline.mode,
   traceSha256:baseline.traceSha256,finalSha256:baseline.finalSha256,checks});

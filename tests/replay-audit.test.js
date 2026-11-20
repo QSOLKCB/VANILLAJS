@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {replayExamples,BASE_BUILD} from '../demos/replay-audit-lab/scenarios.js';
 import {createReplayPlan,sealReplayReceipt,verifyReplayReceipt,exportReplayReceipt,
- importReplayReceipt,auditReplayPresentation,REPLAY_LIMITS} from '../modules/replay-audit/index.js';
+ importReplayReceipt,auditReplayPresentation,sampleReplayPresentation,REPLAY_LIMITS} from '../modules/replay-audit/index.js';
 const samples=()=>replayExamples(),clone=structuredClone;
 test('actual FPS authoritative damage and independent replay receipt',async()=>{
  const source=samples().fps,before=clone(source),r=await sealReplayReceipt(source);
@@ -29,12 +29,42 @@ test('real vehicle and integer engines produce distinct correct authority modes'
   assert.deepEqual(r,await sealReplayReceipt(p));
  }
 });
-test('30/60/144 Hz presentation does not alter accepted ticks',async()=>{
+test('real 30/60/144 Hz interleaved tick/sample schedules preserve authoritative results',async()=>{
  for(const source of Object.values(samples())){
-  const result=await auditReplayPresentation(source);
+  const rendered=[];
+  const result=await auditReplayPresentation(source,[30,60,144],{
+   present:sample=>{assert.equal(Object.isFrozen(sample),true);rendered.push(sample);}
+  });
   assert.equal(result.checks.length,3);
   assert.ok(result.checks.every(x=>x.sameAuthoritativeTrace&&x.consumedTicks===result.ticks));
+  for(const check of result.checks){
+   const rate=check.renderHz,observed=rendered.filter(s=>s.renderHz===rate);
+   const simHz=source.kind==='integer'?60:source.kind==='fps'?60:120;
+   assert.equal(check.displaySamples,Math.ceil(result.ticks*rate/simHz));
+   assert.equal(observed.length,check.displaySamples,'presenter executed every display sample');
+   assert.equal(observed.at(-1).acceptedTicks,result.ticks);
+   assert.equal(observed.filter(s=>s.advancedTicks===0).length,check.nonAdvancingFrames);
+   assert.ok(observed.every((s,i)=>i===0||s.acceptedTicks>=observed[i-1].acceptedTicks));
+  }
+  assert.notEqual(result.checks[0].sampleSha256,result.checks[2].sampleSha256);
+  if(source.kind==='air'||source.kind==='racing')
+   assert.ok(result.checks[2].nonAdvancingFrames>0);
  }
+});
+test('sampling callbacks are read-only and rendering failure cannot forge a parity PASS',async()=>{
+ const source=samples().racing,before=clone(source),seen=[];
+ const result=await sampleReplayPresentation(source,144,{present:async sample=>{
+  seen.push(sample);
+  assert.ok(Object.isFrozen(sample));
+ }});
+ assert.deepEqual(source,before);
+ assert.equal(seen.length,result.displaySamples);
+ assert.equal(result.lastPresentedTick,source.frames.length);
+ await assert.rejects(auditReplayPresentation(source,[30,60,144],{
+  present:()=>{throw Error('presentation renderer failed');}
+ }),/presentation renderer failed/);
+ await assert.rejects(sampleReplayPresentation(source,100),/presentation rate/);
+ await assert.rejects(sampleReplayPresentation(source,30,{present:'execute'}),/trusted host/);
 });
 test('stale, forged, truncated and altered receipts never pass',async()=>{
  const r=await sealReplayReceipt(samples().fps);

@@ -44,10 +44,30 @@ try{
  }
  await page.locator('#compare').click();
  await page.waitForFunction(()=>__replayAudit.snapshot().parity!==null,undefined,{timeout:20000});
- const parity=(await snap()).parity;
+ const afterCompare=await snap(),parity=afterCompare.parity;
  assert.deepEqual(parity.map(x=>x.renderHz),[30,60,144]);
  assert.ok(parity.every(x=>x.sameAuthoritativeTrace));
+ for(const check of parity){
+  const observed=afterCompare.presentation.draws[String(check.renderHz)];
+  assert.equal(observed.frames,check.displaySamples,'actual Canvas redraws required');
+  assert.equal(observed.lastTick,check.consumedTicks);
+  assert.equal(observed.nonAdvancingFrames,check.nonAdvancingFrames);
+ }
+ assert.notEqual(parity[0].sampleSha256,parity[2].sampleSha256,'rates must schedule different samples');
+ assert.ok(parity[2].nonAdvancingFrames>0,'144 Hz must display frames without 120 Hz tick');
+ // The visible selector also exercises the same real Canvas cadence path.
+ for(const rate of ['30','60','144']){
+  await page.locator('#render-rate').selectOption(rate);
+  await page.waitForFunction(r=>__replayAudit.snapshot().presentation.audit?.renderHz===Number(r),rate,{timeout:20000});
+  const status=await snap(),draws=status.presentation.draws[rate];
+  assert.ok(draws.frames>0);assert.equal(draws.lastTick,status.ticks);
+  assert.match(status.message,/CADENCE EXERCISED/);
+ }
  await page.locator('#tamper').click();
+ await page.waitForFunction(()=>{
+  const m=__replayAudit.snapshot().message;
+  return m.startsWith('EXPECTED REJECTION')||m.startsWith('NEGATIVE CONTROL ERROR')||m.startsWith('FAIL:');
+ },undefined,{timeout:20000});
  assert.match((await snap()).message,/EXPECTED REJECTION/);
  await page.locator('#model').selectOption('fps');await page.locator('#record').click();
  await page.waitForFunction(()=>__replayAudit.snapshot().kind==='fps',undefined,{timeout:20000});
@@ -70,7 +90,8 @@ try{
   checkout:process.env.GITHUB_SHA??null,chromium:browser.version(),
   manifestSha256:hash(manifest),screenSha256:hash(png),receiptSha256:hash(bytes),
   models:cases,parity,checks:['actual FPS hits','real TRAJECTORY-001 actor impact',
-   'Vehicle3D and integer simulation','three presentation rates','full export/import verification',
+   'Vehicle3D and integer simulation','three interleaved 30/60/144 Hz Canvas sampling paths',
+   'selector driven real Canvas frames','full export/import verification',
    'tamper fails closed','zero JS and network errors']};
  await writeFile(join(root,'browser-artifacts/replay-audit-001.json'),JSON.stringify(evidence,null,2)+'\n');
  console.log(JSON.stringify(evidence));
