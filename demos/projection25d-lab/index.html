@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VANILLAJS — 2.5D Projection Foundation</title>
+<style>
+:root{color-scheme:dark;font:16px system-ui;background:#101821;color:#e9f1ec}
+body{max-width:1200px;margin:1.5rem auto;padding:0 1rem}h1{font-size:1.7rem}p{max-width:76ch;color:#c1d1cc}
+main{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,450px),1fr));gap:1rem}
+section{min-width:0;border:1px solid #37525b;padding:1rem;background:#192631;border-radius:.65rem}
+canvas{width:100%;height:auto;background:#142936;border:1px solid #415863}
+small{color:#c9e8d5}a{color:#a9dfcb}
+</style></head><body>
+<p><a href="../../index.html">VANILLAJS</a> / Game Labs</p>
+<h1>2.5D Projection Foundation</h1>
+<p>Two different views of precisely the same immutable world. Geometry and shading are presentation-only: the authoritative flat collision rectangles and vehicle state are never changed.</p>
+<main><section><h2>Classic top-down</h2><canvas id="flat" width="560" height="360" aria-label="Flat projection"></canvas></section>
+<section><h2>Oblique 2.5D</h2><canvas id="raised" width="560" height="360" aria-label="Height-aware projection"></canvas></section></main>
+<p><small id="receipt">Checking deterministic projection…</small></p>
+<script type="module" src="./start.js"></script></body></html>

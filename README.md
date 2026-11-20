@@ -15,6 +15,8 @@ working scene, change one thing, test it, and keep the files you create.
 [Interactive Tutorial Lab](demos/tutorial-lab/index.html) ·
 [Build with AI](#build-with-an-ai-agent) · [Modules](#modules)
 
+**Under upstream review:** [VANILLAJS-25D-001](docs/PROJECTION25D_API.md) provides experimental, opt-in pure projection geometry, an [offline 2.5D demonstration](demos/projection25d-lab/index.html) and a bounded authoring-only OBJ conversion tool. This does not alter existing simulation or HORIZON rendering.
+
 ## Welcome to the foundry
 
 **VANILLAJS = engine, physics, Game Labs, mods, tools and education.**
