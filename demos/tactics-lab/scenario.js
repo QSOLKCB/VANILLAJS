@@ -29,3 +29,28 @@ export function createOperation(seed=OPERATION.seed){
   const world=createTacticsWorld({...OPERATION,seed});
   return {world,state:createTacticsState(world)};
 }
+
+/** Quiet Relay's objective policy lives in this demo, NOT the squad engine.
+ * A different game can reuse stepTactics without inheriting these win rules.
+ */
+export const RELAY_TURN_LIMIT=64;
+export const RELAY_HOLD_TURNS=2;
+export function createRelayStatus(){
+  return Object.freeze({phase:'active',progress:0});
+}
+export function advanceRelayStatus(previous,tactical,objective=OPERATION.objective,turnLimit=RELAY_TURN_LIMIT){
+  if(!previous||previous.phase!=='active')throw RangeError('relay status is terminal');
+  if(!tactical||!Number.isSafeInteger(tactical.turn)||tactical.turn<1||
+      !Array.isArray(tactical.units))throw TypeError('accepted tactical turn required');
+  if(!Array.isArray(objective)||objective.length!==2||
+      !objective.every(Number.isSafeInteger))throw TypeError('valid relay objective required');
+  if(!Number.isSafeInteger(turnLimit)||turnLimit<1||turnLimit>100000)
+    throw RangeError('relay turn cap must be bounded');
+  const atTarget=u=>u.cell[0]===objective[0]&&u.cell[1]===objective[1],
+    held=tactical.units.some(u=>u.team==='alpha'&&atTarget(u)&&u.suppression===0),
+    contested=tactical.units.some(u=>u.team==='bravo'&&atTarget(u)),
+    progress=held&&!contested?Math.min(RELAY_HOLD_TURNS,previous.progress+1):0,
+    phase=progress===RELAY_HOLD_TURNS?'secured':
+      tactical.turn>=turnLimit?'exhausted':'active';
+  return Object.freeze({phase,progress});
+}
