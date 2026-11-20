@@ -78,6 +78,24 @@ test('recover edit-friendly rings from existing CAD-001 and CAD-002 project mesh
     assert.equal(reloaded.profile.length,loaded.profile.length);
   }
 });
+test('short supported CAD-001 meshes recover with mathematically bounded UV quantisation',()=>{
+  // Codex P2 reproduction: after 6-decimal OBJ rounding, relative V can
+  // differ by >1e-6 although every world-space ring is a valid CAD mesh.
+  for(const height of [.200001,.234567,.301234,.687654,9.999999]){
+    for(const kind of ['urn','column','cone']){
+      const model=createCADPrimitive({kind,radius:.8,height,segments:16});
+      const roundtripped=asset(model,'cad-'+kind+'.obj');
+      const draft=cadProfileRecover(roundtripped);
+      assert.equal(draft.segments,16);
+      assert.equal(draft.profile.length,kind==='urn'?5:2);
+    }
+  }
+  const original=asset(createCADPrimitive({kind:'urn',radius:.8,height:.234567,segments:16}),
+    'cad-urn.obj');
+  const poisoned={...original,vertices:original.vertices.map((v,i)=>i%5===4?v+.02:v)};
+  assert.throws(()=>cadProfileRecover(poisoned),/not a recognisable native CAD surface/,
+    'V rounding tolerance must not accept deliberately distorted UVs');
+});
 test('mismatched, copied/non-CAD and malformed meshes cannot impersonate a native profile',()=>{
   const raw=asset(cadProfileMesh(preset()));
   assert.throws(()=>cadProfileRecover({...raw,sourceName:'obj-import.obj'}));
