@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {createSceneGraph} from '../modules/scene-graph/index.js';
 import {querySight} from '../modules/sensing/index.js';
 import {createTacticsState} from '../modules/tactics/index.js';
-import {CREATOR_FORMAT,createCreatorProject,createCreatorSightWorld,createCreatorTacticsWorld,
+import {CREATOR_FORMAT,createCreatorProject,creatorCADAsset,createCreatorSightWorld,createCreatorTacticsWorld,
  sealCreatorPackage,creatorPackageJSON,openCreatorPackage} from '../modules/creator-interop/index.js';
 const p=()=>({format:CREATOR_FORMAT,version:1,name:'Workshop',scene:createSceneGraph('Workshop'),
  assets:[{id:'mesh-1',dimension:'2d',vertices:[[0,0,0],[1,0,0],[0,1,0]],
@@ -52,4 +52,17 @@ test('duplicate IDs and invalid tactical occupancy cannot cross authoring bounda
  const tactical=structuredClone(seed.tactical);
  tactical.cover.push({id:'bad',x:1,z:1,w:1,h:1,height:2});
  assert.throws(()=>createCreatorProject({...seed,tactical}),/walkable/);
+});
+
+test('real CAD-003 tower geometry becomes a distinct portable indexed asset',()=>{
+ const generated=creatorCADAsset({id:'cad-1',kind:'tower',
+   options:{width:2,depth:2,height:3,bevel:.2}});
+ assert.equal(generated.dimension,'3d');assert.equal(generated.origin,'original');
+ assert.ok(generated.vertices.length>=8&&generated.triangles.length>=12);
+ assert.ok(generated.vertices.length<generated.triangles.length*3);
+ const seed=p();const project=createCreatorProject({...seed,assets:[...seed.assets,generated],
+   placements:[...seed.placements,{id:'tower-1',kind:'prop',assetId:'cad-1',position:[3,1,-9]}]});
+ assert.equal(project.assets.length,2);
+ assert.throws(()=>creatorCADAsset({id:'bad',kind:'tower',options:{width:2,depth:2,height:3,
+   get bevel(){throw Error('not executable');}}}),/non-executable/);
 });

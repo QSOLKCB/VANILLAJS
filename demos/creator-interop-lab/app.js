@@ -2,7 +2,7 @@
 // Original offline world editor: authority comes from the imported modules, not canvas.
 import {createSceneGraph} from '../../modules/scene-graph/index.js';
 import {querySight} from '../../modules/sensing/index.js';
-import {CREATOR_FORMAT,createCreatorProject,createCreatorSightWorld,createCreatorTacticsWorld,
+import {CREATOR_FORMAT,createCreatorProject,creatorCADAsset,createCreatorSightWorld,createCreatorTacticsWorld,
  sealCreatorPackage,creatorPackageJSON,openCreatorPackage} from '../../modules/creator-interop/index.js';
 const $=id=>document.getElementById(id),ctx=$('field').getContext('2d');
 const asset={id:'mesh-1',dimension:'2d',vertices:[[0,0,0],[1,0,0],[0,1,0]],
@@ -31,7 +31,7 @@ function render(){
   ctx.fillRect(x,y,(z.max[0]-z.min[0])/2*cell,(z.max[2]-z.min[2])/2*cell);}
  for(const p of project.placements)place(p.position,
   p.kind==='target'?'#f9bd73':p.kind==='vehicle'?'#a5caff':'#8edbb2',
-  p.kind==='target'?'T':p.kind==='vehicle'?'V':'P');
+  p.kind==='target'?'T':p.kind==='vehicle'?'V':p.assetId?.startsWith('cad-')?'C':'P');
  for(const u of project.tactical.units)place(coord(...u.cell),u.team==='alpha'?'#83e5ff':'#ef8c9c',u.team==='alpha'?'A':'B');
  const targets=project.placements.filter(p=>p.kind==='target').length;
  const reports=querySight(createCreatorSightWorld(project),
@@ -55,6 +55,12 @@ function edit(x,z){
   draft.zones.push({id:nextId('wall',used),kind:'occluder',
    min:[x*2,0,-(z+1)*2],max:[(x+1)*2,3,-z*2]});
   draft.tactical.cover.push({id:nextId('cover',used),x,z,w:1,h:1,height:3});
+ }else if(tool==='cad'){
+  const assetId=nextId('cad',used);
+  draft.assets.push(creatorCADAsset({id:assetId,kind:'tower',
+   options:{width:2,depth:2,height:3,bevel:.1}}));
+  used.add(assetId);
+  draft.placements.push({id:nextId('prop',used),kind:'prop',assetId,position});
  }else if(tool==='alpha'||tool==='bravo'){
   draft.tactical.units.push({id:nextId(tool,used),team:tool,cell:[x,z],
    heading:tool==='alpha'?[1,0]:[-1,0]});

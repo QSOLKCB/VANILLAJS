@@ -712,7 +712,8 @@
       "depends": [
         "scene-graph",
         "sensing",
-        "tactics"
+        "tactics",
+        "cad-geometry"
       ],
       "environment": "pure-js",
       "status": "experimental",

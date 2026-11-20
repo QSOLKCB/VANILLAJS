@@ -46,7 +46,11 @@ try{
  assert.match(edited.message,/Accepted wall/);
  await page.locator('[data-tool="target"]').click();
  await choose(7,3);
- const authored=await report();assert.equal(authored.placements,start.placements+1);
+ await page.locator('[data-tool="cad"]').click();
+ await choose(3,6);
+ const authored=await report();assert.equal(authored.placements,start.placements+2);
+ assert.equal(authored.assets,start.assets+1);
+ assert.match(authored.message,/Accepted cad/);
  const [download]=await Promise.all([page.waitForEvent('download'),page.locator('#export').click()]);
  const payload=await readFile(await download.path());
  const parsed=JSON.parse(payload);assert.match(parsed.sha256,/^[a-f0-9]{64}$/);

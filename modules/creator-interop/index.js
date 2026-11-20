@@ -4,6 +4,7 @@
 import {validateSceneGraph} from '../scene-graph/index.js';
 import {createSightWorld} from '../sensing/index.js';
 import {createTacticsWorld} from '../tactics/index.js';
+import {createCADPrimitive,createForgePreset} from '../cad-geometry/index.js';
 
 export const CREATOR_FORMAT='qsol.vanillajs.creator-world.v1';
 export const CREATOR_PACKAGE='qsol.vanillajs.creator-package.v1';
@@ -69,6 +70,33 @@ function zone(value,ids){
   const min=vector(z.min,2000,'zone min'),max=vector(z.max,2000,'zone max');
   if(min.some((n,i)=>n>=max[i]))throw RangeError('zone requires positive AABB volume');
   return {id,kind:z.kind,min,max};
+}
+/** Convert *generated* native CAD-001/003 XYZ/UV triangle geometry into an
+ * indexed, validated portable asset. CAD itself owns shape and topology rules. */
+export function creatorCADAsset(input){
+  const r=record(input,['id','kind','options'],'CAD asset request');
+  const kind=r.kind;
+  let mesh;
+  if(['column','cone','urn'].includes(kind)){
+    const options=record(r.options,['radius','height','segments'],'lathe options');
+    mesh=createCADPrimitive({kind,...options});
+  }else if(['wall','platform','tower','wedge'].includes(kind)){
+    const options=record(r.options,['width','depth','height','bevel'],'forge options');
+    mesh=createForgePreset({kind,...options});
+  }else throw TypeError('unsupported CAD generator kind');
+  const vertices=[],triangles=[],lookup=new Map(),raw=mesh.vertices;
+  if(raw.length%15!==0)throw RangeError('generated mesh must be whole XYZ/UV triangles');
+  for(let i=0;i<raw.length;i+=15){
+    const tri=[];
+    for(let j=0;j<3;j++){
+      const xyz=raw.slice(i+j*5,i+j*5+3),key=xyz.join(',');
+      if(!lookup.has(key)){lookup.set(key,vertices.length);vertices.push(xyz);}
+      tri.push(lookup.get(key));
+    }
+    triangles.push(tri);
+  }
+  return freeze(asset({id:r.id,dimension:'3d',vertices,triangles,origin:'original',
+    license:'Apache-2.0',sourceRef:'qsol:cad-geometry:apache-2.0'},new Set()));
 }
 /** The exported core can be validated independently without DOM or file I/O. */
 export function createCreatorProject(input){
