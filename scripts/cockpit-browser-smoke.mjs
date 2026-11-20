@@ -54,7 +54,7 @@ try{
   await page.keyboard.press('KeyF');
   // Await actual fixed-tick input consumption, not an arbitrary 80 ms wall clock.
   await page.waitForFunction(()=>document.getElementById('last-shot')?.textContent?.startsWith('SHOT 1'),
-    null,{timeout:10000});
+    {timeout:10000});
   assert.match(await page.locator('#last-shot').textContent(),/SHOT 1/);
   await page.keyboard.press('KeyM');
   await page.waitForFunction(()=>document.querySelector('#missile-ammo')?.textContent==='3 / 4',{timeout:5000});
