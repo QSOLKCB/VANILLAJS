@@ -174,6 +174,11 @@ export function cadProfileDraft(options){
     if(Number(numberText(profile[i-1][1]))>=Number(numberText(profile[i][1])))
       throw RangeError('adjacent CAD ring elevations collapse at six-decimal OBJ precision');
   }
+  // Recovery reads each radius from the vertex at theta=0, where x=radius.
+  for(const [radius] of profile){
+    if(radius>0&&numberText(radius)==='0')
+      throw RangeError('positive CAD ring radius collapses to the axis at six-decimal OBJ precision');
+  }
   const out=Object.freeze({profile,segments:options.segments,
     triangles:model.triangleCount,vertices:model.vertexCount});
   drafts.add(out);

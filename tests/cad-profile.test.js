@@ -92,6 +92,24 @@ test('reject authored rings collapsing at OBJ six-decimal Y precision before gen
     /height must increase/);
   assert.equal(tiny.profile.length,3);
 });
+test('positive ring radii must survive OBJ rounding, while authored tips remain valid',()=>{
+  const segments=8,collapses=/radius collapses to the axis/;
+  assert.throws(()=>cadProfileDraft({profile:[[.0000004,0],[1,1]],segments}),collapses);
+  const original=cadProfileDraft({profile:[[1,0],[1,1],[1,2]],segments});
+  const before=cadMeshOBJ(cadProfileMesh(original));
+  for(const [index,[,y]] of original.profile.entries()){
+    assert.throws(()=>cadProfileMove(original,{index,radius:.0000004,y,snap:0}),collapses);
+  }
+  assert.equal(cadMeshOBJ(cadProfileMesh(original)),before);
+
+  for(const radius of [0,.0000008]){
+    const draft=cadProfileDraft({profile:[[radius,0],[1,1]],segments});
+    const recovered=cadProfileRecover(asset(cadProfileMesh(draft)));
+    assert.deepEqual(recovered.profile,[[radius===0?0:.000001,0],[1,1]]);
+    assert.equal(recovered.segments,segments);
+    assert.equal(recovered.triangles,draft.triangles);
+  }
+});
 test('recover edit-friendly rings from existing CAD-001 and CAD-002 project meshes',()=>{
   for(const kind of ['urn','column','cone'])for(const segments of [3,9,16,24]){
     const primitive=createCADPrimitive({kind,radius:.8,height:2.3,segments}),
