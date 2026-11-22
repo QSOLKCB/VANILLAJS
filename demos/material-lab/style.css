@@ -1,0 +1,58 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+:root { color-scheme: light; --paper: #eeeae0; --ink: #1c3537; --line: #b7bbb0; --teal: #205856; --mono: "IBM Plex Mono", ui-monospace, monospace }
+* { box-sizing: border-box }
+body { margin: 0; color: var(--ink); background: var(--paper); font: 16px/1.45 "Work Sans", system-ui, sans-serif }
+header, main { width: min(1280px, 94%); margin: auto }
+nav { display: flex; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid var(--ink); gap: 1rem }
+a { color: var(--teal); text-underline-offset: .22em }
+nav a { font: 600 .8rem/1.4 var(--mono) }
+.intro { padding: clamp(20px, 3.7vw, 52px) 0 26px; display: flex; gap: 2rem; justify-content: space-between; align-items: end }
+h1 { margin: 0; font: 600 clamp(2.6rem, 6.1vw, 5.8rem)/.98 "Instrument Serif", Georgia, serif; letter-spacing: -.055em }
+h1 span { color: #a55028 }
+.intro p { max-width: 43ch; margin: 0; font-size: .98rem }
+.workbench { display: grid; grid-template-columns: minmax(0, 3.3fr) minmax(220px, 1fr); gap: clamp(16px, 2.4vw, 34px); align-items: start; padding-bottom: 36px }
+.tank { min-width: 0; background: #f8f5ed; border: 1px solid var(--ink) }
+.tank-head, .transport, .files, .size { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap }
+.tank-head { padding: 12px 16px; background: #d6dfd2 }
+.tank-head label, #dimensions, .readout { font: 600 .82rem/1.4 var(--mono) }
+#dimensions, .readout { margin-left: auto; white-space: nowrap }
+canvas { display: block; width: 100%; height: auto; background: #142226; touch-action: none; cursor: crosshair }
+button, select, .open-file { color: var(--ink); font-family: inherit; font-size: .88rem; font-weight: 600; line-height: 1.25; background: #fcfaf3; border: 1px solid #778880; border-radius: 3px; padding: .56rem .76rem; cursor: pointer }
+button:hover, .open-file:hover { background: #e0e8de }
+button:disabled { opacity: .52; cursor: default }
+:focus-visible, .open-file:focus-within { outline: 3px solid #ad561e; outline-offset: 2px }
+canvas:focus-visible { outline-offset: -3px }
+.transport { padding: 14px 16px 7px }
+#run { min-width: 6rem; background: var(--teal); color: white; border-color: var(--teal) }
+#run:hover { background: #163f3d }
+.readout { font-variant-numeric: tabular-nums }
+.guide { margin: 0; padding: 6px 16px 14px; font-size: .83rem; color: #475b58 }
+aside { border-top: 3px solid var(--ink) }
+aside section, fieldset { margin: 0; min-width: 0; border: 0; border-bottom: 1px solid var(--line); padding: 14px 0 }
+fieldset { padding-top: 8px }
+legend, h2 { font: 600 1.3rem/1.2 "Instrument Serif", Georgia, serif }
+legend { float: left; width: 100%; padding: 5px 0 12px }
+h2 { margin: 0 0 10px }
+.materials { clear: both; display: grid; grid-template-columns: 1fr 1fr; gap: .45rem }
+.materials label { display: flex; align-items: center; gap: .5rem; position: relative; cursor: pointer; padding: .5rem; border: 1px solid #a2ada3; border-radius: 3px; font-weight: 600; font-size: .88rem }
+.materials label:has(:checked) { background: #d5e3d9; border-color: var(--teal); box-shadow: inset 0 0 0 1px var(--teal) }
+.materials label:has(:focus-visible) { outline: 3px solid #ad561e }
+.materials input, .open-file input { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden }
+.swatch { display: inline-block; width: .84rem; height: .84rem; border: 1px solid #33474d; vertical-align: -.07em }
+.sand { background: #efb45e } .water { background: #52afbc } .stone { background: #798785 } .air { background: transparent; border-style: dashed }
+.size { justify-content: space-between; margin-top: .8rem; font-size: .86rem }
+.ledger { margin: 0; font-size: .86rem }
+.ledger div { display: flex; justify-content: space-between; padding: .22rem 0 }
+.ledger dt i { margin-right: .5rem } .ledger dd { margin: 0; font-family: var(--mono) }
+.open-file { position: relative; display: inline-block }
+#status { font-size: .84rem; margin: 10px 0; overflow-wrap: anywhere }
+@media (max-width: 760px) {
+  .intro { display: block } .intro p { margin-top: 12px }
+  .workbench { grid-template-columns: 1fr }
+  .materials { grid-template-columns: repeat(4, minmax(0, 1fr)) }
+  .tank-head, .transport { padding-inline: 9px }
+}
+@media (max-width: 410px) {
+  .materials { grid-template-columns: 1fr 1fr } #run { min-width: 4rem }
+  .tank-head label { display: none } .readout { margin-left: 0 }
+}

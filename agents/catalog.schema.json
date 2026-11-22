@@ -73,6 +73,7 @@
         "properties": {
           "id": {
             "enum": [
+              "material-grid",
               "first-scene",
               "platformer",
               "offline-fps",
@@ -133,6 +134,7 @@
             "uniqueItems": true,
             "items": {
               "enum": [
+                "node scripts/material-browser-smoke.mjs",
                 "node --test tests/*.test.js",
                 "node scripts/check.js",
                 "node scripts/build.js",

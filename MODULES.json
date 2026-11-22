@@ -745,9 +745,22 @@
       "status": "experimental",
       "demo": "demos/replay-audit-lab/index.html",
       "description": "REPLAY-AUDIT-001: source-pinned FPS/air/racing/integer complete command tapes, independently reexecuted per-tick SHA-256 event/state receipts and rendering-cadence parity"
+    },
+    "material-grid": {
+      "entry": "modules/material-grid/index.js",
+      "depends": ["integer-math"],
+      "environment": "pure-js",
+      "status": "experimental",
+      "demo": "demos/material-lab/index.html",
+      "description": "Bounded integer sand and water transport with editable stone barriers, per-material conservation and portable tick snapshots"
     }
   },
   "recipes": {
+    "sediment-works": {
+      "entry": "demos/material-lab/index.html",
+      "modules": ["material-grid", "time"],
+      "description": "Paint and run two original material chambers, then save and resume the grid at the same tick"
+    },
     "assisted-tunnel": {
       "entry": "demos/flight-lab/worlds.js",
       "modules": [

@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eeeae0">
+  <title>Sediment Works · VANILLAJS</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header><nav><a href="../creator-hub/index.html">VANILLAJS / Creator Hub</a><a href="../../docs/MATERIAL_001.md">Field manual ↗</a></nav></header>
+  <main>
+    <div class="intro">
+      <h1>Sediment Works<span>.</span></h1>
+      <p>Run the twin hoppers and watch sand settle through water. Cut a channel, build a weir, or step through the flow one tick at a time.</p>
+    </div>
+    <div class="workbench">
+      <section class="tank" aria-label="Simulation chamber">
+        <div class="tank-head"><label for="chamber">Chamber</label>
+          <select id="chamber"><option value="hoppers">Twin hoppers</option><option value="spillway">Spillway</option><option value="empty">Empty tank</option><option value="file" hidden disabled>Imported chamber</option></select>
+          <span id="dimensions"></span>
+        </div>
+        <canvas id="field" width="960" height="540" tabindex="0" aria-label="Editable material grid" aria-describedby="input-guide">Interactive sand, water and stone grid.</canvas>
+        <div class="transport"><button type="button" id="run">Run</button><button type="button" id="step">Step one tick</button><button type="button" id="reset">Reset</button>
+          <span class="readout">Tick <output id="tick" aria-live="off">0</output></span>
+        </div>
+        <p class="guide" id="input-guide">Drag to paint. With the grid focused, use the arrow keys to move the brush and Space to paint.</p>
+      </section>
+      <aside aria-label="Material tools">
+        <fieldset><legend>Brush</legend>
+          <div class="materials">
+            <label><input type="radio" name="material" value="sand" checked><i class="swatch sand"></i>Sand</label>
+            <label><input type="radio" name="material" value="water"><i class="swatch water"></i>Water</label>
+            <label><input type="radio" name="material" value="stone"><i class="swatch stone"></i>Stone</label>
+            <label><input type="radio" name="material" value="air"><i class="swatch air"></i>Erase</label>
+          </div>
+          <label class="size" for="radius">Diameter<select id="radius"><option value="0">1 cell</option><option value="1" selected>3 cells</option><option value="2">5 cells</option><option value="3">7 cells</option></select></label>
+        </fieldset>
+        <section><h2>Cell counts</h2>
+          <dl class="ledger"><div><dt><i class="swatch sand"></i>Sand</dt><dd id="sand-count">0</dd></div>
+            <div><dt><i class="swatch water"></i>Water</dt><dd id="water-count">0</dd></div>
+            <div><dt><i class="swatch stone"></i>Stone</dt><dd id="stone-count">0</dd></div></dl>
+        </section>
+        <section><h2>Snapshot</h2><div class="files"><button id="save" type="button">Save JSON</button><label class="open-file">Open JSON<input type="file" id="load" accept=".json,application/json"></label></div></section>
+        <p id="status" role="status">Paused at the starting layout.</p>
+      </aside>
+    </div>
+  </main>
+  <script type="module" src="./app.js"></script>
+  <script type="module" src="../../offline/register.js"></script>
+</body>
+</html>
