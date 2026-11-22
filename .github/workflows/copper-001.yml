@@ -1,0 +1,63 @@
+name: COPPER-001 — Raster Conductor scanline proof
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/copper-001.yml'
+      - 'modules/copper/**'
+      - 'modules/blit/**'
+      - 'tests/copper.test.js'
+      - 'demos/copper-lab/**'
+      - 'scripts/copper-browser.mjs'
+      - 'MODULES.json'
+      - 'docs/COPPER_001.md'
+      - 'scripts/audit-docs.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  copper-001:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Fetch exact ALIEN-MATH-006 historical baseline for full Node regression
+        run: |
+          git fetch --no-tags --depth=1 origin ce7e38eb3c7412407a3ba2bc472120b589e6eb9e
+          python3 scripts/verify_alien_math_006.py --pins-only
+      - name: Numerical oracle and complete offline source gates
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          node --check scripts/copper-browser.mjs
+          node --test tests/blit.test.js tests/copper.test.js
+          node --test tests/*.test.js
+          node scripts/check.js
+          node scripts/build.js
+          node scripts/verify-offline.js
+      - name: Install isolated pinned hosted Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PLAYWRIGHT_BROWSERS_PATH="$RUNNER_TEMP/copper-001/browsers"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" >> "$GITHUB_ENV"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --prefix "$RUNNER_TEMP/copper-001" \
+            --ignore-scripts --no-save --package-lock=false --no-audit --no-fund playwright@1.64.0
+          node "$RUNNER_TEMP/copper-001/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Browser palette/scroll bypass and reset pixels
+        env:
+          NODE_PATH: ${{ runner.temp }}/copper-001/node_modules
+        run: |
+          node scripts/copper-browser.mjs copper-001-evidence
+          (cd copper-001-evidence && sha256sum -c SHA256SUMS)
+      - name: Preserve browser and scanline receipts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: copper-001-${{ github.run_id }}-${{ github.run_attempt }}
+          path: copper-001-evidence/
+          retention-days: 14
+          if-no-files-found: warn

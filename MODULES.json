@@ -61,6 +61,13 @@
       "status": "experimental",
       "description": "Bounded reusable Float32 XYZ/RGB box streams for low-allocation dynamic geometry"
     },
+    "copper": {
+      "entry": "modules/copper/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded inert scanline palette and horizontal scroll commands for indexed presentation frames"
+    },
     "blit": {
       "entry": "modules/blit/index.js",
       "depends": [],
