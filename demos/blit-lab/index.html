@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BLIT-001 — The Bitplane Forge</title>
+<style>
+:root{color-scheme:dark;font:15px ui-monospace,Consolas,monospace;background:#08131a;color:#ddf2eb}
+*{box-sizing:border-box}body{margin:0 auto;max-width:960px;padding:24px 16px 44px}
+h1{font-size:clamp(23px,5vw,40px);color:#f9bd78;letter-spacing:.04em;margin:.2em 0}
+p{line-height:1.6;color:#aec8c3}.kicker{color:#7be1c1;letter-spacing:.1em}
+canvas{display:block;width:100%;image-rendering:pixelated;aspect-ratio:5/3;border:2px solid #55766e;background:#000;box-shadow:0 0 45px #3562583b}
+main{display:grid;gap:16px}.controls{display:flex;gap:12px;flex-wrap:wrap}
+button{border:1px solid #659e8e;background:#122c32;color:#e8f7ef;padding:11px 17px;border-radius:4px;font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid #ffbb75;outline-offset:3px}button:hover{background:#20434a}
+pre{white-space:pre-wrap;background:#081c24;border:1px solid #3a545d;padding:16px;min-height:58px;line-height:1.5}
+.note{font-size:12px;color:#aebdbb}
+</style></head><body><main>
+<div><div class="kicker">QSOL-IMC / VANILLAJS / ORIGINAL ARCADE RESEARCH</div>
+<h1>BLIT-001 — THE BITPLANE FORGE</h1>
+<p>Four packed 16-bit colour planes. Masked sprite movement, three-input Boolean minterms, pixel linework and one local Canvas2D presentation surface. Gameplay authority remains untouched.</p></div>
+<canvas id="screen" width="320" height="192" aria-label="Original arcade scene rendered from four bitplanes"></canvas>
+<div class="controls"><button id="move">Move masked sprite</button><button id="copy">Overlap-safe copy</button><button id="reset">Reset frame</button></div>
+<pre id="report" role="status">Loading graphics…</pre>
+<p class="note">Original procedural pixels, zero external assets. Software presentation experiment, not a cycle-accurate Amiga or Atari emulator.</p>
+</main><script type="module" src="./main.js"></script></body></html>
