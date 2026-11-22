@@ -69,6 +69,8 @@ test('malformed programs, indices and foreign handles fail before display mutati
   const bad=new Uint8Array(src);bad[bad.length-1]=16;
   assert.throws(()=>d.render(bad,accepted));
   assert.throws(()=>d.render(src,{format:COPPER_FORMAT,height:8,commandCount:0}));
+  assert.throws(()=>d.render(new Uint8Array(d.view().buffer,0,32*8),accepted),TypeError);
+
   assert.throws(()=>new CopperDisplay(31,9).render(new Uint8Array(31*9),accepted));
   assert.deepEqual(d.view(),baseline);
   const accessor={height:8,palette:colors,commands:[]};

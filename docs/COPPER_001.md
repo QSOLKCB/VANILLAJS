@@ -12,7 +12,7 @@ Input is an inert ordered scanline programme with an initial 16-colour **RGBA by
 
 `createCopperProgram({height,palette,commands})` deep-copies accepted data into private ownership and returns a frozen public handle. The producer's later mutation cannot change the accepted palette/command program.
 
-`new CopperDisplay(width,height)` retains exactly **width × height × 4 RGBA bytes** (width 1..512, height 1..384). `display.render(indexed,program)` accepts a native `Uint8Array(width×height)` with every index in 0..15; it validates the complete frame *before* drawing, rejecting invalid pixels without partial output. The programme must have the exact display height. No network or DOM calls are made by the core.
+`new CopperDisplay(width,height)` retains exactly **width × height × 4 RGBA bytes** (width 1..512, height 1..384). `display.render(indexed,program)` accepts a native `Uint8Array(width×height)` with every index in 0..15; it validates the complete frame *before* drawing, rejecting invalid pixels without partial output. Shared or aliased backing buffers are rejected: source indexes require a separate ordinary `ArrayBuffer`, never the retained RGBA output. The programme must have the exact display height. No network or DOM calls are made by the core.
 
 Every `render` begins from the programme's initial palette and zero horizontal scroll, so consecutive frames with identical input are byte-identical and independent of prior presentation. The returned `Uint8ClampedArray` is **owned mutable presentation storage**. If the caller needs a durable snapshot, copy the result before a later render; the library does not promise input alias safety after the call.
 

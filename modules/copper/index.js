@@ -86,6 +86,8 @@ export class CopperDisplay{
     if(!(indexed instanceof Uint8Array)||Object.getPrototypeOf(indexed)!==Uint8Array.prototype||
        indexed.length!==this.#width*this.#height)
       throw new TypeError('exact native Uint8Array indexed frame required');
+    if(!(indexed.buffer instanceof ArrayBuffer)||indexed.buffer===this.#rgba.buffer)
+      throw new TypeError('indexed source must own a separate ordinary ArrayBuffer');
     // Check every index before writing a single RGBA byte.
     for(let i=0;i<indexed.length;i++)if(indexed[i]>15)
       throw new RangeError('palette index outside 0..15');
