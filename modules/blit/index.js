@@ -109,8 +109,19 @@ export class BitplaneSurface{
    * Alias sources are sampled before writes, avoiding overlapping-copy corruption.
    * Reject malformed arguments and invalid source rectangles before changing bytes.
    */
-  blit(src,{sx=0,sy=0,dx=0,dy=0,width=src?.width,height=src?.height,mask=null,minterm=BLIT_COPY}={}){
+  blit(src,options={}){
     source(src,'source');
+    if(!options||![Object.prototype,null].includes(Object.getPrototypeOf(options)))
+      throw new TypeError('blit options must be a plain data record');
+    const desc=Object.getOwnPropertyDescriptors(options);
+    const allowed=['sx','sy','dx','dy','width','height','mask','minterm'];
+    if(Reflect.ownKeys(desc).some(key=>typeof key!=='string'||!allowed.includes(key)||
+       !desc[key].enumerable||!Object.hasOwn(desc[key],'value')))
+      throw new TypeError('unknown or accessor blit option');
+    const get=(name,fallback)=>Object.hasOwn(desc,name)?desc[name].value:fallback;
+    const sx=get('sx',0),sy=get('sy',0),dx=get('dx',0),dy=get('dy',0);
+    const width=get('width',src.width),height=get('height',src.height);
+    const mask=get('mask',null),minterm=get('minterm',BLIT_COPY);
     if(src.planes!==this.#planes)throw new RangeError('source/destination plane counts differ');
     if(mask!==null){
       source(mask,'mask');
