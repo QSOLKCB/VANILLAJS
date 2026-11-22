@@ -1,0 +1,27 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+:root { color-scheme: dark; --ink:#eaf1e7; --muted:#b4c6c6; --edge:#475d64; --signal:#f3c783; --panel:#152c34 }
+* { box-sizing:border-box }
+body { margin:0; background:#0c2029; color:var(--ink); font:16px/1.5 "Work Sans",system-ui,sans-serif }
+header, main { max-width:1180px; width:92%; margin:auto }
+header { display:flex; justify-content:space-between; gap:1rem; padding:16px 0; border-bottom:1px solid var(--edge); font:600 .85rem/1.5 ui-monospace,monospace }
+a { color:#a8e4d6; text-underline-offset:.22em }
+h1 { font:600 clamp(2.8rem,6vw,5rem)/1 "Instrument Serif",Georgia,serif; letter-spacing:-.045em; margin:32px 0 12px }
+.intro { max-width:65ch; margin:0 0 28px; color:var(--muted) }
+.bench { display:grid; grid-template-columns:1.1fr 1fr; gap:22px; margin-bottom:32px }
+section { min-width:0; background:var(--panel); border-top:3px solid var(--signal); padding:18px 22px }
+h2 { margin:0 0 16px; font:600 1.7rem/1.15 "Instrument Serif",Georgia,serif }
+h3 { font-size:.85rem; color:var(--signal); margin:.7rem 0 .2rem }
+label { display:grid; gap:.3rem; margin:.7rem 0; font-size:.88rem; font-weight:650 }
+button,select,input,textarea { max-width:100%; border:1px solid #66818b; border-radius:3px; font:inherit; padding:.55rem .75rem; background:#0c2029; color:var(--ink) }
+textarea, #build, output { font:.84rem/1.45 ui-monospace,monospace; overflow-wrap:anywhere }
+textarea { width:100%; resize:vertical } input, select { min-width:0 }
+button { cursor:pointer; font-size:.89rem; font-weight:650; background:#274852 }
+#pair,#send { background:var(--signal); color:#182c31 }
+button:disabled,input:disabled,select:disabled { opacity:.55; cursor:default }
+:focus-visible { outline:3px solid #67d8c1; outline-offset:2px }
+.actions { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 }
+p { margin:.8rem 0; color:var(--muted); font-size:.93rem }
+.ledger { padding:8px 14px 14px; background:#0c2029; margin:1rem 0; border-left:2px solid #61ae9f }
+output { display:block; white-space:pre-line } progress { width:100%; accent-color:#69d1b4 }
+[hidden] { display:none!important }
+@media (max-width:740px) { .bench { grid-template-columns:1fr } section { padding:14px 16px } }
