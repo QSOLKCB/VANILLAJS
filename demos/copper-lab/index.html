@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COPPER-001 — The Raster Conductor</title>
+<style>
+:root{font:16px ui-monospace,Consolas,monospace;color:#dce8ed;background:#08121e;color-scheme:dark}
+*{box-sizing:border-box}body{max-width:980px;margin:0 auto;padding:25px 17px}
+h1{font-size:clamp(23px,5vw,43px);color:#f6b775}p{line-height:1.6;color:#acc8c9}
+canvas{width:100%;max-width:960px;image-rendering:pixelated;border:2px solid #6aa8a6;aspect-ratio:5/3}
+button{background:#15303d;color:#f5e3c7;border:1px solid #69a8a3;padding:12px 17px;margin:7px 6px 7px 0;font:inherit;cursor:pointer}
+button:hover{background:#245169}button:focus-visible{outline:3px solid #ffb873}
+pre{white-space:pre-wrap;border:1px solid #355267;background:#081d29;padding:14px}
+</style></head><body>
+<div style="color:#79e0cb">QSOL-IMC / VANILLAJS / ORIGINAL ARCADE RESEARCH</div>
+<h1>COPPER-001 — THE RASTER CONDUCTOR</h1>
+<p>Original Copper-inspired scanline palette registers and horizontal scroll. Commands change presentation colour and sample position only; source bitplanes never change.</p>
+<canvas id="screen" width="320" height="192" aria-label="Original raster bars and per-scanline scroll effect"></canvas>
+<div><button id="mode">Toggle scanline commands</button><button id="scroll">Next scroll pattern</button><button id="reset">Reset</button></div>
+<pre id="report" role="status">Starting raster display…</pre>
+<p>Uses BLIT-001 indexed pixels as input and a private retained Copper RGBA presentation buffer. No real CRT beam timing, DMA, hardware registers or external network resources.</p>
+<script type="module" src="./main.js"></script></body></html>
