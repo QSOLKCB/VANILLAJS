@@ -54,6 +54,13 @@
       "status": "experimental",
       "description": "Minimal coloured geometry, lines, points and camera rendering"
     },
+    "render-packing": {
+      "entry": "modules/render-packing/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded reusable Float32 XYZ/RGB box streams for low-allocation dynamic geometry"
+    },
     "projectiles": {
       "entry": "modules/projectiles/index.js",
       "depends": [
