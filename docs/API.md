@@ -25,6 +25,10 @@ to the mutable legacy bodies described above. Their full public contracts,
 rounding, overflow, tick units and runnable composition example are in
 [INTEGER_ENGINE.md](INTEGER_ENGINE.md). Integer Foundry is the first consumer.
 
+## Optional low-allocation box streaming (RENDER-PACKING-001)
+
+`render-packing` is a pure, opt-in bounded Float32 XYZ/RGB writer that can feed the existing WebGL1 `Renderer.update` with a single live typed view per frame. It is a presentation tool, not a garbage collector, physics kernel or new combat projectile cap. See [bounds, byte-parity tests, ownership and workload protocol](RENDER_PACKING_001.md).
+
 ## Optional static geometry layer (layer 2)
 
 ```js

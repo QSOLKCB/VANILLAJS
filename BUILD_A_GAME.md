@@ -76,6 +76,26 @@ Production games should also implement reset, teardown, controller disconnect,
 touch cancellation and unsupported-renderer behaviour. The Flight Lab app is a
 complete reference for those boundaries; its DOM layout is not a module contract.
 
+## Stream a dense bullet field without per-box garbage
+
+The new experimental [RENDER-PACKING-001](docs/RENDER_PACKING_001.md) module owns a bounded, reusable typed buffer for coloured boxes. It emits the same Float32 geometry as `boxVertices`, then passes one live subview per frame to the existing `Renderer.update` method. For 512 bullets, one 442,368-byte storage allocation replaces repeated JS-number assembly and per-frame conversion. **This is a rendering optimization, not collision or a new combat projectile limit.**
+
+```js
+import {BoxVertexStream} from './vendor/vanillajs/modules/render-packing/index.js';
+
+const bullets=new BoxVertexStream(512);
+const bulletMesh=renderer.mesh([]);
+function renderBulletHeads(acceptedShots) {
+  bullets.reset();
+  for (const p of acceptedShots)
+    bullets.appendXYZRGB(p.x,p.y,p.z,.12,.12,.12,1,.5,.2);
+  renderer.update(bulletMesh,bullets.view());
+  renderer.draw(bulletMesh);
+}
+```
+
+Keep source projectile caps, actual damaging collision, stable ordering and tested replay independent of this presentation helper. Over-capacity requests throw and must be handled by explicit game policy.
+
 ## Record the dependency selection
 
 Keep a small file in the consuming game, for example:
