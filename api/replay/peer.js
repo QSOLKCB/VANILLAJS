@@ -64,6 +64,10 @@ export function createReplayPeer({role, expectedBuild, onChange = () => {}}) {
     publish(next, message);
   }
   function fail(error) { end('failed', error.message); }
+  function connectionLost(message) {
+    if (verified) end('verified');
+    else end('failed', message);
+  }
   function deadline(message) {
     clearTimeout(timer);
     timer = setTimeout(() => fail(new Error(message)), 30000);
@@ -112,8 +116,8 @@ export function createReplayPeer({role, expectedBuild, onChange = () => {}}) {
     };
     dc.onopen = opened;
     dc.onmessage = event => { void message(event.data); };
-    dc.onerror = () => end(verified ? 'verified' : 'failed', 'Data channel error');
-    dc.onclose = () => end(verified ? 'verified' : 'failed', verified ? '' : 'Peer closed the transfer');
+    dc.onerror = () => connectionLost('Data channel error');
+    dc.onclose = () => connectionLost('Peer closed the transfer');
     if (dc.readyState === 'open') opened();
   }
   pc.ondatachannel = event => {
@@ -121,7 +125,7 @@ export function createReplayPeer({role, expectedBuild, onChange = () => {}}) {
     else { event.channel.close(); fail(new Error('Unexpected channel from receiver')); }
   };
   pc.onconnectionstatechange = () => {
-    if (pc.connectionState === 'failed') end(verified ? 'verified' : 'failed', 'Peer connection failed');
+    if (pc.connectionState === 'failed') connectionLost('Peer connection failed');
   };
 
   async function localCode(type) {

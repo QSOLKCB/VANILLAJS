@@ -95,6 +95,13 @@ async function save(page) {
   const [download] = await Promise.all([page.waitForEvent('download'), page.locator('#save').click()]);
   return readFile(await download.path(), 'utf8');
 }
+async function completed(sender, receiver) {
+  await Promise.all([state(sender, 'acknowledged'), state(receiver, 'verified')]);
+  // The sender releases its native peer after the acknowledgment. A late
+  // channel-close/error on the receiver must preserve the visible success.
+  await receiver.waitForFunction(() => globalThis.observedReplayPeer.connectionState === 'closed');
+  assert.equal(await receiver.locator('#status').textContent(), 'Verified by this browser.');
+}
 const reset = (a, b) => Promise.all([a.locator('#reset').click(), b.locator('#reset').click()]);
 try {
   // Separate processes, profiles and worker caches, all hosted on this one runner.
@@ -110,7 +117,7 @@ try {
   const build = await receiver.locator('#build').inputValue();
   const route = await pair(sender, receiver);
   await sender.locator('#send').click();
-  await Promise.all([state(sender, 'acknowledged'), state(receiver, 'verified')]);
+  await completed(sender, receiver);
   const integer = await save(receiver);
   assert.equal(integer, exportReplayReceipt(await sealReplayReceipt({...replayExamples().integer, build})));
 
@@ -133,7 +140,7 @@ try {
   assert.equal(await save(receiver), integer);
   await setFile(racing);
   await sender.locator('#send').click();
-  await Promise.all([state(sender, 'acknowledged'), state(receiver, 'verified')]);
+  await completed(sender, receiver);
   assert.equal(await save(receiver), racing);
 
   const out = join(root, 'browser-artifacts/replay-transport-001');
