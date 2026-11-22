@@ -25,6 +25,10 @@ to the mutable legacy bodies described above. Their full public contracts,
 rounding, overflow, tick units and runnable composition example are in
 [INTEGER_ENGINE.md](INTEGER_ENGINE.md). Integer Foundry is the first consumer.
 
+## FX-PIPE-001 — optional Q16 graphics preparation
+
+`modules/fx-pipe/index.js` provides `FxGraphicsPipe`: a bounded, retained `Float32Array` writer for original Q16.16 affine transforms and RGB sprite-card / triangle batches. It accepts **integer raw Q16.16 coordinates** and 0–255 RGB bytes, and emits interleaved XYZ/RGB vertices usable by the unchanged WebGL1 `Renderer.update()`. It is presentation-only and **not** an emulated Super FX chip, projection matrix, texture system or authoritative simulation. See [the complete input and numerical contract](FX_PIPE_001.md).
+
 ## Optional low-allocation box streaming (RENDER-PACKING-001)
 
 `render-packing` is a pure, opt-in bounded Float32 XYZ/RGB writer that can feed the existing WebGL1 `Renderer.update` with a single live typed view per frame. It is a presentation tool, not a garbage collector, physics kernel or new combat projectile cap. See [bounds, byte-parity tests, ownership and workload protocol](RENDER_PACKING_001.md).
