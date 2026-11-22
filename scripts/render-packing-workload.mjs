@@ -35,24 +35,18 @@ for(const count of [64,256,512]){
     return sum;
   };
   for(let i=0;i<2;i++){assert.equal(original(),reuse());}
+  const expectedChecksum=original();
   const samples={original:[],stream:[]};
   for(let trial=0;trial<7;trial++)
     for(const key of trial%2?['stream','original']:['original','stream']){
       const start=performance.now(),value=key==='stream'?reuse():original();
       samples[key].push(performance.now()-start);
-      assert.equal(value,reuseChecksum(count,boxes));
+      assert.equal(value,expectedChecksum,'paired geometry checksum');
     }
   rows.push({boxes:count,framesPerTrial:80,verticesPerFrame:count*36,
     originalFloatValuesPerFrame:count*BOX_STREAM_FLOATS,streamRetainedBytes:stream.view().buffer.byteLength,
     float32ByteParity:true,medianMs:{original:median(samples.original),stream:median(samples.stream)},
     samplesMs:samples});
-}
-function reuseChecksum(count,boxes){
-  // Both modes use the same first and final vertex every frame, and the inputs
-  // do not depend on the draw schedule.
-  const first=boxVertices(boxes[0].p,boxes[0].s,boxes[0].c)[0];
-  const last=new Float32Array(boxVertices(boxes[count-1].p,boxes[count-1].s,boxes[count-1].c)).at(-1);
-  return 80*(Math.fround(first)+last);
 }
 assert.ok(rows.every(r=>r.float32ByteParity&&r.streamRetainedBytes===r.boxes*BOX_STREAM_FLOATS*4));
 console.log(JSON.stringify({kind:'qsol.vanillajs.render-packing-workload.v1',node:process.version,
