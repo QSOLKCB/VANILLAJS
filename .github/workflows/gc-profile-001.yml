@@ -1,0 +1,75 @@
+name: GC-PROFILE-001 — hosted Allocation Observatory
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/gc-profile-001.yml'
+      - 'scripts/gc-profile-*.mjs'
+      - 'tests/gc-profile.test.js'
+      - 'docs/GC_PROFILE_001.md'
+      - 'modules/render-packing/**'
+      - 'modules/render-webgl/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  allocation-observatory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Verify source and standard offline contracts
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          node --test tests/gc-profile.test.js
+          node scripts/check.js
+          node scripts/build.js
+          node scripts/verify-offline.js
+      - name: Install pinned isolated Playwright on GitHub-hosted runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PLAYWRIGHT_BROWSERS_PATH="$RUNNER_TEMP/gc-profile/browsers"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" >> "$GITHUB_ENV"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install \
+            --prefix "$RUNNER_TEMP/gc-profile" \
+            --ignore-scripts --no-save --package-lock=false --no-audit --no-fund \
+            playwright@1.64.0
+          node "$RUNNER_TEMP/gc-profile/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Profile actual FPS gameplay and paired 64-512 visual boxes
+        env:
+          NODE_PATH: ${{ runner.temp }}/gc-profile/node_modules
+          GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          node scripts/gc-profile-browser.mjs --out gc-profile-evidence \
+            --frames 60 --warmup 20 --backend software
+          (cd gc-profile-evidence && sha256sum -c SHA256SUMS)
+      - name: Summarize observational evidence without native GPU claims
+        if: success()
+        run: |
+          python3 - <<'PY'
+          import json, os
+          p=json.load(open('gc-profile-evidence/gc-profile-001.json',encoding='utf8'))
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf8') as f:
+              f.write('## GC-PROFILE-001 — measured headless software-rendering observations\n\n')
+              f.write('| Workload | Pass | p95 RAF ms | p95 JS work ms | Sampled bytes | Observed GC events |\n')
+              f.write('| --- | ---: | ---: | ---: | ---: | ---: |\n')
+              for row in p['observations']:
+                  name='Real Block Arena FPS' if row['kind']=='real-gameplay' else str(row['count'])+' visual boxes / '+row['variant']
+                  f.write(f"| {name} | {row.get('pass','—')} | {row['frameIntervals']['p95']:.2f} | {row['jsWork']['p95']:.2f} | {row['allocationSampling']['sampledBytes']} | {row['gc']['observedCount']} |\n")
+              f.write('\nStatistical sampled bytes are not total allocations. GC trace events can overlap or go unobserved. These hosted readings do NOT establish native GPU FPS or a rendering speedup.\n')
+          PY
+      - name: Preserve exact source-bound raw samples and screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: gc-profile-001-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            gc-profile-evidence/
+            dist/manifest.json
+          retention-days: 14
+          if-no-files-found: warn
