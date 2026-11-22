@@ -40,6 +40,10 @@ test('bounds and malformed admission do not modify published words',()=>{
     ()=>s.setPixel(32,0,2),()=>s.setPixel(0,0,16),()=>s.fillRect(0,0,33,1,2),
     ()=>s.fillRect(0,0,3,2,256),()=>s.line(0,0,0,21,2),()=>s.line(0,0,2,2,NaN),
     ()=>s.blit(s,{sx:0,sy:0,dx:0,dy:0,width:33,height:1}),
+    ()=>s.blit(s,{width:1,height:1,unexpected:2}),
+    ()=>s.blit(s,null),
+    ()=>s.blit(s,Object.defineProperty({width:1,height:1},'dx',{
+      enumerable:true,get(){throw Error('getter must not run');}})),
     ()=>s.blit(s,{sx:0,sy:0,dx:0,dy:0,width:1,height:1,minterm:-1}),
     ()=>s.blit(new BitplaneSurface(16,8,1),{width:1,height:1}),
     ()=>s.blit(s,{width:1,height:1,mask:new BitplaneSurface(32,20,2)}),()=>s.rgba([])
