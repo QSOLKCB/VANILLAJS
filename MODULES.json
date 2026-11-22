@@ -61,6 +61,13 @@
       "status": "experimental",
       "description": "Bounded reusable Float32 XYZ/RGB box streams for low-allocation dynamic geometry"
     },
+    "fx-pipe": {
+      "entry": "modules/fx-pipe/index.js",
+      "depends": ["integer-math"],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded Q16 affine transform and reusable Float32 XYZ/RGB triangle/sprite batching"
+    },
     "projectiles": {
       "entry": "modules/projectiles/index.js",
       "depends": [
