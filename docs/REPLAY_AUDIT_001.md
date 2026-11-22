@@ -55,3 +55,7 @@ the presentation selector, then resumes the original digest. Every stale audit
 must leave the newest accepted evidence and displayed status untouched. The
 test does not mock the physics engine or claim that the underlying bounded
 simulation computations can be cancelled mid-digest.
+
+## Send a recorded tape to another browser
+
+[Replay Exchange](../demos/replay-link-lab/index.html) uses the public receipt exporter and importer at both ends of a direct WebRTC link. Each receiver chooses its own expected build. To use an original Evidence Chamber fixture, enter its documented model-source pin on both browsers and select the saved receipt on the sender. [Transport and pairing guide](REPLAY_TRANSPORT_001.md).

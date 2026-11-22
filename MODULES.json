@@ -734,6 +734,9 @@
     },
     "replay-audit": {
       "entry": "modules/replay-audit/index.js",
+      "demonstrations": {
+        "peer-exchange": "demos/replay-link-lab/index.html"
+      },
       "depends": [
         "combat3d",
         "vehicle3d",

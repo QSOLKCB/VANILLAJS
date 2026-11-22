@@ -1,0 +1,56 @@
+name: REPLAY-TRANSPORT-001 direct peer exchange
+on:
+  pull_request: {}
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: replay-transport-001-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Validate wire framing and build the offline package
+        run: |
+          node --test tests/replay-transport.test.js tests/replay-audit.test.js
+          node scripts/build.js
+          node scripts/verify-offline.js
+      - name: Set isolated pinned Playwright browser root
+        run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
+      - name: Restore pinned browser toolchain
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        id: tooling
+        with:
+          path: ${{ runner.temp }}/flight-browser
+          key: flight-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24.04-node22-playwright1.64.0-only-shell-v1
+      - name: Install isolated pinned Chromium only on cache miss
+        if: steps.tooling.outputs.cache-hit != 'true'
+        run: |
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --prefix "$RUNNER_TEMP/flight-browser" \
+            --ignore-scripts --no-save --package-lock=false --no-audit --no-fund playwright@1.64.0
+          node "$RUNNER_TEMP/flight-browser/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Verify pinned actual Chromium runtime
+        run: node scripts/flight-browser-preflight.mjs
+      - name: Exchange verified receipts between two native Chromium peers
+        env:
+          NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
+        run: node scripts/replay-transport-browser.mjs
+      - name: Retain receiver ledger, receipt and manifest
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: replay-transport-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            browser-artifacts/replay-transport-001/
+            dist/manifest.json
+          if-no-files-found: error

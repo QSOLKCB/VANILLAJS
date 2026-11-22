@@ -171,6 +171,10 @@ This engine programme neither changes Games2 nor decides when its next game star
 The genre catalogue informs priorities; no row promises a complete new genre
 engine. Each proposal needs a bounded contract, consumer, provenance and tests.
 
+## Replay transport after v3.1.0
+
+The conditional network phase builds on the published P6 replay authority. The [Replay Exchange candidate](docs/REPLAY_TRANSPORT_001.md) connects two browsers directly for one bounded transfer and verifies the tape on the receiving engine. Its scope is recorded runs. Live command replication would require its own authority contract.
+
 ## Historical milestones and evidence
 
 The preceding [v2.4.0 Demoscene Foundry](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.4.0)

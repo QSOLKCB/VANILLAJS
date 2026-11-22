@@ -79,6 +79,8 @@ Each phase is a **separate, reviewable PR** with its own exact-head source check
 
 **Later/conditional:** procedural environmental effects or material simulation (inspired by Sandboxels) only after memory and deterministic particle budgets are established; network transport only after replay/authority boundaries are complete. Do not add cloud services, websocket backends or third-party runtimes merely to build a demo.
 
+**Post-v3.1.0 implementation note.** P6 shipped the receiving verifier. [REPLAY-TRANSPORT-001](REPLAY_TRANSPORT_001.md) implements the conditional network item above as a direct browser-to-browser exchange of recorded tapes, with a locally chosen build pin and full receiver-side replay.
+
 ## 5. First implementation PR specification: SENSE-001
 
 Create a small *pure* reusable module, not a second combat engine:

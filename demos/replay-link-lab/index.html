@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<html lang="en"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Replay Exchange · VANILLAJS</title><link rel="stylesheet" href="./style.css">
+</head><body>
+<header><a href="../creator-hub/index.html">VANILLAJS / Creator Hub</a><a href="../../docs/REPLAY_TRANSPORT_001.md">Protocol guide ↗</a></header>
+<main><h1>Replay Exchange</h1>
+<p class="intro">Send a recorded run directly to another browser. The receiver replays the tape against its own engine before it can save the result.</p>
+<div class="bench">
+<section><h2>Pair browsers</h2>
+  <label>This browser<select id="role"><option value="sender">Sender</option><option value="receiver">Receiver</option></select></label>
+  <label>Expected replay build<input id="build" spellcheck="false" autocomplete="off" maxlength="40" value="d6da91b91374d28bdd7c201d214f5618b247904c"></label>
+  <p id="instructions"></p>
+  <label>Code from peer<textarea id="remote" spellcheck="false" rows="3" maxlength="24576"></textarea></label>
+  <div class="actions"><button id="pair">Create offer</button><button id="connect" hidden>Apply answer</button><button id="reset" disabled>Disconnect</button></div>
+  <label>Your pairing code<textarea id="local" readonly rows="3" spellcheck="false"></textarea></label>
+  <p><a href="./index.html" target="_blank" rel="noopener">Open the lab in another tab ↗</a> and select Receiver.</p>
+</section>
+<section><h2>Transfer a receipt</h2>
+  <div id="sources">
+    <label>Replay source<select id="source"><option value="integer">Integer engine · 40 ticks</option><option value="racing">Flat-track racing · 60 ticks</option><option value="file">Saved Evidence Chamber receipt</option></select></label>
+    <label id="file-row" hidden>Receipt file<input id="file" type="file" accept="application/json,.json"></label>
+    <button id="send" disabled>Send replay</button>
+  </div>
+  <div class="ledger"><h3>Connection</h3><p id="status" role="status">Ready to pair.</p>
+    <progress id="progress" max="1" value="0" aria-label="Receipt bytes received" hidden></progress>
+    <h3>Last verified here</h3><output id="result">Awaiting a receipt.</output>
+  </div>
+  <button id="save" disabled>Save verified JSON</button>
+  <p><a href="../replay-audit-lab/index.html">Record a tape in the Evidence Chamber ↗</a></p>
+</section></div>
+</main><script type="module" src="./app.js"></script><script type="module" src="../../offline/register.js"></script></body></html>
