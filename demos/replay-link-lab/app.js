@@ -9,7 +9,6 @@ const role = el('role'), build = el('build'), source = el('source');
 const status = el('status'), progress = el('progress');
 let peer = null, lastVerified = null, preparing = false;
 const fixtureBuild = build.defaultValue;
-if (location.hash === '#receiver') role.value = 'receiver';
 const descriptions = {
   gathering: 'Gathering local connection information…', offered: 'Give your offer to the receiver, then paste its answer.',
   connecting: 'Waiting for the peer connection.', open: 'Direct channel open.', receiving: 'Receiving bytes.',

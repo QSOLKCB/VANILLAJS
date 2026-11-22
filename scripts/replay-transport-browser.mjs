@@ -100,11 +100,13 @@ try {
   // Separate processes, profiles and worker caches, all hosted on this one runner.
   const sender = await cachedClient(), receiver = await cachedClient();
   await stopOrigin();
-  for (const [page, url] of [[sender, lab], [receiver, lab + '#receiver']]) {
-    const response = await page.goto(url);
+  for (const page of [sender, receiver]) {
+    const response = await page.goto(lab);
     assert.equal(response.status(), 200);
     assert.equal(response.fromServiceWorker(), true);
+    assert.equal(await page.getByRole('link', {name:'Open the lab in another tab'}).evaluate(link => link.href), lab);
   }
+  await receiver.locator('#role').selectOption('receiver');
   const build = await receiver.locator('#build').inputValue();
   const route = await pair(sender, receiver);
   await sender.locator('#send').click();
