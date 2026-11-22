@@ -25,6 +25,10 @@ to the mutable legacy bodies described above. Their full public contracts,
 rounding, overflow, tick units and runnable composition example are in
 [INTEGER_ENGINE.md](INTEGER_ENGINE.md). Integer Foundry is the first consumer.
 
+## BLIT-001 — packed bitplane graphics processor
+
+`modules/blit/index.js` exports `BitplaneSurface` (up to 512×384 pixels, four indexed 16-bit word planes), general eight-bit three-input Boolean blits, cookie-cut masks (0xCA), overlap-safe copying, rect fills, Bresenham lines, indexed pixels and owned RGBA export. It is pure, bounded presentation data; no Amiga/ST hardware emulation, graphics driver or collision authority. See [the BLIT-001 contract](BLIT_001.md) and [the live Bitplane Forge](../demos/blit-lab/index.html).
+
 ## FX-PIPE-001 — optional Q16 graphics preparation
 
 `modules/fx-pipe/index.js` provides `FxGraphicsPipe`: a bounded, retained `Float32Array` writer for original Q16.16 affine transforms and RGB sprite-card / triangle batches. It accepts **integer raw Q16.16 coordinates** and 0–255 RGB bytes, and emits interleaved XYZ/RGB vertices usable by the unchanged WebGL1 `Renderer.update()`. It is presentation-only and **not** an emulated Super FX chip, projection matrix, texture system or authoritative simulation. See [the complete input and numerical contract](FX_PIPE_001.md).

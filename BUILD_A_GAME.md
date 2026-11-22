@@ -100,6 +100,10 @@ Keep source projectile caps, actual damaging collision, stable ordering and test
 
 [GC-PROFILE-001](docs/GC_PROFILE_001.md) is a development-only Chromium Allocation Observatory. It profiles a real packaged FPS skirmish and pairs 64–512-box WebGL visual workloads under statistical allocation sampling, conservative GC tracing and raw frame observations. No browser collector tuning, native GPU speedup or game runtime dependency is implied.
 
+## Classic arcade-inspired Bitplane Forge (BLIT-001)
+
+`modules/blit/index.js` offers a bounded 16-bit planar bitmap and masked raster operations inspired by early arcade, Amiga and Atari STE blitters. The [interactive Bitplane Forge](demos/blit-lab/index.html) renders original indexed pixels into a local Canvas2D framebuffer. It does not change physics, replace the WebGL engine or claim hardware-equivalent performance. See [BLIT-001](docs/BLIT_001.md).
+
 ## Original Super FX-inspired graphics staging (FX-PIPE-001)
 
 The experimental [FX-PIPE-001](docs/FX_PIPE_001.md) module prepares bounded RGB quads and triangles using integer Q16.16 affine transforms and one retained `Float32Array`. It is an independent **graphics preparation stage**: submit its live `view()` to `Renderer.update()` for the existing WebGL1 renderer to draw. It adds no new physics, sprite textures, compositor or performance guarantee. The caller owns the camera, 3D world authority and lifecycle.

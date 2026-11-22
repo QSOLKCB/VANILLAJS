@@ -61,6 +61,13 @@
       "status": "experimental",
       "description": "Bounded reusable Float32 XYZ/RGB box streams for low-allocation dynamic geometry"
     },
+    "blit": {
+      "entry": "modules/blit/index.js",
+      "depends": [],
+      "environment": "pure-js",
+      "status": "experimental",
+      "description": "Bounded packed 16-bit indexed bitplanes, three-input Boolean blitting, masked sprites, fills and lines"
+    },
     "fx-pipe": {
       "entry": "modules/fx-pipe/index.js",
       "depends": ["integer-math"],
