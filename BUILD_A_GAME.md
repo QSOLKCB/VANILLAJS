@@ -96,6 +96,10 @@ function renderBulletHeads(acceptedShots) {
 
 Keep source projectile caps, actual damaging collision, stable ordering and tested replay independent of this presentation helper. Over-capacity requests throw and must be handled by explicit game policy.
 
+## Measure allocations before optimizing visuals
+
+[GC-PROFILE-001](docs/GC_PROFILE_001.md) is a development-only Chromium Allocation Observatory. It profiles a real packaged FPS skirmish and pairs 64–512-box WebGL visual workloads under statistical allocation sampling, conservative GC tracing and raw frame observations. No browser collector tuning, native GPU speedup or game runtime dependency is implied.
+
 ## Record the dependency selection
 
 Keep a small file in the consuming game, for example:
