@@ -100,6 +100,10 @@ Keep source projectile caps, actual damaging collision, stable ordering and test
 
 [GC-PROFILE-001](docs/GC_PROFILE_001.md) is a development-only Chromium Allocation Observatory. It profiles a real packaged FPS skirmish and pairs 64–512-box WebGL visual workloads under statistical allocation sampling, conservative GC tracing and raw frame observations. No browser collector tuning, native GPU speedup or game runtime dependency is implied.
 
+## Copper-inspired scanline presentation (COPPER-001)
+
+The optional [COPPER-001](docs/COPPER_001.md) compiler accepts ordered per-scanline palette and horizontal-scroll commands over a read-only indexed frame, such as `BitplaneSurface.indices()`. `CopperDisplay` owns the RGBA presentation buffer; it never affects game physics or the original bitplanes. Try the [Raster Conductor](demos/copper-lab/index.html). This models the *concept* of Amiga Copper display changes, not cycle-exact beam-timed hardware.
+
 ## Classic arcade-inspired Bitplane Forge (BLIT-001)
 
 `modules/blit/index.js` offers a bounded 16-bit planar bitmap and masked raster operations inspired by early arcade, Amiga and Atari STE blitters. The [interactive Bitplane Forge](demos/blit-lab/index.html) renders original indexed pixels into a local Canvas2D framebuffer. It does not change physics, replace the WebGL engine or claim hardware-equivalent performance. See [BLIT-001](docs/BLIT_001.md).

@@ -25,6 +25,10 @@ to the mutable legacy bodies described above. Their full public contracts,
 rounding, overflow, tick units and runnable composition example are in
 [INTEGER_ENGINE.md](INTEGER_ENGINE.md). Integer Foundry is the first consumer.
 
+## COPPER-001 — original scanline palette and scroll commands
+
+`modules/copper/index.js` exports `createCopperProgram` and `CopperDisplay`, accepting a validated inert scanline command list to change indexed pixel palette and horizontal sample position per row. It uses owned RGBA output and does not mutate `BLIT-001` source pixels; no ambient clock or Amiga Copper hardware. See [the complete COPPER-001 contract](COPPER_001.md) and [the Raster Conductor lab](../demos/copper-lab/index.html).
+
 ## BLIT-001 — packed bitplane graphics processor
 
 `modules/blit/index.js` exports `BitplaneSurface` (up to 512×384 pixels, four indexed 16-bit word planes), general eight-bit three-input Boolean blits, cookie-cut masks (0xCA), overlap-safe copying, rect fills, Bresenham lines, indexed pixels and owned RGBA export. It is pure, bounded presentation data; no Amiga/ST hardware emulation, graphics driver or collision authority. See [the BLIT-001 contract](BLIT_001.md) and [the live Bitplane Forge](../demos/blit-lab/index.html).
