@@ -19,6 +19,23 @@
   ],
   "workflows": [
     {
+      "id": "material-grid",
+      "title": "Build and replay a bounded sand and water chamber",
+      "entryPoints": ["demos/material-lab/index.html", "modules/material-grid/index.js"],
+      "modules": ["material-grid", "time"],
+      "examples": ["demos/material-lab/index.html"],
+      "docs": ["docs/MATERIAL_001.md"],
+      "validation": [
+        "node --test tests/*.test.js",
+        "node scripts/check.js",
+        "node scripts/build.js",
+        "node scripts/verify-offline.js",
+        "node scripts/material-browser-smoke.mjs"
+      ],
+      "limitations": ["Discrete cells use integer ticks and closed borders. A snapshot resumes the saved state. It contains no command history."],
+      "experimental": true
+    },
+    {
       "id": "first-scene",
       "title": "Learn, edit, test and export a Workbench scene",
       "entryPoints": [

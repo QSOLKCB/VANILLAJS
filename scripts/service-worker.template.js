@@ -14,10 +14,15 @@ function shaHex(buffer){return crypto.subtle.digest('SHA-256',buffer).then(bytes
 async function verify(response,entry){
   if(!response.ok||response.status!==200||response.type==='opaque')
     throw new Error('unverifiable offline asset: '+entry.path);
-  const raw=await response.clone().arrayBuffer();
+  const raw=await response.arrayBuffer();
   if(raw.byteLength!==entry.bytes||(await shaHex(raw))!==entry.sha256)
     throw new Error('offline asset digest mismatch: '+entry.path);
-  return response;
+  // Serve the bytes we hashed. Returning the other branch of a cloned
+  // body leaves Chromium streaming it even after verification has finished.
+  const headers=new Headers(response.headers);
+  headers.delete('Content-Encoding'); // Fetch already decoded the body.
+  headers.set('Content-Length',String(raw.byteLength));
+  return new Response(raw,{status:response.status,statusText:response.statusText,headers});
 }
 self.addEventListener('install',event=>event.waitUntil((async()=>{
   const cache=await caches.open(CACHE);

@@ -1,5 +1,11 @@
 # VANILLAJS roadmap
 
+## After v3.1.0
+
+[v3.1.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v3.1.0) shipped all six numbered phases of the [OSS game reuse roadmap](docs/OSS_GAME_REUSE_2026_ROADMAP.md) through REPLAY-AUDIT-001 in PR #148.
+
+**MATERIAL-001 — Sediment Works** takes up its first conditional follow-up, procedural environmental materials. This review candidate sets a 12,288-cell ceiling and a 24,592-byte simulation buffer budget. The [lab](demos/material-lab/index.html) lets creators paint, run and restore a chamber using the [experimental material grid API](docs/MATERIAL_001.md).
+
 ## Published baseline — v2.8.0, The Game Maker API
 
 [v2.8.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v2.8.0) was published on

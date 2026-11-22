@@ -1,5 +1,7 @@
 # OSS-GAME-REUSE-001 — Evidence-led VANILLAJS engine roadmap
 
+**Implementation update, 22 November 2026.** [v3.1.0](https://github.com/QSOLKCB/VANILLAJS/releases/tag/v3.1.0) shipped P1–P6. The first conditional materials follow-up now has a [bounded implementation and creator lab for review](MATERIAL_001.md). The original research and sequence follow below.
+
 **Review date:** 20 November 2026 (Australia). **Status:** proposed, not an implemented API, release or certification.
 **VANILLAJS main inspected:** `ae0b594f006ec3c1add71574c830ddde9ff5fa66`, the owner-merged COCKPIT-002 / PR #137 commit.
 **Scope:** the eight user-supplied discovery collections, individual high-value exemplars, existing VANILLAJS capabilities and a sequence of original, testable improvements.

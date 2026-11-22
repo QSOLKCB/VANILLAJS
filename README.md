@@ -127,6 +127,7 @@ contracts, even when the demonstrations are playable.
 
 | Build or investigate | Working entry point | Guide |
 | --- | --- | --- |
+| Paint, simulate and save sand and water chambers | [Sediment Works](demos/material-lab/index.html) | [Material grid API and tutorial](docs/MATERIAL_001.md) |
 | Build, race and export a scenic 3D route | [HORIZON Race Foundry](demos/horizon-lab/index.html) | [Author your first race](docs/HORIZON_RACING.md) |
 | World-space driving, gearing and suspension | [HORIZON Driving](demos/horizon-lab/drive.html) | [Tune and test a vehicle](docs/HORIZON_DRIVING.md) |
 | Lit 3D scenery, roads and vehicle visuals | [Scenery Atelier](demos/horizon-lab/scenery.html) | [Rendering and environment tutorial](docs/HORIZON_LAB.md) |

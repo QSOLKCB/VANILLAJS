@@ -38,7 +38,7 @@ function fixture(){
   vm.runInNewContext(source,{
     self:{registration:{scope},clients:{claim(){throw Error('must not claim old clients');}},
       addEventListener(name,fn){listeners.set(name,fn);}},
-    crypto:webcrypto,caches:cacheApi,URL,Response,Uint8Array,Map,Promise,
+    crypto:webcrypto,caches:cacheApi,URL,Response,Headers,Uint8Array,Map,Promise,
     fetch:async url=>{
       fetchCount++;
       if(offline)throw new Error('offline');
@@ -108,6 +108,22 @@ test('tampered post-install cache is rejected offline and repaired online',async
   f.setOffline(true);
   assert.equal(await (await f.fetch('modules/time/index.js')).text(),
     samples['modules/time/index.js']);
+});
+test('offline module response describes the decoded bytes verified from cache',async()=>{
+  const f=fixture(),path='modules/time/index.js',source=samples[path];
+  await f.install();
+  f.setOffline(true);
+  // Fetch exposes decoded bytes alongside the original HTTP encoding headers.
+  const headers={'Content-Type':'text/javascript','Content-Encoding':'gzip',
+    'Content-Length':'43','X-Content-Type-Options':'nosniff'};
+  f.stores.get(f.cacheName).set(new URL(path,scope).href,new Response(source,{headers}));
+  const served=await f.fetch(path);
+  assert.equal(served.headers.get('content-type'),'text/javascript');
+  assert.equal(served.headers.get('x-content-type-options'),'nosniff');
+  assert.equal(served.headers.get('content-encoding'),null);
+  assert.equal(served.headers.get('content-length'),String(Buffer.byteLength(source)));
+  assert.equal(await served.text(),source);
+  assert.equal(f.fetchCount,f.files.length);
 });
 test('activation prunes only cache versions under the same scoped prefix',async()=>{
   const f=fixture();await f.install();
