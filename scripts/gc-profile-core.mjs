@@ -47,23 +47,32 @@ export function allocationSummary(profile){
     topSites:[...sites.values()].sort((a,b)=>b.sampledBytes-a.sampledBytes||a.nodeId-b.nodeId).slice(0,15)};
 }
 
-/** Accept only complete top-level Chrome tracing duration events; missing events != no GC. */
+/** Count one outer collection event per GC cycle, never an overlapping nested V8 phase. */
 export function gcTraceSummary(trace){
   if(!trace||!Array.isArray(trace.traceEvents))throw new TypeError('traceEvents array required');
   if(trace.traceEvents.length>500000)throw new RangeError('trace too large');
-  const events=[];
+  const observed=[];
   for(const e of trace.traceEvents){
     if(!selected.has(e?.name)||e.ph!=='X')continue;
     const micros=finite(e.dur,'GC event duration');
     const start=finite(e.ts,'GC timestamp');
-    events.push({name:e.name,tsUs:start,durationMs:micros/1000,tid:e.tid??null});
-    if(events.length>20000)throw new RangeError('GC trace event budget exceeded');
+    observed.push({name:e.name,tsUs:start,durationMs:micros/1000,tid:e.tid??null});
+    if(observed.length>20000)throw new RangeError('GC trace event budget exceeded');
   }
-  return {recognizedEventNames:[...GC_TRACE_EVENT_NAMES],observedEvents:events,
-    observedCount:events.length,
-    observedDurationMs:events.reduce((total,e)=>total+e.durationMs,0),
-    durationMs:events.length?quantiles(events.map(e=>e.durationMs)):null,
-    meaning:'Only selected complete CDP duration events. Nested/overlapping events may double-count; an empty list does not prove that no GC occurred.'};
+  const byName=name=>observed.filter(e=>e.name===name);
+  const minor=byName('MinorGC'),major=byName('MajorGC'),blink=byName('BlinkGC');
+  // CDP emits e.g. MinorGC enclosing V8.GCScavenger, MajorGC enclosing V8.GCCompactor.
+  // Prefer outer duration records. Use one internal fallback only when an outer
+  // event of that class is entirely absent. Do not add nested durations together.
+  const innerMajor=byName('V8.GCCompactor').length?byName('V8.GCCompactor'):
+    byName('V8.GCMarkCompact').length?byName('V8.GCMarkCompact'):byName('V8.GCMarkSweepCompact');
+  const complete=[...(minor.length?minor:byName('V8.GCScavenger')),
+    ...(major.length?major:innerMajor),...blink].sort((a,b)=>a.tsUs-b.tsUs||a.name.localeCompare(b.name));
+  return {recognizedEventNames:[...GC_TRACE_EVENT_NAMES],rawSelectedCount:observed.length,
+    observedEvents:complete,observedCount:complete.length,
+    observedDurationMs:complete.reduce((total,e)=>total+e.durationMs,0),
+    durationMs:complete.length?quantiles(complete.map(e=>e.durationMs)):null,
+    meaning:'Count outer MinorGC/MajorGC/BlinkGC events where present, never their nested V8 phases. Fallback records are incomplete evidence; reported durations are not exclusively stop-the-world time. No observed event does not prove zero GC.'};
 }
 export function namedMetrics(rows){
   if(!Array.isArray(rows))throw new TypeError('CDP metrics array required');

@@ -42,7 +42,7 @@ The default run contains **17 independent samples**: one unchanged FPS skirmish 
 | --- | --- | --- |
 | `allocationSampling.samples` / `sampledBytes` / `topSites` | V8's statistical sampled allocation records and attribution | Not all allocations, absolute allocation rate, or collection frequency |
 | `cdpBefore` / `cdpAfter` `JSHeapUsedSize` | Heap occupancy before and after a workload | Not cumulative allocation, RSS, retained leaks or GPU memory |
-| `gc.observedEvents` / `observedDurationMs` | Recognized complete CDP trace events and their reported duration | May miss events, may overlap or include non-pausing phases; no events does **not** prove zero GC |
+| `gc.observedEvents` / `observedDurationMs` | Recognized complete CDP trace events and their reported duration | Outer MinorGC/MajorGC events preferred over nested V8 phases; reported event time is not necessarily stop-the-world; missing events do **not** prove zero GC |
 | `frameIntervals` | RAF callback spacing under instrumentation | Not native GPU completion or confirmed 60 FPS |
 | `jsWork` | FPS game's JS callback duration, or visual geometry build+WebGL submission | Not asynchronous driver work or compositor time |
 | `scene.retainedStreamBytes` | Explicit typed-array capacity allocated by the visual stream | Not engine heap size or VRAM |

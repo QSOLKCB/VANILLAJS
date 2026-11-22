@@ -79,7 +79,8 @@ async function profile(page,measure,details){
   try{
     await cdp.send('Performance.enable');await cdp.send('HeapProfiler.enable');
     const before=namedMetrics((await cdp.send('Performance.getMetrics')).metrics);
-    await cdp.send('HeapProfiler.startSampling',{samplingInterval:32768});sampling=true;
+    await cdp.send('HeapProfiler.startSampling',{samplingInterval:8192,
+      includeObjectsCollectedByMajorGC:true,includeObjectsCollectedByMinorGC:true});sampling=true;
     await cdp.send('Tracing.start',{categories:'devtools.timeline,v8,disabled-by-default-v8.gc',
       transferMode:'ReturnAsStream'});tracing=true;
     const start=performance.now(),observed=await measure(),elapsedMs=performance.now()-start;

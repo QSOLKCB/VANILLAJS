@@ -22,23 +22,33 @@ test('allocation records are statistical samples, not implied total allocations'
   assert.throws(()=>allocationSummary({head:{id:1,children:[{id:1,children:[]}]},samples:[]}),/duplicate/);
   assert.throws(()=>allocationSummary({head:{id:1,children:[]},samples:[{nodeId:1,size:-1}]}),RangeError);
 });
-test('GC trace accepts only selected duration events and preserves explicit no-observation scope',()=>{
+test('GC trace counts outer events without double-counting nested V8 phases',()=>{
   const s=gcTraceSummary({traceEvents:[
     {name:'MinorGC',ph:'X',ts:1200,dur:3500,tid:6},
-    {name:'MajorGC',ph:'B',ts:1300,dur:10000},
-    {name:'V8.GCScavenger',ph:'X',ts:1600,dur:1000},
+    {name:'V8.GCScavenger',ph:'X',ts:1250,dur:1000,tid:6},
+    {name:'MajorGC',ph:'X',ts:1300,dur:4000,tid:6},
+    {name:'V8.GCCompactor',ph:'X',ts:1340,dur:2200,tid:6},
+    {name:'MajorGC',ph:'B',ts:1400,dur:10000},
     {name:'Layout',ph:'X',ts:1700,dur:10000}
   ]});
+  assert.equal(s.rawSelectedCount,4);
   assert.equal(s.observedCount,2);
-  assert.equal(s.observedDurationMs,4.5);
-  assert.deepEqual(s.observedEvents.map(e=>e.name),['MinorGC','V8.GCScavenger']);
-  assert.equal(s.durationMs.p95,3.5);
+  assert.equal(s.observedDurationMs,7.5);
+  assert.deepEqual(s.observedEvents.map(e=>e.name),['MinorGC','MajorGC']);
+  assert.equal(s.durationMs.p95,4);
+  const fallback=gcTraceSummary({traceEvents:[
+    {name:'V8.GCScavenger',ph:'X',ts:1,dur:800},
+    {name:'V8.GCCompactor',ph:'X',ts:2,dur:600}
+  ]});
+  assert.equal(fallback.observedCount,2);
+  assert.equal(fallback.observedDurationMs,1.4);
   const none=gcTraceSummary({traceEvents:[]});
   assert.equal(none.durationMs,null);
   assert.match(none.meaning,/does not prove/);
   assert.throws(()=>gcTraceSummary({traceEvents:[{name:'MinorGC',ph:'X',ts:1,dur:-1}]}),RangeError);
   assert.throws(()=>gcTraceSummary({traceEvents:{}}),TypeError);
 });
+
 test('CDP heap occupancy is separate from sampled allocated bytes',()=>{
   assert.deepEqual(namedMetrics([{name:'JSHeapUsedSize',value:4000},{name:'TaskDuration',value:2},{name:'Unknown',value:9}]),{JSHeapUsedSize:4000,TaskDuration:2});
   assert.throws(()=>namedMetrics([{name:'JSHeapUsedSize',value:NaN}]),RangeError);
