@@ -1,0 +1,82 @@
+name: FX-PIPE-001 — bounded Q16 graphics and Chromium parity
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/fx-pipe-001.yml'
+      - 'modules/fx-pipe/**'
+      - 'modules/integer-math/**'
+      - 'scripts/fx-pipe-*.mjs'
+      - 'tests/fx-pipe.test.js'
+      - 'docs/FX_PIPE_001.md'
+      - 'MODULES.json'
+      - 'scripts/audit-docs.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fx-pipe-001:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Verify exact checkout, numerical oracle and packaged source
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          node --check scripts/fx-pipe-workload.mjs
+          node --check scripts/fx-pipe-browser.mjs
+          node --test tests/fx-pipe.test.js
+          node scripts/check.js
+          node scripts/build.js
+          node scripts/verify-offline.js
+      - name: Record paired CPU graphics preparation observations
+        run: node scripts/fx-pipe-workload.mjs > fx-pipe-001-workload.json
+      - name: Install isolated pinned browser test tooling on GitHub-hosted runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PLAYWRIGHT_BROWSERS_PATH="$RUNNER_TEMP/fx-pipe/browsers"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" >> "$GITHUB_ENV"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install \
+            --prefix "$RUNNER_TEMP/fx-pipe" \
+            --ignore-scripts --no-save --package-lock=false --no-audit --no-fund \
+            playwright@1.64.0
+          node "$RUNNER_TEMP/fx-pipe/node_modules/playwright/cli.js" install --only-shell chromium
+      - name: Verify actual packaged WebGL1 draw pixels
+        env:
+          NODE_PATH: ${{ runner.temp }}/fx-pipe/node_modules
+        run: |
+          node scripts/fx-pipe-browser.mjs fx-pipe-evidence
+          (cd fx-pipe-evidence && sha256sum -c SHA256SUMS)
+      - name: Summarize scope-limited evidence
+        if: success()
+        run: |
+          python3 - <<'PY'
+          import json, os
+          rows=json.load(open('fx-pipe-001-workload.json',encoding='utf8'))['observations']
+          browser=json.load(open('fx-pipe-evidence/fx-pipe-001.json',encoding='utf8'))
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf8') as out:
+              out.write('## FX-PIPE-001 — Q16 graphics preparation\n\n')
+              out.write('| Sprite cards | Legacy JS array median ms | Retained FX stream median ms | Float32 parity |\n')
+              out.write('|---:|---:|---:|---|\n')
+              for row in rows:
+                  out.write(f"| {row['quads']} | {row['medianMs']['original']:.2f} | {row['medianMs']['stream']:.2f} | {row['parity']} |\n")
+              out.write('\nWebGL1 pixel equality: '+str(browser['full']['float32ByteParity'])+
+                        '; hash '+str(browser['full']['pixelHash'])+'.\n\n')
+              out.write('Timings are CPU-only exploratory results. Headless SwiftShader readPixels parity does NOT certify native GPU FPS or performance improvement.\n')
+          PY
+      - name: Preserve source-bound CPU, browser and screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: fx-pipe-001-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            fx-pipe-001-workload.json
+            fx-pipe-evidence/
+            dist/manifest.json
+          retention-days: 14
+          if-no-files-found: warn
