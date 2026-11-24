@@ -26,23 +26,38 @@ async function captureMobilePage(page,width){
   const original=await page.evaluate(layout),scroll=await page.evaluate(()=>scrollY);
   assert.equal(original.width,width);
   assert.ok(original.height>=viewport.height&&original.height<=8192,'bounded mobile document height');
+  let frozen=false,tick;
   try{
     await page.setViewportSize({width,height:original.height});
     await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
     assert.deepEqual(await page.evaluate(layout),original,'full mobile document must retain its layout');
+    // Stop the live canvas repainting while Chromium captures the composed page.
+    await page.clock.pauseAt(new Date(await page.evaluate(()=>Date.now())+100));
+    frozen=true;
+    const before=await page.evaluate(()=>subhunt.snapshot());
+    assert.equal(before.screen,'playing');
+    assert.equal(before.paused,false);
+    tick=before.state.tick;
     const png=await page.screenshot({path:`browser-artifacts/subhunt-${width}.png`});
     assert.equal(png.readUInt32BE(16),width,'captured PNG width');
     assert.equal(png.readUInt32BE(20),original.height,'captured PNG must include the complete document');
+    assert.equal(await page.evaluate(()=>subhunt.snapshot().state.tick),tick,'capture must not advance the game');
   }finally{
-    await page.setViewportSize(viewport);
-    await page.evaluate(y=>scrollTo({top:y,behavior:'instant'}),scroll);
+    try{
+      await page.setViewportSize(viewport);
+      await page.evaluate(y=>scrollTo({top:y,behavior:'instant'}),scroll);
+    }finally{
+      if(frozen)await page.clock.resume();
+    }
   }
+  await page.waitForFunction(tick=>subhunt.snapshot().state.tick>tick,tick);
 }
 export async function checkSubHunt(browser,base){
   await mkdir('browser-artifacts',{recursive:true});
   const context=await browser.newContext({viewport:{width:1440,height:1100}}),page=await context.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   try{
+    await page.clock.install();
     await page.goto(base+'demos/subhunt-lab/index.html');await page.waitForFunction(()=>!!window.subhunt);
     // Lab preferences must not overwrite the standalone game's records on a shared origin.
     await page.evaluate(()=>localStorage.setItem('subhunt-best-v1','9876'));
