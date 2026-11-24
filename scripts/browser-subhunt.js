@@ -13,7 +13,7 @@ async function press(page,index){
 // The mobile controls scroll the live canvas off centre. Capture the whole page
 // through the ordinary viewport compositor, preserving the tested portrait layout.
 // Hosted headless Chromium twice timed out capturing beyond the viewport here.
-async function captureMobilePage(page,width){
+export async function captureMobilePage(page,width){
   const viewport=page.viewportSize();
   const layout=()=>{
     const bounds=selector=>{
@@ -38,7 +38,18 @@ async function captureMobilePage(page,width){
     assert.equal(before.screen,'playing');
     assert.equal(before.paused,false);
     tick=before.state.tick;
-    const png=await page.screenshot({path:`browser-artifacts/subhunt-${width}.png`});
+    let png;
+    try{
+      png=await page.screenshot({path:`browser-artifacts/subhunt-${width}.png`});
+    }catch(error){
+      if(error.name!=='TimeoutError')throw error;
+      console.warn(`SubHunt ${width}px screenshot timed out; resetting viewport and retrying once`);
+      await page.setViewportSize(viewport);
+      await page.setViewportSize({width,height:original.height});
+      await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
+      assert.deepEqual(await page.evaluate(layout),original,'retried mobile document must retain its layout');
+      png=await page.screenshot({path:`browser-artifacts/subhunt-${width}.png`});
+    }
     assert.equal(png.readUInt32BE(16),width,'captured PNG width');
     assert.equal(png.readUInt32BE(20),original.height,'captured PNG must include the complete document');
     assert.equal(await page.evaluate(()=>subhunt.snapshot().state.tick),tick,'capture must not advance the game');
