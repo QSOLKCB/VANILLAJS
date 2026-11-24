@@ -166,6 +166,12 @@ set RUNNER_TEMP/NODE_PATH/PLAYWRIGHT_BROWSERS_PATH as the workflow does, run
 `node scripts/browser-suite-cache.mjs execute`. Without verified authority this
 is the normal cold path and executes all seven suites.
 
+To reproduce a single hosted worker's scenarios against the local package, use
+`node scripts/browser-check.js --shard=horizon-race` with the same browser tooling.
+The hosted matrix and local serial command select from the same check inventory.
+The [Flight Lab browser guide](BROWSER_CACHE.md#ci-decisions-and-manual-override)
+describes input digests, worker evidence and reruns.
+
 Manual workflow_dispatch `full_browser=true` always executes all seven, including
 qualified suites. A test/oracle/contract/source change must establish a new
 identity; matching expected numerical output alone never admits reuse.

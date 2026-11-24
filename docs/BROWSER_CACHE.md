@@ -98,16 +98,40 @@ Do not silently install a browser or use an owner-only physical runner for PR co
 
 ## CI decisions and manual override
 
-The existing [Flight Lab workflow](../.github/workflows/flight-lab.yml) invokes
-`scripts/browser-suite-cache.mjs execute` after the mandatory checks and preflight.
-Its log reports `EXECUTE` or `REUSE` for each group, the reason, qualifying run IDs,
-changed inputs and rejected receipt diagnostics. The `flight-lab-evidence`
-artifact includes `plan.json` with the decision inputs; the workflow summary
-reports actual execution separately from reuse.
+Flight Lab builds and verifies one package, measures the pinned Chromium environment,
+then authenticates main receipts once. Preparation records the existing suite decisions
+in `plan.json`. Its immutable artifact ID and SHA-256 identify the archive containing
+that plan, `dist/` (including dotfiles), and CPU evidence. Every worker and the final
+gate check the downloaded archive digest before extracting it.
 
-When the `editor` group needs execution, the Tutorial Lab runs first, before the
-longer labs. A tutorial regression therefore fails early; successful full runs
-still execute every selected check.
+The seven workers own complete browser scenarios. HORIZON's keyboard race and portable
+export have dedicated workers. The remaining five cover Foundry, worlds, rendering
+and research, vehicles, and play including the Flight Lab home page. A qualified
+suite schedules zero scenarios. A worker with no remaining scenarios consumes no
+runner. Each worker has its own Chromium process and screenshot directory. See the [scenario inventory](../scripts/browser-shards.mjs).
+
+In the linked main run, the serial browser step took **29m 33s** of **32m 30s**
+from workflow creation through Pages deployment. HORIZON racing took 440.41s and
+HORIZON export took 259.50s. These measurements guided the split. The run reported
+that main was unprotected, and executed all seven suites. [Baseline run 45069862674](https://github.com/QSOLKCB/VANILLAJS/actions/runs/45069862674/job/137354205047)
+
+This applies OPT's bounded parallel execution and invariant-driven reuse. Within one
+run, the shared input is the exact verified package and plan. Across runs, a suite
+still requires an authenticated reviewed-main receipt for every fingerprinted input.
+Unreviewed source closures run in Chromium, even on an otherwise identical package.
+[OPT-PAR-001](https://github.com/QSOLKCB/OPT/blob/8dc06e99e48711497380fb11237f5fe12b6c556d/optimizations/OPT-PAR-001-bounded-parallel-execution.md) · [OPT-INV-001](https://github.com/QSOLKCB/OPT/blob/8dc06e99e48711497380fb11237f5fe12b6c556d/optimizations/OPT-INV-001-invariant-driven-reuse.md)
+
+Each worker records the IDs and elapsed milliseconds of the scenarios that passed.
+The final `verify` job requires successful preparation and every scheduled worker,
+then compares the exact, disjoint scenario inventory to the plan. A fully qualified
+plan can skip the matrix after preparation's real Chromium preflight. A failed,
+missing or cancelled worker blocks Pages. The combined `flight-lab-evidence` includes
+the plan, workload JSON, and screenshots grouped by worker. Individual worker
+artifacts retain available failure diagnostics.
+
+Rerunning failed jobs can use successful workers from an earlier attempt of the
+same run and preparation. Only suites executed in their entirety in the current
+attempt under the planned environment can issue a fresh main receipt.
 
 To force all suites, the owner can manually run that workflow on reviewed `main`
 with **full_browser = true**. The override ignores matching receipts. The existing

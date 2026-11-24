@@ -2,6 +2,8 @@
 // CI-INVARIANT-001: auditable closures + authenticated immutable execution receipts.
 import {readFile,readdir,mkdir,writeFile,rename} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
+import assert from 'node:assert/strict';
+import {SUITES,selectedChecks,activeShards} from './browser-shards.mjs';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {hash,gitBlob,identity,closures,jsDependencies,resolveLocal} from './browser-dependencies.mjs';
@@ -10,7 +12,7 @@ import {applyLiveProfile,LIVE_PROFILE} from './browser-cache-profile.mjs';
 import {packageProvenance} from './browser-package-provenance.mjs';
 import {RECEIPT_KIND,producerAllowed,loadMainExecutions,decide,changedInputs} from './browser-receipt-authority.mjs';
 const ROOT=resolve(import.meta.dirname,'..');
-export const SUITES=Object.freeze(['home','render','play','worlds','research','donor','editor']);
+export {SUITES};
 export const REQUIRED_PASSES=1;
 export const PROFILE='CI-INVARIANT-001/1';
 const policyPath=join(ROOT,'scripts/browser-reuse-policy.json');
@@ -114,33 +116,134 @@ export function executionPlan(profiles,authority,receipts,forceFull=false,qualif
     return [group,{...decision,changed:prior?changedInputs(prior.results[group].inputs,profiles[group].inputs):['no prior authenticated execution']}];
   }));
 }
-async function execute(){
+async function prepare(){
   const {policy,profiles}=await sourceProfile(),token=process.env.GITHUB_TOKEN;
   const {authority,executions,diagnostics}=token?await loadMainExecutions({token,policy}):{authority:{ok:false,reason:'GitHub token unavailable'},executions:[],diagnostics:[]};
   const plan=executionPlan(profiles,authority,executions,process.env.BROWSER_FORCE_FULL==='true',policy.qualification);
-  const stale=SUITES.filter(g=>!plan[g].reuse),reused=SUITES.filter(g=>plan[g].reuse);
+  const stale=SUITES.filter(g=>!plan[g].reuse);
   const temp=process.env.RUNNER_TEMP;if(!temp)throw Error('RUNNER_TEMP required');
   const out=join(temp,'flight-suite-evidence');await mkdir(out,{recursive:true});
   for(const g of SUITES)console.log(`${g}: ${plan[g].reuse?'REUSE':'EXECUTE'} — ${plan[g].reason}; qualifying runs: ${plan[g].runs.join(", ")||"none"}; changed: ${plan[g].changed.join(', ')}`);
   for(const d of diagnostics)console.log('RECEIPT REJECTED: '+d);
-  await writeFile(join(out,'plan.json'),JSON.stringify({protocol:PROFILE,authority,plan,diagnostics,profiles},null,2)+'\n');
-  if(stale.length){
-    const result=spawnSync(process.execPath,['scripts/browser-check.js','--suites='+stale.join(',')],{cwd:ROOT,env:process.env,stdio:'inherit'});
-    if(result.error||result.status!==0)throw Error('Chromium verification failed; no execution receipt published');
-  }
-  const context={repository:process.env.GITHUB_REPOSITORY,ref:process.env.GITHUB_REF,event:process.env.GITHUB_EVENT_NAME,run:process.env.GITHUB_RUN_ID,attempt:process.env.GITHUB_RUN_ATTEMPT,sha:process.env.GITHUB_SHA,workflow:policy.workflow,authorityDigest:authority.policyDigest};
-  // Local/PR executions never become trusted artifacts. Unknown analysis cannot
-  // seed a future PASS, even if the current browser run happens to succeed.
-  const eligible=stale.filter(g=>!profiles[g].issues.length);
+  const data={protocol:PROFILE,workflow:policy.workflow,source:runContext(),authority,plan,diagnostics,profiles};
+  await writeFile(join(out,'plan.json'),JSON.stringify(data,null,2)+'\n');
+  if(process.env.GITHUB_OUTPUT)
+    await writeFile(process.env.GITHUB_OUTPUT,'shards='+JSON.stringify(activeShards(stale))+'\n',{flag:'a'});
+  return data;
+}
+
+function runContext(){
+  return {repository:process.env.GITHUB_REPOSITORY,ref:process.env.GITHUB_REF,event:process.env.GITHUB_EVENT_NAME,
+    run:process.env.GITHUB_RUN_ID,attempt:process.env.GITHUB_RUN_ATTEMPT,sha:process.env.GITHUB_SHA};
+}
+function staleSuites(data){
+  assert.deepEqual(Object.keys(data.plan).sort(),[...SUITES].sort(),'invalid browser plan inventory');
+  return SUITES.filter(suite=>{
+    const decision=data.plan[suite];
+    assert.equal(typeof decision.reuse,'boolean','invalid suite decision');
+    if(decision.reuse)assert.ok(data.authority.ok&&decision.runs.length&&!data.profiles[suite].issues.length,'unqualified suite reuse');
+    return !decision.reuse;
+  });
+}
+function runChromium(suites,shard,report){
+  const args=['scripts/browser-check.js','--suites='+suites.join(',')];
+  if(shard)args.push('--shard='+shard);
+  const result=spawnSync(process.execPath,args,{cwd:ROOT,env:{...process.env,...(report?{FLIGHT_CHECK_REPORT:report}:{})},stdio:'inherit'});
+  if(result.error||result.status!==0)throw Error('Chromium verification failed');
+}
+async function summarize(data,eligible){
+  const {profiles,authority,plan}=data,stale=staleSuites(data);
+  const context={...runContext(),workflow:data.workflow,authorityDigest:authority.policyDigest};
+  const out=join(process.env.RUNNER_TEMP,'flight-suite-evidence');
+  await mkdir(out,{recursive:true});
   if(authority.ok&&producerAllowed(context)&&eligible.length){
-    const target=join(out,'execution.json');await writeFile(target+'.tmp',JSON.stringify(encodeReceipt(executionReceipt(context,profiles,eligible)))+'\n',{mode:0o600});await rename(target+'.tmp',target);
+    const target=join(out,'execution.json');
+    await writeFile(target+'.tmp',JSON.stringify(encodeReceipt(executionReceipt(context,profiles,eligible)))+'\n',{mode:0o600});
+    await rename(target+'.tmp',target);
     if(process.env.GITHUB_ENV)await writeFile(process.env.GITHUB_ENV,'BROWSER_PUBLISH_EXECUTION=true\n',{flag:'a'});
   }
-  const summary=['## CI-INVARIANT-001 browser decisions','',`Executed ${stale.length}; reused ${reused.length}. Authority: ${authority.reason}`,'',...SUITES.map(g=>`- ${g}: ${plan[g].reuse?'REUSED':'EXECUTED'} — ${plan[g].reason}`),'','Node, source, build, package, archival and preflight gates are never reused.',''];
-  console.log(summary.join('\n'));if(process.env.GITHUB_STEP_SUMMARY)await writeFile(process.env.GITHUB_STEP_SUMMARY,summary.join('\n'),{flag:'a'});
+  const summary=['## CI-INVARIANT-001 browser decisions','',
+    `Executed ${stale.length}; reused ${SUITES.length-stale.length}. Authority: ${authority.reason}`,'',
+    ...SUITES.map(g=>`- ${g}: ${plan[g].reuse?'REUSED':'EXECUTED'} — ${plan[g].reason}`),''];
+  console.log(summary.join('\n'));
+  if(process.env.GITHUB_STEP_SUMMARY)await writeFile(process.env.GITHUB_STEP_SUMMARY,summary.join('\n'),{flag:'a'});
+}
+function sameRun(actual,expected){
+  for(const field of ['repository','sha','run','ref','event'])assert.equal(actual[field],expected[field],'wrong '+field);
+}
+function attempt(value){
+  assert.match(value,/^[1-9]\d{0,8}$/,'invalid run attempt');
+  return Number(value);
+}
+function checkTransfer(data,digest,context){
+  assert.equal(data.protocol,PROFILE);
+  assert.match(digest,/^[a-f0-9]{64}$/,'missing verified input digest');
+  assert.match(context.sha,/^[a-f0-9]{40}$/);
+  assert.match(context.run,/^[1-9]\d*$/);
+  sameRun(data.source,context);
+  assert.ok(attempt(data.source.attempt)<=attempt(context.attempt),'plan from a future attempt');
+}
+export function verifiedShards(data,reports,digest,context){
+  checkTransfer(data,digest,context);
+  const stale=staleSuites(data),expected=activeShards(stale);
+  assert.deepEqual(reports.map(r=>r.shard).sort(),[...expected].sort(),'incomplete or duplicate browser shard');
+  const eligible=new Set(stale.filter(g=>!data.profiles[g].issues.length));
+  for(const report of reports){
+    sameRun(report.source,context);
+    assert.ok(attempt(report.source.attempt)>=attempt(data.source.attempt)&&attempt(report.source.attempt)<=attempt(context.attempt),'invalid worker attempt');
+    assert.equal(report.inputSHA256,digest,'worker used different package or plan');
+    assert.match(report.environment,/^[a-f0-9]{64}$/);
+    const checks=selectedChecks(stale,report.shard);
+    assert.deepEqual(report.passed.map(row=>row.id),checks.map(check=>check.id),'missing, duplicate or misassigned browser check');
+    assert.ok(report.passed.every(row=>Number.isSafeInteger(row.ms)&&row.ms>=0),'invalid check duration');
+    for(const {suite} of checks){
+      // A successful earlier attempt can finish verification. Only freshly observed
+      // checks in this attempt and exact preflight environment can mint a new PASS.
+      if(report.source.attempt!==context.attempt||report.environment!==identity(data.profiles[suite].inputs.environment))
+        eligible.delete(suite);
+    }
+  }
+  return [...eligible];
+}
+async function worker(shard){
+  const data=JSON.parse(await read('plan.json')),context=runContext(),digest=process.env.FLIGHT_INPUT_SHA256;
+  checkTransfer(data,digest,context);
+  const stale=staleSuites(data),checks=selectedChecks(stale,shard);
+  assert.ok(shard&&checks.length,'worker has no assignment');
+  const temp=process.env.RUNNER_TEMP;
+  const environment=identity(JSON.parse(await readFile(join(temp,'flight-browser-environment.json'),'utf8')));
+  const report=join(temp,'flight-passed-'+shard+'.json');
+  runChromium(stale,shard,report);
+  const passed=JSON.parse(await readFile(report,'utf8'));
+  assert.deepEqual(passed.map(row=>row.id),checks.map(check=>check.id));
+  await writeFile(join(ROOT,'browser-artifacts','checks.json'),JSON.stringify({shard,source:context,inputSHA256:digest,environment,passed})+'\n',{flag:'wx'});
+}
+async function finish(){
+  const data=JSON.parse(await read('plan.json')),reports=[];
+  const prefix='flight-shard-'+data.source.attempt+'-';
+  const shards=activeShards(staleSuites(data));
+  if(shards.length){
+    const folders=await readdir(join(ROOT,'browser-artifacts'));
+    assert.deepEqual(folders.sort(),shards.map(shard=>prefix+shard).sort(),'unexpected shard artifacts');
+    for(const shard of shards)reports.push(JSON.parse(await read('browser-artifacts/'+prefix+shard+'/checks.json')));
+  }
+  const eligible=verifiedShards(data,reports,process.env.FLIGHT_INPUT_SHA256,runContext());
+  if(reports.length)console.log('Verified '+reports.reduce((n,r)=>n+r.passed.length,0)+' browser checks across '+reports.length+' workers');
+  await summarize(data,eligible);
 }
 async function main(){
-  if(process.argv[2]==='plan'){const {profiles}=await sourceProfile();console.log(JSON.stringify(profiles,null,2));}
-  else if(process.argv[2]==='execute')await execute();else throw Error('usage: browser-suite-cache.mjs plan|execute');
+  switch(process.argv[2]){
+  case 'plan': console.log(JSON.stringify((await sourceProfile()).profiles,null,2));break;
+  case 'prepare': await prepare();break;
+  case 'worker': await worker(process.argv[3]);break;
+  case 'finish': await finish();break;
+  case 'execute': {
+    const data=await prepare(),stale=staleSuites(data);
+    if(stale.length)runChromium(stale);
+    await summarize(data,stale.filter(g=>!data.profiles[g].issues.length));
+    break;
+  }
+  default: throw Error('usage: browser-suite-cache.mjs plan|prepare|worker NAME|finish|execute');
+  }
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{console.error(e.stack);process.exitCode=1;});

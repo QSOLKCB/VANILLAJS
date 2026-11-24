@@ -101,6 +101,7 @@ class CapsuleTests(unittest.TestCase):
         browser_sources = [path for path in cls.real_extra
                            if path.startswith(('scripts/browser-', 'tests/browser-'))]
         browser_sources += ['scripts/browser-reuse-policy.json', '.github/workflows/flight-lab.yml',
+                            '.github/actions/flight-inputs/action.yml', '.github/actions/flight-tooling/action.yml',
                             'tests/fixtures/ci-invariant-001-input.json',
                             'tests/fixtures/ci-invariant-001-expected.json']
         build_sources = list(dict.fromkeys(build_sources + browser_sources))

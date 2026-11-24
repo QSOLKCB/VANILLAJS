@@ -36,16 +36,17 @@ NEW_FILES=[FORMAL+n+'.lean' for n in ['AlienMath006','Audit','Bridge']]+[
  'scripts/verify_alien_math_006.py','scripts/pin_alien_math_006.py','scripts/alien_math_006_oracle.py','scripts/alien-math-006-bridge.mjs',
  'tests/test_alien_math_006.py','tests/alien-math-006.test.js',
  'tests/fixtures/alien-math-006-input.json','tests/fixtures/alien-math-006-oracle.json',
- 'docs/ALIEN_MATH_006.md','.github/workflows/alien-math-formal.yml','scripts/browser-reuse-policy.json']
+ 'docs/ALIEN_MATH_006.md','.github/workflows/alien-math-formal.yml','scripts/browser-reuse-policy.json',
+ '.github/actions/flight-inputs/action.yml','.github/actions/flight-tooling/action.yml']
 FILES=sorted(BASELINE_FILES+NEW_FILES)
-# Retain exact witnesses for the frozen 20-minute phase-005 source and
-# the previously reviewed 35-minute phase-006 workflow. Only an exact
-# 35 -> 45 minute budget/comment substitution is authorised after that.
-# Every other action, command, condition and permission must match.
+# Reconstruct the three serial workflow witnesses from the frozen Git blob.
+# Admit the reviewed sharded successor by exact bytes, alongside its pinned actions.
 FLIGHT_WORKFLOW='.github/workflows/flight-lab.yml'
 FLIGHT_BASE_SHA256='dee8b35061e6768a76aad700e30486f1d13a4cfcfcdaaef16f1dcf5ef7f0f4b9'
 FLIGHT_OLD_BUDGET=b'    timeout-minutes: 20 # cold-cache and complete browser-suite margin; not permission to skip checks\n'
 FLIGHT_PREVIOUS_SHA256='e6a1e69f4b44c06c23deeeb4126af32b18ff6e26efbef0a7dee89599ac80e9c7'
+FLIGHT_SERIAL_SHA256='d7442f5ff493c67af4d61ab7a226439c5a6b4617c722cc061b248c1c31575411'
+FLIGHT_SHARDED_SHA256='104b7bdc9956fa1c6ac93d99600a8a1e655bdeab69e5aa0c7a22785d98c9371f'
 FLIGHT_PREVIOUS_BUDGET=(b'    # HORIZON extends the full software-rendered suite beyond the former 20-minute\n'
                         b'    # whole-job limit. Keep every gate and allow time for cold tooling and uploads.\n'
                         b'    timeout-minutes: 35\n')
@@ -92,8 +93,10 @@ def verify_workflow_budget_revision(baseline,current):
     if previous.count(FLIGHT_PREVIOUS_BUDGET)!=1:
         raise ValueError('previous approved workflow budget is ambiguous')
     expected=previous.replace(FLIGHT_PREVIOUS_BUDGET,FLIGHT_NEW_BUDGET,1)
-    if current!=expected:
-        raise ValueError('unreviewed workflow change outside exact 20-to-35-to-45 budget revision')
+    if sha(expected)!=FLIGHT_SERIAL_SHA256:
+        raise ValueError('previous serial workflow witness mismatch')
+    if sha(current)!=FLIGHT_SHARDED_SHA256:
+        raise ValueError('unreviewed sharded workflow revision')
     return True
 
 def verify_baseline(root,manifest):

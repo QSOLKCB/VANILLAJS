@@ -80,16 +80,16 @@ claim**. The old Q16 allowlist remains unchanged. `sorryAx`, custom axioms,
 records or unexpected audit output cause failure. Executable `lean --run` output
 is finite evaluation evidence, not a kernel theorem about JavaScript.
 
-## Hosted workflow timeout revision
+## Hosted workflow revisions
 
-Flight Lab run 44190272172 was cancelled near the final browser check at the
-previous 35-minute whole-job limit. The reviewed 45-minute budget adds bounded
-headroom without skipping any test or changing deployment's verification gate.
-The source verifier now reconstructs and hashes both the original 20-minute
-workflow and the authorised 35-minute predecessor before admitting the exact
-35-to-45-minute budget/comment substitution. The active source manifest pins
-the new workflow and verifier; old Git history and mathematical fixtures remain
-unchanged.
+Flight Lab run 44190272172 reached its 35-minute deadline near the last browser
+check. Its serial successor raised the timeout to 45 minutes. The source verifier
+reconstructs and hashes the 20-, 35-, and 45-minute workflow witnesses from the
+historical Git blob. It admits the seven-worker successor by exact SHA-256. The
+source manifest also pins both local Actions used to launch Chromium and restore
+the verified package. Negative controls exercise worker cancellation, the
+parallelism bound, historical fetch, action source, permissions, and Pages gate.
+See the [Flight Lab scheduling and cache contract](BROWSER_CACHE.md#ci-decisions-and-manual-override).
 
 ## Source pins and provenance
 

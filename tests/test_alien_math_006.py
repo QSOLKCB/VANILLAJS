@@ -10,24 +10,29 @@ ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('alien006',ROOT/'scripts/verify_alien_math_006.py')
 v=importlib.util.module_from_spec(spec);spec.loader.exec_module(v)
 class BoundaryTests(unittest.TestCase):
-    def test_exact_hosted_budget_revision_preserves_frozen_workflow_and_all_gates(self):
+    def test_exact_sharded_revision_preserves_frozen_workflow_and_all_gates(self):
         baseline=v.run(['git','show',v.BASE+':'+v.FLIGHT_WORKFLOW])
         current=(ROOT/v.FLIGHT_WORKFLOW).read_bytes()
         self.assertEqual(v.sha(baseline),v.FLIGHT_BASE_SHA256)
         self.assertTrue(v.verify_workflow_budget_revision(baseline,current))
-        previous=current.replace(v.FLIGHT_NEW_BUDGET,v.FLIGHT_PREVIOUS_BUDGET,1)
+        previous=baseline.replace(v.FLIGHT_OLD_BUDGET,v.FLIGHT_PREVIOUS_BUDGET,1)
+        previous=previous.replace(v.FLIGHT_CHECKOUT,v.FLIGHT_CHECKOUT+v.FLIGHT_BASELINE_PREPARATION,1)
+        serial=previous.replace(v.FLIGHT_PREVIOUS_BUDGET,v.FLIGHT_NEW_BUDGET,1)
+        self.assertEqual(v.sha(serial),v.FLIGHT_SERIAL_SHA256)
         self.assertEqual(v.sha(previous),v.FLIGHT_PREVIOUS_SHA256)
         preparation=v.FLIGHT_BASELINE_PREPARATION
         node_step=b'      - run: node --test tests/*.test.js\n'
         cases={
             'different budget':current.replace(b'timeout-minutes: 45',b'timeout-minutes: 46',1),
-            'old 35-minute budget':current.replace(v.FLIGHT_NEW_BUDGET,v.FLIGHT_PREVIOUS_BUDGET,1),
+            'old serial workflow':serial,
+            'unbounded matrix':current.replace(b'max-parallel: 7',b'max-parallel: 70',1),
+            'ignore shard cancellation':current.replace(b'[[ "$WORKERS" == success ]]',b'true',1),
             'permission':current.replace(b'contents: read',b'contents: write',1),
             'verification bypass':current.replace(b'run: node scripts/check.js',b'run: true',1),
             'action source':current.replace(b'actions/checkout@11d5960a326750d5838078e36cf38b85af677262',b'actions/checkout@main',1),
             'production branch':current.replace(b"github.ref == 'refs/heads/main'",b'true',1),
             'duplicate budget':current+v.FLIGHT_NEW_BUDGET,
-            'missing budget':current.replace(v.FLIGHT_NEW_BUDGET,b'',1),
+            'missing budget':current.replace(b'    timeout-minutes: 45\n',b'',1),
             'missing historical fetch':current.replace(preparation,b'',1),
             'duplicate historical fetch':current+preparation,
             'wrong historical commit':current.replace(v.BASE.encode(),b'0'*40,1),
