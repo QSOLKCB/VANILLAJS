@@ -10,6 +10,34 @@ async function press(page,index){
   await page.evaluate(i=>testPad.buttons[i].pressed=false,index);
   await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
 }
+// The mobile controls scroll the live canvas off centre. Capture the whole page
+// through the ordinary viewport compositor, preserving the tested portrait layout.
+// Hosted headless Chromium twice timed out capturing beyond the viewport here.
+async function captureMobilePage(page,width){
+  const viewport=page.viewportSize();
+  const layout=()=>{
+    const bounds=selector=>{
+      const rect=document.querySelector(selector).getBoundingClientRect();
+      return [rect.x+scrollX,rect.y+scrollY,rect.width,rect.height];
+    };
+    return {width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight,
+      game:bounds('#viewport'),controls:bounds('.touch-controls'),footer:bounds('footer')};
+  };
+  const original=await page.evaluate(layout),scroll=await page.evaluate(()=>scrollY);
+  assert.equal(original.width,width);
+  assert.ok(original.height>=viewport.height&&original.height<=8192,'bounded mobile document height');
+  try{
+    await page.setViewportSize({width,height:original.height});
+    await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
+    assert.deepEqual(await page.evaluate(layout),original,'full mobile document must retain its layout');
+    const png=await page.screenshot({path:`browser-artifacts/subhunt-${width}.png`});
+    assert.equal(png.readUInt32BE(16),width,'captured PNG width');
+    assert.equal(png.readUInt32BE(20),original.height,'captured PNG must include the complete document');
+  }finally{
+    await page.setViewportSize(viewport);
+    await page.evaluate(y=>scrollTo({top:y,behavior:'instant'}),scroll);
+  }
+}
 export async function checkSubHunt(browser,base){
   await mkdir('browser-artifacts',{recursive:true});
   const context=await browser.newContext({viewport:{width:1440,height:1100}}),page=await context.newPage(),errors=[];
@@ -92,7 +120,7 @@ export async function checkSubHunt(browser,base){
       assert.ok(card.y>=frame.y&&card.y+card.height<=frame.y+frame.height);
       await page.locator('#launch').click();await page.locator('[data-control="fire"]').click();
       await page.waitForFunction(()=>subhunt.snapshot().state.stats.shots>0);
-      await page.screenshot({path:`browser-artifacts/subhunt-${width}.png`,fullPage:true});
+      await captureMobilePage(page,width);
       await page.keyboard.press('Escape');await page.locator('#pause-menu').click();
     }
     assert.equal(await page.evaluate(()=>localStorage.getItem('subhunt-best-v1')),'9876');
