@@ -83,7 +83,7 @@ export function unpackArtifact(bytes,digest){
   const p=spawnSync('python3',['-c',unzip],{input:bytes,maxBuffer:1048576});
   if(p.status!==0)throw Error('invalid artifact archive');return decodeReceipt(JSON.parse(p.stdout.toString('utf8')));
 }
-async function downloadArtifact(id,token){
+export async function downloadArtifact(id,token){
   if(!Number.isSafeInteger(id)||id<=0)throw Error('invalid artifact id');
   const r=await fetch(`https://api.github.com/repos/QSOLKCB/VANILLAJS/actions/artifacts/${id}/zip`,{headers:{Authorization:'Bearer '+token},redirect:'manual',signal:AbortSignal.timeout(20000)});
   if(r.status!==302)throw Error('artifact download unavailable');
