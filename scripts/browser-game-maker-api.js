@@ -2,6 +2,14 @@
 // Actual native Canvas2D/Web Audio checks over the packaged public facade.
 import assert from 'node:assert/strict';
 
+async function advanceExampleUntil(page,predicate,message){
+  for(let frame=0;frame<180;frame++){
+    if(await page.evaluate(predicate))return;
+    await page.clock.runFor(1000/60);
+  }
+  assert.ok(await page.evaluate(predicate),message);
+}
+
 export async function checkGameMakerAPI(browser,base){
   const page=await browser.newPage({viewport:{width:1000,height:780}}),errors=[];
   page.on('pageerror',error=>errors.push(error.message));
@@ -90,18 +98,21 @@ export async function checkGameMakerAPI(browser,base){
     assert.equal(audio.independentPixels,result.beforeMap,'disposing one owned facade preserves the other canvas and atlas');assert.equal(audio.independentState.tilemaps,1);assert.equal(audio.independentState.disposed,false);
     // The separately copyable example imports no lab runtime. Exercise its real
     // public-module game through native controls, not a simulation-state setter.
+    // Keep frames stopped between driver calls: a delayed key-up on a busy CI
+    // runner can otherwise carry the courier past the ember before its jump.
+    await page.clock.install({time:0});await page.clock.pauseAt(1000);
     await page.goto(base+'demos/game-maker-lab/api-example.html');
     await page.waitForFunction(()=>globalThis.gameMakerExample);
     const initial=await page.evaluate(()=>gameMakerExample.snapshot());assert.equal(initial.running,false);assert.equal(initial.collected,false);
     await page.locator('#example-play').click();await page.keyboard.down('ArrowRight');
-    await page.waitForFunction(()=>gameMakerExample.snapshot().body.x>=1580);await page.keyboard.up('ArrowRight');
-    await page.waitForFunction(()=>gameMakerExample.snapshot().body.vx===0);
+    await advanceExampleUntil(page,()=>gameMakerExample.snapshot().body.x>=1580,'courier must reach the ember');await page.keyboard.up('ArrowRight');
+    await advanceExampleUntil(page,()=>gameMakerExample.snapshot().body.vx===0,'courier must stop after key release');
     const standing=await page.evaluate(()=>gameMakerExample.snapshot());assert.equal(standing.body.grounded,true);assert.equal(standing.collected,false,'floating pickup requires an actual jump');
-    await page.keyboard.press('Space');await page.waitForFunction(()=>gameMakerExample.snapshot().collected);
+    await page.keyboard.press('Space');await advanceExampleUntil(page,()=>gameMakerExample.snapshot().collected,'native jump must collect the ember');
     assert.ok((await page.evaluate(()=>gameMakerExample.snapshot())).body.y>standing.body.y,'jump changes authoritative body height');
     await page.evaluate(()=>window.dispatchEvent(new Event('blur')));const paused=await page.evaluate(()=>gameMakerExample.snapshot());
-    await page.waitForTimeout(100);assert.equal((await page.evaluate(()=>gameMakerExample.snapshot())).graphics.ticks,paused.graphics.ticks);assert.equal(paused.running,false);
-    await page.locator('#example-play').click();await page.keyboard.down('ArrowRight');await page.waitForFunction(()=>gameMakerExample.snapshot().won);await page.keyboard.up('ArrowRight');
+    await page.clock.runFor(100);assert.equal((await page.evaluate(()=>gameMakerExample.snapshot())).graphics.ticks,paused.graphics.ticks);assert.equal(paused.running,false);
+    await page.locator('#example-play').click();await page.keyboard.down('ArrowRight');await advanceExampleUntil(page,()=>gameMakerExample.snapshot().won,'courier must deliver the ember after resuming');await page.keyboard.up('ArrowRight');
     assert.match(await page.locator('#example-status').textContent(),/delivered the ember/);
     await page.locator('#example-restart').click();const restarted=await page.evaluate(()=>gameMakerExample.snapshot());
     assert.deepEqual(restarted.body,initial.body);assert.equal(restarted.won,false);assert.equal(restarted.collected,false);assert.equal(restarted.running,false);
