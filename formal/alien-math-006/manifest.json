@@ -6,8 +6,10 @@
   ],
   "baseline": "ce7e38eb3c7412407a3ba2bc472120b589e6eb9e",
   "files": {
+    ".github/actions/flight-inputs/action.yml": "eb618d232c32281892e22f2efc54d69eddf72117a846cfd8bd54627876582d79",
+    ".github/actions/flight-tooling/action.yml": "418a15363b6fd7c50bdbae5e6c24d7ebad28bc4d908b7727915d5804f3f7337b",
     ".github/workflows/alien-math-formal.yml": "bbe3beb8ca3df9eb90eac75b0ce237f704ce74b8c395518e35863a12354133cd",
-    ".github/workflows/flight-lab.yml": "d7442f5ff493c67af4d61ab7a226439c5a6b4617c722cc061b248c1c31575411",
+    ".github/workflows/flight-lab.yml": "104b7bdc9956fa1c6ac93d99600a8a1e655bdeab69e5aa0c7a22785d98c9371f",
     ".github/workflows/q16-formal.yml": "7bc3e6b4043c6d5c140996e78abdf6c6b3520cd49d22c3bd1fa66957ece05b71",
     "AGENTS.md": "57eb9dcab057bb1adbc5e019a1a37ffd9bfe1b1ad183930c5bba49f097640329",
     "Q16Audit.lean": "1bd7bd9f3567ed52e61ceb7b9191561ae540d69a22abe519889c6a0e672d8fbe",
@@ -19,7 +21,7 @@
     "docs/ALIEN_MATH_003.md": "34858c32353e1f954e789b107a601b8b5bafa1a83c0589c3ae83193af62bb9e0",
     "docs/ALIEN_MATH_004.md": "cab9a1e02160c9170b2389838a530e502e26fc72fe70db637637a50a8c7074bd",
     "docs/ALIEN_MATH_005.md": "a92f3d568b79032b0846a42907cea40091d342cd0898404b8406be93a7116329",
-    "docs/ALIEN_MATH_006.md": "bcf66e53906b84088eef577a1710de7a7d40153f24a18697dbe2c187ff07cfe0",
+    "docs/ALIEN_MATH_006.md": "5ca1d543dee9f5fc69284ae0101f9bd56eaea8628f90b5308cddf27f4602b311",
     "docs/QFLOAT_001.md": "922da5bb147636081dfe38decbb27f272128906980733e386e91e4ece3ca752d",
     "formal/alien-math-006/AlienMath006.lean": "d946bd85e2184f709f1de1e4d0e754aba69fa99cf3f0f6bbeb655f8491c71e8c",
     "formal/alien-math-006/Audit.lean": "b91730dc4f216028a2977c5ab349d2d6f4635ee2c0a3bca54af231a8d4838805",
@@ -46,7 +48,7 @@
     "scripts/pin_alien_math_006.py": "38b8d63dcb6e5186aad7d37d05e06e18264a1a61a4637bb2ad348aa16ab28179",
     "scripts/verify-q16-axioms.py": "1523ce456304737267b8abc380a6592656f2ab6d7e339f8f3b7996bb8936291e",
     "scripts/verify-q16-proof-boundary.py": "35ef5297ccfcc42b2ae73ad0a4c04488d545c8e5e2f91a00f5d4c0fc3e048fd0",
-    "scripts/verify_alien_math_006.py": "6572e3f2575b387dd3e360c9299d553a471b1490d46475c6b743bc43af17a0b6",
+    "scripts/verify_alien_math_006.py": "f2c7a92bb002bf0e7fcd7400699d5d178480b61f342f3d951457e328269042be",
     "tests/alien-math-006.test.js": "0841d6664866ef1899f5f846176cbfa2eb3ef338e6b6e2ee6dc9c07709f081fe",
     "tests/exact-d4.test.js": "aea4b6c684c8b8146cffeda9ae0838009186dacf2ec676e3340b2c2a8b33eed7",
     "tests/exact-geometry.test.js": "13722dcea7baf21d0217210858ff7033c2c36f85342adb017034b1ed1094f71c",
@@ -62,7 +64,7 @@
     "tests/fixtures/alien-math-006-input.json": "390a7400f1ab01b0243979ea707e1498d5090fe64afccd9b38962ec878782c7c",
     "tests/fixtures/alien-math-006-oracle.json": "1866040c3fdd08477f190b47c44f6bfb47c9ca66d3e51c7352d8a6b417a23b45",
     "tests/rational-q16.test.js": "b2a7b7daa0b6b3a8ba2603ccfb112f18bed41676eff3cf25a1d94a2a780acbab",
-    "tests/test_alien_math_006.py": "3e1f3ae989b2149610f6fb856d632efec5992a5f748545c01d79cf2080423387"
+    "tests/test_alien_math_006.py": "f8d1d8bb0f7ed03ddfb97a55672c4c54bf1b23ee02fc54ab6d5027a2e5fdb6ae"
   },
   "leanCommit": "eb6cafb7290e8bd5f2937522d8d804f58f02bafc",
   "leanVersion": "4.35.0",

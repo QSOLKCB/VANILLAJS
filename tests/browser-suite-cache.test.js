@@ -126,18 +126,31 @@ test('L: manual full-browser selects all seven regardless of qualification',()=>
 });
 test('workflow retains mandatory gates, main-only artifact publication and no PR-scoped witness restore',async()=>{
   const yaml=await readFile(new URL('../.github/workflows/flight-lab.yml',import.meta.url),'utf8');
-  for(const command of ['node --test tests/*.test.js','node scripts/check.js','node scripts/build.js','node scripts/verify-offline.js','node scripts/flight-browser-preflight.mjs','scripts/ci_invariant_oracle.py --check','full_browser:'])assert.ok(yaml.includes(command),command);
-  assert.doesNotMatch(yaml,/actions\/cache\/(restore|save)@/);assert.match(yaml,/github.ref == 'refs\/heads\/main'.*BROWSER_PUBLISH_EXECUTION/);
+  const tooling=await readFile(new URL('../.github/actions/flight-tooling/action.yml',import.meta.url),'utf8');
+  for(const command of ['node --test tests/*.test.js','node scripts/check.js','node scripts/build.js','node scripts/verify-offline.js','scripts/ci_invariant_oracle.py --check','full_browser:'])assert.ok(yaml.includes(command),command);
+  assert.match(tooling,/run: node scripts\/flight-browser-preflight\.mjs/);
+  assert.equal(yaml.split('uses: ./.github/actions/flight-tooling').length-1,2);
+  assert.doesNotMatch(yaml+tooling,/actions\/cache\/(restore|save)@/);
+  assert.match(yaml,/github.ref == 'refs\/heads\/main'.*BROWSER_PUBLISH_EXECUTION/);
 });
 
-test('complete hosted browser verification has headroom and a failure cannot stage or deploy Pages',async()=>{
+test('seven hosted workers retain timeout headroom and only a complete plan can stage Pages',async()=>{
   const yaml=await readFile(new URL('../.github/workflows/flight-lab.yml',import.meta.url),'utf8');
-  const verify=yaml.split('\n  verify:\n')[1]?.split('\n  deploy:\n')[0];
+  const browser=yaml.split('\n  chromium:\n')[1].split('\n  verify:\n')[0];
+  const verify=yaml.split('\n  verify:\n')[1].split('\n  deploy:\n')[0];
   const deploy=yaml.split('\n  deploy:\n')[1];
-  assert.ok(verify&&deploy,'verification and deployment remain separate jobs');
-  const timeout=Number(verify.match(/^    timeout-minutes: (\d+)/m)?.[1]);
-  assert.ok(timeout>=45&&timeout<=50,'full hosted verification needs at least 45 minutes for the complete cold-cache browser suite and uploads');
-  assert.match(verify,/run: node scripts\/browser-suite-cache\.mjs execute/);
+  assert.match(browser,/timeout-minutes: 45/);
+  assert.match(browser,/fail-fast: false\n      max-parallel: 7/);
+  assert.match(browser,/run: node scripts\/browser-suite-cache\.mjs worker "\$SHARD"/);
+  assert.match(verify,/needs: \[prepare, chromium\]\n    if: always\(\)/);
+  assert.match(verify,/run: node scripts\/browser-suite-cache\.mjs finish/);
+  const gate=verify.split('        run: |\n')[1].split('\n      - uses:')[0];
+  for(const prepared of ['success','failure','cancelled','skipped'])
+    for(const workers of ['success','failure','cancelled','skipped'])
+      for(const shards of ['[]','["play"]','']){
+        const ran=spawnSync('bash',['-c',gate],{env:{PREPARED:prepared,WORKERS:workers,SHARDS:shards}});
+        assert.equal(ran.status===0,prepared==='success'&&(shards==='[]'?workers==='skipped':Boolean(shards)&&workers==='success'));
+      }
   assert.doesNotMatch(yaml,/continue-on-error:/,'verification failures must fail the job');
   assert.match(verify,/- name: Publish immutable real executions on verified main only\n        if: github\.ref == 'refs\/heads\/main' && github\.event_name != 'pull_request' && env\.BROWSER_PUBLISH_EXECUTION == 'true'\n/);
   assert.match(verify,/- name: Stage verified Pages artifact\n        if: github\.ref == 'refs\/heads\/main' && github\.event_name != 'pull_request'\n/);

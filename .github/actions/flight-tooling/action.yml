@@ -1,0 +1,31 @@
+name: Pinned Flight Lab browser
+description: Restore isolated Playwright tooling and measure the actual Chromium environment
+runs:
+  using: composite
+  steps:
+  - name: Set isolated browser paths
+    shell: bash
+    run: |
+      echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
+      echo "NODE_PATH=$RUNNER_TEMP/flight-browser/node_modules" >> "$GITHUB_ENV"
+  - name: Restore pinned Playwright headless tooling
+    id: playwright-tooling
+    uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+    with:
+      path: ${{ runner.temp }}/flight-browser
+      key: flight-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24.04-node22-playwright1.64.0-only-shell-v1
+  - name: Install pinned isolated Playwright on cache miss (no apt)
+    if: steps.playwright-tooling.outputs.cache-hit != 'true'
+    shell: bash
+    run: |
+      set -euo pipefail
+      # GitHub Ubuntu 24.04 image already has the headless shell's shared libraries.
+      # Previous --with-deps fetched optional foreign-language fonts for ~9.5 minutes.
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install \
+        --prefix "$RUNNER_TEMP/flight-browser" \
+        --ignore-scripts --no-save --package-lock=false --no-audit --no-fund \
+        playwright@1.64.0
+      node "$RUNNER_TEMP/flight-browser/node_modules/playwright/cli.js" install --only-shell chromium
+  - name: Validate pinned Playwright and launch its cached browser
+    shell: bash
+    run: node scripts/flight-browser-preflight.mjs

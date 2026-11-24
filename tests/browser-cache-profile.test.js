@@ -24,6 +24,19 @@ test('live browser profile extends frozen policy without changing protection or 
   assert.ok(policy.shared.includes(LIVE_PROFILE));
   assert.ok(policy.suites.editor.scripts.includes('scripts/browser-tutorial.js'));
 });
+test('the live offline-worker pin admits only the inspected bytes and preserves the frozen pin',async()=>{
+  const path='scripts/service-worker.template.js';
+  const policy=applyLiveProfile(baseBytes,live),template=await readFile(new URL(path,root),'utf8');
+  assert.equal(policy.workerTemplateSHA256,hash(template));
+  assert.ok(policy.shared.includes(path));
+  const archived={...live};delete archived.workerTemplateSHA256;
+  assert.equal(applyLiveProfile(baseBytes,archived).workerTemplateSHA256,JSON.parse(baseBytes).workerTemplateSHA256);
+  assert.throws(()=>applyLiveProfile(baseBytes,{...live,workerTemplateSHA256:'invalid'}));
+  const inputs={files:[{path:'service-worker.js',sha256:hash('generated')}],sources:{'service-worker.js':'generated'},environment:{},
+    policy:{suites:{home:{consumes:['home'],roots:['service-worker.js'],serviceWorker:true}},contracts:{},workerTemplateSHA256:policy.workerTemplateSHA256}};
+  const changed=closures({...inputs,extra:{[path]:template+'\n'}});
+  assert.ok(changed.home.issues.includes('unreviewed worker template'));
+});
 test('live profile rejects invented fields, changed frozen identity, unsafe paths and mismatched opaque pins',()=>{
   const cases=[x=>x.unknown=true,x=>delete x.qualification,x=>x.qualification=0,x=>x.qualification=2,x=>x.qualification=3,x=>x.qualification='1',x=>x.schema='qsol.browser.live-profile.v1',x=>x.suites.editor.serviceWorker=false,x=>x.basePolicySHA256='0'.repeat(64),x=>x.shared.push('../outside.js'),x=>x.suites.unknown={roots:[],scripts:[]},x=>x.opaqueRuntime[Object.keys(x.opaqueRuntime)[0]].sha256='0'.repeat(64),x=>x.opaqueHarness[Object.keys(x.opaqueHarness)[0]].reason='ignore'];
   for(const mutate of cases){const changed=structuredClone(live);mutate(changed);assert.throws(()=>applyLiveProfile(baseBytes,changed));}

@@ -17,11 +17,14 @@ concurrency:
   group: flight-lab-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  verify:
+  prepare:
     runs-on: ubuntu-24.04
-    # Run 44190272172 reached the final SubHunt browser check but hit the 35-minute
-    # job limit. Keep every gate: allow full-suite, cold-tooling and upload headroom.
     timeout-minutes: 45
+    outputs:
+      shards: ${{ steps.plan.outputs.shards }}
+      plan-attempt: ${{ steps.package.outputs.attempt }}
+      sha256: ${{ steps.package.outputs.sha256 }}
+      artifact-id: ${{ steps.inputs.outputs.artifact-id }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Fetch exact ALIEN-MATH-006 historical baseline
@@ -61,9 +64,6 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
-      # runner.temp is only defined at step runtime, never in jobs.verify.env.
-      - name: Set isolated Playwright browser root
-        run: echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/flight-browser/browsers" >> "$GITHUB_ENV"
       - run: node --test tests/*.test.js
       - name: Reproduce ALIEN-MATH-004 independent matrix and Fraction fixture
         run: python3 scripts/alien_math_004_oracle.py --check
@@ -146,38 +146,121 @@ jobs:
         run: node scripts/geometry-workload.js --check > geometry-workload.json
       - name: Verify streamed geometry batching and record paired CPU observations
         run: node scripts/geometry-batch-workload.js --check > geometry-batch-workload.json
-      # Only independently authenticated main execution artifacts may be reused.
-      # Source/unit/package/archival checks run every time; shared changes invalidate suites.
-      - name: Restore pinned Playwright headless tooling
-        id: playwright-tooling
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
-        with:
-          path: ${{ runner.temp }}/flight-browser
-          key: flight-browser-${{ runner.os }}-${{ runner.arch }}-ubuntu24.04-node22-playwright1.64.0-only-shell-v1
-      - name: Install pinned isolated Playwright on cache miss (no apt)
-        if: steps.playwright-tooling.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          # GitHub Ubuntu 24.04 image already has the headless shell's shared libraries.
-          # Previous --with-deps fetched optional foreign-language fonts for ~9.5 minutes.
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install \
-            --prefix "$RUNNER_TEMP/flight-browser" \
-            --ignore-scripts --no-save --package-lock=false --no-audit --no-fund \
-            playwright@1.64.0
-          node "$RUNNER_TEMP/flight-browser/node_modules/playwright/cli.js" install --only-shell chromium
-      - name: Validate pinned Playwright and launch its cached browser
-        run: node scripts/flight-browser-preflight.mjs
+      - uses: ./.github/actions/flight-tooling
       - name: Verify invariant reuse negative controls and independent closure fixture
         run: |
           node --test tests/browser-suite-cache.test.js
           python3 scripts/ci_invariant_oracle.py --check
           node scripts/ci-invariant-workload.mjs > ci-invariant-workload.json
-      - name: Verify changed browser suites and authenticate main execution artifacts
+      - name: Authenticate previous main executions and plan the browser work once
+        id: plan
         env:
-          NODE_PATH: ${{ runner.temp }}/flight-browser/node_modules
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BROWSER_FORCE_FULL: ${{ github.event_name == 'workflow_dispatch' && inputs.full_browser == true }}
-        run: node scripts/browser-suite-cache.mjs execute
+        run: node scripts/browser-suite-cache.mjs prepare
+      - name: Bind the verified package, evidence and plan to one archive
+        id: package
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/flight-inputs.tgz"
+          tar -czf "$archive" dist *-evidence.json *-workload.json -C "$RUNNER_TEMP/flight-suite-evidence" plan.json
+          echo "sha256=$(sha256sum "$archive" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+          echo "attempt=$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
+      - name: Share these inputs with workers and the final verification gate
+        id: inputs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: flight-inputs-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/flight-inputs.tgz
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+      - name: Preserve available diagnostics if preparation fails
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: flight-prepare-failure-${{ github.run_attempt }}
+          path: |
+            dist/manifest.json
+            *-evidence.json
+            *-workload.json
+            ${{ runner.temp }}/flight-suite-evidence/*.json
+          retention-days: 14
+
+  chromium:
+    name: Chromium / ${{ matrix.shard }}
+    needs: prepare
+    if: needs.prepare.outputs.shards != '[]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 7
+      matrix:
+        shard: ${{ fromJSON(needs.prepare.outputs.shards) }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - uses: ./.github/actions/flight-inputs
+        with:
+          artifact-id: ${{ needs.prepare.outputs.artifact-id }}
+          sha256: ${{ needs.prepare.outputs.sha256 }}
+      - uses: ./.github/actions/flight-tooling
+      - name: Run assigned scenarios on the verified package
+        env:
+          SHARD: ${{ matrix.shard }}
+          FLIGHT_INPUT_SHA256: ${{ needs.prepare.outputs.sha256 }}
+        run: node scripts/browser-suite-cache.mjs worker "$SHARD"
+      - name: Preserve completed checks, screenshots and failure diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: flight-shard-${{ needs.prepare.outputs.plan-attempt }}-${{ matrix.shard }}
+          path: browser-artifacts/
+          overwrite: true
+          retention-days: 14
+
+  verify:
+    needs: [prepare, chromium]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Require preparation and every scheduled Chromium worker
+        env:
+          PREPARED: ${{ needs.prepare.result }}
+          WORKERS: ${{ needs.chromium.result }}
+          SHARDS: ${{ needs.prepare.outputs.shards }}
+        run: |
+          set -euo pipefail
+          [[ "$PREPARED" == success && -n "$SHARDS" ]]
+          if [[ "$SHARDS" == '[]' ]]; then
+            [[ "$WORKERS" == skipped ]]
+          else
+            [[ "$WORKERS" == success ]]
+          fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - uses: ./.github/actions/flight-inputs
+        id: restore
+        with:
+          artifact-id: ${{ needs.prepare.outputs.artifact-id }}
+          sha256: ${{ needs.prepare.outputs.sha256 }}
+      - name: Collect the worker evidence from this preparation
+        if: needs.prepare.outputs.shards != '[]'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: flight-shard-${{ needs.prepare.outputs.plan-attempt }}-*
+          path: browser-artifacts
+      - name: Verify completed check inventory and assemble eligible suite witnesses
+        env:
+          FLIGHT_INPUT_SHA256: ${{ needs.prepare.outputs.sha256 }}
+        run: node scripts/browser-suite-cache.mjs finish
       - name: Publish immutable real executions on verified main only
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.BROWSER_PUBLISH_EXECUTION == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -187,12 +270,14 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Preserve browser screenshots and package manifest
-        if: always()
+        if: always() && steps.restore.outcome == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: flight-lab-evidence
+          overwrite: true
           path: |
-            ${{ runner.temp }}/flight-suite-evidence/*.json
+            plan.json
+            ${{ runner.temp }}/flight-suite-evidence/execution.json
             browser-artifacts/
             dist/manifest.json
             ci-invariant-workload.json

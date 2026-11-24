@@ -35,8 +35,8 @@ EXTRA = (
     'research/alien-math-final/release-notes.draft.md',
     'research/alien-math-final/zenodo.draft.json',
     'research/alien-math-final/audit.json',
-    'scripts/browser-suite-cache.mjs', 'scripts/browser-dependencies.mjs',
-    'scripts/browser-receipt-authority.mjs', 'tests/browser-suite-cache.test.js',
+    'scripts/browser-suite-cache.mjs', 'scripts/browser-dependencies.mjs', 'scripts/browser-shards.mjs',
+    'scripts/browser-receipt-authority.mjs', 'tests/browser-suite-cache.test.js', 'tests/browser-shards.test.js',
     'scripts/browser-cache-profile.mjs', 'scripts/browser-cache-profile.json',
     'scripts/browser-package-provenance.mjs', 'scripts/browser-receipt-codec.mjs',
     'tests/browser-cache-profile.test.js', 'tests/browser-package-provenance.test.js',
@@ -265,7 +265,7 @@ def reproduce(root, lean):
     # No package installers, network calls, caches or claimed receipt reuse.
     commands = [['node', '--test', *['tests/' + name + '.test.js' for name in
                  ('exact-rational', 'rational-q16', 'exact-geometry', 'exact-d4', 'exact-graph', 'alien-math-006',
-                  'browser-suite-cache', 'browser-cache-profile', 'browser-package-provenance', 'browser-receipt-codec')]]]
+                  'browser-suite-cache', 'browser-cache-profile', 'browser-package-provenance', 'browser-receipt-codec', 'browser-shards')]]]
     commands += [[sys.executable, f'scripts/alien_math_00{i}_oracle.py', '--check'] for i in range(1, 7)]
     commands += [[sys.executable, 'scripts/ci_invariant_oracle.py', '--check'],
                  [sys.executable, 'scripts/verify_alien_math_006.py', '--lean', lean, '--negative-controls', '--output', '../formal-result.json'],

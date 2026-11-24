@@ -22,12 +22,17 @@ function opaque(value,label){
   }
 }
 export function applyLiveProfile(baseBytes,live){
-  fields(live,['schema','qualification','basePolicySHA256','suites','shared','auditedHarnesses','auditedRuntime','opaqueHarness','opaqueRuntime'],'live profile');
+  const templatePin=Object.hasOwn(live,'workerTemplateSHA256');
+  fields(live,['schema','qualification','basePolicySHA256','suites','shared','auditedHarnesses','auditedRuntime','opaqueHarness','opaqueRuntime',...(templatePin?['workerTemplateSHA256']:[])],'live profile');
   assert.equal(live.schema,'qsol.browser.live-profile.v2');assert.equal(live.basePolicySHA256,hash(baseBytes),'frozen policy identity');
   const base=JSON.parse(baseBytes),policy=structuredClone(base),groups=Object.keys(base.suites);
   assert.equal(base.qualification,3,'frozen qualification evidence remains unchanged');
   assert.equal(live.qualification,1,'live qualification requires one authenticated main execution');
   policy.qualification=live.qualification;
+  if(templatePin){
+    assert.match(live.workerTemplateSHA256,/^[a-f0-9]{64}$/,'live worker template digest');
+    policy.workerTemplateSHA256=live.workerTemplateSHA256;
+  }
   fields(live.suites,groups,'suite set');paths(live.shared,'shared');
   for(const group of groups){
     assert.equal(base.suites[group].serviceWorker,true,'live profile requires whole-package worker coverage');
